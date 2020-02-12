@@ -24,11 +24,11 @@ Single signature wallets take a unique approach in that a new wallet is created 
 
 ### Multi-Signature
 
-By default FullyNoded 2 will create a 2 of 3 mutlisignature wallet whereby all three seeds are created locally. One seed is converted to BIP39 words for the user to record securely for recovery purposes and then deleted forever from the device. The app will then create a wallet on your node and utilizes the `importmulti` command to import 2,000 BIP84 private keys to your nodes wallet so that it may sign for one of the two required signatures. The third seed is saved locally to your device as a BIP39 mnemonic. When it comes to spending again we utilize `walletcreatefundedpsbt` on your node to handle coin selection, and fee optimization. Yoru node will then sign the psbt and pass it to the app at which time the app will sign for the second signature locally. With this set up a user may lose either their node, device or back recovery words and still be able to spend their bitcoin's. In a future release the app will allow multiple levels of secureity including 2fa and wallet.dat encryption which would mean even if an attacker got hold of your device they would need you decryption password to spend funds.
+By default FullyNoded 2 will create a 2 of 3 mutlisignature wallet whereby all three seeds are created locally. One seed is converted to BIP39 words for the user to record securely for recovery purposes and then deleted forever from the device. The app will then create a wallet on your node and utilizes the `importmulti` command to import 2,000 BIP84 private keys to your nodes wallet so that it may sign for one of the two required signatures. The third seed is saved locally to your device as a BIP39 mnemonic. When it comes to spending again we utilize `walletcreatefundedpsbt` on your node to handle coin selection, and fee optimization. Your node will then sign the psbt and pass it to the app at which time the app will sign for the second signature locally. With this set up a user may lose either their node, device or the BIP39 back up recovery words and still be able to spend their bitcoin. In a future release the app will allow multiple levels of security including 2fa and wallet.dat encryption which would mean even if an attacker got hold of your device they would *also* need your decryption password to spend funds.
 
 ### Custom
 
-At present htis feature is baing utilized for testing purposes only. The idea being we want to allow purely watch-only wallets for deep cold storage whilst also allwoing users to sign PSBT's offline, or pass unsigned PSBT's to other signers. For now this is not ready for active use but will be in the near future. If you want to test it you can make any wallet cold in the wallets view by tapping the cold button or by importing a public key descriptor from one of your exisiting wallets.
+At present this feature is being utilized for testing purposes only. The idea being we want to allow purely watch-only wallets for deep cold storage whilst also allwoing users to sign PSBT's offline, or pass unsigned PSBT's to other signers. For now this is not ready for active use but will be in the near future. If you want to test it you can make any wallet cold in the wallets view by tapping the cold button or by importing a public key descriptor from one of your exisiting wallets.
 
 ### Wishlist
 
@@ -93,6 +93,6 @@ This code in this repository is Copyright © 2019 by Blockchain Commons, LLC, an
 
 ### Contributing
 
-We encourage public contributions through issues and pull-requests! Please review [CONTRIBUTING.md](https://github.com/BlockchainCommons/Bitcoin-Standup/tree/master/CONTRIBUTING.md) for details on our development process. All contributions to this repository require a GPG signed [CONTRIBUTOR-LICENSE-AGREEMENT.md](https://github.com/BlockchainCommons/Bitcoin-Standup/tree/master/CLA.md).
+We encourage public contributions through issues and pull-requests! Please review [CONTRIBUTING.md](https://github.com/BlockchainCommons/Bitcoin-Standup/tree/master/CONTRIBUTING.md) for details on our development process. All contributions to this repository require a GPG signed [Contributor License Agreement](https://github.com/BlockchainCommons/Bitcoin-Standup/tree/master/CLA.md).
 
 
