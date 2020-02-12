@@ -6,9 +6,9 @@ Name: `$name`
 
 E-Mail: `$email`
 
-Legal Jurisdiction: Indonesia
+Legal Jurisdiction: Wyoming, United States of America
 
-Project: `$repository_url`
+Project: https://github.com/BlockchainCommons/FullyNoded-2/
 
 Date: `$date`
 
