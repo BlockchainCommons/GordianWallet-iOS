@@ -80,6 +80,7 @@ Currently the app is fully capable of creating and signing PSBT's with either mu
 
 ### Author
 Peter Denton, fontainedenton@gmail.com
+PGP: 3B37 97FA 0AE8 4BE5 B440  6591 8564 01D7 121C 32FC
 
 ### Built with
 - [Tor.framework](https://github.com/iCepa/Tor.framework) by the [iCepa project](https://github.com/iCepa) - for communicating with your nodes hidden service
