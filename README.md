@@ -1,28 +1,52 @@
-# StandUp-Remote
+# FullyNoded 2
 
 ### Status
 
-StandUp-Remote is currently under active development and in the early testing phase. Future versions may include breaking changes which aren't backward compatible, use only on testnet.
+FullyNoded 2 is currently under active development and in the early testing phase. It should only be used on testnet for now.
 
-In order to use it you need to scan a `btcstandup://` uri which you can read about [here](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup).
+FullyNoded 2 is designed to work with the [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-Standup/tree/master/StandUp) and [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-Standup/tree/master/LinuxScript), but will work with any properly configured Bitcoin Core 0.19.0.1 node with a hidden service controlling `rpcport` via localhost. Supporting nodes are [Nodl](https://www.nodl.it/), [BTCPayServer](https://btcpayserver.org) and [RaspiBlitz](https://github.com/rootzoll/raspiblitz), these nodes can be connected by clicking a link or scanning a qr code. Please refer to their telegram groups for simple instructions: 
+
+- [Nodl Telegram](https://t.me/nodl_support)
+- [BTCPayServer](https://t.me/btcpayserver)
+- [RaspiBlitz Telegram](https://t.me/raspiblitz)
 
 ### Testflight
 
 We have a public link available for beta testing [here at this link](https://testflight.apple.com/join/OQHyL0a8), please bare in mind the app may change drastically and may not be backward compatible, please only use the app on testnet.
 
+### What does it do?
+
+#### Initial Setup
+
+Upon on initial use the user may choose to connect to their own node or a testnet node we are currently utilzing for development purposes. Once you are connected to a node you may go to the "Wallets" tab and create either a Single-Sig, Multi-Sig or Custom wallet.
+
+##### Single-Signature
+
+Single signature wallets take a unique approach in that a new wallet is created on your node with private keys disabled and avoid address reuse set to true. Once the wallet creation is confirmed on your node the app will utilize the LibWally-Swift libary in conjunction with Apple's native cryptographically secure random number generator to generate a seed locally. The seed is encrypted and stored on the device only. The entropy is converted into a 12 word BIP39 recovery phrase, the app then utilizes the `importmulti` rpc command to derive 2,000 public keys from the seeds BIP84 xpub. This allows your node to handle all the transaction building with the rpc command `walletcreatefundedpsbt` which handles coin selection, fee optimization and avoids address reuse. The app will create the unsinged psbt with your node and then signs the psbt locally so that your private keys are *never* broadcasted over Tor.
+
+##### Multi-Signature
+
+By default FullyNoded 2 will create a 2 of 3 mutlisignature wallet whereby all three seeds are created locally. One seed is converted to BIP39 words for the user to record securely for recovery purposes and then deleted forever from the device. The app will then create a wallet on your node and utilizes the `importmulti` command to import 2,000 BIP84 private keys to your nodes wallet so that it may sign for one of the two required signatures. The third seed is saved locally to your device as a BIP39 mnemonic. When it comes to spending again we utilize `walletcreatefundedpsbt` on your node to handle coin selection, and fee optimization. Yoru node will then sign the psbt and pass it to the app at which time the app will sign for the second signature locally. With this set up a user may lose either their node, device or back recovery words and still be able to spend their bitcoin's. In a future release the app will allow multiple levels of secureity including 2fa and wallet.dat encryption which would mean even if an attacker got hold of your device they would need you decryption password to spend funds.
+
+##### Custom
+
+At present htis feature is baing utilized for testing purposes only. The idea being we want to allow purely watch-only wallets for deep cold storage whilst also allwoing users to sign PSBT's offline, or pass unsigned PSBT's to other signers. For now this is not ready for active use but will be in the near future. If you want to test it you can make any wallet cold in the wallets view by tapping the cold button or by importing a public key descriptor from one of your exisiting wallets.
+
+#### Wishlist
+
 - [ ] Wallet Functions
   - [x] Spend and Receive
   - [x] Segwit
   - [x] Non-custodial
-  - [x] Coin Control
-  - [x] BIP44
+  - [ ] Coin Control
+  - [ ] BIP44
   - [x] BIP84
-  - [x] BIP49
+  - [ ] BIP49
   - [x] BIP32
   - [x] BIP21
   - [x] Custom mining fee
-  - [ ] Multisig
-  - [ ] Cold storage
+  - [x] Multisig
+  - [x] Cold storage
   - [x] Multiwalletrpc
   
 - [ ] Security
@@ -34,6 +58,8 @@ We have a public link available for beta testing [here at this link](https://tes
   - [ ] Wallet.dat encryption
   - [ ] Disable all networking before importing/exporting seed 
   - [ ] Automated Tor authentication
+  - [ ] 2FA
+  - [ ] Add local authentication via biometrics/pin/password
  
 - [ ] Compatible Nodes
   - [x] Your own Bitcoin Core node
@@ -45,48 +71,14 @@ We have a public link available for beta testing [here at this link](https://tes
   - [x] RaspiBlitz
   - [ ] Wasabi
   - [ ] CasaHodl
-  
-StandUp-Remote is designed to work with the [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-Standup/tree/master/StandUp) and [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-Standup/tree/master/LinuxScript), but will work with any properly configured Bitcoin Core node with a hidden service controlling `rpcport` via localhost. Supporting nodes are [myNode](http://www.mynodebtc.com), [Nodl](https://www.nodl.it/), [BTCPayServer](https://btcpayserver.org) and [RaspiBlitz](https://github.com/rootzoll/raspiblitz), these nodes can be connected by clicking a link or scanning a qr code. Please refer to their telegram groups for simple instructions: 
-
-- [Nodl Telegram](https://t.me/nodl_support)
-- [myNode Telegram](https://t.me/mynode_btc)
-- [BTCPayServer](https://t.me/btcpayserver)
-- [RaspiBlitz Telegram](https://t.me/raspiblitz)
-
-### What does it do?
-
-#### Initial Setup
-
-Everything below happens automatically after you scan the QuickConnect QR code.
-
-When you open StandUp the first time it will create a seed for you, encrypt it, save it locally. Once the seed is created you can connect to your node by scanning a [QuickConnect QR code](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or by clicking it as a deeplink.  Upon scanning a valid QuickConnect QR code the app will create a private/public keypair which is used for authenticating your tor connection. The app then goes through a series of Bitcoin Core RPC calls over Tor to your node. The app will create a new wallet on your node, import the first 2,000 addresses from your xpub deriving the addresses as m/84'/1'/0'/0 by default and m/84'/0'/0'/0 if the node is on mainnet. Advanced users may set different derivation paths and import seeds. Altering the derivation path or adding a seed will always create a new wallet so that nothing is ever overwritten or deleted, simply go to advanced settings to see your wallets and switch them on and off. Altering the derivation path will always create a new wallet with the existing seed, if you want to import a new seed simply go to advanced settings and tap import seed.
 
 #### Everyday use
 
-After the above process completes you will be able to:
-
-- spend and receive using BIP44, BIP84, BIP49 compatible keys
-- breakdown of your raw transaction before broadcasting to ensure piece of mind
-- import/export BIP39 seeds
-- customize derivation schemes
-- create and pay BIP21 invoices
-- coin control
-- transaction batching
-- descriptor exporting
-- one line exportable command to recover your wallet with Bitcoin Core should you lose your device
-- export/verify your addresses
-- custom fee preference
-- statistics about the Bitcoin network straight from your node
-- balance in BTC or fiat (tap the balance to toggle)
-- your last 50 transactions, tap a transaction to see full details
-
-### How does it work?
-
-StandUp-Remote keeps thing simple by relying on Bitcoin Core for the majority of wallet functions related to building/signing of transactions. StandUp-Remote is responsible for passing the appropriate private key to Bitcoin Core (your node) to sign transactions with. We create wallets with `avoidaddressreuse` set to `true` so that private keys will only every be used once. As the app is designed it is a hot wallet with keys stored locally onto your device. Your seed is fully encrypted and stored as raw data. The private key for decrypting your seed is stored securely on the keychain. We believe that storing private keys on your device is generally safer then an all purpose computer. You should never store more bitcoins then you are willing to lose on a hot wallet just as you would never carry more cash than necessary when going out.
+Currently the app is fully capable of creating and signing PSBT's with either multisig or single signature wallets. The app offers coin control, fee optimization, batching and other useful tools for verifying keys and exporting backups.
 
 ### Requirements
 - iOS 13
-- a Bitcoin Core full-node v0.18.0 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service
+- a Bitcoin Core full-node v0.19.0.1 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service
 
 ### Author
 Peter Denton, fontainedenton@gmail.com
