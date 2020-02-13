@@ -2,15 +2,15 @@
 
 Version 1.0
 
-Name: `$name`
+Name: Peter Denton
 
-E-Mail: `$email`
+E-Mail: fontainedenton@gmail.com
 
 Legal Jurisdiction: Wyoming, United States of America
 
 Project: https://github.com/BlockchainCommons/FullyNoded-2/
 
-Date: `$date`
+Date: 2020 Feb 13
 
 ## Purpose
 

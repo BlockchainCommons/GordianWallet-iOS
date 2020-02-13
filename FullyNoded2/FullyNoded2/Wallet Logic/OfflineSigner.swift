@@ -83,37 +83,29 @@ class OfflineSigner {
                         
                         if !error {
                             
-                            //getActiveWalletNow { (wallet, error) in
+                            let witness = Witness(.payToWitnessPubKeyHash(key!.pubKey))
+                            let input = TxInput(Transaction(txid)!, vout, amount, nil, witness, scriptPubKey)!
+                            inputsToSign.append(input)
+                            privKeys.append(key!)
+                            
+                            if i + 1 == vins.count {
                                 
-                                //if wallet != nil && !error {
-                                                                    
-                                    let witness = Witness(.payToWitnessPubKeyHash(key!.pubKey))
-                                    let input = TxInput(Transaction(txid)!, vout, amount, nil, witness, scriptPubKey)!
-                                    inputsToSign.append(input)
-                                    privKeys.append(key!)
-                                    
-                                    if i + 1 == vins.count {
-                                        
-                                        var transaction = Transaction(inputsToSign, outputsToSend)
-                                        let signedTx = transaction.sign(privKeys)
-                                        
-                                        if signedTx {
-                                            
-                                            completion(transaction.description!)
-                                            
-                                        } else {
-                                            
-                                            print("failed signing")
-                                            completion(nil)
-                                            
-                                        }
-                                                                    
-                                    }
-                                    
-                                //}
+                                var transaction = Transaction(inputsToSign, outputsToSend)
+                                let signedTx = transaction.sign(privKeys)
                                 
-                            //}
-                                                   
+                                if signedTx {
+                                    
+                                    completion(transaction.description!)
+                                    
+                                } else {
+                                    
+                                    print("failed signing")
+                                    completion(nil)
+                                    
+                                }
+                                
+                            }
+                            
                         } else {
                             
                             print("error fetching key for offline signing")
