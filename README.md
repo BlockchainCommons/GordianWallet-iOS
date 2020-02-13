@@ -33,6 +33,8 @@ At present this feature is being utilized for testing purposes only. The idea be
 ### Wishlist
 
 - [ ] Wallet Functions
+  - [x] Offline PSBT signing
+  - [x] Offline raw transaction signing
   - [x] Spend and Receive
   - [x] Segwit
   - [x] Non-custodial
