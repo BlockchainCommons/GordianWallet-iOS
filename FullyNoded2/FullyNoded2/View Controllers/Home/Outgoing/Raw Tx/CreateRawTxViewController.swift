@@ -385,7 +385,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         print("tryraw")
         
         creatingView.addConnectingView(vc: self,
-                                       description: "Creating Raw Transaction")
+                                       description: "Creating psbt")
         
         if self.addressInput.text != "" && self.amountInput.text != "" {
             

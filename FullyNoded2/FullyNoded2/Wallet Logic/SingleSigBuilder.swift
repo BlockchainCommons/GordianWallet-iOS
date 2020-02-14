@@ -15,6 +15,51 @@ class SingleSigBuilder {
     
     func build(outputs: [Any], completion: @escaping ((signedTx: String?, errorDescription: String?)) -> Void) {
         
+        func signSegwitWrapped(psbt: String) {
+         
+            let signer = OfflineSignerP2SHSegwit()
+            signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
+
+                if signedTx != nil {
+
+                    completion((signedTx!, nil))
+
+                }
+
+            }
+            
+        }
+        
+        func signLegacy(psbt: String) {
+            
+            let signer = OfflineSignerLegacy()
+            signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
+
+                if signedTx != nil {
+
+                    completion((signedTx!, nil))
+
+                }
+
+            }
+            
+        }
+        
+        func signSegwit(psbt: String) {
+            
+            let signer = OfflineSigner()
+            signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
+
+                if signedTx != nil {
+
+                    completion((signedTx!, nil))
+
+                }
+
+            }
+            
+        }
+        
         func fallbackToNormalSigning(psbt: String) {
             print("fallbackToNormalSigning")
             
@@ -22,55 +67,17 @@ class SingleSigBuilder {
                 
                 if wallet != nil && !error {
                     
-//                    let signer = OfflineSigner()
-//                    signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
-//
-//                        if signedTx != nil {
-//
-//                            completion((signedTx!, nil))
-//
-//                        }
-//
-//                    }
-                    
                     if wallet!.derivation.contains("84") {
 
-                        let signer = OfflineSigner()
-                        signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
-
-                            if signedTx != nil {
-
-                                completion((signedTx!, nil))
-
-                            }
-
-                        }
+                        signSegwitWrapped(psbt: psbt)
 
                     } else if wallet!.derivation.contains("44") {
 
-                        let signer = OfflineSignerLegacy()
-                        signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
-
-                            if signedTx != nil {
-
-                                completion((signedTx!, nil))
-
-                            }
-
-                        }
+                        signLegacy(psbt: psbt)
 
                     } else if wallet!.derivation.contains("49") {
 
-                        let signer = OfflineSignerP2SHSegwit()
-                        signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
-
-                            if signedTx != nil {
-
-                                completion((signedTx!, nil))
-
-                            }
-
-                        }
+                        signSegwitWrapped(psbt: psbt)
 
                     }
                     
@@ -241,7 +248,16 @@ class SingleSigBuilder {
                     
                     if self.wallet.type == "DEFAULT" {
                         
-                        decodePsbt(psbt: psbt)
+                        //decodePsbt(psbt: psbt)
+                        switch self.wallet.derivation {
+                            
+                        case "m/84'/1'/0'/0": signSegwit(psbt: psbt)
+                        case "m/44'/1'/0'/0": signLegacy(psbt: psbt)
+                        case "m/49'/1'/0'/0": signSegwitWrapped(psbt: psbt)
+                            
+                        default:
+                            break
+                        }
                         
                     } else if self.wallet.type == "MULTI" {
                      

@@ -13,143 +13,144 @@ class OfflineSignerP2SHSegwit {
     
     func signTransactionOffline(unsignedTx: String, completion: @escaping ((String?)) -> Void) {
         
-//        var inputsToSign = [TxInput]()
-//        var outputsToSend = [TxOutput]()
-//        var inputMetaDataArray = [NSDictionary]()
-//        var destinationAddresses = [Address]()
-//        var privKeys = [HDKey]()
-//        
-//        let reducer = Reducer()
-//        reducer.makeCommand(command: .decodepsbt, param: "\"\(unsignedTx)\"") {
-//            
-//            if !reducer.errorBool {
-//                
-//                let decodedPSBT = reducer.dictToReturn
-//                parseDecodedPSBT(psbt: decodedPSBT)
-//                
-//            } else {
-//                
-//                print("error decoding psbt: \(reducer.errorDescription)")
-//                completion(nil)
-//                
-//            }
-//            
-//        }
-//        
-//        func parseDecodedPSBT(psbt: NSDictionary) {
-//            
-//            let inputs = psbt["inputs"] as! NSArray
-//            
-//            for (i, input) in inputs.enumerated() {
-//                
-//                inputMetaDataArray.append(input as! NSDictionary)
-//                
-//                if i + 1 == inputs.count {
-//                    
-//                    let tx = psbt["tx"] as! NSDictionary
-//                    parseTx(tx: tx)
-//                    
-//                }
-//                
-//            }
-//            
-//        }
-//        
-//        func parseTx(tx: NSDictionary) {
-//            
-//            let vins = tx["vin"] as! NSArray
-//            let vouts = tx["vout"] as! NSArray
-//            parseVouts(vouts: vouts, vins: vins)
-//            
-//        }
-//        
-//        func parseVins(vins: NSArray) {
-//            
-//            print("vins.count = \(vins.count)")
-//        
-//            for (i, input) in vins.enumerated() {
-//                
-//                let vinDict = input as! NSDictionary
-//                let txid = vinDict["txid"] as! String
-//                let vout = UInt32(vinDict["vout"] as! Int)
-//                
-//                let witness_utxo = inputMetaDataArray[i]["witness_utxo"] as! NSDictionary
-//                let scriptPubKeyDict = witness_utxo["scriptPubKey"] as! NSDictionary
-//                let hex = scriptPubKeyDict["hex"] as! String
-//                let scriptPubKey = ScriptPubKey(hex)!
-//                let amount = UInt64((witness_utxo["amount"] as! Double) * 100000000)
-//                let bip32derivs = inputMetaDataArray[i]["bip32_derivs"] as! NSArray
-//                let bip32derivsDict = bip32derivs[0] as! NSDictionary
-//                let path = bip32derivsDict["path"] as! String
-//                let index = Int(path.split(separator: "/")[1])!
-//                
-////                let pubkeyString = bip32derivsDict["pubkey"] as! String
-////                let pubkeyData = Data.init(pubkeyString)!
-////                let pubkey = PubKey.init(pubkeyData, .testnet)!
-//                
-//                let keyfetcher = KeyFetcher()
-//                
-//                keyfetcher.key(index: index) { (key, error) in
-//                    
-//                    if !error {
-//                        
-//                        let witness = Witness(.payToScriptHashPayToWitnessPubKeyHash(key!.pubKey))
-//                        let input = TxInput(Transaction(txid)!, vout, amount, nil, witness, scriptPubKey)!
-//                        inputsToSign.append(input)
-//                        privKeys.append(key!)
-//                        
-//                        if i + 1 == vins.count {
-//                            
-//                            var transaction = Transaction(inputsToSign, outputsToSend)
-//                            let signedTx = transaction.sign(privKeys)
-//                            
-//                            if signedTx {
-//                                
-//                                completion(transaction.description!)
-//                                
-//                            } else {
-//                                
-//                                print("failed signing")
-//                                completion(nil)
-//                                
-//                            }
-//                                                        
-//                        }
-//                                               
-//                    } else {
-//                        
-//                        print("error fetching key for offline signing")
-//                        completion(nil)
-//                        
-//                    }
-//                    
-//                }
-//            
-//            }
-//            
-//        }
-//        
-//        func parseVouts(vouts: NSArray, vins: NSArray) {
-//            
-//            for (i, vout) in vouts.enumerated() {
-//                
-//                let dict = vout as! NSDictionary
-//                let scriptPubKey = dict["scriptPubKey"] as! NSDictionary
-//                let addresses = scriptPubKey["addresses"] as! NSArray
-//                let amount = UInt64((dict["value"] as! Double) * 100000000)
-//                let destination = Address.init((addresses[0] as! String))!
-//                let output = TxOutput(destination.scriptPubKey, amount, .testnet)
-//                outputsToSend.append(output)
-//                                
-//                if i + 1 == vouts.count {
-//                    
-//                    parseVins(vins: vins)
-//                    
-//                }
-//                
-//            }
-//            
-//        }
+        var inputsToSign = [TxInput]()
+        var outputsToSend = [TxOutput]()
+        var inputMetaDataArray = [NSDictionary]()
+        var destinationAddresses = [Address]()
+        var privKeys = [HDKey]()
+        
+        let reducer = Reducer()
+        reducer.makeCommand(walletName: "", command: .decodepsbt, param: "\"\(unsignedTx)\"") {
+            
+            if !reducer.errorBool {
+                
+                let decodedPSBT = reducer.dictToReturn
+                parseDecodedPSBT(psbt: decodedPSBT)
+                
+            } else {
+                
+                print("error decoding psbt: \(reducer.errorDescription)")
+                completion(nil)
+                
+            }
+            
+        }
+        
+        func parseDecodedPSBT(psbt: NSDictionary) {
+            
+            let inputs = psbt["inputs"] as! NSArray
+            
+            for (i, input) in inputs.enumerated() {
+                
+                inputMetaDataArray.append(input as! NSDictionary)
+                
+                if i + 1 == inputs.count {
+                    
+                    let tx = psbt["tx"] as! NSDictionary
+                    parseTx(tx: tx)
+                    
+                }
+                
+            }
+            
+        }
+        
+        func parseTx(tx: NSDictionary) {
+            
+            let vins = tx["vin"] as! NSArray
+            let vouts = tx["vout"] as! NSArray
+            parseVouts(vouts: vouts, vins: vins)
+            
+        }
+        
+        func parseVins(vins: NSArray) {
+            
+            print("vins.count = \(vins.count)")
+        
+            for (i, input) in vins.enumerated() {
+                
+                let vinDict = input as! NSDictionary
+                let txid = vinDict["txid"] as! String
+                let vout = UInt32(vinDict["vout"] as! Int)
+                
+                let witness_utxo = inputMetaDataArray[i]["witness_utxo"] as! NSDictionary
+                let scriptPubKeyDict = witness_utxo["scriptPubKey"] as! NSDictionary
+                let hex = scriptPubKeyDict["hex"] as! String
+                let scriptPubKey = ScriptPubKey(hex)!
+                let amount = UInt64((witness_utxo["amount"] as! Double) * 100000000)
+                let bip32derivs = inputMetaDataArray[i]["bip32_derivs"] as! NSArray
+                let bip32derivsDict = bip32derivs[0] as! NSDictionary
+                let path = bip32derivsDict["path"] as! String
+                let index = Int(path.split(separator: "/")[1])!
+                
+//                let pubkeyString = bip32derivsDict["pubkey"] as! String
+//                let pubkeyData = Data.init(pubkeyString)!
+//                let pubkey = PubKey.init(pubkeyData, .testnet)!
+                
+                let keyfetcher = KeyFetcher()
+                
+                keyfetcher.key(index: index) { (key, error) in
+                    
+                    if !error {
+                        
+                        
+                        let witness = Witness(.payToScriptHashPayToWitnessPubKeyHash(key!.pubKey))
+                        let input = TxInput(Transaction(txid)!, vout, amount, nil, witness, scriptPubKey)!
+                        inputsToSign.append(input)
+                        privKeys.append(key!)
+                        
+                        if i + 1 == vins.count {
+                            
+                            var transaction = Transaction(inputsToSign, outputsToSend)
+                            let signedTx = transaction.sign(privKeys)
+                            
+                            if signedTx {
+                                
+                                completion(transaction.description!)
+                                
+                            } else {
+                                
+                                print("failed signing")
+                                completion(nil)
+                                
+                            }
+                                                        
+                        }
+                                               
+                    } else {
+                        
+                        print("error fetching key for offline signing")
+                        completion(nil)
+                        
+                    }
+                    
+                }
+            
+            }
+            
+        }
+        
+        func parseVouts(vouts: NSArray, vins: NSArray) {
+            
+            for (i, vout) in vouts.enumerated() {
+                
+                let dict = vout as! NSDictionary
+                let scriptPubKey = dict["scriptPubKey"] as! NSDictionary
+                let addresses = scriptPubKey["addresses"] as! NSArray
+                let amount = UInt64((dict["value"] as! Double) * 100000000)
+                let destination = Address.init((addresses[0] as! String))!
+                let output = TxOutput(destination.scriptPubKey, amount, .testnet)
+                outputsToSend.append(output)
+                                
+                if i + 1 == vouts.count {
+                    
+                    parseVins(vins: vins)
+                    
+                }
+                
+            }
+            
+        }
         
     }
     

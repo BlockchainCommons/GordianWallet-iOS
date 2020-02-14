@@ -482,7 +482,7 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         safe.text = "Not Safe"
                         safe.textColor = .systemOrange
-                        cell.backgroundColor = .systemRed
+                        //cell.backgroundColor = .systemRed
                         
                     }
                     
