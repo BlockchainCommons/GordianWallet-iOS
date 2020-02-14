@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 class ImportColdMultiSigDescriptor {
     
     func create(descriptor: String, completion: @escaping ((success: Bool, error:Bool, errorDescription: String?)) -> Void) {
@@ -45,6 +44,7 @@ class ImportColdMultiSigDescriptor {
                                 let processedDescriptor = result["descriptor"] as! String
                                 
                                 newWallet["descriptor"] = processedDescriptor
+                                print("processedDescriptor = \(processedDescriptor)")
                                 
                                 let params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,1999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
                                 

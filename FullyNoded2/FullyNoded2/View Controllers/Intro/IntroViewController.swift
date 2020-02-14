@@ -17,13 +17,13 @@ enum Pages: CaseIterable {
     var title: String {
         switch self {
         case .pageZero:
-            return "Welcome to StandUp-Remote!"
+            return "Welcome to FullyNoded 2!"
         case .pageOne:
-            return "How do I use StandUp-Remote?"
+            return "How do I use FullyNoded 2?"
         case .pageTwo:
-            return "How does StandUp-Remote work?"
+            return "How does FullyNoded 2 work?"
         case .pageThree:
-            return "Is StandUp-Remote secure?"
+            return "Is FullyNoded 2 secure?"
         }
     }
     

@@ -56,6 +56,10 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>To scan a QuickConnect QR code</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>To upload QR codes</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To save QR codes to your photo library</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -57,6 +57,17 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
+    @IBAction func close(_ sender: Any) {
+        
+        DispatchQueue.main.async {
+            
+            self.dismiss(animated: false, completion: nil)
+            
+        }
+        
+    }
+    
+    
     func setupTaps() {
         
         blurView.frame = self.view.frame

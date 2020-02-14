@@ -133,7 +133,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        return "\(wallet.derivation)/\(section)"
+        return "m/84'/1'/0'/0/\(section)"//"\(wallet.derivation)/\(section)"
         
     }
     
@@ -147,12 +147,23 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
+    @IBAction func close(_ sender: Any) {
+        
+        DispatchQueue.main.async {
+            
+            self.dismiss(animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    
     @objc func copyAddress(_ sender: UIButton) {
         
         let impact = UIImpactFeedbackGenerator()
         impact.impactOccurred()
         let index = Int(sender.accessibilityLabel!)!
-        let address = keys[index]["address"]
+        let address = keys[index]["address"]!
         UIPasteboard.general.string = address
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
@@ -170,7 +181,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         let impact = UIImpactFeedbackGenerator()
         impact.impactOccurred()
         let index = Int(sender.accessibilityLabel!)!
-        qrString = keys[index]["address"]!
+        qrString = keys[index]["address"] ?? "no address"
         
         DispatchQueue.main.async {
             
@@ -185,16 +196,20 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         let impact = UIImpactFeedbackGenerator()
         impact.impactOccurred()
         let index = Int(sender.accessibilityLabel!)!
-        let publicKey = keys[index]["publicKey"]
-        UIPasteboard.general.string = publicKey
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+        if keys[index]["publicKey"] != nil {
             
-            UIPasteboard.general.string = ""
+            let publicKey = keys[index]["publicKey"]
+            UIPasteboard.general.string = publicKey
             
+            DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+                
+                UIPasteboard.general.string = ""
+                
+            }
+            
+            displayAlert(viewController: self, isError: false, message: "public key copied to clipboard for 60 seconds")
         }
-        
-        displayAlert(viewController: self, isError: false, message: "public key copied to clipboard for 60 seconds")
         
     }
     
@@ -204,7 +219,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         impact.impactOccurred()
         let index = Int(sender.accessibilityLabel!)!
         
-        qrString = keys[index]["publicKey"]!
+        qrString = keys[index]["publicKey"] ?? "no public key to display"
         
         DispatchQueue.main.async {
             
@@ -219,7 +234,9 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         let impact = UIImpactFeedbackGenerator()
         impact.impactOccurred()
         let index = Int(sender.accessibilityLabel!)!
-        let wif = keys[index]["wif"]
+        
+        let wif = keys[index]["wif"] ?? "no wif exists"
+        
         UIPasteboard.general.string = wif
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
@@ -238,11 +255,15 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         impact.impactOccurred()
         let index = Int(sender.accessibilityLabel!)!
         
-        qrString = keys[index]["wif"]!
-        
-        DispatchQueue.main.async {
+        if keys[index]["wif"] != nil {
             
-            self.performSegue(withIdentifier: "exportKeys", sender: self)
+            qrString = keys[index]["wif"] ?? "no wif"
+            
+            DispatchQueue.main.async {
+                
+                self.performSegue(withIdentifier: "exportKeys", sender: self)
+                
+            }
             
         }
         
@@ -251,17 +272,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
      func getKeysFromBitcoinCore() {
         
         let reducer = Reducer()
-        var param = ""
-        
-        if wallet.descriptor.contains("\"\"") {
-            
-            param = "\(wallet.descriptor), ''[0,1999]''"
-            
-        } else {
-            
-            param = "\"\(wallet.descriptor)\", ''[0,1999]''"
-            
-        }
+        let param = "\"\(wallet.descriptor)\", ''[0,1999]''"
         
         reducer.makeCommand(walletName: wallet.name, command: .deriveaddresses, param: param) {
              
@@ -280,8 +291,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                         self.keys[i]["address"] = (address as! String)
                         
                     }
-                    
-                    
                     
                     if i + 1 == result.count {
                         
@@ -307,7 +316,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
          }
          
      }
-    
     
     func getWords() {
         

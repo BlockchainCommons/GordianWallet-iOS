@@ -63,6 +63,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var existingWalletName = ""
     var fiatBalance = ""
     var sectionThreeLoaded = Bool()
+    var infoHidden = Bool()
+    var nodeInfoHidden = Bool()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,6 +85,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         setTitleView()
         addRefreshButton()
         configureRefresher()
+        infoHidden = true
+        nodeInfoHidden = true
         
         if ud.object(forKey: "firstTime") == nil {
             
@@ -429,6 +433,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     let deviceView = cell.viewWithTag(16)!
                     let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
                     let nodeView = cell.viewWithTag(24)!
+                    let keysOnNodeDescription = cell.viewWithTag(25) as! UILabel
                     
                     nodeView.layer.cornerRadius = 8
                     
@@ -469,6 +474,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         
                     }
                     
+                    if wallet.type == "CUSTOM" {
+                        
+                        coldBalanceLabel.textColor = .systemGray
+                    }
+                    
+                    coldBalanceLabel.textColor = .systemGray
+                    
                     if walletInfo.unconfirmed {
                         
                         coldBalanceLabel.text = self.coldBalance + " " + "BTC ⚠︎"
@@ -496,14 +508,20 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     if wallet.derivation.contains("84") {
                         
                         derivationPathLabel.text = "Native Segwit Account 0 (BIP84 \(wallet.derivation))"
+                        deviceXprv.text = "xprv m'/84'/1'/0'/0"
+                        keysOnNodeDescription.text = "public keys m'/84'/1'/0'/0/0 to /1999"
                         
                     } else if wallet.derivation.contains("44") {
                         
                         derivationPathLabel.text = "Legacy Account 0 (BIP44 \(wallet.derivation))"
+                        deviceXprv.text = "xprv m'/44'/1'/0'/0"
+                        keysOnNodeDescription.text = "public keys m'/44'/1'/0'/0/0 to /1999"
                         
                     } else if wallet.derivation.contains("49") {
                         
                         derivationPathLabel.text = "P2SH Nested Segwit Account 0 (BIP49 \(wallet.derivation))"
+                        deviceXprv.text = "xprv m'/49'/1'/0'/0"
+                        keysOnNodeDescription.text = "public keys m'/49'/1'/0'/0/0 to /1999"
                         
                     }
                     
@@ -529,9 +547,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     let infoButton = cell.viewWithTag(12) as! UIButton
                     //let walletsButton = cell.viewWithTag(13) as! UIButton
                     //let addWalletButton = cell.viewWithTag(14) as! UIButton
-                    //let deviceXprv = cell.viewWithTag(15) as! UILabel
+                    let deviceXprv = cell.viewWithTag(15) as! UILabel
                     let deviceView = cell.viewWithTag(16)!
-                    //let nodeXprv = cell.viewWithTag(17) as! UILabel
+                    let nodeXprv = cell.viewWithTag(17) as! UILabel
                     let nodeView = cell.viewWithTag(18)!
                     let offlineView = cell.viewWithTag(19)!
                     //let keysOnNodeImage = cell.viewWithTag(20) as! UIImageView
@@ -598,25 +616,32 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     nodeView.alpha = 1
                     offlineView.alpha = 1
                     
-                    var account = "1"
-                    
-                    if walletInfo.network == "main" {
-                        
-                        account = "0"
-                        
-                    }
+//                    var account = "1"
+//                    
+//                    if walletInfo.network == "main" {
+//                        
+//                        account = "0"
+//                        
+//                    }
                     
                     if wallet.derivation.contains("84") {
                         
-                        derivationPathLabel.text = "Native Segwit Account \(account) (BIP84 \(wallet.derivation))"
+                        derivationPathLabel.text = "Native Segwit Account 0 (BIP84 \(wallet.derivation))"
+                        deviceXprv.text = "xprv m'/84'/1'/0'/0"
+                        nodeXprv.text = "private keys m'/84'/1'/0'/0/0 to /1999"
+                        
                         
                     } else if wallet.derivation.contains("44") {
                         
-                        derivationPathLabel.text = "Legacy Account \(account) (BIP44 \(wallet.derivation))"
+                        derivationPathLabel.text = "Legacy Account 0 (BIP44 \(wallet.derivation))"
+                        deviceXprv.text = "xprv m'/44'/1'/0'/0"
+                        nodeXprv.text = "private keys m'/44'/1'/0'/0/0 to /1999"
                         
                     } else if wallet.derivation.contains("49") {
                         
-                        derivationPathLabel.text = "P2SH Nested Segwit Account \(account) (BIP49 \(wallet.derivation))"
+                        derivationPathLabel.text = "P2SH Nested Segwit Account 0 (BIP49 \(wallet.derivation))"
+                        deviceXprv.text = "xprv m'/49'/1'/0'/0"
+                        nodeXprv.text = "private keys m'/49'/1'/0'/0/0 to /1999"
                         
                     }
                     
@@ -757,8 +782,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 let infoButton = cell.viewWithTag(9) as! UIButton
                 spinner.startAnimating()
                 spinner.alpha = 1
+                infoButton.alpha = 0
                 
-                infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
+                infoButton.addTarget(self, action: #selector(getNodeInfo(_:)), for: .touchUpInside)
                 
                 let onionAddress = (node.onionAddress.split(separator: "."))[0]
                 
@@ -776,11 +802,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     spinner.startAnimating()
                     spinner.alpha = 1
+                    infoButton.alpha = 0
                     
                 } else {
                     
                     spinner.stopAnimating()
                     spinner.alpha = 0
+                    infoButton.alpha = 1
                     
                 }
                 
@@ -800,31 +828,37 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 }
                 
+                torActiveCircle.image = UIImage(systemName: "circle.fill")
+                
                 if self.torConnected {
-                    
-                    torStatusLabel.text = "connected"
-                    torActiveCircle.image = UIImage.init(imageLiteralResourceName: "greenCircle.png")
                     
                     if sectionOneLoaded && !isRefreshingOne {
                         
                         spinner.stopAnimating()
                         spinner.alpha = 0
+                        infoButton.alpha = 1
+                        torStatusLabel.text = "connected"
+                        torActiveCircle.tintColor = .systemGreen
                         
                     } else if isRefreshingOne && !sectionOneLoaded {
                         
                         spinner.startAnimating()
                         spinner.alpha = 1
+                        infoButton.alpha = 0
+                        torStatusLabel.text = "connecting..."
+                        torActiveCircle.tintColor = .systemOrange
                         
                     }
                     
                 } else {
                     
                     torStatusLabel.text = "disconnected"
-                    torActiveCircle.image = UIImage.init(imageLiteralResourceName: "redCircle.png")
+                    torActiveCircle.tintColor = .systemRed
                     connectionStatusLabel.text = "disconnected..."
                     
                     spinner.startAnimating()
                     spinner.alpha = 1
+                    infoButton.alpha = 0
                     
                     
                 }
@@ -918,7 +952,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         
                     } else if wallet.type == "MULTI" {
                         
-                        isHot.backgroundColor = .systemYellow
+                        isHot.backgroundColor = .systemTeal
                         isHot.text = "signer"
                         
                     } else if wallet.type == "CUSTOM" {
@@ -1204,15 +1238,39 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 if wallet.type == "MULTI" {
                     
-                    return 290
+                    if infoHidden {
+                        
+                        return 138
+                        
+                    } else {
+                       
+                        return 290
+                        
+                    }
                     
                 } else if wallet.type == "CUSTOM" {
                     
-                    return 188
+                    if infoHidden {
+                    
+                        return 138
+                        
+                    } else {
+                        
+                        return 188
+                        
+                    }
                     
                 } else {
                     
-                    return 255
+                    if infoHidden {
+                    
+                        return 138
+                        
+                    } else {
+                        
+                        return 255
+                        
+                    }
                     
                 }
 
@@ -1226,7 +1284,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if self.node != nil {
                 
-                return 129
+                if nodeInfoHidden {
+                    
+                    return 57
+                    
+                } else {
+                    
+                    return 129
+                    
+                }
                 
             } else {
                 
@@ -1270,7 +1336,45 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             impact.impactOccurred()
             
-            self.performSegue(withIdentifier: "walletInfo", sender: self)
+            if self.infoHidden {
+                
+                self.infoHidden = false
+                
+            } else {
+                
+                self.infoHidden = true
+                
+            }
+            
+            self.mainMenu.reloadSections(IndexSet(arrayLiteral: 0), with: .fade)
+            
+            //self.performSegue(withIdentifier: "walletInfo", sender: self)
+            
+        }
+        
+    }
+    
+    @objc func getNodeInfo(_ sender: UIButton) {
+        
+        let impact = UIImpactFeedbackGenerator()
+        
+        DispatchQueue.main.async {
+            
+            impact.impactOccurred()
+            
+            if self.nodeInfoHidden {
+                
+                self.nodeInfoHidden = false
+                
+            } else {
+                
+                self.nodeInfoHidden = true
+                
+            }
+            
+            self.mainMenu.reloadSections(IndexSet(arrayLiteral: 0), with: .fade)
+            
+            //self.performSegue(withIdentifier: "walletInfo", sender: self)
             
         }
         
@@ -1775,156 +1879,158 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @objc func addWallet() {
-        
+
         let impact = UIImpactFeedbackGenerator()
-        
+
         DispatchQueue.main.async {
-        
+
             impact.impactOccurred()
-            
+
         }
-        
+
         if self.torConnected {
             
-            DispatchQueue.main.async {
-                
-                let alert = UIAlertController(title: "To create a wallet, select a type below", message: "", preferredStyle: .actionSheet)
+            self.tabBarController?.selectedIndex = 1
 
-                alert.addAction(UIAlertAction(title: "Single-Sig", style: .default, handler: { action in
-                    
-                    self.createSingleSig()
+//            DispatchQueue.main.async {
+//
+//                let alert = UIAlertController(title: "To create a wallet, select a type below", message: "", preferredStyle: .actionSheet)
+//
+//                alert.addAction(UIAlertAction(title: "Single-Sig", style: .default, handler: { action in
+//
+//                    self.createSingleSig()
+//
+//                }))
+//
+//                alert.addAction(UIAlertAction(title: "Multi-Sig", style: .default, handler: { action in
+//
+//                    self.createMultiSig()
+//
+//                }))
+//
+//                alert.addAction(UIAlertAction(title: "Import Custom", style: .default, handler: { action in
+//
+//                    self.importCustom()
+//
+//                }))
+//
+//                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+//
+//                self.present(alert, animated: true, completion: nil)
+//
+//            }
 
-                }))
-                
-                alert.addAction(UIAlertAction(title: "Multi-Sig", style: .default, handler: { action in
-                    
-                    self.createMultiSig()
-
-                }))
-                
-                alert.addAction(UIAlertAction(title: "Import Custom", style: .default, handler: { action in
-                    
-                    self.importCustom()
-                    
-                }))
-                
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                        
-                self.present(alert, animated: true, completion: nil)
-                
-            }
-            
         } else {
-            
+
             showAlert(vc: self, title: "Tor not connected", message: "You need to be connected to a node over tor in order to create a wallet")
-            
+
         }
-        
+
     }
-    
-    func importCustom() {
-        
-        DispatchQueue.main.async {
-            
-            self.performSegue(withIdentifier: "import", sender: self)
-            
-        }
-        
-    }
-    
-    func createMultiSig() {
-        
-        DispatchQueue.main.async {
-            
-            self.performSegue(withIdentifier: "createMuSig", sender: self)
-            
-        }
-        
-    }
-    
-    func createSingleSig() {
-        
-        connectingView.addConnectingView(vc: self, description: "Creating single-sig wallet")
-        
-        let enc = Encryption()
-        let keyCreator = KeychainCreator()
-        keyCreator.createKeyChain() { (mnemonic, error) in
-            
-            if !error {
-                
-                let dataToEncrypt = mnemonic!.dataUsingUTF8StringEncoding
-                enc.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
-                    
-                    if !error {
-                        
-                        let walletSaver = WalletSaver()
-                        var newWallet = [String:Any]()
-                        newWallet["birthdate"] = keyBirthday()
-                        newWallet["id"] = UUID()
-                        newWallet["derivation"] = "m/84'/1'/0'/0"
-                        newWallet["isActive"] = false
-                        newWallet["name"] = "\(randomString(length: 10))_StandUp"
-                        newWallet["seed"] = encryptedData!
-                        newWallet["lastUsed"] = Date()
-                        newWallet["lastBalance"] = 0.0
-                        newWallet["type"] = "DEFAULT"
-                        newWallet["nodeId"] = self.node.id
-                        newWallet["isArchived"] = false
-                        
-                        let walletCreator = WalletCreator()
-                        walletCreator.walletDict = newWallet
-                        walletCreator.node = self.node
-                        
-                        walletCreator.createStandUpWallet(derivation: "m/84'/1'/0'/0") { (success, errorDescription, descriptor) in
-                            
-                            if success {
-                                
-                                newWallet["descriptor"] = descriptor!
-                                
-                                walletSaver.save(walletToSave: newWallet) { (success) in
-                                    
-                                    if success {
-                                        
-                                        print("wallet saved")
-                                        
-                                        self.connectingView.removeConnectingView()
-                                        
-                                        showAlert(vc: self, title: "Success!", message: "Single sig wallet created, if you have more then one wallet you need to go to the wallets screen and tap it to activate it")
-                                        
-                                        self.refreshNow()
-                                                                                
-                                    } else {
-                                        
-                                        print("error saving wallet")
-                                        displayAlert(viewController: self, isError: true, message: "There was an error saving your wallet")
-                                        
-                                    }
-                                    
-                                }
-                                
-                            } else {
-                                
-                                self.connectingView.removeConnectingView()
-                                displayAlert(viewController: self, isError: true, message: "There was an error creating your wallet: \(errorDescription!)")
-                                
-                            }
-                            
-                        }
-                        
-                    } else {
-                        
-                        self.connectingView.removeConnectingView()
-                        displayAlert(viewController: self, isError: true, message: "There was an error encrypting your seed")
-                        
-                    }
-                    
-                }
-                
-            }
-            
-        }
-        
-    }
+//
+//    func importCustom() {
+//
+//        DispatchQueue.main.async {
+//
+//            self.performSegue(withIdentifier: "import", sender: self)
+//
+//        }
+//
+//    }
+//
+//    func createMultiSig() {
+//
+//        DispatchQueue.main.async {
+//
+//            self.performSegue(withIdentifier: "createMuSig", sender: self)
+//
+//        }
+//
+//    }
+//
+//    func createSingleSig() {
+//
+//        connectingView.addConnectingView(vc: self, description: "Creating single-sig wallet")
+//
+//        let enc = Encryption()
+//        let keyCreator = KeychainCreator()
+//        keyCreator.createKeyChain() { (mnemonic, error) in
+//
+//            if !error {
+//
+//                let dataToEncrypt = mnemonic!.dataUsingUTF8StringEncoding
+//                enc.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
+//
+//                    if !error {
+//
+//                        let walletSaver = WalletSaver()
+//                        var newWallet = [String:Any]()
+//                        newWallet["birthdate"] = keyBirthday()
+//                        newWallet["id"] = UUID()
+//                        newWallet["derivation"] = "m/84'/1'/0'/0"
+//                        newWallet["isActive"] = false
+//                        newWallet["name"] = "\(randomString(length: 10))_StandUp"
+//                        newWallet["seed"] = encryptedData!
+//                        newWallet["lastUsed"] = Date()
+//                        newWallet["lastBalance"] = 0.0
+//                        newWallet["type"] = "DEFAULT"
+//                        newWallet["nodeId"] = self.node.id
+//                        newWallet["isArchived"] = false
+//
+//                        let walletCreator = WalletCreator()
+//                        walletCreator.walletDict = newWallet
+//                        walletCreator.node = self.node
+//
+//                        walletCreator.createStandUpWallet(derivation: "m/84'/1'/0'/0") { (success, errorDescription, descriptor) in
+//
+//                            if success {
+//
+//                                newWallet["descriptor"] = descriptor!
+//
+//                                walletSaver.save(walletToSave: newWallet) { (success) in
+//
+//                                    if success {
+//
+//                                        print("wallet saved")
+//
+//                                        self.connectingView.removeConnectingView()
+//
+//                                        showAlert(vc: self, title: "Success!", message: "Single sig wallet created, if you have more then one wallet you need to go to the wallets screen and tap it to activate it")
+//
+//                                        self.refreshNow()
+//
+//                                    } else {
+//
+//                                        print("error saving wallet")
+//                                        displayAlert(viewController: self, isError: true, message: "There was an error saving your wallet")
+//
+//                                    }
+//
+//                                }
+//
+//                            } else {
+//
+//                                self.connectingView.removeConnectingView()
+//                                displayAlert(viewController: self, isError: true, message: "There was an error creating your wallet: \(errorDescription!)")
+//
+//                            }
+//
+//                        }
+//
+//                    } else {
+//
+//                        self.connectingView.removeConnectingView()
+//                        displayAlert(viewController: self, isError: true, message: "There was an error encrypting your seed")
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
     
     func configureRefresher() {
         

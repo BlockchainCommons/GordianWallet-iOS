@@ -61,6 +61,17 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
+    @IBAction func close(_ sender: Any) {
+        
+        DispatchQueue.main.async {
+            
+            self.dismiss(animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    
     func addExistingDerivationLabel() {
         
         let derivation = wallet.derivation

@@ -28,6 +28,8 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     var dataRefresher = UIBarButtonItem()
     var initialLoad = Bool()
     var wallet:WalletStruct!
+    var presentingModally = Bool()
+    @IBOutlet var closeButtonOutlet: UIButton!
     
     @IBOutlet var amountField: UITextField!
     @IBOutlet var labelField: UITextField!
@@ -59,6 +61,16 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         addDoneButtonOnKeyboard()
         load()
         
+        if presentingModally {
+            
+            closeButtonOutlet.alpha = 1
+            
+        } else {
+            
+            closeButtonOutlet.alpha = 0
+            
+        }
+        
     }
     
     @IBAction func refresh(_ sender: Any) {
@@ -66,6 +78,17 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         self.load()
                 
     }
+    
+    @IBAction func close(_ sender: Any) {
+        
+        DispatchQueue.main.async {
+            
+            self.dismiss(animated: true, completion: nil)
+            
+        }
+        
+    }
+    
     
     func addNavBarSpinner() {
         

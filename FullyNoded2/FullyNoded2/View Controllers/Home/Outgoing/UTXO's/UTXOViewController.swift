@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UINavigationControllerDelegate {
+class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
     
     @IBOutlet var createRawOutlet: UIBarButtonItem!
     var isSweeping = false
@@ -303,7 +303,7 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.delegate = self
+        //navigationController?.delegate = self
         
         utxoTable.delegate = self
         utxoTable.dataSource = self
@@ -402,7 +402,11 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let spendable = cell.viewWithTag(10) as! UILabel
             let checkMark = cell.viewWithTag(13) as! UIImageView
             let label = cell.viewWithTag(11) as! UILabel
+            let infoButton = cell.viewWithTag(12) as! UIButton
             txId.adjustsFontSizeToFitWidth = true
+            
+            infoButton.addTarget(self, action: #selector(getInfo(_:)), for: .touchUpInside)
+            infoButton.restorationIdentifier = "\(indexPath.section)"
             
             if !(selectedArray[indexPath.section]) {
                 
@@ -444,12 +448,12 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     if (value as! Int) == 1 {
                         
                         solvable.text = "Solvable"
-                        solvable.textColor = UIColor.green
+                        solvable.textColor = .systemBlue
                         
                     } else if (value as! Int) == 0 {
                         
                         solvable.text = "Not Solvable"
-                        solvable.textColor = UIColor.blue
+                        solvable.textColor = .systemRed
                         
                     }
                     
@@ -457,11 +461,11 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     if (value as! Int) == 0 {
                      
-                        confs.textColor = UIColor.red
+                        confs.textColor = .systemRed
                         
                     } else {
                         
-                        confs.textColor = UIColor.green
+                        confs.textColor = .systemGreen
                         
                     }
                     
@@ -472,12 +476,13 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     if (value as! Int) == 1 {
                         
                         safe.text = "Safe"
-                        safe.textColor = UIColor.green
+                        safe.textColor = .systemGreen
                         
                     } else if (value as! Int) == 0 {
                         
                         safe.text = "Not Safe"
-                        safe.textColor = UIColor.red
+                        safe.textColor = .systemOrange
+                        cell.backgroundColor = .systemRed
                         
                     }
                     
@@ -486,12 +491,12 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     if (value as! Int) == 1 {
                         
                         spendable.text = "Spendable"
-                        spendable.textColor = UIColor.green
+                        spendable.textColor = .systemGreen
                         
                     } else if (value as! Int) == 0 {
                         
                         spendable.text = "COLD"
-                        spendable.textColor = UIColor.blue
+                        spendable.textColor = .systemBlue
                         
                     }
                     
@@ -511,6 +516,20 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         return cell
         
+    }
+    
+    @objc func getInfo(_ sender: UIButton) {
+     
+        let index = Int(sender.restorationIdentifier!)!
+        utxo = utxoArray[index] as! NSDictionary
+        let impact = UIImpactFeedbackGenerator()
+        
+        DispatchQueue.main.async {
+            
+            impact.impactOccurred()
+            self.performSegue(withIdentifier: "utxoInfo", sender: self)
+            
+        }
     }
     
     func lockUTXO(txid: String, vout: Int) {
@@ -544,11 +563,11 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let cell = utxoTable.cellForRow(at: indexPath)
-        let checkmark = cell?.viewWithTag(13) as! UIImageView
-        let address = (utxoArray[indexPath.section] as! NSDictionary)["address"] as! String
-        cell?.isSelected = true
-        
-        self.selectedArray[indexPath.section] = true
+//        let checkmark = cell?.viewWithTag(13) as! UIImageView
+//        let address = (utxoArray[indexPath.section] as! NSDictionary)["address"] as! String
+//        cell?.isSelected = true
+//
+//        self.selectedArray[indexPath.section] = true
         
         DispatchQueue.main.async {
             
@@ -564,7 +583,7 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 UIView.animate(withDuration: 0.2, animations: {
                     
                     cell?.alpha = 1
-                    checkmark.alpha = 1
+                    //checkmark.alpha = 1
                     cell?.backgroundColor = UIColor.black
                     
                 })
@@ -573,8 +592,8 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
         }
         
-        utxoToSpendArray.append(utxoArray[indexPath.section] as! [String:Any])
-        addresses.append(address)
+//        utxoToSpendArray.append(utxoArray[indexPath.section] as! [String:Any])
+//        addresses.append(address)
         
     }
     
@@ -838,6 +857,16 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             self.refresher.endRefreshing()
             self.creatingView.removeConnectingView()
+            
+        }
+        
+    }
+    
+    @IBAction func close(_ sender: Any) {
+        
+        DispatchQueue.main.async {
+            
+            self.dismiss(animated: true, completion: nil)
             
         }
         
@@ -1332,6 +1361,14 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if let vc = segue.destination as? ConfirmViewController {
                 
                 vc.signedRawTx = self.rawSigned
+                
+            }
+            
+        case "utxoInfo":
+            
+            if let vc = segue.destination as? UtxoInfoViewController {
+             
+                vc.utxo = self.utxo
                 
             }
             

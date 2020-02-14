@@ -125,6 +125,9 @@
 		D09DCF6423F1045F008F5B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D09DCF6323F1045F008F5B9F /* Assets.xcassets */; };
 		D09DCF6623F10645008F5B9F /* Base32.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09DCF6523F10645008F5B9F /* Base32.swift */; };
 		D09DCF6823F1072A008F5B9F /* KeyGen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09DCF6723F10729008F5B9F /* KeyGen.swift */; };
+		D0A0EAEE23F584C8004F9E15 /* UtxoInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A0EAED23F584C8004F9E15 /* UtxoInfoViewController.swift */; };
+		D0A9EB8723F5335A00C84829 /* ChooseWalletFormatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */; };
+		D0A9EB8923F5338700C84829 /* ChooseWalletTemplateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A9EB8823F5338700C84829 /* ChooseWalletTemplateViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -276,6 +279,9 @@
 		D09DCF6323F1045F008F5B9F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D09DCF6523F10645008F5B9F /* Base32.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base32.swift; sourceTree = "<group>"; };
 		D09DCF6723F10729008F5B9F /* KeyGen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyGen.swift; sourceTree = "<group>"; };
+		D0A0EAED23F584C8004F9E15 /* UtxoInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtxoInfoViewController.swift; sourceTree = "<group>"; };
+		D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseWalletFormatViewController.swift; sourceTree = "<group>"; };
+		D0A9EB8823F5338700C84829 /* ChooseWalletTemplateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseWalletTemplateViewController.swift; sourceTree = "<group>"; };
 		DDDEC206181E8985B8D9E919 /* Pods-FullyNoded2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FullyNoded2.debug.xcconfig"; path = "Target Support Files/Pods-FullyNoded2/Pods-FullyNoded2.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -477,6 +483,9 @@
 				D09D729E23F0F3BF00847DC8 /* TemplateViewController.swift */,
 				D09D729F23F0F3BF00847DC8 /* MultiSigDescriptorViewController.swift */,
 				D09D72A023F0F3BF00847DC8 /* RecoveryViewController.swift */,
+				D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */,
+				D0A9EB8823F5338700C84829 /* ChooseWalletTemplateViewController.swift */,
+				D0A0EAED23F584C8004F9E15 /* UtxoInfoViewController.swift */,
 			);
 			path = Wallets;
 			sourceTree = "<group>";
@@ -1020,6 +1029,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D09D731B23F0F3C000847DC8 /* DerivationViewController.swift in Sources */,
+				D0A0EAEE23F584C8004F9E15 /* UtxoInfoViewController.swift in Sources */,
 				D09D731423F0F3C000847DC8 /* ImportQRViewController.swift in Sources */,
 				D09D732023F0F3C000847DC8 /* TemplateViewController.swift in Sources */,
 				D09D733723F0F3C000847DC8 /* shim.swift in Sources */,
@@ -1035,6 +1045,7 @@
 				D09D732123F0F3C000847DC8 /* MultiSigDescriptorViewController.swift in Sources */,
 				D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */,
 				D09D731D23F0F3C000847DC8 /* CreateMultiSigViewController.swift in Sources */,
+				D0A9EB8923F5338700C84829 /* ChooseWalletTemplateViewController.swift in Sources */,
 				D09D731A23F0F3C000847DC8 /* QRDisplayerViewController.swift in Sources */,
 				D09D734523F0F3C000847DC8 /* Encryption.swift in Sources */,
 				D09D733023F0F3C000847DC8 /* IntroViewController.swift in Sources */,
@@ -1043,6 +1054,7 @@
 				D09D732523F0F3C000847DC8 /* LockedViewController.swift in Sources */,
 				D09D733823F0F3C000847DC8 /* StringExtension.swift in Sources */,
 				D09D736B23F0F3C000847DC8 /* CreateMultisigWallet.swift in Sources */,
+				D0A9EB8723F5335A00C84829 /* ChooseWalletFormatViewController.swift in Sources */,
 				D09D736623F0F3C000847DC8 /* GetPrivateKeys.swift in Sources */,
 				D09D736223F0F3C000847DC8 /* ConnectingView.swift in Sources */,
 				D09D733D23F0F3C000847DC8 /* FirstTime.swift in Sources */,
@@ -1259,7 +1271,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.40;
+				CURRENT_PROJECT_VERSION = 0.0.41;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1272,7 +1284,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.40;
+				MARKETING_VERSION = 0.0.41;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1288,7 +1300,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.40;
+				CURRENT_PROJECT_VERSION = 0.0.41;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1301,7 +1313,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.40;
+				MARKETING_VERSION = 0.0.41;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

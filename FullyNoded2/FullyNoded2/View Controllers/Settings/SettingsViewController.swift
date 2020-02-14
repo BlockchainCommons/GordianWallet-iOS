@@ -37,6 +37,17 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    @IBAction func close(_ sender: Any) {
+        
+        DispatchQueue.main.async {
+            
+            self.dismiss(animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    
     func load() {
         
         //self.checkDefault()

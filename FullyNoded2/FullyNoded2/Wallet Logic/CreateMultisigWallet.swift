@@ -68,8 +68,6 @@ class CreateMultiSigWallet {
                             
                             if !reducer.errorBool {
                                 
-                                print("result = \(reducer.dictToReturn)")
-                                
                                 let updatedDescriptor = reducer.dictToReturn["descriptor"] as! String
                                 let checksum = reducer.dictToReturn["checksum"] as! String
                                 let array = updatedDescriptor.split(separator: "#")

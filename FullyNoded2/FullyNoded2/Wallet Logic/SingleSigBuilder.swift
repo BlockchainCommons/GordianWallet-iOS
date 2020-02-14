@@ -22,57 +22,57 @@ class SingleSigBuilder {
                 
                 if wallet != nil && !error {
                     
-                    let signer = OfflineSigner()
-                    signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
-                        
-                        if signedTx != nil {
-                         
-                            completion((signedTx!, nil))
-                            
-                        }
-                        
-                    }
-                    
-//                    if wallet!.derivation.contains("84") {
+//                    let signer = OfflineSigner()
+//                    signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
 //
-//                        let signer = OfflineSigner()
-//                        signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
+//                        if signedTx != nil {
 //
-//                            if signedTx != nil {
-//
-//                                completion((signedTx!, nil))
-//
-//                            }
-//
-//                        }
-//
-//                    } else if wallet!.derivation.contains("44") {
-//
-//                        let signer = OfflineSignerLegacy()
-//                        signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
-//
-//                            if signedTx != nil {
-//
-//                                completion((signedTx!, nil))
-//
-//                            }
-//
-//                        }
-//
-//                    } else if wallet!.derivation.contains("49") {
-//
-//                        let signer = OfflineSignerP2SHSegwit()
-//                        signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
-//
-//                            if signedTx != nil {
-//
-//                                completion((signedTx!, nil))
-//
-//                            }
+//                            completion((signedTx!, nil))
 //
 //                        }
 //
 //                    }
+                    
+                    if wallet!.derivation.contains("84") {
+
+                        let signer = OfflineSigner()
+                        signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
+
+                            if signedTx != nil {
+
+                                completion((signedTx!, nil))
+
+                            }
+
+                        }
+
+                    } else if wallet!.derivation.contains("44") {
+
+                        let signer = OfflineSignerLegacy()
+                        signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
+
+                            if signedTx != nil {
+
+                                completion((signedTx!, nil))
+
+                            }
+
+                        }
+
+                    } else if wallet!.derivation.contains("49") {
+
+                        let signer = OfflineSignerP2SHSegwit()
+                        signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
+
+                            if signedTx != nil {
+
+                                completion((signedTx!, nil))
+
+                            }
+
+                        }
+
+                    }
                     
                 }
                 
@@ -217,8 +217,20 @@ class SingleSigBuilder {
             var outputsString = outputs.description
             outputsString = outputsString.replacingOccurrences(of: "[", with: "")
             outputsString = outputsString.replacingOccurrences(of: "]", with: "")
+            var changeType = ""
+            
+            switch wallet.derivation {
+            case "m/84'/1'/0'/0":
+                changeType = "bech32"
+            case "m/44'/1'/0'/0":
+                changeType = "legacy"
+            case "m/49'/1'/0'/0":
+                changeType = "p2sh-segwit"
+            default:
+                break
+            }
 
-            let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"change_type\": \"bech32\"}'', true"
+            let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"change_type\": \"\(changeType)\"}'', true"
 
             reducer.makeCommand(walletName: wallet.name, command: .walletcreatefundedpsbt, param: param) {
 
