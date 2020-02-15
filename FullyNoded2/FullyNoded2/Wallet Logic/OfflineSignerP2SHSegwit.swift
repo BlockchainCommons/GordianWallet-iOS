@@ -132,19 +132,27 @@ class OfflineSignerP2SHSegwit {
         
         func parseVouts(vouts: NSArray, vins: NSArray) {
             
-            for (i, vout) in vouts.enumerated() {
+            getActiveWalletNow { (wallet, error) in
                 
-                let dict = vout as! NSDictionary
-                let scriptPubKey = dict["scriptPubKey"] as! NSDictionary
-                let addresses = scriptPubKey["addresses"] as! NSArray
-                let amount = UInt64((dict["value"] as! Double) * 100000000)
-                let destination = Address.init((addresses[0] as! String))!
-                let output = TxOutput(destination.scriptPubKey, amount, .testnet)
-                outputsToSend.append(output)
-                                
-                if i + 1 == vouts.count {
+                if wallet != nil && !error {
                     
-                    parseVins(vins: vins)
+                    for (i, vout) in vouts.enumerated() {
+                        
+                        let dict = vout as! NSDictionary
+                        let scriptPubKey = dict["scriptPubKey"] as! NSDictionary
+                        let addresses = scriptPubKey["addresses"] as! NSArray
+                        let amount = UInt64((dict["value"] as! Double) * 100000000)
+                        let destination = Address.init((addresses[0] as! String))!
+                        let output = TxOutput(destination.scriptPubKey, amount, network(path: wallet!.derivation))
+                        outputsToSend.append(output)
+                                        
+                        if i + 1 == vouts.count {
+                            
+                            parseVins(vins: vins)
+                            
+                        }
+                        
+                    }
                     
                 }
                 

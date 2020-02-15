@@ -29,7 +29,6 @@ class CreateMultiSigWallet {
                     if success {
                         
                         print("success")
-                        
                         completion(true)
                         
                     } else {

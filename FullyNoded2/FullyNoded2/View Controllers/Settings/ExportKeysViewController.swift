@@ -133,7 +133,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        return "m/84'/1'/0'/0/\(section)"//"\(wallet.derivation)/\(section)"
+        return "\(wallet.derivation)/\(section)"
         
     }
     
@@ -378,21 +378,21 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         for i in 0 ... 1999 {
             
             let key1 = try! account.derive(BIP32Path("\(i)")!)
-            let addressType = AddressType.payToWitnessPubKeyHash
+            var addressType:AddressType!
             
-//            if derivation.contains("84") {
-//
-//                addressType = .payToWitnessPubKeyHash
-//
-//            } else if derivation.contains("44") {
-//
-//                addressType = .payToPubKeyHash
-//
-//            } else if derivation.contains("49") {
-//
-//                addressType = .payToScriptHashPayToWitnessPubKeyHash
-//
-//            }
+            if derivation.contains("84") {
+
+                addressType = .payToWitnessPubKeyHash
+
+            } else if derivation.contains("44") {
+
+                addressType = .payToPubKeyHash
+
+            } else if derivation.contains("49") {
+
+                addressType = .payToScriptHashPayToWitnessPubKeyHash
+
+            }
             
             let address = key1.address(addressType)
             

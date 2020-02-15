@@ -11,6 +11,7 @@ import UIKit
 class ConfirmViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
     let creatingView = ConnectingView()
+    var unsignedPsbt = ""
     var signedRawTx = ""
     var outputsString = ""
     var inputsString = ""
@@ -32,26 +33,134 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         print("recipients = \(recipients)")
         
         navigationController?.delegate = self
-
-        creatingView.addConnectingView(vc: self,
-                                       description: "verifying signed transaction")
         
-        executeNodeCommand(method: .decoderawtransaction,
-                           param: "\"\(signedRawTx)\"")
+        if unsignedPsbt == "" {
+            
+            creatingView.addConnectingView(vc: self, description: "verifying signed transaction")
+            executeNodeCommand(method: .decoderawtransaction, param: "\"\(signedRawTx)\"")
+            
+        } else {
+            
+            creatingView.addConnectingView(vc: self, description: "verifying unsigned psbt")
+            executeNodeCommand(method: .decodepsbt, param: "\"\(unsignedPsbt)\"")
+            
+        }
         
     }
     
     @IBAction func sendNow(_ sender: Any) {
         
-        creatingView.addConnectingView(vc: self,
-                                       description: "broadcasting transaction")
-        
-        executeNodeCommand(method: .sendrawtransaction,
-                           param: "\"\(signedRawTx)\"")
+        if unsignedPsbt == "" {
+            
+            creatingView.addConnectingView(vc: self, description: "broadcasting transaction")
+            executeNodeCommand(method: .sendrawtransaction, param: "\"\(signedRawTx)\"")
+            
+        } else {
+            
+            showPsbtOptions()
+            
+        }
         
     }
     
+    /*
+     let alert = UIAlertController(title: "Share as raw data or text?", message: "Sharing as raw data allows you to send the unsigned psbt directly to your Coldcard Wallets SD card for signing", preferredStyle: .actionSheet)
+     
+     alert.addAction(UIAlertAction(title: "Raw Data", style: .default, handler: { action in
+         
+         self.convertPSBTtoData(string: self.psbt)
+         
+     }))
+     
+     alert.addAction(UIAlertAction(title: "Text", style: .default, handler: { action in
+         
+         DispatchQueue.main.async {
+             
+             let textToShare = [self.psbt]
+             
+             let activityViewController = UIActivityViewController(activityItems: textToShare,
+                                                                   applicationActivities: nil)
+             
+             activityViewController.popoverPresentationController?.sourceView = self.view
+             self.present(activityViewController, animated: true) {}
+             
+         }
+         
+     }))
+     
+     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+         
+     }))
+     
+     alert.popoverPresentationController?.sourceView = self.view
+     self.present(alert, animated: true) {}
+     */
     
+    func showPsbtOptions() {
+        
+        DispatchQueue.main.async {
+                        
+            let alert = UIAlertController(title: "Sign with:", message: "Choose your offline signer", preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: "Hermit", style: .default, handler: { action in
+                
+                displayAlert(viewController: self, isError: false, message: "under construction")
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "CryptoWallet", style: .default, handler: { action in
+                
+                displayAlert(viewController: self, isError: false, message: "under construction")
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Coldcard", style: .default, handler: { action in
+                
+                self.convertPSBTtoData(string: self.unsignedPsbt)
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Export", style: .default, handler: { action in
+                
+                DispatchQueue.main.async {
+                    
+                    let textToShare = [self.unsignedPsbt]
+                    
+                    let activityViewController = UIActivityViewController(activityItems: textToShare,
+                                                                          applicationActivities: nil)
+                    
+                    activityViewController.popoverPresentationController?.sourceView = self.view
+                    self.present(activityViewController, animated: true) {}
+                    
+                }
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    
+            self.present(alert, animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    func convertPSBTtoData(string: String) {
+     
+        if let data = Data(base64Encoded: string) {
+         
+            DispatchQueue.main.async {
+                
+                let activityViewController = UIActivityViewController(activityItems: [data],
+                                                                      applicationActivities: nil)
+                
+                activityViewController.popoverPresentationController?.sourceView = self.view
+                self.present(activityViewController, animated: true) {}
+                
+            }
+            
+        }
+        
+    }
 
     func executeNodeCommand(method: BTC_CLI_COMMAND, param: String) {
         
@@ -83,6 +192,10 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                         }
                         
                     }
+                case .decodepsbt:
+                    
+                    let dict = reducer.dictToReturn["tx"] as! NSDictionary
+                    parseTransaction(tx: dict)
                     
                 case .decoderawtransaction:
                     
@@ -409,6 +522,17 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         case 0:
             
             let inputCell = tableView.dequeueReusableCell(withIdentifier: "inputCell", for: indexPath)
+            
+            if unsignedPsbt != "" {
+                
+                inputCell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
+                
+            } else {
+                
+                
+                
+            }
+            
             let inputIndexLabel = inputCell.viewWithTag(1) as! UILabel
             let inputAmountLabel = inputCell.viewWithTag(2) as! UILabel
             let inputAddressLabel = inputCell.viewWithTag(3) as! UILabel
@@ -423,6 +547,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         case 1:
             
             let outputCell = tableView.dequeueReusableCell(withIdentifier: "outputCell", for: indexPath)
+            
+            if unsignedPsbt != "" {
+            
+                outputCell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
+                
+            }
+            
             let outputIndexLabel = outputCell.viewWithTag(1) as! UILabel
             let outputAmountLabel = outputCell.viewWithTag(2) as! UILabel
             let outputAddressLabel = outputCell.viewWithTag(3) as! UILabel
@@ -458,6 +589,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         case 2:
             
             let miningFeeCell = tableView.dequeueReusableCell(withIdentifier: "miningFeeCell", for: indexPath)
+            
+            if unsignedPsbt != "" {
+            
+                miningFeeCell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
+                
+            }
+            
             let miningLabel = miningFeeCell.viewWithTag(1) as! UILabel
             miningLabel.text = self.miningFee
             miningFeeCell.selectionStyle = .none

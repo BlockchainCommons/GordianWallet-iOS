@@ -26,6 +26,7 @@ class ChooseWalletFormatViewController: UIViewController {
     var backUpRecoveryPhrase = ""
     var singleSigDoneBlock : ((Bool) -> Void)?
     var multiSigDoneBlock : (((success: Bool, recoveryPhrase: String, descriptor: String)) -> Void)?
+    var importDoneBlock : ((Bool) -> Void)?
     let enc = Encryption()
     let creatingView = ConnectingView()
     
@@ -33,19 +34,46 @@ class ChooseWalletFormatViewController: UIViewController {
     @IBOutlet var templateSwitch: UISegmentedControl!
     @IBOutlet var buttonOutlet: UIButton!
     @IBOutlet var seedDescription: UILabel!
-    //your device will hold one seed, your node will hold 2,000 private keys derived from a second seed, and you will securely store one seed offline for recovery purposes
+    @IBOutlet var importButtonOutlet: UIButton!
+    @IBOutlet var recoverWalletOutlet: UIButton!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         buttonOutlet.clipsToBounds = true
         buttonOutlet.layer.cornerRadius = 10
+        importButtonOutlet.layer.cornerRadius = 10
+        recoverWalletOutlet.layer.cornerRadius = 10
         formatSwitch.selectedSegmentIndex = 0
         templateSwitch.selectedSegmentIndex = 0
         isBIP84 = true
         isMultiSig = true
+        seedDescription.text = "Your device will hold one seed, your node will hold 2,000 private keys derived from a second seed, and you will securely store one seed offline for recovery purposes.\n\nYour node will create PSBT's and sign them with one key, passing the partially signed PSBT's to your device which will sign the PSBT's with the second key."
+        seedDescription.sizeToFit()
         
     }
+    
+    @IBAction func importAction(_ sender: Any) {
+        
+        
+        
+        DispatchQueue.main.async {
+            
+            self.importDoneBlock!(true)
+            self.dismiss(animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    @IBAction func recoverAction(_ sender: Any) {
+        
+        showAlert(vc: self, title: "Under Construction", message: "")
+        
+    }
+    
+    
     
     @IBAction func close(_ sender: Any) {
         
@@ -102,7 +130,7 @@ class ChooseWalletFormatViewController: UIViewController {
         let impact = UIImpactFeedbackGenerator()
         
         DispatchQueue.main.async {
-            
+                
             impact.impactOccurred()
             
         }
@@ -116,10 +144,22 @@ class ChooseWalletFormatViewController: UIViewController {
             isMultiSig = true
             isSingleSig = false
             
+            DispatchQueue.main.async {
+                
+                self.seedDescription.text = "Your device will hold one seed, your node will hold 2,000 private keys derived from a second seed, and you will securely store one seed offline for recovery purposes.\n\nYour node will create PSBT's and sign them with one key, passing the partially signed PSBT's to your device which will sign the PSBT's with the second key."
+                
+            }
+            
         case 1:
             
             isSingleSig = true
             isMultiSig = false
+            
+            DispatchQueue.main.async {
+                
+                self.seedDescription.text = "Your device will hold one seed and your node will hold 2,000 public keys derived from the same seed.\n\nYour node will build unsigned PSBT's acting as a watch-only wallet and pass them to your device for offline signing."
+                
+            }
             
         default:
             
@@ -146,38 +186,57 @@ class ChooseWalletFormatViewController: UIViewController {
                 self.node = node!
                 self.creatingView.addConnectingView(vc: self, description: "creating your wallet")
                 
-                if self.isBIP84 {
+                if self.node.network == "testnet" {
                     
-                    self.newWallet["derivation"] = "m/84'/1'/0'/0"
+                    if self.isBIP84 {
+                        
+                        self.newWallet["derivation"] = "m/84'/1'/0'/0"
+                        
+                    } else if self.isBIP49 {
+                        
+                        self.newWallet["derivation"] = "m/49'/1'/0'/0"
+                        
+                    } else if self.isBIP44 {
+                        
+                        self.newWallet["derivation"] = "m/44'/1'/0'/0"
+                        
+                    }
                     
-                } else if self.isBIP49 {
+                } else if self.node.network == "mainnet" {
                     
-                    self.newWallet["derivation"] = "m/49'/1'/0'/0"
-                    
-                } else if self.isBIP44 {
-                    
-                    self.newWallet["derivation"] = "m/44'/1'/0'/0"
+                    if self.isBIP84 {
+                        
+                        self.newWallet["derivation"] = "m/84'/0'/0'/0"
+                        
+                    } else if self.isBIP49 {
+                        
+                        self.newWallet["derivation"] = "m/49'/0'/0'/0"
+                        
+                    } else if self.isBIP44 {
+                        
+                        self.newWallet["derivation"] = "m/44'/0'/0'/0"
+                        
+                    }
                     
                 }
                 
                 self.newWallet["birthdate"] = keyBirthday()
                 self.newWallet["id"] = UUID()
                 self.newWallet["isActive"] = false
-                self.newWallet["name"] = "\(randomString(length: 10))_StandUp"
                 self.newWallet["lastUsed"] = Date()
                 self.newWallet["lastBalance"] = 0.0
                 self.newWallet["isArchived"] = false
                 self.newWallet["nodeId"] = self.node.id
-                
-                print("ismultisig = \(self.isMultiSig)")
-                
+                                
                 if self.isMultiSig {
                     
+                    self.newWallet["name"] = "MULTI_\(randomString(length: 10))_StandUp"
                     self.newWallet["type"] = "MULTI"
                     self.createMultiSig()
                     
                 } else if self.isSingleSig {
                     
+                    self.newWallet["name"] = "DEFAULT_\(randomString(length: 10))_StandUp"
                     self.newWallet["type"] = "DEFAULT"
                     self.createSingleSig()
                     
@@ -359,19 +418,6 @@ class ChooseWalletFormatViewController: UIViewController {
                                             self.publickeys.append(account.xpub)
                                             self.createNodesKey()
                                             
-//                                            if self.publickeys.count == 2 {
-//
-//
-//
-//                                            }
-//
-//                                            if self.publickeys.count == 3 {
-//
-//                                                self.nodesSeed = account.xpriv!
-//                                                self.constructDescriptor(derivation: derivation)
-//
-//                                            }
-                                            
                                         } catch {
                                             
                                             self.creatingView.removeConnectingView()
@@ -431,70 +477,62 @@ class ChooseWalletFormatViewController: UIViewController {
             
             if !error {
                 
-                //let unencryptedSeed = words!.dataUsingUTF8StringEncoding
-                //let enc = Encryption()
-                //enc.encryptData(dataToEncrypt: unencryptedSeed) { (encryptedSeed, error) in
+                if !error {
                     
-                    if !error {
+                    let converter = MnemonicCreator()
+                    converter.convert(words: words!) { (mnemonic, error) in
                         
-                        //nodesSeed = encryptedSeed!
-                        let converter = MnemonicCreator()
-                        converter.convert(words: words!) { (mnemonic, error) in
+                        if !error {
                             
-                            if !error {
+                            let derivation = self.newWallet["derivation"] as! String
+                            
+                            if let masterKey = HDKey((mnemonic!.seedHex("")), self.network(path: derivation)) {
                                 
-                                let derivation = self.newWallet["derivation"] as! String
-                                
-                                if let masterKey = HDKey((mnemonic!.seedHex("")), self.network(path: derivation)) {
+                                if let path = BIP32Path(derivation) {
                                     
-                                    if let path = BIP32Path(derivation) {
+                                    do {
                                         
-                                        do {
-                                            
-                                            let account = try masterKey.derive(path)
-                                            self.publickeys.append(account.xpub)
-                                            self.nodesSeed = account.xpriv!
-                                            self.constructDescriptor(derivation: derivation)
-                                            
-                                        } catch {
-                                            
-                                            self.creatingView.removeConnectingView()
-                                            displayAlert(viewController: self, isError: true, message: "failed deriving xpub")
-                                            
-                                        }
+                                        let account = try masterKey.derive(path)
+                                        self.publickeys.append(account.xpub)
+                                        self.nodesSeed = account.xpriv!
+                                        self.constructDescriptor(derivation: derivation)
                                         
-                                    } else {
+                                    } catch {
                                         
                                         self.creatingView.removeConnectingView()
-                                        displayAlert(viewController: self, isError: true, message: "failed initiating bip32 path")
+                                        displayAlert(viewController: self, isError: true, message: "failed deriving xpub")
                                         
                                     }
                                     
                                 } else {
                                     
                                     self.creatingView.removeConnectingView()
-                                    displayAlert(viewController: self, isError: true, message: "failed creating masterkey")
+                                    displayAlert(viewController: self, isError: true, message: "failed initiating bip32 path")
                                     
                                 }
                                 
                             } else {
                                 
                                 self.creatingView.removeConnectingView()
-                                displayAlert(viewController: self, isError: true, message: "error converting your words to BIP39 mnmemonic")
+                                displayAlert(viewController: self, isError: true, message: "failed creating masterkey")
                                 
                             }
                             
+                        } else {
+                            
+                            self.creatingView.removeConnectingView()
+                            displayAlert(viewController: self, isError: true, message: "error converting your words to BIP39 mnmemonic")
+                            
                         }
-                        
-                    } else {
-                        
-                        self.creatingView.removeConnectingView()
-                        displayAlert(viewController: self, isError: true, message: "error encrypting data")
                         
                     }
                     
+                } else {
                     
-                //}
+                    self.creatingView.removeConnectingView()
+                    displayAlert(viewController: self, isError: true, message: "error encrypting data")
+                    
+                }
                 
             } else {
                 
@@ -543,19 +581,6 @@ class ChooseWalletFormatViewController: UIViewController {
         descriptor = descriptor.replacingOccurrences(of: " ", with: "")
         getInfo(descriptor: descriptor)
         
-//        qrGenerator.textInput = descriptor
-//
-//        tapQRGesture = UITapGestureRecognizer(target: self,
-//                                              action: #selector(shareQRCode(_:)))
-//
-//        imageView.addGestureRecognizer(tapQRGesture)
-//
-//        DispatchQueue.main.async {
-//
-//            self.imageView.image = self.qrGenerator.getQRCode()
-//
-//        }
-        
     }
     
     func getInfo(descriptor: String) {
@@ -567,8 +592,6 @@ class ChooseWalletFormatViewController: UIViewController {
         }
         
         let reducer = Reducer()
-        print("descriptor: \(descriptor)")
-        
         reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(descriptor)\"") {
             
             DispatchQueue.main.async {
@@ -580,8 +603,6 @@ class ChooseWalletFormatViewController: UIViewController {
             if !reducer.errorBool {
                 
                 let result = reducer.dictToReturn
-                print("result = \(result)")
-                
                 let desc = result["descriptor"] as! String
                 
                 let enc = Encryption()
@@ -663,78 +684,5 @@ class ChooseWalletFormatViewController: UIViewController {
         return network
         
     }
-    
-//    @IBAction func nativeSegwitAction(_ sender: Any) {
-//
-//        print("chose native segwit")
-//
-//        DispatchQueue.main.async {
-//
-//            self.performSegue(withIdentifier: "chooseTemplate", sender: self)
-//
-//        }
-//
-//    }
-//
-//    @IBAction func segwitWrappedAction(_ sender: Any) {
-//
-//        print("chose segwit wrapped")
-//
-//        DispatchQueue.main.async {
-//
-//            self.performSegue(withIdentifier: "chooseTemplate", sender: self)
-//
-//        }
-//
-//    }
-//
-//    @IBAction func legacyAction(_ sender: Any) {
-//
-//        print("chose legacy")
-//
-//        DispatchQueue.main.async {
-//
-//            self.performSegue(withIdentifier: "chooseTemplate", sender: self)
-//
-//        }
-//
-//    }
-    
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//
-//        let id = segue.identifier
-//
-//        switch id {
-//
-//        case "chooseTemplate":
-//
-//            if let vc = segue.destination as? ChooseWalletTemplateViewController {
-//
-//                vc.chooseTemplateDoneBlock = { result in
-//
-//                    self.singleSigDoneBlock!(true)
-//
-//                    DispatchQueue.main.async {
-//
-//                         self.dismiss(animated: true, completion: nil)
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//        default:
-//
-//            break
-//
-//        }
-//
-//    }
-    
 
 }

@@ -90,13 +90,15 @@ class SingleSigBuilder {
         func signPsbt(psbt: String, privateKeys: [String]) {
             print("sign psbt")
             
+            let chain = network(path: wallet.derivation)
+            
             do {
                 
-                var localPSBT = try PSBT(psbt, .testnet)
+                var localPSBT = try PSBT(psbt, chain)
                 
                 for (i, key) in privateKeys.enumerated() {
                     
-                    let pk = Key(key, .testnet)
+                    let pk = Key(key, chain)
                     localPSBT.sign(pk!)
                     
                     if i + 1 == privateKeys.count {
@@ -227,11 +229,11 @@ class SingleSigBuilder {
             var changeType = ""
             
             switch wallet.derivation {
-            case "m/84'/1'/0'/0":
+            case "m/84'/1'/0'/0", "m/84'/0'/0'/0":
                 changeType = "bech32"
-            case "m/44'/1'/0'/0":
+            case "m/44'/1'/0'/0", "m/44'/0'/0'/0":
                 changeType = "legacy"
-            case "m/49'/1'/0'/0":
+            case "m/49'/1'/0'/0", "m/49'/0'/0'/0":
                 changeType = "p2sh-segwit"
             default:
                 break
@@ -248,13 +250,10 @@ class SingleSigBuilder {
                     
                     if self.wallet.type == "DEFAULT" {
                         
-                        //decodePsbt(psbt: psbt)
                         switch self.wallet.derivation {
-                            
-                        case "m/84'/1'/0'/0": signSegwit(psbt: psbt)
-                        case "m/44'/1'/0'/0": signLegacy(psbt: psbt)
-                        case "m/49'/1'/0'/0": signSegwitWrapped(psbt: psbt)
-                            
+                        case "m/84'/1'/0'/0", "m/84'/0'/0'/0": signSegwit(psbt: psbt)
+                        case "m/44'/1'/0'/0", "m/44'/0'/0'/0": signLegacy(psbt: psbt)
+                        case "m/49'/1'/0'/0", "m/49'/0'/0'/0": signSegwitWrapped(psbt: psbt)
                         default:
                             break
                         }

@@ -15,10 +15,9 @@ public struct NodeStruct: CustomStringConvertible {
     let onionAddress:String
     let rpcpassword:String
     let rpcuser:String
-    //let authKey:String
-    //let authPubKey:String
     let isActive:Bool
     let id:UUID
+    let network:String
     
     init(dictionary: [String: Any]) {
         
@@ -26,10 +25,9 @@ public struct NodeStruct: CustomStringConvertible {
         self.onionAddress = dictionary["onionAddress"] as? String ?? ""
         self.rpcpassword = dictionary["rpcpassword"] as? String ?? ""
         self.rpcuser = dictionary["rpcuser"] as? String ?? ""
-        //self.authKey = dictionary["authKey"] as? String ?? ""
-        //self.authPubKey = dictionary["authPubKey"] as? String ?? ""
         self.isActive = dictionary["isActive"] as? Bool ?? true
         self.id = dictionary["id"] as! UUID
+        self.network = dictionary["network"] as? String ?? "testnet"
         
     }
     

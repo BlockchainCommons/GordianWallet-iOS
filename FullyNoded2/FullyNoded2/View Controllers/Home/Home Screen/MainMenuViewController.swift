@@ -83,7 +83,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         sectionThreeLoaded = false
         isRefreshingOne = true
         setTitleView()
-        addRefreshButton()
+        //addRefreshButton()
         configureRefresher()
         infoHidden = true
         nodeInfoHidden = true
@@ -142,7 +142,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         self.torConnected = true
         self.reloadSectionOne()
-        //self.sectionOneLoaded = true
         didAppear()
 
     }
@@ -151,7 +150,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         print("foreground NotificationReceived")
         
         if UIDevice.modelName != "iPhone 11 pro max" && UIDevice.modelName != "Simulator iPhone 11 pro max" {
-         
+            
             self.torConnected = false
             self.reloadSectionOne()
             
@@ -159,21 +158,27 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if !initialLoad {
                 
-                self.isRefreshingOne = true
+                showAlert(vc: self, title: "Alert", message: "There is a known issue when refreshing the Tor connection on iPhone 11 Pro Max, we are working on a fix, in the meantime you may need to force close the app and reopen to reconnect Tor manually if you experience any issues.")
                 
             }
             
-            if TorClient.sharedInstance.isOperational {
-                
-                self.torConnected = true
-                
-            } else {
-                
-                self.torConnected = false
-                
-            }
-            
-            self.reloadSectionOne()
+//            if !initialLoad {
+//
+//                self.isRefreshingOne = true
+//
+//            }
+//
+//            if TorClient.sharedInstance.isOperational {
+//
+//                self.torConnected = true
+//
+//            } else {
+//
+//                self.torConnected = false
+//
+//            }
+//
+//            self.reloadSectionOne()
             
         }
 
@@ -218,19 +223,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    func addNavBarSpinner() {
-
-        DispatchQueue.main.async {
-
-            self.spinner.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-            self.dataRefresher = UIBarButtonItem(customView: self.spinner)
-            self.navigationItem.setRightBarButton(self.dataRefresher, animated: true)
-            self.spinner.startAnimating()
-            self.spinner.alpha = 1
-
-        }
-
-    }
+//    func addNavBarSpinner() {
+//
+//        DispatchQueue.main.async {
+//
+//            self.spinner.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+//            self.dataRefresher = UIBarButtonItem(customView: self.spinner)
+//            self.navigationItem.setRightBarButton(self.dataRefresher, animated: true)
+//            self.spinner.startAnimating()
+//            self.spinner.alpha = 1
+//
+//        }
+//
+//    }
     
     override func viewDidAppear(_ animated: Bool) {
         
@@ -276,7 +281,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                     
                                     self.wallet = w!
                                     
-                                    if self.existingWalletName != w!.name {
+                                    if self.existingWalletName != w!.name && self.existingNodeId != node!.id {
+                                        
+                                        //self.loadSectionZero()
+                                        self.existingNodeId = node!.id
+                                        self.refreshNow()
+                                        
+                                    } else if self.existingWalletName != w!.name {
                                         
                                         self.loadSectionZero()
                                         
@@ -310,7 +321,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 } else {
                     
-                    self.removeSpinner()
+                    //self.removeSpinner()
                     self.addNode()
                     
                 }
@@ -379,7 +390,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         let blank = blankCell()
         let spinner = UIActivityIndicatorView()
-        spinner.frame = CGRect(x: 16, y: (blank.frame.height / 2) - 10, width: 20, height: 20)
+        spinner.frame = CGRect(x: blank.contentView.frame.maxX, y: (blank.frame.height / 2) - 10, width: 20, height: 20)
         blank.addSubview(spinner)
         spinner.startAnimating()
         return blank
@@ -424,7 +435,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     let walletTypeLabel = cell.viewWithTag(4) as! UILabel
                     let derivationPathLabel = cell.viewWithTag(5) as! UILabel
                     let seedOnDeviceLabel = cell.viewWithTag(8) as! UILabel
-                    let seedOnDeviceImage = cell.viewWithTag(10) as! UIImageView
+                    //let seedOnDeviceImage = cell.viewWithTag(10) as! UIImageView
                     let dirtyFiatLabel = cell.viewWithTag(11) as! UILabel
                     let infoButton = cell.viewWithTag(12) as! UIButton
                     //let walletsButton = cell.viewWithTag(13) as! UIButton
@@ -508,23 +519,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     if wallet.derivation.contains("84") {
                         
                         derivationPathLabel.text = "Native Segwit Account 0 (BIP84 \(wallet.derivation))"
-                        deviceXprv.text = "xprv m'/84'/1'/0'/0"
-                        keysOnNodeDescription.text = "public keys m'/84'/1'/0'/0/0 to /1999"
                         
                     } else if wallet.derivation.contains("44") {
                         
                         derivationPathLabel.text = "Legacy Account 0 (BIP44 \(wallet.derivation))"
-                        deviceXprv.text = "xprv m'/44'/1'/0'/0"
-                        keysOnNodeDescription.text = "public keys m'/44'/1'/0'/0/0 to /1999"
                         
                     } else if wallet.derivation.contains("49") {
                         
                         derivationPathLabel.text = "P2SH Nested Segwit Account 0 (BIP49 \(wallet.derivation))"
-                        deviceXprv.text = "xprv m'/49'/1'/0'/0"
-                        keysOnNodeDescription.text = "public keys m'/49'/1'/0'/0/0 to /1999"
                         
                     }
                     
+                    keysOnNodeDescription.text = "public keys \(wallet.derivation)/0 to /1999"
+                    deviceXprv.text = "xprv \(wallet.derivation)"
                     walletNameLabel.text = "\(wallet.name).dat"
                     
                     return cell
@@ -554,7 +561,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     let offlineView = cell.viewWithTag(19)!
                     //let keysOnNodeImage = cell.viewWithTag(20) as! UIImageView
                     //let keyOfflineImage = cell.viewWithTag(21) as! UIImageView
-                    //let offlineSignerImage = cell.viewWithTag(22) as! UIImageView
+                    let offlineXprvLabel = cell.viewWithTag(22) as! UILabel
                     let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
                     
                     if isRefreshingZero {
@@ -627,23 +634,20 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     if wallet.derivation.contains("84") {
                         
                         derivationPathLabel.text = "Native Segwit Account 0 (BIP84 \(wallet.derivation))"
-                        deviceXprv.text = "xprv m'/84'/1'/0'/0"
-                        nodeXprv.text = "private keys m'/84'/1'/0'/0/0 to /1999"
-                        
                         
                     } else if wallet.derivation.contains("44") {
                         
                         derivationPathLabel.text = "Legacy Account 0 (BIP44 \(wallet.derivation))"
-                        deviceXprv.text = "xprv m'/44'/1'/0'/0"
-                        nodeXprv.text = "private keys m'/44'/1'/0'/0/0 to /1999"
                         
                     } else if wallet.derivation.contains("49") {
                         
                         derivationPathLabel.text = "P2SH Nested Segwit Account 0 (BIP49 \(wallet.derivation))"
-                        deviceXprv.text = "xprv m'/49'/1'/0'/0"
-                        nodeXprv.text = "private keys m'/49'/1'/0'/0/0 to /1999"
                         
                     }
+                    
+                    nodeXprv.text = "private keys \(wallet.derivation)/0 to /1999"
+                    deviceXprv.text = "xprv \(wallet.derivation)"
+                    offlineXprvLabel.text = "xprv \(wallet.derivation)"
                     
                     walletNameLabel.text = "\(wallet.name).dat"
                     
@@ -654,6 +658,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     let cell = mainMenu.dequeueReusableCell(withIdentifier: "coldStorageCell", for: indexPath)
                     cell.selectionStyle = .none
                     
+                    let descriptorParser = DescriptorParser()
+                    let descStruct = descriptorParser.descriptor(wallet.descriptor)
+                    
                     let walletNameLabel = cell.viewWithTag(1) as! UILabel
                     let coldBalanceLabel = cell.viewWithTag(2) as! UILabel
                     let walletTypeLabel = cell.viewWithTag(4) as! UILabel
@@ -663,6 +670,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     let infoButton = cell.viewWithTag(12) as! UIButton
                     let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
                     let nodeView = cell.viewWithTag(24)!
+                    let watchIcon = cell.viewWithTag(25) as! UIImageView
+                    let keysOnNodeLabel = cell.viewWithTag(26) as! UILabel
                     
                     nodeView.layer.cornerRadius = 8
                     
@@ -713,24 +722,36 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     coldBalanceLabel.adjustsFontSizeToFitWidth = true
                     
-                    walletTypeLabel.text = "Custom"
-                    seedOnDeviceLabel.text = "1 Watch-only wallet on \(node.label)"
-                    
-                    // need to parse the descriptor or key
-                    
-                    if wallet.derivation.contains("84") {
+                    if descStruct.isMulti {
                         
-                        derivationPathLabel.text = "Native Segwit Account 0 (BIP84 \(wallet.derivation))"
+                        walletTypeLabel.text = descStruct.mOfNType
                         
-                    } else if wallet.derivation.contains("44") {
+                    } else {
                         
-                        derivationPathLabel.text = "Legacy Account 0 (BIP44 \(wallet.derivation))"
-                        
-                    } else if wallet.derivation.contains("49") {
-                        
-                        derivationPathLabel.text = "P2SH Nested Segwit Account 0 (BIP49 \(wallet.derivation))"
+                        walletTypeLabel.text = "Single Signature"
                         
                     }
+                    
+                    if descStruct.isHot {
+                        
+                        seedOnDeviceLabel.text = "\(node.label) is Hot"
+                        keysOnNodeLabel.text = "2,000 private keys on \(node.label)"
+                        watchIcon.image = UIImage(systemName: "pencil.and.ellipsis.rectangle")
+                        cell.backgroundColor = #colorLiteral(red: 0.3451878428, green: 0.0757862553, blue: 0.05608722568, alpha: 1)
+                        nodeView.backgroundColor = #colorLiteral(red: 0.3920713854, green: 0.08131650479, blue: 0.04822516962, alpha: 1)
+                        
+                    } else {
+                        
+                        seedOnDeviceLabel.text = "\(node.label) is Cold"
+                        keysOnNodeLabel.text = "2,000 public keys on \(node.label)"
+                        watchIcon.image = UIImage(systemName: "eye")
+                        cell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
+                        nodeView.backgroundColor = #colorLiteral(red: 0, green: 0.1491778237, blue: 0.3231337072, alpha: 1)
+                        
+                    }
+                    
+                    
+                    derivationPathLabel.text = descStruct.format
                     
                     walletNameLabel.text = "\(wallet.name).dat"
                     
@@ -780,10 +801,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 let torActiveCircle = cell.viewWithTag(7) as! UIImageView
                 let spinner = cell.viewWithTag(8) as! UIActivityIndicatorView
                 let infoButton = cell.viewWithTag(9) as! UIButton
+                
                 spinner.startAnimating()
                 spinner.alpha = 1
                 infoButton.alpha = 0
-                
                 infoButton.addTarget(self, action: #selector(getNodeInfo(_:)), for: .touchUpInside)
                 
                 let onionAddress = (node.onionAddress.split(separator: "."))[0]
@@ -852,14 +873,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 } else {
                     
-                    torStatusLabel.text = "disconnected"
-                    torActiveCircle.tintColor = .systemRed
+                    //spinner.startAnimating()
+                    //spinner.alpha = 1
+                    //infoButton.alpha = 0
+                    torStatusLabel.text = "connecting..."
+                    torActiveCircle.tintColor = .systemOrange
+                    
+                    //torStatusLabel.text = "disconnected"
+                    //torActiveCircle.tintColor = .systemRed
                     connectionStatusLabel.text = "disconnected..."
                     
                     spinner.startAnimating()
                     spinner.alpha = 1
                     infoButton.alpha = 0
-                    
                     
                 }
                 
@@ -993,6 +1019,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     if self.network == "main" {
                         
                         network.text = "mainnet"
+                        network.textColor = .white
                         network.backgroundColor = .systemGreen
                         
                     } else if self.network == "test" {
@@ -1106,16 +1133,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                     
                     let amount = dict["amount"] as! String
-                    var textColor = UIColor.darkGray
                     let confs = Int(dict["confirmations"] as! String)!
                     
                     if confs == 0 {
                         
-                        textColor = .systemRed
+                        confirmationsLabel.textColor = .systemRed
                         
                     } else if confs < 6 {
                      
-                        textColor = .systemYellow
+                        confirmationsLabel.textColor = .systemYellow
+                        
+                    } else {
+                        
+                        confirmationsLabel.textColor = .systemGray
                         
                     }
                     
@@ -1124,24 +1154,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     if amount.hasPrefix("-") {
                     
                         amountLabel.text = amount
+                        amountLabel.textColor = .darkGray
+                        labelLabel.textColor = .systemGray
+                        dateLabel.textColor = .systemGray
                         
                     } else {
                         
-                        if confs == 0 {
-                            
-                            textColor = .systemRed
-                            
-                        } else if confs < 6 {
-                             
-                            textColor = .systemYellow
-                                
-                        } else {
-                            
-                            textColor = .white
-                            
-                        }
-                        
                         amountLabel.text = "+" + amount
+                        amountLabel.textColor = .lightGray
+                        labelLabel.textColor = .systemGray
+                        dateLabel.textColor = .systemGray
                                             
                     }
                     
@@ -1157,11 +1179,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         amountLabel.text = "⚠︎ \(amountLabel.text!)"
                         
                     }
-                    
-                    amountLabel.textColor = textColor
-                    labelLabel.textColor = textColor
-                    confirmationsLabel.textColor = textColor
-                    dateLabel.textColor = textColor
                     
                     return cell
                     
@@ -1457,7 +1474,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     self.sectionOneLoaded = false
                     self.removeStatusLabel()
-                    self.removeSpinner()
+                    //self.removeSpinner()
                     
                     self.isRefreshingOne = false
                     
@@ -1502,7 +1519,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 self.sectionZeroLoaded = false
                 self.removeStatusLabel()
-                self.removeSpinner()
+                //self.removeSpinner()
                 self.isRefreshingZero = false
                 
                 DispatchQueue.main.async {
@@ -1526,6 +1543,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     self.mainMenu.reloadSections(IndexSet.init(arrayLiteral: 0, 3), with: .fade)
                     let impact = UIImpactFeedbackGenerator()
                     impact.impactOccurred()
+                    self.getDirtyFiatBalance()
                     self.loadSectionThree()
                     
                 }
@@ -1559,7 +1577,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if nodeLogic.errorBool {
                 
                 self.sectionTwoLoaded = false
-                self.removeSpinner()
+                //self.removeSpinner()
                 self.removeStatusLabel()
                 self.isRefreshingTwo = false
                 
@@ -1579,6 +1597,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 feeRate = str.feeRate
                 mempoolCount = str.mempoolCount
                 network = str.network
+                
+                let cd = CoreDataService()
+                
+                if network == "main" {
+                    
+                    cd.updateEntity(id: self.node.id, keyToUpdate: "network", newValue: "mainnet", entityName: .nodes) {}
+                    
+                } else if network == "test" {
+                    
+                    cd.updateEntity(id: self.node.id, keyToUpdate: "network", newValue: "testnet", entityName: .nodes) {}
+                    
+                }
+                
                 size = str.size
                 difficulty = str.difficulty
                 progress = str.progress
@@ -1606,7 +1637,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     let impact = UIImpactFeedbackGenerator()
                     impact.impactOccurred()
-                    self.removeSpinner()
+                    //self.removeSpinner()
                     self.removeStatusLabel()
                     
                 }
@@ -1632,7 +1663,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if nodeLogic.errorBool {
                 
                 self.sectionThreeLoaded = false
-                self.removeSpinner()
+                //self.removeSpinner()
                 self.removeStatusLabel()
                 
                 displayAlert(viewController: self,
@@ -1850,33 +1881,33 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    func removeSpinner() {
-        
-        DispatchQueue.main.async {
-            
-            self.refresher.endRefreshing()
-            self.spinner.stopAnimating()
-            self.spinner.alpha = 0
-            self.addRefreshButton()
-            
-        }
-        
-    }
+//    func removeSpinner() {
+//
+//        DispatchQueue.main.async {
+//
+//            self.refresher.endRefreshing()
+//            self.spinner.stopAnimating()
+//            self.spinner.alpha = 0
+//            //self.addRefreshButton()
+//
+//        }
+//
+//    }
     
-    func addRefreshButton() {
-        
-        DispatchQueue.main.async {
-            
-            self.refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh,
-                                                 target: self,
-                                                 action: #selector(self.refreshNow))
-            
-            self.refreshButton.tintColor = UIColor.white.withAlphaComponent(1)
-            
-            self.navigationItem.setRightBarButtonItems([self.refreshButton], animated: true)
-            
-        }
-    }
+//    func addRefreshButton() {
+//
+//        DispatchQueue.main.async {
+//
+//            self.refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh,
+//                                                 target: self,
+//                                                 action: #selector(self.refreshNow))
+//
+//            self.refreshButton.tintColor = UIColor.white.withAlphaComponent(1)
+//
+//            self.navigationItem.setRightBarButtonItems([self.refreshButton], animated: true)
+//
+//        }
+//    }
     
     @objc func addWallet() {
 
@@ -2088,7 +2119,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             DispatchQueue.main.async {
                 
-                self.removeSpinner()
+                //self.removeSpinner()
                 self.performSegue(withIdentifier: "showIntro", sender: self)
                 
             }
@@ -2097,7 +2128,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             DispatchQueue.main.async {
                 
-                self.removeSpinner()
+                //self.removeSpinner()
                 self.performSegue(withIdentifier: "scanNow", sender: self)
                 
             }
@@ -2108,9 +2139,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     func reloadTableData() {
         
-        addNavBarSpinner()
+        //addNavBarSpinner()
         self.refresher.endRefreshing()
-        self.addStatusLabel(description: "     Getting Tor Network Info...")
+        self.addStatusLabel(description: "     Connecting Tor...")
         
         getActiveWalletNow() { (w, error) in
                 
@@ -2127,7 +2158,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 } else {
                     
                     self.isRefreshingOne = false
-                    self.removeSpinner()
+                    //self.removeSpinner()
                     self.removeStatusLabel()
                     displayAlert(viewController: self, isError: true, message: "no active node, please go to node manager and activate one")
                     
@@ -2251,7 +2282,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 vc.onDoneBlock = { result in
                     
-                    self.addNavBarSpinner()
+                    //self.addNavBarSpinner()
                     self.nodeJustAdded()
                     
                 }

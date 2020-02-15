@@ -308,7 +308,16 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     
                 } else {
                     
-                    self.publicKeyDescriptor = "wpkh(\(xpub)/*)"
+                    switch self.wallet.derivation {
+                    case "m/84'/1'/0'/0":
+                        self.publicKeyDescriptor = "wpkh(\(xpub)/*)"
+                    case "m/44'/1'/0'/0":
+                        self.publicKeyDescriptor = "pkh(\(xpub)/*)"
+                    case "m/49'/1'/0'/0":
+                        self.publicKeyDescriptor = "sh(wpkh(\(xpub)/*))"
+                    default:
+                        break
+                    }
                     
                     DispatchQueue.main.async {
                         self.tableView.reloadData()

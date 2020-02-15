@@ -27,6 +27,7 @@ public struct WalletStruct: CustomStringConvertible {
     let walletCreated:Bool
     let keysImported:Bool
     let isArchived:Bool
+    let mOfNtype:String
     
     init(dictionary: [String: Any]) {
         
@@ -47,6 +48,7 @@ public struct WalletStruct: CustomStringConvertible {
         self.walletCreated = dictionary["walletCreated"] as? Bool ?? false
         self.keysImported = dictionary["keysImported"] as? Bool ?? false
         self.isArchived = dictionary["isArchived"] as? Bool ?? false
+        self.mOfNtype = dictionary["mOfNtype"] as? String ?? ""
         
     }
     

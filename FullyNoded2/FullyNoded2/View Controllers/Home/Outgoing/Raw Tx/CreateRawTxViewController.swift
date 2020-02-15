@@ -14,6 +14,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     var qrCode = UIImage()
     var spendable = Double()
     var rawTxUnsigned = String()
+    var unsignedPsbt = String()
     var rawTxSigned = String()
     var amountAvailable = Double()
     let qrImageView = UIImageView()
@@ -369,6 +370,24 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
+    func confirmUnsigned(psbt: String) {
+        
+        DispatchQueue.main.async {
+            
+            self.creatingView.removeConnectingView()
+            self.amount = ""
+            self.amountInput.text = ""
+            self.addressInput.text = ""
+            self.outputs.removeAll()
+            self.outputArray.removeAll()
+            self.outputsString = ""
+            self.outputsTable.reloadData()
+            self.unsignedPsbt = psbt
+            self.performSegue(withIdentifier: "goConfirm", sender: self)
+            
+        }
+    }
+    
     @IBAction func tryRawNow(_ sender: Any) {
         print("tryrawnow")
         
@@ -659,11 +678,26 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 
                 if wallet!.type == "MULTI" {
                     
-                    self.createMultiSig()
+                    self.createMultiSig(wallet: wallet!)
+                    
+                } else if wallet!.type == "DEFAULT" {
+                    
+                    self.createSingleSig()
                     
                 } else {
                     
-                    self.createSingleSig()
+                    let descParser = DescriptorParser()
+                    let descStr = descParser.descriptor(wallet!.descriptor)
+                    
+                    if descStr.isMulti {
+                        
+                        self.createMultiSig(wallet: wallet!)
+                        
+                    } else {
+                        
+                        self.createSingleSig()
+                        
+                    }
                     
                 }
                 
@@ -673,7 +707,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
-    func createMultiSig() {
+    func createMultiSig(wallet: WalletStruct) {
         
         var amount = Double()
         for output in outputArray {
@@ -684,11 +718,15 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         }
         
         let multiSigTxBuilder = MultiSigTxBuilder()
-        multiSigTxBuilder.build(outputs: outputs) { (signedTx, errorDescription) in
+        multiSigTxBuilder.build(outputs: outputs) { (signedTx, unsignedPsbt, errorDescription) in
             
             if signedTx != nil {
                 
                 self.confirm(raw: signedTx!)
+                
+            } else if unsignedPsbt != nil {
+                
+                self.confirmUnsigned(psbt: unsignedPsbt!)
                 
             } else {
                 
@@ -830,6 +868,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 
                 vc.signedRawTx = self.rawTxSigned
                 vc.recipients = self.recipients
+                vc.unsignedPsbt = self.unsignedPsbt
                 
             }
             

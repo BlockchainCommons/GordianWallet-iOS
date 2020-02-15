@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import LibWally
 
 extension Notification.Name {
     public static let torConnecting = Notification.Name(rawValue: "torConnecting")
@@ -169,6 +170,24 @@ public func displayAlert(viewController: UIViewController, isError: Bool, messag
                                 isError: isError)
         
     }
+    
+}
+
+public func network(path: String) -> Network {
+    
+    var network:Network!
+    
+    if path.contains("/1'") {
+        
+        network = .testnet
+        
+    } else {
+        
+        network = .mainnet
+        
+    }
+    
+    return network
     
 }
 

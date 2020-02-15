@@ -11,6 +11,7 @@ import UIKit
 class ImportViewController: UIViewController, UINavigationControllerDelegate {
     
     var onDoneBlock : ((Bool) -> Void)?
+    var importComplete: ((Bool) -> Void)?
     let qrScanner = QRScanner()
     var isTorchOn = Bool()
     let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
@@ -144,7 +145,8 @@ class ImportViewController: UIViewController, UINavigationControllerDelegate {
             if !error && success {
                 
                 self.connectingView.removeConnectingView()
-                showAlert(vc: self, title: "Success!", message: "Wallet created, to use it activate it in \"Wallets\"")
+                self.importComplete!(true)
+                self.dismiss(animated: true, completion: nil)
                 
             } else {
                 

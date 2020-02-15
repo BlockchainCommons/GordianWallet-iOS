@@ -312,7 +312,7 @@
                                 <color key="sectionIndexBackgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MainMenuCell" rowHeight="66" id="EVM-FH-EQj">
-                                        <rect key="frame" x="0.0" y="55.5" width="345" height="66"/>
+                                        <rect key="frame" x="15" y="55.5" width="345" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="EVM-FH-EQj" id="6Y2-Fh-R1z">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="66"/>
@@ -369,7 +369,7 @@
                                         <color key="backgroundColor" red="0.090666323016946812" green="0.10264321163773631" blue="0.12232880449385808" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NodeInfo" rowHeight="192" id="LJt-F3-a27">
-                                        <rect key="frame" x="0.0" y="121.5" width="345" height="192"/>
+                                        <rect key="frame" x="15" y="121.5" width="345" height="192"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LJt-F3-a27" id="bIn-ES-gWa">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="192"/>
@@ -436,23 +436,23 @@
                                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mainnet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cWK-lS-hWx">
+                                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="14" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 s/b fee rate" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ucC-3H-Iuv">
                                                                     <rect key="frame" x="0.0" y="125" width="130" height="20"/>
                                                                     <color key="backgroundColor" red="0.15269406657258877" green="0.15269406657258877" blue="0.15269406657258877" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="height" constant="20" id="MpA-ci-PYa"/>
-                                                                        <constraint firstAttribute="width" constant="130" id="QAP-3n-OUK"/>
+                                                                        <constraint firstAttribute="height" constant="20" id="dWd-9a-Opb"/>
+                                                                        <constraint firstAttribute="width" constant="130" id="ioF-6G-Ogu"/>
                                                                     </constraints>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="14" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 s/b fee rate" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ucC-3H-Iuv">
+                                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mainnet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cWK-lS-hWx">
                                                                     <rect key="frame" x="0.0" y="150" width="130" height="20"/>
                                                                     <color key="backgroundColor" red="0.15269406657258877" green="0.15269406657258877" blue="0.15269406657258877" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="height" constant="20" id="dWd-9a-Opb"/>
-                                                                        <constraint firstAttribute="width" constant="130" id="ioF-6G-Ogu"/>
+                                                                        <constraint firstAttribute="height" constant="20" id="MpA-ci-PYa"/>
+                                                                        <constraint firstAttribute="width" constant="130" id="QAP-3n-OUK"/>
                                                                     </constraints>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -579,8 +579,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="129"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="greenCircle.png" translatesAutoresizingMaskIntoConstraints="NO" id="FDm-hf-kLF">
-                                                    <rect key="frame" x="61.5" y="11" width="15" height="15"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="FDm-hf-kLF">
+                                                    <rect key="frame" x="61.5" y="11.5" width="15" height="14"/>
                                                     <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="15" id="3KJ-na-M67"/>
@@ -615,8 +615,8 @@
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="client authenticated" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mvk-kl-ldP">
-                                                    <rect key="frame" x="79.5" y="11.5" width="112.5" height="14.5"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ClientOnionAuthDir" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mvk-kl-ldP">
+                                                    <rect key="frame" x="79.5" y="11.5" width="109" height="14.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -913,7 +913,7 @@
                                                             <color key="textColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="22" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Signature" translatesAutoresizingMaskIntoConstraints="NO" id="xEG-27-O7R">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Signature" translatesAutoresizingMaskIntoConstraints="NO" id="xEG-27-O7R">
                                                             <rect key="frame" x="4" y="19" width="20" height="15"/>
                                                             <color key="tintColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
@@ -1007,7 +1007,7 @@
                                         <color key="backgroundColor" red="0.1051254794" green="0.12928032880000001" blue="0.14184883240000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="coldStorageCell" rowHeight="188" id="lKm-ad-JjI">
-                                        <rect key="frame" x="15" y="732.5" width="345" height="188"/>
+                                        <rect key="frame" x="0.0" y="732.5" width="345" height="188"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lKm-ad-JjI" id="k7X-TL-xsP">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="188"/>
@@ -1098,15 +1098,6 @@
                                                             <color key="textColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="15" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="public keys 0 to 1999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tg6-uQ-xcS">
-                                                            <rect key="frame" x="30" y="18.5" width="121" height="14.5"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="14.5" id="kPx-wj-7eS"/>
-                                                            </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <color key="textColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="💻" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mjH-26-J3p">
                                                             <rect key="frame" x="286" y="10" width="20" height="17"/>
                                                             <constraints>
@@ -1117,22 +1108,33 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eye" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="2sM-sR-KXf">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="25" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eye" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="2sM-sR-KXf">
                                                             <rect key="frame" x="0.0" y="10" width="26" height="16.5"/>
                                                             <color key="tintColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="26" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2,000 addresses on Testing Node" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ENt-f1-Roi">
+                                                            <rect key="frame" x="29" y="22" width="190.5" height="14.5"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="14.5" id="RKf-zd-JZc"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                            <color key="textColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.0" green="0.14917782373840735" blue="0.32313370721015233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
+                                                        <constraint firstItem="JUY-QE-KEf" firstAttribute="leading" secondItem="2sM-sR-KXf" secondAttribute="trailing" constant="3" id="3PI-aK-TKg"/>
                                                         <constraint firstItem="2sM-sR-KXf" firstAttribute="leading" secondItem="HRi-D8-hDF" secondAttribute="leading" id="7JJ-wt-1Ng"/>
+                                                        <constraint firstItem="ENt-f1-Roi" firstAttribute="top" secondItem="JUY-QE-KEf" secondAttribute="bottom" constant="3.5" id="K72-Rb-WEj"/>
+                                                        <constraint firstItem="ENt-f1-Roi" firstAttribute="leading" secondItem="2sM-sR-KXf" secondAttribute="trailing" constant="3" id="KeH-Lv-Wa6"/>
                                                         <constraint firstItem="JUY-QE-KEf" firstAttribute="leading" secondItem="2sM-sR-KXf" secondAttribute="trailing" constant="3" id="OQD-hG-qWN"/>
                                                         <constraint firstAttribute="height" constant="37" id="Q8s-qv-rMA"/>
-                                                        <constraint firstItem="tg6-uQ-xcS" firstAttribute="leading" secondItem="2sM-sR-KXf" secondAttribute="trailing" constant="4" id="Xqn-5s-dUt"/>
+                                                        <constraint firstItem="JUY-QE-KEf" firstAttribute="top" secondItem="HRi-D8-hDF" secondAttribute="top" constant="4" id="Z4b-r4-re0"/>
                                                         <constraint firstItem="2sM-sR-KXf" firstAttribute="centerY" secondItem="HRi-D8-hDF" secondAttribute="centerY" id="nHf-zj-1U9"/>
-                                                        <constraint firstItem="tg6-uQ-xcS" firstAttribute="top" secondItem="JUY-QE-KEf" secondAttribute="bottom" id="njS-9R-yse"/>
                                                         <constraint firstAttribute="trailing" secondItem="mjH-26-J3p" secondAttribute="trailing" constant="9" id="sn3-bN-wvG"/>
                                                         <constraint firstItem="mjH-26-J3p" firstAttribute="centerY" secondItem="HRi-D8-hDF" secondAttribute="centerY" id="tWt-7p-7rx"/>
-                                                        <constraint firstItem="JUY-QE-KEf" firstAttribute="top" secondItem="HRi-D8-hDF" secondAttribute="top" constant="4" id="v6r-EJ-vTD"/>
+                                                        <constraint firstAttribute="bottom" secondItem="ENt-f1-Roi" secondAttribute="bottom" constant="0.5" id="zR0-VX-WJt"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -1422,18 +1424,16 @@
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="83A-pa-ZRF">
-                        <leftBarButtonItems>
-                            <barButtonItem image="gear" catalog="system" id="0PZ-Jg-vxe">
-                                <connections>
-                                    <action selector="goToSettings:" destination="XmP-lK-cua" id="qEa-P5-u1a"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Item" image="qrcode.viewfinder" catalog="system" id="vMr-w1-gwX">
-                                <connections>
-                                    <action selector="goToWallets:" destination="XmP-lK-cua" id="IvZ-Hu-VN6"/>
-                                </connections>
-                            </barButtonItem>
-                        </leftBarButtonItems>
+                        <barButtonItem key="leftBarButtonItem" title="Item" image="qrcode.viewfinder" catalog="system" id="vMr-w1-gwX">
+                            <connections>
+                                <action selector="goToWallets:" destination="XmP-lK-cua" id="IvZ-Hu-VN6"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="gear" catalog="system" id="0PZ-Jg-vxe">
+                            <connections>
+                                <action selector="goToSettings:" destination="XmP-lK-cua" id="qEa-P5-u1a"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -3406,7 +3406,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="coldWalletCell" rowHeight="310" id="Cjy-2R-y2B">
-                                        <rect key="frame" x="0.0" y="55.5" width="345" height="310"/>
+                                        <rect key="frame" x="15" y="55.5" width="345" height="310"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Cjy-2R-y2B" id="85P-mu-gZ2">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="310"/>
@@ -3514,7 +3514,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                     <color key="textColor" systemColor="systemOrangeColor" red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Custom" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iCq-qO-kHT">
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="29" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Custom" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iCq-qO-kHT">
                                                     <rect key="frame" x="285" y="118" width="44" height="14.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -3600,7 +3600,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             <color key="textColor" red="0.57864717509999997" green="0.57864717509999997" blue="0.57864717509999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="public keys 0 to 1999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U7S-4a-NWE">
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="28" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="public keys 0 to 1999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U7S-4a-NWE">
                                                             <rect key="frame" x="30" y="19.5" width="121" height="14.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="14.5" id="BxW-V6-DJi"/>
@@ -3676,7 +3676,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                     <state key="normal" image="dot.radiowaves.left.and.right" catalog="system"/>
                                                                 </button>
                                                             </subviews>
-                                                            <color key="backgroundColor" red="0.097482465209999994" green="0.11331280320000001" blue="0.13826072219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="26" id="ynv-0J-IMD"/>
                                                             </constraints>
@@ -4155,7 +4155,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                         <color key="backgroundColor" red="0.34125158629441621" green="0.079370195940718494" blue="0.066585869314202212" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="multiSigWalletCell" rowHeight="398" id="Pu7-d1-gy4">
-                                        <rect key="frame" x="15" y="735.5" width="345" height="398"/>
+                                        <rect key="frame" x="0.0" y="735.5" width="345" height="398"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Pu7-d1-gy4" id="EKP-cw-XcR">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="398"/>
@@ -4386,8 +4386,8 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                 <constraint firstAttribute="height" constant="15" id="cxs-d0-Cth"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="keys m'/84'/1'/0'/0/0 to /1999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6GI-Av-oYU">
-                                                            <rect key="frame" x="30" y="19.5" width="165.5" height="14.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="private keys m'/84'/1'/0'/0/0 to /1999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6GI-Av-oYU">
+                                                            <rect key="frame" x="30" y="19.5" width="208" height="14.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="14.5" id="CJ2-4p-ggv"/>
                                                             </constraints>
@@ -4784,6 +4784,21 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                     <action selector="createAction:" destination="20O-ZD-xtI" eventType="touchUpInside" id="a3M-uL-G6n"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MYb-Vd-jtF">
+                                <rect key="frame" x="16" y="597" width="131" height="30"/>
+                                <color key="backgroundColor" red="0.0" green="0.1332779825" blue="0.2869860232" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="131" id="Mc5-VT-22s"/>
+                                    <constraint firstAttribute="height" constant="30" id="gqC-Ou-PgW"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Import Wallet">
+                                    <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="importAction:" destination="20O-ZD-xtI" eventType="touchUpInside" id="Vgo-WO-ema"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ej7-Ob-zLB">
                                 <rect key="frame" x="321" y="16" width="38" height="40"/>
                                 <constraints>
@@ -4797,32 +4812,48 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="your device will hold the seed and sign psbt's, your node will be watch-only and build psbt's" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cRB-bS-5qT">
-                                <rect key="frame" x="16" y="329" width="343" height="48"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="48" id="U3Y-jg-Ad1"/>
-                                </constraints>
+                                <rect key="frame" x="16" y="329" width="343" height="29"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gC1-hS-rHa">
+                                <rect key="frame" x="228" y="597" width="131" height="30"/>
+                                <color key="backgroundColor" red="0.34518784279999998" green="0.075786255299999994" blue="0.056087225679999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="ZoO-Ba-BMn"/>
+                                    <constraint firstAttribute="width" constant="131" id="dC7-AK-MYV"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Recover Wallet">
+                                    <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="recoverAction:" destination="20O-ZD-xtI" eventType="touchUpInside" id="WQg-uv-Eer"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Ej7-Ob-zLB" firstAttribute="top" secondItem="wnf-aC-02D" secondAttribute="top" constant="16" id="5Wd-hi-0o9"/>
                             <constraint firstItem="yUQ-II-4AS" firstAttribute="top" secondItem="rvE-Zh-J5O" secondAttribute="bottom" constant="8" id="63v-uw-mMk"/>
                             <constraint firstItem="cRB-bS-5qT" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="8zo-Ju-8AK"/>
+                            <constraint firstItem="MYb-Vd-jtF" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="BCY-aF-CAz"/>
                             <constraint firstItem="fh0-KZ-59e" firstAttribute="top" secondItem="jER-yA-pk1" secondAttribute="bottom" constant="60" id="DRJ-I7-wBB"/>
                             <constraint firstItem="cRB-bS-5qT" firstAttribute="top" secondItem="Dgi-5J-QXH" secondAttribute="bottom" constant="30" id="Dww-UW-9ef"/>
                             <constraint firstItem="Dgi-5J-QXH" firstAttribute="centerX" secondItem="3Xx-cw-zsB" secondAttribute="centerX" id="F1J-db-Pu9"/>
                             <constraint firstItem="fh0-KZ-59e" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="KKl-tK-wBh"/>
+                            <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="gC1-hS-rHa" secondAttribute="trailing" constant="16" id="PwV-Ey-qPm"/>
                             <constraint firstItem="rvE-Zh-J5O" firstAttribute="top" secondItem="DXf-Hi-zwe" secondAttribute="bottom" constant="33" id="T8M-Ye-gi6"/>
                             <constraint firstItem="jER-yA-pk1" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="55" id="VHv-Sk-STA"/>
+                            <constraint firstItem="wnf-aC-02D" firstAttribute="bottom" secondItem="MYb-Vd-jtF" secondAttribute="bottom" constant="20" id="Wj8-kF-6fY"/>
                             <constraint firstItem="rvE-Zh-J5O" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="bpt-rd-4EU"/>
                             <constraint firstItem="DXf-Hi-zwe" firstAttribute="top" secondItem="wnf-aC-02D" secondAttribute="top" constant="16" id="dr8-2I-fmf"/>
                             <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="rvE-Zh-J5O" secondAttribute="trailing" constant="16" id="f2t-fk-8fz"/>
                             <constraint firstItem="yUQ-II-4AS" firstAttribute="centerX" secondItem="3Xx-cw-zsB" secondAttribute="centerX" id="fHh-rP-zHd"/>
                             <constraint firstItem="ZMB-OH-MZE" firstAttribute="centerY" secondItem="jER-yA-pk1" secondAttribute="centerY" id="gja-Tg-Uwn"/>
                             <constraint firstItem="yUQ-II-4AS" firstAttribute="centerY" secondItem="jER-yA-pk1" secondAttribute="centerY" id="goj-Gc-26H"/>
+                            <constraint firstItem="wnf-aC-02D" firstAttribute="bottom" secondItem="gC1-hS-rHa" secondAttribute="bottom" constant="20" id="hnv-T8-AyQ"/>
                             <constraint firstItem="DXf-Hi-zwe" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="i67-eA-Shw"/>
                             <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="fh0-KZ-59e" secondAttribute="trailing" constant="16" id="j1f-74-nAs"/>
                             <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="ZMB-OH-MZE" secondAttribute="trailing" constant="55" id="nB1-ax-hHa"/>
@@ -4836,6 +4867,8 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                     <connections>
                         <outlet property="buttonOutlet" destination="Dgi-5J-QXH" id="0lc-IG-VkB"/>
                         <outlet property="formatSwitch" destination="rvE-Zh-J5O" id="wLt-7i-aGg"/>
+                        <outlet property="importButtonOutlet" destination="MYb-Vd-jtF" id="b0s-fJ-uQG"/>
+                        <outlet property="recoverWalletOutlet" destination="gC1-hS-rHa" id="Ovm-pY-q00"/>
                         <outlet property="seedDescription" destination="cRB-bS-5qT" id="vTp-7b-tTz"/>
                         <outlet property="templateSwitch" destination="fh0-KZ-59e" id="VNn-OD-2Ug"/>
                     </connections>
@@ -5269,6 +5302,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
         <image name="info.circle" catalog="system" width="64" height="60"/>
         <image name="key.png" width="90" height="90"/>
         <image name="link" catalog="system" width="64" height="58"/>
+        <image name="lock.circle" catalog="system" width="64" height="60"/>
         <image name="lock.icloud" catalog="system" width="64" height="44"/>
         <image name="pencil.circle" catalog="system" width="64" height="60"/>
         <image name="person.3" catalog="system" width="72" height="35"/>

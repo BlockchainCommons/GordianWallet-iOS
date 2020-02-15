@@ -135,7 +135,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                     
                     for (key, value) in node {
                         
-                        if key != "isActive" && key != "id" && key != "walletCreated" && key != "keysImported" {
+                        if key != "isActive" && key != "id" && key != "network" {
                             
                             let encryptedData = value as! Data
                             enc.decryptData(dataToDecrypt: encryptedData) { (decryptedData) in

@@ -11,7 +11,7 @@ import LibWally
 
 class MultiSigTxBuilder {
     
-    func build(outputs: [Any], completion: @escaping ((signedTx: String?, errorDescription: String?)) -> Void) {
+    func build(outputs: [Any], completion: @escaping ((signedTx: String?, unsignedPsbt: String?, errorDescription: String?)) -> Void) {
         
         getActiveWalletNow { (wallet, error) in
             
@@ -21,11 +21,13 @@ class MultiSigTxBuilder {
                     
                     do {
                         
-                        var localPSBT = try PSBT(psbt, .testnet)
+                        let chain = network(path: wallet!.derivation)
+                        
+                        var localPSBT = try PSBT(psbt, chain)
                         
                         for (i, key) in privateKeys.enumerated() {
                             
-                            let pk = Key(key, .testnet)
+                            let pk = Key(key, chain)
                             localPSBT.sign(pk!)
                             
                             if i + 1 == privateKeys.count {
@@ -39,11 +41,11 @@ class MultiSigTxBuilder {
                                         
                                         if let hex = localPSBT.transactionFinal?.description {
                                             
-                                            completion((hex, nil))
+                                            completion((hex, nil, nil))
                                             
                                         } else {
                                             
-                                            completion((nil, "Error: PSBT incomplete"))
+                                            completion((nil, nil, "Error: PSBT incomplete"))
                                             
                                         }
                                         
@@ -57,7 +59,7 @@ class MultiSigTxBuilder {
                         
                     } catch {
                         
-                        completion((nil, "Error creating local PSBT"))
+                        completion((nil, nil, "Error creating local PSBT"))
                         
                     }
                     
@@ -89,7 +91,7 @@ class MultiSigTxBuilder {
                                 
                             } else {
                                 
-                                completion((nil, "Error fetching private key"))
+                                completion((nil, nil, "Error fetching private key"))
                                 
                             }
                             
@@ -112,7 +114,7 @@ class MultiSigTxBuilder {
                             
                         } else {
                             
-                            completion((nil, "Error decoding transaction: \(reducer.errorDescription)"))
+                            completion((nil, nil, "Error decoding transaction: \(reducer.errorDescription)"))
                             
                         }
                         
@@ -130,11 +132,23 @@ class MultiSigTxBuilder {
                             
                             let dict = reducer.dictToReturn
                             let procccessedPsbt = dict["psbt"] as! String
-                            decodePsbt(psbt: procccessedPsbt)
+                            
+                            let descParser = DescriptorParser()
+                            let descStr = descParser.descriptor(wallet!.descriptor)
+                            
+                            if descStr.isHot || String(data: wallet!.seed, encoding: .utf8) != "no seed" {
+                                
+                                decodePsbt(psbt: procccessedPsbt)
+                                
+                            } else {
+                                
+                                completion((nil, procccessedPsbt, nil))
+                                
+                            }
                             
                         } else {
                             
-                            completion((nil, "Error decoding transaction: \(reducer.errorDescription)"))
+                            completion((nil, nil, "Error decoding transaction: \(reducer.errorDescription)"))
                             
                         }
                         
@@ -160,9 +174,10 @@ class MultiSigTxBuilder {
                             let psbt = psbtDict["psbt"] as! String
                             processPsbt(psbt: psbt)
                             
+                            
                         } else {
                             
-                            completion((nil, "error creating psbt: \(reducer.errorDescription)"))
+                            completion((nil, nil, "error creating psbt: \(reducer.errorDescription)"))
                             
                         }
                         
@@ -182,7 +197,7 @@ class MultiSigTxBuilder {
                             
                         } else {
                             
-                            completion((nil, "error getting change address"))
+                            completion((nil, nil, "error getting change address"))
                             
                         }
                         

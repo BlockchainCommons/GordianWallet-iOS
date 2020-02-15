@@ -166,26 +166,26 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         print("saveButtonAction")
         
-        connectingView.addConnectingView(vc: self, description: "confirming derived keys with bitcoin core")
-        
-        let mnemonicCreator = MnemonicCreator()
-        mnemonicCreator.convert(words: words) { (mnemonic, error) in
-            
-            if !error {
-                
-                let masterKey = HDKey((mnemonic!.seedHex("")), self.network(path: "m/84'/1'/0'/0"))!
-                let path = BIP32Path("m/84'/1'/0'/0")!
-                let account = try! masterKey.derive(path)
-                let xpub = account.xpub
-                self.getDescriptorInfo(xpub: xpub)
-                
-            } else {
-                
-                displayAlert(viewController: self, isError: true, message: "error converting those words into a seed")
-                
-            }
-            
-        }
+//        connectingView.addConnectingView(vc: self, description: "confirming derived keys with bitcoin core")
+//        
+//        let mnemonicCreator = MnemonicCreator()
+//        mnemonicCreator.convert(words: words) { (mnemonic, error) in
+//            
+//            if !error {
+//                
+//                let masterKey = HDKey((mnemonic!.seedHex("")), self.network(path: self.wallet.derivation))!
+//                let path = BIP32Path(self.wallet.derivation)!
+//                let account = try! masterKey.derive(path)
+//                let xpub = account.xpub
+//                self.getDescriptorInfo(xpub: xpub)
+//                
+//            } else {
+//                
+//                displayAlert(viewController: self, isError: true, message: "error converting those words into a seed")
+//                
+//            }
+//            
+//        }
         
     }
     
@@ -221,7 +221,7 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         let keyLabel = cell.viewWithTag(2) as! UILabel
         let pathLabel = cell.viewWithTag(3) as! UILabel
         
-        pathLabel.text = "m/84'/1'/0'/0/\(indexPath.section)"
+        pathLabel.text = "\(wallet.derivation)/\(indexPath.section)"
         keyLabel.text = "\(keys[indexPath.section])"
         
         keyLabel.adjustsFontSizeToFitWidth = true
@@ -304,29 +304,28 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func getKeys(mnemonic: BIP39Mnemonic) {
         
-        let path = BIP32Path("m/84'/1'/0'/0")!
-        let masterKey = HDKey((mnemonic.seedHex("")), network(path: "m/84'/1'/0'/0"))!
+        let path = BIP32Path(wallet.derivation)!
+        let masterKey = HDKey((mnemonic.seedHex("")), network(path: wallet.derivation))!
         let account = try! masterKey.derive(path)
         
         for i in 0 ... 1999 {
             
             let key1 = try! account.derive(BIP32Path("\(i)")!)
             var addressType:AddressType!
-            addressType = .payToWitnessPubKeyHash
             
-//            if derivation.contains("84") {
-//
-//                addressType = .payToWitnessPubKeyHash
-//
-//            } else if derivation.contains("44") {
-//
-//                addressType = .payToPubKeyHash
-//
-//            } else if derivation.contains("49") {
-//
-//                addressType = .payToScriptHashPayToWitnessPubKeyHash
-//
-//            }
+            if derivation.contains("84") {
+
+                addressType = .payToWitnessPubKeyHash
+
+            } else if derivation.contains("44") {
+
+                addressType = .payToPubKeyHash
+
+            } else if derivation.contains("49") {
+
+                addressType = .payToScriptHashPayToWitnessPubKeyHash
+
+            }
             
             let address = key1.address(addressType)
             keys.append("\(address)")
@@ -345,162 +344,162 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-    func getDescriptorInfo(xpub: String) {
-        
-        let reducer = Reducer()
-        var param = ""
-        
-        switch self.derivation {
-            
-        case "m/84'/1'/0'/0", "m/84'/0'/0'/0":
-            
-            param = "\"wpkh(\(xpub)/*)\""
-            
-        case "m/44'/1'/0'/0", "m/44'/0'/0'/0":
-            
-            param = "\"pkh(\(xpub)/*)\""
-            
-        case "m/49'/1'/0'/0", "m/49'/0'/0'/0":
-            
-            param = "\"sh(wpkh(\(xpub)/*))\""
-            
-        default:
-            
-            break
-            
-        }
-                
-        reducer.makeCommand(walletName: wallet.name, command: .getdescriptorinfo, param: param) {
-            
-            if !reducer.errorBool {
-                
-                let result = reducer.dictToReturn
-                let descriptor = "\"\(result["descriptor"] as! String)\""
-                let parameter = "\(descriptor), ''[0,1999]''"
-                self.deriveKeys(parameter: parameter)
-                
-            } else {
-                
-                self.connectingView.removeConnectingView()
-                displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
-                
-            }
-            
-        }
-        
-    }
+//    func getDescriptorInfo(xpub: String) {
+//
+//        let reducer = Reducer()
+//        var param = ""
+//
+//        switch self.derivation {
+//
+//        case "m/84'/1'/0'/0", "m/84'/0'/0'/0":
+//
+//            param = "\"wpkh(\(xpub)/*)\""
+//
+//        case "m/44'/1'/0'/0", "m/44'/0'/0'/0":
+//
+//            param = "\"pkh(\(xpub)/*)\""
+//
+//        case "m/49'/1'/0'/0", "m/49'/0'/0'/0":
+//
+//            param = "\"sh(wpkh(\(xpub)/*))\""
+//
+//        default:
+//
+//            break
+//
+//        }
+//
+//        reducer.makeCommand(walletName: wallet.name, command: .getdescriptorinfo, param: param) {
+//
+//            if !reducer.errorBool {
+//
+//                let result = reducer.dictToReturn
+//                let descriptor = "\"\(result["descriptor"] as! String)\""
+//                let parameter = "\(descriptor), ''[0,1999]''"
+//                self.deriveKeys(parameter: parameter)
+//
+//            } else {
+//
+//                self.connectingView.removeConnectingView()
+//                displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
+//
+//            }
+//
+//        }
+//
+//    }
     
-    func deriveKeys(parameter: String) {
-        
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: wallet.name, command: .deriveaddresses, param: parameter) {
-            
-            if !reducer.errorBool {
-                
-                let keysToConfirm = reducer.arrayToReturn as! [String]
-                let keysDerivedByLibWally = Set(self.keys)
-                let keysDerivedByBitcoinCore = Set(keysToConfirm)
-
-                if (keysDerivedByLibWally.count == keysDerivedByBitcoinCore.count && keysDerivedByLibWally == keysDerivedByBitcoinCore) {
-                    
-                    print("keys are identical")
-                    self.saveWallet()
-                    
-                } else {
-                    
-                    self.connectingView.removeConnectingView()
-                    
-                    displayAlert(viewController: self,
-                                 isError: true,
-                                 message: "keys do not match! error confirming derived keys with bitcoin core, seed will not be saved")
-                    
-                }
-                
-            } else {
-                
-                self.connectingView.removeConnectingView()
-                displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
-                
-            }
-            
-        }
-        
-    }
+//    func deriveKeys(parameter: String) {
+//
+//        let reducer = Reducer()
+//        reducer.makeCommand(walletName: wallet.name, command: .deriveaddresses, param: parameter) {
+//
+//            if !reducer.errorBool {
+//
+//                let keysToConfirm = reducer.arrayToReturn as! [String]
+//                let keysDerivedByLibWally = Set(self.keys)
+//                let keysDerivedByBitcoinCore = Set(keysToConfirm)
+//
+//                if (keysDerivedByLibWally.count == keysDerivedByBitcoinCore.count && keysDerivedByLibWally == keysDerivedByBitcoinCore) {
+//
+//                    print("keys are identical")
+//                    self.saveWallet()
+//
+//                } else {
+//
+//                    self.connectingView.removeConnectingView()
+//
+//                    displayAlert(viewController: self,
+//                                 isError: true,
+//                                 message: "keys do not match! error confirming derived keys with bitcoin core, seed will not be saved")
+//
+//                }
+//
+//            } else {
+//
+//                self.connectingView.removeConnectingView()
+//                displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
+//
+//            }
+//
+//        }
+//
+//    }
     
-    func saveWallet() {
-                
-        connectingView.addConnectingView(vc: self, description: "saving new wallet")
-        
-        let enc = Encryption()
-        let dataToEncrypt = words.dataUsingUTF8StringEncoding
-        enc.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
-            
-            if !error {
-                
-                var newWallet = [String:Any]()
-                newWallet["birthdate"] = keyBirthday()
-                newWallet["id"] = UUID()
-                newWallet["derivation"] = self.derivation
-                newWallet["isActive"] = true
-                newWallet["name"] = "\(randomString(length: 10))_StandUp"
-                newWallet["seed"] = encryptedData
-                newWallet["lastUsed"] = Date()
-                newWallet["lastBalance"] = 0.0
-                newWallet["walletCreated"] = false
-                newWallet["keysImported"] = false
-                newWallet["type"] = "DEFAULT"
-                
-                let walletCreator = WalletCreator()
-                
-                walletCreator.createStandUpWallet(derivation: self.derivation) { (success, errorDescription, descriptor) in
-                                                
-                    if success {
-                        
-                        newWallet["descriptor"] = descriptor!
-                        
-                        let walletSaver = WalletSaver()
-                        walletSaver.save(walletToSave: newWallet) { (success) in
-                            
-                            if success {
-                                
-                                print("wallet saved")
-                                
-                                self.connectingView.removeConnectingView()
-                                displayAlert(viewController: self, isError: false, message: "✓ successfully created new wallet")
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                                    self.navigationController?.popToRootViewController(animated: true)
-                                }
-                                
-                            } else {
-                                
-                                print("error saving default wallet")
-                                self.connectingView.removeConnectingView()
-                                
-                            }
-                            
-                        }
-                        
-                    } else {
-                        
-                        print("error creating new wallet")
-                        displayAlert(viewController: self, isError: true, message: errorDescription!)
-                        self.connectingView.removeConnectingView()
-                        
-                    }
-                    
-                }
-                
-            } else {
-                
-                print("error encrypting seed")
-                self.connectingView.removeConnectingView()
-                
-            }
-            
-        }
-        
-    }
+//    func saveWallet() {
+//
+//        connectingView.addConnectingView(vc: self, description: "saving new wallet")
+//
+//        let enc = Encryption()
+//        let dataToEncrypt = words.dataUsingUTF8StringEncoding
+//        enc.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
+//
+//            if !error {
+//
+//                var newWallet = [String:Any]()
+//                newWallet["birthdate"] = keyBirthday()
+//                newWallet["id"] = UUID()
+//                newWallet["derivation"] = self.derivation
+//                newWallet["isActive"] = true
+//                newWallet["name"] = "\(randomString(length: 10))_StandUp"
+//                newWallet["seed"] = encryptedData
+//                newWallet["lastUsed"] = Date()
+//                newWallet["lastBalance"] = 0.0
+//                newWallet["walletCreated"] = false
+//                newWallet["keysImported"] = false
+//                newWallet["type"] = "DEFAULT"
+//
+//                let walletCreator = WalletCreator()
+//
+//                walletCreator.createStandUpWallet(derivation: self.derivation) { (success, errorDescription, descriptor) in
+//
+//                    if success {
+//
+//                        newWallet["descriptor"] = descriptor!
+//
+//                        let walletSaver = WalletSaver()
+//                        walletSaver.save(walletToSave: newWallet) { (success) in
+//
+//                            if success {
+//
+//                                print("wallet saved")
+//
+//                                self.connectingView.removeConnectingView()
+//                                displayAlert(viewController: self, isError: false, message: "✓ successfully created new wallet")
+//
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+//                                    self.navigationController?.popToRootViewController(animated: true)
+//                                }
+//
+//                            } else {
+//
+//                                print("error saving default wallet")
+//                                self.connectingView.removeConnectingView()
+//
+//                            }
+//
+//                        }
+//
+//                    } else {
+//
+//                        print("error creating new wallet")
+//                        displayAlert(viewController: self, isError: true, message: errorDescription!)
+//                        self.connectingView.removeConnectingView()
+//
+//                    }
+//
+//                }
+//
+//            } else {
+//
+//                print("error encrypting seed")
+//                self.connectingView.removeConnectingView()
+//
+//            }
+//
+//        }
+//
+//    }
     
     private func network(path: String) -> Network {
         

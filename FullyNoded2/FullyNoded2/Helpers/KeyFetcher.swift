@@ -34,7 +34,7 @@ class KeyFetcher {
                             
                             if !error {
                                 
-                                if let masterKey = HDKey((mnemonic!.seedHex("")), self.network(path: derivationPath)) {
+                                if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
                                     
                                     if let path = BIP32Path(derivationPath) {
                                         
@@ -122,7 +122,7 @@ class KeyFetcher {
                             
                             if !error {
                                 
-                                if let masterKey = HDKey((mnemonic!.seedHex("")), self.network(path: derivationPath)) {
+                                if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
                                     
                                     if let path = BIP32Path(derivationPath) {
                                         
@@ -183,45 +183,29 @@ class KeyFetcher {
     
     func bip32Xpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
         
-        //getActiveWallet() { (wallet) in
+        let derivationPath = wallet.derivation
+        
+        let enc = Encryption()
+        enc.decryptData(dataToDecrypt: wallet.seed) { (seed) in
             
-            //if wallet != nil {
+            if seed != nil {
                 
-                let derivationPath = wallet.derivation
-                
-                let enc = Encryption()
-                enc.decryptData(dataToDecrypt: wallet.seed) { (seed) in
+                let words = String(data: seed!, encoding: .utf8)!
+                let mnenomicCreator = MnemonicCreator()
+                mnenomicCreator.convert(words: words) { (mnemonic, error) in
                     
-                    if seed != nil {
+                    if !error {
                         
-                        let words = String(data: seed!, encoding: .utf8)!
-                        let mnenomicCreator = MnemonicCreator()
-                        mnenomicCreator.convert(words: words) { (mnemonic, error) in
+                        if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
                             
-                            if !error {
+                            if let path = BIP32Path(derivationPath) {
                                 
-                                if let masterKey = HDKey((mnemonic!.seedHex("")), self.network(path: derivationPath)) {
+                                do {
                                     
-                                    if let path = BIP32Path(derivationPath) {
-                                        
-                                        do {
-                                            
-                                            let account = try masterKey.derive(path)
-                                            completion((account.xpub,false))
-                                            
-                                        } catch {
-                                            
-                                            completion((nil,true))
-                                            
-                                        }
-                                        
-                                    } else {
-                                        
-                                        completion((nil,true))
-                                        
-                                    }
+                                    let account = try masterKey.derive(path)
+                                    completion((account.xpub,false))
                                     
-                                } else {
+                                } catch {
                                     
                                     completion((nil,true))
                                     
@@ -233,6 +217,10 @@ class KeyFetcher {
                                 
                             }
                             
+                        } else {
+                            
+                            completion((nil,true))
+                            
                         }
                         
                     } else {
@@ -243,15 +231,17 @@ class KeyFetcher {
                     
                 }
                 
-            //}
+            } else {
+                
+                completion((nil,true))
+                
+            }
             
-        //}
+        }
         
     }
     
     func bip32Xprv(completion: @escaping ((xprv: String?, error: Bool)) -> Void) {
-        
-        print("bip32Xprv")
         
         getActiveWalletNow() { (wallet, error) in
             
@@ -269,7 +259,7 @@ class KeyFetcher {
                             
                             if !error {
                                 
-                                if let masterKey = HDKey((mnemonic!.seedHex("")), self.network(path: derivationPath)) {
+                                if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
                                     
                                     if let path = BIP32Path(derivationPath) {
                                         
@@ -416,24 +406,6 @@ class KeyFetcher {
             }
             
         }
-        
-    }
-    
-    public func network(path: String) -> Network {
-        
-        var network:Network!
-        
-        if path.contains("/1'") {
-            
-            network = .testnet
-            
-        } else {
-            
-            network = .mainnet
-            
-        }
-        
-        return network
         
     }
     

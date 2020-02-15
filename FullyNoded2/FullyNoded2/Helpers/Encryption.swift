@@ -129,7 +129,7 @@ class Encryption {
                                     
                                     for (k, value) in node {
                                                                                                                     
-                                        if k != "isActive" && k != "id" && k != "walletCreated" && k != "keysImported" {
+                                        if k != "isActive" && k != "id" && k != "network" {
                                             
                                             loopCount += 1
                                          
@@ -145,7 +145,7 @@ class Encryption {
                                                     
                                                     if loopCount == 4 {
                                                         
-                                                        // we know there will be 10 keys, so can check the loop has finished here
+                                                        // we know there will be 7 keys, so can check the loop has finished here
                                                         let nodeStruct = NodeStruct.init(dictionary: decryptedNode)
                                                         completion((nodeStruct,false))
                                                         
@@ -212,7 +212,7 @@ class Encryption {
                 
                 for (k, value) in node {
                                         
-                    if k != "id" && k != "isActive" && k != "walletCreated" && k != "keysImported" {
+                    if k != "id" && k != "isActive" && k != "network" {
                         
                         let stringToEncrypt = value as! String
                         

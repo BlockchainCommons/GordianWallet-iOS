@@ -8,6 +8,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isActive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="label" optional="YES" attributeType="Binary"/>
+        <attribute name="network" optional="YES" attributeType="String"/>
         <attribute name="onionAddress" optional="YES" attributeType="Binary"/>
         <attribute name="rpcpassword" optional="YES" attributeType="Binary"/>
         <attribute name="rpcuser" optional="YES" attributeType="Binary"/>
@@ -23,6 +24,7 @@
         <attribute name="isArchived" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="lastBalance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="lastUsed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="mOfNtype" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="nodeId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="seed" optional="YES" attributeType="Binary"/>
@@ -30,7 +32,7 @@
     </entity>
     <elements>
         <element name="Auth" positionX="-63" positionY="-18" width="128" height="73"/>
-        <element name="Nodes" positionX="-54" positionY="-9" width="128" height="133"/>
-        <element name="Wallets" positionX="-36" positionY="9" width="128" height="253"/>
+        <element name="Nodes" positionX="-54" positionY="-9" width="128" height="148"/>
+        <element name="Wallets" positionX="-36" positionY="9" width="128" height="268"/>
     </elements>
 </model>

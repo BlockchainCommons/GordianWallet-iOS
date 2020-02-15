@@ -44,9 +44,36 @@ class ImportColdMultiSigDescriptor {
                                 let processedDescriptor = result["descriptor"] as! String
                                 
                                 newWallet["descriptor"] = processedDescriptor
-                                print("processedDescriptor = \(processedDescriptor)")
                                 
-                                let params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,1999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
+                                var params = ""
+                                let descParser = DescriptorParser()
+                                let descStruct = descParser.descriptor(processedDescriptor)
+                                
+                                if descStruct.isHot {
+                                    
+                                    if !descStruct.isMulti {
+                                        
+                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,1999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
+                                        
+                                    } else {
+                                        
+                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,1999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
+                                        
+                                    }
+                                    
+                                } else {
+                                    
+                                    if !descStruct.isMulti {
+                                        
+                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,1999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
+                                        
+                                    } else {
+                                        
+                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,1999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
+                                        
+                                    }
+                                    
+                                }
                                 
                                 reducer.makeCommand(walletName: str.name, command: .importmulti, param: params) {
                                     

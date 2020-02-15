@@ -33,13 +33,20 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         walletTable.dataSource = self
         editButton = UIBarButtonItem.init(barButtonSystemItem: .edit, target: self, action: #selector(editWallets))
         addButton = UIBarButtonItem.init(barButtonSystemItem: .add, target: self, action: #selector(createWallet))
-        self.navigationItem.setRightBarButtonItems([addButton, editButton], animated: true)
+        self.navigationItem.setRightBarButton(addButton, animated: true)
+        self.navigationItem.setLeftBarButton(editButton, animated: true)
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
         refresh()
+        
+        DispatchQueue.main.async {
+            
+            self.walletTable.setContentOffset(.zero, animated: true)
+            
+        }
         
     }
     
@@ -57,7 +64,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        self.navigationItem.setRightBarButtonItems([addButton, editButton], animated: true)
+        self.navigationItem.setLeftBarButton(editButton, animated: true)
         
     }
     
@@ -182,7 +189,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                             DispatchQueue.main.async {
                                                 
                                                 self.walletTable.reloadData()
-                                                self.walletTable.setContentOffset(.zero, animated: true)
                                                 
                                             }
                                             
@@ -244,7 +250,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let getWalletInfoButton = cell.viewWithTag(12) as! UIButton
             let updatedLabel = cell.viewWithTag(13) as! UILabel
             let createdLabel = cell.viewWithTag(14) as! UILabel
-            //            let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
+            let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
             let shareSeedButton = cell.viewWithTag(16) as! UIButton
             //            let getNodeSeedInfo = cell.viewWithTag(17) as! UIButton
             //            let getOfflineSeedInfo = cell.viewWithTag(18) as! UIButton
@@ -326,12 +332,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if derivation.contains("1") {
                 
                 networkLabel.text = "Testnet"
-                //balanceLabel.textColor = .systemOrange
+                networkLabel.textColor = .systemOrange
+                balanceLabel.textColor = .systemOrange
                 
             } else {
                 
                 networkLabel.text = "Mainnet"
-                //balanceLabel.textColor = .systemGreen
+                networkLabel.textColor = .systemGreen
+                balanceLabel.textColor = .systemGreen
                 
             }
             
@@ -340,20 +348,19 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if derivation.contains("84") {
                 
                 derivationLabel.text = "BIP84"
-                deviceXprv.text = "xprv m/84'/1'/0'/0"
+                
                 
             } else if derivation.contains("44") {
                 
                 derivationLabel.text = "BIP44"
-                deviceXprv.text = "xprv m/44'/1'/0'/0"
                 
             } else if derivation.contains("49") {
                 
                 derivationLabel.text = "BIP49"
-                deviceXprv.text = "xprv m/49'/1'/0'/0"
                 
             }
             
+            deviceXprv.text = "xprv \(wallet.derivation)"
             updatedLabel.text = "\(formatDate(date: wallet.lastUsed))"
             createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
             walletFileLabel.text = wallet.name + ".dat"
@@ -369,6 +376,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     let last15 = String(rpcOnion.suffix(15))
                     rpcOnionLabel.text = "\(first10)*****\(last15)"
                     nodeLabel.text = s.label
+                    nodeSeedLabel.text = "1 Watch-only \(s.label)"
                     
                 }
                 
@@ -394,7 +402,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let getWalletInfoButton = cell.viewWithTag(12) as! UIButton
             let updatedLabel = cell.viewWithTag(13) as! UILabel
             let createdLabel = cell.viewWithTag(14) as! UILabel
-            //            let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
+            let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
             let shareSeedButton = cell.viewWithTag(16) as! UIButton
             //            let getNodeSeedInfo = cell.viewWithTag(17) as! UIButton
             //            let getOfflineSeedInfo = cell.viewWithTag(18) as! UIButton
@@ -481,11 +489,13 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if derivation.contains("1") {
                 
                 networkLabel.text = "Testnet"
+                networkLabel.textColor = .systemOrange
                 balanceLabel.textColor = .systemOrange
                 
             } else {
                 
                 networkLabel.text = "Mainnet"
+                networkLabel.textColor = .systemGreen
                 balanceLabel.textColor = .systemGreen
                 
             }
@@ -493,25 +503,20 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if derivation.contains("84") {
                 
                 derivationLabel.text = "BIP84"
-                deviceXprv.text = "xprv m/84'/1'/0'/0"
-                nodeKeys.text = "keys m/84'/1'/0'/0/0 to /1999"
-                offlineXprv.text = "xprv m/84'/1'/0'/0"
                 
             } else if derivation.contains("44") {
                 
                 derivationLabel.text = "BIP44"
-                deviceXprv.text = "xprv m/44'/1'/0'/0"
-                nodeKeys.text = "keys m/44'/1'/0'/0/0 to /1999"
-                offlineXprv.text = "xprv m/44'/1'/0'/0"
                 
             } else if derivation.contains("49") {
                 
                 derivationLabel.text = "BIP49"
-                deviceXprv.text = "xprv m/49'/1'/0'/0"
-                nodeKeys.text = "keys m/49'/1'/0'/0/0 to /1999"
-                offlineXprv.text = "xprv m/49'/1'/0'/0"
                 
             }
+            
+            deviceXprv.text = "xprv \(wallet.derivation)"
+            nodeKeys.text = "keys \(wallet.derivation)/0 to /1999"
+            offlineXprv.text = "xprv \(wallet.derivation)"
             
             updatedLabel.text = "\(formatDate(date: wallet.lastUsed))"
             createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
@@ -528,6 +533,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     let last15 = String(rpcOnion.suffix(15))
                     rpcOnionLabel.text = "\(first10)*****\(last15)"
                     nodeLabel.text = s.label
+                    nodeSeedLabel.text = "1 Seedless \(s.label)"
                     
                 }
                 
@@ -540,13 +546,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let cell = walletTable.dequeueReusableCell(withIdentifier: "coldWalletCell", for: indexPath)
             cell.selectionStyle = .none
             
+            let parser = DescriptorParser()
+            let descStr = parser.descriptor(wallet.descriptor)
+            
             let balanceLabel = cell.viewWithTag(1) as! UILabel
             let isActive = cell.viewWithTag(2) as! UISwitch
             let exportKeysButton = cell.viewWithTag(3) as! UIButton
             let verifyAddresses = cell.viewWithTag(4) as! UIButton
             let refreshData = cell.viewWithTag(5) as! UIButton
             let showInvoice = cell.viewWithTag(6) as! UIButton
-            let makeItCold = cell.viewWithTag(7) as! UIButton
+            let rescanButton = cell.viewWithTag(7) as! UIButton
             let networkLabel = cell.viewWithTag(8) as! UILabel
             let utxosButton = cell.viewWithTag(9) as! UIButton
             //let getDerivationInfoButton = cell.viewWithTag(10) as! UIButton
@@ -554,7 +563,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let getWalletInfoButton = cell.viewWithTag(12) as! UIButton
             let updatedLabel = cell.viewWithTag(13) as! UILabel
             let createdLabel = cell.viewWithTag(14) as! UILabel
-            //            let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
+            let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
             //let shareSeedButton = cell.viewWithTag(16) as! UIButton
             let exportSeedButton = cell.viewWithTag(17) as! UIButton
             //            let getOfflineSeedInfo = cell.viewWithTag(18) as! UIButton
@@ -567,6 +576,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let stackView = cell.viewWithTag(25)!
             let nodeView = cell.viewWithTag(26)!
             let nodeLabel = cell.viewWithTag(27) as! UILabel
+            let keysOnNodeLabel = cell.viewWithTag(28) as! UILabel
+            let typeLabel = cell.viewWithTag(29) as! UILabel
             
             if wallet.isActive {
                 
@@ -594,7 +605,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 utxosButton.addTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
                 exportSeedButton.addTarget(self, action: #selector(export(_:)), for: .touchUpInside)
-                makeItCold.addTarget(self, action: #selector(rescan(_:)), for: .touchUpInside)
+                rescanButton.addTarget(self, action: #selector(rescan(_:)), for: .touchUpInside)
                 showInvoice.addTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
                 //shareSeedButton.addTarget(self, action: #selector(export(_:)), for: .touchUpInside)
                 exportKeysButton.addTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
@@ -606,7 +617,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 utxosButton.removeTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
                 exportSeedButton.removeTarget(self, action: #selector(export(_:)), for: .touchUpInside)
-                makeItCold.removeTarget(self, action: #selector(rescan(_:)), for: .touchUpInside)
+                rescanButton.removeTarget(self, action: #selector(rescan(_:)), for: .touchUpInside)
                 showInvoice.removeTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
                 //shareSeedButton.removeTarget(self, action: #selector(export(_:)), for: .touchUpInside)
                 exportKeysButton.removeTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
@@ -616,7 +627,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             }
             
-            makeItCold.restorationIdentifier = "\(indexPath.section)"
+            rescanButton.restorationIdentifier = "\(indexPath.section)"
             exportSeedButton.restorationIdentifier = "\(indexPath.section)"
             exportKeysButton.restorationIdentifier = "\(indexPath.section)"
             getWalletInfoButton.restorationIdentifier = "\(indexPath.section)"
@@ -630,34 +641,34 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             networkLabel.layer.cornerRadius = 8
             utxosButton.layer.cornerRadius = 8
             
-            let derivation = wallet.derivation
+            //let derivation = wallet.derivation
             balanceLabel.adjustsFontSizeToFitWidth = true
             balanceLabel.text = "\(wallet.lastBalance.avoidNotation) BTC"
             
-            if derivation.contains("1") {
+            if descStr.chain == "Testnet" {
                 
                 networkLabel.text = "Testnet"
+                networkLabel.textColor = .systemOrange
                 balanceLabel.textColor = .systemOrange
                 
-            } else {
+            } else if descStr.chain == "Mainnet" {
                 
                 networkLabel.text = "Mainnet"
+                networkLabel.textColor = .systemGreen
                 balanceLabel.textColor = .systemGreen
                 
             }
-                                    
-            if derivation.contains("84") {
-
-                derivationLabel.text = "BIP84"
-
-            } else if derivation.contains("44") {
-
-                derivationLabel.text = "BIP44"
-
-            } else if derivation.contains("49") {
-
-                derivationLabel.text = "BIP49"
-
+            
+            derivationLabel.text = descStr.format
+            
+            if descStr.isMulti {
+                
+                typeLabel.text = descStr.mOfNType
+                
+            } else {
+                
+                typeLabel.text = "Single-Sig"
+                
             }
             
             updatedLabel.text = "\(formatDate(date: wallet.lastUsed))"
@@ -675,6 +686,28 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     let last15 = String(rpcOnion.suffix(15))
                     rpcOnionLabel.text = "\(first10)*****\(last15)"
                     nodeLabel.text = s.label
+                    
+                    if descStr.isHot {
+                        
+                        nodeSeedLabel.text = "\(s.label) is Hot"
+                        keysOnNodeLabel.text = "2,000 private keys on \(s.label)"
+                        cell.backgroundColor = #colorLiteral(red: 0.3412515863, green: 0.07937019594, blue: 0.06658586931, alpha: 1)
+                        seedOnNodeView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
+                        nodeView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
+                        stackView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
+                        balanceLabel.textColor = .lightGray
+                        
+                    } else {
+                        
+                        nodeSeedLabel.text = "\(s.label) is Cold"
+                        keysOnNodeLabel.text = "2,000 public keys on \(s.label)"
+                        cell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
+                        seedOnNodeView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
+                        nodeView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
+                        stackView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
+                        
+                    }
+                    
                     
                 }
                 
@@ -1042,7 +1075,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        //let name = WalletStruct.init(dictionary: sortedWallets[section]).name
         return ""
         
     }
@@ -1063,11 +1095,29 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     func activateNow(wallet: WalletStruct, index: Int) {
         
         if !wallet.isActive {
-            
+                        
             DispatchQueue.main.async {
                 
                 let impact = UIImpactFeedbackGenerator()
                 impact.impactOccurred()
+                
+            }
+            
+            let cd = CoreDataService()
+            let enc = Encryption()
+            
+            enc.getNode { (n, error) in
+                
+                if n != nil {
+                    
+                    if wallet.nodeId != n!.id {
+                        
+                        cd.updateEntity(id: wallet.nodeId, keyToUpdate: "isActive", newValue: true, entityName: .nodes) {}
+                        cd.updateEntity(id: n!.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) {}
+                        
+                    }
+                    
+                }
                 
             }
             
@@ -1080,28 +1130,21 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     self.sortedWallets[i]["lastUsed"]  = Date()
                     self.sortedWallets[i]["isActive"] = true
                     
-                    DispatchQueue.main.async {
-                        
-                        self.walletTable.reloadSections(IndexSet(arrayLiteral: i), with: .fade)
-                                            
-                    }
-                    
                 } else {
                     
                     self.sortedWallets[i]["isActive"] = false
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.walletTable.reloadSections(IndexSet(arrayLiteral: i), with: .none)
-                                            
-                    }
                     
                 }
                 
                 if i + 1 == sortedWallets.count {
                     
+                    DispatchQueue.main.async {
+                        
+                        self.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
+                                            
+                    }
+                    
                     // update the actual data
-                    let cd = CoreDataService()
                     cd.updateEntity(id: wallet.id, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) {
                         
                         self.activate(walletToActivate: wallet.id, index: index)
@@ -1241,151 +1284,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             self.performSegue(withIdentifier: "addWallet", sender: self)
             
-//            let alert = UIAlertController(title: "To create a wallet, select a type below", message: "", preferredStyle: .actionSheet)
-//            
-//            alert.addAction(UIAlertAction(title: "Single-Sig", style: .default, handler: { action in
-//                
-//                self.createSingleSig()
-//                
-//            }))
-//            
-//            alert.addAction(UIAlertAction(title: "Multi-Sig", style: .default, handler: { action in
-//                
-//                self.createMultiSig()
-//                
-//            }))
-//            
-//            alert.addAction(UIAlertAction(title: "Import Custom", style: .default, handler: { action in
-//                
-//                self.importCustom()
-//                
-//            }))
-//            
-//            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-//            
-//            self.present(alert, animated: true, completion: nil)
-            
         }
         
     }
-    
-//    func importCustom() {
-//
-//        DispatchQueue.main.async {
-//
-//            self.performSegue(withIdentifier: "importCustom", sender: self)
-//
-//        }
-//
-//    }
-//
-//    func createMultiSig() {
-//
-//        DispatchQueue.main.async {
-//
-//            self.performSegue(withIdentifier: "createMultiSigNow", sender: self)
-//
-//        }
-//
-//    }
-//
-//    func createSingleSig() {
-//
-//        creatingView.addConnectingView(vc: self, description: "Creating single-sig wallet")
-//
-//        let enc = Encryption()
-//
-//        enc.getNode { (node, error) in
-//
-//            if !error && node != nil {
-//
-//                let keyCreator = KeychainCreator()
-//                keyCreator.createKeyChain() { (mnemonic, error) in
-//
-//                    if !error {
-//
-//                        let dataToEncrypt = mnemonic!.dataUsingUTF8StringEncoding
-//                        enc.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
-//
-//                            if !error {
-//
-//                                let walletSaver = WalletSaver()
-//                                var newWallet = [String:Any]()
-//                                newWallet["birthdate"] = keyBirthday()
-//                                newWallet["id"] = UUID()
-//                                newWallet["derivation"] = "m/84'/1'/0'/0"
-//                                newWallet["isActive"] = false
-//                                newWallet["name"] = "\(randomString(length: 10))_StandUp"
-//                                newWallet["seed"] = encryptedData!
-//                                newWallet["lastUsed"] = Date()
-//                                newWallet["lastBalance"] = 0.0
-//                                newWallet["type"] = "DEFAULT"
-//                                newWallet["nodeId"] = node!.id
-//                                newWallet["isArchived"] = false
-//
-//                                let walletCreator = WalletCreator()
-//                                walletCreator.walletDict = newWallet
-//                                walletCreator.node = node!
-//
-//                                walletCreator.createStandUpWallet(derivation: "m/84'/1'/0'/0") { (success, errorDescription, descriptor) in
-//
-//                                    if success {
-//
-//                                        newWallet["descriptor"] = descriptor!
-//
-//                                        walletSaver.save(walletToSave: newWallet) { (success) in
-//
-//                                            if success {
-//
-//                                                print("wallet saved")
-//
-//                                                self.creatingView.removeConnectingView()
-//
-//                                                self.refresh()
-//
-//                                                displayAlert(viewController: self, isError: false, message: "wallet added! Tap it to activate it")
-//
-//                                            } else {
-//
-//                                                print("error saving wallet")
-//                                                displayAlert(viewController: self, isError: true, message: "There was an error saving your wallet")
-//
-//                                            }
-//
-//                                        }
-//
-//                                    } else {
-//
-//                                        self.creatingView.removeConnectingView()
-//                                        displayAlert(viewController: self, isError: true, message: "There was an error creating your wallet: \(errorDescription!)")
-//
-//                                    }
-//
-//                                }
-//
-//                            } else {
-//
-//                                self.creatingView.removeConnectingView()
-//                                displayAlert(viewController: self, isError: true, message: "There was an error encrypting your seed")
-//
-//                            }
-//
-//                        }
-//
-//                    }
-//
-//                }
-//
-//            } else {
-//
-//                self.creatingView.removeConnectingView()
-//                displayAlert(viewController: self, isError: true, message: "no active node")
-//
-//            }
-//
-//        }
-//
-//    }
     
     // MARK: - Navigation
 
@@ -1454,7 +1355,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 vc.multiSigDoneBlock = { (arg0) in
                     
-                    let (success, recoverphrase, desc) = arg0
+                    let (_, recoverphrase, desc) = arg0
                     
                     DispatchQueue.main.async {
                         
@@ -1465,6 +1366,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             self.performSegue(withIdentifier: "showRecoveryKit", sender: self)
                             
                         }
+                        
+                    }
+                    
+                }
+                
+                vc.importDoneBlock = { result in
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.performSegue(withIdentifier: "importCustom", sender: self)
                         
                     }
                     
@@ -1481,6 +1392,19 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 vc.onDoneBlock2 = { result in
                     
+                    self.refresh()
+                    
+                }
+                
+            }
+            
+        case "importCustom":
+            
+            if let vc = segue.destination as? ImportViewController {
+                
+                vc.importComplete = { result in
+                    
+                    showAlert(vc: self, title: "Success!", message: "Wallet imported! Tap it to active it.")
                     self.refresh()
                     
                 }

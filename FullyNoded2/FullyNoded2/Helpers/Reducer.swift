@@ -93,9 +93,37 @@ class Reducer {
                     
                 } else {
                     
-                    errorBool = true
-                    errorDescription = torRPC.errorDescription
-                    completion()
+                    if torRPC.errorDescription.contains("Requested wallet does not exist or is not loaded") {
+                        
+                        errorDescription = ""
+                        errorBool = false
+                        
+                        torRPC.executeRPCCommand(walletName: walletName, method: .loadwallet, param: "\"\(walletName)\"") {
+                            
+                            if !self.torRPC.errorBool {
+                                
+                                self.torRPC.executeRPCCommand(walletName: walletName, method: command,
+                                                              param: param,
+                                                              completion: getResult)
+                                
+                            } else {
+                                
+                                self.errorBool = true
+                                self.errorDescription = "Wallet does not exist, maybe your node changed networks?"
+                                completion()
+                                
+                            }
+                            
+                        }
+                        
+                    } else {
+                        
+                        errorBool = true
+                        errorDescription = torRPC.errorDescription
+                        completion()
+                        
+                    }
+                
                     
                 }
                 

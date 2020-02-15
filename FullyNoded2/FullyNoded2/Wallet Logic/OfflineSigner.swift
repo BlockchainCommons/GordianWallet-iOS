@@ -128,7 +128,7 @@ class OfflineSigner {
                     let addresses = scriptPubKey["addresses"] as! NSArray
                     let amount = UInt64((dict["value"] as! Double) * 100000000)
                     let destination = Address.init((addresses[0] as! String))!
-                    let output = TxOutput(destination.scriptPubKey, amount, .testnet)
+                    let output = TxOutput(destination.scriptPubKey, amount, network(path: wallet!.derivation))
                     outputsToSend.append(output)
                     
                     if i + 1 == vouts.count {
