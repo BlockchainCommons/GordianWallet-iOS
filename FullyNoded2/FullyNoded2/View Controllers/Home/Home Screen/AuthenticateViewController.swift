@@ -22,8 +22,12 @@ class AuthenticateViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        configureDisplayer()
         
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        configureDisplayer()
     }
     
     func getpubkey() {
@@ -33,10 +37,62 @@ class AuthenticateViewController: UIViewController {
             
             if errorDescription == nil {
                 
-                let pubkey = authKeys![0]["pubkey"] as! Data
-                let str = String(bytes: pubkey, encoding: .utf8)!
-                self.pubkey = "descriptor:x25519:" + str
-                self.showDescriptor()
+                if authKeys != nil {
+                    
+                    if authKeys!.count > 0 {
+                        
+                        let pubkey = authKeys![0]["pubkey"] as! Data
+                        let str = String(bytes: pubkey, encoding: .utf8)!
+                        self.pubkey = "descriptor:x25519:" + str
+                        self.showDescriptor()
+                        
+                    }
+                    
+                } else {
+                    
+                    let keygen = KeyGen()
+                    keygen.generate { (pubkey, privkey) in
+                        
+                        if pubkey != nil && privkey != nil {
+                            
+                            let pubkeyData = pubkey!.dataUsingUTF8StringEncoding
+                            let privkeyData = privkey!.dataUsingUTF8StringEncoding
+                            let enc = Encryption()
+                            enc.encryptData(dataToEncrypt: privkeyData) { (encryptedPrivkey, error) in
+                                
+                                if !error {
+                                    
+                                    let dict = ["privkey":encryptedPrivkey!, "pubkey":pubkeyData]
+                                    let cd = CoreDataService()
+                                    cd.saveEntity(dict: dict, entityName: .auth) {
+                                        
+                                        if cd.errorBool {
+                                            
+                                            self.pubkey = "descriptor:x25519:" + pubkey!
+                                            self.showDescriptor()
+                                            
+                                        } else {
+                                            
+                                            displayAlert(viewController: self, isError: true, message: "error saving auth keys")
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                } else {
+                                    
+                                    displayAlert(viewController: self, isError: true, message: "error encrypting your privkey")
+                                    
+                                }
+                                
+                            }
+                            
+                            
+                        }
+                        
+                    }
+                    
+                }
                 
             } else {
                 
@@ -68,8 +124,12 @@ class AuthenticateViewController: UIViewController {
     
     func showDescriptor() {
         
-        displayer.rawString = pubkey
-        displayer.addRawDisplay()
+        DispatchQueue.main.async {
+            
+            self.displayer.rawString = self.pubkey
+            self.displayer.addRawDisplay()
+            
+        }
         
     }
     

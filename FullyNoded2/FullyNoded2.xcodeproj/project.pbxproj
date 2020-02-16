@@ -60,7 +60,6 @@
 		D09D733123F0F3C000847DC8 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B823F0F3C000847DC8 /* PageViewController.swift */; };
 		D09D733223F0F3C000847DC8 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72BA23F0F3C000847DC8 /* LogInViewController.swift */; };
 		D09D733323F0F3C000847DC8 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72BC23F0F3C000847DC8 /* Utilities.swift */; };
-		D09D733423F0F3C000847DC8 /* Transition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72BE23F0F3C000847DC8 /* Transition.swift */; };
 		D09D733723F0F3C000847DC8 /* shim.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72C223F0F3C000847DC8 /* shim.swift */; };
 		D09D733823F0F3C000847DC8 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72C323F0F3C000847DC8 /* StringExtension.swift */; };
 		D09D733A23F0F3C000847DC8 /* Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72C623F0F3C000847DC8 /* Entities.swift */; };
@@ -214,7 +213,6 @@
 		D09D72BA23F0F3C000847DC8 /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		D09D72BC23F0F3C000847DC8 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		D09D72BD23F0F3C000847DC8 /* StandUp-Remote-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StandUp-Remote-Bridging-Header.h"; sourceTree = "<group>"; };
-		D09D72BE23F0F3C000847DC8 /* Transition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transition.swift; sourceTree = "<group>"; };
 		D09D72C223F0F3C000847DC8 /* shim.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = shim.swift; sourceTree = "<group>"; };
 		D09D72C323F0F3C000847DC8 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		D09D72C623F0F3C000847DC8 /* Entities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entities.swift; sourceTree = "<group>"; };
@@ -592,7 +590,6 @@
 			children = (
 				D09D72BC23F0F3C000847DC8 /* Utilities.swift */,
 				D09D72BD23F0F3C000847DC8 /* StandUp-Remote-Bridging-Header.h */,
-				D09D72BE23F0F3C000847DC8 /* Transition.swift */,
 				D09D72BF23F0F3C000847DC8 /* Base32 Key Gen */,
 			);
 			path = Miscellaneous;
@@ -1112,7 +1109,6 @@
 				D09D732923F0F3C000847DC8 /* InvoiceViewController.swift in Sources */,
 				D09D730D23F0F3C000847DC8 /* NodeStruct.swift in Sources */,
 				D09D736923F0F3C000847DC8 /* SingleSigBuilder.swift in Sources */,
-				D09D733423F0F3C000847DC8 /* Transition.swift in Sources */,
 				D09D732A23F0F3C000847DC8 /* TransactionViewController.swift in Sources */,
 				D09D733223F0F3C000847DC8 /* LogInViewController.swift in Sources */,
 				D09DCF6623F10645008F5B9F /* Base32.swift in Sources */,
