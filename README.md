@@ -45,7 +45,7 @@ Currently the app is fully capable of creating and locally signing PSBT's with e
 - creates the psbt with your node
 - signs the psbt with your node (if it can)
 - signs the psbt locally on your device (if it can)
-- the transaction is then decoded and analyzed, each input/output is listed, identifiying change outputs and the mining fee
+- the transaction is then decoded and analyzed, each input/output is listed, identifying change outputs and the mining fee
 - the user may tap each input/output and the app will make the `getaddressinfo` rpc command to your node for the respective address so that you may confirm whether or not the address is yours and the utxo is the intended one
 - if the transaction is fully signed you can broadcast by tapping the play button
 - if the transaction is still partially signed or unsigned at all you may export it for external signing (it will show blue), currently *FullyNoded 2* will export the psbt in raw data fromat which is fully compatible with Coldcard Wallet
