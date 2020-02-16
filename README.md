@@ -17,25 +17,25 @@ We have a public link available for beta testing [here](https://testflight.apple
 ### Initial Setup
 
 Upon on initial use the user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or a testnet node we are currently utilzing for development purposes by tapping the "don't have a node?" button:
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/FullyNoded2/Images/quickConnect.PNG" alt="" width="250"/>
+<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/Images/quickConnect.PNG" alt="" width="250"/>
 
 Once you are connected to a node you may go to the "Wallets" tab and create either a Single-Sig, Multi-Sig or import a wallet (recovery is under development):
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/FullyNoded2/Images/createWallet.PNG" alt="" width="250"/>
+<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/Images/createWallet.PNG" alt="" width="250"/>
 
 After creating a wallet you wll see it on the "Wallets" page:
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/FullyNoded2/Images/wallets.PNG" alt="" width="250"/>
+<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/Images/wallets.PNG" alt="" width="250"/>
 
 You can activate/deactivate wallets by toggling them, when you have an active wallet your home screen will look like this:
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/FullyNoded2/Images/home.PNG" alt="" width="250"/>
+<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/Images/home.PNG" alt="" width="250"/>
 
 You may expand the cells to show more info about your Tor connection and Wallet by tapping the info buttons:
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/FullyNoded2/Images/expanded.PNG" alt="" width="250"/>
+<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/Images/expanded.PNG" alt="" width="250"/>
 
 ### Everyday use
 
 Currently the app is fully capable of creating and locally signing PSBT's with either multisig or single signature wallets. It also builds unsigned PSBT's for watch-only wallets which can be passed to external signers such as [Hermit](https://github.com/unchained-capital/hermit/tree/master/hermit) or [Coldcard](https://coldcardwallet.com).
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/FullyNoded2/Images/unsigned.PNG" alt="" width="250"/>
+<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/Images/unsigned.PNG" alt="" width="250"/>
 
 The app offers coin control, fee optimization, batching and other useful tools for verifying keys and exporting backups.
 
@@ -57,9 +57,9 @@ The reason we use descriptors are because they are human readable, unambigous bi
 
 *FullyNoded 2* allows you to export the seed which is stored on your device at anytime in the form of a 12 word BIP39 mnemonic, a public key descriptor, private key descriptor and even the verbatim rpc command `importmulti` which can be copied and pasted into your nodes terminal to recover your wallets seed.
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/FullyNoded2/Images/export1.PNG" alt="" width="250"/>
+<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/Images/export1.PNG" alt="" width="250"/>
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/FullyNoded2/Images/export2.PNG" alt="" width="250"/>
+<img src="https://github.com/BlockchainCommons/FullyNoded-2/tree/master/Images/export2.PNG" alt="" width="250"/>
 
 ### Wishlist
 
