@@ -75,7 +75,7 @@ The reason we use descriptors are because they are human readable, unambigous bi
   - [x] Segwit
   - [x] Non-custodial
   - [ ] Coin Control (work in progress)
-  - [x ] BIP44
+  - [x] BIP44
   - [x] BIP84
   - [x] BIP49
   - [x] BIP32
@@ -152,7 +152,7 @@ The app should now run in XCode.
 - GPG Fingerprint: 3B37 97FA 0AE8 4BE5 B440  6591 8564 01D7 121C 32FC 
 
 ### Authors
-- Add your name here by getting involved, first step is to check out our Contributing section [here](https://github.com/BlockchainCommons/FullyNoded-2#contributing)
+- Add your name here by getting involved, first step is to check out our [contributing section](https://github.com/BlockchainCommons/FullyNoded-2#contributing).
 
 ### Reporting a Vulnerability
 
