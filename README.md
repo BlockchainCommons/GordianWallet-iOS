@@ -16,9 +16,7 @@ We have a public link available for beta testing [here](https://testflight.apple
 
 ### Initial Setup
 
-Upon on initial use the user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or a testnet node we are currently utilizing for development purposes by tapping the "don't have a node?" button:
-
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/quickConnect.PNG" alt="" width="250"/>
+Upon on initial use the user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or a testnet node we are currently utilizing for development purposes by tapping the "don't have a node?" button.
 
 Once you are connected to a node you may go to the "Wallets" tab and create either a Single-Sig, Multi-Sig or import a wallet (recovery is under development):
 
