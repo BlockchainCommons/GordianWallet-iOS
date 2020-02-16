@@ -2,9 +2,9 @@
 
 ## Status
 
-FullyNoded 2 is currently under active development and in the early testing phase. It should only be used on testnet for now.
+*FullyNoded 2* is currently under active development and in the early testing phase. It should only be used on testnet for now.
 
-FullyNoded 2 is designed to work with the [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) and [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts), but will work with any properly configured Bitcoin Core 0.19.0.1 node with a hidden service controlling `rpcport` via localhost. Supporting nodes are [Nodl](https://www.nodl.it/), [BTCPayServer](https://btcpayserver.org) and [RaspiBlitz](https://github.com/rootzoll/raspiblitz), these nodes can be connected by clicking a link or scanning a qr code. Please refer to their telegram groups for simple instructions: 
+*FullyNoded 2* is designed to work with the [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) and [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts), but will work with any properly configured Bitcoin Core 0.19.0.1 node with a hidden service controlling `rpcport` via localhost. Supporting nodes are [Nodl](https://www.nodl.it/), [BTCPayServer](https://btcpayserver.org) and [RaspiBlitz](https://github.com/rootzoll/raspiblitz), these nodes can be connected by clicking a link or scanning a qr code. Please refer to their telegram groups for simple instructions: 
 
 - [Nodl Telegram](https://t.me/nodl_support)
 - [BTCPayServer](https://t.me/btcpayserver)
@@ -16,7 +16,7 @@ We have a public link available for beta testing [here](https://testflight.apple
 
 ### Initial Setup
 
-Upon on initial use the user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or a testnet node we are currently utilzing for development purposes by tapping the "don't have a node?" button:
+Upon on initial use the user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or a testnet node we are currently utilizing for development purposes by tapping the "don't have a node?" button:
 
 <img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/quickConnect.PNG" alt="" width="250"/>
 
@@ -24,7 +24,7 @@ Once you are connected to a node you may go to the "Wallets" tab and create eith
 
 <img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/createWallet.PNG" alt="" width="250"/>
 
-After creating a wallet you wll see it on the "Wallets" page:
+After creating a wallet you will see it on the "Wallets" page:
 
 <img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/wallets.PNG" alt="" width="250"/>
 
@@ -50,11 +50,11 @@ Single signature wallets take a unique approach in that a new wallet is created 
 
 ### Multi-Signature
 
-By default FullyNoded 2 will create a 2 of 3 mutlisignature wallet whereby all three seeds are created locally. One seed is converted to BIP39 words for the user to record securely for recovery purposes and then deleted forever from the device. The app will then create a wallet on your node and utilizes the `importmulti` command to import 2,000 BIP84 private keys to your nodes wallet so that it may sign for one of the two required signatures. The third seed is saved locally to your device as a BIP39 mnemonic. When it comes to spending again we utilize `walletcreatefundedpsbt` on your node to handle coin selection, and fee optimization. Your node will then sign the psbt and pass it to the app at which time the app will sign for the second signature locally. With this set up a user may lose either their node, device or the BIP39 back up recovery words and still be able to spend their bitcoin. In a future release the app will allow multiple levels of security including 2fa and wallet.dat encryption which would mean even if an attacker got hold of your device they would *also* need your decryption password to spend funds.
+By default *FullyNoded 2* will create a 2 of 3 mutlisignature wallet whereby all three seeds are created locally. One seed is converted to BIP39 words for the user to record securely for recovery purposes and then deleted forever from the device. The app will then create a wallet on your node and utilizes the `importmulti` command to import 2,000 BIP84 private keys to your nodes wallet so that it may sign for one of the two required signatures. The third seed is saved locally to your device as a BIP39 mnemonic. When it comes to spending again we utilize `walletcreatefundedpsbt` on your node to handle coin selection, and fee optimization. Your node will then sign the psbt and pass it to the app at which time the app will sign for the second signature locally. With this set up a user may lose either their node, device or the BIP39 back up recovery words and still be able to spend their bitcoin. In a future release the app will allow multiple levels of security including 2fa and wallet.dat encryption which would mean even if an attacker got hold of your device they would *also* need your decryption password to spend funds.
 
 ### Importing a Wallet
 
-You may import any type of [descriptor](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md). Future releases will add the ability to import other things too. If you want to test this functionality you can either copy one of your descriptors from your exisiting wallets or visit this [link](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md) and learn how to convert your xpub/xprv or multisig wallet into a descriptor. FullyNoded 1 is able to export descriptors and will convert any extended key you import into it into a descriptor that can be used in FullyNoded 2.
+You may import any type of [descriptor](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md). Future releases will add the ability to import other things too. If you want to test this functionality you can either copy one of your descriptors from your exisiting wallets or visit this [link](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md) and learn how to convert your xpub/xprv or multisig wallet into a descriptor. FullyNoded 1 is able to export descriptors and will convert any extended key you import into it into a descriptor that can be used in *FullyNoded 2*.
 
 The reason we use descriptors are because they are human readable, unambigous bits of text which make storing complex wallet meta data as easy as saving a QR code. They are utilized by Bitcoin Core. Entire complex custom derived HD multisig wallets can be fully recovered with a single command using your own node, this is superior to storing indivdual keys, addresses and redeem scripts.
 
@@ -63,8 +63,6 @@ The reason we use descriptors are because they are human readable, unambigous bi
 *FullyNoded 2* allows you to export the seed which is stored on your device at anytime in the form of a 12 word BIP39 mnemonic, a public key descriptor, private key descriptor and even the verbatim rpc command `importmulti` which can be copied and pasted into your nodes terminal to recover your wallets seed.
 
 <img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/export1.PNG" alt="" width="250"/>
-
-<img src="https://github.com/Fonta1n3/Bitcoin-Standup/blob/master/Images/StandUp_Remote_Settings.PNG" alt="export authentication public key" width="250"/>
 
 <img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/export2.PNG" alt="" width="250"/>
 
@@ -76,7 +74,7 @@ The reason we use descriptors are because they are human readable, unambigous bi
   - [x] Spend and Receive
   - [x] Segwit
   - [x] Non-custodial
-  - [ ] Coin Control
+  - [ ] Coin Control (work in progress)
   - [x ] BIP44
   - [x] BIP84
   - [x] BIP49
@@ -93,11 +91,11 @@ The reason we use descriptors are because they are human readable, unambigous bi
   - [x] Seed encrypted with native iOS code
   - [x] Tor V3 Authentication
   - [ ] Passphrase support
-  - [ ] Wallet.dat encryption
+  - [ ] Wallet.dat encryption (work in progress)
   - [ ] Disable all networking before importing/exporting seed 
   - [ ] Automated Tor authentication
   - [ ] 2FA
-  - [ ] Add local authentication via biometrics/pin/password
+  - [ ] Add local authentication via biometrics/pin/password (work in progress)
  
 - [ ] Compatible Nodes
   - [x] Your own Bitcoin Core node
