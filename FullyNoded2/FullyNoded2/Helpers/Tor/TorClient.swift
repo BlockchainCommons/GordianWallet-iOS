@@ -349,9 +349,7 @@ class TorClient {
                     let nodesCount = entity!.count
                     
                     for (i, n) in entity!.enumerated() {
-                                                
-                        let node = NodeStruct(dictionary: n)
-                        
+                                                                        
                         cd.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
                             
                             if errorDescription == nil {

@@ -9,7 +9,7 @@
 import Foundation
 import LibWally
 
-class OfflineSigner {
+class NativeSegwitOfflineSigner {
     
     func signTransactionOffline(unsignedTx: String, completion: @escaping ((String?)) -> Void) {
         

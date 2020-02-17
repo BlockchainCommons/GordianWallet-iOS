@@ -26,7 +26,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cXF-wE-ppa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5474" y="-1334"/>
+            <point key="canvasLocation" x="159" y="-1324"/>
         </scene>
         <!--Export Keys View Controller-->
         <scene sceneID="ldE-LN-HUc">
@@ -263,7 +263,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2f1-ht-YJe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1428" y="291.90404797601201"/>
+            <point key="canvasLocation" x="-5257" y="349"/>
         </scene>
         <!--Authenticate-->
         <scene sceneID="uhr-cc-fch">
@@ -295,7 +295,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0dh-vH-Z0p" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-612" y="296"/>
+            <point key="canvasLocation" x="-7458" y="2001"/>
         </scene>
         <!--Home-->
         <scene sceneID="erx-5N-Kcy">
@@ -312,7 +312,7 @@
                                 <color key="sectionIndexBackgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MainMenuCell" rowHeight="66" id="EVM-FH-EQj">
-                                        <rect key="frame" x="15" y="55.5" width="345" height="66"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="345" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="EVM-FH-EQj" id="6Y2-Fh-R1z">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="66"/>
@@ -369,7 +369,7 @@
                                         <color key="backgroundColor" red="0.090666323016946812" green="0.10264321163773631" blue="0.12232880449385808" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NodeInfo" rowHeight="192" id="LJt-F3-a27">
-                                        <rect key="frame" x="15" y="121.5" width="345" height="192"/>
+                                        <rect key="frame" x="0.0" y="121.5" width="345" height="192"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LJt-F3-a27" id="bIn-ES-gWa">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="192"/>
@@ -573,7 +573,7 @@
                                         <color key="backgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="torCell" rowHeight="129" id="Ypb-Cj-jX8">
-                                        <rect key="frame" x="15" y="313.5" width="345" height="129"/>
+                                        <rect key="frame" x="0.0" y="313.5" width="345" height="129"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ypb-Cj-jX8" id="glf-PS-WeE">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="129"/>
@@ -1007,7 +1007,7 @@
                                         <color key="backgroundColor" red="0.1051254794" green="0.12928032880000001" blue="0.14184883240000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="coldStorageCell" rowHeight="188" id="lKm-ad-JjI">
-                                        <rect key="frame" x="0.0" y="732.5" width="345" height="188"/>
+                                        <rect key="frame" x="15" y="732.5" width="345" height="188"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lKm-ad-JjI" id="k7X-TL-xsP">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="188"/>
@@ -1168,7 +1168,7 @@
                                         <color key="backgroundColor" red="0.0" green="0.13545817230621357" blue="0.28083359771573602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="singleSigCell" rowHeight="255" id="nLp-7u-fn2">
-                                        <rect key="frame" x="0.0" y="920.5" width="345" height="255"/>
+                                        <rect key="frame" x="15" y="920.5" width="345" height="255"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nLp-7u-fn2" id="Vqk-up-C8V">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="255"/>
@@ -1285,7 +1285,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.39207138537918773" green="0.081316504793458144" blue="0.04822516962399194" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="iRz-Dd-Neu" firstAttribute="centerY" secondItem="ckJ-Ii-wgl" secondAttribute="centerY" id="5px-aB-jxf"/>
                                                         <constraint firstItem="qJx-rN-IFB" firstAttribute="leading" secondItem="0Vh-7w-T5J" secondAttribute="leading" constant="4" id="BoV-mf-tFK"/>
@@ -1353,7 +1353,7 @@
                                                             <color key="tintColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </imageView>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.39207138537918773" green="0.081316504793458144" blue="0.04822516962399194" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="vzN-LS-SVR" secondAttribute="trailing" constant="9" id="9fr-JP-tTy"/>
                                                         <constraint firstItem="49c-IU-sAK" firstAttribute="top" secondItem="sa9-jX-8Ur" secondAttribute="bottom" id="CDG-B4-SrO"/>
@@ -1400,7 +1400,7 @@
                                                 <constraint firstItem="n9a-vz-hvu" firstAttribute="top" secondItem="Vqk-up-C8V" secondAttribute="topMargin" constant="6" id="yev-zi-42P"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34518784279999998" green="0.075786255299999994" blue="0.056087225679999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.1051254794" green="0.12928032880000001" blue="0.14184883240000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                 </prototypes>
                                 <sections/>
@@ -1445,14 +1445,13 @@
                         <segue destination="3uQ-0D-YgM" kind="show" identifier="goToWallets" id="fBg-S5-BEW"/>
                         <segue destination="Ohm-tR-Xrl" kind="show" identifier="walletInfo" id="Tj9-fv-XMH"/>
                         <segue destination="Ohm-tR-Xrl" kind="show" identifier="torInfo" id="cWG-kJ-vzf"/>
-                        <segue destination="VKH-qt-cX3" kind="presentation" identifier="createMuSig" id="hIF-z9-Zdw"/>
                         <segue destination="rWu-wq-Agv" kind="presentation" identifier="import" id="0zN-S6-Zr1"/>
                         <segue destination="AS8-ke-Yxh" kind="presentation" identifier="settings" id="hdq-o6-Ing"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dhK-90-srt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7540" y="-503.29835082458777"/>
+            <point key="canvasLocation" x="-9711" y="-499"/>
         </scene>
         <!--Intro View Controller-->
         <scene sceneID="xwq-yX-n8x">
@@ -1468,7 +1467,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1b8-Hz-Xly" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7533" y="-2302"/>
+            <point key="canvasLocation" x="-12081" y="392"/>
         </scene>
         <!--Item-->
         <scene sceneID="Js7-4j-A4D">
@@ -1489,7 +1488,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nvo-2v-clY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7540" y="-1334"/>
+            <point key="canvasLocation" x="-9711" y="-1334"/>
         </scene>
         <!--Import View Controller-->
         <scene sceneID="Hz8-4L-tK7">
@@ -1518,7 +1517,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aX8-lc-fq0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9356" y="309.89505247376314"/>
+            <point key="canvasLocation" x="-11081" y="392"/>
         </scene>
         <!--Table Detail View Controller-->
         <scene sceneID="GzS-1K-5ua">
@@ -1550,7 +1549,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CQi-wO-k1B" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8420" y="312.59370314842579"/>
+            <point key="canvasLocation" x="-10145" y="394"/>
         </scene>
         <!--Transaction-->
         <scene sceneID="VqF-ym-nmL">
@@ -1584,7 +1583,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eFH-Df-Iax" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7521" y="299"/>
+            <point key="canvasLocation" x="-9247" y="380"/>
         </scene>
         <!--QuickConnect QR-->
         <scene sceneID="S5B-qY-ww0">
@@ -1615,7 +1614,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yzr-Ht-6RX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6676" y="297"/>
+            <point key="canvasLocation" x="-8401" y="378"/>
         </scene>
         <!--Out-->
         <scene sceneID="zmQ-sK-kpe">
@@ -1636,7 +1635,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YSV-df-WZi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2774" y="-1332"/>
+            <point key="canvasLocation" x="2481" y="-1325"/>
         </scene>
         <!--Invoice View Controller-->
         <scene sceneID="aU3-2L-A1l">
@@ -1758,7 +1757,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e3g-lC-Q3f" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5474.3999999999996" y="-501.49925037481262"/>
+            <point key="canvasLocation" x="159" y="-500"/>
         </scene>
         <!--Create Raw Tx View Controller-->
         <scene sceneID="nPC-E2-jSN">
@@ -1912,13 +1911,12 @@
                         <outlet property="qrScannerOutlet" destination="dOe-be-vZT" id="Dkz-st-n96"/>
                         <outlet property="receivingLabel" destination="uIC-Eu-XZD" id="wYg-jj-lxo"/>
                         <outlet property="scannerView" destination="hCl-Q8-hd5" id="iVt-0D-Bjm"/>
-                        <segue destination="qYd-Xi-rqO" kind="show" identifier="goToUTXOs" id="0Gl-Ni-iIV"/>
                         <segue destination="xB3-mY-13p" kind="show" identifier="goConfirm" id="cZz-Rg-m7M"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BlL-9x-Sif" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2775.1999999999998" y="-500.59970014992507"/>
+            <point key="canvasLocation" x="2481" y="-490"/>
         </scene>
         <!--Confirm View Controller-->
         <scene sceneID="cYH-Od-C1K">
@@ -2094,7 +2092,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nmz-vJ-TbM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1866.4000000000001" y="-506.89655172413796"/>
+            <point key="canvasLocation" x="3390" y="-495"/>
         </scene>
         <!--Verify-->
         <scene sceneID="i2z-D9-ciK">
@@ -2128,7 +2126,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uD9-Db-AgG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1060" y="-508.69565217391306"/>
+            <point key="canvasLocation" x="4194" y="-498"/>
         </scene>
         <!--v0.0.39-->
         <scene sceneID="Ajv-p7-tUm">
@@ -2269,17 +2267,15 @@
                         <segue destination="FI5-Kv-Y72" kind="show" identifier="goToAuth" id="FYa-hr-w4j"/>
                         <segue destination="tfK-3c-azq" kind="show" identifier="importSeed" id="NvN-z1-iOE"/>
                         <segue destination="jXY-2O-cMK" kind="show" identifier="seeKeys" id="qbv-38-KBn"/>
-                        <segue destination="nq7-KI-n3p" kind="show" identifier="setDerivation" id="oZ8-Se-mPS"/>
                         <segue destination="3uQ-0D-YgM" kind="show" identifier="goToWallets" id="ku6-7s-Oes"/>
                         <segue destination="niJ-kt-9ZY" kind="show" identifier="walletInfo" id="W9s-Zc-E88"/>
-                        <segue destination="0GI-v0-c51" kind="show" identifier="templates" id="onL-br-pkI"/>
                         <segue destination="jX1-Is-hS7" kind="show" identifier="exportKeys" id="W1u-CP-aMh"/>
                         <segue destination="DOn-IQ-sOy" kind="show" identifier="nodeManager" id="SNM-Ay-Yq0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k6b-ep-z2U" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="133.59999999999999" y="-501.49925037481262"/>
+            <point key="canvasLocation" x="-7458" y="377"/>
         </scene>
         <!--Seed Export-->
         <scene sceneID="whf-ed-7JK">
@@ -2370,7 +2366,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cfw-Yo-wGu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="133.59999999999999" y="297.30134932533736"/>
+            <point key="canvasLocation" x="-2628" y="349"/>
         </scene>
         <!--Seed Import-->
         <scene sceneID="jBs-pE-1GY">
@@ -2541,7 +2537,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dbw-zx-ecN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="973.60000000000002" y="297.30134932533736"/>
+            <point key="canvasLocation" x="-4418" y="1815"/>
         </scene>
         <!--Export-->
         <scene sceneID="txy-Zb-nWB">
@@ -2584,7 +2580,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IXO-dM-SLD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="134" y="1039"/>
+            <point key="canvasLocation" x="-2628" y="1101"/>
         </scene>
         <!--Document Scanner-->
         <scene sceneID="ReE-Oz-Pl8">
@@ -2646,7 +2642,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9L0-lY-zWd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="972" y="1040.3298350824589"/>
+            <point key="canvasLocation" x="-4004" y="2581"/>
         </scene>
         <!--ImportQR View Controller-->
         <scene sceneID="c6Z-bq-xba">
@@ -2677,7 +2673,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sjw-Zt-TBR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1749.5999999999999" y="1043.9280359820091"/>
+            <point key="canvasLocation" x="-4841" y="2582"/>
         </scene>
         <!--Wallet Info View Controller-->
         <scene sceneID="FKq-oD-XHg">
@@ -2729,82 +2725,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5A8-ku-k9j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3350" y="293"/>
-        </scene>
-        <!--Template View Controller-->
-        <scene sceneID="ul0-0i-NUw">
-            <objects>
-                <viewController id="0GI-v0-c51" customClass="TemplateViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="svq-bC-yUD">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rectangle.stack" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Nb7-f1-6Xx">
-                                <rect key="frame" x="16" y="8.5" width="22" height="46"/>
-                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="22" id="8bW-ql-0EG"/>
-                                    <constraint firstAttribute="height" constant="45" id="Rjp-A9-PZH"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wallet Templates" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4qE-oG-lUU">
-                                <rect key="frame" x="46" y="5" width="304" height="54"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="54" id="j9P-TX-jOf"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="31"/>
-                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="oWB-cU-EKC">
-                                <rect key="frame" x="20" y="189" width="334" height="32"/>
-                                <segments>
-                                    <segment title="Single Sig"/>
-                                    <segment title="Multi Sig"/>
-                                </segments>
-                                <connections>
-                                    <action selector="switchAction:" destination="0GI-v0-c51" eventType="valueChanged" id="bYM-qx-FnF"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CUv-WW-5pG">
-                                <rect key="frame" x="16" y="62" width="343" height="110"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="343" id="Aor-DP-1PO"/>
-                                    <constraint firstAttribute="height" constant="110" id="WWb-tl-M88"/>
-                                </constraints>
-                                <string key="text">Choose a wallet template. By default wallets are created as single signature. You may select MultiSig to create a powerful multi signature wallet whereby multiple private keys will be needed to sign a transaction.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" red="0.041132189329999999" green="0.049217775460000002" blue="0.054824478920000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="4qE-oG-lUU" firstAttribute="leading" secondItem="Nb7-f1-6Xx" secondAttribute="trailing" constant="8" id="1j5-Qm-d71"/>
-                            <constraint firstItem="CUv-WW-5pG" firstAttribute="centerX" secondItem="svq-bC-yUD" secondAttribute="centerX" id="4Ue-rg-OSA"/>
-                            <constraint firstItem="oWB-cU-EKC" firstAttribute="leading" secondItem="IXB-rL-V1k" secondAttribute="leading" constant="20" id="Jpy-zY-mVt"/>
-                            <constraint firstItem="oWB-cU-EKC" firstAttribute="top" secondItem="CUv-WW-5pG" secondAttribute="bottom" constant="17" id="Ll9-QI-yLF"/>
-                            <constraint firstItem="IXB-rL-V1k" firstAttribute="trailing" secondItem="CUv-WW-5pG" secondAttribute="trailing" constant="16" id="NsJ-7p-LiR"/>
-                            <constraint firstItem="IXB-rL-V1k" firstAttribute="trailing" secondItem="4qE-oG-lUU" secondAttribute="trailing" constant="25" id="RBs-PM-7IE"/>
-                            <constraint firstItem="4qE-oG-lUU" firstAttribute="centerY" secondItem="Nb7-f1-6Xx" secondAttribute="centerY" id="RVt-Mu-hbE"/>
-                            <constraint firstItem="CUv-WW-5pG" firstAttribute="top" secondItem="4qE-oG-lUU" secondAttribute="bottom" constant="3" id="RWO-LS-jhU"/>
-                            <constraint firstItem="Nb7-f1-6Xx" firstAttribute="leading" secondItem="IXB-rL-V1k" secondAttribute="leading" constant="16" id="bpu-a6-jG5"/>
-                            <constraint firstItem="4qE-oG-lUU" firstAttribute="leading" secondItem="Nb7-f1-6Xx" secondAttribute="trailing" constant="8" id="gMb-iX-bCS"/>
-                            <constraint firstItem="CUv-WW-5pG" firstAttribute="leading" secondItem="IXB-rL-V1k" secondAttribute="leading" constant="16" id="iW4-91-iAG"/>
-                            <constraint firstItem="4qE-oG-lUU" firstAttribute="top" secondItem="IXB-rL-V1k" secondAttribute="top" constant="5" id="vFL-ws-zMw"/>
-                            <constraint firstItem="IXB-rL-V1k" firstAttribute="trailing" secondItem="oWB-cU-EKC" secondAttribute="trailing" constant="21" id="zM8-2A-Chn"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="IXB-rL-V1k"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="llR-fg-yfY"/>
-                    <connections>
-                        <outlet property="switchOutlet" destination="oWB-cU-EKC" id="ava-yd-4NX"/>
-                        <segue destination="VKH-qt-cX3" kind="show" identifier="createMultisig" id="S1d-U0-ST9"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mxW-58-fXP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4173.6000000000004" y="290.10494752623691"/>
+            <point key="canvasLocation" x="-6007" y="350"/>
         </scene>
         <!--Node Manager View Controller-->
         <scene sceneID="xYz-bt-Lyj">
@@ -2898,83 +2819,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8UK-q3-fY3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5101.6000000000004" y="281.10944527736132"/>
-        </scene>
-        <!--Create Multi Sig View Controller-->
-        <scene sceneID="bpd-5F-Rvw">
-            <objects>
-                <viewController id="VKH-qt-cX3" customClass="CreateMultiSigViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="qOf-Xm-wOQ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.3" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="bnm-ZS-ce6">
-                                <rect key="frame" x="16" y="11" width="41" height="42.5"/>
-                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="41" id="7Hi-Pf-FIH"/>
-                                    <constraint firstAttribute="height" constant="45" id="ogM-Ij-Usr"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Multisig" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="868-Iy-5bl">
-                                <rect key="frame" x="65" y="5" width="126" height="54"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="54" id="3te-WS-nLm"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="31"/>
-                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Poh-Ip-YWj">
-                                <rect key="frame" x="16" y="62" width="343" height="181"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="181" id="UUf-nE-Qcz"/>
-                                    <constraint firstAttribute="width" constant="343" id="xWx-la-p0s"/>
-                                </constraints>
-                                <string key="text">By default StandUp-Remote will create a 2 of 3 multisig wallet, whereby one seed is stored on your device, one on your node and one kept by you as a backup. This way you may recover your wallet if you lose your device or node. You will be presented with a recovery key and a descriptor, both of which are needed to recover your wallet.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YGw-V7-6sd">
-                                <rect key="frame" x="71" y="260" width="233" height="54"/>
-                                <color key="backgroundColor" red="0.081975709081857445" green="0.10819210704952263" blue="0.11830264726649753" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="233" id="clw-XY-Gal"/>
-                                    <constraint firstAttribute="height" constant="54" id="dTz-VP-4g0"/>
-                                </constraints>
-                                <state key="normal" title="Next">
-                                    <color key="titleColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="createAction:" destination="VKH-qt-cX3" eventType="touchUpInside" id="VNL-9Y-yEe"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="Poh-Ip-YWj" firstAttribute="leading" secondItem="OoQ-9s-CZX" secondAttribute="leading" constant="16" id="3E3-3c-fR4"/>
-                            <constraint firstItem="YGw-V7-6sd" firstAttribute="top" secondItem="Poh-Ip-YWj" secondAttribute="bottom" constant="17" id="7nP-ao-TAW"/>
-                            <constraint firstItem="868-Iy-5bl" firstAttribute="leading" secondItem="bnm-ZS-ce6" secondAttribute="trailing" constant="8" id="BNs-TS-Sno"/>
-                            <constraint firstItem="868-Iy-5bl" firstAttribute="leading" secondItem="bnm-ZS-ce6" secondAttribute="trailing" constant="8" id="Pyk-mN-K7Z"/>
-                            <constraint firstItem="YGw-V7-6sd" firstAttribute="centerX" secondItem="qOf-Xm-wOQ" secondAttribute="centerX" id="W7z-IS-jpn"/>
-                            <constraint firstItem="bnm-ZS-ce6" firstAttribute="leading" secondItem="OoQ-9s-CZX" secondAttribute="leading" constant="16" id="doA-IE-5bd"/>
-                            <constraint firstItem="Poh-Ip-YWj" firstAttribute="top" secondItem="868-Iy-5bl" secondAttribute="bottom" constant="3" id="kfy-WE-65v"/>
-                            <constraint firstItem="868-Iy-5bl" firstAttribute="top" secondItem="OoQ-9s-CZX" secondAttribute="top" constant="5" id="vAR-5b-5Cp"/>
-                            <constraint firstItem="868-Iy-5bl" firstAttribute="centerY" secondItem="bnm-ZS-ce6" secondAttribute="centerY" id="vHc-Gd-9Eb"/>
-                            <constraint firstItem="OoQ-9s-CZX" firstAttribute="trailing" secondItem="Poh-Ip-YWj" secondAttribute="trailing" constant="16" id="vtL-gu-PiH"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="OoQ-9s-CZX"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="Hlm-xQ-icc"/>
-                    <connections>
-                        <outlet property="createButton" destination="YGw-V7-6sd" id="k9L-oG-F8l"/>
-                        <segue destination="XRX-1n-DHG" kind="presentation" identifier="recoveryKey" id="uSI-0P-li8"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="e0E-vi-ePm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4173.6000000000004" y="1043.9280359820091"/>
+            <point key="canvasLocation" x="-7458" y="1225"/>
         </scene>
         <!--Recovery View Controller-->
         <scene sceneID="Gd4-wB-LU0">
@@ -3072,97 +2917,11 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                         <outlet property="imageView" destination="P3h-dC-Vnd" id="U1s-bt-jzl"/>
                         <outlet property="nextButtonOutlet" destination="npP-BR-7Kd" id="mgJ-UI-WXS"/>
                         <outlet property="textView" destination="vdw-Ya-feJ" id="P6l-OL-wjU"/>
-                        <segue destination="mzr-6M-veP" kind="presentation" identifier="descriptor" id="FEk-kQ-zJc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JoO-T3-GZZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4173.6000000000004" y="1773.4632683658172"/>
-        </scene>
-        <!--Multi Sig Descriptor View Controller-->
-        <scene sceneID="vnf-xX-UUd">
-            <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" id="mzr-6M-veP" customClass="MultiSigDescriptorViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="rw7-js-ePe">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.icloud" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="oU4-x1-GPe">
-                                <rect key="frame" x="16" y="10.5" width="41" height="41.5"/>
-                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="OKs-O8-uFF"/>
-                                    <constraint firstAttribute="width" constant="41" id="sRS-KW-idW"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Descriptor" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IHq-NP-Nla">
-                                <rect key="frame" x="65" y="5" width="166.5" height="54"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="54" id="X7J-Qr-JG4"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="31"/>
-                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IVe-dU-QQe">
-                                <rect key="frame" x="16" y="67" width="343" height="130"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="343" id="XzB-Nh-IpO"/>
-                                    <constraint firstAttribute="height" constant="130" id="dBG-aA-atQ"/>
-                                </constraints>
-                                <string key="text">This is the public key descriptor you need to save in order to recover your wallet with a different device, you may export it at any time in Settings. Save this as you will not be able to recover your wallet without it!</string>
-                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="17"/>
-                                <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FaS-7F-IQN">
-                                <rect key="frame" x="71" y="456" width="233" height="54"/>
-                                <color key="backgroundColor" red="0.08197570908" green="0.108192107" blue="0.11830264729999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="233" id="7uV-Ux-482"/>
-                                    <constraint firstAttribute="height" constant="54" id="XFf-W1-8H7"/>
-                                </constraints>
-                                <state key="normal" title="Create Wallet">
-                                    <color key="titleColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="createAction:" destination="mzr-6M-veP" eventType="touchUpInside" id="qPN-2o-OqF"/>
-                                </connections>
-                            </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bDk-OG-MVw">
-                                <rect key="frame" x="77" y="215" width="221" height="221"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="221" id="NLY-v2-Ma9"/>
-                                    <constraint firstAttribute="width" constant="221" id="a9v-PF-h40"/>
-                                </constraints>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="bDk-OG-MVw" firstAttribute="top" secondItem="IVe-dU-QQe" secondAttribute="bottom" constant="18" id="Hfc-qi-hEQ"/>
-                            <constraint firstItem="IHq-NP-Nla" firstAttribute="leading" secondItem="oU4-x1-GPe" secondAttribute="trailing" constant="8" id="IcS-y7-RX8"/>
-                            <constraint firstItem="bDk-OG-MVw" firstAttribute="centerX" secondItem="rw7-js-ePe" secondAttribute="centerX" id="Q4b-Zb-2qc"/>
-                            <constraint firstItem="IHq-NP-Nla" firstAttribute="top" secondItem="rRX-QN-PmX" secondAttribute="top" constant="5" id="Ree-oD-cgV"/>
-                            <constraint firstItem="FaS-7F-IQN" firstAttribute="top" secondItem="bDk-OG-MVw" secondAttribute="bottom" constant="20" id="ThP-BM-hfi"/>
-                            <constraint firstItem="IHq-NP-Nla" firstAttribute="centerY" secondItem="oU4-x1-GPe" secondAttribute="centerY" id="Tt2-wJ-sXO"/>
-                            <constraint firstItem="IHq-NP-Nla" firstAttribute="leading" secondItem="oU4-x1-GPe" secondAttribute="trailing" constant="8" id="UaS-MM-Yah"/>
-                            <constraint firstItem="IVe-dU-QQe" firstAttribute="leading" secondItem="rRX-QN-PmX" secondAttribute="leading" constant="16" id="bmd-p9-4kp"/>
-                            <constraint firstItem="rRX-QN-PmX" firstAttribute="trailing" secondItem="IVe-dU-QQe" secondAttribute="trailing" constant="16" id="lmJ-1L-Ddd"/>
-                            <constraint firstItem="FaS-7F-IQN" firstAttribute="centerX" secondItem="rw7-js-ePe" secondAttribute="centerX" id="myd-Zp-abl"/>
-                            <constraint firstItem="IVe-dU-QQe" firstAttribute="top" secondItem="IHq-NP-Nla" secondAttribute="bottom" constant="8" id="okX-Vd-fwn"/>
-                            <constraint firstItem="oU4-x1-GPe" firstAttribute="leading" secondItem="rRX-QN-PmX" secondAttribute="leading" constant="16" id="tqZ-4c-Mit"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="rRX-QN-PmX"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="Li8-PX-coQ"/>
-                    <connections>
-                        <outlet property="createButton" destination="FaS-7F-IQN" id="QhP-WY-h73"/>
-                        <outlet property="imageView" destination="bDk-OG-MVw" id="ZCS-C8-JfO"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Vme-Cd-upa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4181.6000000000004" y="2513.7931034482763"/>
+            <point key="canvasLocation" x="-4418" y="1101"/>
         </scene>
         <!--Displayer View Controller-->
         <scene sceneID="2P1-G0-q27">
@@ -3177,7 +2936,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qiS-au-xqh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="140" y="1772.5637181409297"/>
+            <point key="canvasLocation" x="-5258" y="1101"/>
         </scene>
         <!--Verify Keys View Controller-->
         <scene sceneID="1tG-du-HiP">
@@ -3312,7 +3071,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QVj-L3-a2O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="972" y="1774.3628185907048"/>
+            <point key="canvasLocation" x="-1714" y="349"/>
         </scene>
         <!--Verify Address View Controller-->
         <scene sceneID="Cog-vC-RD4">
@@ -3327,71 +3086,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Rz-8I-QNM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="974" y="2556"/>
-        </scene>
-        <!--Derivation-->
-        <scene sceneID="SwU-HM-G39">
-            <objects>
-                <viewController id="nq7-KI-n3p" customClass="DerivationViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="wle-OF-hd1">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EEq-zF-Bq9">
-                                <rect key="frame" x="16" y="95" width="343" height="87"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="87" id="HjC-UL-f4u"/>
-                                    <constraint firstAttribute="width" constant="343" id="afL-B6-iUe"/>
-                                </constraints>
-                                <string key="text">Choose a derivation scheme. The root path represents the extended key whilst the asterics * represents the index of the derived addresses and private keys.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="3lw-ut-Xef">
-                                <rect key="frame" x="16" y="213" width="343" height="32"/>
-                                <segments>
-                                    <segment title="BIP44"/>
-                                    <segment title="BIP84"/>
-                                    <segment title="BIP49"/>
-                                </segments>
-                                <connections>
-                                    <action selector="switchDerivation:" destination="nq7-KI-n3p" eventType="valueChanged" id="b1f-wN-kUI"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="m/84'/1'/0'/0/*" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zj8-7Z-ifu">
-                                <rect key="frame" x="16" y="5" width="236.5" height="54"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="54" id="P5C-jl-9Xl"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="30"/>
-                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="3lw-ut-Xef" firstAttribute="leading" secondItem="ipH-QB-eAg" secondAttribute="leading" constant="16" id="8Yk-PK-RyL"/>
-                            <constraint firstItem="ipH-QB-eAg" firstAttribute="trailing" secondItem="EEq-zF-Bq9" secondAttribute="trailing" constant="16" id="F9Y-S7-utY"/>
-                            <constraint firstItem="ipH-QB-eAg" firstAttribute="trailing" secondItem="3lw-ut-Xef" secondAttribute="trailing" constant="16" id="aDx-hQ-Ec7"/>
-                            <constraint firstItem="EEq-zF-Bq9" firstAttribute="top" secondItem="zj8-7Z-ifu" secondAttribute="bottom" constant="36" id="ap6-cO-esJ"/>
-                            <constraint firstItem="zj8-7Z-ifu" firstAttribute="top" secondItem="ipH-QB-eAg" secondAttribute="top" constant="5" id="ecw-sh-Z0j"/>
-                            <constraint firstItem="3lw-ut-Xef" firstAttribute="top" secondItem="EEq-zF-Bq9" secondAttribute="bottom" constant="31" id="h2h-D5-rIb"/>
-                            <constraint firstItem="zj8-7Z-ifu" firstAttribute="leading" secondItem="ipH-QB-eAg" secondAttribute="leading" constant="16" id="hOe-9f-ivv"/>
-                            <constraint firstItem="EEq-zF-Bq9" firstAttribute="leading" secondItem="ipH-QB-eAg" secondAttribute="leading" constant="16" id="u3z-4Q-5pR"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="ipH-QB-eAg"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Derivation" id="HNZ-GN-Y0I"/>
-                    <connections>
-                        <outlet property="derivationLabel" destination="zj8-7Z-ifu" id="Pad-a6-5Po"/>
-                        <outlet property="segmentedControl" destination="3lw-ut-Xef" id="Z1v-aj-u58"/>
-                        <segue destination="jXY-2O-cMK" kind="show" identifier="verifyDerivation" id="sHA-Gy-yk4"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Geo-M8-ccC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1757.5999999999999" y="297.30134932533736"/>
+            <point key="canvasLocation" x="-1714" y="1101"/>
         </scene>
         <!--Wallets-->
         <scene sceneID="xPx-UU-NTd">
@@ -3406,7 +3101,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="coldWalletCell" rowHeight="310" id="Cjy-2R-y2B">
-                                        <rect key="frame" x="15" y="55.5" width="345" height="310"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="345" height="310"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Cjy-2R-y2B" id="85P-mu-gZ2">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="310"/>
@@ -3807,7 +3502,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.39831852791878175" green="0.092643143292106531" blue="0.077720914746292516" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="g8x-Ld-Ezw" firstAttribute="top" secondItem="car-yr-b08" secondAttribute="bottom" constant="2" id="66n-Dg-o7p"/>
                                                         <constraint firstItem="3Cs-N1-Juh" firstAttribute="top" secondItem="Mus-be-FaA" secondAttribute="top" constant="4" id="7Jy-vE-KhN"/>
@@ -3837,7 +3532,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="8" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Testnet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dOn-Dy-2vG">
                                                     <rect key="frame" x="177" y="23.5" width="75" height="26"/>
-                                                    <color key="backgroundColor" red="0.39831852791878175" green="0.092643143292106531" blue="0.077720914746292516" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="26" id="cfH-MH-xOT"/>
                                                         <constraint firstAttribute="width" constant="75" id="qfy-GY-E2l"/>
@@ -3924,7 +3619,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             <state key="normal" image="square.and.arrow.up" catalog="system"/>
                                                         </button>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.39831852791878175" green="0.092643143292106531" blue="0.077720914746292516" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="Fds-1S-xmg" firstAttribute="centerY" secondItem="AMk-q2-GQu" secondAttribute="centerY" id="1U0-6C-W1n"/>
                                                         <constraint firstItem="GYH-38-DIo" firstAttribute="leading" secondItem="AMk-q2-GQu" secondAttribute="leading" constant="4" id="CVt-bG-Cza"/>
@@ -3982,7 +3677,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             <color key="tintColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </imageView>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.39831852791878175" green="0.092643143292106531" blue="0.077720914746292516" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="n61-Zn-aDm" firstAttribute="top" secondItem="z3r-1y-FSf" secondAttribute="top" constant="4.5" id="0mK-BC-WKc"/>
                                                         <constraint firstAttribute="height" constant="37" id="8a5-E4-94B"/>
@@ -4019,7 +3714,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                 </button>
                                                 <button opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5s-y7-UKM">
                                                     <rect key="frame" x="260" y="23.5" width="75" height="26"/>
-                                                    <color key="backgroundColor" red="0.39831852791878175" green="0.092643143292106531" blue="0.077720914746292516" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="26" id="TNr-JY-hEu"/>
                                                         <constraint firstAttribute="width" constant="75" id="ggO-Pu-3Wn"/>
@@ -4094,7 +3789,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             </constraints>
                                                         </stackView>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.39831852791878175" green="0.092643143292106531" blue="0.077720914746292516" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="KoW-G0-uW0" firstAttribute="top" secondItem="egC-uO-FYs" secondAttribute="top" constant="6" id="0Nb-0C-AED"/>
                                                         <constraint firstAttribute="height" constant="38" id="J6H-WT-W0x"/>
@@ -4152,10 +3847,10 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                 <constraint firstItem="7jg-Bo-IWL" firstAttribute="leading" secondItem="g94-fh-bhc" secondAttribute="trailing" constant="7" id="zhf-81-zCK"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34125158629441621" green="0.079370195940718494" blue="0.066585869314202212" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.1051254794" green="0.12928032880000001" blue="0.14184883240000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="multiSigWalletCell" rowHeight="398" id="Pu7-d1-gy4">
-                                        <rect key="frame" x="0.0" y="735.5" width="345" height="398"/>
+                                        <rect key="frame" x="15" y="735.5" width="345" height="398"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Pu7-d1-gy4" id="EKP-cw-XcR">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="398"/>
@@ -4697,7 +4392,6 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                     <navigationItem key="navigationItem" id="E9A-mq-8W3"/>
                     <connections>
                         <outlet property="walletTable" destination="JXW-QX-3AG" id="FsL-zD-yAJ"/>
-                        <segue destination="VKH-qt-cX3" kind="presentation" identifier="createMultiSigNow" id="GH5-KE-o79"/>
                         <segue destination="rWu-wq-Agv" kind="presentation" identifier="importCustom" id="r5v-RV-hIL"/>
                         <segue destination="lq5-Pd-gqW" kind="presentation" identifier="exportSeed" id="Pnz-5F-hdP"/>
                         <segue destination="niJ-kt-9ZY" kind="presentation" identifier="getWalletInfo" id="q40-x8-mKf"/>
@@ -4711,7 +4405,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GpR-E8-6UF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2490" y="-1333"/>
+            <point key="canvasLocation" x="-4199" y="-521"/>
         </scene>
         <!--Choose Wallet Format View Controller-->
         <scene sceneID="lEx-cV-voz">
@@ -4875,7 +4569,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FSZ-Yj-Svg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3252" y="-1334.4827586206898"/>
+            <point key="canvasLocation" x="-4418" y="349"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="T9u-Zb-e9t">
@@ -4919,7 +4613,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zlz-Cd-Yzb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="135" y="-1333"/>
+            <point key="canvasLocation" x="-4199" y="-1263"/>
         </scene>
         <!--Utxo Info View Controller-->
         <scene sceneID="gUA-vw-Rw5">
@@ -4965,7 +4659,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6RY-SP-uGD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3642.4000000000001" y="302.6986506746627"/>
+            <point key="canvasLocation" x="-3546" y="1101"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="WAZ-Eh-cw6">
@@ -5069,10 +4763,6 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                     <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                 </button>
-                                                <imageView userInteractionEnabled="NO" tag="13" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="whiteCheck.png" translatesAutoresizingMaskIntoConstraints="NO" id="rht-6f-BG5">
-                                                    <rect key="frame" x="147" y="12" width="51" height="53"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="xqP-qB-AkM" firstAttribute="trailing" secondItem="vwn-lY-2nZ" secondAttribute="trailingMargin" id="2KM-0U-aTX"/>
@@ -5108,9 +4798,6 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                     <outlet property="delegate" destination="qYd-Xi-rqO" id="E0c-st-Xuw"/>
                                 </connections>
                             </tableView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mEd-k8-etq">
-                                <rect key="frame" x="0.0" y="419" width="375" height="228"/>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UTXO's" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D8a-LY-3Aq">
                                 <rect key="frame" x="16" y="5" width="140.5" height="54"/>
                                 <constraints>
@@ -5132,38 +4819,17 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="CFb-Jk-h9Z" firstAttribute="leading" secondItem="0Ah-Yv-vnx" secondAttribute="leading" id="0uE-RY-Xok"/>
-                            <constraint firstItem="mEd-k8-etq" firstAttribute="trailing" secondItem="0Ah-Yv-vnx" secondAttribute="trailing" id="0z1-4I-Kcb"/>
-                            <constraint firstItem="mEd-k8-etq" firstAttribute="bottom" secondItem="0Ah-Yv-vnx" secondAttribute="bottom" id="EbT-Pe-74i"/>
-                            <constraint firstItem="mEd-k8-etq" firstAttribute="leading" secondItem="0Ah-Yv-vnx" secondAttribute="leading" id="Iyf-jB-yFk"/>
                             <constraint firstItem="D8a-LY-3Aq" firstAttribute="leading" secondItem="0Ah-Yv-vnx" secondAttribute="leading" constant="16" id="S3f-RX-hWh"/>
                             <constraint firstItem="0Ah-Yv-vnx" firstAttribute="trailing" secondItem="fQt-7R-sYd" secondAttribute="trailing" constant="16" id="UDq-af-dRj"/>
                             <constraint firstItem="CFb-Jk-h9Z" firstAttribute="trailing" secondItem="0Ah-Yv-vnx" secondAttribute="trailing" id="UIo-zu-1UQ"/>
                             <constraint firstItem="CFb-Jk-h9Z" firstAttribute="top" secondItem="fQt-7R-sYd" secondAttribute="bottom" constant="8" id="Xqc-bF-7lH"/>
                             <constraint firstItem="CFb-Jk-h9Z" firstAttribute="top" secondItem="0Ah-Yv-vnx" secondAttribute="top" constant="52" id="k7K-F2-Nu4"/>
-                            <constraint firstItem="mEd-k8-etq" firstAttribute="top" secondItem="Mo7-j4-oZL" secondAttribute="top" id="nsq-KY-fcz"/>
                             <constraint firstItem="D8a-LY-3Aq" firstAttribute="top" secondItem="0Ah-Yv-vnx" secondAttribute="top" constant="5" id="tgv-LJ-iYu"/>
                             <constraint firstItem="CFb-Jk-h9Z" firstAttribute="bottom" secondItem="0Ah-Yv-vnx" secondAttribute="bottom" id="uir-Kx-1I6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="0Ah-Yv-vnx"/>
                     </view>
-                    <navigationItem key="navigationItem" id="Rn6-U1-85A">
-                        <rightBarButtonItems>
-                            <barButtonItem image="Minus" id="KPg-ds-9LB">
-                                <connections>
-                                    <action selector="createRaw:" destination="qYd-Xi-rqO" id="JXZ-h1-zih"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem image="Image-14" id="Uko-d0-d9N">
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <connections>
-                                    <action selector="lockAction:" destination="qYd-Xi-rqO" id="yST-ec-1NP"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
-                    </navigationItem>
                     <connections>
-                        <outlet property="createRawOutlet" destination="KPg-ds-9LB" id="KVJ-Fu-2re"/>
-                        <outlet property="imageView" destination="mEd-k8-etq" id="Jzc-LL-W7y"/>
                         <outlet property="utxoTable" destination="CFb-Jk-h9Z" id="Nra-d1-mSR"/>
                         <segue destination="03r-hX-hYT" kind="show" identifier="goToLocked" id="zZA-rA-VBd"/>
                         <segue destination="xB3-mY-13p" kind="show" identifier="confirmUtxoSpend" id="zL7-ti-xtY"/>
@@ -5172,7 +4838,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bQO-X8-aij" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2775.1999999999998" y="297.30134932533736"/>
+            <point key="canvasLocation" x="-3546" y="349"/>
         </scene>
         <!--Locked View Controller-->
         <scene sceneID="CKp-4Z-5YA">
@@ -5259,7 +4925,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XHY-E8-tJm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2775.1999999999998" y="1039.4302848575712"/>
+            <point key="canvasLocation" x="-3546" y="1773"/>
         </scene>
         <!--Log In View Controller-->
         <scene sceneID="Ieg-P5-lGV">
@@ -5279,7 +4945,6 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
         </scene>
     </scenes>
     <resources>
-        <image name="Image-14" width="30" height="30"/>
         <image name="Minus" width="30" height="30"/>
         <image name="Settings" width="30" height="30"/>
         <image name="Signature" width="30" height="30"/>
@@ -5315,23 +4980,19 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
         <image name="text.bubble" catalog="system" width="64" height="54"/>
         <image name="thermometer.snowflake" catalog="system" width="56" height="64"/>
         <image name="timer" catalog="system" width="64" height="60"/>
-        <image name="whiteCheck.png" width="2048" height="2048"/>
         <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="UBf-qr-XYG"/>
-        <segue reference="tQf-PJ-RMT"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="rrW-6B-Fka"/>
-        <segue reference="lOf-xV-x4E"/>
-        <segue reference="GH5-KE-o79"/>
         <segue reference="q40-x8-mKf"/>
         <segue reference="Pnz-5F-hdP"/>
         <segue reference="zL7-ti-xtY"/>
         <segue reference="tY7-Ss-m0T"/>
         <segue reference="LzA-tD-DJD"/>
-        <segue reference="cWG-kJ-vzf"/>
-        <segue reference="r5v-RV-hIL"/>
+        <segue reference="Tj9-fv-XMH"/>
+        <segue reference="0zN-S6-Zr1"/>
         <segue reference="r3C-3T-Ati"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

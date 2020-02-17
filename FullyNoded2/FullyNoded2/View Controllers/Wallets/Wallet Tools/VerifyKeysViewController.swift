@@ -304,41 +304,73 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func getKeys(mnemonic: BIP39Mnemonic) {
         
-        let path = BIP32Path(wallet.derivation)!
-        let masterKey = HDKey((mnemonic.seedHex("")), network(path: wallet.derivation))!
-        let account = try! masterKey.derive(path)
+        let derivation = wallet.derivation
         
-        for i in 0 ... 1999 {
+        if let path = BIP32Path(wallet.derivation) {
             
-            let key1 = try! account.derive(BIP32Path("\(i)")!)
-            var addressType:AddressType!
-            
-            if derivation.contains("84") {
-
-                addressType = .payToWitnessPubKeyHash
-
-            } else if derivation.contains("44") {
-
-                addressType = .payToPubKeyHash
-
-            } else if derivation.contains("49") {
-
-                addressType = .payToScriptHashPayToWitnessPubKeyHash
-
-            }
-            
-            let address = key1.address(addressType)
-            keys.append("\(address)")
-            
-            if i == 1999 {
+            if let masterKey = HDKey((mnemonic.seedHex("")), network(path: derivation)) {
                 
-                DispatchQueue.main.async {
+                do {
                     
-                    self.table.reloadData()
+                    let account = try masterKey.derive(path)
+                    
+                    for i in 0 ... 1999 {
+                        
+                        do {
+                            
+                            let key1 = try account.derive(BIP32Path("\(i)")!)
+                            var addressType:AddressType!
+                            
+                            if derivation.contains("84") {
+
+                                addressType = .payToWitnessPubKeyHash
+
+                            } else if derivation.contains("44") {
+
+                                addressType = .payToPubKeyHash
+
+                            } else if derivation.contains("49") {
+
+                                addressType = .payToScriptHashPayToWitnessPubKeyHash
+
+                            }
+                            
+                            let address = key1.address(addressType)
+                            keys.append("\(address)")
+                            
+                            if i == 1999 {
+                                
+                                DispatchQueue.main.async {
+                                    
+                                    self.table.reloadData()
+                                    
+                                }
+                                
+                            }
+                            
+                        } catch {
+                            
+                            displayAlert(viewController: self, isError: true, message: "error deriving your wallets keys")
+                            
+                        }
+                        
+                    }
+                    
+                } catch {
+                    
+                    displayAlert(viewController: self, isError: true, message: "error initiating your wallets account")
                     
                 }
                 
+            } else {
+                
+                displayAlert(viewController: self, isError: true, message: "error initiating your wallets master key")
+                
             }
+            
+        } else {
+            
+            displayAlert(viewController: self, isError: true, message: "error initiating your wallets path")
             
         }
         

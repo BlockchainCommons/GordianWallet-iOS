@@ -96,11 +96,11 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         scannerButton.addTarget(self, action: #selector(scanNow(_:)), for: .touchUpInside)
         scannerButton.tintColor = .white
         
-        let utxosButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
-        let utxosImage = UIImage.init(systemName: "list.bullet")
-        utxosButton.setImage(utxosImage, for: .normal)
-        utxosButton.addTarget(self, action: #selector(utxos), for: .touchUpInside)
-        utxosButton.tintColor = .white
+//        let utxosButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+//        let utxosImage = UIImage.init(systemName: "list.bullet")
+//        utxosButton.setImage(utxosImage, for: .normal)
+//        utxosButton.addTarget(self, action: #selector(utxos), for: .touchUpInside)
+//        utxosButton.tintColor = .white
 
         if isShowing {
             
@@ -115,9 +115,9 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         }
         
         let leftButton = UIBarButtonItem(customView: scannerButton)
-        let nextLeftButton = UIBarButtonItem(customView: utxosButton)
+        //let nextLeftButton = UIBarButtonItem(customView: utxosButton)
         
-        self.navigationItem.setLeftBarButtonItems([leftButton, nextLeftButton], animated: true)
+        self.navigationItem.setLeftBarButtonItems([leftButton], animated: true)
         
     }
     
