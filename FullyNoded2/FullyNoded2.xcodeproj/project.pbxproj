@@ -37,11 +37,8 @@
 		D09D731A23F0F3C000847DC8 /* QRDisplayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */; };
 		D09D731B23F0F3C000847DC8 /* DerivationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729823F0F3BF00847DC8 /* DerivationViewController.swift */; };
 		D09D731C23F0F3C000847DC8 /* QRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729923F0F3BF00847DC8 /* QRViewController.swift */; };
-		D09D731D23F0F3C000847DC8 /* CreateMultiSigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729B23F0F3BF00847DC8 /* CreateMultiSigViewController.swift */; };
 		D09D731E23F0F3C000847DC8 /* WalletInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729C23F0F3BF00847DC8 /* WalletInfoViewController.swift */; };
 		D09D731F23F0F3C000847DC8 /* WalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729D23F0F3BF00847DC8 /* WalletsViewController.swift */; };
-		D09D732023F0F3C000847DC8 /* TemplateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729E23F0F3BF00847DC8 /* TemplateViewController.swift */; };
-		D09D732123F0F3C000847DC8 /* MultiSigDescriptorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729F23F0F3BF00847DC8 /* MultiSigDescriptorViewController.swift */; };
 		D09D732223F0F3C000847DC8 /* RecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72A023F0F3BF00847DC8 /* RecoveryViewController.swift */; };
 		D09D732323F0F3C000847DC8 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72A123F0F3BF00847DC8 /* SettingsViewController.swift */; };
 		D09D732423F0F3C000847DC8 /* CreateRawTxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72A523F0F3C000847DC8 /* CreateRawTxViewController.swift */; };
@@ -107,19 +104,14 @@
 		D09D736423F0F3C000847DC8 /* RawDisplayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72F823F0F3C000847DC8 /* RawDisplayer.swift */; };
 		D09D736523F0F3C000847DC8 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FA23F0F3C000847DC8 /* QRScanner.swift */; };
 		D09D736623F0F3C000847DC8 /* GetPrivateKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FC23F0F3C000847DC8 /* GetPrivateKeys.swift */; };
-		D09D736723F0F3C000847DC8 /* CreateUnsigned.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FD23F0F3C000847DC8 /* CreateUnsigned.swift */; };
 		D09D736823F0F3C000847DC8 /* MultiSigTxBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */; };
 		D09D736923F0F3C000847DC8 /* SingleSigBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */; };
 		D09D736A23F0F3C000847DC8 /* WalletSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730023F0F3C000847DC8 /* WalletSaver.swift */; };
 		D09D736B23F0F3C000847DC8 /* CreateMultisigWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */; };
-		D09D736C23F0F3C000847DC8 /* SignMultiSig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730223F0F3C000847DC8 /* SignMultiSig.swift */; };
-		D09D736D23F0F3C000847DC8 /* Send.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730323F0F3C000847DC8 /* Send.swift */; };
-		D09D736E23F0F3C000847DC8 /* SendUTXO.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730423F0F3C000847DC8 /* SendUTXO.swift */; };
 		D09D736F23F0F3C000847DC8 /* OfflineSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730523F0F3C000847DC8 /* OfflineSigner.swift */; };
 		D09D737023F0F3C000847DC8 /* WalletCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730623F0F3C000847DC8 /* WalletCreator.swift */; };
 		D09D737123F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730723F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift */; };
 		D09D737223F0F3C000847DC8 /* OfflineSignerLegacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730823F0F3C000847DC8 /* OfflineSignerLegacy.swift */; };
-		D09D737323F0F3C000847DC8 /* GetSmartFee.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730923F0F3C000847DC8 /* GetSmartFee.swift */; };
 		D09D737523F0F40400847DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D09D737423F0F40400847DC8 /* Main.storyboard */; };
 		D09DCF6423F1045F008F5B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D09DCF6323F1045F008F5B9F /* Assets.xcassets */; };
 		D09DCF6623F10645008F5B9F /* Base32.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09DCF6523F10645008F5B9F /* Base32.swift */; };
@@ -128,7 +120,6 @@
 		D0A0EAF023F7C06E004F9E15 /* DescriptorParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A0EAEF23F7C06E004F9E15 /* DescriptorParser.swift */; };
 		D0A0EAF223F7CF70004F9E15 /* DescriptorStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A0EAF123F7CF70004F9E15 /* DescriptorStruct.swift */; };
 		D0A9EB8723F5335A00C84829 /* ChooseWalletFormatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */; };
-		D0A9EB8923F5338700C84829 /* ChooseWalletTemplateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A9EB8823F5338700C84829 /* ChooseWalletTemplateViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -189,11 +180,8 @@
 		D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRDisplayerViewController.swift; sourceTree = "<group>"; };
 		D09D729823F0F3BF00847DC8 /* DerivationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DerivationViewController.swift; sourceTree = "<group>"; };
 		D09D729923F0F3BF00847DC8 /* QRViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRViewController.swift; sourceTree = "<group>"; };
-		D09D729B23F0F3BF00847DC8 /* CreateMultiSigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateMultiSigViewController.swift; sourceTree = "<group>"; };
 		D09D729C23F0F3BF00847DC8 /* WalletInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletInfoViewController.swift; sourceTree = "<group>"; };
 		D09D729D23F0F3BF00847DC8 /* WalletsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletsViewController.swift; sourceTree = "<group>"; };
-		D09D729E23F0F3BF00847DC8 /* TemplateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemplateViewController.swift; sourceTree = "<group>"; };
-		D09D729F23F0F3BF00847DC8 /* MultiSigDescriptorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSigDescriptorViewController.swift; sourceTree = "<group>"; };
 		D09D72A023F0F3BF00847DC8 /* RecoveryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryViewController.swift; sourceTree = "<group>"; };
 		D09D72A123F0F3BF00847DC8 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		D09D72A523F0F3C000847DC8 /* CreateRawTxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateRawTxViewController.swift; sourceTree = "<group>"; };
@@ -260,19 +248,14 @@
 		D09D72F823F0F3C000847DC8 /* RawDisplayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawDisplayer.swift; sourceTree = "<group>"; };
 		D09D72FA23F0F3C000847DC8 /* QRScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
 		D09D72FC23F0F3C000847DC8 /* GetPrivateKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetPrivateKeys.swift; sourceTree = "<group>"; };
-		D09D72FD23F0F3C000847DC8 /* CreateUnsigned.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateUnsigned.swift; sourceTree = "<group>"; };
 		D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSigTxBuilder.swift; sourceTree = "<group>"; };
 		D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleSigBuilder.swift; sourceTree = "<group>"; };
 		D09D730023F0F3C000847DC8 /* WalletSaver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletSaver.swift; sourceTree = "<group>"; };
 		D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateMultisigWallet.swift; sourceTree = "<group>"; };
-		D09D730223F0F3C000847DC8 /* SignMultiSig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignMultiSig.swift; sourceTree = "<group>"; };
-		D09D730323F0F3C000847DC8 /* Send.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Send.swift; sourceTree = "<group>"; };
-		D09D730423F0F3C000847DC8 /* SendUTXO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendUTXO.swift; sourceTree = "<group>"; };
 		D09D730523F0F3C000847DC8 /* OfflineSigner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSigner.swift; sourceTree = "<group>"; };
 		D09D730623F0F3C000847DC8 /* WalletCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletCreator.swift; sourceTree = "<group>"; };
 		D09D730723F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSignerP2SHSegwit.swift; sourceTree = "<group>"; };
 		D09D730823F0F3C000847DC8 /* OfflineSignerLegacy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSignerLegacy.swift; sourceTree = "<group>"; };
-		D09D730923F0F3C000847DC8 /* GetSmartFee.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetSmartFee.swift; sourceTree = "<group>"; };
 		D09D737423F0F40400847DC8 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		D09D737623F0F61300847DC8 /* FullyNoded2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FullyNoded2.entitlements; sourceTree = "<group>"; };
 		D09DCF6123F0FC7B008F5B9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -283,7 +266,6 @@
 		D0A0EAEF23F7C06E004F9E15 /* DescriptorParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptorParser.swift; sourceTree = "<group>"; };
 		D0A0EAF123F7CF70004F9E15 /* DescriptorStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptorStruct.swift; sourceTree = "<group>"; };
 		D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseWalletFormatViewController.swift; sourceTree = "<group>"; };
-		D0A9EB8823F5338700C84829 /* ChooseWalletTemplateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseWalletTemplateViewController.swift; sourceTree = "<group>"; };
 		DDDEC206181E8985B8D9E919 /* Pods-FullyNoded2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FullyNoded2.debug.xcconfig"; path = "Target Support Files/Pods-FullyNoded2/Pods-FullyNoded2.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -440,9 +422,10 @@
 		D09D728B23F0F3BF00847DC8 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D09D728C23F0F3BF00847DC8 /* Settings */,
-				D09D72A223F0F3C000847DC8 /* Home */,
-				D09D72B623F0F3C000847DC8 /* Intro */,
+				D09D729A23F0F3BF00847DC8 /* Wallets */,
+				D09D72A323F0F3C000847DC8 /* Outgoing */,
+				D09D72AB23F0F3C000847DC8 /* Incoming */,
+				D09D72AE23F0F3C000847DC8 /* Home Screen */,
 				D09D72B923F0F3C000847DC8 /* Unlock Screen */,
 			);
 			path = "View Controllers";
@@ -451,16 +434,9 @@
 		D09D728C23F0F3BF00847DC8 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				D09D728D23F0F3BF00847DC8 /* ExportKeysViewController.swift */,
-				D09D728E23F0F3BF00847DC8 /* Seed */,
-				D09D729323F0F3BF00847DC8 /* NodeScannerViewController.swift */,
-				D09D729423F0F3BF00847DC8 /* VerifyKeysViewController.swift */,
 				D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */,
-				D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */,
-				D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */,
 				D09D729823F0F3BF00847DC8 /* DerivationViewController.swift */,
 				D09D729923F0F3BF00847DC8 /* QRViewController.swift */,
-				D09D729A23F0F3BF00847DC8 /* Wallets */,
 				D09D72A123F0F3BF00847DC8 /* SettingsViewController.swift */,
 			);
 			path = Settings;
@@ -480,34 +456,19 @@
 		D09D729A23F0F3BF00847DC8 /* Wallets */ = {
 			isa = PBXGroup;
 			children = (
-				D09D729B23F0F3BF00847DC8 /* CreateMultiSigViewController.swift */,
-				D09D729C23F0F3BF00847DC8 /* WalletInfoViewController.swift */,
-				D09D729D23F0F3BF00847DC8 /* WalletsViewController.swift */,
-				D09D729E23F0F3BF00847DC8 /* TemplateViewController.swift */,
-				D09D729F23F0F3BF00847DC8 /* MultiSigDescriptorViewController.swift */,
-				D09D72A023F0F3BF00847DC8 /* RecoveryViewController.swift */,
-				D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */,
-				D0A9EB8823F5338700C84829 /* ChooseWalletTemplateViewController.swift */,
-				D0A0EAED23F584C8004F9E15 /* UtxoInfoViewController.swift */,
+				D09D72A623F0F3C000847DC8 /* UTXO's */,
+				D09D728E23F0F3BF00847DC8 /* Seed */,
+				D0CD026923FA3631009F2E7F /* Wallet Tools */,
+				D0CD026A23FA368A009F2E7F /* Wallets Table */,
+				D0CD026B23FA36B4009F2E7F /* Wallet Creation */,
 			);
 			path = Wallets;
-			sourceTree = "<group>";
-		};
-		D09D72A223F0F3C000847DC8 /* Home */ = {
-			isa = PBXGroup;
-			children = (
-				D09D72A323F0F3C000847DC8 /* Outgoing */,
-				D09D72AB23F0F3C000847DC8 /* Incoming */,
-				D09D72AE23F0F3C000847DC8 /* Home Screen */,
-			);
-			path = Home;
 			sourceTree = "<group>";
 		};
 		D09D72A323F0F3C000847DC8 /* Outgoing */ = {
 			isa = PBXGroup;
 			children = (
 				D09D72A423F0F3C000847DC8 /* Raw Tx */,
-				D09D72A623F0F3C000847DC8 /* UTXO's */,
 				D09D72A923F0F3C000847DC8 /* ConfirmViewController.swift */,
 				D09D72AA23F0F3C000847DC8 /* VerifyViewController.swift */,
 			);
@@ -525,6 +486,7 @@
 		D09D72A623F0F3C000847DC8 /* UTXO's */ = {
 			isa = PBXGroup;
 			children = (
+				D0A0EAED23F584C8004F9E15 /* UtxoInfoViewController.swift */,
 				D09D72A723F0F3C000847DC8 /* LockedViewController.swift */,
 				D09D72A823F0F3C000847DC8 /* UTXOViewController.swift */,
 			);
@@ -550,12 +512,15 @@
 		D09D72AE23F0F3C000847DC8 /* Home Screen */ = {
 			isa = PBXGroup;
 			children = (
+				D09D72B623F0F3C000847DC8 /* Intro */,
+				D09D728C23F0F3BF00847DC8 /* Settings */,
 				D09D72AF23F0F3C000847DC8 /* Transaction Viewer */,
 				D09D72B123F0F3C000847DC8 /* ImportViewController.swift */,
 				D09D72B223F0F3C000847DC8 /* TableDetailViewController.swift */,
 				D09D72B323F0F3C000847DC8 /* AuthenticateViewController.swift */,
 				D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */,
 				D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */,
+				D09D729323F0F3BF00847DC8 /* NodeScannerViewController.swift */,
 			);
 			path = "Home Screen";
 			sourceTree = "<group>";
@@ -731,23 +696,79 @@
 		D09D72FB23F0F3C000847DC8 /* Wallet Logic */ = {
 			isa = PBXGroup;
 			children = (
-				D09D72FC23F0F3C000847DC8 /* GetPrivateKeys.swift */,
-				D09D72FD23F0F3C000847DC8 /* CreateUnsigned.swift */,
-				D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */,
-				D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */,
-				D09D730023F0F3C000847DC8 /* WalletSaver.swift */,
-				D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */,
-				D09D730223F0F3C000847DC8 /* SignMultiSig.swift */,
-				D09D730323F0F3C000847DC8 /* Send.swift */,
-				D09D730423F0F3C000847DC8 /* SendUTXO.swift */,
-				D09D730523F0F3C000847DC8 /* OfflineSigner.swift */,
-				D09D730623F0F3C000847DC8 /* WalletCreator.swift */,
-				D09D730723F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift */,
-				D09D730823F0F3C000847DC8 /* OfflineSignerLegacy.swift */,
-				D09D730923F0F3C000847DC8 /* GetSmartFee.swift */,
-				D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */,
+				D0CD026F23FA380B009F2E7F /* Transaction Builders */,
+				D0CD026E23FA37E8009F2E7F /* Saver */,
+				D0CD026D23FA37C8009F2E7F /* Creators */,
+				D0CD026C23FA376D009F2E7F /* Signers */,
 			);
 			path = "Wallet Logic";
+			sourceTree = "<group>";
+		};
+		D0CD026923FA3631009F2E7F /* Wallet Tools */ = {
+			isa = PBXGroup;
+			children = (
+				D09D729C23F0F3BF00847DC8 /* WalletInfoViewController.swift */,
+				D09D728D23F0F3BF00847DC8 /* ExportKeysViewController.swift */,
+				D09D729423F0F3BF00847DC8 /* VerifyKeysViewController.swift */,
+				D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */,
+				D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */,
+			);
+			path = "Wallet Tools";
+			sourceTree = "<group>";
+		};
+		D0CD026A23FA368A009F2E7F /* Wallets Table */ = {
+			isa = PBXGroup;
+			children = (
+				D09D729D23F0F3BF00847DC8 /* WalletsViewController.swift */,
+			);
+			path = "Wallets Table";
+			sourceTree = "<group>";
+		};
+		D0CD026B23FA36B4009F2E7F /* Wallet Creation */ = {
+			isa = PBXGroup;
+			children = (
+				D09D72A023F0F3BF00847DC8 /* RecoveryViewController.swift */,
+				D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */,
+			);
+			path = "Wallet Creation";
+			sourceTree = "<group>";
+		};
+		D0CD026C23FA376D009F2E7F /* Signers */ = {
+			isa = PBXGroup;
+			children = (
+				D09D72FC23F0F3C000847DC8 /* GetPrivateKeys.swift */,
+				D09D730523F0F3C000847DC8 /* OfflineSigner.swift */,
+				D09D730723F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift */,
+				D09D730823F0F3C000847DC8 /* OfflineSignerLegacy.swift */,
+			);
+			path = Signers;
+			sourceTree = "<group>";
+		};
+		D0CD026D23FA37C8009F2E7F /* Creators */ = {
+			isa = PBXGroup;
+			children = (
+				D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */,
+				D09D730623F0F3C000847DC8 /* WalletCreator.swift */,
+				D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */,
+			);
+			path = Creators;
+			sourceTree = "<group>";
+		};
+		D0CD026E23FA37E8009F2E7F /* Saver */ = {
+			isa = PBXGroup;
+			children = (
+				D09D730023F0F3C000847DC8 /* WalletSaver.swift */,
+			);
+			path = Saver;
+			sourceTree = "<group>";
+		};
+		D0CD026F23FA380B009F2E7F /* Transaction Builders */ = {
+			isa = PBXGroup;
+			children = (
+				D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */,
+				D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */,
+			);
+			path = "Transaction Builders";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1034,7 +1055,6 @@
 				D09D731B23F0F3C000847DC8 /* DerivationViewController.swift in Sources */,
 				D0A0EAEE23F584C8004F9E15 /* UtxoInfoViewController.swift in Sources */,
 				D09D731423F0F3C000847DC8 /* ImportQRViewController.swift in Sources */,
-				D09D732023F0F3C000847DC8 /* TemplateViewController.swift in Sources */,
 				D09D733723F0F3C000847DC8 /* shim.swift in Sources */,
 				D09D734123F0F3C000847DC8 /* KeychainCreator.swift in Sources */,
 				D09D734323F0F3C000847DC8 /* MakeRPCCall.swift in Sources */,
@@ -1045,10 +1065,7 @@
 				D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */,
 				D09D732823F0F3C000847DC8 /* VerifyViewController.swift in Sources */,
 				D09D732F23F0F3C000847DC8 /* ScannerViewController.swift in Sources */,
-				D09D732123F0F3C000847DC8 /* MultiSigDescriptorViewController.swift in Sources */,
 				D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */,
-				D09D731D23F0F3C000847DC8 /* CreateMultiSigViewController.swift in Sources */,
-				D0A9EB8923F5338700C84829 /* ChooseWalletTemplateViewController.swift in Sources */,
 				D09D731A23F0F3C000847DC8 /* QRDisplayerViewController.swift in Sources */,
 				D09D734523F0F3C000847DC8 /* Encryption.swift in Sources */,
 				D09D733023F0F3C000847DC8 /* IntroViewController.swift in Sources */,
@@ -1073,14 +1090,11 @@
 				D09D732C23F0F3C000847DC8 /* TableDetailViewController.swift in Sources */,
 				D09D734023F0F3C000847DC8 /* Commands.swift in Sources */,
 				D09D737023F0F3C000847DC8 /* WalletCreator.swift in Sources */,
-				D09D736D23F0F3C000847DC8 /* Send.swift in Sources */,
-				D09D737323F0F3C000847DC8 /* GetSmartFee.swift in Sources */,
 				D09D731823F0F3C000847DC8 /* NodeManagerViewController.swift in Sources */,
 				D09D733E23F0F3C000847DC8 /* MnemonicCreator.swift in Sources */,
 				D09D734223F0F3C000847DC8 /* QuickConnect.swift in Sources */,
 				D09D735D23F0F3C000847DC8 /* CustomButton.swift in Sources */,
 				D09D731723F0F3C000847DC8 /* VerifyKeysViewController.swift in Sources */,
-				D09D736723F0F3C000847DC8 /* CreateUnsigned.swift in Sources */,
 				D09D736523F0F3C000847DC8 /* QRScanner.swift in Sources */,
 				D09D732423F0F3C000847DC8 /* CreateRawTxViewController.swift in Sources */,
 				D09D737123F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift in Sources */,
@@ -1103,7 +1117,6 @@
 				D09D734823F0F3C000847DC8 /* FiatConverter.swift in Sources */,
 				D09D731323F0F3C000847DC8 /* ImportSeedViewController.swift in Sources */,
 				D09D736323F0F3C000847DC8 /* ErrorView.swift in Sources */,
-				D09D736C23F0F3C000847DC8 /* SignMultiSig.swift in Sources */,
 				D09D733323F0F3C000847DC8 /* Utilities.swift in Sources */,
 				D09D731123F0F3C000847DC8 /* ExportKeysViewController.swift in Sources */,
 				D09D732923F0F3C000847DC8 /* InvoiceViewController.swift in Sources */,
@@ -1113,7 +1126,6 @@
 				D09D733223F0F3C000847DC8 /* LogInViewController.swift in Sources */,
 				D09DCF6623F10645008F5B9F /* Base32.swift in Sources */,
 				D09D736F23F0F3C000847DC8 /* OfflineSigner.swift in Sources */,
-				D09D736E23F0F3C000847DC8 /* SendUTXO.swift in Sources */,
 				D09D731E23F0F3C000847DC8 /* WalletInfoViewController.swift in Sources */,
 				D09D734723F0F3C000847DC8 /* Connector.swift in Sources */,
 				D09D735E23F0F3C000847DC8 /* QRGenerator.swift in Sources */,

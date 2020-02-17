@@ -489,9 +489,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         
                         coldBalanceLabel.textColor = .systemGray
                     }
-                    
-                    coldBalanceLabel.textColor = .systemGray
-                    
+                                        
                     if walletInfo.unconfirmed {
                         
                         coldBalanceLabel.text = self.coldBalance + " " + "BTC ⚠︎"
@@ -2211,55 +2209,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         switch segue.identifier {
             
-        case "createMuSig":
-            
-            if let vc = segue.destination as? CreateMultiSigViewController {
-                
-                vc.onDoneBlock1 = { result in
-                    
-                    let cd = CoreDataService()
-                    cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
-                        
-                        if wallets != nil {
-                            
-                            var numberOfUnarchivedWallets = 0
-                            
-                            for w in wallets! {
-                                
-                                let ws = WalletStruct(dictionary: w)
-                                
-                                if !ws.isArchived {
-                                    
-                                    numberOfUnarchivedWallets += 1
-                                    
-                                }
-                                
-                            }
-                            
-                            if wallets!.count == 1 || numberOfUnarchivedWallets == 1 {
-                                
-                                self.addStatusLabel(description: "")
-                                self.sectionZeroLoaded = false
-                                self.sectionThreeLoaded = false
-                                
-                                showAlert(vc: self, title: "Success!", message: "2 of 3 multi-sig wallet created successfully!")
-                                
-                            } else {
-                                
-                                showAlert(vc: self, title: "Success!", message: "2 of 3 multi-sig wallet created successfully!\n\nYou have more then one wallet on this node so we have not activated the newly created wallet yet, please go to wallet manager to activate it.")
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                    self.didAppear()
-                    
-                }
-                
-            }
-            
         case "goToWallets":
             
             if let vc = segue.destination as? WalletsViewController {
@@ -2350,15 +2299,3 @@ extension Double {
     }
     
 }
-
-//extension MainMenuViewController  {
-//    
-//    func tabBarController(_ tabBarController: UITabBarController,
-//                          animationControllerForTransitionFrom fromVC: UIViewController,
-//                          to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-//        
-//        return MyTransition(viewControllers: tabBarController.viewControllers)
-//        
-//    }
-//    
-//}

@@ -172,23 +172,31 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 
                                 if errorDescription == nil {
                                     
-                                    for (i, w) in wallets!.enumerated() {
+                                    if wallets!.count == 0 {
                                         
-                                        let s = WalletStruct(dictionary: w)
+                                        self.createWallet()
                                         
-                                        if !s.isArchived {
-                                            
-                                            self.sortedWallets.append(w)
-                                            
-                                        }
+                                    } else {
                                         
-                                        if i + 1 == wallets!.count {
+                                        for (i, w) in wallets!.enumerated() {
                                             
-                                            self.sortedWallets = self.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
+                                            let s = WalletStruct(dictionary: w)
                                             
-                                            DispatchQueue.main.async {
+                                            if !s.isArchived {
                                                 
-                                                self.walletTable.reloadData()
+                                                self.sortedWallets.append(w)
+                                                
+                                            }
+                                            
+                                            if i + 1 == wallets!.count {
+                                                
+                                                self.sortedWallets = self.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
+                                                
+                                                DispatchQueue.main.async {
+                                                    
+                                                    self.walletTable.reloadData()
+                                                    
+                                                }
                                                 
                                             }
                                             
@@ -342,9 +350,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 balanceLabel.textColor = .systemGreen
                 
             }
-            
-            balanceLabel.textColor = .lightGray
-            
+                        
             if derivation.contains("84") {
                 
                 derivationLabel.text = "BIP84"
@@ -1296,24 +1302,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let id = segue.identifier
         
         switch id {
-            
-        case "createMultiSigNow":
-            
-            if let vc = segue.destination as? CreateMultiSigViewController {
-                
-                vc.onDoneBlock1 = { result in
-                    
-                    self.refresh()
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.performSegue(withIdentifier: "showRecoveryKit", sender: self)
-                        
-                    }
-                    
-                }
-                
-            }
             
         case "walletInfo":
             

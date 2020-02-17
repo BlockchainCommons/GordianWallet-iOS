@@ -339,7 +339,7 @@ class ChooseWalletFormatViewController: UIViewController {
                     
                     if !error {
                         
-                        if let masterKey = HDKey((mnemonic!.seedHex("")), self.network(path: derivation)) {
+                        if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
                             
                             if let path = BIP32Path(derivation) {
                                 
@@ -408,7 +408,7 @@ class ChooseWalletFormatViewController: UIViewController {
                                 
                                 let derivation = self.newWallet["derivation"] as! String
                                 
-                                if let masterKey = HDKey((mnemonic!.seedHex("")), self.network(path: derivation)) {
+                                if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
                                     
                                     if let path = BIP32Path(derivation) {
                                         
@@ -486,7 +486,7 @@ class ChooseWalletFormatViewController: UIViewController {
                             
                             let derivation = self.newWallet["derivation"] as! String
                             
-                            if let masterKey = HDKey((mnemonic!.seedHex("")), self.network(path: derivation)) {
+                            if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
                                 
                                 if let path = BIP32Path(derivation) {
                                     
@@ -667,22 +667,22 @@ class ChooseWalletFormatViewController: UIViewController {
         
     }
     
-    private func network(path: String) -> Network {
-        
-        var network:Network!
-        
-        if path.contains("/1'") {
-            
-            network = .testnet
-            
-        } else {
-            
-            network = .mainnet
-            
-        }
-        
-        return network
-        
-    }
+//    private func network(path: String) -> Network {
+//        
+//        var network:Network!
+//        
+//        if path.contains("/1'") {
+//            
+//            network = .testnet
+//            
+//        } else {
+//            
+//            network = .mainnet
+//            
+//        }
+//        
+//        return network
+//        
+//    }
 
 }

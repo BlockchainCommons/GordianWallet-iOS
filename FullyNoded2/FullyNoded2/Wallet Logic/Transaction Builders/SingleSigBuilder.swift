@@ -47,7 +47,7 @@ class SingleSigBuilder {
         
         func signSegwit(psbt: String) {
             
-            let signer = OfflineSigner()
+            let signer = NativeSegwitOfflineSigner()
             signer.signTransactionOffline(unsignedTx: psbt) { (signedTx) in
 
                 if signedTx != nil {
