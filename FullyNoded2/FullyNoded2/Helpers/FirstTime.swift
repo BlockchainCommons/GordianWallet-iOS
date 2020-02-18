@@ -26,7 +26,6 @@ class FirstTime {
             
             if keychain.set(privateKey, forKey: "privateKey") {
                 
-                print("keychain set privkey")
                 let keygen = KeyGen()
                 keygen.generate { (pubkey, privkey) in
                     

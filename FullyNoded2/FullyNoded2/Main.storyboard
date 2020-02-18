@@ -297,6 +297,78 @@
             </objects>
             <point key="canvasLocation" x="-7458" y="2001"/>
         </scene>
+        <!--Security View Controller-->
+        <scene sceneID="iZu-HS-qu2">
+            <objects>
+                <viewController id="nFU-Iq-QMx" customClass="SecurityViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="dwH-7u-E8e">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.shield" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zZm-wl-uDo">
+                                <rect key="frame" x="16" y="13.5" width="22" height="44"/>
+                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="22" id="FMb-i3-Bf0"/>
+                                    <constraint firstAttribute="height" constant="45" id="IDA-lY-e4Z"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Security Center" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uyv-vm-NIu">
+                                <rect key="frame" x="46" y="19.5" width="208" height="32"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="26"/>
+                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Uma-0Y-kMk">
+                                <rect key="frame" x="0.0" y="66" width="375" height="581"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="securityCell" id="l80-89-tb2">
+                                        <rect key="frame" x="15" y="55.5" width="345" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="l80-89-tb2" id="8dB-9K-MpZ">
+                                            <rect key="frame" x="0.0" y="0.0" width="345" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.050706155599999997" green="0.05862525851" blue="0.071102283899999993" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="nFU-Iq-QMx" id="QRK-zn-Ms9"/>
+                                    <outlet property="delegate" destination="nFU-Iq-QMx" id="AiP-bq-SYZ"/>
+                                </connections>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ay2-oL-4Qj">
+                                <rect key="frame" x="339" y="24.5" width="20" height="22"/>
+                                <state key="normal" image="xmark.circle.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="close:" destination="nFU-Iq-QMx" eventType="touchUpInside" id="tja-Z6-ODM"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.074236519629999997" green="0.082159139219999996" blue="0.094636552040000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="zZm-wl-uDo" firstAttribute="leading" secondItem="5GC-ob-r2z" secondAttribute="leading" constant="16" id="4Dv-e7-loM"/>
+                            <constraint firstItem="5GC-ob-r2z" firstAttribute="trailing" secondItem="ay2-oL-4Qj" secondAttribute="trailing" constant="16" id="8KA-lJ-C5x"/>
+                            <constraint firstItem="zZm-wl-uDo" firstAttribute="top" secondItem="5GC-ob-r2z" secondAttribute="top" constant="13" id="LgU-0h-FNC"/>
+                            <constraint firstItem="Uma-0Y-kMk" firstAttribute="bottom" secondItem="5GC-ob-r2z" secondAttribute="bottom" id="NQz-iL-Pk7"/>
+                            <constraint firstItem="Uma-0Y-kMk" firstAttribute="top" secondItem="zZm-wl-uDo" secondAttribute="bottom" constant="8" id="UyP-Uh-OME"/>
+                            <constraint firstItem="Uma-0Y-kMk" firstAttribute="trailing" secondItem="5GC-ob-r2z" secondAttribute="trailing" id="ZZo-Gy-w7E"/>
+                            <constraint firstItem="Uyv-vm-NIu" firstAttribute="centerY" secondItem="zZm-wl-uDo" secondAttribute="centerY" id="nIL-oo-2a2"/>
+                            <constraint firstItem="Uyv-vm-NIu" firstAttribute="leading" secondItem="zZm-wl-uDo" secondAttribute="trailing" constant="8" id="oZY-Tl-5hy"/>
+                            <constraint firstItem="Uma-0Y-kMk" firstAttribute="leading" secondItem="5GC-ob-r2z" secondAttribute="leading" id="sBl-cc-Hid"/>
+                            <constraint firstItem="ay2-oL-4Qj" firstAttribute="centerY" secondItem="Uyv-vm-NIu" secondAttribute="centerY" id="yii-jZ-hCg"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="5GC-ob-r2z"/>
+                    </view>
+                    <connections>
+                        <outlet property="table" destination="Uma-0Y-kMk" id="856-d3-1Mu"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="T3m-1s-5Vo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-7458.3999999999996" y="2754.872563718141"/>
+        </scene>
         <!--Home-->
         <scene sceneID="erx-5N-Kcy">
             <objects>
@@ -312,7 +384,7 @@
                                 <color key="sectionIndexBackgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MainMenuCell" rowHeight="66" id="EVM-FH-EQj">
-                                        <rect key="frame" x="0.0" y="55.5" width="345" height="66"/>
+                                        <rect key="frame" x="15" y="55.5" width="345" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="EVM-FH-EQj" id="6Y2-Fh-R1z">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="66"/>
@@ -369,7 +441,7 @@
                                         <color key="backgroundColor" red="0.090666323016946812" green="0.10264321163773631" blue="0.12232880449385808" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NodeInfo" rowHeight="192" id="LJt-F3-a27">
-                                        <rect key="frame" x="0.0" y="121.5" width="345" height="192"/>
+                                        <rect key="frame" x="15" y="121.5" width="345" height="192"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LJt-F3-a27" id="bIn-ES-gWa">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="192"/>
@@ -573,7 +645,7 @@
                                         <color key="backgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="torCell" rowHeight="129" id="Ypb-Cj-jX8">
-                                        <rect key="frame" x="0.0" y="313.5" width="345" height="129"/>
+                                        <rect key="frame" x="15" y="313.5" width="345" height="129"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ypb-Cj-jX8" id="glf-PS-WeE">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="129"/>
@@ -1007,7 +1079,7 @@
                                         <color key="backgroundColor" red="0.1051254794" green="0.12928032880000001" blue="0.14184883240000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="coldStorageCell" rowHeight="188" id="lKm-ad-JjI">
-                                        <rect key="frame" x="15" y="732.5" width="345" height="188"/>
+                                        <rect key="frame" x="0.0" y="732.5" width="345" height="188"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lKm-ad-JjI" id="k7X-TL-xsP">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="188"/>
@@ -1168,7 +1240,7 @@
                                         <color key="backgroundColor" red="0.0" green="0.13545817230621357" blue="0.28083359771573602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="singleSigCell" rowHeight="255" id="nLp-7u-fn2">
-                                        <rect key="frame" x="15" y="920.5" width="345" height="255"/>
+                                        <rect key="frame" x="0.0" y="920.5" width="345" height="255"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nLp-7u-fn2" id="Vqk-up-C8V">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="255"/>
@@ -1443,8 +1515,6 @@
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="scanNow" id="LzA-tD-DJD"/>
                         <segue destination="I2N-Ql-8qz" kind="show" identifier="showIntro" id="a8G-G5-GSa"/>
                         <segue destination="3uQ-0D-YgM" kind="show" identifier="goToWallets" id="fBg-S5-BEW"/>
-                        <segue destination="Ohm-tR-Xrl" kind="show" identifier="walletInfo" id="Tj9-fv-XMH"/>
-                        <segue destination="Ohm-tR-Xrl" kind="show" identifier="torInfo" id="cWG-kJ-vzf"/>
                         <segue destination="rWu-wq-Agv" kind="presentation" identifier="import" id="0zN-S6-Zr1"/>
                         <segue destination="AS8-ke-Yxh" kind="presentation" identifier="settings" id="hdq-o6-Ing"/>
                     </connections>
@@ -1488,7 +1558,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nvo-2v-clY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9711" y="-1334"/>
+            <point key="canvasLocation" x="-9711" y="-1263"/>
         </scene>
         <!--Import View Controller-->
         <scene sceneID="Hz8-4L-tK7">
@@ -1518,38 +1588,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aX8-lc-fq0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-11081" y="392"/>
-        </scene>
-        <!--Table Detail View Controller-->
-        <scene sceneID="GzS-1K-5ua">
-            <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" id="Ohm-tR-Xrl" customClass="TableDetailViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="6nw-Sc-kIq">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Insert detailed information about the wallet here..." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HTN-Bc-ePr">
-                                <rect key="frame" x="16" y="62" width="343" height="41"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" red="0.078040815890000004" green="0.090017892419999995" blue="0.10251823810000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="aJx-C8-qho" firstAttribute="trailing" secondItem="HTN-Bc-ePr" secondAttribute="trailing" constant="16" id="0by-cM-xHd"/>
-                            <constraint firstItem="HTN-Bc-ePr" firstAttribute="top" secondItem="aJx-C8-qho" secondAttribute="top" constant="18" id="FBd-wW-mCm"/>
-                            <constraint firstItem="HTN-Bc-ePr" firstAttribute="leading" secondItem="aJx-C8-qho" secondAttribute="leading" constant="16" id="pxM-12-RJf"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="aJx-C8-qho"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="qhk-0K-rKG"/>
-                    <connections>
-                        <outlet property="textLabel" destination="HTN-Bc-ePr" id="cBA-FR-TrC"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="CQi-wO-k1B" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-10145" y="394"/>
         </scene>
         <!--Transaction-->
         <scene sceneID="VqF-ym-nmL">
@@ -1923,11 +1961,11 @@
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" id="xB3-mY-13p" customClass="ConfirmViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="T5K-PU-RA6">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="A2T-tZ-Y6M">
-                                <rect key="frame" x="16" y="67" width="343" height="529"/>
+                                <rect key="frame" x="16" y="111" width="343" height="505"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="inputCell" rowHeight="78" id="6pv-wa-mjr">
@@ -2047,7 +2085,7 @@
                                 </connections>
                             </tableView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark.seal" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="hko-Fb-uxl">
-                                <rect key="frame" x="16" y="14" width="31" height="37"/>
+                                <rect key="frame" x="16" y="58" width="31" height="37"/>
                                 <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="31" id="KQS-W6-nlc"/>
@@ -2055,7 +2093,7 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sbR-Se-K5i">
-                                <rect key="frame" x="55" y="5" width="149.5" height="54"/>
+                                <rect key="frame" x="55" y="49" width="149.5" height="54"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="54" id="ax2-Xb-J3F"/>
                                 </constraints>
@@ -2099,11 +2137,11 @@
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" id="J96-pV-r6d" customClass="VerifyViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XGu-4Z-bs0">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="yLm-bN-fYY">
-                                <rect key="frame" x="16" y="20" width="343" height="607"/>
+                                <rect key="frame" x="16" y="64" width="343" height="583"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -2263,14 +2301,9 @@
                         <outlet property="settingsTable" destination="hcp-eG-lok" id="xPg-8r-KBs"/>
                         <segue destination="bKH-sI-MiM" kind="show" identifier="goLogIn" id="qed-hl-jG5"/>
                         <segue destination="bKH-sI-MiM" kind="show" identifier="reenterCredentials" id="ckQ-WD-ole"/>
-                        <segue destination="lq5-Pd-gqW" kind="show" identifier="exportSeed" id="5OR-LT-YTJ"/>
                         <segue destination="FI5-Kv-Y72" kind="show" identifier="goToAuth" id="FYa-hr-w4j"/>
-                        <segue destination="tfK-3c-azq" kind="show" identifier="importSeed" id="NvN-z1-iOE"/>
-                        <segue destination="jXY-2O-cMK" kind="show" identifier="seeKeys" id="qbv-38-KBn"/>
-                        <segue destination="3uQ-0D-YgM" kind="show" identifier="goToWallets" id="ku6-7s-Oes"/>
-                        <segue destination="niJ-kt-9ZY" kind="show" identifier="walletInfo" id="W9s-Zc-E88"/>
-                        <segue destination="jX1-Is-hS7" kind="show" identifier="exportKeys" id="W1u-CP-aMh"/>
                         <segue destination="DOn-IQ-sOy" kind="show" identifier="nodeManager" id="SNM-Ay-Yq0"/>
+                        <segue destination="nFU-Iq-QMx" kind="presentation" identifier="security" id="uYa-Es-8DF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k6b-ep-z2U" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2373,11 +2406,11 @@
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" id="tfK-3c-azq" customClass="ImportSeedMenuViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="X24-zS-zSR">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="2SA-E8-GKP">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="separatorColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -2796,12 +2829,18 @@
                                     <outlet property="delegate" destination="DOn-IQ-sOy" id="SG2-VV-WWI"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcH-HD-Aa1">
+                                <rect key="frame" x="339" y="21" width="20" height="22"/>
+                                <state key="normal" image="xmark.circle.fill" catalog="system"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="hUj-Oq-aob" firstAttribute="leading" secondItem="Mym-HT-kr5" secondAttribute="leading" constant="16" id="2VG-Ob-HEq"/>
                             <constraint firstItem="Mym-HT-kr5" firstAttribute="trailing" secondItem="2hj-fw-DNn" secondAttribute="trailing" constant="16" id="3wc-h3-KDg"/>
+                            <constraint firstItem="gcH-HD-Aa1" firstAttribute="centerY" secondItem="ZDy-HF-H1J" secondAttribute="centerY" id="5pg-z8-bJb"/>
                             <constraint firstItem="2hj-fw-DNn" firstAttribute="top" secondItem="hUj-Oq-aob" secondAttribute="bottom" constant="1.5" id="HaH-vk-AOk"/>
+                            <constraint firstItem="Mym-HT-kr5" firstAttribute="trailing" secondItem="gcH-HD-Aa1" secondAttribute="trailing" constant="16" id="Oqm-6d-cbX"/>
                             <constraint firstItem="ZDy-HF-H1J" firstAttribute="leading" secondItem="hUj-Oq-aob" secondAttribute="trailing" constant="8" id="cPY-In-RbO"/>
                             <constraint firstItem="ZDy-HF-H1J" firstAttribute="centerY" secondItem="hUj-Oq-aob" secondAttribute="centerY" id="dcf-6f-ncN"/>
                             <constraint firstItem="ZDy-HF-H1J" firstAttribute="top" secondItem="Mym-HT-kr5" secondAttribute="top" constant="5" id="nTz-Af-ijx"/>
@@ -3377,7 +3416,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             </constraints>
                                                         </stackView>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.0" green="0.15797236686254543" blue="0.32751031089796967" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstItem="3GT-EX-m02" firstAttribute="top" secondItem="W1t-FH-89R" secondAttribute="top" constant="6" id="4Mu-uv-O2J"/>
                                                         <constraint firstItem="3GT-EX-m02" firstAttribute="leading" secondItem="W1t-FH-89R" secondAttribute="leading" constant="8" id="7ui-cq-s30"/>
@@ -3502,7 +3541,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.1432691574537093" green="0.17390265680334469" blue="0.19676344636040599" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="g8x-Ld-Ezw" firstAttribute="top" secondItem="car-yr-b08" secondAttribute="bottom" constant="2" id="66n-Dg-o7p"/>
                                                         <constraint firstItem="3Cs-N1-Juh" firstAttribute="top" secondItem="Mus-be-FaA" secondAttribute="top" constant="4" id="7Jy-vE-KhN"/>
@@ -3532,7 +3571,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="8" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Testnet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dOn-Dy-2vG">
                                                     <rect key="frame" x="177" y="23.5" width="75" height="26"/>
-                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.1432691574537093" green="0.17390265680334469" blue="0.19676344636040599" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="26" id="cfH-MH-xOT"/>
                                                         <constraint firstAttribute="width" constant="75" id="qfy-GY-E2l"/>
@@ -3619,7 +3658,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             <state key="normal" image="square.and.arrow.up" catalog="system"/>
                                                         </button>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.1432691574537093" green="0.17390265680334469" blue="0.19676344636040599" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="Fds-1S-xmg" firstAttribute="centerY" secondItem="AMk-q2-GQu" secondAttribute="centerY" id="1U0-6C-W1n"/>
                                                         <constraint firstItem="GYH-38-DIo" firstAttribute="leading" secondItem="AMk-q2-GQu" secondAttribute="leading" constant="4" id="CVt-bG-Cza"/>
@@ -3677,7 +3716,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             <color key="tintColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </imageView>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.1432691574537093" green="0.17390265680334469" blue="0.19676344636040599" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="n61-Zn-aDm" firstAttribute="top" secondItem="z3r-1y-FSf" secondAttribute="top" constant="4.5" id="0mK-BC-WKc"/>
                                                         <constraint firstAttribute="height" constant="37" id="8a5-E4-94B"/>
@@ -3714,7 +3753,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                 </button>
                                                 <button opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5s-y7-UKM">
                                                     <rect key="frame" x="260" y="23.5" width="75" height="26"/>
-                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.1432691574537093" green="0.17390265680334469" blue="0.19676344636040599" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="26" id="TNr-JY-hEu"/>
                                                         <constraint firstAttribute="width" constant="75" id="ggO-Pu-3Wn"/>
@@ -3783,13 +3822,13 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                     <state key="normal" image="thermometer.snowflake" catalog="system"/>
                                                                 </button>
                                                             </subviews>
-                                                            <color key="backgroundColor" red="0.097482465209999994" green="0.11331280320000001" blue="0.13826072219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="26" id="UOX-JA-RFS"/>
                                                             </constraints>
                                                         </stackView>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.11295536909999999" green="0.13704425100000001" blue="0.15375503900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstItem="KoW-G0-uW0" firstAttribute="top" secondItem="egC-uO-FYs" secondAttribute="top" constant="6" id="0Nb-0C-AED"/>
                                                         <constraint firstAttribute="height" constant="38" id="J6H-WT-W0x"/>
@@ -4245,13 +4284,13 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                     <state key="normal" image="thermometer.snowflake" catalog="system"/>
                                                                 </button>
                                                             </subviews>
-                                                            <color key="backgroundColor" red="0.097482465209999994" green="0.11331280320000001" blue="0.13826072219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="26" id="0MG-29-vSB"/>
                                                             </constraints>
                                                         </stackView>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.14014528487774194" green="0.17214550810387905" blue="0.19040927021725895" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="Dwt-Xd-gsb" secondAttribute="bottom" constant="6" id="Ex3-dv-vJn"/>
                                                         <constraint firstItem="Dwt-Xd-gsb" firstAttribute="leading" secondItem="1Wn-ab-2Sg" secondAttribute="leading" constant="8" id="SsN-34-DaZ"/>
@@ -4429,7 +4468,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                 <segments>
                                     <segment title="P2WSH"/>
                                     <segment title="P2SH-P2WSH"/>
-                                    <segment title="P2PKH"/>
+                                    <segment title="P2SH"/>
                                 </segments>
                                 <color key="selectedSegmentTintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
@@ -4832,7 +4871,6 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                     <connections>
                         <outlet property="utxoTable" destination="CFb-Jk-h9Z" id="Nra-d1-mSR"/>
                         <segue destination="03r-hX-hYT" kind="show" identifier="goToLocked" id="zZA-rA-VBd"/>
-                        <segue destination="xB3-mY-13p" kind="show" identifier="confirmUtxoSpend" id="zL7-ti-xtY"/>
                         <segue destination="w66-ss-9Kp" kind="presentation" identifier="utxoInfo" id="YuM-5w-wRl"/>
                     </connections>
                 </viewController>
@@ -4969,6 +5007,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
         <image name="link" catalog="system" width="64" height="58"/>
         <image name="lock.circle" catalog="system" width="64" height="60"/>
         <image name="lock.icloud" catalog="system" width="64" height="44"/>
+        <image name="lock.shield" catalog="system" width="64" height="60"/>
         <image name="pencil.circle" catalog="system" width="64" height="60"/>
         <image name="person.3" catalog="system" width="72" height="35"/>
         <image name="qrcode" catalog="system" width="64" height="56"/>
@@ -4983,17 +5022,12 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
         <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="UBf-qr-XYG"/>
+        <segue reference="ckQ-WD-ole"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="rrW-6B-Fka"/>
-        <segue reference="q40-x8-mKf"/>
-        <segue reference="Pnz-5F-hdP"/>
-        <segue reference="zL7-ti-xtY"/>
         <segue reference="tY7-Ss-m0T"/>
-        <segue reference="LzA-tD-DJD"/>
-        <segue reference="Tj9-fv-XMH"/>
-        <segue reference="0zN-S6-Zr1"/>
-        <segue reference="r3C-3T-Ati"/>
+        <segue reference="hQB-hF-hqf"/>
+        <segue reference="r5v-RV-hIL"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

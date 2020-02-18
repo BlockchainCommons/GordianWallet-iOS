@@ -62,50 +62,6 @@ class Encryption {
         
     }
     
-//    func getSeed(completion: @escaping ((seed: String, derivation: String, error: Bool)) -> Void) {
-//
-//        if #available(iOS 13.0, *) {
-//
-//            getActiveWallet() { (activeWallet) in
-//
-//                if activeWallet != nil {
-//
-//                    let encryptedSeed = activeWallet!.seed
-//
-//                    self.decryptData(dataToDecrypt: encryptedSeed) { (decryptedSeed) in
-//
-//                        if decryptedSeed != nil {
-//
-//                            if let seed = String(data: decryptedSeed!, encoding: .utf8) {
-//
-//                                completion((seed, activeWallet!.derivation, false))
-//
-//                            } else {
-//
-//                                completion(("","",true))
-//
-//                            }
-//
-//                        } else {
-//
-//                            completion(("","",true))
-//
-//                        }
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//        } else {
-//            
-//            completion(("","",true))
-//
-//        }
-//
-//    }
-    
     func getNode(completion: @escaping ((node: NodeStruct?, error: Bool)) -> Void) {
         
         if #available(iOS 13.0, *) {
@@ -147,6 +103,7 @@ class Encryption {
                                                         
                                                         // we know there will be 7 keys, so can check the loop has finished here
                                                         let nodeStruct = NodeStruct.init(dictionary: decryptedNode)
+                                                        decryptedNode.removeAll()
                                                         completion((nodeStruct,false))
                                                         
                                                     }

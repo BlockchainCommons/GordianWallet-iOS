@@ -15,6 +15,30 @@ extension Notification.Name {
     public static let didEnterForeground = Notification.Name(rawValue: "enteredForeground")
 }
 
+extension Int {
+    func withCommas() -> String {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = NumberFormatter.Style.decimal
+        return numberFormatter.string(from: NSNumber(value:self))!
+    }
+}
+
+public func isValidCharacters(_ string: String) -> Bool {
+    
+    let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+    
+    if string.rangeOfCharacter(from: characterset.inverted) != nil {
+        
+        return false
+        
+    } else {
+        
+        return true
+        
+    }
+    
+}
+
 public func getActiveWalletNow(completion: @escaping ((wallet: WalletStruct?, error: Bool)) -> Void) {
     
     let enc = Encryption()

@@ -31,25 +31,45 @@ class QuickConnect {
             
             if let hostCheck = URLComponents(string: url)?.host {
                 
-                host = hostCheck
-                
-            }
-            
-            if let portCheck = URLComponents(string: url)?.port {
-                
-                host += ":" + String(portCheck)
+                let arr = hostCheck.split(separator: ".")
+                if arr[0].count == 56 {
+                    
+                    print("its a valid V3 url")
+                    if isValidCharacters("\(arr[0])") {
+                        
+                        if let portCheck = URLComponents(string: url)?.port {
+                            
+                            if isValidCharacters(String(portCheck)) {
+                                
+                                host = hostCheck + ":" + String(portCheck)
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
                 
             }
             
             if let rpcPasswordCheck = URLComponents(string: url)?.password {
                 
-                rpcPassword = rpcPasswordCheck
+                if isValidCharacters(rpcPasswordCheck) {
+                    
+                    rpcPassword = rpcPasswordCheck
+                    
+                }
                 
             }
             
             if let rpcUserCheck = URLComponents(string: url)?.user {
                 
-                rpcUser = rpcUserCheck
+                if isValidCharacters(rpcUserCheck) {
+                    
+                    rpcUser = rpcUserCheck
+                    
+                }
                 
             }
             
@@ -67,8 +87,12 @@ class QuickConnect {
                         
                         if arr.count > 1 {
                             
-                            label = arr[1]
-                            
+                            if isValidCharacters("\(arr[1])") {
+                                
+                                label = arr[1]
+                                
+                            }
+                                                        
                         }
                         
                     }
@@ -81,7 +105,15 @@ class QuickConnect {
                 
                 if let labelCheck = url?.value(for: "label") {
                     
-                    label = labelCheck
+                    var removeAllowedChars = labelCheck.replacingOccurrences(of: ".", with: "")
+                    removeAllowedChars = removeAllowedChars.replacingOccurrences(of: "-", with: "")
+                    removeAllowedChars = removeAllowedChars.replacingOccurrences(of: "_", with: "")
+                    
+                    if isValidCharacters(removeAllowedChars) {
+                        
+                        label = labelCheck
+                        
+                    }
                     
                 }
                 
@@ -118,6 +150,7 @@ class QuickConnect {
                     
                     print("standup node added")
                     self.errorBool = false
+                    node.removeAll()
                     completion()
                     
                 } else {
@@ -139,9 +172,7 @@ class QuickConnect {
                 if nodes!.count > 0 {
                     
                     for (i, node) in nodes!.enumerated() {
-                        
-                        print("node = \(node)")
-                        
+                                                
                         cd.updateEntity(id: (node["id"] as! UUID), keyToUpdate: "isActive", newValue: false, entityName: .nodes) {
                             
                             if i + 1 == nodes!.count {

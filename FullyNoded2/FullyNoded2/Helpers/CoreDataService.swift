@@ -17,51 +17,51 @@ class CoreDataService {
     var errorBool = Bool()
     var errorDescription = ""
     
-    func saveSeed(seed: Data, completion: @escaping () -> Void) {
-        print("saveSeedToCoreData")
-        
-        DispatchQueue.main.async {
-            
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                
-                let context = appDelegate.persistentContainer.viewContext
-                guard let entity = NSEntityDescription.entity(forEntityName: "Seed", in: context) else {
-                    self.errorBool = true
-                    self.errorDescription = "unable to access Seed"
-                    completion()
-                    return
-                }
-                
-                let credential = NSManagedObject(entity: entity, insertInto: context)
-                
-                credential.setValue(seed, forKey: "seed")
-                
-                do {
-                    
-                    try context.save()
-                    self.boolToReturn = true
-                    print("Saved seed")
-                    
-                } catch {
-                    
-                    self.errorBool = true
-                    self.errorDescription = "Failed saving seed"
-                    
-                }
-                
-                completion()
-                
-            } else {
-                
-                self.errorBool = true
-                self.errorDescription = "Unable to access app delegate for core data"
-                completion()
-                
-            }
-            
-        }
-        
-    }
+//    func saveSeed(seed: Data, completion: @escaping () -> Void) {
+//        print("saveSeedToCoreData")
+//
+//        DispatchQueue.main.async {
+//
+//            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+//
+//                let context = appDelegate.persistentContainer.viewContext
+//                guard let entity = NSEntityDescription.entity(forEntityName: "Seed", in: context) else {
+//                    self.errorBool = true
+//                    self.errorDescription = "unable to access Seed"
+//                    completion()
+//                    return
+//                }
+//
+//                let credential = NSManagedObject(entity: entity, insertInto: context)
+//
+//                credential.setValue(seed, forKey: "seed")
+//
+//                do {
+//
+//                    try context.save()
+//                    self.boolToReturn = true
+//                    print("Saved seed")
+//
+//                } catch {
+//
+//                    self.errorBool = true
+//                    self.errorDescription = "Failed saving seed"
+//
+//                }
+//
+//                completion()
+//
+//            } else {
+//
+//                self.errorBool = true
+//                self.errorDescription = "Unable to access app delegate for core data"
+//                completion()
+//
+//            }
+//
+//        }
+//
+//    }
     
     func saveEntity(dict: [String:Any], entityName: ENTITY, completion: @escaping () -> Void) {
         print("saveEntityToCoreData")
@@ -79,6 +79,9 @@ class CoreDataService {
                 }
                 
                 let credential = NSManagedObject(entity: entity, insertInto: context)
+                
+                
+
                 
                 for (key, value) in dict {
                     

@@ -67,7 +67,7 @@ class TorClient {
                             
                             "DNSPort": "12346",
                             "AutomapHostsOnResolve": "1",
-                            "SocksPort": "29050",
+                            "SocksPort": "29050 OnionTrafficOnly",
                             "AvoidDiskWrites": "1",
                             "ClientOnionAuthDir": "\(self.authDirPath)",
                             "HardwareAccel": "1",
@@ -75,7 +75,11 @@ class TorClient {
                             "NumEntryGuards": "8",
                             "SafeSocks": "1",
                             "LongLivedPorts": "80,443",
-                            "NumCPUs": "2"
+                            "NumCPUs": "2",
+                            "DisableDebuggerAttachment": "1",
+                            "SafeLogging": "1",
+                            "ExcludeExitNodes": "1",
+                            "StrictNodes": "1"
                             
                         ]
                                             
@@ -233,7 +237,6 @@ class TorClient {
                     
                     print("observer added")
                     self.controller?.getSessionConfiguration() { sessionConfig in
-                        print("getsessionconfig")
                         
                         self.sessionConfiguration.connectionProxyDictionary = [kCFProxyTypeKey: kCFProxyTypeSOCKS, kCFStreamPropertySOCKSProxyHost: "localhost", kCFStreamPropertySOCKSProxyPort: 29050]
                         self.session = URLSession(configuration: self.sessionConfiguration)
@@ -243,12 +246,11 @@ class TorClient {
                     }
                     
                     self.controller?.removeObserver(observer)
-                    
+                   
+                    // This is a hack to enable adding more then one observer which allows us to automate the tor circuit reconnection as Tor will not run in the background and cause bad UX. There is a probably a better way to do it, but it works reliably.
                 } else if self.isRefreshing {
                     
-                    print("observer added")
                     self.controller?.getSessionConfiguration() { sessionConfig in
-                        print("getsessionconfig")
                         
                         self.sessionConfiguration.connectionProxyDictionary = [kCFProxyTypeKey: kCFProxyTypeSOCKS, kCFStreamPropertySOCKSProxyHost: "localhost", kCFStreamPropertySOCKSProxyPort: 29050]
                         self.session = URLSession(configuration: self.sessionConfiguration)
@@ -362,43 +364,61 @@ class TorClient {
                                             
                                             enc.decryptData(dataToDecrypt: encryptedPrivkey) { (decryptedPrivkey) in
                                                 
-                                                let authorizedKey = String(bytes: decryptedPrivkey!, encoding: .utf8)!
-                                                let encryptedOnionAddress = n["onionAddress"] as! Data
-                                                
-                                                enc.decryptData(dataToDecrypt: encryptedOnionAddress) { (decryptedOnion) in
+                                                if decryptedPrivkey != nil {
                                                     
-                                                    if decryptedOnion != nil {
+                                                    let authorizedKey = String(bytes: decryptedPrivkey!, encoding: .utf8)!
+                                                    let encryptedOnionAddress = n["onionAddress"] as! Data
+                                                    
+                                                    enc.decryptData(dataToDecrypt: encryptedOnionAddress) { (decryptedOnion) in
                                                         
-                                                        let onionAddress = String(bytes: decryptedOnion!, encoding: .utf8)!
-                                                        let onionAddressArray = onionAddress.components(separatedBy: ".onion:")
-                                                        let authString = onionAddressArray[0] + ":descriptor:x25519:" + authorizedKey
-                                                        print("authstring = \(authString)")
-                                                        let file = URL(fileURLWithPath: authPath, isDirectory: true).appendingPathComponent("\(randomString(length: 10)).auth_private")
-                                                        
-                                                        do {
+                                                        if decryptedOnion != nil {
                                                             
-                                                            try authString.write(to: file, atomically: true, encoding: .utf8)
+                                                            let onionAddress = String(bytes: decryptedOnion!, encoding: .utf8)!
+                                                            let onionAddressArray = onionAddress.components(separatedBy: ".onion:")
+                                                            let authString = onionAddressArray[0] + ":descriptor:x25519:" + authorizedKey
+                                                            let file = URL(fileURLWithPath: authPath, isDirectory: true).appendingPathComponent("\(randomString(length: 10)).auth_private")
                                                             
-                                                            print("successfully wrote authkey to file")
-                                                            
-                                                            if i + 1 == nodesCount {
+                                                            do {
                                                                 
+                                                                try authString.write(to: file, atomically: true, encoding: .utf8)
+                                                                print("successfully wrote authkey to file")
+                                                                
+                                                                do {
+                                                                    
+                                                                    try (file as NSURL).setResourceValue(URLFileProtection.complete, forKey: .fileProtectionKey)
+                                                                    print("success setting file protection")
+                                                                    
+                                                                } catch {
+                                                                    
+                                                                   print("error setting file protection")
+                                                                    
+                                                                }
+                                                                
+                                                                if i + 1 == nodesCount {
+                                                                    
+                                                                    completion()
+                                                                    
+                                                                }
+                                                                
+                                                            } catch {
+                                                                
+                                                                print("failed writing auth key")
                                                                 completion()
-                                                                
                                                             }
                                                             
-                                                        } catch {
+                                                        } else {
                                                             
-                                                            print("failed writing auth key")
+                                                            print("failed decrypting onion address")
                                                             completion()
+                                                            
                                                         }
                                                         
-                                                    } else {
-                                                        
-                                                        print("failed decrypting onion address")
-                                                        completion()
-                                                        
                                                     }
+                                                    
+                                                } else {
+                                                    
+                                                    print("failed decrypting private key")
+                                                    completion()
                                                     
                                                 }
                                                 
@@ -450,21 +470,6 @@ class TorClient {
             }
             
         }
-        
-        //enc.getNode { (node, error) in
-            
-            //if !error {
-                
-                
-                                    
-//            } else {
-//
-//                print("error fetching nodes")
-//                completion()
-//
-//            }
-            
-        //}
         
     }
     

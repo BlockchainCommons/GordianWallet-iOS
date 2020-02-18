@@ -56,8 +56,6 @@ class ChooseWalletFormatViewController: UIViewController {
     
     @IBAction func importAction(_ sender: Any) {
         
-        
-        
         DispatchQueue.main.async {
             
             self.importDoneBlock!(true)
@@ -72,8 +70,6 @@ class ChooseWalletFormatViewController: UIViewController {
         showAlert(vc: self, title: "Under Construction", message: "")
         
     }
-    
-    
     
     @IBAction func close(_ sender: Any) {
         
@@ -146,6 +142,10 @@ class ChooseWalletFormatViewController: UIViewController {
             
             DispatchQueue.main.async {
                 
+                self.formatSwitch.setTitle("P2WSH", forSegmentAt: 0)
+                self.formatSwitch.setTitle("P2SH-P2WSH", forSegmentAt: 1)
+                self.formatSwitch.setTitle("P2SH", forSegmentAt: 2)
+                
                 self.seedDescription.text = "Your device will hold one seed, your node will hold 2,000 private keys derived from a second seed, and you will securely store one seed offline for recovery purposes.\n\nYour node will create PSBT's and sign them with one key, passing the partially signed PSBT's to your device which will sign the PSBT's with the second key."
                 
             }
@@ -156,6 +156,10 @@ class ChooseWalletFormatViewController: UIViewController {
             isMultiSig = false
             
             DispatchQueue.main.async {
+                
+                self.formatSwitch.setTitle("P2WPKH", forSegmentAt: 0)
+                self.formatSwitch.setTitle("P2SH-P2WPKH", forSegmentAt: 1)
+                self.formatSwitch.setTitle("P2PKH", forSegmentAt: 2)
                 
                 self.seedDescription.text = "Your device will hold one seed and your node will hold 2,000 public keys derived from the same seed.\n\nYour node will build unsigned PSBT's acting as a watch-only wallet and pass them to your device for offline signing."
                 
@@ -495,6 +499,7 @@ class ChooseWalletFormatViewController: UIViewController {
                                         let account = try masterKey.derive(path)
                                         self.publickeys.append(account.xpub)
                                         self.nodesSeed = account.xpriv!
+                                        
                                         self.constructDescriptor(derivation: derivation)
                                         
                                     } catch {
@@ -555,7 +560,7 @@ class ChooseWalletFormatViewController: UIViewController {
         processedKeys = processedKeys.replacingOccurrences(of: "]", with: "")
         processedKeys = processedKeys.replacingOccurrences(of: "\"", with: "")
         
-        // MARK: TODO CHANGE TO SORTEDMULTI
+        // MARK: TODO CHANGE MULTI TO SORTEDMULTI - NEEDS BITCOIN CORE V0.20
         
         switch derivation {
 
@@ -604,7 +609,6 @@ class ChooseWalletFormatViewController: UIViewController {
                 
                 let result = reducer.dictToReturn
                 let desc = result["descriptor"] as! String
-                
                 let enc = Encryption()
                 enc.getNode { (node, error) in
                     
@@ -632,6 +636,8 @@ class ChooseWalletFormatViewController: UIViewController {
                                         
                                         DispatchQueue.main.async {
                                             
+                                            self.nodesSeed = ""
+                                            self.newWallet.removeAll()
                                             self.multiSigDoneBlock!((true, self.backUpRecoveryPhrase, self.descriptor))
                                             self.dismiss(animated: true, completion: nil)
                                             
@@ -666,23 +672,5 @@ class ChooseWalletFormatViewController: UIViewController {
         }
         
     }
-    
-//    private func network(path: String) -> Network {
-//        
-//        var network:Network!
-//        
-//        if path.contains("/1'") {
-//            
-//            network = .testnet
-//            
-//        } else {
-//            
-//            network = .mainnet
-//            
-//        }
-//        
-//        return network
-//        
-//    }
 
 }

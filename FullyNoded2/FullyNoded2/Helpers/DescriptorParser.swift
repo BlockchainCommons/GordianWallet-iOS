@@ -35,12 +35,10 @@ class DescriptorParser {
         
         if descriptor.contains("multi") {
             
-            print("multi sig")
             dict["isMulti"] = true
             
             if descriptor.contains("sortedmulti") {
                 
-                print("bip67")
                 dict["isBIP67"] = true
                 
             }
@@ -55,24 +53,20 @@ class DescriptorParser {
                         
                     case "multi":
                         
-                        print("bare multi sig")
                         dict["format"] = "Bare multi"
                         
                     case "wsh":
                         
-                        print("witness script hash")
                         dict["format"] = "P2WSH"
                         
                     case "sh":
                         
                         if arr[1] == "wsh" {
                             
-                            print("is segwit wrapped script hash")
                             dict["format"] = "P2SH - P2WSH"
                             
                         } else {
                             
-                            print("is legacy multis sig script hash")
                             dict["format"] = "P2SH"
                             
                         }
@@ -90,11 +84,7 @@ class DescriptorParser {
                 case "multi", "sortedmulti":
                     
                     let mofnarray = (arr[i + 1]).split(separator: ",")
-                    print("numberOfSigs = \(mofnarray[0])")
-                    
                     let numberOfKeys = mofnarray.count - 1
-                    print("numberOfKeys = \(numberOfKeys)")
-                    
                     dict["mOfNType"] = "\(mofnarray[0]) of \(numberOfKeys)"
                     
                 default:
@@ -105,19 +95,16 @@ class DescriptorParser {
                 
                 if descriptor.contains("xpub") {
                     
-                    print("mainnet")
                     dict["chain"] = "Mainnet"
                     
                 } else if descriptor.contains("tpub") {
                     
-                    print("testnet")
                     dict["chain"] = "Testnet"
                     
                 }
                 
                 if descriptor.contains("xprv") || descriptor.contains("tprv") {
                     
-                    print("its hot")
                     dict["isHot"] = true
                     
                 }
@@ -128,7 +115,6 @@ class DescriptorParser {
             
             if descriptor.contains("combo") {
                 
-                print("single sig of all types")
                 dict["format"] = "Combo"
                 
             } else {
@@ -143,31 +129,26 @@ class DescriptorParser {
                             
                         case "wpkh":
                             
-                            print("pay to witness public key hash - native segwit bc1")
                             dict["format"] = "P2WPKH"
                             
                         case "sh":
                             
                             if arr[1] == "wpkh" {
                                 
-                                print("is script hash wrapped native segwit - 3 addresses")
                                 dict["format"] = "P2SH-P2WPKH"
                                 
                             } else {
                                 
-                                print("is legacy script hash 3 too?")
                                 dict["format"] = "P2SH"
                                 
                             }
                             
                         case "pk":
                             
-                            print("is pay to public key")
                             dict["format"] = "P2PK"
                             
                         case "pkh":
                             
-                            print("pay to pub key hash - legacy 1 addresses")
                             dict["format"] = "P2PKH"
                             
                         default:

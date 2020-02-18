@@ -28,17 +28,10 @@ class MakeRPCCall {
             
             if !error {
                 
-                //getActiveWallet { (wallet) in
-                
-                //if wallet != nil {
-                
                 let onionAddress = node!.onionAddress
                 let rpcusername = node!.rpcuser
                 let rpcpassword = node!.rpcpassword
-                //let walletName = wallet!.name
-                
                 let walletUrl = "http://\(rpcusername):\(rpcpassword)@\(onionAddress)/wallet/\(walletName)"
-                print("walleturl = \(walletUrl)")
                 
                 // Have to escape ' characters for certain rpc commands
                 var formattedParam = (param as! String).replacingOccurrences(of: "''", with: "")
@@ -56,8 +49,6 @@ class MakeRPCCall {
                 request.httpMethod = "POST"
                 request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
                 request.httpBody = "{\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}".data(using: .utf8)
-                print("request = \("{\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}")")
-                
                 let queue = DispatchQueue(label: "com.FullyNoded.torQueue")
                 queue.async {
                     
@@ -69,19 +60,9 @@ class MakeRPCCall {
                                 
                                 // attempt a node command 20 times to avoid user having to tap refresh button
                                 if self.attempts < 20 {
-                                    
-//                                    if error!.localizedDescription.contains("The request timed out") && self.attempts == 2 {
-//
-//                                        self.errorBool = true
-//                                        self.errorDescription = error!.localizedDescription
-//                                        completion()
-//
-//                                    } else {
                                         
-                                        self.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
-                                        
-                                    //}
-                                    
+                                    self.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
+                                                                            
                                 } else {
                                     
                                     self.attempts = 0
@@ -100,9 +81,7 @@ class MakeRPCCall {
                                     do {
                                         
                                         let jsonAddressResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
-                                        
-                                        print("result = \(String(describing: jsonAddressResult["result"]))")
-                                        
+                                                                                
                                         if let errorCheck = jsonAddressResult["error"] as? NSDictionary {
                                             
                                             if let errorMessage = errorCheck["message"] as? String {
@@ -147,10 +126,6 @@ class MakeRPCCall {
                     task.resume()
                     
                 }
-                
-                //}
-                
-                //}
                 
             } else {
                 
