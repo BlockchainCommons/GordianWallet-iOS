@@ -40,6 +40,38 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
+        
+        DispatchQueue.main.async {
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginVC = storyboard.instantiateViewController(withIdentifier: "LogIn")
+            loginVC.modalPresentationStyle = .fullScreen
+            let topVC = self.window?.rootViewController?.topViewController()
+            
+            if topVC!.restorationIdentifier != "LogIn" {
+                                  
+                topVC!.present(loginVC, animated: true, completion: nil)
+                                   
+            }
+            
+        }
+
+        
+//        if let userIdentifier = keychain.get("userIdentifier1") {
+//
+//            let authorizationProvider = ASAuthorizationAppleIDProvider()
+//            authorizationProvider.getCredentialState(forUserID: userIdentifier) { (state, error) in
+//
+//
+//
+//            }
+//
+//        } else {
+//
+//            showLogIn()
+//
+//        }
+        
         NotificationCenter.default.post(name: .didEnterForeground, object: nil, userInfo: nil)
         
         let enc = Encryption()
@@ -65,6 +97,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+        
+        let fileManager = FileManager.default
+        let authPath = URL(fileURLWithPath: self.getTorPath(), isDirectory: true).appendingPathComponent("onion_auth", isDirectory: true).path
+        
+        do {
+            
+            let filePaths = try fileManager.contentsOfDirectory(atPath: authPath)
+            
+            for filePath in filePaths {
+                
+                let url = URL(fileURLWithPath: authPath + "/" + filePath)
+                try fileManager.removeItem(at: url)
+                print("deleted key")
+                
+            }
+                        
+        } catch {
+            
+            print("error deleting auth keys file")
+            
+        }
         
         if UIDevice.modelName != "iPhone 11 pro max" && UIDevice.modelName != "Simulator iPhone 11 pro max" {
             
@@ -113,6 +166,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             print("error adding quick connect no access to tabbar")
             
         }
+        
+    }
+    
+    private func getTorPath() -> String {
+        print("getTorPath")
+        
+        var torDirectory = ""
+        
+        #if targetEnvironment(simulator)
+        print("is simulator")
+        
+        let path = NSSearchPathForDirectoriesInDomains(.applicationDirectory, .userDomainMask, true).first ?? ""
+        torDirectory = "\(path.split(separator: Character("/"))[0..<2].joined(separator: "/"))/.tor_tmp"
+        
+        #else
+        print("is device")
+        
+        torDirectory = "\(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? "")/tor"
+        
+        #endif
+        
+        return torDirectory
         
     }
 

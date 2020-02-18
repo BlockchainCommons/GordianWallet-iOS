@@ -10,6 +10,7 @@
 		391F5A65379DC463BEB9D1CC /* Pods_FullyNoded2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52CC707C319DA2AC51DC2778 /* Pods_FullyNoded2.framework */; };
 		909C32A7D23C358CEDE6B2C2 /* Pods_FullyNoded2_FullyNoded2UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 844709F0C8016CF38686145B /* Pods_FullyNoded2_FullyNoded2UITests.framework */; };
 		A151B8FD6A96BB6F17C9A12B /* Pods_FullyNoded2Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D002CA2C3751C4A29EE7C952 /* Pods_FullyNoded2Tests.framework */; };
+		D06BE5FF23FAD64300DDE1F6 /* SecurityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06BE5FE23FAD64300DDE1F6 /* SecurityViewController.swift */; };
 		D080F49523F120B200CC8D6E /* ImportCustomDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */; };
 		D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724023F0EDBB00847DC8 /* AppDelegate.swift */; };
 		D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724223F0EDBB00847DC8 /* SceneDelegate.swift */; };
@@ -30,7 +31,6 @@
 		D09D731323F0F3C000847DC8 /* ImportSeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729023F0F3BF00847DC8 /* ImportSeedViewController.swift */; };
 		D09D731423F0F3C000847DC8 /* ImportQRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729123F0F3BF00847DC8 /* ImportQRViewController.swift */; };
 		D09D731523F0F3C000847DC8 /* ImportSeedMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729223F0F3BF00847DC8 /* ImportSeedMenuViewController.swift */; };
-		D09D731623F0F3C000847DC8 /* NodeScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729323F0F3BF00847DC8 /* NodeScannerViewController.swift */; };
 		D09D731723F0F3C000847DC8 /* VerifyKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729423F0F3BF00847DC8 /* VerifyKeysViewController.swift */; };
 		D09D731823F0F3C000847DC8 /* NodeManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */; };
 		D09D731923F0F3C000847DC8 /* VerifyAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */; };
@@ -49,7 +49,6 @@
 		D09D732923F0F3C000847DC8 /* InvoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72AD23F0F3C000847DC8 /* InvoiceViewController.swift */; };
 		D09D732A23F0F3C000847DC8 /* TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B023F0F3C000847DC8 /* TransactionViewController.swift */; };
 		D09D732B23F0F3C000847DC8 /* ImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B123F0F3C000847DC8 /* ImportViewController.swift */; };
-		D09D732C23F0F3C000847DC8 /* TableDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B223F0F3C000847DC8 /* TableDetailViewController.swift */; };
 		D09D732D23F0F3C000847DC8 /* AuthenticateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B323F0F3C000847DC8 /* AuthenticateViewController.swift */; };
 		D09D732E23F0F3C000847DC8 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */; };
 		D09D732F23F0F3C000847DC8 /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */; };
@@ -148,6 +147,7 @@
 		844709F0C8016CF38686145B /* Pods_FullyNoded2_FullyNoded2UITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FullyNoded2_FullyNoded2UITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2A8B77AF9161303353F149F /* Pods-FullyNoded2-FullyNoded2UITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FullyNoded2-FullyNoded2UITests.debug.xcconfig"; path = "Target Support Files/Pods-FullyNoded2-FullyNoded2UITests/Pods-FullyNoded2-FullyNoded2UITests.debug.xcconfig"; sourceTree = "<group>"; };
 		D002CA2C3751C4A29EE7C952 /* Pods_FullyNoded2Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FullyNoded2Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D06BE5FE23FAD64300DDE1F6 /* SecurityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityViewController.swift; sourceTree = "<group>"; };
 		D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCustomDescriptor.swift; sourceTree = "<group>"; };
 		D09D723D23F0EDBB00847DC8 /* FullyNoded 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FullyNoded 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D09D724023F0EDBB00847DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -173,7 +173,6 @@
 		D09D729023F0F3BF00847DC8 /* ImportSeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportSeedViewController.swift; sourceTree = "<group>"; };
 		D09D729123F0F3BF00847DC8 /* ImportQRViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportQRViewController.swift; sourceTree = "<group>"; };
 		D09D729223F0F3BF00847DC8 /* ImportSeedMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportSeedMenuViewController.swift; sourceTree = "<group>"; };
-		D09D729323F0F3BF00847DC8 /* NodeScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeScannerViewController.swift; sourceTree = "<group>"; };
 		D09D729423F0F3BF00847DC8 /* VerifyKeysViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyKeysViewController.swift; sourceTree = "<group>"; };
 		D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeManagerViewController.swift; sourceTree = "<group>"; };
 		D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyAddressViewController.swift; sourceTree = "<group>"; };
@@ -192,7 +191,6 @@
 		D09D72AD23F0F3C000847DC8 /* InvoiceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvoiceViewController.swift; sourceTree = "<group>"; };
 		D09D72B023F0F3C000847DC8 /* TransactionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionViewController.swift; sourceTree = "<group>"; };
 		D09D72B123F0F3C000847DC8 /* ImportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportViewController.swift; sourceTree = "<group>"; };
-		D09D72B223F0F3C000847DC8 /* TableDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableDetailViewController.swift; sourceTree = "<group>"; };
 		D09D72B323F0F3C000847DC8 /* AuthenticateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateViewController.swift; sourceTree = "<group>"; };
 		D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
@@ -436,8 +434,8 @@
 			children = (
 				D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */,
 				D09D729823F0F3BF00847DC8 /* DerivationViewController.swift */,
-				D09D729923F0F3BF00847DC8 /* QRViewController.swift */,
 				D09D72A123F0F3BF00847DC8 /* SettingsViewController.swift */,
+				D06BE5FE23FAD64300DDE1F6 /* SecurityViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -516,11 +514,9 @@
 				D09D728C23F0F3BF00847DC8 /* Settings */,
 				D09D72AF23F0F3C000847DC8 /* Transaction Viewer */,
 				D09D72B123F0F3C000847DC8 /* ImportViewController.swift */,
-				D09D72B223F0F3C000847DC8 /* TableDetailViewController.swift */,
 				D09D72B323F0F3C000847DC8 /* AuthenticateViewController.swift */,
 				D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */,
 				D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */,
-				D09D729323F0F3BF00847DC8 /* NodeScannerViewController.swift */,
 			);
 			path = "Home Screen";
 			sourceTree = "<group>";
@@ -712,6 +708,7 @@
 				D09D729423F0F3BF00847DC8 /* VerifyKeysViewController.swift */,
 				D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */,
 				D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */,
+				D09D729923F0F3BF00847DC8 /* QRViewController.swift */,
 			);
 			path = "Wallet Tools";
 			sourceTree = "<group>";
@@ -1058,7 +1055,6 @@
 				D09D733723F0F3C000847DC8 /* shim.swift in Sources */,
 				D09D734123F0F3C000847DC8 /* KeychainCreator.swift in Sources */,
 				D09D734323F0F3C000847DC8 /* MakeRPCCall.swift in Sources */,
-				D09D731623F0F3C000847DC8 /* NodeScannerViewController.swift in Sources */,
 				D09D724B23F0EDBB00847DC8 /* FullyNoded2.xcdatamodeld in Sources */,
 				D09D731223F0F3C000847DC8 /* SeedViewController.swift in Sources */,
 				D09D732723F0F3C000847DC8 /* ConfirmViewController.swift in Sources */,
@@ -1087,7 +1083,6 @@
 				D09D731C23F0F3C000847DC8 /* QRViewController.swift in Sources */,
 				D09D730F23F0F3C000847DC8 /* WalletStruct.swift in Sources */,
 				D09D730E23F0F3C000847DC8 /* HomeTableStruct.swift in Sources */,
-				D09D732C23F0F3C000847DC8 /* TableDetailViewController.swift in Sources */,
 				D09D734023F0F3C000847DC8 /* Commands.swift in Sources */,
 				D09D737023F0F3C000847DC8 /* WalletCreator.swift in Sources */,
 				D09D731823F0F3C000847DC8 /* NodeManagerViewController.swift in Sources */,
@@ -1110,6 +1105,7 @@
 				D09D732623F0F3C000847DC8 /* UTXOViewController.swift in Sources */,
 				D09D733C23F0F3C000847DC8 /* CoreDataService.swift in Sources */,
 				D09D736423F0F3C000847DC8 /* RawDisplayer.swift in Sources */,
+				D06BE5FF23FAD64300DDE1F6 /* SecurityViewController.swift in Sources */,
 				D09D733123F0F3C000847DC8 /* PageViewController.swift in Sources */,
 				D09D732B23F0F3C000847DC8 /* ImportViewController.swift in Sources */,
 				D09D734423F0F3C000847DC8 /* TorClient.swift in Sources */,
@@ -1287,7 +1283,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.43;
+				CURRENT_PROJECT_VERSION = 0.0.45;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1300,7 +1296,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.43;
+				MARKETING_VERSION = 0.0.45;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1316,7 +1312,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.43;
+				CURRENT_PROJECT_VERSION = 0.0.45;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1329,7 +1325,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.43;
+				MARKETING_VERSION = 0.0.45;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

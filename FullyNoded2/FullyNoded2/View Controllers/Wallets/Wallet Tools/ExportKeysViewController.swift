@@ -28,6 +28,12 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        keys.removeAll()
+        
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         
         return keys.count
