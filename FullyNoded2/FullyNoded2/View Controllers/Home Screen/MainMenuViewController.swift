@@ -857,19 +857,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if wallet.type == "DEFAULT" {
                 
-                //isHot.backgroundColor = .systemBlue
                 isHot.text = "watch-only"
                 isHot.textColor = .systemBlue
                 
             } else if wallet.type == "MULTI" {
                 
-                //isHot.backgroundColor = .systemTeal
                 isHot.text = "signer"
                 isHot.textColor = .systemTeal
                 
             } else if wallet.type == "CUSTOM" {
                 
-                //isHot.backgroundColor = .systemBlue
                 isHot.text = "watch-only"
                 
                 let parser = DescriptorParser()
