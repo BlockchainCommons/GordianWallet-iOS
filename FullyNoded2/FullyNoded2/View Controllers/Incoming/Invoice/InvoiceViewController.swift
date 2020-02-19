@@ -196,9 +196,11 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     func showAddress() {
         
         let derivation = wallet!.derivation
-        let type = wallet!.type
+        //let type = wallet!.type
+        let parser = DescriptorParser()
+        let str = parser.descriptor(wallet!.descriptor)
         
-        if type == "MULTI" || type == "CUSTOM" {
+        if str.isMulti {
             
             self.getMsigAddress()
             
@@ -207,6 +209,17 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             self.filterDerivation(derivation: derivation)
             
         }
+        
+        
+//        if type == "MULTI" || type == "CUSTOM" {
+//
+//            self.getMsigAddress()
+//
+//        } else {
+//
+//            self.filterDerivation(derivation: derivation)
+//
+//        }
         
     }
     

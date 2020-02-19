@@ -12,7 +12,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
@@ -98,32 +97,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
         
-        let fileManager = FileManager.default
-        let authPath = URL(fileURLWithPath: self.getTorPath(), isDirectory: true).appendingPathComponent("onion_auth", isDirectory: true).path
+//        let fileManager = FileManager.default
+//        let authPath = URL(fileURLWithPath: self.getTorPath(), isDirectory: true).appendingPathComponent("onion_auth", isDirectory: true).path
+//
+//        do {
+//
+//            let filePaths = try fileManager.contentsOfDirectory(atPath: authPath)
+//
+//            for filePath in filePaths {
+//
+//                let url = URL(fileURLWithPath: authPath + "/" + filePath)
+//                try fileManager.removeItem(at: url)
+//                print("deleted key")
+//
+//            }
+//
+//        } catch {
+//
+//            print("error deleting auth keys file")
+//
+//        }
         
-        do {
-            
-            let filePaths = try fileManager.contentsOfDirectory(atPath: authPath)
-            
-            for filePath in filePaths {
-                
-                let url = URL(fileURLWithPath: authPath + "/" + filePath)
-                try fileManager.removeItem(at: url)
-                print("deleted key")
-                
-            }
-                        
-        } catch {
-            
-            print("error deleting auth keys file")
-            
-        }
-        
-        if UIDevice.modelName != "iPhone 11 pro max" && UIDevice.modelName != "Simulator iPhone 11 pro max" {
+        //if UIDevice.modelName != "iPhone 11 pro max" && UIDevice.modelName != "Simulator iPhone 11 pro max" {
             
             TorClient.sharedInstance.resign()
             
-        }
+        //}
 
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
@@ -169,27 +168,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
     }
     
-    private func getTorPath() -> String {
-        print("getTorPath")
-        
-        var torDirectory = ""
-        
-        #if targetEnvironment(simulator)
-        print("is simulator")
-        
-        let path = NSSearchPathForDirectoriesInDomains(.applicationDirectory, .userDomainMask, true).first ?? ""
-        torDirectory = "\(path.split(separator: Character("/"))[0..<2].joined(separator: "/"))/.tor_tmp"
-        
-        #else
-        print("is device")
-        
-        torDirectory = "\(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? "")/tor"
-        
-        #endif
-        
-        return torDirectory
-        
-    }
+//    private func getTorPath() -> String {
+//        print("getTorPath")
+//
+//        var torDirectory = ""
+//
+//        #if targetEnvironment(simulator)
+//        print("is simulator")
+//
+//        let path = NSSearchPathForDirectoriesInDomains(.applicationDirectory, .userDomainMask, true).first ?? ""
+//        torDirectory = "\(path.split(separator: Character("/"))[0..<2].joined(separator: "/"))/.tor_tmp"
+//
+//        #else
+//        print("is device")
+//
+//        torDirectory = "\(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? "")/tor"
+//
+//        #endif
+//
+//        return torDirectory
+//
+//    }
 
 
 }

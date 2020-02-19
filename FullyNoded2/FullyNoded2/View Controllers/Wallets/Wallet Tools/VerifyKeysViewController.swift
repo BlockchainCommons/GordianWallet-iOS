@@ -117,14 +117,17 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func loadActiveWallet() {
+        print("loadActiveWallet")
         
         getActiveWalletNow { (wallet, error) in
             
             if wallet != nil && !error {
                 
                 self.wallet = wallet!
+                let parser = DescriptorParser()
+                let str = parser.descriptor(wallet!.descriptor)
                 
-                if wallet!.type == "MULTI" || wallet!.type == "CUSTOM" {
+                if str.isMulti {
                     
                     self.getKeysFromBitcoinCore()
                     
@@ -140,6 +143,15 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                                 
                                 self.words = String(data: decryptedSeed!, encoding: .utf8)!
                                 self.getKeysFromLibWally()
+                                
+                            } else {
+                                
+                                let s = String(bytes: wallet!.seed, encoding: .utf8)
+                                if s == "no seed" {
+                                    
+                                    self.getKeysFromBitcoinCore()
+                                    
+                                }
                                 
                             }
                             
@@ -268,7 +280,6 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             } else {
                 
                 displayAlert(viewController: self, isError: true, message: "error getting addresses from your node")
-                
                 self.connectingView.removeConnectingView()
                 
             }

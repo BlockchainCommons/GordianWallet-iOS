@@ -14,11 +14,14 @@ class FiatConverter {
     var fxRate = Double()
     var errorBool = Bool()
     
+    // MARK: TODO Find an onion api that returns bitcoin price data, not so easy... Using ExcludeExitNodes prevents the below method from working.
+    
     func getFxRate(completion: @escaping () -> Void) {
         
         torClient = TorClient.sharedInstance
         
         var url:NSURL!
+        //http://blkchairbknpn73cfjhevhla7rkp4ed5gg2knctvv7it4lioy22defid.onion
         url = NSURL(string: "https://api.coindesk.com/v1/bpi/currentprice.json")
         
         let task = torClient.session.dataTask(with: url! as URL) { (data, response, error) -> Void in
@@ -37,6 +40,8 @@ class FiatConverter {
                         do {
                             
                             let json = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
+                            
+                            print("json = \(json)")
                             
                             if let exchangeCheck = json["bpi"] as? NSDictionary {
                                 

@@ -1,5 +1,7 @@
 # FullyNoded 2
 
+<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/homescreen_musig.png" alt="" width="250"/>
+
 ## Status
 
 *FullyNoded 2* is currently under active development and in the early testing phase. It should only be used on testnet for now.

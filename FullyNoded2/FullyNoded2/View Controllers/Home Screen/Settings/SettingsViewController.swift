@@ -10,6 +10,7 @@ import UIKit
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var doneBlock : ((Bool) -> Void)?
     let ud = UserDefaults.standard
     var miningFeeText = ""
     @IBOutlet var settingsTable: UITableView!
@@ -34,6 +35,12 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             self.dismiss(animated: true, completion: nil)
             
         }
+        
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        
+        doneBlock!(true)
         
     }
     

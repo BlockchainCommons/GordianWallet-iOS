@@ -16,7 +16,7 @@ class QuickConnect {
     var errorDescription = ""
     
     // MARK: QuickConnect uri examples
-    // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233b.onion:1309/?label=Node%20Name
+    // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233bygtrdertgfd.onion:1309/?label=Node%20Name
     // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233b.onion:1309/?
     // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233b.onion:1309?
     
@@ -31,17 +31,20 @@ class QuickConnect {
             
             if let hostCheck = URLComponents(string: url)?.host {
                 
-                let arr = hostCheck.split(separator: ".")
-                if arr[0].count == 56 {
+                if hostCheck != "" {
                     
-                    print("its a valid V3 url")
-                    if isValidCharacters("\(arr[0])") {
+                    let arr = hostCheck.split(separator: ".")
+                    if arr[0].count == 56 {
                         
-                        if let portCheck = URLComponents(string: url)?.port {
+                        if isValidCharacters("\(arr[0])") {
                             
-                            if isValidCharacters(String(portCheck)) {
+                            if let portCheck = URLComponents(string: url)?.port {
                                 
-                                host = hostCheck + ":" + String(portCheck)
+                                if isValidCharacters(String(portCheck)) {
+                                    
+                                    host = hostCheck + ":" + String(portCheck)
+                                    
+                                }
                                 
                             }
                             
@@ -128,6 +131,7 @@ class QuickConnect {
         
         guard host != "", rpcUser != "", rpcPassword != "" else {
             self.errorBool = true
+            self.errorDescription = "That is not a valid QuickConnect URI"
             completion()
             return
         }
@@ -140,44 +144,20 @@ class QuickConnect {
         node["id"] = UUID()
         node["isActive"] = true
         
-        let cd = CoreDataService()
-        
-        func save() {
+        func deactivate(newNodeID: UUID) {
             
-            self.enc.saveNode(node: node) { (success) in
+            let cd = CoreDataService()
+            cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
                 
-                if success {
+                if errorDescription == nil {
                     
-                    print("standup node added")
-                    self.errorBool = false
-                    node.removeAll()
-                    completion()
-                    
-                } else {
-                    
-                    self.errorBool = true
-                    self.errorDescription = "Error adding QuickConnect node"
-                    completion()
-                    
-                }
-                
-            }
-            
-        }
-        
-        cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
-            
-            if errorDescription == nil {
-                
-                if nodes!.count > 0 {
-                    
-                    for (i, node) in nodes!.enumerated() {
-                                                
-                        cd.updateEntity(id: (node["id"] as! UUID), keyToUpdate: "isActive", newValue: false, entityName: .nodes) {
+                    if nodes!.count > 0 {
+                        
+                        for node in nodes! {
                             
-                            if i + 1 == nodes!.count {
+                            if node ["id"] as! UUID != newNodeID {
                                 
-                                save()
+                                cd.updateEntity(id: (node["id"] as! UUID), keyToUpdate: "isActive", newValue: false, entityName: .nodes) {}
                                 
                             }
                             
@@ -185,9 +165,35 @@ class QuickConnect {
                         
                     }
                     
+                }
+                
+            }
+            
+        }
+                    
+        self.enc.saveNode(newNode: node) { (success, error) in
+            
+            if error == nil && success {
+                
+                print("standup node added")
+                self.errorBool = false
+                deactivate(newNodeID: node["id"] as! UUID)
+                node.removeAll()
+                completion()
+                
+            } else {
+                
+                self.errorBool = true
+                
+                if error != nil {
+                    
+                    self.errorDescription = "Error adding QuickConnect node: \(error!)"
+                    completion()
+                    
                 } else {
                     
-                    save()
+                    self.errorDescription = "Error adding QuickConnect node"
+                    completion()
                     
                 }
                 
