@@ -239,7 +239,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func numberOfSections(in tableView: UITableView) -> Int {
         
-        return sortedWallets.count
+        if sortedWallets.count == 0 {
+            
+            return 1
+            
+        } else {
+            
+            return sortedWallets.count
+            
+        }
+        
     }
     
     private func singleSigCell(_ indexPath: IndexPath) -> UITableViewCell {
@@ -713,28 +722,47 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
+    private func noWalletCell() -> UITableViewCell {
+        
+        let cell = UITableViewCell()
+        cell.backgroundColor = .black
+        cell.textLabel?.text = "⚠︎ No wallets created yet, tap the +"
+        cell.textLabel?.textColor = .lightGray
+        cell.textLabel?.font = .systemFont(ofSize: 17)
+        return cell
+        
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let d = sortedWallets[indexPath.section]
-        let wallet = WalletStruct.init(dictionary: d)
+        if sortedWallets.count > 0 {
             
-        switch wallet.type {
+            let d = sortedWallets[indexPath.section]
+            let wallet = WalletStruct.init(dictionary: d)
+                
+            switch wallet.type {
+                
+            case "DEFAULT":
+                
+                return singleSigCell(indexPath)
+                
+            case "MULTI":
+                
+                return multiSigWalletCell(indexPath)
+                
+            case "CUSTOM":
+                
+                return customWalletCell(indexPath)
+                
+            default:
+                
+                return UITableViewCell()
+                
+            }
             
-        case "DEFAULT":
+        } else {
             
-            return singleSigCell(indexPath)
-            
-        case "MULTI":
-            
-            return multiSigWalletCell(indexPath)
-            
-        case "CUSTOM":
-            
-            return customWalletCell(indexPath)
-            
-        default:
-            
-            return UITableViewCell()
+            return noWalletCell()
             
         }
         
@@ -837,7 +865,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let nodeLogic = NodeLogic()
         nodeLogic.wallet = wallet
-        nodeLogic.loadSectionZero {
+        nodeLogic.loadWalletData {
             
             if !nodeLogic.errorBool {
                 
@@ -1056,25 +1084,33 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        let type = WalletStruct(dictionary: sortedWallets[indexPath.section]).type
-        
-        switch  type {
+        if sortedWallets.count > 0 {
             
-        case "DEFAULT":
+            let type = WalletStruct(dictionary: sortedWallets[indexPath.section]).type
             
-            return 370
+            switch  type {
+                
+            case "DEFAULT":
+                
+                return 370
+                
+            case "MULTI":
+                
+                return 403
+                
+            case "CUSTOM":
+                
+                return 310
+                
+            default:
+                
+                return 0
+                
+            }
             
-        case "MULTI":
+        } else {
             
-            return 403
-            
-        case "CUSTOM":
-            
-            return 310
-            
-        default:
-            
-            return 0
+            return 80
             
         }
                 
@@ -1422,24 +1458,4 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-}
-
-extension UIButton {
-    func loadingIndicator(show: Bool) {
-        if show {
-            let indicator = UIActivityIndicatorView()
-            let buttonHeight = self.bounds.size.height
-            let buttonWidth = self.bounds.size.width
-            indicator.center = CGPoint(x: buttonWidth/2, y: buttonHeight/2)
-            self.addSubview(indicator)
-            indicator.startAnimating()
-        } else {
-            for view in self.subviews {
-                if let indicator = view as? UIActivityIndicatorView {
-                    indicator.stopAnimating()
-                    indicator.removeFromSuperview()
-                }
-            }
-        }
-    }
 }

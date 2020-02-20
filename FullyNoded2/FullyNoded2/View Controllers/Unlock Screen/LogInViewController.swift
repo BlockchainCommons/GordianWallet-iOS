@@ -17,17 +17,22 @@ class LogInViewController: UIViewController, UITextFieldDelegate, ASAuthorizatio
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemGray
+        view.backgroundColor = .darkGray
+        let logInButton = ASAuthorizationAppleIDButton()
+        logInButton.sizeToFit()
+        logInButton.addTarget(self, action: #selector(handleLogInWithAppleID), for: .touchUpInside)
+        logInButton.frame = CGRect(x: 32, y: 100, width: view.frame.width - 64, height: 80)
+        view.addSubview(logInButton)
         
-        DispatchQueue.main.async {
-    
-            let logInButton = ASAuthorizationAppleIDButton()
-            logInButton.sizeToFit()
-            logInButton.addTarget(self, action: #selector(self.handleLogInWithAppleID), for: .touchUpInside)
-            logInButton.frame = CGRect(x: 32, y: 100, width: self.view.frame.width - 64, height: 80)
-            self.view.addSubview(logInButton)
-            
-        }
+        let description = UILabel()
+        description.font = .systemFont(ofSize: 12, weight: .regular)
+        description.numberOfLines = 0
+        description.sizeToFit()
+        description.frame = CGRect(x: 48, y: logInButton.frame.maxY, width: self.view.frame.width - 96, height: 70)
+        description.text = "BlockchainCommons and FullyNoded 2 do not use or save your Apple ID data in anyway, it used purely for 2 factor authentication purposes only."
+        description.textAlignment = .left
+        description.textColor = .white
+        view.addSubview(description)
         
     }
     

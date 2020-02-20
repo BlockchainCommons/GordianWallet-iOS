@@ -19,7 +19,7 @@ class NodeLogic {
     var walletDisabled = Bool()
     var wallet:WalletStruct!
     
-    func loadSectionOne(completion: @escaping () -> Void) {
+    func loadTorData(completion: @escaping () -> Void) {
         
         let reducer = Reducer()
         reducer.makeCommand(walletName: "", command: .getnetworkinfo, param: "") {
@@ -80,8 +80,8 @@ class NodeLogic {
         
     }
     
-    func loadSectionZero(completion: @escaping () -> Void) {
-        print("loadSectionZero")
+    func loadWalletData(completion: @escaping () -> Void) {
+        print("loadWalletData")
         
         let reducer = Reducer()
         
@@ -164,8 +164,8 @@ class NodeLogic {
         
     }
     
-    func loadSectionTwo(completion: @escaping () -> Void) {
-        print("loadSectionTwo")
+    func loadNodeData(completion: @escaping () -> Void) {
+        print("loadNodeData")
         
         var walletName = ""
         
@@ -281,8 +281,8 @@ class NodeLogic {
         
     }
     
-    func loadSectionThree(completion: @escaping () -> Void) {
-        print("loadSectionThree")
+    func loadTransactionData(completion: @escaping () -> Void) {
+        print("loadTransactionData")
         
         let reducer = Reducer()
         

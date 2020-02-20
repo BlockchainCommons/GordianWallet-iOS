@@ -142,16 +142,25 @@ class TorClient {
     func resign() {
         print("resign")
         
-        if self.controller != nil {
-            
-            clearAuthKeys {}
-            //isRefreshing = true
-            self.controller.disconnect()
-            self.isOperational = false
-            self.thread = nil
-            self.progress = 0
-            
-        }
+//        if self.controller != nil {
+//            
+//            clearAuthKeys {}
+//            //isRefreshing = true
+//            self.controller.disconnect()
+//            self.isOperational = false
+//            self.thread = nil
+//            self.progress = 0
+//            
+//        }
+        
+        clearAuthKeys {}
+        isOperational = false
+        controller.disconnect()
+        controller = nil
+
+        // More cleanup
+        thread.cancel()
+        thread = nil
         
     }
     

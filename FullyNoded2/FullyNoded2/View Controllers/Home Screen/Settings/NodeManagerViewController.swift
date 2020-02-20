@@ -33,6 +33,17 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
+    @IBAction func close(_ sender: Any) {
+        
+        DispatchQueue.main.async {
+            
+            self.dismiss(animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    
     @objc func addNode() {
         
         let impact = UIImpactFeedbackGenerator()

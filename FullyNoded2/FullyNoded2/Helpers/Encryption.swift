@@ -158,55 +158,109 @@ class Encryption {
         
     }
     
-    func saveNode(node: [String:Any], completion: @escaping ((Bool)) -> Void) {
+    func saveNode(newNode: [String:Any], completion: @escaping ((success: Bool, error: String?)) -> Void) {
         
         if #available(iOS 13.0, *) {
             
             if let key = self.keychain.getData("privateKey") {
                 
+                let cd = CoreDataService()
                 let pk = SymmetricKey(data: key)
-                var encryptedNode = node
+                var encryptedNode = newNode
                 
-                for (k, value) in node {
-                                        
-                    if k != "id" && k != "isActive" && k != "network" {
-                        
-                        let stringToEncrypt = value as! String
-                        
-                        if let dataToEncrypt = stringToEncrypt.data(using: .utf8) {
+                func save() {
+                    
+                    for (k, value) in newNode {
+                                            
+                        if k != "id" && k != "isActive" && k != "network" {
                             
-                            if let sealedBox = try? ChaChaPoly.seal(dataToEncrypt, using: pk) {
+                            let stringToEncrypt = value as! String
+                            
+                            if let dataToEncrypt = stringToEncrypt.data(using: .utf8) {
                                 
-                                let encryptedData = sealedBox.combined
-                                encryptedNode[k] = encryptedData
+                                if let sealedBox = try? ChaChaPoly.seal(dataToEncrypt, using: pk) {
+                                    
+                                    let encryptedData = sealedBox.combined
+                                    encryptedNode[k] = encryptedData
+                                    
+                                } else {
+                                    
+                                    completion((false, "node encryption failed"))
+                                    
+                                }
                                 
                             } else {
                                 
-                                completion((false))
+                                completion((false, "node encryption failed"))
                                 
                             }
                             
-                        } else {
-                            
-                            completion((false))
-                            
                         }
                         
+                    }
+                    
+                    cd.saveEntity(dict: encryptedNode, entityName: .nodes) {
+                        
+                        if !cd.errorBool {
+                            
+                            completion((true, nil))
+                            
+                        } else {
+                            
+                            completion((false, nil))
+                            
+                        }
                         
                     }
                     
                 }
                 
-                let cd = CoreDataService()
-                cd.saveEntity(dict: encryptedNode, entityName: .nodes) {
+                cd.retrieveEntity(entityName: .nodes) { (existingNodes, errorDescription) in
                     
-                    if !cd.errorBool {
+                    if errorDescription == nil && existingNodes != nil {
                         
-                        completion((true))
-                        
-                    } else {
-                        
-                        completion((false))
+                        if existingNodes!.count > 0 {
+                            
+                            var nodeAlreadyExists = false
+                            
+                            for (i, n) in existingNodes!.enumerated() {
+                                
+                                let existingOnionEncrypted = n["onionAddress"] as! Data
+                                self.decryptData(dataToDecrypt: existingOnionEncrypted) { (decrpytedOnion) in
+                                    
+                                    if decrpytedOnion != nil {
+                                        
+                                        if (newNode["onionAddress"] as! String) == String(data: decrpytedOnion!, encoding: .utf8) {
+                                            
+                                            nodeAlreadyExists = true
+                                            
+                                        }
+                                        
+                                        if i + 1 == existingNodes!.count {
+                                            
+                                            if !nodeAlreadyExists {
+                                                
+                                                save()
+                                                
+                                            } else {
+                                                
+                                                completion((false, "node already added"))
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        } else {
+                            
+                            save()
+                            
+                        }
                         
                     }
                     
@@ -214,13 +268,13 @@ class Encryption {
                 
             } else {
                 
-                completion((false))
+                completion((false, nil))
                 
             }
             
         } else {
             
-            completion((false))
+            completion((false, nil))
             
         }
         

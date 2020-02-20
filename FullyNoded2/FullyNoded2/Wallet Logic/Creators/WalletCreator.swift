@@ -22,18 +22,6 @@ class WalletCreator {
         
         let wallet = WalletStruct.init(dictionary: walletDict)
         
-        //getActiveWallet { (wallet) in
-        
-        //            func whichChain() {
-        //
-        //                self.statusDescription = "Checking which network your node is on..."
-        //                self.progress = 10
-        //
-        //                executeNodeCommand(method: .getblockchaininfo,
-        //                                   param: "")
-        //
-        //            }
-        
         func createStandUpWallet() {
             
             self.statusDescription = "Creating the wallet on your node..."
@@ -54,70 +42,10 @@ class WalletCreator {
                     
                     switch method {
                         
-                        //                        case .getblockchaininfo:
-                        //
-                        //                            let response = reducer.dictToReturn
-                        //                            let chain = response["chain"] as! String
-                        //
-                        //                            if chain == "main" {
-                        //
-                        //                                print("main chain")
-                        //
-                        //                                var newDerivation = wallet.derivation
-                        //
-                        //                                switch wallet.derivation {
-                        //
-                        //                                case "m/84'/1'/0'/0":
-                        //
-                        //                                    newDerivation = "m/84'/0'/0'/0"
-                        //
-                        //                                case "m/44'/1'/0'/0":
-                        //
-                        //                                    newDerivation = "m/44'/0'/0'/0"
-                        //
-                        //                                case "m/49'/1'/0'/0":
-                        //
-                        //                                    newDerivation = "m/49'/0'/0'/0"
-                        //
-                        //                                default:
-                        //
-                        //                                    break
-                        //
-                        //                                }
-                        //
-                        //                                //self.statusDescription = "You can not use mainnet yet..."
-                        //                                //self.progress = 100
-                        //                                //completion((false, "mainnet is not yet allowed", nil))
-                        //
-                        //                                let cd = CoreDataService()
-                        //
-                        //                                cd.updateEntity(id: wallet.id, keyToUpdate: "derivation", newValue: newDerivation, entityName: .wallets) {
-                        //
-                        //                                    if !cd.errorBool {
-                        //
-                        //                                        print("changed derivation to mainnet")
-                        //
-                        //
-                        //                                    }
-                        //
-                        //                                }
-                        //
-                        //                            } else {
-                        //
-                        //                                print("test chain")
-                        //
-                        //
-                        //                            }
-                        
                     case .createwallet:
                         
                         let response = reducer.dictToReturn
                         handleWalletCreation(response: response)
-                        
-                        //                        case .listwalletdir:
-                        //
-                        //                            let dict =  reducer.dictToReturn
-                        //                            parseWallets(walletDict: dict)
                         
                     case .importmulti:
                         
@@ -164,11 +92,9 @@ class WalletCreator {
                         
                         self.progress = 60
                         let result = reducer.dictToReturn
-                        self.descriptor = "\"\(result["descriptor"] as! String)\""
+                        self.descriptor = result["descriptor"] as! String
                         
-                        
-                        
-                        let params = "[{ \"desc\": \(self.descriptor), \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }]"
+                        let params = "[{ \"desc\": \"\(self.descriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }]"
                         
                         executeNodeCommand(method: .importmulti,
                                            param: params)
@@ -261,7 +187,7 @@ class WalletCreator {
             
             self.statusDescription = "Importing 1,000 change addresses into your nodes wallet..."
             self.importingChange = true
-            let params = "[{ \"desc\": \(self.descriptor), \"timestamp\": \"now\", \"range\": [1000,1999], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
+            let params = "[{ \"desc\": \"\(self.descriptor)\", \"timestamp\": \"now\", \"range\": [1000,1999], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
             executeNodeCommand(method: .importmulti, param: params)
             
         }

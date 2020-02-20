@@ -174,7 +174,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                 
             } else {
                 
-                scanNow()
+                //scanNow()
                 
                 displayAlert(viewController: self,
                              isError: true,
