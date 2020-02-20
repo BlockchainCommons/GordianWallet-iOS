@@ -42,15 +42,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         DispatchQueue.main.async {
             
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let loginVC = storyboard.instantiateViewController(withIdentifier: "LogIn")
+            let loginVC = LogInViewController()
             loginVC.modalPresentationStyle = .fullScreen
             let topVC = self.window?.rootViewController?.topViewController()
             
             if topVC!.restorationIdentifier != "LogIn" {
-                                  
                 topVC!.present(loginVC, animated: true, completion: nil)
-                                   
             }
             
         }

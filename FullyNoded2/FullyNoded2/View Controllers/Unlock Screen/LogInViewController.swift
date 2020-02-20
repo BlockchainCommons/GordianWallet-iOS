@@ -6,33 +6,51 @@
 //  Copyright © 2019 BlockchainCommons. All rights reserved.
 //
 
-//need to copy account creation to create account view controller
+//TODO: Need to copy account creation to create account view controller
 
 import UIKit
 import KeychainSwift
 import AuthenticationServices
 
-class LogInViewController: UIViewController, UITextFieldDelegate, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+/// View Controller that handles app authorization via Apple ID.
+class LogInViewController: UIViewController {
+    
+    let lblDescription = UILabel()
+    let btnLogin = ASAuthorizationAppleIDButton(authorizationButtonType: .default, authorizationButtonStyle: .whiteOutline)
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .darkGray
-        let logInButton = ASAuthorizationAppleIDButton()
-        logInButton.sizeToFit()
-        logInButton.addTarget(self, action: #selector(handleLogInWithAppleID), for: .touchUpInside)
-        logInButton.frame = CGRect(x: 32, y: 100, width: view.frame.width - 64, height: 80)
-        view.addSubview(logInButton)
+        setupViews()
+    }
+    
+    func setupViews() {
         
-        let description = UILabel()
-        description.font = .systemFont(ofSize: 12, weight: .regular)
-        description.numberOfLines = 0
-        description.sizeToFit()
-        description.frame = CGRect(x: 48, y: logInButton.frame.maxY, width: self.view.frame.width - 96, height: 70)
-        description.text = "BlockchainCommons and FullyNoded 2 do not use or save your Apple ID data in anyway, it used purely for 2 factor authentication purposes only."
-        description.textAlignment = .left
-        description.textColor = .white
-        view.addSubview(description)
+        view.backgroundColor = .black
+        
+        btnLogin.translatesAutoresizingMaskIntoConstraints = false
+        lblDescription.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(btnLogin)
+        view.addSubview(lblDescription)
+        
+        btnLogin.addTarget(self, action: #selector(handleLogInWithAppleID), for: .touchUpInside)
+        
+        lblDescription.font = .systemFont(ofSize: 12, weight: .regular)
+        lblDescription.numberOfLines = 0
+        lblDescription.text = "Blockchain Commons and Fully Noded do not save your Apple ID. It is used purely for 2 factor authentication purposes only."
+        lblDescription.textAlignment = .left
+        lblDescription.textColor = .lightGray
+        
+        btnLogin.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        btnLogin.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        btnLogin.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
+        btnLogin.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+        
+        lblDescription.heightAnchor.constraint(equalToConstant: 75).isActive = true
+        lblDescription.topAnchor.constraint(equalTo: btnLogin.bottomAnchor, constant: 10).isActive = true
+        lblDescription.widthAnchor.constraint(equalTo: btnLogin.widthAnchor, constant: 0).isActive = true
+        lblDescription.centerXAnchor.constraint(equalTo: btnLogin.centerXAnchor, constant: 0).isActive = true
         
     }
     
@@ -44,66 +62,30 @@ class LogInViewController: UIViewController, UITextFieldDelegate, ASAuthorizatio
         controller.presentationContextProvider = self
         controller.performRequests()
     }
+}
+
+/// ASAuthorization protocol extension
+extension LogInViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return self.view.window!
     }
     
+    // Derives a keychain based on an Apple ID upon successful authorization.
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
 
         switch authorization.credential {
-
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
-
             let userIdentifier = appleIDCredential.user
             let keychain = KeychainSwift()
             keychain.set(userIdentifier, forKey: "userIdentifier1")
+            
             self.dismiss(animated: true, completion: nil)
 
             break
-
         default:
-
             break
-
         }
 
     }
-    
 }
-
-extension UIViewController {
-    
-    func topViewController() -> UIViewController! {
-        
-        if self.isKind(of: UITabBarController.self) {
-            
-            let tabbarController =  self as! UITabBarController
-            
-            return tabbarController.selectedViewController!.topViewController()
-            
-        } else if (self.isKind(of: UINavigationController.self)) {
-            
-            let navigationController = self as! UINavigationController
-            
-            return navigationController.visibleViewController!.topViewController()
-            
-        } else if ((self.presentedViewController) != nil) {
-            
-            let controller = self.presentedViewController
-            
-            return controller!.topViewController()
-            
-        } else {
-            
-            return self
-            
-        }
-        
-    }
-
-}
-
-
-
-
