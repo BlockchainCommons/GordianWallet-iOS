@@ -172,19 +172,20 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    func filterDerivation(derivation: String) {
+    func filterDerivation(str: DescriptorStruct) {
+        print("derivation")
         
-        if derivation.contains("84") {
-            
-            self.executeNodeCommand(method: .getnewaddress,
-                                    param: "\"\", \"bech32\"")
-            
-        } else if derivation.contains("44") {
+        if str.isP2PKH || str.isBIP44 || wallet.derivation.contains("44") {
             
             self.executeNodeCommand(method: .getnewaddress,
                                     param: "\"\", \"legacy\"")
             
-        } else if derivation.contains("49") {
+        } else if str.isP2WPKH || str.isBIP84 || wallet.derivation.contains("84")  {
+            
+            self.executeNodeCommand(method: .getnewaddress,
+                                    param: "\"\", \"bech32\"")
+            
+        } else if str.isP2SHP2WPKH || str.isBIP49 || wallet.derivation.contains("49")  {
             
             self.executeNodeCommand(method: .getnewaddress,
                                     param: "\"\", \"p2sh-segwit\"")
@@ -194,8 +195,9 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     }
     
     func showAddress() {
+        print("showAddress")
         
-        let derivation = wallet!.derivation
+        //let derivation = wallet!.derivation
         //let type = wallet!.type
         let parser = DescriptorParser()
         let str = parser.descriptor(wallet!.descriptor)
@@ -206,7 +208,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             
         } else {
             
-            self.filterDerivation(derivation: derivation)
+            self.filterDerivation(str: str)
             
         }
         
@@ -224,6 +226,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     }
     
     func getMsigAddress() {
+        print("getMsigAddress")
         
         let keyFetcher = KeyFetcher()
         keyFetcher.musigAddress { (address, error) in

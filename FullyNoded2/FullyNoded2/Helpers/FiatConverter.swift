@@ -21,8 +21,10 @@ class FiatConverter {
         torClient = TorClient.sharedInstance
         
         var url:NSURL!
-        //http://blkchairbknpn73cfjhevhla7rkp4ed5gg2knctvv7it4lioy22defid.onion
-        url = NSURL(string: "https://api.coindesk.com/v1/bpi/currentprice.json")
+        //http://blkchairbknpn73cfjhevhla7rkp4ed5gg2knctvv7it4lioy22defid.onion/www/bitcoin/stats
+        //http://blockchairt5d4pj.onion/www/bitcoin/stats
+        //url = NSURL(string: "https://api.coindesk.com/v1/bpi/currentprice.json")
+        url = NSURL(string: "http://blkchairbknpn73cfjhevhla7rkp4ed5gg2knctvv7it4lioy22defid.onion/www/bitcoin/stats")
         
         let task = torClient.session.dataTask(with: url! as URL) { (data, response, error) -> Void in
             
@@ -43,18 +45,14 @@ class FiatConverter {
                             
                             print("json = \(json)")
                             
-                            if let exchangeCheck = json["bpi"] as? NSDictionary {
+                            if let data = json["data"] as? NSDictionary {
                                 
-                                if let usdCheck = exchangeCheck["USD"] as? NSDictionary {
-                                    
-                                    if let rateCheck = usdCheck["rate_float"] as? Double {
+                                if let rateCheck = data["market_price_usd"] as? Double {
                                         
                                         self.errorBool = false
                                         self.fxRate = rateCheck
                                         completion()
-                                        
-                                    }
-                                    
+                                                                            
                                 }
                                 
                             }

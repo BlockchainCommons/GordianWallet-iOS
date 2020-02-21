@@ -33,6 +33,55 @@ class DescriptorParser {
         
         var dict = [String:Any]()
         
+        if descriptor.contains("[") && descriptor.contains("]") {
+            
+            let arr1 = descriptor.split(separator: "[")
+            let arr2 = arr1[1].split(separator: "]")
+            let derivation = arr2[0]
+            let arr3 = derivation.split(separator: "/")
+            var path = "m"
+            
+            for (i, item) in arr3.enumerated() {
+                
+                switch i {
+                    
+//                case 0:
+//                    let fingerprint = item
+                    
+                case 1:
+                    let type = item
+                    path += "/" + type
+                    
+                default:
+                    
+                    path += "/" + item
+                    
+                }
+                
+            }
+            
+            switch path {
+                
+            case "m/44'/0'/0'":
+                dict["isBIP44"] = true
+                dict["isP2PKH"] = true
+                
+            case "m/84'/0'/0'":
+                dict["isBIP84"] = true
+                dict["isP2WPKH"] = true
+                
+            case "m/49'/0'/0'":
+                dict["isBIP49"] = true
+                dict["isP2SHP2WPKH"] = true
+                
+            default:
+                
+                break
+                
+            }
+            
+        }
+        
         if descriptor.contains("multi") {
             
             dict["isMulti"] = true
@@ -93,22 +142,6 @@ class DescriptorParser {
                     
                 }
                 
-                if descriptor.contains("xpub") {
-                    
-                    dict["chain"] = "Mainnet"
-                    
-                } else if descriptor.contains("tpub") {
-                    
-                    dict["chain"] = "Testnet"
-                    
-                }
-                
-                if descriptor.contains("xprv") || descriptor.contains("tprv") {
-                    
-                    dict["isHot"] = true
-                    
-                }
-                
             }
                         
         } else {
@@ -130,12 +163,14 @@ class DescriptorParser {
                         case "wpkh":
                             
                             dict["format"] = "P2WPKH"
+                            dict["isP2WPKH"] = true
                             
                         case "sh":
                             
                             if arr[1] == "wpkh" {
                                 
                                 dict["format"] = "P2SH-P2WPKH"
+                                dict["isP2SHP2WPKH"] = true
                                 
                             } else {
                                 
@@ -150,6 +185,7 @@ class DescriptorParser {
                         case "pkh":
                             
                             dict["format"] = "P2PKH"
+                            dict["isP2PKH"] = true
                             
                         default:
                             
@@ -162,6 +198,22 @@ class DescriptorParser {
                 }
                 
             }
+            
+        }
+        
+        if descriptor.contains("xpub") || descriptor.contains("xprv") {
+            
+            dict["chain"] = "Mainnet"
+            
+        } else if descriptor.contains("tpub") || descriptor.contains("tprv") {
+            
+            dict["chain"] = "Testnet"
+            
+        }
+        
+        if descriptor.contains("xprv") || descriptor.contains("tprv") {
+            
+            dict["isHot"] = true
             
         }
         

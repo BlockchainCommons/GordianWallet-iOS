@@ -82,7 +82,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         navigationController?.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(self.notificationReceived(_:)), name: .torConnecting, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.foregroundNotificationReceived(_:)), name: .didEnterForeground, object: nil)
-        //mainMenu.tableFooterView = UIView(frame: .zero)
         initialLoad = true
         walletSectionLoaded = false
         torSectionLoaded = false
@@ -126,6 +125,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
         }
+        
+        let p = DescriptorParser()
+        let s = p.descriptor("wpkh(tpubDEVbsU2HhhyMWRfMiX4gEJRk9e5V19V6n9RwmhE9oP6QtkU2pSR8c4GHxV2WBX36TSyjx9kcA89fAnm4QVGJRbchXSx9iBBAvvUDRCgaLDY/*)")
+        print("s.ismulti = \(s.isMulti)")
+        
                 
     }
     
@@ -154,20 +158,20 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     @objc func foregroundNotificationReceived(_ notification: Notification) {
         print("foreground NotificationReceived")
         
-        if UIDevice.modelName != "iPhone 11 pro max" && UIDevice.modelName != "Simulator iPhone 11 pro max" {
-            
-            self.torConnected = false
-            self.reloadSections([1])
-            
-        } else {
-            
-            if !initialLoad {
-                
-                showAlert(vc: self, title: "Alert", message: "There is a known issue when refreshing the Tor connection on iPhone 11 Pro Max, we are working on a fix, in the meantime you may need to force close the app and reopen to reconnect Tor manually if you experience any issues.")
-                
-            }
-            
-        }
+//        if UIDevice.modelName != "iPhone 11 pro max" && UIDevice.modelName != "Simulator iPhone 11 pro max" {
+//
+//            self.torConnected = false
+//            self.reloadSections([1])
+//
+//        } else {
+//
+//            if !initialLoad {
+//
+//                showAlert(vc: self, title: "Alert", message: "There is a known issue when refreshing the Tor connection on iPhone 11 Pro Max, we are working on a fix, in the meantime you may need to force close the app and reopen to reconnect Tor manually if you experience any issues.")
+//
+//            }
+//
+//        }
 
     }
     
@@ -410,13 +414,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         dirtyFiatLabel.text = "\(self.fiatBalance)"
         
-        if network == "test" {
-            
-            coldBalanceLabel.textColor = .systemOrange
-            
-        } else if network == "main" {
+        let parser = DescriptorParser()
+        let str = parser.descriptor(wallet.descriptor)
+        
+        if str.chain == "Mainnet" {
             
             coldBalanceLabel.textColor = .systemGreen
+            
+        } else if str.chain == "Testnet" {
+            
+            coldBalanceLabel.textColor = .systemOrange
             
         }
         
@@ -434,7 +441,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         } else {
             
-            confirmedIcon.image = UIImage(systemName: "checkmark.circle")
+            confirmedIcon.image = UIImage(systemName: "checkmark")
             confirmedIcon.tintColor = .systemGreen
             
         }
@@ -518,13 +525,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         dirtyFiatLabel.text = "\(self.fiatBalance)"
         
-        if network == "test" {
-            
-            coldBalanceLabel.textColor = .systemOrange
-            
-        } else if network == "main" {
+        let parser = DescriptorParser()
+        let str = parser.descriptor(wallet.descriptor)
+        
+        if str.chain == "Mainnet" {
             
             coldBalanceLabel.textColor = .systemGreen
+            
+        } else if str.chain == "Testnet" {
+            
+            coldBalanceLabel.textColor = .systemOrange
             
         }
         
@@ -537,7 +547,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         } else {
             
-            confirmedIcon.image = UIImage(systemName: "checkmark.circle")
+            confirmedIcon.image = UIImage(systemName: "checkmark")
             confirmedIcon.tintColor = .systemGreen
             
         }
@@ -624,13 +634,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         dirtyFiatLabel.text = "\(self.fiatBalance)"
         
-        if network == "test" {
-            
-            coldBalanceLabel.textColor = .systemOrange
-            
-        } else if network == "main" {
+        let parser = DescriptorParser()
+        let str = parser.descriptor(wallet.descriptor)
+        
+        if str.chain == "Mainnet" {
             
             coldBalanceLabel.textColor = .systemGreen
+            
+        } else if str.chain == "Testnet" {
+            
+            coldBalanceLabel.textColor = .systemOrange
             
         }
         
@@ -643,7 +656,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         } else {
             
-            confirmedIcon.image = UIImage(systemName: "checkmark.circle")
+            confirmedIcon.image = UIImage(systemName: "checkmark")
             confirmedIcon.tintColor = .systemGreen
             
         }
@@ -787,13 +800,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         } else {
             
-            torStatusLabel.text = "connecting..."
-            torActiveCircle.tintColor = .systemOrange
+            torStatusLabel.text = "disconnected..."
+            torActiveCircle.tintColor = .systemRed
             connectionStatusLabel.text = "disconnected..."
             
-            spinner.startAnimating()
-            spinner.alpha = 1
-            infoButton.alpha = 0
+            spinner.stopAnimating()
+            spinner.alpha = 0
+            infoButton.alpha = 1
             
         }
         
@@ -1827,7 +1840,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         
                     } else {
                         
-                        self.reloadSections([self.nodeCellIndex, self.walletCellIndex])
+                        self.reloadSections([self.nodeCellIndex])
                         
                     }
                     
@@ -1939,7 +1952,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         self.reloadSections([3])
 
                     }
-                    self.mainMenu.reloadData()
+                    //self.mainMenu.reloadData()
                     self.impact()
                     self.loadNodeData()
                     

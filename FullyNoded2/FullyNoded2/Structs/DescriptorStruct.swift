@@ -16,6 +16,13 @@ public struct DescriptorStruct: CustomStringConvertible {
     let chain:String
     let isMulti:Bool
     let isBIP67:Bool
+    let isBIP49:Bool
+    let isBIP84:Bool
+    let isBIP44:Bool
+    let isP2WPKH:Bool
+    let isP2PKH:Bool
+    let isP2SHP2WPKH:Bool
+    let network:String
     
     init(dictionary: [String: Any]) {
         
@@ -25,6 +32,13 @@ public struct DescriptorStruct: CustomStringConvertible {
         self.chain = dictionary["chain"] as? String ?? ""
         self.isMulti = dictionary["isMulti"] as? Bool ?? false
         self.isBIP67 = dictionary["isBIP67"] as? Bool ?? false
+        self.isBIP49 = dictionary["isBIP49"] as? Bool ?? false
+        self.isBIP84 = dictionary["isBIP84"] as? Bool ?? false
+        self.isBIP44 = dictionary["isBIP44"] as? Bool ?? false
+        self.isP2PKH = dictionary["isP2PKH"] as? Bool ?? false
+        self.isP2WPKH = dictionary["isP2WPKH"] as? Bool ?? false
+        self.isP2SHP2WPKH = dictionary["isP2SHP2WPKH"] as? Bool ?? false
+        self.network = dictionary["network"] as? String ?? ""
         
     }
     

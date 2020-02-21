@@ -272,17 +272,18 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let getWalletInfoButton = cell.viewWithTag(12) as! UIButton
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
-        let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
+        //let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
         let shareSeedButton = cell.viewWithTag(16) as! UIButton
         let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
         let walletFileLabel = cell.viewWithTag(20) as! UILabel
         let seedOnDeviceView = cell.viewWithTag(21)!
-        let seedOnNodeView = cell.viewWithTag(22)!
+        //let seedOnNodeView = cell.viewWithTag(22)!
         let isActiveLabel = cell.viewWithTag(24) as! UILabel
         let stackView = cell.viewWithTag(25)!
         let nodeView = cell.viewWithTag(26)!
         let nodeLabel = cell.viewWithTag(27) as! UILabel
         let deviceXprv = cell.viewWithTag(28) as! UILabel
+        let bannerView = cell.viewWithTag(32)!
         
         if wallet.isActive {
             
@@ -290,6 +291,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             isActiveLabel.text = "Active"
             isActiveLabel.textColor = .lightGray
             cell.contentView.alpha = 1
+            bannerView.backgroundColor = #colorLiteral(red: 0, green: 0.1631944358, blue: 0.3383367703, alpha: 1)
             
         } else if !wallet.isActive {
             
@@ -297,6 +299,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             isActiveLabel.text = "Inactive"
             isActiveLabel.textColor = .darkGray
             cell.contentView.alpha = 0.6
+            bannerView.backgroundColor = #colorLiteral(red: 0.1051254794, green: 0.1292803288, blue: 0.1418488324, alpha: 1)
             
         }
         
@@ -337,7 +340,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         nodeView.layer.cornerRadius = 8
         stackView.layer.cornerRadius = 8
         seedOnDeviceView.layer.cornerRadius = 8
-        seedOnNodeView.layer.cornerRadius = 8
+        //seedOnNodeView.layer.cornerRadius = 8
         networkLabel.layer.cornerRadius = 8
         utxosButton.layer.cornerRadius = 8
         
@@ -390,7 +393,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let last15 = String(rpcOnion.suffix(15))
                 rpcOnionLabel.text = "\(first10)*****\(last15)"
                 nodeLabel.text = s.label
-                nodeSeedLabel.text = "1 Watch-only \(s.label)"
+                //nodeSeedLabel.text = "1 Watch-only \(s.label)"
                 
             }
             
@@ -435,6 +438,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let deviceXprv = cell.viewWithTag(29) as! UILabel
         let nodeKeys = cell.viewWithTag(30) as! UILabel
         let offlineXprv = cell.viewWithTag(31) as! UILabel
+        let bannerView = cell.viewWithTag(33)!
         
         isActive.addTarget(self, action: #selector(makeActive(_:)), for: .valueChanged)
         isActive.restorationIdentifier = "\(indexPath.section)"
@@ -445,6 +449,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             isActiveLabel.text = "Active"
             isActiveLabel.textColor = .lightGray
             cell.contentView.alpha = 1
+            bannerView.backgroundColor = #colorLiteral(red: 0, green: 0.1631944358, blue: 0.3383367703, alpha: 1)
             
         } else if !wallet.isActive {
             
@@ -452,6 +457,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             isActiveLabel.text = "Inactive"
             isActiveLabel.textColor = .darkGray
             cell.contentView.alpha = 0.6
+            bannerView.backgroundColor = #colorLiteral(red: 0.1051254794, green: 0.1292803288, blue: 0.1418488324, alpha: 1)
             
         }
         
@@ -580,17 +586,18 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let getWalletInfoButton = cell.viewWithTag(12) as! UIButton
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
-        let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
+        //let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
         let exportSeedButton = cell.viewWithTag(17) as! UIButton
         let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
         let walletFileLabel = cell.viewWithTag(20) as! UILabel
-        let seedOnNodeView = cell.viewWithTag(22)!
+        //let seedOnNodeView = cell.viewWithTag(22)!
         let isActiveLabel = cell.viewWithTag(24) as! UILabel
         let stackView = cell.viewWithTag(25)!
         let nodeView = cell.viewWithTag(26)!
         let nodeLabel = cell.viewWithTag(27) as! UILabel
         let keysOnNodeLabel = cell.viewWithTag(28) as! UILabel
         let typeLabel = cell.viewWithTag(29) as! UILabel
+        let bannerView = cell.viewWithTag(32)!
         
         if wallet.isActive {
             
@@ -598,6 +605,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             isActiveLabel.text = "Active"
             isActiveLabel.textColor = .lightGray
             cell.contentView.alpha = 1
+            bannerView.backgroundColor = #colorLiteral(red: 0, green: 0.1631944358, blue: 0.3383367703, alpha: 1)
             
         } else if !wallet.isActive {
             
@@ -605,6 +613,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             isActiveLabel.text = "Inactive"
             isActiveLabel.textColor = .darkGray
             cell.contentView.alpha = 0.6
+            bannerView.backgroundColor = #colorLiteral(red: 0.1051254794, green: 0.1292803288, blue: 0.1418488324, alpha: 1)
             
         }
         
@@ -644,7 +653,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         nodeView.layer.cornerRadius = 8
         stackView.layer.cornerRadius = 8
-        seedOnNodeView.layer.cornerRadius = 8
+        //seedOnNodeView.layer.cornerRadius = 8
         networkLabel.layer.cornerRadius = 8
         utxosButton.layer.cornerRadius = 8
         
@@ -695,22 +704,22 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if descStr.isHot {
                     
-                    nodeSeedLabel.text = "\(s.label) is Hot"
+                    //nodeSeedLabel.text = "\(s.label) is Hot"
                     keysOnNodeLabel.text = "2,000 private keys on \(s.label)"
-                    cell.backgroundColor = #colorLiteral(red: 0.3412515863, green: 0.07937019594, blue: 0.06658586931, alpha: 1)
-                    seedOnNodeView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
-                    nodeView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
-                    stackView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
-                    balanceLabel.textColor = .lightGray
+//                    cell.backgroundColor = #colorLiteral(red: 0.3412515863, green: 0.07937019594, blue: 0.06658586931, alpha: 1)
+//                    seedOnNodeView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
+//                    nodeView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
+//                    stackView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
+//                    balanceLabel.textColor = .lightGray
                     
                 } else {
                     
-                    nodeSeedLabel.text = "\(s.label) is Cold"
+                    //nodeSeedLabel.text = "\(s.label) is Cold"
                     keysOnNodeLabel.text = "2,000 public keys on \(s.label)"
-                    cell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
-                    seedOnNodeView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
-                    nodeView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
-                    stackView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
+//                    cell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
+//                    seedOnNodeView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
+//                    nodeView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
+//                    stackView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
                     
                 }
                 
@@ -1092,15 +1101,15 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             case "DEFAULT":
                 
-                return 370
+                return 377
                 
             case "MULTI":
                 
-                return 403
+                return 435
                 
             case "CUSTOM":
                 
-                return 310
+                return 294
                 
             default:
                 
