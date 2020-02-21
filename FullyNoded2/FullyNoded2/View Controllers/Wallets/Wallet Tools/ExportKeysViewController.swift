@@ -28,7 +28,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         
         keys.removeAll()
         
@@ -294,7 +294,12 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                         
                     } else {
                         
-                        self.keys[i]["address"] = (address as! String)
+                        // fixes crash caused by user pre-maturely dismissing the view as keys is emptied when the view disappears
+                        if self.keys.count > 0 {
+                            
+                            self.keys[i]["address"] = (address as! String)
+                            
+                        }
                         
                     }
                     

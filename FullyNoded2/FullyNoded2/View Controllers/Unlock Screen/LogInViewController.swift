@@ -17,7 +17,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate, ASAuthorizatio
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .black
         let logInButton = ASAuthorizationAppleIDButton()
         logInButton.sizeToFit()
         logInButton.addTarget(self, action: #selector(handleLogInWithAppleID), for: .touchUpInside)
@@ -25,11 +25,11 @@ class LogInViewController: UIViewController, UITextFieldDelegate, ASAuthorizatio
         view.addSubview(logInButton)
         
         let description = UILabel()
-        description.font = .systemFont(ofSize: 12, weight: .regular)
+        description.font = .systemFont(ofSize: 16, weight: .light)
         description.numberOfLines = 0
+        description.frame = CGRect(x: 48, y: logInButton.frame.maxY + 5, width: self.view.frame.width - 96, height: 150)
+        description.text = "Blockchain Commons, LLC and FullyNoded 2 do not use or save your Apple ID data in anyway, it is used solely for 2FA (two-factor authentication) purposes only."
         description.sizeToFit()
-        description.frame = CGRect(x: 48, y: logInButton.frame.maxY, width: self.view.frame.width - 96, height: 70)
-        description.text = "BlockchainCommons and FullyNoded 2 do not use or save your Apple ID data in anyway, it used purely for 2 factor authentication purposes only."
         description.textAlignment = .left
         description.textColor = .white
         view.addSubview(description)

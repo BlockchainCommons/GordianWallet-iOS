@@ -13,7 +13,7 @@ class SingleSigBuilder {
     
     var wallet:WalletStruct!
     
-    func build(outputs: [Any], completion: @escaping ((signedTx: String?, errorDescription: String?)) -> Void) {
+    func build(outputs: [Any], completion: @escaping ((signedTx: String?, unsignedPsbt: String?, errorDescription: String?)) -> Void) {
         
         func signSegwitWrapped(psbt: String) {
          
@@ -22,7 +22,7 @@ class SingleSigBuilder {
 
                 if signedTx != nil {
 
-                    completion((signedTx!, nil))
+                    completion((signedTx!, nil, nil))
 
                 }
 
@@ -37,7 +37,7 @@ class SingleSigBuilder {
 
                 if signedTx != nil {
 
-                    completion((signedTx!, nil))
+                    completion((signedTx!, nil, nil))
 
                 }
 
@@ -52,7 +52,7 @@ class SingleSigBuilder {
 
                 if signedTx != nil {
 
-                    completion((signedTx!, nil))
+                    completion((signedTx!, nil, nil))
 
                 }
 
@@ -112,7 +112,7 @@ class SingleSigBuilder {
                                 
                                 if let hex = localPSBT.transactionFinal?.description {
                                     
-                                    completion((hex, nil))
+                                    completion((hex, nil, nil))
                                     
                                 } else {
                                     
@@ -134,7 +134,7 @@ class SingleSigBuilder {
                 
             } catch {
                 
-                completion((nil, "Error: Local PSBT creation failed"))
+                completion((nil, nil, "Error: Local PSBT creation failed"))
                 
             }
             
@@ -166,7 +166,7 @@ class SingleSigBuilder {
                         
                     } else {
                         
-                        completion((nil, "Error: Failed fetching private key at index \(index)"))
+                        completion((nil, nil, "Error: Failed fetching private key at index \(index)"))
                         
                     }
                     
@@ -189,7 +189,7 @@ class SingleSigBuilder {
                     
                 } else {
                     
-                    completion((nil, "Error decoding transaction: \(reducer.errorDescription)"))
+                    completion((nil, nil, "Error decoding transaction: \(reducer.errorDescription)"))
                     
                 }
                 
@@ -211,7 +211,7 @@ class SingleSigBuilder {
                     
                 } else {
                     
-                    completion((nil, "Error decoding transaction: \(reducer.errorDescription)"))
+                    completion((nil, nil, "Error decoding transaction: \(reducer.errorDescription)"))
                     
                 }
                 
@@ -227,17 +227,33 @@ class SingleSigBuilder {
             outputsString = outputsString.replacingOccurrences(of: "[", with: "")
             outputsString = outputsString.replacingOccurrences(of: "]", with: "")
             var changeType = ""
+            let parser = DescriptorParser()
+            let str = parser.descriptor(wallet.descriptor)
             
-            switch wallet.derivation {
-            case "m/84'/1'/0'/0", "m/84'/0'/0'/0":
+            if str.isP2WPKH || str.isBIP84 {
+                
                 changeType = "bech32"
-            case "m/44'/1'/0'/0", "m/44'/0'/0'/0":
-                changeType = "legacy"
-            case "m/49'/1'/0'/0", "m/49'/0'/0'/0":
+                
+            } else if str.isP2SHP2WPKH || str.isBIP49 {
+                
                 changeType = "p2sh-segwit"
-            default:
-                break
+                
+            } else if str.isP2PKH || str.isBIP44 {
+                
+                changeType = "legacy"
+                
             }
+            
+//            switch wallet.derivation {
+//            case "m/84'/1'/0'/0", "m/84'/0'/0'/0":
+//                changeType = "bech32"
+//            case "m/44'/1'/0'/0", "m/44'/0'/0'/0":
+//                changeType = "legacy"
+//            case "m/49'/1'/0'/0", "m/49'/0'/0'/0":
+//                changeType = "p2sh-segwit"
+//            default:
+//                break
+//            }
 
             let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"change_type\": \"\(changeType)\"}'', true"
 
@@ -248,15 +264,38 @@ class SingleSigBuilder {
                     let psbtDict = reducer.dictToReturn
                     let psbt = psbtDict["psbt"] as! String
                     
-                    if self.wallet.type == "DEFAULT" {
+                    if self.wallet.type == "DEFAULT" || self.wallet.type == "CUSTOM" {
                         
-                        switch self.wallet.derivation {
-                        case "m/84'/1'/0'/0", "m/84'/0'/0'/0": signSegwit(psbt: psbt)
-                        case "m/44'/1'/0'/0", "m/44'/0'/0'/0": signLegacy(psbt: psbt)
-                        case "m/49'/1'/0'/0", "m/49'/0'/0'/0": signSegwitWrapped(psbt: psbt)
-                        default:
-                            break
+//                        switch self.wallet.derivation {
+//                        case "m/84'/1'/0'/0", "m/84'/0'/0'/0": signSegwit(psbt: psbt)
+//                        case "m/44'/1'/0'/0", "m/44'/0'/0'/0": signLegacy(psbt: psbt)
+//                        case "m/49'/1'/0'/0", "m/49'/0'/0'/0": signSegwitWrapped(psbt: psbt)
+//                        default:
+//                            break
+//                        }
+                        
+                        if str.isHot || String(data: self.wallet.seed, encoding: .utf8) != "no seed" {
+                            
+                            if str.isP2WPKH || str.isBIP84 {
+                                
+                                signSegwit(psbt: psbt)
+                                
+                            } else if str.isP2SHP2WPKH || str.isBIP49 {
+                                
+                                signSegwitWrapped(psbt: psbt)
+                                
+                            } else if str.isP2PKH || str.isBIP44 {
+                                
+                                signLegacy(psbt: psbt)
+                                
+                            }
+                            
+                        } else {
+                           
+                            completion((nil, psbt, nil))
+                            
                         }
+                        
                         
                     } else if self.wallet.type == "MULTI" {
                      
@@ -267,7 +306,7 @@ class SingleSigBuilder {
 
                 } else {
 
-                    completion((nil, "Error creating psbt: \(reducer.errorDescription)"))
+                    completion((nil, nil, "Error creating psbt: \(reducer.errorDescription)"))
 
                 }
 

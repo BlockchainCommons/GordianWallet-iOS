@@ -73,7 +73,8 @@ class FirstTime {
                 
             } else {
                 
-                print("keychain set privkey")
+                print("keychain did not set privkey")
+                completion(false)
                 
             }
             

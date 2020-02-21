@@ -155,8 +155,8 @@ class TorClient {
         
         clearAuthKeys {}
         isOperational = false
-        controller.disconnect()
-        controller = nil
+        //controller.disconnect()
+        //controller = nil
 
         // More cleanup
         thread.cancel()

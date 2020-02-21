@@ -40,6 +40,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
         
+        // Disable Sign In with Apple on simulator
+        #if !targetEnvironment(simulator)
+        
         DispatchQueue.main.async {
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -54,75 +57,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
             
         }
-
         
-//        if let userIdentifier = keychain.get("userIdentifier1") {
-//
-//            let authorizationProvider = ASAuthorizationAppleIDProvider()
-//            authorizationProvider.getCredentialState(forUserID: userIdentifier) { (state, error) in
-//
-//
-//
-//            }
-//
-//        } else {
-//
-//            showLogIn()
-//
-//        }
+        #endif
         
         NotificationCenter.default.post(name: .didEnterForeground, object: nil, userInfo: nil)
         
         let enc = Encryption()
         enc.getNode { (node, error) in
             
-            if !error && node != nil {
+            if !error && node != nil && !TorClient.sharedInstance.isOperational {
                 
-                TorClient.sharedInstance.isRefreshing = true
-                
-                TorClient.sharedInstance.start {
-                    
-                    print("start tor")
-                    
-                    
-                }
+                TorClient.sharedInstance.start {}
                 
             }
             
         }
+        
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
-        
-//        let fileManager = FileManager.default
-//        let authPath = URL(fileURLWithPath: self.getTorPath(), isDirectory: true).appendingPathComponent("onion_auth", isDirectory: true).path
-//
-//        do {
-//
-//            let filePaths = try fileManager.contentsOfDirectory(atPath: authPath)
-//
-//            for filePath in filePaths {
-//
-//                let url = URL(fileURLWithPath: authPath + "/" + filePath)
-//                try fileManager.removeItem(at: url)
-//                print("deleted key")
-//
-//            }
-//
-//        } catch {
-//
-//            print("error deleting auth keys file")
-//
-//        }
-        
-        //if UIDevice.modelName != "iPhone 11 pro max" && UIDevice.modelName != "Simulator iPhone 11 pro max" {
-            
-            TorClient.sharedInstance.resign()
-            
-        //}
 
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
@@ -167,29 +123,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
     }
-    
-//    private func getTorPath() -> String {
-//        print("getTorPath")
-//
-//        var torDirectory = ""
-//
-//        #if targetEnvironment(simulator)
-//        print("is simulator")
-//
-//        let path = NSSearchPathForDirectoriesInDomains(.applicationDirectory, .userDomainMask, true).first ?? ""
-//        torDirectory = "\(path.split(separator: Character("/"))[0..<2].joined(separator: "/"))/.tor_tmp"
-//
-//        #else
-//        print("is device")
-//
-//        torDirectory = "\(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first ?? "")/tor"
-//
-//        #endif
-//
-//        return torDirectory
-//
-//    }
-
 
 }
 

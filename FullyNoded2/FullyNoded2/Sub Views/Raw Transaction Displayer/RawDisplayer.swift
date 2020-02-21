@@ -15,10 +15,10 @@ class RawDisplayer {
     let textView = UITextView()
     var qrView = UIImageView()
     let qrGenerator = QRGenerator()
-    let backgroundView = UIView()
+    //let backgroundView = UIView()
     let copiedLabel = UILabel()
     //var navigationBar = UINavigationBar()
-    var tabbar = UITabBar()
+    //var tabbar = UITabBar()
     var vc = UIViewController()
     var rawString = ""
     let impact = UIImpactFeedbackGenerator()
@@ -27,7 +27,7 @@ class RawDisplayer {
         
         //tabbar = vc.tabBarController!.tabBar
         //navigationBar = vc.navigationController!.navigationBar
-        configureBackground()
+        //configureBackground()
         configureQrView()
         configureTextView()
         configureCopiedLabel()
@@ -36,13 +36,13 @@ class RawDisplayer {
         textView.text = rawString
         UIPasteboard.general.string = rawString
         
-        backgroundView.addSubview(qrView)
-        backgroundView.addSubview(textView)
-        vc.view.addSubview(backgroundView)
+        vc.view.addSubview(qrView)
+        vc.view.addSubview(textView)
+        //vc.view.addSubview(backgroundView)
         
         UIView.animate(withDuration: 0.2, animations: {
             
-            self.backgroundView.alpha = 1
+            //self.backgroundView.alpha = 1
             
         }) { _ in
             
@@ -169,13 +169,13 @@ class RawDisplayer {
         
     }
     
-    func configureBackground() {
-        
-        backgroundView.alpha = 0
-        backgroundView.backgroundColor = UIColor.clear
-        backgroundView.frame = vc.view.frame
-        
-    }
+//    func configureBackground() {
+//
+//        backgroundView.alpha = 0
+//        backgroundView.backgroundColor = UIColor.clear
+//        backgroundView.frame = vc.view.frame
+//
+//    }
     
     func generateQrCode(key: String) -> UIImage {
         

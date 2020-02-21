@@ -13,14 +13,13 @@ class ErrorView: UIView, UIGestureRecognizerDelegate {
     
     let errorLabel = UILabel()
     let impact = UIImpactFeedbackGenerator()
-    let upSwipe = UISwipeGestureRecognizer()
+    //let upSwipe = UISwipeGestureRecognizer()
     let backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     let tap = UITapGestureRecognizer()
     let infoButton = UIButton()
     let infoTitle = ""
     let infoDetail = ""
     var action = {}
-    //myView.addGestureRecognizer(tap)
     
     
     @objc func handleTap(_ sender: UIGestureRecognizer) {
@@ -29,13 +28,13 @@ class ErrorView: UIView, UIGestureRecognizerDelegate {
         
     }
     
-    @objc func handleSwipes(_ sender: UIGestureRecognizer) {
-        
-        print("handleSwipes")
-     
-        hide()
-        
-    }
+//    @objc func handleSwipes(_ sender: UIGestureRecognizer) {
+//
+//        print("handleSwipes")
+//
+//        hide()
+//
+//    }
     
     func hide() {
         
@@ -85,23 +84,19 @@ class ErrorView: UIView, UIGestureRecognizerDelegate {
         tap.delegate = self
         //tap.cancelsTouchesInView = false
         self.isUserInteractionEnabled = true
-        upSwipe.direction = .up
-        upSwipe.addTarget(self, action: #selector(handleSwipes(_:)))
-        //backgroundView.addGestureRecognizer(self.upSwipe)
-        //tap.addTarget(target: self, action: #selector(self.handleTap(_:)))
+        //upSwipe.direction = .up
+        //upSwipe.addTarget(self, action: #selector(handleSwipes(_:)))
         tap.addTarget(self, action: #selector(self.handleTap(_:)))
         backgroundView.addGestureRecognizer(self.tap)
         
-        let width = vc.view.frame.width
+        let width = vc.view.frame.width - 32
         
         backgroundView.frame = CGRect(x: 0,
                                       y: -61,
-                                      width: width,
+                                      width: vc.view.frame.width,
                                       height: 61)
         
         backgroundView.alpha = 0
-        
-        
         
         if isError {
             
@@ -115,7 +110,7 @@ class ErrorView: UIView, UIGestureRecognizerDelegate {
         
         errorLabel.frame = CGRect(x: 16,
                                   y: -61,
-                                  width: width - 32,
+                                  width: width,
                                   height: 61)
         
         errorLabel.font = UIFont.systemFont(ofSize: 12)
@@ -123,7 +118,7 @@ class ErrorView: UIView, UIGestureRecognizerDelegate {
         errorLabel.numberOfLines = 0
         errorLabel.textAlignment = .left
         
-        infoButton.frame = CGRect(x: errorLabel.frame.maxX - 30, y: (errorLabel.frame.height / 2) - 10, width: 20, height: 20)
+        infoButton.frame = CGRect(x: backgroundView.frame.maxX - 30, y: (backgroundView.frame.height / 2) - 10, width: 20, height: 20)
         infoButton.target(forAction: #selector(showInfo), withSender: self)
         
         if isError {
@@ -141,57 +136,42 @@ class ErrorView: UIView, UIGestureRecognizerDelegate {
             
         }
         
-        errorLabel.addSubview(infoButton)
+        //errorLabel.addSubview(infoButton)
         
         backgroundView.contentView.addSubview(errorLabel)
+        backgroundView.contentView.addSubview(infoButton)
         
         vc.view.addSubview(backgroundView)
         
-        //let imageView = UIImageView()
-        //imageView.backgroundColor = UIColor.clear
-        //imageView.image = UIImage(named: "Image-12")
+        var y = CGFloat()
+        
+        if vc.navigationController != nil {
+            
+            y = vc.navigationController!.navigationBar.frame.maxY
+            
+        } else {
+            
+            y = 0
+            
+        }
         
         UIView.animate(withDuration: 0.3, animations: {
             
             self.backgroundView.alpha = 1
             
-            if vc.navigationController != nil {
-                
-                self.backgroundView.frame = CGRect(x: 0,
-                                                   y: 61,
-                                                   width: width,
-                                                   height: 61)
-                
-                self.errorLabel.frame = CGRect(x: 16,
-                                               y: 0,
-                                               width: width,
+            self.backgroundView.frame = CGRect(x: 0,
+                                               y: y,
+                                               width: vc.view.frame.width,
                                                height: 61)
-                
-            } else {
-               
-                self.backgroundView.frame = CGRect(x: 0,
-                                                   y: 0,
-                                                   width: width,
-                                                   height: 61)
-                
-                self.errorLabel.frame = CGRect(x: 16,
-                                               y: 0,
-                                               width: width,
-                                               height: 61)
-                
-            }
+            
+            self.errorLabel.frame = CGRect(x: 16,
+                                           y: 0,
+                                           width: width,
+                                           height: 61)
             
         }) { _ in
             
             DispatchQueue.main.async {
-                
-                //imageView.alpha = 0.2
-//                imageView.frame = CGRect(x: self.errorLabel.frame.midX - 15,
-//                                         y: self.errorLabel.frame.maxY - 18,
-//                                         width: 20,
-//                                         height: 20)
-                
-                //self.errorLabel.addSubview(imageView)
                 
                 self.impact.impactOccurred()
                 
