@@ -1367,8 +1367,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        return 30
-        
+        if section <= 3 {
+            
+            return 30
+            
+        } else {
+            
+            return 10
+            
+        }
+                
     }
     
     private func walletCellHeight() -> CGFloat {
@@ -1938,23 +1946,33 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                 
                 DispatchQueue.main.async {
                     
-                    if self.transactionArray.count > 0 {
-
-                        for (i, _) in self.transactionArray.enumerated() {
-
-                            self.reloadSections([i + 3])
-
-                        }
-                        //self.mainMenu.reloadData()
-
-                    } else {
-
-                        self.reloadSections([3])
-
-                    }
-                    //self.mainMenu.reloadData()
+//                    if self.transactionArray.count > 0 {
+//
+//                        for (i, _) in self.transactionArray.enumerated() {
+//
+//                            self.reloadSections([i + 3])
+//
+//                            if i + 1 == self.transactionArray.count {
+//
+//                                self.impact()
+//                                self.loadNodeData()
+//
+//                            }
+//
+//                        }
+//
+//                    } else {
+//
+//                        self.reloadSections([3])
+//                        self.impact()
+//                        self.loadNodeData()
+//
+//                    }
+                    
                     self.impact()
+                    self.mainMenu.reloadData()
                     self.loadNodeData()
+                    
                     
                 }
                 
@@ -1988,23 +2006,24 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                 
                 DispatchQueue.main.async {
                     
-                    if self.transactionArray.count > 1 {
-                        
-                        for (i, _) in self.transactionArray.enumerated() {
-                            
-                            self.reloadSections([i + 3])
-                            
-                        }
-                        
-                        //
-                        self.mainMenu.reloadData()
-                        
-                    } else {
-                        
-                        self.reloadSections([3])
-                        
-                    }
+//                    if self.transactionArray.count > 1 {
+//
+//                        for (i, _) in self.transactionArray.enumerated() {
+//
+//                            self.reloadSections([i + 3])
+//
+//                        }
+//
+//                        //
+//                        self.mainMenu.reloadData()
+//
+//                    } else {
+//
+//                        self.reloadSections([3])
+//
+//                    }
                     
+                    self.mainMenu.reloadData()
                     self.impact()
                     
                 }
