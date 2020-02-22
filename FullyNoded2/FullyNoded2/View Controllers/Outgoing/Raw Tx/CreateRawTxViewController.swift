@@ -596,6 +596,19 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        
+        amount = ""
+        addressInput.text = ""
+        outputs.removeAll()
+        outputArray.removeAll()
+        outputsString = ""
+        outputsTable.reloadData()
+        rawTxSigned = ""
+        outputsTable.alpha = 0
+        
+    }
+    
     //MARK: Helpers
     
     func rounded(number: Double) -> Double {
@@ -708,6 +721,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     func createMultiSig(wallet: WalletStruct) {
+        print("createMultiSig")
         
         var amount = Double()
         for output in outputArray {
@@ -749,13 +763,18 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     func createSingleSig() {
+        print("createSingleSig")
         
         let builder = SingleSigBuilder()
-        builder.build(outputs: outputs) { (signedTx, errorDescription) in
+        builder.build(outputs: outputs) { (signedTx, psbt, errorDescription) in
             
             if signedTx != nil {
                 
                 self.confirm(raw: signedTx!)
+                
+            } else if psbt != nil {
+                
+                self.confirmUnsigned(psbt: psbt!)
                 
             } else {
                 

@@ -139,7 +139,7 @@ class ImportViewController: UIViewController, UINavigationControllerDelegate {
         
         connectingView.addConnectingView(vc: self, description: "creating custom wallet")
         
-        let importWallet = ImportColdMultiSigDescriptor()
+        let importWallet = ImportCustomDescriptor()
         importWallet.create(descriptor: url) { (success, error, errorDescription) in
             
             if !error && success {

@@ -116,6 +116,18 @@ class Reducer {
                             
                         }
                         
+                    } else if torRPC.errorDescription.contains("Could not connect to server") {
+                        
+                        print("restarting tor")
+                        
+                        TorClient.sharedInstance.start {
+                            
+                            self.torRPC.executeRPCCommand(walletName: walletName, method: command,
+                                                          param: param,
+                                                          completion: getResult)
+                            
+                        }
+                        
                     } else {
                         
                         errorBool = true
