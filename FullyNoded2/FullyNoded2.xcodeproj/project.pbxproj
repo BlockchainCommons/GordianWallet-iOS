@@ -1353,7 +1353,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FullyNoded2.app/FullyNoded2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FullyNoded 2.app/FullyNoded 2";
 			};
 			name = Debug;
 		};
@@ -1376,7 +1376,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FullyNoded2.app/FullyNoded2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FullyNoded 2.app/FullyNoded 2";
 			};
 			name = Release;
 		};

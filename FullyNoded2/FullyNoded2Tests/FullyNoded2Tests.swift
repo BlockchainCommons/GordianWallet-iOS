@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import FullyNoded2
+@testable import FullyNoded_2
 
 class FullyNoded2Tests: XCTestCase {
 
