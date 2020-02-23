@@ -81,7 +81,7 @@ class OfflineSignerP2SHSegwit {
                 let bip32derivs = inputMetaDataArray[i]["bip32_derivs"] as! NSArray
                 let bip32derivsDict = bip32derivs[0] as! NSDictionary
                 let path = bip32derivsDict["path"] as! String
-                let index = Int(path.split(separator: "/")[1])!
+                //let index = Int(path.split(separator: "/")[1])!
                 
 //                let pubkeyString = bip32derivsDict["pubkey"] as! String
 //                let pubkeyData = Data.init(pubkeyString)!
@@ -89,38 +89,41 @@ class OfflineSignerP2SHSegwit {
                 
                 let keyfetcher = KeyFetcher()
                 
-                keyfetcher.key(index: index) { (key, error) in
+                if let bip32Path = BIP32Path(path) {
                     
-                    if !error {
+                    keyfetcher.key(path: bip32Path) { (key, error) in
                         
-                        
-                        let witness = Witness(.payToScriptHashPayToWitnessPubKeyHash(key!.pubKey))
-                        let input = TxInput(Transaction(txid)!, vout, amount, nil, witness, scriptPubKey)!
-                        inputsToSign.append(input)
-                        privKeys.append(key!)
-                        
-                        if i + 1 == vins.count {
+                        if !error {
                             
-                            var transaction = Transaction(inputsToSign, outputsToSend)
-                            let signedTx = transaction.sign(privKeys)
+                            let witness = Witness(.payToScriptHashPayToWitnessPubKeyHash(key!.pubKey))
+                            let input = TxInput(Transaction(txid)!, vout, amount, nil, witness, scriptPubKey)!
+                            inputsToSign.append(input)
+                            privKeys.append(key!)
                             
-                            if signedTx {
+                            if i + 1 == vins.count {
                                 
-                                completion(transaction.description!)
+                                var transaction = Transaction(inputsToSign, outputsToSend)
+                                let signedTx = transaction.sign(privKeys)
                                 
-                            } else {
-                                
-                                print("failed signing")
-                                completion(nil)
-                                
+                                if signedTx {
+                                    
+                                    completion(transaction.description!)
+                                    
+                                } else {
+                                    
+                                    print("failed signing")
+                                    completion(nil)
+                                    
+                                }
+                                                            
                             }
-                                                        
+                                                   
+                        } else {
+                            
+                            print("error fetching key for offline signing")
+                            completion(nil)
+                            
                         }
-                                               
-                    } else {
-                        
-                        print("error fetching key for offline signing")
-                        completion(nil)
                         
                     }
                     

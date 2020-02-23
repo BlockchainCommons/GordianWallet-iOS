@@ -7,11 +7,13 @@
 //
 
 import Foundation
+import LibWally
 
 class GetPrivateKeys {
     
     var index = Int()
-    var indexarray = [Int]()
+    //var indexarray = [Int]()
+    var pathArray = [BIP32Path]()
     
     func getKeys(addresses: [String], completion: @escaping (([String]?)) -> Void) {
         
@@ -24,23 +26,34 @@ class GetPrivateKeys {
                 
                 if !reducer.errorBool {
                     
-                    self.index += 1
+                    //self.index += 1
                     let result = reducer.dictToReturn
                     
                     if let hdkeypath = result["hdkeypath"] as? String {
                         
-                        let arr = hdkeypath.components(separatedBy: "/")
-                        indexarray.append(Int(arr[1])!)
-                        getAddressInfo(addresses: addresses)
+                        //let arr = hdkeypath.components(separatedBy: "/")
+                        //indexarray.append(Int(arr[1])!)
+                        if let path = BIP32Path(hdkeypath) {
+                            
+                            pathArray.append(path)
+                            getAddressInfo(addresses: addresses)
+                            
+                        } else {
+                            
+                            print("error converting path")
+                            completion((nil))
+                            
+                        }
                         
                     } else {
                         
                         if let desc = result["desc"] as? String {
                             
-                            let arr = desc.components(separatedBy: "/")
-                            let index = (arr[1].components(separatedBy: "]"))[0]
-                            indexarray.append(Int(index)!)
-                            getAddressInfo(addresses: addresses)
+//                            let arr = desc.components(separatedBy: "/")
+//                            let index = (arr[1].components(separatedBy: "]"))[0]
+//                            indexarray.append(Int(index)!)
+//                            getAddressInfo(addresses: addresses)
+                            print("getprivatekeys.swift what are we doing here??")
                             
                         }
                         
@@ -73,17 +86,17 @@ class GetPrivateKeys {
                 // loop is finished get the private keys
                 let keyfetcher = KeyFetcher()
                 
-                for (i, keypathint) in indexarray.enumerated() {
+                for (i, path) in pathArray.enumerated() {
                     
-                    let int = Int(keypathint)
+                    //let int = Int(keypathint)
                     
-                    keyfetcher.privKey(index: int) { (privKey, error) in
+                    keyfetcher.privKey(path: path) { (privKey, error) in
                         
                         if !error {
                             
                             privkeyarray.append(privKey!)
                             
-                            if i == self.indexarray.count - 1 {
+                            if i == self.pathArray.count - 1 {
                                 
                                 completion(privkeyarray)
                                 

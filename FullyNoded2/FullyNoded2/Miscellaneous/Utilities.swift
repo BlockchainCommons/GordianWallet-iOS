@@ -33,6 +33,7 @@ public extension UIButton {
 extension Notification.Name {
     public static let torConnecting = Notification.Name(rawValue: "torConnecting")
     public static let didEnterForeground = Notification.Name(rawValue: "enteredForeground")
+    public static let didStartBootstrappingTor = Notification.Name(rawValue: "didStartBootstrappingTor")
 }
 
 extension Int {

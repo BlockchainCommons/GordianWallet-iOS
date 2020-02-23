@@ -75,23 +75,27 @@ class MultiSigTxBuilder {
                         let bip32derivs = dict["bip32_derivs"] as! NSArray
                         let bip32deriv = bip32derivs[0] as! NSDictionary
                         let path = bip32deriv["path"] as! String
-                        let index = Int((path.split(separator: "/"))[1])!
+                        //let index = Int((path.split(separator: "/"))[1])!
                         let keyFetcher = KeyFetcher()
-                        keyFetcher.privKey(index: index) { (privKey, error) in
+                        if let bip32path = BIP32Path(path) {
                             
-                            if !error {
+                            keyFetcher.privKey(path: bip32path) { (privKey, error) in
                                 
-                                privateKeys.append(privKey!)
-                                
-                                if i + 1 == inputs.count {
+                                if !error {
                                     
-                                    signPsbt(psbt: psbt, privateKeys: privateKeys)
+                                    privateKeys.append(privKey!)
+                                    
+                                    if i + 1 == inputs.count {
+                                        
+                                        signPsbt(psbt: psbt, privateKeys: privateKeys)
+                                        
+                                    }
+                                    
+                                } else {
+                                    
+                                    completion((nil, nil, "Error fetching private key"))
                                     
                                 }
-                                
-                            } else {
-                                
-                                completion((nil, nil, "Error fetching private key"))
                                 
                             }
                             

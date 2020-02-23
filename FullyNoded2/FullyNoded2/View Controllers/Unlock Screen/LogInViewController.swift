@@ -18,7 +18,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate, ASAuthorizatio
         super.viewDidLoad()
 
         view.backgroundColor = .black
-        let logInButton = ASAuthorizationAppleIDButton()
+        let logInButton = ASAuthorizationAppleIDButton(type: .signIn, style: .whiteOutline)
         logInButton.sizeToFit()
         logInButton.addTarget(self, action: #selector(handleLogInWithAppleID), for: .touchUpInside)
         logInButton.frame = CGRect(x: 32, y: 100, width: view.frame.width - 64, height: 80)

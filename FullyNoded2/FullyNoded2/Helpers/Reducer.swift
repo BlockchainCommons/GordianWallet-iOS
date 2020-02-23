@@ -93,6 +93,8 @@ class Reducer {
                     
                 } else {
                     
+                    print("torRPC.errorDescription = \(torRPC.errorDescription)")
+                    
                     if torRPC.errorDescription.contains("Requested wallet does not exist or is not loaded") {
                         
                         errorDescription = ""

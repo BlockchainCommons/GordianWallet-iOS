@@ -11,6 +11,7 @@ import KeychainSwift
 
 class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate {
     
+    var bootStrapping = Bool()
     var showNodeInfo = Bool()
     var torCellIndex = Int()
     var walletCellIndex = Int()
@@ -63,7 +64,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var walletSectionLoaded = Bool()
     var torSectionLoaded = Bool()
     let spinner = UIActivityIndicatorView(style: .medium)
-    var refreshButton = UIBarButtonItem()
     var dataRefresher = UIBarButtonItem()
     var wallets = NSArray()
     let label = UILabel()
@@ -80,8 +80,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         mainMenu.delegate = self
         tabBarController?.delegate = self
         navigationController?.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(self.notificationReceived(_:)), name: .torConnecting, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.foregroundNotificationReceived(_:)), name: .didEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived(_:)), name: .torConnecting, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(foregroundNotificationReceived(_:)), name: .didEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(torBootStrapping(_:)), name: .didStartBootstrappingTor, object: nil)
         initialLoad = true
         walletSectionLoaded = false
         torSectionLoaded = false
@@ -125,11 +126,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
         }
-        
-        let p = DescriptorParser()
-        let s = p.descriptor("wpkh(tpubDEVbsU2HhhyMWRfMiX4gEJRk9e5V19V6n9RwmhE9oP6QtkU2pSR8c4GHxV2WBX36TSyjx9kcA89fAnm4QVGJRbchXSx9iBBAvvUDRCgaLDY/*)")
-        print("s.ismulti = \(s.isMulti)")
-        
                 
     }
     
@@ -145,33 +141,31 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    @objc func torBootStrapping(_ notification: Notification) {
+        print("torBootStrapping")
+        
+        bootStrapping = true
+        addStatusLabel(description: "     Bootstrapping Tor...")
+        reloadSections([torCellIndex])
+        
+    }
+    
     
     @objc func notificationReceived(_ notification: Notification) {
         print("notificationReceived TorConnected")
         
-        self.torConnected = true
-        self.reloadSections([1])
+        bootStrapping = false
+        torConnected = true
+        reloadSections([torCellIndex])
         didAppear()
 
     }
     
+    // We can ignore this now as we are no longer force resigning tor when the app enters the background. It may be used again as tor reconnection is an ongoing issue.
     @objc func foregroundNotificationReceived(_ notification: Notification) {
         print("foreground NotificationReceived")
         
-//        if UIDevice.modelName != "iPhone 11 pro max" && UIDevice.modelName != "Simulator iPhone 11 pro max" {
-//
-//            self.torConnected = false
-//            self.reloadSections([1])
-//
-//        } else {
-//
-//            if !initialLoad {
-//
-//                showAlert(vc: self, title: "Alert", message: "There is a known issue when refreshing the Tor connection on iPhone 11 Pro Max, we are working on a fix, in the meantime you may need to force close the app and reopen to reconnect Tor manually if you experience any issues.")
-//
-//            }
-//
-//        }
+
 
     }
     
@@ -222,8 +216,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         print("didappear")
                 
         DispatchQueue.main.async {
-            
-            //self.reloadSections([1])
             
             self.enc.getNode { (node, error) in
                 
@@ -389,6 +381,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let keysOnNodeDescription = cell.viewWithTag(25) as! UILabel
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
         
+        coldBalanceLabel.isUserInteractionEnabled = true
+        let tap = UIGestureRecognizer()
+        tap.addTarget(self, action: #selector(switchBalances(_:)))
+        
         nodeView.layer.cornerRadius = 8
         
         if isRefreshingZero {
@@ -497,6 +493,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let offlineXprvLabel = cell.viewWithTag(22) as! UILabel
         let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
+        
+        coldBalanceLabel.isUserInteractionEnabled = true
+        let tap = UIGestureRecognizer()
+        tap.addTarget(self, action: #selector(switchBalances(_:)))
         
         if isRefreshingZero {
             
@@ -608,6 +608,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let keysOnNodeLabel = cell.viewWithTag(26) as! UILabel
         let confirmedIcon = cell.viewWithTag(27) as! UIImageView
         
+        coldBalanceLabel.isUserInteractionEnabled = true
+        let tap = UIGestureRecognizer()
+        tap.addTarget(self, action: #selector(switchBalances(_:)))
+        
         nodeView.layer.cornerRadius = 8
         
         if isRefreshingZero {
@@ -680,16 +684,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             seedOnDeviceLabel.text = "\(node.label) is Hot"
             keysOnNodeLabel.text = "2,000 private keys on \(node.label)"
             watchIcon.image = UIImage(systemName: "pencil.and.ellipsis.rectangle")
-            cell.backgroundColor = #colorLiteral(red: 0.3451878428, green: 0.0757862553, blue: 0.05608722568, alpha: 1)
-            nodeView.backgroundColor = #colorLiteral(red: 0.3920713854, green: 0.08131650479, blue: 0.04822516962, alpha: 1)
             
         } else {
             
             seedOnDeviceLabel.text = "\(node.label) is Cold"
             keysOnNodeLabel.text = "2,000 public keys on \(node.label)"
             watchIcon.image = UIImage(systemName: "eye")
-            cell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
-            nodeView.backgroundColor = #colorLiteral(red: 0, green: 0.1491778237, blue: 0.3231337072, alpha: 1)
             
         }
         
@@ -800,13 +800,25 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         } else {
             
-            torStatusLabel.text = "disconnected..."
-            torActiveCircle.tintColor = .systemRed
-            connectionStatusLabel.text = "disconnected..."
-            
-            spinner.stopAnimating()
-            spinner.alpha = 0
-            infoButton.alpha = 1
+            if bootStrapping {
+                
+                spinner.startAnimating()
+                spinner.alpha = 1
+                infoButton.alpha = 0
+                torStatusLabel.text = "bootstrapping..."
+                torActiveCircle.tintColor = .systemOrange
+                
+            } else {
+                
+                torStatusLabel.text = "disconnected..."
+                torActiveCircle.tintColor = .systemRed
+                connectionStatusLabel.text = "disconnected..."
+                
+                spinner.stopAnimating()
+                spinner.alpha = 0
+                infoButton.alpha = 1
+                
+            }
             
         }
         
@@ -1082,11 +1094,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             case "DEFAULT":
                 return defaultWalletCell(indexPath)
                 
-            // Multi sig cell
+            // Multi sig wallet
             case "MULTI":
                 return multiWalletCell(indexPath)
                 
-            // Custom cell (can be antyhing the user imports), to parse it we use the DescriptorParser.swift
+            // Custom wallet (can be antyhing the user imports), to parse it we use the DescriptorParser.swift
             case "CUSTOM":
                 return customWalletCell(indexPath)
                 
@@ -1240,7 +1252,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let refreshButton = UIButton()
         let image = UIImage(systemName: "arrow.clockwise")
         refreshButton.setImage(image, for: .normal)
-        refreshButton.tintColor = .systemBlue
+        refreshButton.tintColor = .white
         refreshButton.tag = section
         refreshButton.addTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
         
@@ -1253,8 +1265,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if torSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-                textLabel.frame = CGRect(x: refreshButton.frame.maxX + 5, y: 0, width: 200, height: 30)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
                 
@@ -1271,8 +1283,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if walletSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-                textLabel.frame = CGRect(x: refreshButton.frame.maxX + 5, y: 0, width: 200, height: 30)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
                 
@@ -1289,8 +1301,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if nodeSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-                textLabel.frame = CGRect(x: refreshButton.frame.maxX + 5, y: 0, width: 200, height: 30)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
                 
@@ -1307,8 +1319,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if transactionsSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-                textLabel.frame = CGRect(x: refreshButton.frame.maxX + 5, y: 0, width: 200, height: 30)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
                 
@@ -1511,6 +1523,32 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    @objc func switchBalances(_ sender: UILabel) {
+                
+        if sender.text != "" {
+            
+            if sender.text!.contains("$") {
+                
+                DispatchQueue.main.async {
+                    
+                    sender.text = self.coldBalance
+                    
+                }
+                                
+            } else {
+                
+                DispatchQueue.main.async {
+                    
+                    sender.text = self.fiatBalance
+                    
+                }
+                
+            }
+            
+        }
+                    
+    }
+    
     private func impact() {
         
         let impact = UIImpactFeedbackGenerator()
@@ -1694,9 +1732,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 self.walletSectionLoaded = true
                 self.isRefreshingZero = false
                 self.reloadSections([self.walletCellIndex])
-                
                 self.impact()
-                
                 self.getDirtyFiatBalance()
                 
             }
@@ -1710,7 +1746,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if self.node != nil {
             
             reloadSections([self.torCellIndex])
-            updateLabel(text: "     Getting Tor network data...")
+            updateLabel(text: "     Getting Tor network data from your node...")
             nodeLogic.loadTorData {
                 
                 if !self.nodeLogic.errorBool {
