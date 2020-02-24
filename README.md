@@ -1,10 +1,10 @@
 # FullyNoded 2
 
-FullyNoded 2 is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to your own Bitcoin full node (bitcoind installed using either Bitcoin Standup [MacOS](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS), [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts) or to a number of full node boxes like [Nodl](https://www.nodl.it/), [Rasbiblitz](https://github.com/rootzoll/raspiblitz), or for use with fullnode services like BTCpay [https://btcpayserver.org/]).
+FullyNoded 2 is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to your own Bitcoin full node (bitcoind installed using either Bitcoin Standup [MacOS](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS), [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts) or to a number of full node boxes like [Nodl](https://www.nodl.it/), [Rasbiblitz](https://github.com/rootzoll/raspiblitz), or for use with fullnode services like [BTCpay](https://btcpayserver.org/]).
 
 FullyNoded 2 allows for multiple wallet templates including legacy, segwit compatible, and segwit native hot wallets using a single signature (seed on iOS device), or a warm wallet using multisig (seed on iOS device, keys on full node, offline seed, etc.), as well  leverage PSBTs (Partially Signed Bitcoin Transactions) for  a number of cold wallet templates such as cold offline seeds, third-party collaborative custody services, and various air-gapped hardware solutions using QR codes. FullyNoded 2 can support potentially almost anything that can be described by a [bitcoind descriptor](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md).
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/homescreen_musig.png" alt="FullyNoded 2 app Home Screen" width="250"/>
+<img src="./Images/homescreen_musig.png" alt="FullyNoded 2 app Home Screen" width="250"/>
 
 ## Status — Late Alpha
 
