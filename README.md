@@ -26,25 +26,25 @@ Upon on initial use the user may choose to connect to their own node by scanning
 
 Once you are connected to a node you may go to the "Wallets" tab and create either a Single-Sig, Multi-Sig or import a wallet (recovery is under development):
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/createWallet.PNG" alt="" width="250"/>
+<img src="./Images/createWallet.PNG" alt="" width="250"/>
 
 After creating a wallet you will see it on the "Wallets" page:
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/wallets.PNG" alt="" width="250"/>
+<img src="./Images/wallets.PNG" alt="" width="250"/>
 
 You can activate/deactivate wallets by toggling them, when you have an active wallet your home screen will look like this:
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/home.PNG" alt="" width="250"/>
+<img src="./Images/home.PNG" alt="" width="250"/>
 
 You may expand the cells to show more info about your Tor connection and Wallet by tapping the info buttons:
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/expanded.PNG" alt="" width="250"/>
+<img src="./Images/expanded.PNG" alt="" width="250"/>
 
 ### Everyday use
 
 Currently the app is fully capable of creating and locally signing PSBT's with either multisig or single signature wallets. It also builds unsigned PSBT's for watch-only wallets which can be passed to external signers such as [Hermit](https://github.com/unchained-capital/hermit/blob/master/hermit) or [Coldcard](https://coldcardwallet.com).
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/unsigned1.PNG" alt="" width="250"/>
+<img src="./Images/unsigned1.PNG" alt="" width="250"/>
 
 *FullyNoded 2* transaction flow:
 
@@ -56,7 +56,7 @@ Currently the app is fully capable of creating and locally signing PSBT's with e
 - if the transaction is fully signed you can broadcast by tapping the play button
 - if the transaction is still partially signed or unsigned at all you may export it for external signing (it will show blue), currently *FullyNoded 2* will export the psbt in raw data fromat which is fully compatible with Coldcard Wallet
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/unsigned2.PNG" alt="" width="250"/>
+<img src="./Images/unsigned2.PNG" alt="" width="250"/>
 
 The app also offers coin control, fee optimization, batching and other useful tools for verifying keys and exporting backups.
 
@@ -78,9 +78,9 @@ The reason we use descriptors are because they are human readable, unambigous bi
 
 *FullyNoded 2* allows you to export the seed which is stored on your device at anytime in the form of a 12 word BIP39 mnemonic, a public key descriptor, private key descriptor and even the verbatim rpc command `importmulti` which can be copied and pasted into your nodes terminal to recover your wallets seed.
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/export1.PNG" alt="" width="250"/>
+<img src="./Images/export1.PNG" alt="" width="250"/>
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/export2.PNG" alt="" width="250"/>
+<img src="./Images/export2.PNG" alt="" width="250"/>
 
 ### Wishlist
 
@@ -190,8 +190,8 @@ You can import a key by running the following command with that individual’s f
 
 ### Copyright & License
 
-This code in this repository is Copyright © 2019 by Blockchain Commons, LLC, and is [licensed](https://github.com/BlockchainCommons/FullyNoded-2/blob/master/LICENSE) under the [spdx:BSD-2-Clause Plus Patent License](https://spdx.org/licenses/BSD-2-Clause-Patent.html).
+This code in this repository is Copyright © 2019 by Blockchain Commons, LLC, and is [licensed](./LICENSE) under the [spdx:BSD-2-Clause Plus Patent License](https://spdx.org/licenses/BSD-2-Clause-Patent.html).
 
 ### Contributing
 
-We encourage public contributions through issues and pull-requests! Please review [CONTRIBUTING.md](https://github.com/BlockchainCommons/FullyNoded-2/blob/master/CONTRIBUTING.md) for details on our development process. All contributions to this repository require a GPG signed [Contributor License Agreement](https://github.com/BlockchainCommons/FullyNoded-2/blob/master/CLA.md).
+We encourage public contributions through issues and pull-requests! Please review [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our development process. All contributions to this repository require a GPG signed [Contributor License Agreement](./CLA.md).
