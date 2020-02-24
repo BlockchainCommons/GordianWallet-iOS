@@ -1,16 +1,20 @@
 # FullyNoded 2
 
-<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/homescreen_musig.png" alt="" width="250"/>
+FullyNoded 2 is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to your own Bitcoin full node (bitcoind installed using either Bitcoin Standup [MacOS](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS), [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts) or to a number of full node boxes like [Nodl](https://www.nodl.it/), [Rasbiblitz](https://github.com/rootzoll/raspiblitz), or for use with fullnode services like BTCpay [https://btcpayserver.org/]).
 
-## Status
+FullyNoded 2 allows for multiple wallet templates including legacy, segwit compatible, and segwit native hot wallets using a single signature (seed on iOS device), or a warm wallet using multisig (seed on iOS device, keys on full node, offline seed, etc.), as well  leverage PSBTs (Partially Signed Bitcoin Transactions) for  a number of cold wallet templates such as cold offline seeds, third-party collaborative custody services, and various air-gapped hardware solutions using QR codes. FullyNoded 2 can support potentially almost anything that can be described by a [bitcoind descriptor](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md).
 
-*FullyNoded 2* is currently under active development and in the early testing phase. It should only be used on testnet for now.
+<img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/homescreen_musig.png" alt="FullyNoded 2 app Home Screen" width="250"/>
 
-*FullyNoded 2* is designed to work with the [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) and [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts), but will work with any properly configured Bitcoin Core 0.19.0.1 node with a hidden service controlling `rpcport` via localhost. Supporting nodes are [Nodl](https://www.nodl.it/), [BTCPayServer](https://btcpayserver.org) and [RaspiBlitz](https://github.com/rootzoll/raspiblitz), these nodes can be connected by clicking a link or scanning a qr code. Please refer to their telegram groups for simple instructions: 
+## Status — Late Alpha
+
+*FullyNoded 2* is currently under active development and in  late alpha testing phase. It should only be used on Bitcoin testnet for now.
+
+*FullyNoded 2* is designed to work with the [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) or one of a number of [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts), but will work with any properly configured Bitcoin Core 0.19.0.1 node with a hidden service controlling `rpcport` via localhost. Supporting nodes are [Nodl](https://www.nodl.it/), [RaspiBlitz](https://github.com/rootzoll/raspiblitz), or full nodes installed by other services such as [BTCPayServer](https://btcpayserver.org). These full nodes can be connected by clicking a link or scanning a QR code. Please refer to their telegram groups for simple instructions:
 
 - [Nodl Telegram](https://t.me/nodl_support)
-- [BTCPayServer](https://t.me/btcpayserver)
 - [RaspiBlitz Telegram](https://t.me/raspiblitz)
+- [BTCPayServer](https://t.me/btcpayserver)
 
 ## Testflight
 
@@ -42,7 +46,7 @@ Currently the app is fully capable of creating and locally signing PSBT's with e
 
 <img src="https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Images/unsigned1.PNG" alt="" width="250"/>
 
-*FullyNoded 2* transaction flow: 
+*FullyNoded 2* transaction flow:
 
 - creates the psbt with your node
 - signs the psbt with your node (if it can)
@@ -62,7 +66,7 @@ Single signature wallets take a unique approach in that a new wallet is created 
 
 ### Multi-Signature
 
-By default *FullyNoded 2* will create a 2 of 3 mutlisignature wallet whereby all three seeds are created locally. One seed is converted to BIP39 words for the user to record securely for recovery purposes and then deleted forever from the device. The app will then create a wallet on your node and utilizes the `importmulti` command to import 2,000 BIP84 private keys to your nodes wallet so that it may sign for one of the two required signatures. The third seed is saved locally to your device as a BIP39 mnemonic. When it comes to spending again we utilize `walletcreatefundedpsbt` on your node to handle coin selection, and fee optimization. Your node will then sign the psbt and pass it to the app at which time the app will sign for the second signature locally. With this set up a user may lose either their node, device or the BIP39 back up recovery words and still be able to spend their bitcoin. In a future release the app will allow multiple levels of security including 2fa and wallet.dat encryption which would mean even if an attacker got hold of your device they would *also* need your decryption password to spend funds.
+By default *FullyNoded 2* will create a 2 of 3 mutlisignature wallet whereby all three seeds are created locally. One seed is converted to BIP39 words for the user to record securely for recovery purposes and then deleted forever from the device. The app will then create a wallet on your node and utilizes the `importmulti` command to import 2,000 BIP84 private keys to your nodes wallet so that it may sign for one of the two required signatures. The third seed is saved locally to your device as a BIP39 mnemonic. When it comes to spending again we utilize `walletcreatefundedpsbt` on your node to handle coin selection, and fee optimization. Your node will then sign the psbt and pass it to the app at which time the app will sign for the second signature locally. With this set up a user may lose either their node, device or the BIP39 back up recovery words and still be able to spend their Bitcoin. In a future release the app will allow multiple levels of security including 2fa and wallet.dat encryption which would mean even if an attacker got hold of your device they would *also* need your decryption password to spend funds.
 
 ### Importing a Wallet
 
@@ -96,7 +100,7 @@ The reason we use descriptors are because they are human readable, unambigous bi
   - [x] Multisig
   - [x] Cold storage
   - [x] Multiwalletrpc
-  
+
 - [ ] Security
   - [x] Seed created with Apple's cryptographically secure random number generator
   - [x] Seed encrypted with a private key stored on the devices keychain which is itself encrypted
@@ -104,11 +108,11 @@ The reason we use descriptors are because they are human readable, unambigous bi
   - [x] Tor V3 Authentication
   - [ ] Passphrase support
   - [ ] Wallet.dat encryption (work in progress)
-  - [ ] Disable all networking before importing/exporting seed 
+  - [ ] Disable all networking before importing/exporting seed
   - [ ] Automated Tor authentication
   - [ ] 2FA
   - [ ] Add local authentication via biometrics/pin/password (work in progress)
- 
+
 - [ ] Compatible Nodes
   - [x] Your own Bitcoin Core node
   - [x] MacOS - [StandUp.app](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS)
@@ -123,7 +127,7 @@ The reason we use descriptors are because they are human readable, unambigous bi
 ### Requirements
 
 - iOS 13
-- a Bitcoin Core full-node v0.19.0.1 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service
+- A Bitcoin Core full node v0.19.0.1 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service. Your node does not need to be an archive node, thus you can save space by being setup as a pruned full node.
 
 ### Build From Source
 
@@ -161,7 +165,7 @@ The app should now run in XCode.
 
 ### Project Lead
 - Peter Denton [@Fonta1n3](https://github.com/Fonta1n3) \<fonta1n3@protonmail.com\>
-- GPG Fingerprint: 3B37 97FA 0AE8 4BE5 B440  6591 8564 01D7 121C 32FC 
+- GPG Fingerprint: 3B37 97FA 0AE8 4BE5 B440  6591 8564 01D7 121C 32FC
 
 ### Authors
 - Add your name here by getting involved, first step is to check out our [contributing section](https://github.com/BlockchainCommons/FullyNoded-2#contributing).
@@ -191,5 +195,3 @@ This code in this repository is Copyright © 2019 by Blockchain Commons, LLC, an
 ### Contributing
 
 We encourage public contributions through issues and pull-requests! Please review [CONTRIBUTING.md](https://github.com/BlockchainCommons/FullyNoded-2/blob/master/CONTRIBUTING.md) for details on our development process. All contributions to this repository require a GPG signed [Contributor License Agreement](https://github.com/BlockchainCommons/FullyNoded-2/blob/master/CLA.md).
-
-
