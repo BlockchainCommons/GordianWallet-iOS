@@ -23,19 +23,19 @@ class NativeSegwitOfflineSigner {
             
             let reducer = Reducer()
             reducer.makeCommand(walletName: wallet!.name, command: .decodepsbt, param: "\"\(unsignedTx)\"") {
-                
+
                 if !reducer.errorBool {
-                    
+
                     let decodedPSBT = reducer.dictToReturn
                     parseDecodedPSBT(psbt: decodedPSBT)
-                    
+
                 } else {
-                    
+
                     print("error decoding psbt: \(reducer.errorDescription)")
                     completion(nil)
-                    
+
                 }
-                
+
             }
             
             func parseDecodedPSBT(psbt: NSDictionary) {
@@ -75,41 +75,44 @@ class NativeSegwitOfflineSigner {
                     let amount = UInt64((witness_utxo["amount"] as! Double) * 100000000)
                     let bip32derivs = inputMetaDataArray[i]["bip32_derivs"] as! NSArray
                     let path = (bip32derivs[0] as! NSDictionary)["path"] as! String
-                    let index = Int(path.split(separator: "/")[1])!
                                     
                     let keyfetcher = KeyFetcher()
                     
-                    keyfetcher.key(index: index) { (key, error) in
+                    if let bip32path = BIP32Path(path) {
                         
-                        if !error {
+                        keyfetcher.key(path: bip32path) { (key, error) in
                             
-                            let witness = Witness(.payToWitnessPubKeyHash(key!.pubKey))
-                            let input = TxInput(Transaction(txid)!, vout, amount, nil, witness, scriptPubKey)!
-                            inputsToSign.append(input)
-                            privKeys.append(key!)
-                            
-                            if i + 1 == vins.count {
+                            if !error {
                                 
-                                var transaction = Transaction(inputsToSign, outputsToSend)
-                                let signedTx = transaction.sign(privKeys)
+                                let witness = Witness(.payToWitnessPubKeyHash(key!.pubKey))
+                                let input = TxInput(Transaction(txid)!, vout, amount, nil, witness, scriptPubKey)!
+                                inputsToSign.append(input)
+                                privKeys.append(key!)
                                 
-                                if signedTx {
+                                if i + 1 == vins.count {
                                     
-                                    completion(transaction.description!)
+                                    var transaction = Transaction(inputsToSign, outputsToSend)
+                                    let signedTx = transaction.sign(privKeys)
                                     
-                                } else {
-                                    
-                                    print("failed signing")
-                                    completion(nil)
+                                    if signedTx {
+                                        
+                                        completion(transaction.description!)
+                                        
+                                    } else {
+                                        
+                                        print("failed signing")
+                                        completion(nil)
+                                        
+                                    }
                                     
                                 }
                                 
+                            } else {
+                                
+                                print("error fetching key for offline signing")
+                                completion(nil)
+                                
                             }
-                            
-                        } else {
-                            
-                            print("error fetching key for offline signing")
-                            completion(nil)
                             
                         }
                         

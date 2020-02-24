@@ -31,8 +31,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         navigationController?.delegate = self
         walletTable.delegate = self
         walletTable.dataSource = self
-        editButton = UIBarButtonItem.init(barButtonSystemItem: .edit, target: self, action: #selector(editWallets))
-        addButton = UIBarButtonItem.init(barButtonSystemItem: .add, target: self, action: #selector(createWallet))
+        editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editWallets))
+        addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createWallet))
         self.navigationItem.setRightBarButton(addButton, animated: true)
         self.navigationItem.setLeftBarButton(editButton, animated: true)
         
@@ -94,8 +94,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     DispatchQueue.main.async {
                         
                         self.sortedWallets.remove(at: indexPath.section)
-                        tableView.deleteSections(IndexSet.init(arrayLiteral: indexPath.section), with: .fade)
-                        
+                        tableView.deleteSections(IndexSet(arrayLiteral: indexPath.section), with: .fade)
                     }
                     
                 } else {
@@ -200,9 +199,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                                 
                                                 self.sortedWallets = self.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
                                                 
-                                                DispatchQueue.main.async {
+                                                if self.sortedWallets.count == 0 {
                                                     
-                                                    self.walletTable.reloadData()
+                                                    self.createWallet()
+                                                    
+                                                } else {
+                                                    
+                                                    DispatchQueue.main.async {
+                                                        
+                                                        self.walletTable.reloadData()
+                                                        
+                                                    }
                                                     
                                                 }
                                                 
@@ -284,6 +291,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let nodeLabel = cell.viewWithTag(27) as! UILabel
         let deviceXprv = cell.viewWithTag(28) as! UILabel
         let bannerView = cell.viewWithTag(32)!
+        let nodeKeysLabel = cell.viewWithTag(33) as! UILabel
         
         if wallet.isActive {
             
@@ -340,7 +348,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         nodeView.layer.cornerRadius = 8
         stackView.layer.cornerRadius = 8
         seedOnDeviceView.layer.cornerRadius = 8
-        //seedOnNodeView.layer.cornerRadius = 8
         networkLabel.layer.cornerRadius = 8
         utxosButton.layer.cornerRadius = 8
         
@@ -366,7 +373,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             derivationLabel.text = "BIP84"
             
-            
         } else if derivation.contains("44") {
             
             derivationLabel.text = "BIP44"
@@ -377,6 +383,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
+        nodeKeysLabel.text = "holds public keys \(wallet.derivation)/0 to /1999"
         deviceXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUsed))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
@@ -472,7 +479,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             verifyAddresses.addTarget(self, action: #selector(verifyAddresses(_:)), for: .touchUpInside)
             refreshData.addTarget(self, action: #selector(refreshData(_:)), for: .touchUpInside)
             
-            
         } else {
             
             utxosButton.removeTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
@@ -536,7 +542,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         deviceXprv.text = "xprv \(wallet.derivation)"
         nodeKeys.text = "keys \(wallet.derivation)/0 to /1999"
         offlineXprv.text = "xprv \(wallet.derivation)"
-        
         updatedLabel.text = "\(formatDate(date: wallet.lastUsed))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
         walletFileLabel.text = wallet.name + ".dat"
@@ -704,22 +709,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if descStr.isHot {
                     
-                    //nodeSeedLabel.text = "\(s.label) is Hot"
                     keysOnNodeLabel.text = "2,000 private keys on \(s.label)"
-//                    cell.backgroundColor = #colorLiteral(red: 0.3412515863, green: 0.07937019594, blue: 0.06658586931, alpha: 1)
-//                    seedOnNodeView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
-//                    nodeView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
-//                    stackView.backgroundColor = #colorLiteral(red: 0.3983185279, green: 0.09264314329, blue: 0.07772091475, alpha: 1)
-//                    balanceLabel.textColor = .lightGray
                     
                 } else {
                     
-                    //nodeSeedLabel.text = "\(s.label) is Cold"
                     keysOnNodeLabel.text = "2,000 public keys on \(s.label)"
-//                    cell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
-//                    seedOnNodeView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
-//                    nodeView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
-//                    stackView.backgroundColor = #colorLiteral(red: 0, green: 0.1579723669, blue: 0.3275103109, alpha: 1)
                     
                 }
                 

@@ -79,6 +79,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+        
+        // Removes caches for security
+        let caches = (NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.cachesDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0])
+        let appId = Bundle.main.infoDictionary!["CFBundleIdentifier"] as! String
+        let path = String(format:"%@/%@/Cache.db-wal",caches, appId)
+        do {
+            try FileManager.default.removeItem(atPath: path)
+        } catch {
+           print("ERROR DESCRIPTION: \(error)")
+        }
 
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()

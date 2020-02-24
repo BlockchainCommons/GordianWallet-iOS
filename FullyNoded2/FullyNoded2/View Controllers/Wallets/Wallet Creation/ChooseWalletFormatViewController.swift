@@ -19,6 +19,7 @@ class ChooseWalletFormatViewController: UIViewController {
     var isMultiSig = Bool()
     var isSingleSig = Bool()
     var publickeys = [String]()
+    var fingerprints = [String]()
     var localSeed = Data()
     var nodesSeed = ""
     var descriptor = ""
@@ -345,7 +346,10 @@ class ChooseWalletFormatViewController: UIViewController {
                         
                         if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
                             
-                            if let path = BIP32Path(derivation) {
+                            let recoveryFingerPrint = masterKey.fingerprint.hexString
+                            self.fingerprints.append(recoveryFingerPrint)
+                            
+                            if let path = self.accountPath(derivation) {
                                 
                                 do {
                                     
@@ -414,7 +418,10 @@ class ChooseWalletFormatViewController: UIViewController {
                                 
                                 if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
                                     
-                                    if let path = BIP32Path(derivation) {
+                                    let localFingerPrint = masterKey.fingerprint.hexString
+                                    self.fingerprints.append(localFingerPrint)
+                                    
+                                    if let path = self.accountPath(derivation) {
                                         
                                         do {
                                             
@@ -492,15 +499,28 @@ class ChooseWalletFormatViewController: UIViewController {
                             
                             if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
                                 
-                                if let path = BIP32Path(derivation) {
+                                let nodesFingerPrint = masterKey.fingerprint.hexString
+                                self.fingerprints.append(nodesFingerPrint)
+                                
+                                if let path = self.accountPath(derivation) {
                                     
                                     do {
                                         
                                         let account = try masterKey.derive(path)
                                         self.publickeys.append(account.xpub)
-                                        self.nodesSeed = account.xpriv!
                                         
-                                        self.constructDescriptor(derivation: derivation)
+                                        if account.xpriv != nil {
+                                            
+                                            self.nodesSeed = account.xpriv!
+                                            self.constructDescriptor(derivation: derivation)
+                                            
+                                        } else {
+                                           
+                                            self.creatingView.removeConnectingView()
+                                            displayAlert(viewController: self, isError: true, message: "failed deriving node's xprv")
+                                            
+                                        }
+                                        
                                         
                                     } catch {
                                         
@@ -552,34 +572,46 @@ class ChooseWalletFormatViewController: UIViewController {
     
     func constructDescriptor(derivation: String) {
         
+        let recoveryKey = publickeys[0]
+        let localKey = publickeys[1]
+        let nodeKey = publickeys[2]
+        let recoveryFingerprint = fingerprints[0]
+        let localFingerprint = fingerprints[1]
+        let nodeFingerprint = fingerprints[2]
         let signatures = 2
-        
-        var processedKeys = (publickeys.description).replacingOccurrences(of: "[", with: "")
-        processedKeys = processedKeys.replacingOccurrences(of: ",", with: "/*,")
-        processedKeys = processedKeys.replacingOccurrences(of: "]", with: "/*]")
-        processedKeys = processedKeys.replacingOccurrences(of: "]", with: "")
-        processedKeys = processedKeys.replacingOccurrences(of: "\"", with: "")
         
         // MARK: TODO CHANGE MULTI TO SORTEDMULTI - NEEDS BITCOIN CORE V0.20
         
         switch derivation {
+            
+        case "m/84'/1'/0'/0":
+                                            
+            descriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/84'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/84'/1'/0']\(nodeKey)/0/*))"
+            
+        case "m/84'/0'/0'/0":
 
-        case "m/84'/1'/0'/0", "m/84'/0'/0'/0":
+            descriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/0'/0']\(recoveryKey)/0/*, [\(localFingerprint)/84'/0'/0']\(localKey)/0/*, [\(nodeFingerprint)/84'/0'/0']\(nodeKey)/0/*))"
 
-            descriptor = "wsh(multi(\(signatures),\(processedKeys)))"
+        case "m/44'/1'/0'/0":
 
-        case "m/44'/1'/0'/0", "m/44'/0'/0'/0":
+            descriptor = "sh(multi(\(signatures),[\(recoveryFingerprint)/44'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/44'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/44'/1'/0']\(nodeKey)/0/*))"
 
-            descriptor = "sh(multi(\(signatures),\(processedKeys)))"
+        case "m/44'/0'/0'/0":
 
-        case "m/49'/1'/0'/0", "m/49'/0'/0'/0":
+            descriptor = "sh(multi(\(signatures),[\(recoveryFingerprint)/44'/0'/0']\(recoveryKey)/0/*, [\(localFingerprint)/44'/0'/0']\(localKey)/0/*, [\(nodeFingerprint)/44'/0'/0']\(nodeKey)/0/*))"
 
-            descriptor = "sh(wsh(multi(\(signatures),\(processedKeys))))"
+        case "m/49'/1'/0'/0":
+
+            descriptor = "sh(wsh(multi(\(signatures),[\(recoveryFingerprint)/49'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/49'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/49'/1'/0']\(nodeKey)/0/*)))"
+
+        case "m/49'/0'/0'/0":
+            
+            descriptor = "sh(wsh(multi(\(signatures),[\(recoveryFingerprint)/49'/0'/0']\(recoveryKey)/0/*, [\(localFingerprint)/49'/0'/0']\(localKey)/0/*, [\(nodeFingerprint)/49'/0'/0']\(nodeKey)/0/*)))"
             
         default:
-
+            
             break
-
+            
         }
         
         descriptor = descriptor.replacingOccurrences(of: "\"", with: "")
@@ -668,6 +700,48 @@ class ChooseWalletFormatViewController: UIViewController {
                 print("error: \(reducer.errorDescription)")
                 
             }
+            
+        }
+        
+    }
+    
+    private func accountPath(_ derivation: String) -> BIP32Path? {
+        
+        switch derivation {
+            
+        case "m/84'/1'/0'/0":
+                                            
+            //param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/0/*)\""
+            return BIP32Path("m/84'/1'/0'")
+            
+        case "m/84'/0'/0'/0":
+            
+            //param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/0/*)\""
+            return BIP32Path("m/84'/0'/0'")
+            
+        case "m/44'/1'/0'/0":
+            
+            //param = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/0/*)\""
+            return BIP32Path("m/44'/1'/0'")
+             
+        case "m/44'/0'/0'/0":
+            
+            //param = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/0/*)\""
+            return BIP32Path("m/44'/0'/0'")
+            
+        case "m/49'/1'/0'/0":
+            
+            //param = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/0/*))\""
+            return BIP32Path("m/49'/1'/0'")
+            
+        case "m/49'/0'/0'/0":
+            
+            //param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/0/*))\""
+            return BIP32Path("m/49'/0'/0'")
+            
+        default:
+            
+            return nil
             
         }
         

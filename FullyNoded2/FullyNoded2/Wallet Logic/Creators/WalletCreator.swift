@@ -145,33 +145,56 @@ class WalletCreator {
             
             //get the xpub
             let keyFetcher = KeyFetcher()
-            keyFetcher.bip32Xpub(wallet: wallet) { (xpub, error) in
+            keyFetcher.accountXpub(wallet: wallet) { (xpub, error) in
+                
+                // example BIP44 descriptor:
+                // pkh([d34db33f/44'/0'/0']xpub6ERApfZwUNrhLCkDtcHTcxd75RbzS1ed54G1LkBUHQVHQKqhMkhgbmJbZRkrgZw4koxb5JaHWkY4ALHY2grBGRjaDMzQLcgJvLJuZZvRcEL/1/*)
                 
                 if !error {
                     
-                    var param = ""
-                    
-                    switch wallet.derivation {
+                    keyFetcher.fingerprint(wallet: wallet) { (fingerprint, error) in
                         
-                    case "m/84'/1'/0'/0", "m/84'/0'/0'/0":
-                        
-                        param = "\"wpkh(\(xpub!)/*)\""
-                        
-                    case "m/44'/1'/0'/0", "m/44'/0'/0'/0":
-                        
-                        param = "\"pkh(\(xpub!)/*)\""
-                        
-                    case "m/49'/1'/0'/0", "m/49'/0'/0'/0":
-                        
-                        param = "\"sh(wpkh(\(xpub!)/*))\""
-                        
-                    default:
-                        
-                        break
+                        if !error && fingerprint != nil {
+                            
+                            var param = ""
+                            
+                            switch wallet.derivation {
+                                
+                            case "m/84'/1'/0'/0":
+                                                                
+                                param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/0/*)\""
+                                
+                            case "m/84'/0'/0'/0":
+                                
+                                param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/0/*)\""
+                                
+                            case "m/44'/1'/0'/0":
+                                
+                                param = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/0/*)\""
+                                 
+                            case "m/44'/0'/0'/0":
+                                
+                                param = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/0/*)\""
+                                
+                            case "m/49'/1'/0'/0":
+                                
+                                param = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/0/*))\""
+                                
+                            case "m/49'/0'/0'/0":
+                                
+                                param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/0/*))\""
+                                
+                            default:
+                                
+                                break
+                                
+                            }
+                            
+                            executeNodeCommand(method: .getdescriptorinfo, param: param)
+                            
+                        }
                         
                     }
-                    
-                    executeNodeCommand(method: .getdescriptorinfo, param: param)
                     
                 } else {
                     

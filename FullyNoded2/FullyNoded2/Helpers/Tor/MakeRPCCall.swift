@@ -49,6 +49,7 @@ class MakeRPCCall {
                 request.httpMethod = "POST"
                 request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
                 request.httpBody = "{\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}".data(using: .utf8)
+                print("request = {\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}")
                 let queue = DispatchQueue(label: "com.FullyNoded.torQueue")
                 queue.async {
                     
@@ -67,6 +68,7 @@ class MakeRPCCall {
                                     
                                     self.attempts = 0
                                     self.errorBool = true
+                                    print("error description = \(error!.localizedDescription)")
                                     self.errorDescription = error!.localizedDescription
                                     completion()
                                     

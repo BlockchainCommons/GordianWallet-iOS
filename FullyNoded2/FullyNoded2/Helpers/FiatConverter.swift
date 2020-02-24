@@ -21,10 +21,8 @@ class FiatConverter {
         torClient = TorClient.sharedInstance
         
         var url:NSURL!
-        //http://blkchairbknpn73cfjhevhla7rkp4ed5gg2knctvv7it4lioy22defid.onion/www/bitcoin/stats
-        //http://blockchairt5d4pj.onion/www/bitcoin/stats
-        //url = NSURL(string: "https://api.coindesk.com/v1/bpi/currentprice.json")
         url = NSURL(string: "http://blkchairbknpn73cfjhevhla7rkp4ed5gg2knctvv7it4lioy22defid.onion/www/bitcoin/stats")
+        //url = NSURL(string: "http://blockchairt5d4pj.onion/www/bitcoin/stats")
         
         let task = torClient.session.dataTask(with: url! as URL) { (data, response, error) -> Void in
             
@@ -38,21 +36,21 @@ class FiatConverter {
                 } else {
                     
                     if let urlContent = data {
-                        
+                                                
                         do {
                             
-                            let json = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
-                            
-                            print("json = \(json)")
-                            
-                            if let data = json["data"] as? NSDictionary {
-                                
-                                if let rateCheck = data["market_price_usd"] as? Double {
-                                        
-                                        self.errorBool = false
-                                        self.fxRate = rateCheck
-                                        completion()
-                                                                            
+                            if let json = try JSONSerialization.jsonObject(with: urlContent, options: [.mutableContainers]) as? [String : Any] {
+                             
+                                if let data = json["data"] as? NSDictionary {
+                                    
+                                    if let rateCheck = data["market_price_usd"] as? Double {
+                                            
+                                            self.errorBool = false
+                                            self.fxRate = rateCheck
+                                            completion()
+                                                                                
+                                    }
+                                    
                                 }
                                 
                             }

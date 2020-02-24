@@ -39,6 +39,8 @@ class TorClient {
     func start(completion: @escaping () -> Void) {
         print("start")
         
+        NotificationCenter.default.post(name: .didStartBootstrappingTor, object: nil, userInfo: nil)
+        
         let queue = DispatchQueue(label: "com.FullyNoded.torQueue")
         
         queue.async {
@@ -249,6 +251,7 @@ class TorClient {
                         
                         self.sessionConfiguration.connectionProxyDictionary = [kCFProxyTypeKey: kCFProxyTypeSOCKS, kCFStreamPropertySOCKSProxyHost: "localhost", kCFStreamPropertySOCKSProxyPort: 29050]
                         self.session = URLSession(configuration: self.sessionConfiguration)
+                        self.session.configuration.urlCache = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
                         self.isOperational = true
                         NotificationCenter.default.post(name: .torConnecting, object: nil, userInfo: nil)
                         completion()
@@ -263,6 +266,7 @@ class TorClient {
                         
                         self.sessionConfiguration.connectionProxyDictionary = [kCFProxyTypeKey: kCFProxyTypeSOCKS, kCFStreamPropertySOCKSProxyHost: "localhost", kCFStreamPropertySOCKSProxyPort: 29050]
                         self.session = URLSession(configuration: self.sessionConfiguration)
+                        self.session.configuration.urlCache = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
                         self.isOperational = true
                         NotificationCenter.default.post(name: .torConnecting, object: nil, userInfo: nil)
                         completion()
