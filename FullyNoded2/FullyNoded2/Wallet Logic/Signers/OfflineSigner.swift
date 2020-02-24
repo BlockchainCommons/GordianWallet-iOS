@@ -23,19 +23,19 @@ class NativeSegwitOfflineSigner {
             
             let reducer = Reducer()
             reducer.makeCommand(walletName: wallet!.name, command: .decodepsbt, param: "\"\(unsignedTx)\"") {
-                
+
                 if !reducer.errorBool {
-                    
+
                     let decodedPSBT = reducer.dictToReturn
                     parseDecodedPSBT(psbt: decodedPSBT)
-                    
+
                 } else {
-                    
+
                     print("error decoding psbt: \(reducer.errorDescription)")
                     completion(nil)
-                    
+
                 }
-                
+
             }
             
             func parseDecodedPSBT(psbt: NSDictionary) {
@@ -75,7 +75,6 @@ class NativeSegwitOfflineSigner {
                     let amount = UInt64((witness_utxo["amount"] as! Double) * 100000000)
                     let bip32derivs = inputMetaDataArray[i]["bip32_derivs"] as! NSArray
                     let path = (bip32derivs[0] as! NSDictionary)["path"] as! String
-                    //let index = Int(path.split(separator: "/")[1])!
                                     
                     let keyfetcher = KeyFetcher()
                     

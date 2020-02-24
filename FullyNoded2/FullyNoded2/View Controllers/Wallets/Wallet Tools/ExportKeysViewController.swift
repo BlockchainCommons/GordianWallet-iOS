@@ -46,9 +46,9 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    private func singleSigCell(_ indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "exportCell", for: indexPath)
+        let cell = table.dequeueReusableCell(withIdentifier: "exportCell", for: indexPath)
         cell.selectionStyle = .none
         
         let addressView = cell.viewWithTag(1)!
@@ -62,45 +62,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         let addressLabel = cell.viewWithTag(2) as! UILabel
         let publicKeyLabel = cell.viewWithTag(6) as! UILabel
         let wifLabel = cell.viewWithTag(10) as! UILabel
-        
-        if wallet.type == "DEFAULT" {
-            
-            addressLabel.text = keys[indexPath.section]["address"]
-            publicKeyLabel.text = keys[indexPath.section]["publicKey"]
-            wifLabel.text = "*********************************************************"
-            
-        } else if wallet.type == "MULTI" {
-                        
-            if fetchingAddresses {
-                
-                addressLabel.text = "Fetching addresses from your node..."
-                publicKeyLabel.text = keys[indexPath.section]["publicKey"]
-                wifLabel.text = "*********************************************************"
-                
-            } else {
-                
-                 addressLabel.text = keys[indexPath.section]["address"]
-                
-            }
-            
-        } else if wallet.type == "CUSTOM" {
-            
-            if fetchingAddresses {
-                
-                addressLabel.text = "Fetching addresses from your node..."
-                
-            } else {
-                
-                 addressLabel.text = keys[indexPath.section]["address"]
-                
-            }
-            
-            publicKeyLabel.text = "need to look into deriving multi-sig pub keys/scripts from libwally"
-            wifLabel.text = "⚠︎ no private keys on device for current wallet"
-             
-        }
-        
-        
         
         addressLabel.adjustsFontSizeToFitWidth = true
         publicKeyLabel.adjustsFontSizeToFitWidth = true
@@ -127,14 +88,120 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         showWifQRButton.addTarget(self, action: #selector(wifQR(_:)), for: .touchUpInside)
         copyWifButton.addTarget(self, action: #selector(copyWif(_:)), for: .touchUpInside)
         
+        addressLabel.text = keys[indexPath.section]["address"]
+        publicKeyLabel.text = keys[indexPath.section]["publicKey"]
+        wifLabel.text = "*********************************************************"
+        
         return cell
+        
+    }
+    
+    private func multiSigCell(_ indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = table.dequeueReusableCell(withIdentifier: "exportMultiSigCell", for: indexPath)
+        cell.selectionStyle = .none
+        
+        let addressView = cell.viewWithTag(1)!
+        let pubkeysView = cell.viewWithTag(2)!
+        let scriptPubKeyView = cell.viewWithTag(3)!
+        let wifView = cell.viewWithTag(4)!
+        
+        addressView.layer.cornerRadius = 8
+        pubkeysView.layer.cornerRadius = 8
+        scriptPubKeyView.layer.cornerRadius = 8
+        wifView.layer.cornerRadius = 8
+        
+        let addressLabel = cell.viewWithTag(5) as! UILabel
+        addressLabel.adjustsFontSizeToFitWidth = true
+        addressLabel.text = keys[indexPath.section]["address"]
+        
+        let pubkeysTextView = cell.viewWithTag(6) as! UITextView
+        pubkeysTextView.text = keys[indexPath.section]["publicKey"]
+        pubkeysTextView.isEditable = false
+        pubkeysTextView.isSelectable = true
+        
+        let scriptPubKeyTextView = cell.viewWithTag(7) as! UITextView
+        scriptPubKeyTextView.text = keys[indexPath.section]["scriptPubKey"]
+        scriptPubKeyTextView.isEditable = false
+        scriptPubKeyTextView.isSelectable = true
+        
+        let wifLabel = cell.viewWithTag(8) as! UILabel
+        if keys[indexPath.section]["wif"] != nil {
+            if keys[indexPath.section]["wif"] != "" {
+                wifLabel.text = "**********************************************************"
+            } else {
+                wifLabel.text = "No private keys on device"
+            }
+        } else {
+            wifLabel.text = "No private keys on device"
+        }
+        
+        let addressQRButton = cell.viewWithTag(9) as! UIButton
+        let addressCopyButton = cell.viewWithTag(10) as! UIButton
+        let publicKeysQRButton = cell.viewWithTag(11) as! UIButton
+        let publicKeysCopyButton = cell.viewWithTag(12) as! UIButton
+        let scriptPubKeyQRButton = cell.viewWithTag(13) as! UIButton
+        let scriptPubKeyCopyButton = cell.viewWithTag(14) as! UIButton
+        let wifQRButton = cell.viewWithTag(15) as! UIButton
+        let wifCopyButton = cell.viewWithTag(16) as! UIButton
+        
+        addressQRButton.accessibilityLabel = "\(indexPath.section)"
+        addressCopyButton.accessibilityLabel = "\(indexPath.section)"
+        publicKeysCopyButton.accessibilityLabel = "\(indexPath.section)"
+        publicKeysQRButton.accessibilityLabel = "\(indexPath.section)"
+        scriptPubKeyCopyButton.accessibilityLabel = "\(indexPath.section)"
+        scriptPubKeyQRButton.accessibilityLabel = "\(indexPath.section)"
+        wifQRButton.accessibilityLabel = "\(indexPath.section)"
+        wifCopyButton.accessibilityLabel = "\(indexPath.section)"
+        
+        wifQRButton.addTarget(self, action: #selector(wifQR(_:)), for: .touchUpInside)
+        wifCopyButton.addTarget(self, action: #selector(copyWif(_:)), for: .touchUpInside)
+        
+        publicKeysQRButton.addTarget(self, action: #selector(publicKeyQR(_:)), for: .touchUpInside)
+        publicKeysCopyButton.addTarget(self, action: #selector(copyPublicKey(_:)), for: .touchUpInside)
+        
+        scriptPubKeyQRButton.addTarget(self, action: #selector(scriptPubKeyQR(_:)), for: .touchUpInside)
+        scriptPubKeyCopyButton.addTarget(self, action: #selector(copyScriptPubKey(_:)), for: .touchUpInside)
+        
+        addressQRButton.addTarget(self, action: #selector(addressQR(_:)), for: .touchUpInside)
+        addressCopyButton.addTarget(self, action: #selector(copyAddress(_:)), for: .touchUpInside)
+        
+        return cell
+        
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let p = DescriptorParser()
+        let s = p.descriptor(wallet.descriptor)
+        
+        if !s.isMulti {
+            
+            return singleSigCell(indexPath)
+            
+        } else {
+            
+            return multiSigCell(indexPath)
+            
+        }
         
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        return 224
+        let p = DescriptorParser()
+        let s = p.descriptor(wallet.descriptor)
         
+        if !s.isMulti {
+            
+            return 224
+            
+        } else {
+            
+            return 375
+            
+        }
+                
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -188,6 +255,44 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         impact.impactOccurred()
         let index = Int(sender.accessibilityLabel!)!
         qrString = keys[index]["address"] ?? "no address"
+        
+        DispatchQueue.main.async {
+            
+            self.performSegue(withIdentifier: "exportKeys", sender: self)
+            
+        }
+        
+    }
+    
+    @objc func copyScriptPubKey(_ sender: UIButton) {
+        
+        let impact = UIImpactFeedbackGenerator()
+        impact.impactOccurred()
+        let index = Int(sender.accessibilityLabel!)!
+        
+        if keys[index]["scriptPubKey"] != nil {
+            
+            let publicKey = keys[index]["scriptPubKey"]
+            UIPasteboard.general.string = publicKey
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+                
+                UIPasteboard.general.string = ""
+                
+            }
+            
+            displayAlert(viewController: self, isError: false, message: "public key copied to clipboard for 60 seconds")
+        }
+        
+    }
+    
+    @objc func scriptPubKeyQR(_ sender: UIButton) {
+        
+        let impact = UIImpactFeedbackGenerator()
+        impact.impactOccurred()
+        let index = Int(sender.accessibilityLabel!)!
+        
+        qrString = keys[index]["scriptPubKey"] ?? "no scriptPubKey to display"
         
         DispatchQueue.main.async {
             
@@ -275,56 +380,87 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-     func getKeysFromBitcoinCore() {
+    func getMultiSigKeys(words: String) {
         
-        let reducer = Reducer()
-        let param = "\"\(wallet.descriptor)\", ''[0,1999]''"
+        let parser = DescriptorParser()
+        let s = parser.descriptor(wallet.descriptor)
+        let keys = s.multiSigKeys
+        let paths = s.multiSigPaths
+        let sigsRequired = s.sigsRequired
+        var failed = false
+        let kf = KeyFetcher()
         
-        reducer.makeCommand(walletName: wallet.name, command: .deriveaddresses, param: param) {
-             
-             if !reducer.errorBool {
-                 
-                let result = reducer.arrayToReturn
-                 
-                for (i, address) in result.enumerated() {
-                    
-                    if self.wallet.type == "CUSTOM" {
-                        
-                        self.keys.append(["address":(address as! String)])
-                        
-                    } else {
-                        
-                        // fixes crash caused by user pre-maturely dismissing the view as keys is emptied when the view disappears
-                        if self.keys.count > 0 {
-                            
-                            self.keys[i]["address"] = (address as! String)
-                            
+        func getPrivKeys() {
+            let mnemonicCreator = MnemonicCreator()
+            mnemonicCreator.convert(words: words) { (mnemonic, error) in
+                if !error {
+                    let derivation = self.wallet.derivation
+                    for i in 0 ... 1999 {
+                        let path = derivation + "/" + "\(i)"
+                        if let bip32path = BIP32Path(path) {
+                            if let key = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
+                                do {
+                                    let childKey = try key.derive(bip32path)
+                                    if let privKey = childKey.privKey {
+                                        self.keys[i]["wif"] = privKey.wif
+                                    }
+                                } catch {
+                                    print("failed getting a key")
+                                }
+                            }
                         }
-                        
-                    }
-                    
-                    if i + 1 == result.count {
-                        
-                        DispatchQueue.main.async {
-                            
-                            self.fetchingAddresses = false
-                            self.table.reloadData()
-                            self.connectingView.removeConnectingView()
-                            
+                        if i == 1999 {
+                            DispatchQueue.main.async {
+                                self.table.reloadData()
+                                self.connectingView.removeConnectingView()
+                            }
                         }
-                        
                     }
-                    
                 }
-                                  
-             } else {
-                 
-                self.connectingView.removeConnectingView()
-                 displayAlert(viewController: self, isError: true, message: "error getting addresses from your node")
-                                  
-             }
-             
-         }
+            }
+        }
+        
+        for i in 0 ... 1999 {
+            var pubkeys = [PubKey]()
+            var pubkeyStrings = [String]()
+            for (k, key) in keys.enumerated() {
+                let hdKey = HDKey(key)
+                let path = paths[k] + "/" + "\(i)"
+                print("path = \(path)")
+                do {
+                    if let bip32path = BIP32Path(path) {
+                        let key = try hdKey?.derive(bip32path)
+                        if key != nil {
+                            pubkeys.append(key!.pubKey)
+                            pubkeyStrings.append("#\(k + 1): \(key!.pubKey.data.hexString)")
+                            if k + 1 == keys.count {
+                                let scriptPubKey = ScriptPubKey(multisig: pubkeys, threshold: sigsRequired, bip67: false)
+                                let multiSigAddress = Address(scriptPubKey, .testnet)
+                                var processedPubkeys = "\(pubkeyStrings)".replacingOccurrences(of: "[", with: "")
+                                processedPubkeys = processedPubkeys.replacingOccurrences(of: "]", with: "")
+                                processedPubkeys = processedPubkeys.replacingOccurrences(of: "\"", with: "")
+                                processedPubkeys = processedPubkeys.replacingOccurrences(of: ",", with: "\n")
+                                self.keys.append(["address":"\(String(describing: multiSigAddress!))", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
+                                pubkeys.removeAll()
+                            }
+                        }
+                    }
+                } catch {
+                    print("key derivation failed")
+                    failed = true
+                }
+            }
+            
+            if i == 1999 {
+                if !failed {
+                    getPrivKeys()
+                } else {
+                    self.connectingView.removeConnectingView()
+                    displayAlert(viewController: self, isError: true, message: "key derivation failed")
+                }
+            }
+            
+        }
          
      }
     
@@ -335,21 +471,22 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             if wallet != nil && !error {
                 
                 self.wallet = wallet!
-                
-                if wallet!.type == "DEFAULT" || wallet!.type == "MULTI" {
+                let parser = DescriptorParser()
+                let s = parser.descriptor(wallet!.descriptor)
+                let encryptedSeed = wallet!.seed
+                let enc = Encryption()
+                enc.decryptData(dataToDecrypt: encryptedSeed) { (decryptedSeed) in
                     
-                    let encryptedSeed = wallet!.seed
-                    let enc = Encryption()
-                    enc.decryptData(dataToDecrypt: encryptedSeed) { (decryptedSeed) in
+                    let words = String(bytes: decryptedSeed!, encoding: .utf8)!
+                    if s.isMulti {
                         
-                        let words = String(bytes: decryptedSeed!, encoding: .utf8)!
-                        self.getKeysFromLibWally(words: words)
+                        self.getMultiSigKeys(words: words)
+                        
+                    } else {
+                        
+                        self.getSingleSigKeys(words: words)
                         
                     }
-                    
-                } else if wallet!.type == "CUSTOM" {
-                    
-                    self.getKeysFromBitcoinCore()
                     
                 }
                 
@@ -358,8 +495,9 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         }
         
     }
+
     
-    func getKeysFromLibWally(words: String) {
+    func getSingleSigKeys(words: String) {
         
         let mnemonicCreator = MnemonicCreator()
         mnemonicCreator.convert(words: words) { (mnemonic, error) in
@@ -421,12 +559,12 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                 
                 DispatchQueue.main.async {
                     
-                    if self.wallet.type == "MULTI" {
-                        
-                        self.fetchingAddresses = true
-                        self.getKeysFromBitcoinCore()
-                        
-                    }
+//                    if self.wallet.type == "MULTI" {
+//
+//                        self.fetchingAddresses = true
+//                        self.getMultiSigKeys()
+//
+//                    }
                     
                     self.table.reloadData()
                     self.connectingView.removeConnectingView()
@@ -439,23 +577,23 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-    private func network(path: String) -> Network {
-        
-        var network:Network!
-        
-        if path.contains("/1'") {
-            
-            network = .testnet
-            
-        } else {
-            
-            network = .mainnet
-            
-        }
-        
-        return network
-        
-    }
+//    private func network(path: String) -> Network {
+//
+//        var network:Network!
+//
+//        if path.contains("/1'") {
+//
+//            network = .testnet
+//
+//        } else {
+//
+//            network = .mainnet
+//
+//        }
+//
+//        return network
+//
+//    }
     
 
     

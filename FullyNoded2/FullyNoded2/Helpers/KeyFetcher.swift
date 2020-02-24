@@ -78,48 +78,26 @@ class KeyFetcher {
                                 
                                 if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
                                     
-                                    //if let path = BIP32Path(derivationPath) {
+                                    do {
                                         
-                                        //do {
-                                            
-                                            //let account = try masterKey.derive(path)
-                                            
-                                            //if let childPath = BIP32Path("\(index)") {
-                                                
-                                                do {
-                                                    
-                                                    let key = try masterKey.derive(path)
-                                                    
-                                                    if let keyToReturn = key.privKey {
-                                                        
-                                                        let wif = keyToReturn.wif
-                                                        completion((wif,false))
-                                                        
-                                                    } else {
-                                                        
-                                                        completion((nil,true))
-                                                        
-                                                    }
-                                                    
-                                                } catch {
-                                                    
-                                                    completion((nil,true))
-                                                    
-                                                }
-                                                
-                                            //}
-                                            
-//                                        } catch {
-//
-//                                            completion((nil,true))
-//
-//                                        }
+                                        let key = try masterKey.derive(path)
                                         
-//                                    } else {
-//
-//                                        completion((nil,true))
-//
-//                                    }
+                                        if let keyToReturn = key.privKey {
+                                            
+                                            let wif = keyToReturn.wif
+                                            completion((wif,false))
+                                            
+                                        } else {
+                                            
+                                            completion((nil,true))
+                                            
+                                        }
+                                        
+                                    } catch {
+                                        
+                                        completion((nil,true))
+                                        
+                                    }
                                     
                                 } else {
                                     

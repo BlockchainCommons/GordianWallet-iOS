@@ -45,9 +45,6 @@ class DescriptorParser {
                 
                 switch i {
                     
-//                case 0:
-//                    let fingerprint = item
-                    
                 case 1:
                     let type = item
                     path += "/" + type
@@ -102,7 +99,7 @@ class DescriptorParser {
                         
                     case "multi":
                         
-                        dict["format"] = "Bare multi"
+                        dict["format"] = "Bare-multi"
                         
                     case "wsh":
                         
@@ -112,7 +109,7 @@ class DescriptorParser {
                         
                         if arr[1] == "wsh" {
                             
-                            dict["format"] = "P2SH - P2WSH"
+                            dict["format"] = "P2SH-P2WSH"
                             
                         } else {
                             
@@ -131,17 +128,52 @@ class DescriptorParser {
                 switch item {
                     
                 case "multi", "sortedmulti":
-                    
                     let mofnarray = (arr[i + 1]).split(separator: ",")
                     let numberOfKeys = mofnarray.count - 1
                     dict["mOfNType"] = "\(mofnarray[0]) of \(numberOfKeys)"
+                    dict["sigsRequired"] = UInt(mofnarray[0])
+                    var keysWithPath = [String]()
+                    for (i, item) in mofnarray.enumerated() {
+                        if i != 0 {
+                            keysWithPath.append("\(item)")
+                        }
+                    }
+                    var keyArray = [String]()
+                    var paths = [String]()
+                    // extracting the xpubs and their paths so we can derive the individual multisig addresses locally
+                    for key in keysWithPath {
+                        var path = String()
+                        if key.contains("/") {
+                            if key.contains("[") && key.contains("]") {
+                                // remove the bracket with deriv/fingerprint
+                                let arr = key.split(separator: "]")
+                                let processedKey = arr[1]
+                                // it has a path
+                                let pathArray = processedKey.split(separator: "/")
+                                for pathItem in pathArray {
+                                    if pathItem.contains("xpub") || pathItem.contains("tpub") || pathItem.contains("xprv") || pathItem.contains("tprv") {
+                                        keyArray.append("\(pathItem)")
+                                    } else {
+                                        if !pathItem.contains("*") {
+                                            if path == "" {
+                                                path = "\(pathItem)"
+                                            } else {
+                                                path += "/" + pathItem
+                                            }
+                                        } else {
+                                            paths.append(path)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    dict["multiSigKeys"] = keyArray
+                    dict["multiSigPaths"] = paths
                     
                 default:
-                    
                     break
-                    
                 }
-                
             }
                         
         } else {

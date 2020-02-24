@@ -126,6 +126,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
         }
+        
+        let p = DescriptorParser()
+        let s = p.descriptor("wsh(multi(1,xpub661MyMwAqRbcFW31YEwpkMuc5THy2PSt5bDMsktWQcFF8syAmRUapSCGu8ED9W6oDMSgv6Zz8idoc4a6mr8BDzTJY47LJhkJ8UB7WEGuduB/1/0/*,xpub69H7F5d8KSRgmmdJg2KhpAK8SR3DjMwAdkxj3ZuxV27CprR9LgpeyGmXUbC6wb7ERfvrnKZjXoUmmDznezpbZb7ap6r1D3tgFxHmwMkQTPH/0/0/*))")
+        
                 
     }
     
@@ -847,9 +851,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let feeRate = cell.viewWithTag(14) as! UILabel
         let isHot = cell.viewWithTag(15) as! UILabel
         let refreshingSpinner = cell.viewWithTag(16) as! UIActivityIndicatorView
-        //let infoButton = cell.viewWithTag(17) as! UIButton
+        let infoButton = cell.viewWithTag(17) as! UIButton
         
-        //infoButton.addTarget(self, action: #selector(getNodeInfo(_:)), for: .touchUpInside)
+        infoButton.addTarget(self, action: #selector(getNodeInfo(_:)), for: .touchUpInside)
         
         network.layer.cornerRadius = 6
         pruned.layer.cornerRadius = 6
@@ -1449,7 +1453,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 if torSectionLoaded {
                     
-                    return 53
+                    return 52
                     
                 } else {
                     
@@ -1475,8 +1479,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
      
         if nodeSectionLoaded {
             
-            return 205
-            
+            if showNodeInfo {
+                
+                return 205
+                
+            } else {
+                
+                return 64
+                
+            }
+                        
         } else {
             
             return 47
@@ -1629,15 +1641,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func updateWalletMetaData(wallet: WalletStruct) {
         
-        cd.updateEntity(id: wallet.id, keyToUpdate: "lastBalance", newValue: Double(self.walletInfo.coldBalance)!, entityName: .wallets) {
+        if let newBalance = Double(self.walletInfo.coldBalance) {
             
-            if !self.cd.errorBool {
+            cd.updateEntity(id: wallet.id, keyToUpdate: "lastBalance", newValue: newBalance, entityName: .wallets) {
                 
-                print("succesfully updated lastBalance")
-                
-            } else {
-                
-                print("error saving lastBalance")
+                if !self.cd.errorBool {
+                    
+                    print("succesfully updated lastBalance")
+                    
+                } else {
+                    
+                    print("error saving lastBalance")
+                    
+                }
                 
             }
             
