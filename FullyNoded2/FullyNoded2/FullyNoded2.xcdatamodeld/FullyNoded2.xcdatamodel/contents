@@ -15,6 +15,7 @@
     </entity>
     <entity name="Wallets" representedClassName="Wallets" syncable="YES" codeGenerationType="class">
         <attribute name="birthdate" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="changeDescriptor" optional="YES" attributeType="String"/>
         <attribute name="derivation" optional="YES" attributeType="String"/>
         <attribute name="descriptor" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -33,6 +34,6 @@
     <elements>
         <element name="Auth" positionX="-63" positionY="-18" width="128" height="73"/>
         <element name="Nodes" positionX="-54" positionY="-9" width="128" height="148"/>
-        <element name="Wallets" positionX="-36" positionY="9" width="128" height="268"/>
+        <element name="Wallets" positionX="-36" positionY="9" width="128" height="283"/>
     </elements>
 </model>

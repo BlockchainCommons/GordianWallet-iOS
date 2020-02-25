@@ -72,7 +72,6 @@ class TorClient {
                             "SocksPort": "29050 OnionTrafficOnly",
                             "AvoidDiskWrites": "1",
                             "ClientOnionAuthDir": "\(self.authDirPath)",
-                            "HardwareAccel": "1",
                             "LearnCircuitBuildTimeout": "1",
                             "NumEntryGuards": "8",
                             "SafeSocks": "1",

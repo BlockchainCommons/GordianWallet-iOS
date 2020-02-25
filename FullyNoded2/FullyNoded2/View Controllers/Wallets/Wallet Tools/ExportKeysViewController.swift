@@ -388,6 +388,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         let paths = s.multiSigPaths
         let sigsRequired = s.sigsRequired
         var failed = false
+        var getKeysFromNode = false
         let kf = KeyFetcher()
         
         func getPrivKeys() {
@@ -426,7 +427,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             for (k, key) in keys.enumerated() {
                 let hdKey = HDKey(key)
                 let path = paths[k] + "/" + "\(i)"
-                print("path = \(path)")
                 do {
                     if let bip32path = BIP32Path(path) {
                         let key = try hdKey?.derive(bip32path)
@@ -435,13 +435,21 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                             pubkeyStrings.append("#\(k + 1): \(key!.pubKey.data.hexString)")
                             if k + 1 == keys.count {
                                 let scriptPubKey = ScriptPubKey(multisig: pubkeys, threshold: sigsRequired, bip67: false)
-                                let multiSigAddress = Address(scriptPubKey, .testnet)
+                                var multiSigAddress:Address!
                                 var processedPubkeys = "\(pubkeyStrings)".replacingOccurrences(of: "[", with: "")
                                 processedPubkeys = processedPubkeys.replacingOccurrences(of: "]", with: "")
                                 processedPubkeys = processedPubkeys.replacingOccurrences(of: "\"", with: "")
                                 processedPubkeys = processedPubkeys.replacingOccurrences(of: ",", with: "\n")
-                                self.keys.append(["address":"\(String(describing: multiSigAddress!))", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
+                                // LibWally only produces bech32 multisig addresses, so need to fetch other formats from the node
+                                if wallet.derivation.contains("84") || s.isBIP84 || s.isP2WPKH {
+                                    multiSigAddress = Address(scriptPubKey, network(path: wallet.derivation))
+                                    self.keys.append(["address":"\(String(describing: multiSigAddress!))", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
+                                } else {
+                                    self.keys.append(["address":"fetching addresses from your node...", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
+                                    getKeysFromNode = true
+                                }
                                 pubkeys.removeAll()
+                                
                             }
                         }
                     }
@@ -458,11 +466,39 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                     self.connectingView.removeConnectingView()
                     displayAlert(viewController: self, isError: true, message: "key derivation failed")
                 }
+                if getKeysFromNode {
+                    self.getKeysFromBitcoinCore()
+                }
             }
             
         }
-         
-     }
+        
+    }
+    
+    func getKeysFromBitcoinCore() {
+       
+       let reducer = Reducer()
+       let param = "\"\(wallet.descriptor)\", ''[0,1999]''"
+       reducer.makeCommand(walletName: "", command: .deriveaddresses, param: param) {
+            if !reducer.errorBool {
+               let result = reducer.arrayToReturn
+               for (i, address) in result.enumerated() {
+                   if self.keys.count > 0 {
+                       self.keys[i]["address"] = (address as! String)
+                   }
+                   
+                   if i + 1 == result.count {
+                       DispatchQueue.main.async {
+                           self.table.reloadData()
+                       }
+                   }
+               }
+            } else {
+                displayAlert(viewController: self, isError: true, message: "error getting addresses from your node")
+            }
+        }
+        
+    }
     
     func getWords() {
         

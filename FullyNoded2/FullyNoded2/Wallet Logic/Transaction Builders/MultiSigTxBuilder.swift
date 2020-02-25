@@ -75,7 +75,6 @@ class MultiSigTxBuilder {
                         let bip32derivs = dict["bip32_derivs"] as! NSArray
                         let bip32deriv = bip32derivs[0] as! NSDictionary
                         let path = bip32deriv["path"] as! String
-                        //let index = Int((path.split(separator: "/"))[1])!
                         let keyFetcher = KeyFetcher()
                         if let bip32path = BIP32Path(path) {
                             
@@ -136,7 +135,6 @@ class MultiSigTxBuilder {
                             
                             let dict = reducer.dictToReturn
                             let procccessedPsbt = dict["psbt"] as! String
-                            
                             let descParser = DescriptorParser()
                             let descStr = descParser.descriptor(wallet!.descriptor)
                             

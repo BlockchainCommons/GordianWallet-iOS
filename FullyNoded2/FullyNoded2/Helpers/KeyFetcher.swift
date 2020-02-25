@@ -155,39 +155,6 @@ class KeyFetcher {
                                         
                                     }
                                     
-//                                    if let path = BIP32Path(derivationPath) {
-//
-//                                        do {
-//
-//                                            let account = try masterKey.derive(path)
-//
-//                                            if let childPath = BIP32Path("\(index)") {
-//
-//                                                do {
-//
-//                                                    let key = try account.derive(childPath)
-//                                                    completion((key,false))
-//
-//                                                } catch {
-//
-//                                                    completion((nil,true))
-//
-//                                                }
-//
-//                                            }
-//
-//                                        } catch {
-//
-//                                            completion((nil,true))
-//
-//                                        }
-//
-//                                    } else {
-//
-//                                        completion((nil,true))
-//
-//                                    }
-                                    
                                 } else {
                                     
                                     completion((nil,true))
@@ -473,11 +440,11 @@ class KeyFetcher {
             if wallet != nil && !error {
                 
                 let reducer = Reducer()
-                let index = wallet!.index + 1000
+                let index = wallet!.index
                 
                 if wallet!.index < 1000 {
                     
-                    let param = "\"\(wallet!.descriptor)\", [\(index),\(index)]"
+                    let param = "\"\(wallet!.changeDescriptor)\", [\(index),\(index)]"
                     
                     reducer.makeCommand(walletName: wallet!.name, command: .deriveaddresses, param: param) {
                         

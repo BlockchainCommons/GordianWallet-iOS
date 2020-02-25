@@ -17,6 +17,43 @@ class CreateMultiSigWallet {
         
         let reducer = Reducer()
         
+        func importChange() {
+            
+            let array = (wallet.changeDescriptor).split(separator: "#")
+            var descriptor = "\(array[0])"
+            descriptor = descriptor.replacingOccurrences(of: nodeXpub, with: nodeXprv)
+            
+            reducer.makeCommand(walletName: wallet.name, command: .getdescriptorinfo, param: "\"\(descriptor)\"") {
+                
+                if !reducer.errorBool {
+                    
+                    let updatedDescriptor = reducer.dictToReturn["descriptor"] as! String
+                    let checksum = reducer.dictToReturn["checksum"] as! String
+                    let array = updatedDescriptor.split(separator: "#")
+                    let hotDescriptor = "\(array[0])" + "#" + checksum
+                    
+                    var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
+                    params = params.replacingOccurrences(of: nodeXpub, with: nodeXprv)
+                    reducer.makeCommand(walletName: wallet.name, command: .importmulti, param: params) {
+                        
+                        if !reducer.errorBool {
+                            
+                            completion(true)
+                            
+                        } else {
+                            
+                            completion(false)
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
         func importMulti(param: Any) {
         
             reducer.makeCommand(walletName: wallet.name, command: .importmulti, param: param) {
@@ -29,7 +66,7 @@ class CreateMultiSigWallet {
                     if success {
                         
                         print("success")
-                        completion(true)
+                        importChange()
                         
                     } else {
                         
@@ -72,7 +109,7 @@ class CreateMultiSigWallet {
                                 let array = updatedDescriptor.split(separator: "#")
                                 let hotDescriptor = "\(array[0])" + "#" + checksum
                                 
-                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,1999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
+                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
                                 params = params.replacingOccurrences(of: nodeXpub, with: nodeXprv)
                                 importMulti(param: params)
                                 
