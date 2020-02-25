@@ -1,6 +1,6 @@
 # FullyNoded 2
 
-FullyNoded 2 is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to your own Bitcoin full node (bitcoind installed using either Bitcoin Standup [MacOS](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS), [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts) or to a number of full node boxes like [Nodl](https://www.nodl.it/), [Rasbiblitz](https://github.com/rootzoll/raspiblitz), or for use with fullnode services like [BTCpay](https://btcpayserver.org/]).
+FullyNoded 2 is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to your own Bitcoin full node bitcoind installed using either Bitcoin Standup [MacOS](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS), [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts) or to a number of full node boxes like [Nodl](https://www.nodl.it/), [Rasbiblitz](https://github.com/rootzoll/raspiblitz), or for use with fullnode services like [BTCpay](https://btcpayserver.org/]).
 
 FullyNoded 2 allows for multiple wallet templates including legacy, segwit compatible, and segwit native hot wallets using a single signature (seed on iOS device), or a warm wallet using multisig (seed on iOS device, keys on full node, offline seed, etc.), as well  leverage PSBTs (Partially Signed Bitcoin Transactions) for  a number of cold wallet templates such as cold offline seeds, third-party collaborative custody services, and various air-gapped hardware solutions using QR codes. FullyNoded 2 can support potentially almost anything that can be described by a [bitcoind descriptor](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md).
 
@@ -20,7 +20,17 @@ FullyNoded 2 allows for multiple wallet templates including legacy, segwit compa
 
 We have a public link available for beta testing [here](https://testflight.apple.com/join/OQHyL0a8), please only use the app on testnet. Please do share crash reports and give feedback. Want a feature added? Tell us about it.
 
+## Financial Support
+
+Please consider becoming a sponsor by supporting the project via GitHub's sponsorship prgram where they will match up to $5,000 USD in donations, more info [here](https://github.com/sponsors/BlockchainCommons). See our [Sponsors](./Sponsors.md) page for more info.
+
+*FullyNoded 2* is a project of [Blockchain Commons, LLC](https://www.blockchaincommons.com/) a “not-for-profit” benefit corporation founded with the goal of supporting blockchain infrastructure and the broader security industry through cryptographic research, cryptographic & privacy protocol implementations, architecture & code reviews, industry standards, and documentation.
+
+To financially support further development of *FullyNoded 2*, please consider becoming Patron of Blockchain Commons by contributing Bitcoin at our [BTCPay Server](https://btcpay.blockchaincommons.com/) or through ongoing fiat patronage by becoming a [Github Sponsor](https://github.com/sponsors/BlockchainCommons), currently GitHub will match sponsorships so please do consider this option.
+
 ### Initial Setup
+
+<img src="./Images/qr2.PNG" alt="FullyNoded 2 app Home Screen" width="250"/>
 
 Upon on initial use the user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or a testnet node we are currently utilizing for development purposes by tapping the "don't have a node?" button.
 
@@ -195,3 +205,4 @@ This code in this repository is Copyright © 2019 by Blockchain Commons, LLC, an
 ### Contributing
 
 We encourage public contributions through issues and pull-requests! Please review [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our development process. All contributions to this repository require a GPG signed [Contributor License Agreement](./CLA.md).
+
