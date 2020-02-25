@@ -4,7 +4,7 @@ FullyNoded 2 is an open source iOS Bitcoin wallet that connects via Tor V3 authe
 
 FullyNoded 2 allows for multiple wallet templates including legacy, segwit compatible, and segwit native hot wallets using a single signature (seed on iOS device), or a warm wallet using multisig (seed on iOS device, keys on full node, offline seed, etc.), as well  leverage PSBTs (Partially Signed Bitcoin Transactions) for  a number of cold wallet templates such as cold offline seeds, third-party collaborative custody services, and various air-gapped hardware solutions using QR codes. FullyNoded 2 can support potentially almost anything that can be described by a [bitcoind descriptor](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md).
 
-<img src="./Images/homescreen_musig.png" alt="FullyNoded 2 app Home Screen" width="250"/> <img src="./Images/qr2.PNG" alt="FullyNoded 2 app Home Screen" width="250"/>
+<img src="./Images/homescreen_musig.png" alt="FullyNoded 2 app Home Screen" width="250"/>
 
 ## Status — Late Alpha
 
@@ -29,6 +29,8 @@ Please consider becoming a sponsor by supporting the project via GitHub's sponso
 To financially support further development of *FullyNoded 2*, please consider becoming Patron of Blockchain Commons by contributing Bitcoin at our [BTCPay Server](https://btcpay.blockchaincommons.com/) or through ongoing fiat patronage by becoming a [Github Sponsor](https://github.com/sponsors/BlockchainCommons), currently GitHub will match sponsorships so please do consider this option.
 
 ### Initial Setup
+
+<img src="./Images/qr2.PNG" alt="FullyNoded 2 app Home Screen" width="250"/>
 
 Upon on initial use the user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or a testnet node we are currently utilizing for development purposes by tapping the "don't have a node?" button.
 
