@@ -83,7 +83,7 @@ class WalletCreator {
         
         func importPrimaryAddresses() {
             let keyFetcher = KeyFetcher()
-            keyFetcher.accountXpub(wallet: wallet) { (xpub, error) in
+            keyFetcher.xpub(wallet: wallet) { (xpub, error) in
                 if !error {
                     keyFetcher.fingerprint(wallet: wallet) { (fingerprint, error) in
                         if !error && fingerprint != nil {
@@ -91,22 +91,22 @@ class WalletCreator {
                             
                             switch wallet.derivation {
                                 
-                            case "m/84'/1'/0'/0":
+                            case "m/84'/1'/0'":
                                 param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/0/*)\""
                                 
-                            case "m/84'/0'/0'/0":
+                            case "m/84'/0'/0'":
                                 param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/0/*)\""
                                 
-                            case "m/44'/1'/0'/0":
+                            case "m/44'/1'/0'":
                                 param = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/0/*)\""
                                  
-                            case "m/44'/0'/0'/0":
+                            case "m/44'/0'/0'":
                                 param = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/0/*)\""
                                 
-                            case "m/49'/1'/0'/0":
+                            case "m/49'/1'/0'":
                                 param = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/0/*))\""
                                 
-                            case "m/49'/0'/0'/0":
+                            case "m/49'/0'/0'":
                                 param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/0/*))\""
                                 
                             default:
@@ -124,29 +124,29 @@ class WalletCreator {
         
         func importChangeKeys() {
             let keyFetcher = KeyFetcher()
-            keyFetcher.accountXpub(wallet: wallet) { (xpub, error) in
+            keyFetcher.xpub(wallet: wallet) { (xpub, error) in
                 if !error {
                     keyFetcher.fingerprint(wallet: wallet) { (fingerprint, error) in
                         if !error && fingerprint != nil {
                             var changeDescriptor = ""
                             switch wallet.derivation {
                                 
-                            case "m/84'/1'/0'/0":
+                            case "m/84'/1'/0'":
                                 changeDescriptor = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/1/*)\""
                                 
-                            case "m/84'/0'/0'/0":
+                            case "m/84'/0'/0'":
                                 changeDescriptor = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/1/*)\""
                                 
-                            case "m/44'/1'/0'/0":
+                            case "m/44'/1'/0'":
                                 changeDescriptor = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/1/*)\""
                                  
-                            case "m/44'/0'/0'/0":
+                            case "m/44'/0'/0'":
                                 changeDescriptor = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/1/*)\""
                                 
-                            case "m/49'/1'/0'/0":
+                            case "m/49'/1'/0'":
                                 changeDescriptor = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/1/*))\""
                                 
-                            case "m/49'/0'/0'/0":
+                            case "m/49'/0'/0'":
                                 changeDescriptor = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/1/*))\""
                                 
                             default:

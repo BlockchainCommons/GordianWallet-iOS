@@ -8,15 +8,16 @@
 
 import Foundation
 
+// MARK: TODO: THIS WILL NEED TO BE EXPANDED ON IN THE UI, FOR EXAMPLE WE NEED TO ALLOW THE USER TO IMPORT MORE THAN ONE DESCRIPTOR INTO A SINGLE WALLET, DESIGNATING ONE AS CHANGE AND ONE AS PRIMARY ETC... WE CAN NOT MAKE ASSUMPTIONS HERE, IT NEEDS TO BE EXPLICIT.
+
 class ImportCustomDescriptor {
     
     func create(descriptor: String, completion: @escaping ((success: Bool, error:Bool, errorDescription: String?)) -> Void) {
         
-        func importChange(str: WalletStruct, params: String, reducer: Reducer, newWallet: [String:Any], descStruct: DescriptorStruct) {
-            print("importChange")
+        func importPrimary(str: WalletStruct, params: String, reducer: Reducer, newWallet: [String:Any], descriptor: String) {
+            print("importprimary")
             
             reducer.makeCommand(walletName: str.name, command: .importmulti, param: params) {
-                print("import change param: \(params)")
                 
                 if !reducer.errorBool {
                     
@@ -30,58 +31,6 @@ class ImportCustomDescriptor {
                         } else {
                             
                             completion((false, true, "failed saving wallet locally"))
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                    completion((false, true, reducer.errorDescription))
-                    
-                }
-                
-            }
-            
-        }
-        
-        func importPrimary(str: WalletStruct, params: String, reducer: Reducer, newWallet: [String:Any], descStruct: DescriptorStruct, descriptor: String) {
-            print("importprimary")
-            
-            reducer.makeCommand(walletName: str.name, command: .importmulti, param: params) {
-                
-                if !reducer.errorBool {
-                    
-                    if !descStruct.isMulti {
-                        
-                        var changeParams = ""
-                        
-                        if descStruct.isHot {
-                            
-                            changeParams = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [1000,1999], \"watchonly\": false, \"keypool\": true, \"internal\": true }]"
-                            
-                        } else {
-                            
-                            changeParams = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [1000,1999], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
-                            
-                        }
-                        
-                        importChange(str: str, params: changeParams, reducer: reducer, newWallet: newWallet, descStruct: descStruct)
-                        
-                    } else {
-                        
-                        let walletSaver = WalletSaver()
-                        walletSaver.save(walletToSave: newWallet) { (success) in
-                            
-                            if success {
-                                
-                                completion((true, false, nil))
-                                
-                            } else {
-                                
-                                completion((false, true, "failed saving wallet locally"))
-                                
-                            }
                             
                         }
                         
@@ -133,13 +82,11 @@ class ImportCustomDescriptor {
                                     
                                     if !descStruct.isMulti {
                                         
-                                        // import change too, designate first 1,000 as primary
                                         params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
                                         
                                     } else {
                                         
-                                        // its mutlisig, import 2,000 as we can't add keys to keypool
-                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,1999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
+                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
                                         
                                     }
                                     
@@ -147,20 +94,17 @@ class ImportCustomDescriptor {
                                     
                                     if !descStruct.isMulti {
                                         
-                                        // import change too, designate first 1,000 as primary
                                         params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
                                         
                                     } else {
                                         
-                                        // its mutlisig, import 2,000 as we can't add keys to keypool
-                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,1999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
+                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
                                         
                                     }
                                     
                                 }
                                 
-                                importPrimary(str: str, params: params, reducer: reducer, newWallet: newWallet, descStruct: descStruct, descriptor: processedDescriptor)
-                                
+                                importPrimary(str: str, params: params, reducer: reducer, newWallet: newWallet, descriptor: processedDescriptor)
                                                                 
                             } else {
                                 

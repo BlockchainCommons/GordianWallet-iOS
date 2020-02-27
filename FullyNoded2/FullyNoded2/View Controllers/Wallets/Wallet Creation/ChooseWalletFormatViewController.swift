@@ -11,6 +11,7 @@ import LibWally
 
 class ChooseWalletFormatViewController: UIViewController {
     
+    var localXprv = ""
     var node:NodeStruct!
     var newWallet = [String:Any]()
     var isBIP84 = Bool()
@@ -30,6 +31,7 @@ class ChooseWalletFormatViewController: UIViewController {
     var importDoneBlock : ((Bool) -> Void)?
     let enc = Encryption()
     let creatingView = ConnectingView()
+    var recoverDoneBlock : ((Bool) -> Void)?
     
     @IBOutlet var formatSwitch: UISegmentedControl!
     @IBOutlet var templateSwitch: UISegmentedControl!
@@ -68,7 +70,11 @@ class ChooseWalletFormatViewController: UIViewController {
     
     @IBAction func recoverAction(_ sender: Any) {
         
-        showAlert(vc: self, title: "Under Construction", message: "")
+        DispatchQueue.main.async {
+            
+            self.performSegue(withIdentifier: "goRecover", sender: self)
+            
+        }
         
     }
     
@@ -195,15 +201,15 @@ class ChooseWalletFormatViewController: UIViewController {
                     
                     if self.isBIP84 {
                         
-                        self.newWallet["derivation"] = "m/84'/1'/0'/0"
+                        self.newWallet["derivation"] = "m/84'/1'/0'"
                         
                     } else if self.isBIP49 {
                         
-                        self.newWallet["derivation"] = "m/49'/1'/0'/0"
+                        self.newWallet["derivation"] = "m/49'/1'/0'"
                         
                     } else if self.isBIP44 {
                         
-                        self.newWallet["derivation"] = "m/44'/1'/0'/0"
+                        self.newWallet["derivation"] = "m/44'/1'/0'"
                         
                     }
                     
@@ -211,15 +217,15 @@ class ChooseWalletFormatViewController: UIViewController {
                     
                     if self.isBIP84 {
                         
-                        self.newWallet["derivation"] = "m/84'/0'/0'/0"
+                        self.newWallet["derivation"] = "m/84'/0'/0'"
                         
                     } else if self.isBIP49 {
                         
-                        self.newWallet["derivation"] = "m/49'/0'/0'/0"
+                        self.newWallet["derivation"] = "m/49'/0'/0'"
                         
                     } else if self.isBIP44 {
                         
-                        self.newWallet["derivation"] = "m/44'/0'/0'/0"
+                        self.newWallet["derivation"] = "m/44'/0'/0'"
                         
                     }
                     
@@ -348,7 +354,7 @@ class ChooseWalletFormatViewController: UIViewController {
                             let recoveryFingerPrint = masterKey.fingerprint.hexString
                             self.fingerprints.append(recoveryFingerPrint)
                             
-                            if let path = self.accountPath(derivation) {
+                            if let path = BIP32Path(derivation) {
                                 
                                 do {
                                     
@@ -419,14 +425,25 @@ class ChooseWalletFormatViewController: UIViewController {
                                     
                                     let localFingerPrint = masterKey.fingerprint.hexString
                                     self.fingerprints.append(localFingerPrint)
-                                    
-                                    if let path = self.accountPath(derivation) {
+                                                                        
+                                    if let path = BIP32Path(derivation) {
                                         
                                         do {
                                             
                                             let account = try masterKey.derive(path)
                                             self.publickeys.append(account.xpub)
-                                            self.createNodesKey()
+                                            
+                                            if account.xpriv != nil {
+                                                
+                                                self.localXprv = account.xpriv!
+                                                self.createNodesKey()
+                                                
+                                            } else {
+                                                
+                                                self.creatingView.removeConnectingView()
+                                                displayAlert(viewController: self, isError: true, message: "failed deriving local xpriv")
+                                                
+                                            }
                                             
                                         } catch {
                                             
@@ -499,7 +516,7 @@ class ChooseWalletFormatViewController: UIViewController {
                             let nodesFingerPrint = masterKey.fingerprint.hexString
                             self.fingerprints.append(nodesFingerPrint)
                             
-                            if let path = self.accountPath(derivation) {
+                            if let path = BIP32Path(derivation) {
                                 
                                 do {
                                     
@@ -575,37 +592,37 @@ class ChooseWalletFormatViewController: UIViewController {
         
         switch derivation {
             
-        case "m/84'/1'/0'/0":
+        case "m/84'/1'/0'":
                                             
             descriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/84'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/84'/1'/0']\(nodeKey)/0/*))"
             
             changeDescriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/1'/0']\(recoveryKey)/1/*, [\(localFingerprint)/84'/1'/0']\(localKey)/1/*, [\(nodeFingerprint)/84'/1'/0']\(nodeKey)/1/*))"
             
-        case "m/84'/0'/0'/0":
+        case "m/84'/0'/0'":
 
             descriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/0'/0']\(recoveryKey)/0/*, [\(localFingerprint)/84'/0'/0']\(localKey)/0/*, [\(nodeFingerprint)/84'/0'/0']\(nodeKey)/0/*))"
             
             changeDescriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/0'/0']\(recoveryKey)/1/*, [\(localFingerprint)/84'/0'/0']\(localKey)/1/*, [\(nodeFingerprint)/84'/0'/0']\(nodeKey)/1/*))"
 
-        case "m/44'/1'/0'/0":
+        case "m/44'/1'/0'":
 
             descriptor = "sh(multi(\(signatures),[\(recoveryFingerprint)/44'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/44'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/44'/1'/0']\(nodeKey)/0/*))"
             
             changeDescriptor = "sh(multi(\(signatures),[\(recoveryFingerprint)/44'/1'/0']\(recoveryKey)/1/*, [\(localFingerprint)/44'/1'/0']\(localKey)/1/*, [\(nodeFingerprint)/44'/1'/0']\(nodeKey)/1/*))"
 
-        case "m/44'/0'/0'/0":
+        case "m/44'/0'/0'":
 
             descriptor = "sh(multi(\(signatures),[\(recoveryFingerprint)/44'/0'/0']\(recoveryKey)/0/*, [\(localFingerprint)/44'/0'/0']\(localKey)/0/*, [\(nodeFingerprint)/44'/0'/0']\(nodeKey)/0/*))"
             
             changeDescriptor = "sh(multi(\(signatures),[\(recoveryFingerprint)/44'/0'/0']\(recoveryKey)/1/*, [\(localFingerprint)/44'/0'/0']\(localKey)/1/*, [\(nodeFingerprint)/44'/0'/0']\(nodeKey)/1/*))"
 
-        case "m/49'/1'/0'/0":
+        case "m/49'/1'/0'":
 
             descriptor = "sh(wsh(multi(\(signatures),[\(recoveryFingerprint)/49'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/49'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/49'/1'/0']\(nodeKey)/0/*)))"
             
             changeDescriptor = "sh(wsh(multi(\(signatures),[\(recoveryFingerprint)/49'/1'/0']\(recoveryKey)/1/*, [\(localFingerprint)/49'/1'/0']\(localKey)/1/*, [\(nodeFingerprint)/49'/1'/0']\(nodeKey)/1/*)))"
 
-        case "m/49'/0'/0'/0":
+        case "m/49'/0'/0'":
             
             descriptor = "sh(wsh(multi(\(signatures),[\(recoveryFingerprint)/49'/0'/0']\(recoveryKey)/0/*, [\(localFingerprint)/49'/0'/0']\(localKey)/0/*, [\(nodeFingerprint)/49'/0'/0']\(nodeKey)/0/*)))"
             
@@ -681,8 +698,16 @@ class ChooseWalletFormatViewController: UIViewController {
                                                 
                                                 self.nodesSeed = ""
                                                 self.newWallet.removeAll()
-                                                self.multiSigDoneBlock!((true, self.backUpRecoveryPhrase, self.descriptor))
-                                                self.dismiss(animated: true, completion: nil)
+                                                // include the checksum as we will convert this back to a pubkey descriptor when recovering
+                                                let hotDescriptor = primaryDescriptor.replacingOccurrences(of: self.publickeys[1], with: self.localXprv)
+                                                let recoveryQr = ["descriptor":"\(hotDescriptor)", "walletName":"\(wallet.name)","birthdate":wallet.birthdate] as [String : Any]
+                                                
+                                                if let json = recoveryQr.json() {
+                                                    
+                                                    self.multiSigDoneBlock!((true, self.backUpRecoveryPhrase, json))
+                                                    self.dismiss(animated: true, completion: nil)
+                                                    
+                                                }
                                                 
                                             }
                                             
@@ -718,28 +743,33 @@ class ChooseWalletFormatViewController: UIViewController {
         
     }
     
-    private func accountPath(_ derivation: String) -> BIP32Path? {
-        switch derivation {
-        case "m/84'/1'/0'/0":
-            return BIP32Path("m/84'/1'/0'")
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        switch segue.identifier {
             
-        case "m/84'/0'/0'/0":
-            return BIP32Path("m/84'/0'/0'")
+        case "goRecover":
             
-        case "m/44'/1'/0'/0":
-            return BIP32Path("m/44'/1'/0'")
-             
-        case "m/44'/0'/0'/0":
-            return BIP32Path("m/44'/0'/0'")
-            
-        case "m/49'/1'/0'/0":
-            return BIP32Path("m/49'/1'/0'")
-            
-        case "m/49'/0'/0'/0":
-            return BIP32Path("m/49'/0'/0'")
+            if let vc = segue.destination as? WalletRecoverViewController {
+                
+                vc.onDoneBlock = { result in
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.dismiss(animated: true) {
+                            
+                            self.recoverDoneBlock!(true)
+                            
+                        }
+                        
+                    }                    
+                    
+                }
+                
+            }
             
         default:
-            return nil
+            
+            break
             
         }
         

@@ -29,6 +29,7 @@ public struct WalletStruct: CustomStringConvertible {
     let isArchived:Bool
     let mOfNtype:String
     let changeDescriptor:String
+    let xprv:Data?
     
     init(dictionary: [String: Any]) {
         
@@ -51,6 +52,7 @@ public struct WalletStruct: CustomStringConvertible {
         self.isArchived = dictionary["isArchived"] as? Bool ?? false
         self.mOfNtype = dictionary["mOfNtype"] as? String ?? ""
         self.changeDescriptor = dictionary["changeDescriptor"] as? String ?? ""
+        self.xprv = dictionary["xprv"] as? Data ?? nil
         
     }
     

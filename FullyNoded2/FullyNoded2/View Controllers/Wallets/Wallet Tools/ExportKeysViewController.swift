@@ -8,9 +8,14 @@
 
 import UIKit
 import LibWally
+import AuthenticationServices
 
-class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
+    var section = Int()
+    var showQr = Bool()
+    var copyText = Bool()
+    let authView = UIView()
     var fetchingAddresses = Bool()
     var qrString = ""
     var keys = [[String:String]]()
@@ -25,12 +30,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         table.dataSource = self
         getWords()
         connectingView.addConnectingView(vc: self, description: "fetching your keys")
-        
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        
-        keys.removeAll()
         
     }
     
@@ -206,7 +205,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        return "\(wallet.derivation)/\(section)"
+        return "\(wallet.derivation)/0/\(section)"
         
     }
     
@@ -342,41 +341,17 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     
     @objc func copyWif(_ sender: UIButton) {
         
-        let impact = UIImpactFeedbackGenerator()
-        impact.impactOccurred()
-        let index = Int(sender.accessibilityLabel!)!
-        
-        let wif = keys[index]["wif"] ?? "no wif exists"
-        
-        UIPasteboard.general.string = wif
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
-            
-            UIPasteboard.general.string = ""
-            
-        }
-        
-        displayAlert(viewController: self, isError: false, message: "wif copied to clipboard for 60 seconds")
+        self.copyText = true
+        self.section = Int(sender.accessibilityLabel!)!
+        showAuth()
         
     }
     
     @objc func wifQR(_ sender: UIButton) {
         
-        let impact = UIImpactFeedbackGenerator()
-        impact.impactOccurred()
-        let index = Int(sender.accessibilityLabel!)!
-        
-        if keys[index]["wif"] != nil {
-            
-            qrString = keys[index]["wif"] ?? "no wif"
-            
-            DispatchQueue.main.async {
-                
-                self.performSegue(withIdentifier: "exportKeys", sender: self)
-                
-            }
-            
-        }
+        self.showQr = true
+        self.section = Int(sender.accessibilityLabel!)!
+        showAuth()
         
     }
     
@@ -389,28 +364,29 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         let sigsRequired = s.sigsRequired
         var failed = false
         var getKeysFromNode = false
-        let kf = KeyFetcher()
         
         func getPrivKeys() {
             let mnemonicCreator = MnemonicCreator()
             mnemonicCreator.convert(words: words) { (mnemonic, error) in
                 if !error {
                     let derivation = self.wallet.derivation
-                    for i in 0 ... 1999 {
+                    for i in 0 ... 999 {
                         let path = derivation + "/" + "\(i)"
                         if let bip32path = BIP32Path(path) {
                             if let key = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
                                 do {
                                     let childKey = try key.derive(bip32path)
                                     if let privKey = childKey.privKey {
-                                        self.keys[i]["wif"] = privKey.wif
+                                        if self.keys.count > 0 {
+                                            self.keys[i]["wif"] = privKey.wif
+                                        }
                                     }
                                 } catch {
                                     print("failed getting a key")
                                 }
                             }
                         }
-                        if i == 1999 {
+                        if i == 999 {
                             DispatchQueue.main.async {
                                 self.table.reloadData()
                                 self.connectingView.removeConnectingView()
@@ -421,7 +397,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             }
         }
         
-        for i in 0 ... 1999 {
+        for i in 0 ... 999 {
             var pubkeys = [PubKey]()
             var pubkeyStrings = [String]()
             for (k, key) in keys.enumerated() {
@@ -459,7 +435,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                 }
             }
             
-            if i == 1999 {
+            if i == 999 {
                 if !failed {
                     getPrivKeys()
                 } else {
@@ -478,7 +454,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     func getKeysFromBitcoinCore() {
        
        let reducer = Reducer()
-       let param = "\"\(wallet.descriptor)\", ''[0,1999]''"
+       let param = "\"\(wallet.descriptor)\", ''[0,999]''"
        reducer.makeCommand(walletName: "", command: .deriveaddresses, param: param) {
             if !reducer.errorBool {
                let result = reducer.arrayToReturn
@@ -486,7 +462,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                    if self.keys.count > 0 {
                        self.keys[i]["address"] = (address as! String)
                    }
-                   
                    if i + 1 == result.count {
                        DispatchQueue.main.async {
                            self.table.reloadData()
@@ -506,21 +481,60 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             
             if wallet != nil && !error {
                 
+                let enc = Encryption()
                 self.wallet = wallet!
                 let parser = DescriptorParser()
                 let s = parser.descriptor(wallet!.descriptor)
-                let encryptedSeed = wallet!.seed
-                let enc = Encryption()
-                enc.decryptData(dataToDecrypt: encryptedSeed) { (decryptedSeed) in
+                
+                if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
+                 
+                    enc.decryptData(dataToDecrypt: wallet!.seed) { (decryptedSeed) in
+                        
+                        if decryptedSeed != nil {
+                            
+                            if let words = String(bytes: decryptedSeed!, encoding: .utf8) {
+                                
+                                if s.isMulti {
+                                    
+                                    self.getMultiSigKeys(words: words)
+                                    
+                                } else {
+                                    
+                                    self.getSingleSigKeys(words: words)
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    }
                     
-                    let words = String(bytes: decryptedSeed!, encoding: .utf8)!
-                    if s.isMulti {
-                        
-                        self.getMultiSigKeys(words: words)
-                        
-                    } else {
-                        
-                        self.getSingleSigKeys(words: words)
+                } else if wallet?.xprv != nil {
+                    
+                    enc.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
+                    
+                        if decryptedXprv != nil {
+                            
+                            if let xprvString = String(data: decryptedXprv!, encoding: .utf8) {
+                                
+                                if let xprv = HDKey(xprvString) {
+                                    
+                                    if s.isMulti {
+                                        
+                                        self.fetchMultiSigKeysFromXprv(xprv: xprv)
+                                        
+                                    } else {
+                                        
+                                        self.fetchKeysFromXprv(xprv: xprv)
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
                         
                     }
                     
@@ -532,7 +546,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
 
-    
     func getSingleSigKeys(words: String) {
         
         let mnemonicCreator = MnemonicCreator()
@@ -553,6 +566,153 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
+    private func fetchMultiSigKeysFromXprv(xprv: HDKey) {
+        
+        let parser = DescriptorParser()
+        let s = parser.descriptor(wallet.descriptor)
+        let keys = s.multiSigKeys
+        let paths = s.multiSigPaths
+        let sigsRequired = s.sigsRequired
+        var failed = false
+        var getKeysFromNode = false
+        
+        func getPrivKeys() {
+            let derivation = self.wallet.derivation
+            for i in 0 ... 999 {
+                let path = derivation + "/" + "\(i)"
+                if let bip32path = BIP32Path(path) {
+                    do {
+                        let childKey = try xprv.derive(bip32path)
+                        if let privKey = childKey.privKey {
+                            if self.keys.count > 0 {
+                                self.keys[i]["wif"] = privKey.wif
+                            }
+                        }
+                    } catch {
+                        print("failed getting a key")
+                    }
+                }
+                if i == 999 {
+                    DispatchQueue.main.async {
+                        self.table.reloadData()
+                        self.connectingView.removeConnectingView()
+                    }
+                }
+            }
+        }
+        
+        for i in 0 ... 999 {
+            var pubkeys = [PubKey]()
+            var pubkeyStrings = [String]()
+            for (k, key) in keys.enumerated() {
+                let hdKey = HDKey(key)
+                let path = paths[k] + "/" + "\(i)"
+                do {
+                    if let bip32path = BIP32Path(path) {
+                        let key = try hdKey?.derive(bip32path)
+                        if key != nil {
+                            pubkeys.append(key!.pubKey)
+                            pubkeyStrings.append("#\(k + 1): \(key!.pubKey.data.hexString)")
+                            if k + 1 == keys.count {
+                                let scriptPubKey = ScriptPubKey(multisig: pubkeys, threshold: sigsRequired, bip67: false)
+                                var multiSigAddress:Address!
+                                var processedPubkeys = "\(pubkeyStrings)".replacingOccurrences(of: "[", with: "")
+                                processedPubkeys = processedPubkeys.replacingOccurrences(of: "]", with: "")
+                                processedPubkeys = processedPubkeys.replacingOccurrences(of: "\"", with: "")
+                                processedPubkeys = processedPubkeys.replacingOccurrences(of: ",", with: "\n")
+                                // LibWally only produces bech32 multisig addresses, so need to fetch other formats from the node
+                                if wallet.derivation.contains("84") || s.isBIP84 || s.isP2WPKH {
+                                    multiSigAddress = Address(scriptPubKey, network(path: wallet.derivation))
+                                    self.keys.append(["address":"\(String(describing: multiSigAddress!))", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
+                                } else {
+                                    self.keys.append(["address":"fetching addresses from your node...", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
+                                    getKeysFromNode = true
+                                }
+                                pubkeys.removeAll()
+                                
+                            }
+                        }
+                    }
+                } catch {
+                    print("key derivation failed")
+                    failed = true
+                }
+            }
+            
+            if i == 999 {
+                if !failed {
+                    getPrivKeys()
+                } else {
+                    self.connectingView.removeConnectingView()
+                    displayAlert(viewController: self, isError: true, message: "key derivation failed")
+                }
+                if getKeysFromNode {
+                    self.getKeysFromBitcoinCore()
+                }
+            }
+            
+        }
+        
+    }
+    
+    private func fetchKeysFromXprv(xprv: HDKey) {
+        
+        let derivation = wallet.derivation
+        var addressType:AddressType!
+        if derivation.contains("84") {
+
+            addressType = .payToWitnessPubKeyHash
+
+        } else if derivation.contains("44") {
+
+            addressType = .payToPubKeyHash
+
+        } else if derivation.contains("49") {
+
+            addressType = .payToScriptHashPayToWitnessPubKeyHash
+
+        }
+        
+        for i in 0 ... 999 {
+            
+            let path = BIP32Path("0/\(i)")!
+            
+            do {
+                
+                let key = try xprv.derive(path)
+                let address = key.address(addressType)
+                
+                let dict = [
+                
+                    "address":"\(address)",
+                    "publicKey":"\((key.pubKey.data).hexString)",
+                    "wif":"\(key.privKey!.wif)"
+                
+                ]
+                                        
+                keys.append(dict)
+                
+                if i == 999 {
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.table.reloadData()
+                        self.connectingView.removeConnectingView()
+                        
+                    }
+                    
+                }
+                
+            } catch {
+                
+                print("error deriving keys")
+                
+            }
+            
+        }
+        
+    }
+    
     func getKeys(mnemonic: BIP39Mnemonic) {
         
         let derivation = wallet.derivation
@@ -560,7 +720,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         let masterKey = HDKey((mnemonic.seedHex("")), network(path: derivation))!
         let account = try! masterKey.derive(path)
         
-        for i in 0 ... 1999 {
+        for i in 0 ... 999 {
             
             let key1 = try! account.derive(BIP32Path("\(i)")!)
             var addressType:AddressType!
@@ -591,16 +751,9 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                                     
             keys.append(dict)
             
-            if i == 1999 {
+            if i == 999 {
                 
                 DispatchQueue.main.async {
-                    
-//                    if self.wallet.type == "MULTI" {
-//
-//                        self.fetchingAddresses = true
-//                        self.getMultiSigKeys()
-//
-//                    }
                     
                     self.table.reloadData()
                     self.connectingView.removeConnectingView()
@@ -613,25 +766,110 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-//    private func network(path: String) -> Network {
-//
-//        var network:Network!
-//
-//        if path.contains("/1'") {
-//
-//            network = .testnet
-//
-//        } else {
-//
-//            network = .mainnet
-//
-//        }
-//
-//        return network
-//
-//    }
+    func impact() {
+        
+        DispatchQueue.main.async {
+            
+            let impact = UIImpactFeedbackGenerator()
+            impact.impactOccurred()
+            
+        }
+        
+    }
     
+    func showAuth() {
+        
+        DispatchQueue.main.async {
+            
+            self.authView.backgroundColor = .black
+            self.authView.frame = self.view.frame
+            let logInButton = ASAuthorizationAppleIDButton(type: .signIn, style: .whiteOutline)
+            logInButton.sizeToFit()
+            logInButton.addTarget(self, action: #selector(self.handleLogInWithAppleID), for: .touchUpInside)
+            logInButton.frame = CGRect(x: 32, y: 100, width: self.view.frame.width - 64, height: 80)
+            self.view.addSubview(self.authView)
+            self.authView.addSubview(logInButton)
+            
+            let description = UILabel()
+            description.font = .systemFont(ofSize: 16, weight: .light)
+            description.numberOfLines = 0
+            description.frame = CGRect(x: 48, y: logInButton.frame.maxY + 5, width: self.view.frame.width - 96, height: 150)
+            description.text = "Blockchain Commons, LLC and FullyNoded 2 do not use or save your Apple ID data in anyway, it is used solely for 2FA (two-factor authentication) purposes only."
+            description.sizeToFit()
+            description.textAlignment = .left
+            description.textColor = .white
+            self.authView.addSubview(description)
+            
+        }
+        
+    }
+    
+    @objc func handleLogInWithAppleID() {
+        print("handleLogInWithAppleID")
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        controller.delegate = self
+        controller.presentationContextProvider = self
+        controller.performRequests()
+    }
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
 
+        switch authorization.credential {
+
+        case _ as ASAuthorizationAppleIDCredential:
+            
+            self.authView.removeFromSuperview()
+            
+            if self.showQr {
+                
+                self.impact()
+                
+                if self.keys[self.section]["wif"] != nil {
+                    
+                    self.qrString = self.keys[self.section]["wif"] ?? "no wif"
+                    self.showQr = false
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.performSegue(withIdentifier: "exportKeys", sender: self)
+                        
+                    }
+                    
+                }
+                
+            } else if self.copyText {
+                
+                self.impact()
+                
+                let wif = self.keys[self.section]["wif"] ?? "no wif exists"
+                self.copyText = false
+                
+                UIPasteboard.general.string = wif
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+                    
+                    UIPasteboard.general.string = ""
+                    
+                }
+                
+                displayAlert(viewController: self, isError: false, message: "wif copied to clipboard for 60 seconds")
+                
+            }
+                
+            break
+
+        default:
+
+            break
+
+        }
+
+    }
     
     // MARK: - Navigation
 

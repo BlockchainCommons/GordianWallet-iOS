@@ -30,10 +30,11 @@
         <attribute name="nodeId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="seed" optional="YES" attributeType="Binary"/>
         <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="xprv" optional="YES" attributeType="Binary"/>
     </entity>
     <elements>
         <element name="Auth" positionX="-63" positionY="-18" width="128" height="73"/>
         <element name="Nodes" positionX="-54" positionY="-9" width="128" height="148"/>
-        <element name="Wallets" positionX="-36" positionY="9" width="128" height="283"/>
+        <element name="Wallets" positionX="-36" positionY="9" width="128" height="298"/>
     </elements>
 </model>

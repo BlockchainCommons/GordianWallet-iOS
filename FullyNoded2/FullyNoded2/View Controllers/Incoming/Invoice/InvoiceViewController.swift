@@ -197,8 +197,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     func showAddress() {
         print("showAddress")
         
-        //let derivation = wallet!.derivation
-        //let type = wallet!.type
         let parser = DescriptorParser()
         let str = parser.descriptor(wallet!.descriptor)
         
@@ -211,17 +209,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             self.filterDerivation(str: str)
             
         }
-        
-        
-//        if type == "MULTI" || type == "CUSTOM" {
-//
-//            self.getMsigAddress()
-//
-//        } else {
-//
-//            self.filterDerivation(derivation: derivation)
-//
-//        }
         
     }
     
@@ -250,7 +237,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     }
     
     func showAddress(address: String) {
-        print("show address: \(address)")
         
         DispatchQueue.main.async {
             
@@ -403,7 +389,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     }
     
     func executeNodeCommand(method: BTC_CLI_COMMAND, param: String) {
-        print("executeNodeCommand")
         
         let reducer = Reducer()
         
@@ -453,18 +438,15 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
-        print("textFieldDidChange")
         
         updateQRImage()
         
     }
     
     func generateQrCode(key: String) -> UIImage {
-        print("generateqrcode: \(key)")
-        qrGenerator.textInput = key
-        let qr = qrGenerator.getQRCode()
         
-        return qr
+        qrGenerator.textInput = key
+        return qrGenerator.getQRCode()
         
     }
     

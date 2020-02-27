@@ -150,7 +150,6 @@ class SingleSigBuilder {
                 let bip32derivs = dict["bip32_derivs"] as! NSArray
                 let bip32deriv = bip32derivs[0] as! NSDictionary
                 let path = bip32deriv["path"] as! String
-                //let index = Int((path.split(separator: "/"))[1])!
                 let keyFetcher = KeyFetcher()
                 if let bip32path = BIP32Path(path) {
                     
@@ -247,17 +246,6 @@ class SingleSigBuilder {
                 changeType = "legacy"
                 
             }
-            
-//            switch wallet.derivation {
-//            case "m/84'/1'/0'/0", "m/84'/0'/0'/0":
-//                changeType = "bech32"
-//            case "m/44'/1'/0'/0", "m/44'/0'/0'/0":
-//                changeType = "legacy"
-//            case "m/49'/1'/0'/0", "m/49'/0'/0'/0":
-//                changeType = "p2sh-segwit"
-//            default:
-//                break
-//            }
 
             let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"change_type\": \"\(changeType)\"}'', true"
 
@@ -270,15 +258,7 @@ class SingleSigBuilder {
                     
                     if self.wallet.type == "DEFAULT" || self.wallet.type == "CUSTOM" {
                         
-//                        switch self.wallet.derivation {
-//                        case "m/84'/1'/0'/0", "m/84'/0'/0'/0": signSegwit(psbt: psbt)
-//                        case "m/44'/1'/0'/0", "m/44'/0'/0'/0": signLegacy(psbt: psbt)
-//                        case "m/49'/1'/0'/0", "m/49'/0'/0'/0": signSegwitWrapped(psbt: psbt)
-//                        default:
-//                            break
-//                        }
-                        
-                        if str.isHot || String(data: self.wallet.seed, encoding: .utf8) != "no seed" {
+                        if str.isHot || String(data: self.wallet.seed, encoding: .utf8) != "no seed" || self.wallet.xprv != nil {
                             
                             if str.isP2WPKH || str.isBIP84 {
                                 

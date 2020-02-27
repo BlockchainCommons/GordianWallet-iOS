@@ -383,7 +383,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        nodeKeysLabel.text = "holds public keys \(wallet.derivation)/0 to /1999"
+        nodeKeysLabel.text = "holds public keys \(wallet.derivation)/0 to /999"
         deviceXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUsed))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
@@ -400,7 +400,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let last15 = String(rpcOnion.suffix(15))
                 rpcOnionLabel.text = "\(first10)*****\(last15)"
                 nodeLabel.text = s.label
-                //nodeSeedLabel.text = "1 Watch-only \(s.label)"
                 
             }
             
@@ -540,7 +539,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         deviceXprv.text = "xprv \(wallet.derivation)"
-        nodeKeys.text = "keys \(wallet.derivation)/0 to /1999"
+        nodeKeys.text = "keys \(wallet.derivation)/0 and 1/0 to /999"
         offlineXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUsed))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
@@ -709,11 +708,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if descStr.isHot {
                     
-                    keysOnNodeLabel.text = "2,000 private keys on \(s.label)"
+                    keysOnNodeLabel.text = "1,000 private keys on \(s.label)"
                     
                 } else {
                     
-                    keysOnNodeLabel.text = "2,000 public keys on \(s.label)"
+                    keysOnNodeLabel.text = "1,000 public keys on \(s.label)"
                     
                 }
                 
@@ -884,7 +883,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     DispatchQueue.main.async {
                         
                         sender.loadingIndicator(show: false)
-                        sender.tintColor = .systemBlue
+                        sender.tintColor = .systemTeal
                         self.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
                         
                     }
@@ -927,12 +926,22 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         impact()
         
-        DispatchQueue.main.async {
-            
-            self.performSegue(withIdentifier: "exportSeed", sender: self)
-            
-        }
+        let isCaptured = UIScreen.main.isCaptured
         
+        if !isCaptured {
+            
+            DispatchQueue.main.async {
+                
+                self.performSegue(withIdentifier: "exportSeed", sender: self)
+                
+            }
+            
+        } else {
+            
+            showAlert(vc: self, title: "Security Alert!", message: "Your device is taking a screen recording, please stop the recording and try again.")
+            
+        }        
+                
     }
     
     @objc func getWalletInfo(_ sender: UIButton) {
@@ -1136,12 +1145,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let dict = sortedWallets[indexPath.section]
-        let wallet = WalletStruct.init(dictionary: dict)
-        
-        if !wallet.isActive {
+        if sortedWallets.count > 0 {
+         
+            let dict = sortedWallets[indexPath.section]
+            let wallet = WalletStruct.init(dictionary: dict)
             
-            activateNow(wallet: wallet, index: indexPath.section)
+            if !wallet.isActive {
+                
+                activateNow(wallet: wallet, index: indexPath.section)
+                
+            }
             
         }
         
@@ -1418,6 +1431,18 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     DispatchQueue.main.async {
                         
                         self.performSegue(withIdentifier: "importCustom", sender: self)
+                        
+                    }
+                    
+                }
+                
+                vc.recoverDoneBlock = { result in
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.refresh()
+                        
+                        showAlert(vc: self, title: "Success!", message: "Wallet recovered 🤩!\n\nTap it to activate it, you will need to tap the refresh button to load the balance.")
                         
                     }
                     

@@ -35,7 +35,6 @@
 		D09D731823F0F3C000847DC8 /* NodeManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */; };
 		D09D731923F0F3C000847DC8 /* VerifyAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */; };
 		D09D731A23F0F3C000847DC8 /* QRDisplayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */; };
-		D09D731B23F0F3C000847DC8 /* DerivationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729823F0F3BF00847DC8 /* DerivationViewController.swift */; };
 		D09D731C23F0F3C000847DC8 /* QRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729923F0F3BF00847DC8 /* QRViewController.swift */; };
 		D09D731E23F0F3C000847DC8 /* WalletInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729C23F0F3BF00847DC8 /* WalletInfoViewController.swift */; };
 		D09D731F23F0F3C000847DC8 /* WalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729D23F0F3BF00847DC8 /* WalletsViewController.swift */; };
@@ -118,6 +117,8 @@
 		D0A0EAF023F7C06E004F9E15 /* DescriptorParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A0EAEF23F7C06E004F9E15 /* DescriptorParser.swift */; };
 		D0A0EAF223F7CF70004F9E15 /* DescriptorStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A0EAF123F7CF70004F9E15 /* DescriptorStruct.swift */; };
 		D0A9EB8723F5335A00C84829 /* ChooseWalletFormatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */; };
+		D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */; };
+		D0CA5415240750AA0096EE26 /* RecoverWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA5414240750AA0096EE26 /* RecoverWallet.swift */; };
 		D0D8DC162400D85000110A78 /* LibWallyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D8DC152400D85000110A78 /* LibWallyTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -177,7 +178,6 @@
 		D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeManagerViewController.swift; sourceTree = "<group>"; };
 		D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyAddressViewController.swift; sourceTree = "<group>"; };
 		D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRDisplayerViewController.swift; sourceTree = "<group>"; };
-		D09D729823F0F3BF00847DC8 /* DerivationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DerivationViewController.swift; sourceTree = "<group>"; };
 		D09D729923F0F3BF00847DC8 /* QRViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRViewController.swift; sourceTree = "<group>"; };
 		D09D729C23F0F3BF00847DC8 /* WalletInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletInfoViewController.swift; sourceTree = "<group>"; };
 		D09D729D23F0F3BF00847DC8 /* WalletsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletsViewController.swift; sourceTree = "<group>"; };
@@ -263,6 +263,8 @@
 		D0A0EAEF23F7C06E004F9E15 /* DescriptorParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptorParser.swift; sourceTree = "<group>"; };
 		D0A0EAF123F7CF70004F9E15 /* DescriptorStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptorStruct.swift; sourceTree = "<group>"; };
 		D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseWalletFormatViewController.swift; sourceTree = "<group>"; };
+		D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRecoverViewController.swift; sourceTree = "<group>"; };
+		D0CA5414240750AA0096EE26 /* RecoverWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverWallet.swift; sourceTree = "<group>"; };
 		D0D8DC152400D85000110A78 /* LibWallyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibWallyTests.swift; sourceTree = "<group>"; };
 		DDDEC206181E8985B8D9E919 /* Pods-FullyNoded2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FullyNoded2.debug.xcconfig"; path = "Target Support Files/Pods-FullyNoded2/Pods-FullyNoded2.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -434,7 +436,6 @@
 			isa = PBXGroup;
 			children = (
 				D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */,
-				D09D729823F0F3BF00847DC8 /* DerivationViewController.swift */,
 				D09D72A123F0F3BF00847DC8 /* SettingsViewController.swift */,
 				D06BE5FE23FAD64300DDE1F6 /* SecurityViewController.swift */,
 			);
@@ -460,6 +461,8 @@
 				D0CD026923FA3631009F2E7F /* Wallet Tools */,
 				D0CD026A23FA368A009F2E7F /* Wallets Table */,
 				D0CD026B23FA36B4009F2E7F /* Wallet Creation */,
+				D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */,
+				D0CA5414240750AA0096EE26 /* RecoverWallet.swift */,
 			);
 			path = Wallets;
 			sourceTree = "<group>";
@@ -1049,13 +1052,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D09D731B23F0F3C000847DC8 /* DerivationViewController.swift in Sources */,
 				D0A0EAEE23F584C8004F9E15 /* UtxoInfoViewController.swift in Sources */,
 				D09D731423F0F3C000847DC8 /* ImportQRViewController.swift in Sources */,
 				D09D733723F0F3C000847DC8 /* shim.swift in Sources */,
 				D09D734123F0F3C000847DC8 /* KeychainCreator.swift in Sources */,
 				D09D734323F0F3C000847DC8 /* MakeRPCCall.swift in Sources */,
 				D09D724B23F0EDBB00847DC8 /* FullyNoded2.xcdatamodeld in Sources */,
+				D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */,
 				D09D731223F0F3C000847DC8 /* SeedViewController.swift in Sources */,
 				D09D732723F0F3C000847DC8 /* ConfirmViewController.swift in Sources */,
 				D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */,
@@ -1114,6 +1117,7 @@
 				D09D736323F0F3C000847DC8 /* ErrorView.swift in Sources */,
 				D09D733323F0F3C000847DC8 /* Utilities.swift in Sources */,
 				D09D731123F0F3C000847DC8 /* ExportKeysViewController.swift in Sources */,
+				D0CA5415240750AA0096EE26 /* RecoverWallet.swift in Sources */,
 				D09D732923F0F3C000847DC8 /* InvoiceViewController.swift in Sources */,
 				D09D730D23F0F3C000847DC8 /* NodeStruct.swift in Sources */,
 				D09D736923F0F3C000847DC8 /* SingleSigBuilder.swift in Sources */,
@@ -1283,7 +1287,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.50;
+				CURRENT_PROJECT_VERSION = 0.0.51;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1296,7 +1300,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.50;
+				MARKETING_VERSION = 0.0.51;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1312,7 +1316,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.50;
+				CURRENT_PROJECT_VERSION = 0.0.51;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1325,7 +1329,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.50;
+				MARKETING_VERSION = 0.0.51;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

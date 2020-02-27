@@ -55,6 +55,12 @@ class SecurityViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        displayAlert(viewController: self, isError: false, message: "Under construction")
+        
+    }
+    
 
     /*
     // MARK: - Navigation

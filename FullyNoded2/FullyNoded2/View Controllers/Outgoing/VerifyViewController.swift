@@ -17,7 +17,6 @@ class VerifyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("address = \(address)")
         connectingView.addConnectingView(vc: self, description: "getting address info")
         getAddressInfo(address: address)
         

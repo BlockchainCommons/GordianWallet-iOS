@@ -65,8 +65,6 @@ class OfflineSignerP2SHSegwit {
         
         func parseVins(vins: NSArray) {
             
-            print("vins.count = \(vins.count)")
-        
             for (i, input) in vins.enumerated() {
                 
                 let vinDict = input as! NSDictionary
@@ -81,16 +79,9 @@ class OfflineSignerP2SHSegwit {
                 let bip32derivs = inputMetaDataArray[i]["bip32_derivs"] as! NSArray
                 let bip32derivsDict = bip32derivs[0] as! NSDictionary
                 let path = bip32derivsDict["path"] as! String
-                //let index = Int(path.split(separator: "/")[1])!
-                
-//                let pubkeyString = bip32derivsDict["pubkey"] as! String
-//                let pubkeyData = Data.init(pubkeyString)!
-//                let pubkey = PubKey.init(pubkeyData, .testnet)!
                 
                 let keyfetcher = KeyFetcher()
-                
                 if let bip32Path = BIP32Path(path) {
-                    
                     keyfetcher.key(path: bip32Path) { (key, error) in
                         
                         if !error {

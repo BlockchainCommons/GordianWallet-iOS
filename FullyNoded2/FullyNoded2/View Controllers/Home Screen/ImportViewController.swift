@@ -95,7 +95,6 @@ class ImportViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     func scanNow() {
-        print("scanNow")
         
         DispatchQueue.main.async {
             
@@ -155,54 +154,6 @@ class ImportViewController: UIViewController, UINavigationControllerDelegate {
             }
             
         }
-        
-//        let qc = QuickConnect()
-//
-//        func nodeAdded() {
-//
-//            print("result")
-//
-//            if !qc.errorBool {
-//
-//                DispatchQueue.main.async {
-//
-//                    self.onDoneBlock!(true)
-//                    self.dismiss(animated: true, completion: nil)
-//
-//                }
-//
-//            } else {
-//
-//                scanNow()
-//
-//                displayAlert(viewController: self,
-//                             isError: true,
-//                             message: qc.errorDescription)
-//
-//            }
-//
-//        }
-//
-//        func addnode() {
-//
-//            qc.addNode(vc: self,
-//                       url: url,
-//                       completion: nodeAdded)
-//
-//        }
-//
-//        if url.hasPrefix("btcrpc://") || url.hasPrefix("btcstandup://") {
-//
-//            addnode()
-//
-//        } else {
-//
-//
-//            displayAlert(viewController: self,
-//                         isError: true,
-//                         message: "Thats not a compatible url!")
-//
-//        }
                 
     }
     /*

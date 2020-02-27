@@ -463,7 +463,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        keysOnNodeDescription.text = "public keys \(wallet.derivation)/0 to /1999"
+        keysOnNodeDescription.text = "public keys \(wallet.derivation)/0 to /999"
         deviceXprv.text = "xprv \(wallet.derivation)"
         walletNameLabel.text = "\(wallet.name).dat"
         
@@ -577,7 +577,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        nodeXprv.text = "private keys \(wallet.derivation)/0 to /1999"
+        nodeXprv.text = "keys \(wallet.derivation)/0 and 1/0 to /999"
         deviceXprv.text = "xprv \(wallet.derivation)"
         offlineXprvLabel.text = "xprv \(wallet.derivation)"
         
@@ -682,13 +682,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if descStruct.isHot {
             
             seedOnDeviceLabel.text = "\(node.label) is Hot"
-            keysOnNodeLabel.text = "2,000 private keys on \(node.label)"
+            keysOnNodeLabel.text = "1,000 private keys on \(node.label)"
             watchIcon.image = UIImage(systemName: "pencil.and.ellipsis.rectangle")
             
         } else {
             
             seedOnDeviceLabel.text = "\(node.label) is Cold"
-            keysOnNodeLabel.text = "2,000 public keys on \(node.label)"
+            keysOnNodeLabel.text = "1,000 public keys on \(node.label)"
             watchIcon.image = UIImage(systemName: "eye")
             
         }
@@ -1265,7 +1265,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if torSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
                 textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
@@ -1283,7 +1283,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if walletSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
                 textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
@@ -1301,7 +1301,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if nodeSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
                 textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
@@ -1319,7 +1319,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if transactionsSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
                 textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
@@ -2358,6 +2358,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         case "scanNow":
             
             if let vc = segue.destination as? ScannerViewController {
+                
+                vc.scanningNode = true
                 
                 vc.onDoneBlock = { result in
                     

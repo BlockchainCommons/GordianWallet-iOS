@@ -50,22 +50,17 @@ class LogInViewController: UIViewController, UITextFieldDelegate, ASAuthorizatio
     }
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-
+        
         switch authorization.credential {
-
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
-
             let userIdentifier = appleIDCredential.user
             let keychain = KeychainSwift()
-            keychain.set(userIdentifier, forKey: "userIdentifier1")
-            self.dismiss(animated: true, completion: nil)
-
-            break
-
+            keychain.set(userIdentifier, forKey: "userIdentifier")
+            DispatchQueue.main.async {
+                self.dismiss(animated: true, completion: nil)
+            }
         default:
-
             break
-
         }
 
     }

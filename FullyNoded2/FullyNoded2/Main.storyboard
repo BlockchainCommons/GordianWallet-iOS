@@ -76,7 +76,7 @@
                                                                 <constraint firstAttribute="height" constant="22" id="UF6-z3-SGX"/>
                                                                 <constraint firstAttribute="width" constant="20" id="dMY-JZ-KsM"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="qrcode" catalog="system"/>
                                                         </button>
                                                         <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cx1-12-iQK">
@@ -85,7 +85,7 @@
                                                                 <constraint firstAttribute="width" constant="22" id="AV2-St-9uY"/>
                                                                 <constraint firstAttribute="height" constant="24" id="BDL-pp-H7G"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="doc.on.doc" catalog="system"/>
                                                         </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="bc1inef883jf8fhuhf37fh73hhd2hjd92jdh3d37hd3jd239dwkdi" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2hR-Qg-Qw0">
@@ -124,7 +124,7 @@
                                                                 <constraint firstAttribute="width" constant="20" id="MyD-q6-F41"/>
                                                                 <constraint firstAttribute="height" constant="22" id="T7d-hM-U0Q"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="qrcode" catalog="system"/>
                                                         </button>
                                                         <button opaque="NO" tag="8" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0pw-3M-ilO">
@@ -133,7 +133,7 @@
                                                                 <constraint firstAttribute="height" constant="24" id="828-My-hCl"/>
                                                                 <constraint firstAttribute="width" constant="22" id="XXT-Ib-Fh2"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="doc.on.doc" catalog="system"/>
                                                         </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="6" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="02unuh7292e9ju129ej2d7bub3udb2uhdu2d92jd82hduhe" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3pH-Lp-wrJ">
@@ -172,7 +172,7 @@
                                                                 <constraint firstAttribute="height" constant="22" id="Ksz-hl-ECf"/>
                                                                 <constraint firstAttribute="width" constant="20" id="rk6-zT-7RH"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="qrcode" catalog="system"/>
                                                         </button>
                                                         <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UMt-im-CBM">
@@ -181,7 +181,7 @@
                                                                 <constraint firstAttribute="width" constant="22" id="9p6-dF-UBg"/>
                                                                 <constraint firstAttribute="height" constant="24" id="NZO-Cl-xcb"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="doc.on.doc" catalog="system"/>
                                                         </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="cinef92h9ef29enf92ne29uf29uef92uenn92u9ue9u2e9fu293f298efh9" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SBu-qp-ifb">
@@ -243,7 +243,7 @@
                                                                 <constraint firstAttribute="height" constant="22" id="7zz-Sv-mvw"/>
                                                                 <constraint firstAttribute="width" constant="20" id="Ddv-dW-L8c"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="qrcode" catalog="system"/>
                                                         </button>
                                                         <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jGg-u2-GF7">
@@ -252,7 +252,7 @@
                                                                 <constraint firstAttribute="width" constant="22" id="9QT-qV-rj1"/>
                                                                 <constraint firstAttribute="height" constant="24" id="fTH-Kg-AZF"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="doc.on.doc" catalog="system"/>
                                                         </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="bc1inef883jf8fhuhf37fh73hhd2hjd92jdh3d37hd3jd239dwkdi" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lr1-9f-kbL">
@@ -291,7 +291,7 @@
                                                                 <constraint firstAttribute="height" constant="22" id="a4Y-lb-Bz1"/>
                                                                 <constraint firstAttribute="width" constant="20" id="qR9-DC-O2H"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="qrcode" catalog="system"/>
                                                         </button>
                                                         <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X2g-q0-Svq">
@@ -300,7 +300,7 @@
                                                                 <constraint firstAttribute="width" constant="22" id="tia-Bo-Gaz"/>
                                                                 <constraint firstAttribute="height" constant="24" id="yaj-Dc-Sep"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="doc.on.doc" catalog="system"/>
                                                         </button>
                                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="6" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="W6A-sd-UO7">
@@ -342,7 +342,7 @@
                                                                 <constraint firstAttribute="width" constant="20" id="6Sa-Ka-YS2"/>
                                                                 <constraint firstAttribute="height" constant="22" id="Wbs-88-ujH"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="qrcode" catalog="system"/>
                                                         </button>
                                                         <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1No-6U-IBu">
@@ -351,7 +351,7 @@
                                                                 <constraint firstAttribute="width" constant="22" id="A1P-pn-OBM"/>
                                                                 <constraint firstAttribute="height" constant="24" id="A1R-yK-nVE"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="doc.on.doc" catalog="system"/>
                                                         </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="8" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="cinef92h9ef29enf92ne29uf29uef92uenn92u9ue9u2e9fu293f298efh9" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UUx-iN-XZy">
@@ -390,7 +390,7 @@
                                                                 <constraint firstAttribute="height" constant="22" id="N74-DA-G8I"/>
                                                                 <constraint firstAttribute="width" constant="20" id="kxT-Cu-SMt"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="qrcode" catalog="system"/>
                                                         </button>
                                                         <button opaque="NO" tag="14" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IJZ-Tr-7kr">
@@ -399,7 +399,7 @@
                                                                 <constraint firstAttribute="height" constant="24" id="1NZ-Pl-vho"/>
                                                                 <constraint firstAttribute="width" constant="22" id="mmp-D1-C32"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="doc.on.doc" catalog="system"/>
                                                         </button>
                                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="7" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="est-bC-SYa">
@@ -661,7 +661,7 @@
                                                         <constraint firstAttribute="height" constant="20" id="4ff-hj-Le3"/>
                                                         <constraint firstAttribute="width" constant="20" id="Zb8-BG-VTe"/>
                                                     </constraints>
-                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                 </button>
                                             </subviews>
@@ -870,7 +870,7 @@
                                                         <constraint firstAttribute="width" constant="20" id="iel-h5-4iD"/>
                                                         <constraint firstAttribute="height" constant="20" id="lFk-sU-QxG"/>
                                                     </constraints>
-                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                 </button>
                                             </subviews>
@@ -992,7 +992,7 @@
                                                         <constraint firstAttribute="height" constant="20" id="Nhz-dk-DB9"/>
                                                         <constraint firstAttribute="width" constant="20" id="j8M-VW-WeN"/>
                                                     </constraints>
-                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                 </button>
                                             </subviews>
@@ -1297,7 +1297,7 @@
                                                         <constraint firstAttribute="width" constant="20" id="cL8-7b-98c"/>
                                                         <constraint firstAttribute="height" constant="20" id="zLd-yB-2bK"/>
                                                     </constraints>
-                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                 </button>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" tag="26" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="mX7-ta-8pa">
@@ -1484,7 +1484,7 @@
                                                         <constraint firstAttribute="width" constant="20" id="neS-C4-fZy"/>
                                                         <constraint firstAttribute="height" constant="20" id="rkv-Ie-JaH"/>
                                                     </constraints>
-                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                 </button>
                                             </subviews>
@@ -1723,7 +1723,7 @@
                                                         <constraint firstAttribute="height" constant="20" id="N3G-dS-ljP"/>
                                                         <constraint firstAttribute="width" constant="20" id="d0z-Vp-ZNp"/>
                                                     </constraints>
-                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                 </button>
                                             </subviews>
@@ -2608,8 +2608,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="NOC-aP-rCn">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="583"/>
+                                <color key="backgroundColor" red="0.076360787853431852" green="0.088898746754102795" blue="0.09527404682076146" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="separatorColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="phraseCell" rowHeight="136" id="aWQ-xB-Wza">
@@ -2645,19 +2645,46 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.050706155599999997" green="0.05862525851" blue="0.071102283899999993" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="recoveryCell" rowHeight="345" id="WJy-Yu-NLh">
+                                        <rect key="frame" x="15" y="235" width="345" height="345"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="WJy-Yu-NLh" id="wqc-ot-E8c">
+                                            <rect key="frame" x="0.0" y="0.0" width="345" height="345"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ni3-IN-Mpq">
+                                                    <rect key="frame" x="15" y="11" width="315" height="323"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="ni3-IN-Mpq" secondAttribute="height" multiplier="315:323" id="KkJ-9I-koY"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ni3-IN-Mpq" firstAttribute="trailing" secondItem="wqc-ot-E8c" secondAttribute="trailingMargin" id="QXs-VN-i0n"/>
+                                                <constraint firstItem="ni3-IN-Mpq" firstAttribute="centerX" secondItem="wqc-ot-E8c" secondAttribute="centerX" id="URU-VE-fGE"/>
+                                                <constraint firstItem="ni3-IN-Mpq" firstAttribute="leading" secondItem="wqc-ot-E8c" secondAttribute="leadingMargin" id="ij3-3U-LCp"/>
+                                                <constraint firstItem="ni3-IN-Mpq" firstAttribute="centerY" secondItem="wqc-ot-E8c" secondAttribute="centerY" id="sTn-UD-cJm"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.050706155599999997" green="0.05862525851" blue="0.071102283899999993" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="lq5-Pd-gqW" id="9ZE-Ly-lz5"/>
                                     <outlet property="delegate" destination="lq5-Pd-gqW" id="z0d-FI-zxt"/>
                                 </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BMV-eT-vJd" customClass="CustomButton" customModule="FullyNoded_2" customModuleProvider="target">
-                                <rect key="frame" x="67" y="453" width="189" height="143"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device Seed Info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gaj-a7-OpI">
+                                <rect key="frame" x="16" y="5" width="234" height="54"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="54" id="9in-tV-luE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KJP-4R-b09">
-                                <rect key="frame" x="326" y="24" width="20" height="22"/>
+                                <rect key="frame" x="327" y="21" width="20" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="20" id="4qX-dj-uwk"/>
                                 </constraints>
@@ -2670,25 +2697,26 @@
                         </subviews>
                         <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="l53-Rf-mg1" firstAttribute="trailing" secondItem="KJP-4R-b09" secondAttribute="trailing" constant="29" id="4HK-gy-wS1"/>
+                            <constraint firstItem="l53-Rf-mg1" firstAttribute="trailing" secondItem="KJP-4R-b09" secondAttribute="trailing" constant="28" id="4HK-gy-wS1"/>
                             <constraint firstItem="NOC-aP-rCn" firstAttribute="leading" secondItem="l53-Rf-mg1" secondAttribute="leading" id="7eD-ri-eGk"/>
-                            <constraint firstItem="NOC-aP-rCn" firstAttribute="top" secondItem="l53-Rf-mg1" secondAttribute="top" id="9LM-oR-dFz"/>
-                            <constraint firstItem="KJP-4R-b09" firstAttribute="top" secondItem="l53-Rf-mg1" secondAttribute="top" constant="24" id="Bno-SM-I3a"/>
+                            <constraint firstItem="KJP-4R-b09" firstAttribute="top" secondItem="l53-Rf-mg1" secondAttribute="top" constant="21" id="Bno-SM-I3a"/>
                             <constraint firstItem="NOC-aP-rCn" firstAttribute="bottom" secondItem="l53-Rf-mg1" secondAttribute="bottom" id="Muu-Tn-Vgp"/>
+                            <constraint firstItem="gaj-a7-OpI" firstAttribute="leading" secondItem="l53-Rf-mg1" secondAttribute="leading" constant="16" id="Yft-YA-P0J"/>
+                            <constraint firstItem="NOC-aP-rCn" firstAttribute="top" secondItem="gaj-a7-OpI" secondAttribute="bottom" constant="5" id="cDe-Nr-Uc1"/>
+                            <constraint firstItem="gaj-a7-OpI" firstAttribute="top" secondItem="l53-Rf-mg1" secondAttribute="top" constant="5" id="ezT-A0-tKy"/>
                             <constraint firstItem="NOC-aP-rCn" firstAttribute="trailing" secondItem="l53-Rf-mg1" secondAttribute="trailing" id="idh-CG-Gxm"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="l53-Rf-mg1"/>
                     </view>
                     <navigationItem key="navigationItem" title="Seed Export" id="7T2-eh-dsR"/>
                     <connections>
-                        <outlet property="customButtons" destination="BMV-eT-vJd" id="gcQ-mj-oPu"/>
                         <outlet property="tableView" destination="NOC-aP-rCn" id="EJQ-4i-ZGa"/>
                         <segue destination="aWn-Fx-ACR" kind="presentation" identifier="showQR" id="EvJ-Lj-YLy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cfw-Yo-wGu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2628" y="349"/>
+            <point key="canvasLocation" x="-1620" y="349"/>
         </scene>
         <!--Seed Import-->
         <scene sceneID="jBs-pE-1GY">
@@ -2902,7 +2930,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IXO-dM-SLD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2628" y="1101"/>
+            <point key="canvasLocation" x="-1620" y="1101"/>
         </scene>
         <!--Document Scanner-->
         <scene sceneID="ReE-Oz-Pl8">
@@ -2959,7 +2987,6 @@
                         <outlet property="imageView" destination="inK-N3-bKP" id="vSj-vj-rDX"/>
                         <outlet property="nextButtonOutlet" destination="leZ-K5-kYh" id="x6f-n8-53A"/>
                         <outlet property="textView" destination="eeB-NR-6rO" id="koT-B9-L74"/>
-                        <segue destination="jXY-2O-cMK" kind="show" identifier="goVerify" id="das-VD-Tgp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9L0-lY-zWd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2990,7 +3017,6 @@
                     <navigationItem key="navigationItem" id="hLe-KI-gZx"/>
                     <connections>
                         <outlet property="imageView" destination="CGv-49-MOP" id="Iwy-65-Ugk"/>
-                        <segue destination="jXY-2O-cMK" kind="show" identifier="goVerify" id="zpS-pl-Czc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sjw-Zt-TBR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3145,7 +3171,6 @@
                     <navigationItem key="navigationItem" id="eAo-Ly-Bxa"/>
                     <connections>
                         <outlet property="table" destination="2hj-fw-DNn" id="N5l-s9-Oyp"/>
-                        <segue destination="o69-RN-9VD" kind="presentation" identifier="addNode" id="hQB-hF-hqf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8UK-q3-fY3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3183,9 +3208,9 @@
                                     <constraint firstAttribute="width" constant="343" id="Ibi-2Y-x8y"/>
                                     <constraint firstAttribute="height" constant="130" id="OYU-aB-ZVD"/>
                                 </constraints>
-                                <string key="text">In order to recover your wallet in the unlikely event that you lose either your node or your device you MUST SAVE THESE WORDS AND DESCRIPTOR!
+                                <string key="text">In order to recover your wallet in the unlikely event that you lose your node *AND* your device you MUST SAVE THESE WORDS AND RecoveryQR Code!
 
-You may export the public key descriptor at anytime but the 12 word recovery phrase will be GONE FOREVER when you tap "I saved them" below!</string>
+You may export the RecoveryQR Code at anytime but the 12 word recovery kit words will be GONE FOREVER when you tap "I saved them" below!</string>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="13"/>
                                 <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -3209,7 +3234,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                     <constraint firstAttribute="height" constant="54" id="WWV-w6-nkE"/>
                                 </constraints>
                                 <state key="normal" title="I saved them">
-                                    <color key="titleColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="nextAction:" destination="XRX-1n-DHG" eventType="touchUpInside" id="zFd-pA-aZC"/>
@@ -3222,6 +3247,15 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                     <constraint firstAttribute="height" constant="217" id="RZa-Jl-DI4"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ydb-vi-wLn">
+                                <rect key="frame" x="130.5" y="298" width="114" height="30"/>
+                                <state key="normal" title="more info please">
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="moreInfo:" destination="XRX-1n-DHG" eventType="touchUpInside" id="TLV-PE-QoP"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -3236,6 +3270,8 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                             <constraint firstItem="npP-BR-7Kd" firstAttribute="top" secondItem="P3h-dC-Vnd" secondAttribute="bottom" constant="20" id="Ykh-Pt-kDk"/>
                             <constraint firstItem="P3h-dC-Vnd" firstAttribute="top" secondItem="vdw-Ya-feJ" secondAttribute="bottom" constant="8" id="ZEh-0q-SWz"/>
                             <constraint firstItem="P3h-dC-Vnd" firstAttribute="centerX" secondItem="aoZ-Pn-mhv" secondAttribute="centerX" id="cLf-wn-GCp"/>
+                            <constraint firstItem="P3h-dC-Vnd" firstAttribute="top" secondItem="ydb-vi-wLn" secondAttribute="bottom" constant="8" id="e6R-cm-vTk"/>
+                            <constraint firstItem="ydb-vi-wLn" firstAttribute="centerX" secondItem="aoZ-Pn-mhv" secondAttribute="centerX" id="fd6-Lt-TOf"/>
                             <constraint firstItem="nns-B2-XWQ" firstAttribute="trailing" secondItem="vdw-Ya-feJ" secondAttribute="trailing" constant="16" id="ieT-5b-wRi"/>
                             <constraint firstItem="vdw-Ya-feJ" firstAttribute="top" secondItem="wcK-ZB-sAE" secondAttribute="bottom" constant="8" id="pwf-hk-3gA"/>
                             <constraint firstItem="wcK-ZB-sAE" firstAttribute="leading" secondItem="nns-B2-XWQ" secondAttribute="leading" constant="16" id="rlB-4n-8x2"/>
@@ -3253,6 +3289,145 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JoO-T3-GZZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-4418" y="1101"/>
+        </scene>
+        <!--Wallet Recover View Controller-->
+        <scene sceneID="k9E-E2-70I">
+            <objects>
+                <viewController id="Elr-wf-cyI" customClass="WalletRecoverViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="JxN-8Z-mkw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icloud.and.arrow.down" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="MmJ-5B-aeC">
+                                <rect key="frame" x="16" y="25" width="41" height="46"/>
+                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="41" id="D1A-MZ-yu1"/>
+                                    <constraint firstAttribute="height" constant="45" id="Ta3-KB-ZaJ"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wallet Recovery" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HK9-eh-evW">
+                                <rect key="frame" x="65" y="20.5" width="251.5" height="54"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="54" id="LOM-AF-cG1"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="31"/>
+                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="type recovery words" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Gyn-mg-Z8d">
+                                <rect key="frame" x="16" y="131" width="310" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="310" id="3je-cd-Iyp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Vj-y5-al5">
+                                <rect key="frame" x="16" y="173" width="343" height="249"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="249" id="yP6-gR-buz"/>
+                                </constraints>
+                                <string key="text">You may recover a single signature wallet with a BIP39 mnemonic *OR* by scanning a RecoveryQR Code.
+
+If you want to *fully* recover a multi signature wallet you will need your recovery kit words *and* the RecoveryQR Code.
+
+If you lost your device and still have your node all that is needed to recover a multi signature wallet is the RecoveryQR Code.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ftm-bz-o4y">
+                                <rect key="frame" x="334" y="136" width="25" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="24" id="RHL-1v-2B2"/>
+                                    <constraint firstAttribute="width" constant="25" id="mnp-cD-th7"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="addWord:" destination="Elr-wf-cyI" eventType="touchUpInside" id="g4D-PV-wUb"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ir0-SX-h8D">
+                                <rect key="frame" x="16" y="76" width="343" height="47"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="47" id="Rcp-jj-Stb"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tFS-FG-5Pf">
+                                <rect key="frame" x="339" y="25" width="20" height="22"/>
+                                <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="xmark.circle.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="close:" destination="Elr-wf-cyI" eventType="touchUpInside" id="Xv0-qZ-WlN"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40V-y5-mzs">
+                                <rect key="frame" x="112.5" y="576" width="150" height="51"/>
+                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="45n-fq-rPl"/>
+                                    <constraint firstAttribute="height" constant="51" id="lqk-IK-qyu"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Recover Now"/>
+                            </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsz-u9-Mzm">
+                                <rect key="frame" x="37" y="430" width="300" height="58"/>
+                                <color key="backgroundColor" red="0.098023947593815594" green="0.12937268308221372" blue="0.14146254574365491" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="58" id="iQ9-HI-X4s"/>
+                                    <constraint firstAttribute="width" constant="300" id="wT5-bR-fEp"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="  Scan RecoveryQR Code" image="qrcode" catalog="system">
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="scanAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="3za-sk-NIG"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Gyn-mg-Z8d" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="6Y6-aA-Xl4"/>
+                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="37" id="7Cm-sH-wLs"/>
+                            <constraint firstItem="Ir0-SX-h8D" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="7lm-Cd-aWd"/>
+                            <constraint firstItem="5Vj-y5-al5" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="9bu-FF-3pH"/>
+                            <constraint firstItem="Ir0-SX-h8D" firstAttribute="top" secondItem="HK9-eh-evW" secondAttribute="bottom" constant="1.5" id="AEI-tI-VMO"/>
+                            <constraint firstItem="ftm-bz-o4y" firstAttribute="centerY" secondItem="Gyn-mg-Z8d" secondAttribute="centerY" id="C6k-g3-QmZ"/>
+                            <constraint firstItem="HK9-eh-evW" firstAttribute="centerY" secondItem="MmJ-5B-aeC" secondAttribute="centerY" id="CZn-9Z-ih4"/>
+                            <constraint firstItem="tFS-FG-5Pf" firstAttribute="top" secondItem="duj-2r-qsr" secondAttribute="top" constant="25" id="HID-rz-PEq"/>
+                            <constraint firstItem="Gyn-mg-Z8d" firstAttribute="top" secondItem="Ir0-SX-h8D" secondAttribute="bottom" constant="8" id="Iez-CW-Lk8"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="bottom" secondItem="40V-y5-mzs" secondAttribute="bottom" constant="20" id="Oua-Fi-Ike"/>
+                            <constraint firstItem="40V-y5-mzs" firstAttribute="centerX" secondItem="JxN-8Z-mkw" secondAttribute="centerX" id="Pvr-e5-nk3"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="5Vj-y5-al5" secondAttribute="trailing" constant="16" id="Qxm-Kr-4B6"/>
+                            <constraint firstItem="5Vj-y5-al5" firstAttribute="top" secondItem="Gyn-mg-Z8d" secondAttribute="bottom" constant="8" id="SQM-ym-SZw"/>
+                            <constraint firstItem="ftm-bz-o4y" firstAttribute="leading" secondItem="Gyn-mg-Z8d" secondAttribute="trailing" constant="8" id="Wzu-oE-GwV"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="tFS-FG-5Pf" secondAttribute="trailing" constant="16" id="ZGq-Qw-Q5X"/>
+                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="top" secondItem="5Vj-y5-al5" secondAttribute="bottom" constant="8" id="ZM1-lH-HDb"/>
+                            <constraint firstItem="MmJ-5B-aeC" firstAttribute="top" secondItem="duj-2r-qsr" secondAttribute="top" constant="25" id="dMJ-ER-G2x"/>
+                            <constraint firstItem="HK9-eh-evW" firstAttribute="leading" secondItem="MmJ-5B-aeC" secondAttribute="trailing" constant="8" id="h18-6t-mRJ"/>
+                            <constraint firstItem="HK9-eh-evW" firstAttribute="leading" secondItem="MmJ-5B-aeC" secondAttribute="trailing" constant="8" id="hXi-7N-e3S"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="nsz-u9-Mzm" secondAttribute="trailing" constant="38" id="hjb-Jw-CsU"/>
+                            <constraint firstItem="MmJ-5B-aeC" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="nr1-Cp-pQV"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="ftm-bz-o4y" secondAttribute="trailing" constant="16" id="od2-7w-97Q"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="Ir0-SX-h8D" secondAttribute="trailing" constant="16" id="owI-oC-U78"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="duj-2r-qsr"/>
+                    </view>
+                    <connections>
+                        <outlet property="recoverNowOutlet" destination="40V-y5-mzs" id="biv-kR-H0K"/>
+                        <outlet property="scanButton" destination="nsz-u9-Mzm" id="roa-rd-akK"/>
+                        <outlet property="textField" destination="Gyn-mg-Z8d" id="Wxn-zH-bPU"/>
+                        <outlet property="wordsView" destination="Ir0-SX-h8D" id="DTo-lZ-eQD"/>
+                        <segue destination="o69-RN-9VD" kind="presentation" identifier="scanRecovery" id="zkr-zY-rLG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZKN-I6-Ccq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3615.1999999999998" y="1101.4992503748126"/>
         </scene>
         <!--Displayer View Controller-->
         <scene sceneID="2P1-G0-q27">
@@ -3305,7 +3480,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                 </label>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eyeglasses" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Tzs-Ha-Qd5">
                                                     <rect key="frame" x="299" y="14.5" width="31" height="22.5"/>
-                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="31" id="Qes-Hv-oLl"/>
                                                         <constraint firstAttribute="height" constant="31" id="k39-xO-8a6"/>
@@ -3402,7 +3577,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QVj-L3-a2O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1714" y="349"/>
+            <point key="canvasLocation" x="-706" y="349"/>
         </scene>
         <!--Verify Address View Controller-->
         <scene sceneID="Cog-vC-RD4">
@@ -3417,7 +3592,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Rz-8I-QNM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1714" y="1101"/>
+            <point key="canvasLocation" x="-706" y="1101"/>
         </scene>
         <!--Wallets-->
         <scene sceneID="xPx-UU-NTd">
@@ -3506,7 +3681,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                 <constraint firstAttribute="width" constant="28" id="TYd-r6-Ltw"/>
                                                                 <constraint firstAttribute="height" constant="28" id="x2a-Tp-TXE"/>
                                                             </constraints>
-                                                            <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="info.circle" catalog="system"/>
                                                         </button>
                                                     </subviews>
@@ -3664,32 +3839,32 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             <subviews>
                                                                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ymr-tB-rFs">
                                                                     <rect key="frame" x="0.0" y="0.0" width="19" height="26"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="square.and.arrow.up" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jAz-Y0-baB">
                                                                     <rect key="frame" x="53.5" y="0.0" width="22.5" height="26"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="checkmark.seal" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="5" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1rr-R4-xAr">
                                                                     <rect key="frame" x="110" y="0.0" width="18" height="26"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="arrow.clockwise" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="6" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ntu-xg-s71">
                                                                     <rect key="frame" x="162.5" y="0.0" width="19.5" height="26"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="qrcode" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="9" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RiH-co-PfL">
                                                                     <rect key="frame" x="216" y="0.0" width="21" height="26"/>
-                                                                    <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="list.number" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="7" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kN2-EO-eEn">
                                                                     <rect key="frame" x="271.5" y="0.0" width="26.5" height="26"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="dot.radiowaves.left.and.right" catalog="system"/>
                                                                 </button>
                                                             </subviews>
@@ -3938,7 +4113,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                 <constraint firstAttribute="width" constant="28" id="220-6L-vVe"/>
                                                                 <constraint firstAttribute="height" constant="28" id="eUE-iS-P1N"/>
                                                             </constraints>
-                                                            <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="info.circle" catalog="system"/>
                                                         </button>
                                                     </subviews>
@@ -4032,7 +4207,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                 <constraint firstAttribute="height" constant="28" id="reF-wW-LEa"/>
                                                                 <constraint firstAttribute="width" constant="28" id="zrg-Ma-OHQ"/>
                                                             </constraints>
-                                                            <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="info.circle" catalog="system"/>
                                                         </button>
                                                     </subviews>
@@ -4069,35 +4244,35 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             <subviews>
                                                                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dy0-g8-zgF">
                                                                     <rect key="frame" x="0.0" y="0.0" width="26" height="26"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="eye" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ix-Mm-4fG">
                                                                     <rect key="frame" x="60" y="0.0" width="22.5" height="26"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="checkmark.seal" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="5" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4pY-rI-DWW">
                                                                     <rect key="frame" x="117" y="0.0" width="18" height="26"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="arrow.clockwise" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="6" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AT4-Oq-skO">
                                                                     <rect key="frame" x="169" y="0.0" width="19.5" height="26"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="qrcode" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5s-y7-UKM">
                                                                     <rect key="frame" x="223" y="0.0" width="21" height="26"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                    <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="list.number" catalog="system">
                                                                         <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     </state>
                                                                 </button>
                                                                 <button opaque="NO" tag="7" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rep-fm-fmf">
                                                                     <rect key="frame" x="278" y="0.0" width="19" height="26"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="thermometer.snowflake" catalog="system"/>
                                                                 </button>
                                                             </subviews>
@@ -4230,12 +4405,12 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="oWp-iO-M9B">
                                                             <rect key="frame" x="142" y="11" width="61.5" height="22"/>
                                                             <subviews>
-                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
+                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
                                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="22"/>
                                                                     <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                                 </button>
-                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
                                                                     <rect key="frame" x="27" y="0.0" width="34.5" height="22"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -4341,7 +4516,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                 <constraint firstAttribute="height" constant="28" id="F3c-WN-ZTt"/>
                                                                 <constraint firstAttribute="width" constant="28" id="U6W-EO-tDo"/>
                                                             </constraints>
-                                                            <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="info.circle" catalog="system"/>
                                                         </button>
                                                     </subviews>
@@ -4426,7 +4601,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                 <constraint firstAttribute="width" constant="28" id="2oS-7W-pn9"/>
                                                                 <constraint firstAttribute="height" constant="28" id="Ibm-UI-SLV"/>
                                                             </constraints>
-                                                            <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="info.circle" catalog="system"/>
                                                         </button>
                                                     </subviews>
@@ -4490,7 +4665,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                 <constraint firstAttribute="height" constant="28" id="9Mr-61-65M"/>
                                                                 <constraint firstAttribute="width" constant="28" id="MfX-Fb-Qix"/>
                                                             </constraints>
-                                                            <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="info.circle" catalog="system"/>
                                                         </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="💻" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tcQ-uu-jmf">
@@ -4566,7 +4741,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                 <constraint firstAttribute="height" constant="28" id="6bH-DW-bYw"/>
                                                                 <constraint firstAttribute="width" constant="28" id="Be8-Zr-Ewd"/>
                                                             </constraints>
-                                                            <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="info.circle" catalog="system"/>
                                                         </button>
                                                     </subviews>
@@ -4595,22 +4770,22 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                             <subviews>
                                                                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A8n-kc-3Gi">
                                                                     <rect key="frame" x="0.0" y="2" width="33" height="22"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="eye" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zca-xL-5Mz">
                                                                     <rect key="frame" x="53" y="2" width="33" height="22"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="checkmark.seal" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4zK-ut-dro">
                                                                     <rect key="frame" x="106" y="2" width="33" height="22"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="arrow.clockwise" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yeV-eN-KAx">
                                                                     <rect key="frame" x="159" y="2" width="33" height="22"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="qrcode" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IFi-Eu-JzX">
@@ -4620,14 +4795,14 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                                         <constraint firstAttribute="width" constant="75" id="nnD-px-wRB"/>
                                                                         <constraint firstAttribute="height" constant="26" id="t9X-6Q-LSI"/>
                                                                     </constraints>
-                                                                    <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="list.number" catalog="system">
                                                                         <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     </state>
                                                                 </button>
                                                                 <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eSX-pj-Wvd">
                                                                     <rect key="frame" x="265" y="2" width="33" height="22"/>
-                                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="thermometer.snowflake" catalog="system"/>
                                                                 </button>
                                                             </subviews>
@@ -4905,11 +5080,12 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                         <outlet property="recoverWalletOutlet" destination="gC1-hS-rHa" id="Ovm-pY-q00"/>
                         <outlet property="seedDescription" destination="cRB-bS-5qT" id="vTp-7b-tTz"/>
                         <outlet property="templateSwitch" destination="fh0-KZ-59e" id="VNn-OD-2Ug"/>
+                        <segue destination="Elr-wf-cyI" kind="presentation" identifier="goRecover" id="OhX-6s-iKf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FSZ-Yj-Svg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4418" y="349"/>
+            <point key="canvasLocation" x="-4004" y="349"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="T9u-Zb-e9t">
@@ -4999,7 +5175,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6RY-SP-uGD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3546" y="1101"/>
+            <point key="canvasLocation" x="-2538" y="1101"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="WAZ-Eh-cw6">
@@ -5100,7 +5276,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                                                 </label>
                                                 <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wkm-pR-5wI">
                                                     <rect key="frame" x="310" y="56" width="20" height="30"/>
-                                                    <color key="tintColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                 </button>
                                             </subviews>
@@ -5177,7 +5353,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bQO-X8-aij" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3546" y="349"/>
+            <point key="canvasLocation" x="-2538" y="349"/>
         </scene>
         <!--Locked View Controller-->
         <scene sceneID="CKp-4Z-5YA">
@@ -5264,7 +5440,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XHY-E8-tJm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3546" y="1773"/>
+            <point key="canvasLocation" x="-2538" y="1773"/>
         </scene>
         <!--Log In View Controller-->
         <scene sceneID="Ieg-P5-lGV">
@@ -5305,6 +5481,7 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
         <image name="gear" catalog="system" width="64" height="58"/>
         <image name="greenCircle.png" width="90" height="90"/>
         <image name="house" catalog="system" width="64" height="54"/>
+        <image name="icloud.and.arrow.down" catalog="system" width="64" height="56"/>
         <image name="info.circle" catalog="system" width="64" height="60"/>
         <image name="key.png" width="90" height="90"/>
         <image name="link" catalog="system" width="64" height="58"/>
@@ -5330,10 +5507,9 @@ You may export the public key descriptor at anytime but the 12 word recovery phr
     <inferredMetricsTieBreakers>
         <segue reference="UBf-qr-XYG"/>
         <segue reference="fBg-S5-BEW"/>
-        <segue reference="rrW-6B-Fka"/>
         <segue reference="tY7-Ss-m0T"/>
-        <segue reference="LzA-tD-DJD"/>
-        <segue reference="0zN-S6-Zr1"/>
+        <segue reference="zkr-zY-rLG"/>
+        <segue reference="r5v-RV-hIL"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

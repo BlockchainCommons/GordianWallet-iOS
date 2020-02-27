@@ -10,6 +10,21 @@ import Foundation
 import UIKit
 import LibWally
 
+public extension Dictionary {
+    
+    func json() -> String? {
+        if let json = try? JSONSerialization.data(withJSONObject: self, options: []) {
+            if let jsonString = String(data: json, encoding: .utf8) {
+                return jsonString
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+}
+
 public extension UIButton {
     func loadingIndicator(show: Bool) {
         if show {
@@ -36,7 +51,7 @@ extension Notification.Name {
     public static let didStartBootstrappingTor = Notification.Name(rawValue: "didStartBootstrappingTor")
 }
 
-extension Int {
+public extension Int {
     func withCommas() -> String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = NumberFormatter.Style.decimal
@@ -129,33 +144,7 @@ public func getActiveWalletNow(completion: @escaping ((wallet: WalletStruct?, er
     
 }
 
-//public func getActiveWallet(completion: @escaping ((WalletStruct?)) -> Void) {
-//    
-//    let cd = CoreDataService()
-//    cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
-//        
-//        if errorDescription == nil {
-//            
-//            for wallet in wallets! {
-//                
-//                let isActive = wallet["isActive"] as! Bool
-//                
-//                if isActive {
-//                    
-//                    let walletStr = WalletStruct.init(dictionary: wallet)
-//                    completion((walletStr))
-//                    
-//                }
-//                
-//            }
-//            
-//        }
-//        
-//    }
-//    
-//}
-
-func dateToUnix(inputdate: Date) -> Int {
+public func dateToUnix(inputdate: Date) -> Int {
     
     let unixTime = inputdate.timeIntervalSince1970
     return Int(unixTime)
@@ -180,14 +169,6 @@ public func showAlert(vc: UIViewController, title: String, message: String) {
     }
     
 }
-
-//public func saveKeyBirthday() {
-//    
-//    let birthdate = keyBirthday()
-//    let ud = UserDefaults.standard
-//    ud.set(birthdate, forKey: "birthdate")
-//    
-//}
 
 public func randomString(length: Int) -> String {
     
@@ -243,27 +224,17 @@ public func isWalletRPC(command: BTC_CLI_COMMAND) -> Bool {
     switch command {
         
     case .listtransactions,
-         .getbalance,
-         .getunconfirmedbalance,
          .getnewaddress,
          .getwalletinfo,
-         .getrawchangeaddress,
          .importmulti,
-         .importprivkey,
          .rescanblockchain,
          .fundrawtransaction,
          .listunspent,
          .walletprocesspsbt,
          .gettransaction,
          .getaddressinfo,
-         .bumpfee,
-         .signrawtransactionwithwallet,
-         .listaddressgroupings,
-         .listlabels,
-         .getaddressesbylabel,
          .listlockunspent,
          .lockunspent,
-         .abortrescan,
          .walletcreatefundedpsbt,
          .encryptwallet,
          .walletpassphrase,

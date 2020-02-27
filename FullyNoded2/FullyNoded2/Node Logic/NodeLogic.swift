@@ -18,15 +18,15 @@ class NodeLogic {
     var walletsToReturn = NSArray()
     var walletDisabled = Bool()
     var wallet:WalletStruct!
+    let reducer = Reducer()
     
     func loadTorData(completion: @escaping () -> Void) {
         
-        let reducer = Reducer()
         reducer.makeCommand(walletName: "", command: .getnetworkinfo, param: "") {
             
-            if !reducer.errorBool {
+            if !self.reducer.errorBool {
                 
-                let networkInfo = reducer.dictToReturn
+                let networkInfo = self.reducer.dictToReturn
                 let subversion = (networkInfo["subversion"] as! String).replacingOccurrences(of: "/", with: "")
                 self.dictToReturn["subversion"] = subversion.replacingOccurrences(of: "Satoshi:", with: "")
                 
@@ -71,7 +71,7 @@ class NodeLogic {
             } else {
                 
                 self.errorBool = true
-                self.errorDescription = "\(reducer.errorDescription)"
+                self.errorDescription = "\(self.reducer.errorDescription)"
                 completion()
                 
             }
@@ -82,8 +82,6 @@ class NodeLogic {
     
     func loadWalletData(completion: @escaping () -> Void) {
         print("loadWalletData")
-        
-        let reducer = Reducer()
         
         func getResult() {
             
@@ -121,11 +119,11 @@ class NodeLogic {
                     
                     reducer.makeCommand(walletName: wallet.name, command: .loadwallet, param: "\"\(wallet.name)\"") {
                         
-                        if !reducer.errorBool {
+                        if !self.reducer.errorBool {
                             
-                            reducer.makeCommand(walletName: self.wallet.name, command: .listunspent,
-                                                param: "0",
-                                                completion: getResult)
+                            self.reducer.makeCommand(walletName: self.wallet.name, command: .listunspent,
+                                                     param: "0",
+                                                     completion: getResult)
                             
                         } else {
                             
@@ -173,8 +171,6 @@ class NodeLogic {
             walletName = wallet!.name
             
         }
-        
-        let reducer = Reducer()
         
         func getResult() {
             
@@ -283,8 +279,6 @@ class NodeLogic {
     func loadTransactionData(completion: @escaping () -> Void) {
         print("loadTransactionData")
         
-        let reducer = Reducer()
-        
         func getResult() {
             
             if !reducer.errorBool {
@@ -371,9 +365,12 @@ class NodeLogic {
     
     func parseMiningInfo(miningInfo: NSDictionary) {
         
-        let hashesPerSecond = miningInfo["networkhashps"] as! Double
-        let exahashesPerSecond = hashesPerSecond / 1000000000000000000
-        dictToReturn["networkhashps"] = Int(exahashesPerSecond).withCommas()
+        if let hashesPerSecond = miningInfo["networkhashps"] as? Double {
+         
+            let exahashesPerSecond = hashesPerSecond / 1000000000000000000
+            dictToReturn["networkhashps"] = Int(exahashesPerSecond).withCommas()
+            
+        }
         
     }
     
@@ -445,11 +442,11 @@ class NodeLogic {
         
     }
     
-    func parseNetworkInfo(networkInfo: NSDictionary) {
-        
-        
-        
-    }
+//    func parseNetworkInfo(networkInfo: NSDictionary) {
+//
+//
+//
+//    }
     
     func parseTransactions(transactions: NSArray) {
         
@@ -466,90 +463,104 @@ class NodeLogic {
                 
                 let address = transaction["address"] as? String ?? ""
                 let amount = transaction["amount"] as? Double ?? 0.0
-                let amountString = amount.avoidNotation
-                let confsCheck = transaction["confirmations"] as? Int ?? 0
-                let confirmations = String(confsCheck)
                 
-                if let replaced_by_txid_check = transaction["replaced_by_txid"] as? String {
+                if amount.avoidNotation != "" {
                     
-                    replaced_by_txid = replaced_by_txid_check
+                    let amountString = amount.avoidNotation
+                    let confsCheck = transaction["confirmations"] as? Int ?? 0
+                    let confirmations = "\(confsCheck)"
                     
-                }
-                
-                if let labelCheck = transaction["label"] as? String {
+                    if let replaced_by_txid_check = transaction["replaced_by_txid"] as? String {
+                        
+                        replaced_by_txid = replaced_by_txid_check
+                        
+                    }
                     
-                    label = labelCheck
-                    
-                    if labelCheck == "" {
+                    if let labelCheck = transaction["label"] as? String {
+                        
+                        label = labelCheck
+                        
+                        if labelCheck == "" {
+                            
+                            label = ""
+                            
+                        }
+                        
+                        if labelCheck == "," {
+                            
+                            label = ""
+                            
+                        }
+                        
+                    } else {
                         
                         label = ""
                         
                     }
                     
-                    if labelCheck == "," {
+                    let secondsSince = transaction["time"] as? Double ?? 0.0
+                    let rbf = transaction["bip125-replaceable"] as? String ?? ""
+                    let txID = transaction["txid"] as? String ?? ""
+                    
+                    let date = Date(timeIntervalSince1970: secondsSince)
+                    dateFormatter.dateFormat = "MMM-dd-yyyy HH:mm"
+                    let dateString = dateFormatter.string(from: date)
+                    
+                    if let boolCheck = transaction["involvesWatchonly"] as? Bool {
                         
-                        label = ""
+                        isCold = boolCheck
                         
                     }
                     
-                } else {
-                    
-                    label = ""
-                    
-                }
-                
-                let secondsSince = transaction["time"] as? Double ?? 0.0
-                let rbf = transaction["bip125-replaceable"] as? String ?? ""
-                let txID = transaction["txid"] as? String ?? ""
-                
-                let date = Date(timeIntervalSince1970: secondsSince)
-                dateFormatter.dateFormat = "MMM-dd-yyyy HH:mm"
-                let dateString = dateFormatter.string(from: date)
-                
-                if let boolCheck = transaction["involvesWatchonly"] as? Bool {
-                    
-                    isCold = boolCheck
+                    transactionArray.append(["address": address,
+                                             "amount": amountString,
+                                             "confirmations": confirmations,
+                                             "label": label,
+                                             "date": dateString,
+                                             "rbf": rbf,
+                                             "txID": txID,
+                                             "replacedBy": replaced_by_txid,
+                                             "involvesWatchonly":isCold,
+                                             "selfTransfer":false,
+                                             "remove":false])
                     
                 }
-                
-                
-                                
-                transactionArray.append(["address": address,
-                                         "amount": amountString,
-                                         "confirmations": confirmations,
-                                         "label": label,
-                                         "date": dateString,
-                                         "rbf": rbf,
-                                         "txID": txID,
-                                         "replacedBy": replaced_by_txid,
-                                         "involvesWatchonly":isCold,
-                                         "selfTransfer":false,
-                                         "remove":false])
                 
             }
             
         }
         
-        // process self transfers
+        // process self transfers/change
                     
         for (i, tx) in transactionArray.enumerated() {
             
-            let amount = Double(tx["amount"] as! String)!
-            let txID = tx["txID"] as! String
-            
-            for (x, transaction) in transactionArray.enumerated() {
+            if let _ = tx["amount"] as? String {
                 
-                let amountToCompare = Double(transaction["amount"] as! String)!
-                
-                if x != i && txID == (transaction["txID"] as! String) {
+                if let amount = Double(tx["amount"] as! String) {
                     
-                    if amount + amountToCompare == 0 && amount > 0 {
+                    if let txID = tx["txID"] as? String {
                         
-                        transactionArray[i]["selfTransfer"] = true
-                        
-                    } else if amount + amountToCompare == 0 && amount < 0 {
-                        
-                        transactionArray[i]["remove"] = true
+                        for (x, transaction) in transactionArray.enumerated() {
+                            
+                            if let amountToCompare = Double(transaction["amount"] as! String) {
+                                
+                                if x != i && txID == (transaction["txID"] as! String) {
+                                    
+                                    if amount + amountToCompare == 0 && amount > 0 {
+                                        
+                                        transactionArray[i]["selfTransfer"] = true
+                                        
+                                    } else if amount + amountToCompare == 0 && amount < 0 {
+                                        
+                                        transactionArray[i]["remove"] = true
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
                         
                     }
                     

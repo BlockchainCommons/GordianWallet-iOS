@@ -138,7 +138,7 @@ class MultiSigTxBuilder {
                             let descParser = DescriptorParser()
                             let descStr = descParser.descriptor(wallet!.descriptor)
                             
-                            if descStr.isHot || String(data: wallet!.seed, encoding: .utf8) != "no seed" {
+                            if descStr.isHot || String(data: wallet!.seed, encoding: .utf8) != "no seed" || wallet?.xprv != nil {
                                 
                                 decodePsbt(psbt: procccessedPsbt)
                                 

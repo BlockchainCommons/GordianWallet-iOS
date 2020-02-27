@@ -23,104 +23,84 @@ class RecoveryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        nextButtonOutlet.clipsToBounds = true
-        nextButtonOutlet.layer.cornerRadius = 10
-        textView.isEditable = false
-        textView.isSelectable = true
-        textView.text = recoveryPhrase
-        let qrGen = QRGenerator()
-        qrGen.textInput = descriptor
-        imageView.image = qrGen.getQRCode()
+        func setUp() {
+            
+            nextButtonOutlet.clipsToBounds = true
+            nextButtonOutlet.layer.cornerRadius = 10
+            textView.isEditable = false
+            textView.isSelectable = true
+            
+            var wordsToDisplay = ""
+            let arr = recoveryPhrase.split(separator: " ")
+            
+            for (i, word) in arr.enumerated() {
+                
+                wordsToDisplay += "\(i + 1). \(word) "
+            }
+            
+            textView.text = wordsToDisplay
+            let qrGen = QRGenerator()
+            qrGen.textInput = descriptor
+            imageView.image = qrGen.getQRCode()
+            
+            tapQRGesture = UITapGestureRecognizer(target: self,
+                                                  action: #selector(shareQRCode(_:)))
+            
+            imageView.addGestureRecognizer(tapQRGesture)
+            
+            imageView.isUserInteractionEnabled = true
+            
+        }
         
-        tapQRGesture = UITapGestureRecognizer(target: self,
-                                              action: #selector(shareQRCode(_:)))
+        let isCaptured = UIScreen.main.isCaptured
         
-        imageView.addGestureRecognizer(tapQRGesture)
-        
-        imageView.isUserInteractionEnabled = true
+        if !isCaptured {
+            
+            setUp()
+            
+        } else {
+            
+            DispatchQueue.main.async {
+                            
+                let alert = UIAlertController(title: "Security Alert!", message: "Your device is taking a screen recording, for security we can not display your recovery kit, please stop the recording.", preferredStyle: .actionSheet)
+
+                alert.addAction(UIAlertAction(title: "I stopped it", style: .default, handler: { action in
+                    
+                    let isCaptured1 = UIScreen.main.isCaptured
+                    
+                    if !isCaptured1 {
+                        
+                        setUp()
+                        
+                    } else {
+                        
+                        showAlert(vc: self, title: "Still recording!", message: "You should delete this wallet and start over, your device may be compromised.")
+                        
+                    }
+                    
+                }))
+                
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                        
+                self.present(alert, animated: true, completion: nil)
+                
+            }
+        }
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
-        showAlert(vc: self, title: "Success!", message: "Multi signature wallet created successfully!\n\nEnsure you save BOTH THE RECOVERY PHRASE AND DESCRIPTOR which can be used to recover the 2 of 3 multi signature wallet in the event that you lose your device or your node.")
+        showAlert(vc: self, title: "Success!", message: "Multi signature wallet created successfully!\n\nEnsure you save BOTH THE RECOVERY PHRASE AND RecoveryQR Code which can be used to recover the 2 of 3 multi signature wallet in the event that you lose your device *AND* your node.")
     }
     
-//    func createRecoveryKey() {
-//
-//        let keychainCreator = KeychainCreator()
-//        keychainCreator.createKeyChain { (mnemonic, error) in
-//
-//            if !error {
-//
-//                DispatchQueue.main.async {
-//
-//                    self.textView.text = mnemonic!
-//
-//                }
-//
-//                self.getMnemonic(words: mnemonic!)
-//
-//            } else {
-//
-//                displayAlert(viewController: self, isError: true, message: "error creating your recovery key")
-//
-//            }
-//
-//        }
-//
-//    }
-//
-//    func getMnemonic(words: String) {
-//
-//        let mnemonicCreator = MnemonicCreator()
-//        mnemonicCreator.convert(words: words) { (mnemonic, error) in
-//
-//            if !error {
-//
-//                self.getXpub(mnemonic: mnemonic!)
-//
-//            } else {
-//
-//                displayAlert(viewController: self, isError: true, message: "error getting xpub from your recovery key")
-//
-//            }
-//
-//        }
-//
-//    }
-//
-//    func getXpub(mnemonic: BIP39Mnemonic) {
-//
-//        if let masterKey = HDKey((mnemonic.seedHex("")), self.network(path: "m/84'/1'/0'/0")) {
-//
-//            if let path = BIP32Path("m/84'/1'/0'/0") {
-//
-//                do {
-//
-//                    let account = try masterKey.derive(path)
-//                    self.recoveryPubkey = account.xpub
-//
-//                } catch {
-//
-//                    displayAlert(viewController: self, isError: true, message: "failed deriving xpub")
-//
-//                }
-//
-//            } else {
-//
-//                displayAlert(viewController: self, isError: true, message: "failed initiating bip32 path")
-//
-//            }
-//
-//        } else {
-//
-//            displayAlert(viewController: self, isError: true, message: "failed creating masterkey")
-//
-//        }
-//
-//
-//    }
+    @IBAction func moreInfo(_ sender: Any) {
+        
+        let url = URL(string: "https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Recovery.md")!
+        UIApplication.shared.open(url) { (Bool) in }
+        
+    }
+    
     
     @objc func shareQRCode(_ sender: UITapGestureRecognizer) {
         print("shareQRCode")
@@ -155,72 +135,12 @@ class RecoveryViewController: UIViewController {
     
     @IBAction func nextAction(_ sender: Any) {
         
-        //if self.recoveryPubkey != "" {
+        DispatchQueue.main.async {
             
-            DispatchQueue.main.async {
-                
-                //self.performSegue(withIdentifier: "descriptor", sender: self)
-                self.onDoneBlock2!(true)
-                self.dismiss(animated: true, completion: nil)
-            }
-            
-        //}
-        
+            self.onDoneBlock2!(true)
+            self.dismiss(animated: true, completion: nil)
+        }
+                    
     }
-    
-//    private func network(path: String) -> Network {
-//
-//        var network:Network!
-//
-//        if path.contains("/1'") {
-//
-//            network = .testnet
-//
-//        } else {
-//
-//            network = .mainnet
-//
-//        }
-//
-//        return network
-//
-//    }
-    
-    
-    // MARK: - Navigation
-
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//
-//        let id = segue.identifier
-//
-//        switch id {
-//
-//        case "descriptor":
-//
-//            if let vc = segue.destination as? MultiSigDescriptorViewController {
-//
-//                vc.recoveryPubkey = recoveryPubkey
-//
-//                vc.onDoneBlock3 = { result in
-//
-//                    DispatchQueue.main.async {
-//                        self.view.alpha = 0
-//                        self.onDoneBlock2!(true)
-//                        self.dismiss(animated: false, completion: nil)
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//        default:
-//
-//            break
-//
-//        }
-//
-//    }
-    
 
 }
