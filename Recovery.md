@@ -44,7 +44,7 @@ For all wallet types the user may at anytime go to the "Seed Info" view controll
 
 - 1. User only backs up the 12 words and nothing else (WIP).
 
-            - Allow user to import only the words, then we can simply import each wallet derivation into the node and start a rescan, displaying to the user the rescan status in the UI. We as mentioned above will alos be adding the ability to add a signer to wallets, so that a user may make a watch-only wallet hot or add additional signers to a mutli-signature wallet. This aproach will provide a lot of flexibility.
+        - Allow user to import only the words, then we can simply import each wallet derivation into the node and start a rescan, displaying to the user the rescan status in the UI. We as mentioned above will alos be adding the ability to add a signer to wallets, so that a user may make a watch-only wallet hot or add additional signers to a mutli-signature wallet. This aproach will provide a lot of flexibility.
             
 It is worth noting the app also allows a user to import any type of descriptor, this functionality is quite basic at the moment as it does not allow for key management of any sort, it will simply import into the node whatever is supplied by the user, no keys will be stored locally as the app stands.
 
@@ -89,14 +89,14 @@ Represents the unix timestamp for the birthdate of the seed associated with the 
 ### Progress
 
 - [ ] Recovery Scenarios
-- [x] User loses their device and scans a RecoveryQR to recover a single-signature or multi-signature wallet.
-- [ ] User loses both their device and node - full multi-signature recovery.
-- [ ] User loses both their device and node - full single-signature recovery.
-- [ ] Add a signer functionality.
-- [ ] Recover any BIP39 mnemonic.
-- [x] Import any descriptor.
+    - [x] User loses their device and scans a RecoveryQR to recover a single-signature or multi-signature wallet.
+    - [ ] User loses both their device and node - full multi-signature recovery.
+    - [ ] User loses both their device and node - full single-signature recovery.
+    - [ ] Add a signer functionality.
+    - [ ] Recover any BIP39 mnemonic.
+    - [x] Import any descriptor.
 
   CAVEATS:
 
-      - We are only including the primary descriptor in the RecoveryQR Code, FullyNoded 2 and StandUp.app are smart enough to parse the descriptor then create and import the change descriptor into the node during the recovery process.
+    - We are only including the primary descriptor in the RecoveryQR Code, FullyNoded 2 and StandUp.app are smart enough to parse the descriptor then create and import the change descriptor into the node during the recovery process.
 
