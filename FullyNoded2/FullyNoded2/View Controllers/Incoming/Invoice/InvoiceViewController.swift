@@ -406,9 +406,14 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
                         self.initialLoad = false
                         let address = reducer.stringToReturn
                         self.removeLoader()
-                        self.addressString = address
-                        self.addressOutlet.text = address
-                        self.showAddress(address: address)
+                        
+                        if address != nil {
+                            
+                            self.addressString = address!
+                            self.addressOutlet.text = address!
+                            self.showAddress(address: address!)
+                            
+                        }
                         
                     }
                     

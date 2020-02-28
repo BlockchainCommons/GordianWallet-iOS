@@ -72,39 +72,53 @@ class ImportCustomDescriptor {
                             
                             if !reducer.errorBool {
                                 
-                                let result = reducer.dictToReturn
-                                let processedDescriptor = result["descriptor"] as! String
-                                newWallet["descriptor"] = processedDescriptor
-                                var params = ""
-                                let descParser = DescriptorParser()
-                                let descStruct = descParser.descriptor(processedDescriptor)
-                                if descStruct.isHot {
+                                if let result = reducer.dictToReturn {
                                     
-                                    if !descStruct.isMulti {
+                                    if let processedDescriptor = result["descriptor"] as? String {
                                         
-                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
+                                        newWallet["descriptor"] = processedDescriptor
+                                        var params = ""
+                                        let descParser = DescriptorParser()
+                                        let descStruct = descParser.descriptor(processedDescriptor)
+                                        if descStruct.isHot {
+                                            
+                                            if !descStruct.isMulti {
+                                                
+                                                params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
+                                                
+                                            } else {
+                                                
+                                                params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
+                                                
+                                            }
+                                            
+                                        } else {
+                                            
+                                            if !descStruct.isMulti {
+                                                
+                                                params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
+                                                
+                                            } else {
+                                                
+                                                params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                        importPrimary(str: str, params: params, reducer: reducer, newWallet: newWallet, descriptor: processedDescriptor)
                                         
                                     } else {
                                         
-                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
+                                        completion((false, true, "invalid response from bitcoind"))
                                         
                                     }
                                     
                                 } else {
                                     
-                                    if !descStruct.isMulti {
-                                        
-                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
-                                        
-                                    } else {
-                                        
-                                        params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
-                                        
-                                    }
+                                    completion((false, true, "invalid response from bitcoind"))
                                     
                                 }
-                                
-                                importPrimary(str: str, params: params, reducer: reducer, newWallet: newWallet, descriptor: processedDescriptor)
                                                                 
                             } else {
                                 

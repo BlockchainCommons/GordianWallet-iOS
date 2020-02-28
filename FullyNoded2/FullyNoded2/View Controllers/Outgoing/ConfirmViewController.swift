@@ -174,15 +174,20 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     }
                 case .decodepsbt:
                     
-                    let dict = reducer.dictToReturn["tx"] as! NSDictionary
-                    parseTransaction(tx: dict)
+                    if let dict = reducer.dictToReturn?["tx"] as? NSDictionary {
+                        
+                        parseTransaction(tx: dict)
+                        
+                    }
                     
                 case .decoderawtransaction:
                     
-                    let dict = reducer.dictToReturn
-                    
-                    // parse the inputs and outputs and display to user
-                    parseTransaction(tx: dict)
+                    if let dict = reducer.dictToReturn {
+                        
+                        // parse the inputs and outputs and display to user
+                        parseTransaction(tx: dict)
+                        
+                    }
                     
                 default:
                     
@@ -404,17 +409,25 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     
                 case .decoderawtransaction:
                     
-                    let txDict = reducer.dictToReturn
-                    let outputs = txDict["vout"] as! NSArray
-                    parsePrevTxOutput(outputs: outputs, vout: vout)
+                    if let txDict = reducer.dictToReturn {
+                        
+                        if let outputs = txDict["vout"] as? NSArray {
+                            
+                            parsePrevTxOutput(outputs: outputs, vout: vout)
+                            
+                        }
+                        
+                    }
                     
                 case .getrawtransaction:
                     
-                    let rawTransaction = reducer.stringToReturn
-                    
-                    parsePrevTx(method: .decoderawtransaction,
-                                param: "\"\(rawTransaction)\"",
-                                vout: vout)
+                    if let rawTransaction = reducer.stringToReturn {
+                        
+                        parsePrevTx(method: .decoderawtransaction,
+                                    param: "\"\(rawTransaction)\"",
+                                    vout: vout)
+                        
+                    }
                     
                 default:
                     

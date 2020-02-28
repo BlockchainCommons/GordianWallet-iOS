@@ -19,54 +19,119 @@ class WalletCreator {
         let wallet = WalletStruct.init(dictionary: walletDict)
         
         func createStandUpWallet() {
+            
             let param = "\"\(wallet.name)\", true, true, \"\", true"
             executeNodeCommand(method: .createwallet, param: param)
+            
         }
         
         func executeNodeCommand(method: BTC_CLI_COMMAND, param: String) {
+            
             let reducer = Reducer()
+            
             func getResult() {
+                
                 if !reducer.errorBool {
+                    
                     switch method {
+                        
                     case .createwallet:
-                        let response = reducer.dictToReturn
-                        handleWalletCreation(response: response)
+                        
+                        if let response = reducer.dictToReturn {
+                            
+                            handleWalletCreation(response: response)
+                            
+                        }
                         
                     case .importmulti:
-                        let result = reducer.arrayToReturn
-                        let success = (result[0] as! NSDictionary)["success"] as! Bool
-                        if success {
-                            importChangeKeys()
-                        } else {
-                            let errorDict = (result[0] as! NSDictionary)["error"] as! NSDictionary
-                            let error = errorDict["message"] as! String
-                            completion((false, error, nil, nil))
-                        }
-                        if let warnings = (result[0] as! NSDictionary)["warnings"] as? NSArray {
-                            if warnings.count > 0 {
-                                for warning in warnings {
-                                    let warn = warning as! String
-                                    self.errorString += warn
+                        
+                        if let result = reducer.arrayToReturn {
+                            
+                            if result.count > 0 {
+                                
+                                if let dict = result[0] as? NSDictionary {
+                                    
+                                    if let success = dict["success"] as? Bool {
+                                        
+                                        if success {
+                                            
+                                            importChangeKeys()
+                                            
+                                        } else {
+                                            
+                                            if let errorDict = dict["error"] as? NSDictionary {
+                                                
+                                                if let error = errorDict["message"] as? String {
+                                                    
+                                                    completion((false, error, nil, nil))
+                                                    
+                                                } else {
+                                                    
+                                                    completion((false, nil, nil, nil))
+                                                    
+                                                }
+                                                
+                                            } else {
+                                                
+                                                completion((false, nil, nil, nil))
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                        if let warnings = dict["warnings"] as? NSArray {
+                                            
+                                            if warnings.count > 0 {
+                                                
+                                                for warning in warnings {
+                                                    
+                                                    let warn = warning as! String
+                                                    self.errorString += warn
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
                                 }
+                                
                             }
+                            
                         }
                         
                     case .getdescriptorinfo:
-                        let result = reducer.dictToReturn
-                        self.primaryDescriptor = result["descriptor"] as! String
-                        let params = "[{ \"desc\": \"\(self.primaryDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }]"
-                        executeNodeCommand(method: .importmulti, param: params)
+                        
+                        if let result = reducer.dictToReturn {
+                            
+                            if let descriptor = result["descriptor"] as? String {
+                                
+                                self.primaryDescriptor = descriptor
+                                
+                                let params = "[{ \"desc\": \"\(self.primaryDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }]"
+                                
+                                executeNodeCommand(method: .importmulti, param: params)
+                                
+                            }
+                            
+                        }
                         
                     default:
+                        
                         break
                         
                     }
                     
                 } else {
+                    
                     completion((false,reducer.errorDescription, nil, nil))
+                    
                 }
                 
             }
+            
             reducer.makeCommand(walletName: wallet.name, command: method,
                                 param: param,
                                 completion: getResult)
@@ -74,19 +139,30 @@ class WalletCreator {
         }
         
         func handleWalletCreation(response: NSDictionary) {
+            
             let warning = response["warning"] as! String
+            
             if warning != "" {
+                
                 print("warning from bitcoin core: \(warning)")
+                
             }
+            
             importPrimaryAddresses()
+            
         }
         
         func importPrimaryAddresses() {
+            
             let keyFetcher = KeyFetcher()
             keyFetcher.xpub(wallet: wallet) { (xpub, error) in
+                
                 if !error {
+                    
                     keyFetcher.fingerprint(wallet: wallet) { (fingerprint, error) in
+                        
                         if !error && fingerprint != nil {
+                            
                             var param = ""
                             
                             switch wallet.derivation {
@@ -110,16 +186,24 @@ class WalletCreator {
                                 param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/0/*))\""
                                 
                             default:
+                                
                                 break
                                 
                             }
+                            
                             executeNodeCommand(method: .getdescriptorinfo, param: param)
                         }
+                        
                     }
+                    
                 } else {
+                    
                     completion((false, "error getting xpub", nil, nil))
+                    
                 }
+                
             }
+            
         }
         
         func importChangeKeys() {
@@ -156,34 +240,88 @@ class WalletCreator {
                             
                             let reducer = Reducer()
                             reducer.makeCommand(walletName: wallet.name, command: .getdescriptorinfo, param: changeDescriptor) {
+                                
                                 if !reducer.errorBool {
-                                    let result = reducer.dictToReturn
-                                    self.changeDescriptor = result["descriptor"] as! String
-                                    let params = "[{ \"desc\": \"\(self.changeDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
-                                    reducer.makeCommand(walletName: wallet.name, command: .importmulti, param: params) {
-                                        let result = reducer.arrayToReturn
-                                        let success = (result[0] as! NSDictionary)["success"] as! Bool
-                                        if success {
-                                            completion((true, nil, self.primaryDescriptor, self.changeDescriptor))
-                                        } else {
-                                            let errorDict = (result[0] as! NSDictionary)["error"] as! NSDictionary
-                                            let error = errorDict["message"] as! String
-                                            completion((false, error, nil, nil))
-                                        }
-                                        if let warnings = (result[0] as! NSDictionary)["warnings"] as? NSArray {
-                                            if warnings.count > 0 {
-                                                for warning in warnings {
-                                                    let warn = warning as! String
-                                                    self.errorString += warn
+                                    
+                                    if let result = reducer.dictToReturn {
+                                        
+                                        self.changeDescriptor = result["descriptor"] as! String
+                                        
+                                        let params = "[{ \"desc\": \"\(self.changeDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
+                                        
+                                        reducer.makeCommand(walletName: wallet.name, command: .importmulti, param: params) {
+                                            
+                                            if let result = reducer.arrayToReturn {
+                                                
+                                                if result.count > 0 {
+                                                    
+                                                    if let dict = result[0] as? NSDictionary {
+                                                        
+                                                        if let success = dict["success"] as? Bool {
+                                                            
+                                                            if success {
+                                                                
+                                                                completion((true, nil, self.primaryDescriptor, self.changeDescriptor))
+                                                                
+                                                            } else {
+                                                                
+                                                                if let errorDict = dict["error"] as? NSDictionary {
+                                                                    
+                                                                    if let error = errorDict["message"] as? String {
+                                                                        
+                                                                        completion((false, error, nil, nil))
+                                                                        
+                                                                    } else {
+                                                                        
+                                                                        completion((false, nil, nil, nil))
+                                                                        
+                                                                    }
+                                                                    
+                                                                } else {
+                                                                    
+                                                                    completion((false, nil, nil, nil))
+                                                                    
+                                                                }
+                                                                
+                                                            }
+                                                            
+                                                            if let warnings = (result[0] as! NSDictionary)["warnings"] as? NSArray {
+                                                                
+                                                                if warnings.count > 0 {
+                                                                    
+                                                                    for warning in warnings {
+                                                                        
+                                                                        let warn = warning as! String
+                                                                        self.errorString += warn
+                                                                        
+                                                                    }
+                                                                    
+                                                                }
+                                                                
+                                                            }
+                                                            
+                                                        }
+                                                        
+                                                    }
+                                                    
                                                 }
+                                                                                                
                                             }
+                                                                                        
                                         }
+                                        
                                     }
+                                    
                                 } else {
+                                    
                                     completion((false, reducer.errorDescription, nil, nil))
+                                    
                                 }
+                                
                             }
+                            
                         }
+                        
                     }
                     
                 } else {

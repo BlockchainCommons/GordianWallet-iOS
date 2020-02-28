@@ -187,8 +187,15 @@ class SingleSigBuilder {
                 
                 if !reducer.errorBool {
                     
-                    let dict = reducer.dictToReturn
-                    parsePsbt(decodePsbt: dict, psbt: psbt)
+                    if let dict = reducer.dictToReturn {
+                        
+                        parsePsbt(decodePsbt: dict, psbt: psbt)
+                        
+                    } else {
+                        
+                        completion((nil, nil, "Error decoding transaction"))
+                        
+                    }
                     
                 } else {
                     
@@ -208,9 +215,15 @@ class SingleSigBuilder {
                 
                 if !reducer.errorBool {
                     
-                    let dict = reducer.dictToReturn
-                    let processedPsbt = dict["psbt"] as! String
-                    decodePsbt(psbt: processedPsbt)
+                    if let dict = reducer.dictToReturn {
+                        
+                        if let processedPsbt = dict["psbt"] as? String {
+                            
+                            decodePsbt(psbt: processedPsbt)
+                            
+                        }
+                        
+                    }
                     
                 } else {
                     
@@ -253,40 +266,52 @@ class SingleSigBuilder {
 
                 if !reducer.errorBool {
 
-                    let psbtDict = reducer.dictToReturn
-                    let psbt = psbtDict["psbt"] as! String
-                    
-                    if self.wallet.type == "DEFAULT" || self.wallet.type == "CUSTOM" {
+                    if let psbtDict = reducer.dictToReturn {
                         
-                        if str.isHot || String(data: self.wallet.seed, encoding: .utf8) != "no seed" || self.wallet.xprv != nil {
+                        if let psbt = psbtDict["psbt"] as? String {
                             
-                            if str.isP2WPKH || str.isBIP84 {
+                            if self.wallet.type == "DEFAULT" || self.wallet.type == "CUSTOM" {
                                 
-                                signSegwit(psbt: psbt)
+                                if str.isHot || String(data: self.wallet.seed, encoding: .utf8) != "no seed" || self.wallet.xprv != nil {
+                                    
+                                    if str.isP2WPKH || str.isBIP84 {
+                                        
+                                        signSegwit(psbt: psbt)
+                                        
+                                    } else if str.isP2SHP2WPKH || str.isBIP49 {
+                                        
+                                        signSegwitWrapped(psbt: psbt)
+                                        
+                                    } else if str.isP2PKH || str.isBIP44 {
+                                        
+                                        signLegacy(psbt: psbt)
+                                        
+                                    }
+                                    
+                                } else {
+                                   
+                                    completion((nil, psbt, nil))
+                                    
+                                }
                                 
-                            } else if str.isP2SHP2WPKH || str.isBIP49 {
                                 
-                                signSegwitWrapped(psbt: psbt)
-                                
-                            } else if str.isP2PKH || str.isBIP44 {
-                                
-                                signLegacy(psbt: psbt)
+                            } else if self.wallet.type == "MULTI" {
+                             
+                                processPsbt(psbt: psbt)
                                 
                             }
                             
                         } else {
-                           
-                            completion((nil, psbt, nil))
+                            
+                            completion((nil, nil, "Error creating psbt"))
                             
                         }
                         
+                    } else {
                         
-                    } else if self.wallet.type == "MULTI" {
-                     
-                        processPsbt(psbt: psbt)
+                        completion((nil, nil, "Error creating psbt"))
                         
                     }
-                    
 
                 } else {
 

@@ -261,43 +261,13 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 switch method {
                     
-//                case .listlockunspent:
-//
-//                    lockedArray = reducer.arrayToReturn
-//
-//                    creatingView.removeConnectingView()
-//
-//                    DispatchQueue.main.async {
-//
-//                        self.performSegue(withIdentifier: "goToLocked", sender: self)
-//
-//                    }
-                    
-//                case .lockunspent:
-//
-//                    let result = reducer.doubleToReturn
-//                    removeSpinner()
-//
-//                    if result == 1 {
-//
-//                        displayAlert(viewController: self,
-//                                     isError: false,
-//                                     message: "UTXO is locked and will not be selected for spends unless your node restarts, tap the lock button to unlock it")
-//
-//                        self.refresh()
-//
-//                    } else {
-//
-//                        displayAlert(viewController: self,
-//                                     isError: true,
-//                                     message: "Unable to lock that UTXO")
-//
-//                    }
-                    
                 case .listunspent:
                     
-                    let resultArray = reducer.arrayToReturn
-                    parseUnspent(utxos: resultArray)
+                    if let resultArray = reducer.arrayToReturn {
+                        
+                        parseUnspent(utxos: resultArray)
+                        
+                    }
                     
                 default:
                     

@@ -26,8 +26,15 @@ class NativeSegwitOfflineSigner {
 
                 if !reducer.errorBool {
 
-                    let decodedPSBT = reducer.dictToReturn
-                    parseDecodedPSBT(psbt: decodedPSBT)
+                    if let decodedPSBT = reducer.dictToReturn {
+                        
+                         parseDecodedPSBT(psbt: decodedPSBT)
+                        
+                    } else {
+                        
+                        completion(nil)
+                        
+                    }
 
                 } else {
 

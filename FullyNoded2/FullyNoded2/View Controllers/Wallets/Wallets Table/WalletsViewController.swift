@@ -990,26 +990,29 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                         if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
                             
-                            let result = reducer.dictToReturn
-                            if let scanning = result["scanning"] as? NSDictionary {
+                            if let result = reducer.dictToReturn {
                                 
-                                if let _ = scanning["duration"] as? Int {
+                                if let scanning = result["scanning"] as? NSDictionary {
+                                    
+                                    if let _ = scanning["duration"] as? Int {
+                                        
+                                        self.creatingView.removeConnectingView()
+                                        let progress = (scanning["progress"] as! Double)
+                                        showAlert(vc: self, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                                        
+                                    }
+                                    
+                                } else if (result["scanning"] as? Int) == 0 {
                                     
                                     self.creatingView.removeConnectingView()
-                                    let progress = (scanning["progress"] as! Double)
-                                    showAlert(vc: self, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                                    displayAlert(viewController: self, isError: true, message: "wallet not rescanning")
+                                    
+                                } else {
+                                    
+                                    self.creatingView.removeConnectingView()
+                                    displayAlert(viewController: self, isError: true, message: "unable to determine if wallet is rescanning")
                                     
                                 }
-                                
-                            } else if (result["scanning"] as? Int) == 0 {
-                                
-                                self.creatingView.removeConnectingView()
-                                displayAlert(viewController: self, isError: true, message: "wallet not rescanning")
-                                
-                            } else {
-                                
-                                self.creatingView.removeConnectingView()
-                                displayAlert(viewController: self, isError: true, message: "unable to determine if wallet is rescanning")
                                 
                             }
                             
@@ -1035,26 +1038,29 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
                         
-                        let result = reducer.dictToReturn
-                        if let scanning = result["scanning"] as? NSDictionary {
+                        if let result = reducer.dictToReturn {
                             
-                            if let _ = scanning["duration"] as? Int {
+                            if let scanning = result["scanning"] as? NSDictionary {
+                                
+                                if let _ = scanning["duration"] as? Int {
+                                    
+                                    self.creatingView.removeConnectingView()
+                                    let progress = (scanning["progress"] as! Double)
+                                    showAlert(vc: self, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                                    
+                                }
+                                
+                            } else if (result["scanning"] as? Int) == 0 {
                                 
                                 self.creatingView.removeConnectingView()
-                                let progress = (scanning["progress"] as! Double)
-                                showAlert(vc: self, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                                displayAlert(viewController: self, isError: true, message: "wallet not rescanning")
+                                
+                            } else {
+                                
+                                self.creatingView.removeConnectingView()
+                                displayAlert(viewController: self, isError: true, message: "unable to determine if wallet is rescanning")
                                 
                             }
-                            
-                        } else if (result["scanning"] as? Int) == 0 {
-                            
-                            self.creatingView.removeConnectingView()
-                            displayAlert(viewController: self, isError: true, message: "wallet not rescanning")
-                            
-                        } else {
-                            
-                            self.creatingView.removeConnectingView()
-                            displayAlert(viewController: self, isError: true, message: "unable to determine if wallet is rescanning")
                             
                         }
                         

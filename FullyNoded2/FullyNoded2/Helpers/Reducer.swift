@@ -11,11 +11,11 @@ import Foundation
 class Reducer {
     
     let torRPC = MakeRPCCall.sharedInstance
-    var dictToReturn = NSDictionary()
-    var doubleToReturn = Double()
-    var arrayToReturn = NSArray()
-    var stringToReturn = String()
-    var boolToReturn = Bool()
+    var dictToReturn:NSDictionary?
+    var doubleToReturn:Double?
+    var arrayToReturn:NSArray?
+    var stringToReturn:String?
+    var boolToReturn:Bool?
     var errorBool = Bool()
     var errorDescription = ""
     

@@ -655,73 +655,86 @@ class ChooseWalletFormatViewController: UIViewController {
             
             if !reducer.errorBool {
                 
-                let result = reducer.dictToReturn
-                let primaryDescriptor = result["descriptor"] as! String
-                
-                reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDescriptor)\"") {
+                if let result = reducer.dictToReturn {
                     
-                    DispatchQueue.main.async {
+                    if let primaryDescriptor = result["descriptor"] as? String {
                         
-                        self.creatingView.label.text = "importing your descriptors to your node"
-                        
-                    }
-                    
-                    let result = reducer.dictToReturn
-                    let changeDesc = result["descriptor"] as! String
-                    let enc = Encryption()
-                    enc.getNode { (node, error) in
-                        
-                        if !error {
+                        reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDescriptor)\"") {
                             
-                            self.newWallet["descriptor"] = primaryDescriptor
-                            self.newWallet["changeDescriptor"] = changeDesc
-                            self.newWallet["seed"] = self.localSeed
-                            
-                            let multiSigCreator = CreateMultiSigWallet()
-                            let wallet = WalletStruct(dictionary: self.newWallet)
-                            multiSigCreator.create(wallet: wallet, nodeXprv: self.nodesSeed, nodeXpub: self.publickeys[2]) { (success) in
+                            DispatchQueue.main.async {
                                 
-                                if success {
+                                self.creatingView.label.text = "importing your descriptors to your node"
+                                
+                            }
+                            
+                            if let result = reducer.dictToReturn {
+                                
+                                if let changeDesc = result["descriptor"] as? String {
                                     
-                                    DispatchQueue.main.async {
-                                       self.creatingView.label.text = "saving your wallet to your device"
-                                    }
-                                    
-                                    let walletSaver = WalletSaver()
-                                    walletSaver.save(walletToSave: self.newWallet) { (success) in
+                                    let enc = Encryption()
+                                    enc.getNode { (node, error) in
                                         
-                                        if success {
+                                        if !error {
                                             
-                                            self.creatingView.removeConnectingView()
+                                            self.newWallet["descriptor"] = primaryDescriptor
+                                            self.newWallet["changeDescriptor"] = changeDesc
+                                            self.newWallet["seed"] = self.localSeed
                                             
-                                            DispatchQueue.main.async {
+                                            let multiSigCreator = CreateMultiSigWallet()
+                                            let wallet = WalletStruct(dictionary: self.newWallet)
+                                            multiSigCreator.create(wallet: wallet, nodeXprv: self.nodesSeed, nodeXpub: self.publickeys[2]) { (success) in
                                                 
-                                                self.nodesSeed = ""
-                                                self.newWallet.removeAll()
-                                                // include the checksum as we will convert this back to a pubkey descriptor when recovering
-                                                let hotDescriptor = primaryDescriptor.replacingOccurrences(of: self.publickeys[1], with: self.localXprv)
-                                                let recoveryQr = ["descriptor":"\(hotDescriptor)", "walletName":"\(wallet.name)","birthdate":wallet.birthdate] as [String : Any]
-                                                
-                                                if let json = recoveryQr.json() {
+                                                if success {
                                                     
-                                                    self.multiSigDoneBlock!((true, self.backUpRecoveryPhrase, json))
-                                                    self.dismiss(animated: true, completion: nil)
+                                                    DispatchQueue.main.async {
+                                                        
+                                                       self.creatingView.label.text = "saving your wallet to your device"
+                                                        
+                                                    }
+                                                    
+                                                    let walletSaver = WalletSaver()
+                                                    walletSaver.save(walletToSave: self.newWallet) { (success) in
+                                                        
+                                                        if success {
+                                                            
+                                                            self.creatingView.removeConnectingView()
+                                                            
+                                                            DispatchQueue.main.async {
+                                                                
+                                                                self.nodesSeed = ""
+                                                                self.newWallet.removeAll()
+                                                                // include the checksum as we will convert this back to a pubkey descriptor when recovering
+                                                                let hotDescriptor = primaryDescriptor.replacingOccurrences(of: self.publickeys[1], with: self.localXprv)
+                                                                let recoveryQr = ["descriptor":"\(hotDescriptor)", "walletName":"\(wallet.name)","birthdate":wallet.birthdate] as [String : Any]
+                                                                
+                                                                if let json = recoveryQr.json() {
+                                                                    
+                                                                    self.multiSigDoneBlock!((true, self.backUpRecoveryPhrase, json))
+                                                                    self.dismiss(animated: true, completion: nil)
+                                                                    
+                                                                }
+                                                                
+                                                            }
+                                                            
+                                                        } else {
+                                                            
+                                                            displayAlert(viewController: self, isError: true, message: "error saving wallet")
+                                                            
+                                                        }
+                                                        
+                                                    }
+                                                    
+                                                } else {
+                                                    
+                                                    displayAlert(viewController: self, isError: true, message: "failed creating your wallet")
                                                     
                                                 }
                                                 
                                             }
                                             
-                                        } else {
-                                            
-                                            displayAlert(viewController: self, isError: true, message: "error saving wallet")
-                                            
                                         }
                                         
                                     }
-                                    
-                                } else {
-                                    
-                                    displayAlert(viewController: self, isError: true, message: "failed creating your wallet")
                                     
                                 }
                                 
@@ -732,7 +745,7 @@ class ChooseWalletFormatViewController: UIViewController {
                     }
                     
                 }
-                
+                                
             } else {
                 
                 print("error: \(reducer.errorDescription)")

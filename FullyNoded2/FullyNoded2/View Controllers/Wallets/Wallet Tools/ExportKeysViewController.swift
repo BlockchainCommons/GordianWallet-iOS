@@ -456,20 +456,32 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
        let reducer = Reducer()
        let param = "\"\(wallet.descriptor)\", ''[0,999]''"
        reducer.makeCommand(walletName: "", command: .deriveaddresses, param: param) {
+        
             if !reducer.errorBool {
-               let result = reducer.arrayToReturn
-               for (i, address) in result.enumerated() {
-                   if self.keys.count > 0 {
-                       self.keys[i]["address"] = (address as! String)
-                   }
-                   if i + 1 == result.count {
-                       DispatchQueue.main.async {
-                           self.table.reloadData()
-                       }
-                   }
-               }
+                
+                if let result = reducer.arrayToReturn {
+                    
+                    for (i, address) in result.enumerated() {
+                        if self.keys.count > 0 {
+                            self.keys[i]["address"] = (address as! String)
+                        }
+                        if i + 1 == result.count {
+                            DispatchQueue.main.async {
+                                self.table.reloadData()
+                            }
+                        }
+                    }
+                    
+                } else {
+                    
+                    displayAlert(viewController: self, isError: true, message: "error getting addresses from your node")
+                    
+                }
+               
             } else {
+                
                 displayAlert(viewController: self, isError: true, message: "error getting addresses from your node")
+                
             }
         }
         

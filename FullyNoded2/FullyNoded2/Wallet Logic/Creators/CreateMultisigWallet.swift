@@ -27,22 +27,33 @@ class CreateMultiSigWallet {
                 
                 if !reducer.errorBool {
                     
-                    let updatedDescriptor = reducer.dictToReturn["descriptor"] as! String
-                    let checksum = reducer.dictToReturn["checksum"] as! String
-                    let array = updatedDescriptor.split(separator: "#")
-                    let hotDescriptor = "\(array[0])" + "#" + checksum
-                    
-                    var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
-                    params = params.replacingOccurrences(of: nodeXpub, with: nodeXprv)
-                    reducer.makeCommand(walletName: wallet.name, command: .importmulti, param: params) {
+                    if let updatedDescriptor = reducer.dictToReturn?["descriptor"] as? String {
                         
-                        if !reducer.errorBool {
+                        if let checksum = reducer.dictToReturn?["checksum"] as? String {
                             
-                            completion(true)
+                            let array = updatedDescriptor.split(separator: "#")
                             
-                        } else {
-                            
-                            completion(false)
+                            if array.count > 0 {
+                                
+                                let hotDescriptor = "\(array[0])" + "#" + checksum
+                                
+                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
+                                params = params.replacingOccurrences(of: nodeXpub, with: nodeXprv)
+                                reducer.makeCommand(walletName: wallet.name, command: .importmulti, param: params) {
+                                    
+                                    if !reducer.errorBool {
+                                        
+                                        completion(true)
+                                        
+                                    } else {
+                                        
+                                        completion(false)
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
                             
                         }
                         
@@ -60,20 +71,39 @@ class CreateMultiSigWallet {
                 
                 if !reducer.errorBool {
                     
-                    let result = reducer.arrayToReturn
-                    let success = (result[0] as! NSDictionary)["success"] as! Bool
-                    
-                    if success {
+                    if let result = reducer.arrayToReturn {
                         
-                        print("success")
-                        importChange()
-                        
-                    } else {
-                        
-                        let errorDict = (result[0] as! NSDictionary)["error"] as! NSDictionary
-                        let error = errorDict["message"] as! String
-                        print("error importing multi: \(error)")
-                        completion(false)
+                        if result.count > 0 {
+                            
+                            if let dict = result[0] as? NSDictionary {
+                                
+                                if let success = dict["success"] as? Bool {
+                                    
+                                    if success {
+                                        
+                                        print("success")
+                                        importChange()
+                                        
+                                    } else {
+                                        
+                                        if let errorDict = dict["error"] as? NSDictionary {
+                                            
+                                            if let error = errorDict["message"] as? String {
+                                                
+                                                print("error importing multi: \(error)")
+                                                completion(false)
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
                         
                     }
                     
@@ -104,14 +134,20 @@ class CreateMultiSigWallet {
                             
                             if !reducer.errorBool {
                                 
-                                let updatedDescriptor = reducer.dictToReturn["descriptor"] as! String
-                                let checksum = reducer.dictToReturn["checksum"] as! String
-                                let array = updatedDescriptor.split(separator: "#")
-                                let hotDescriptor = "\(array[0])" + "#" + checksum
-                                
-                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
-                                params = params.replacingOccurrences(of: nodeXpub, with: nodeXprv)
-                                importMulti(param: params)
+                                if let updatedDescriptor = reducer.dictToReturn?["descriptor"] as? String {
+                                    
+                                    if let checksum = reducer.dictToReturn?["checksum"] as? String {
+                                        
+                                        let array = updatedDescriptor.split(separator: "#")
+                                        let hotDescriptor = "\(array[0])" + "#" + checksum
+                                        
+                                        var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
+                                        params = params.replacingOccurrences(of: nodeXpub, with: nodeXprv)
+                                        importMulti(param: params)
+                                        
+                                    }
+                                    
+                                }
                                 
                             }
                             

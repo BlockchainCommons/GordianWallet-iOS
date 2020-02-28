@@ -572,8 +572,16 @@ class KeyFetcher {
                     if !reducer.errorBool {
                         
                         self.updateIndex(wallet: wallet!)
-                        let address = reducer.arrayToReturn[0] as! String
-                        completion((address,false))
+                        
+                        if let address = reducer.arrayToReturn?[0] as? String {
+                            
+                            completion((address,false))
+                            
+                        } else {
+                            
+                            completion((nil,true))
+                            
+                        }
                         
                     } else {
                         
@@ -607,8 +615,15 @@ class KeyFetcher {
                         
                         if !reducer.errorBool {
                             
-                            let address = reducer.arrayToReturn[0] as! String
-                            completion((address,false))
+                            if let address = reducer.arrayToReturn?[0] as? String {
+                                
+                                completion((address,false))
+                                
+                            } else {
+                                
+                                completion((nil,true))
+                                
+                            }
                             
                         } else {
                             

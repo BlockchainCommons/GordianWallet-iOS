@@ -18,60 +18,89 @@ class NodeLogic {
     var walletsToReturn = NSArray()
     var walletDisabled = Bool()
     var wallet:WalletStruct!
-    let reducer = Reducer()
     
     func loadTorData(completion: @escaping () -> Void) {
         
+        let reducer = Reducer()
         reducer.makeCommand(walletName: "", command: .getnetworkinfo, param: "") {
             
-            if !self.reducer.errorBool {
+            if !reducer.errorBool {
                 
-                let networkInfo = self.reducer.dictToReturn
-                let subversion = (networkInfo["subversion"] as! String).replacingOccurrences(of: "/", with: "")
-                self.dictToReturn["subversion"] = subversion.replacingOccurrences(of: "Satoshi:", with: "")
-                
-                let localaddresses = networkInfo["localaddresses"] as! NSArray
-                
-                if localaddresses.count > 0 {
+                if reducer.dictToReturn != nil {
                     
-                    for address in localaddresses {
+                    let networkInfo = reducer.dictToReturn!
+                    
+                    if let subversionCheck = networkInfo["subversion"] as? String {
                         
-                        let dict = address as! NSDictionary
-                        let p2pAddress = dict["address"] as! String
-                        let port = dict["port"] as! Int
+                        let subversion = subversionCheck.replacingOccurrences(of: "/", with: "")
+                        self.dictToReturn["subversion"] = subversion.replacingOccurrences(of: "Satoshi:", with: "")
                         
-                        if p2pAddress.contains("onion") {
+                        if let localaddresses = networkInfo["localaddresses"] as? NSArray {
                             
-                            self.dictToReturn["p2pOnionAddress"] = p2pAddress + ":" + "\(port)"
+                            if localaddresses.count > 0 {
+                                
+                                for address in localaddresses {
+                                    
+                                    if let dict = address as? NSDictionary {
+                                        
+                                        if let p2pAddress = dict["address"] as? String {
+                                            
+                                            if let port = dict["port"] as? Int {
+                                                
+                                                if p2pAddress.contains("onion") {
+                                                    
+                                                    self.dictToReturn["p2pOnionAddress"] = p2pAddress + ":" + "\(port)"
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
                             
                         }
                         
+                        if let networks = networkInfo["networks"] as? NSArray {
+                            
+                            for network in networks {
+                                
+                                if let dict = network as? NSDictionary {
+                                    
+                                    if let name = dict["name"] as? String {
+                                        
+                                        if name == "onion" {
+                                            
+                                            if let reachable = dict["reachable"] as? Bool {
+                                                
+                                                self.dictToReturn["reachable"] = reachable
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                        completion()
+                        
                     }
                     
                 }
-                
-                let networks = networkInfo["networks"] as! NSArray
-                
-                for network in networks {
-                    
-                    let dict = network as! NSDictionary
-                    let name = dict["name"] as! String
-                    
-                    if name == "onion" {
-                        
-                        let reachable = dict["reachable"] as! Bool
-                        self.dictToReturn["reachable"] = reachable
-                        
-                    }
-                    
-                }
-                
-                completion()
                 
             } else {
                 
                 self.errorBool = true
-                self.errorDescription = "\(self.reducer.errorDescription)"
+                self.errorDescription = "\(reducer.errorDescription)"
                 completion()
                 
             }
@@ -83,6 +112,8 @@ class NodeLogic {
     func loadWalletData(completion: @escaping () -> Void) {
         print("loadWalletData")
         
+        let reducer = Reducer()
+        
         func getResult() {
             
             if !reducer.errorBool {
@@ -91,8 +122,13 @@ class NodeLogic {
                     
                 case BTC_CLI_COMMAND.listunspent.rawValue:
                     
-                    let utxos = reducer.arrayToReturn
-                    parseUtxos(utxos: utxos)
+                    if reducer.arrayToReturn != nil {
+                        
+                        let utxos = reducer.arrayToReturn!
+                        parseUtxos(utxos: utxos)
+                        
+                    }
+                    
                     completion()
                     
                 default:
@@ -106,7 +142,6 @@ class NodeLogic {
                 
                 errorBool = true
                 errorDescription = reducer.errorDescription
-                
                 print("errorDescription = \(errorDescription)")
                 
                 if errorDescription.contains("Requested wallet does not exist or is not loaded") {
@@ -119,11 +154,11 @@ class NodeLogic {
                     
                     reducer.makeCommand(walletName: wallet.name, command: .loadwallet, param: "\"\(wallet.name)\"") {
                         
-                        if !self.reducer.errorBool {
+                        if !reducer.errorBool {
                             
-                            self.reducer.makeCommand(walletName: self.wallet.name, command: .listunspent,
-                                                     param: "0",
-                                                     completion: getResult)
+                            reducer.makeCommand(walletName: self.wallet.name, command: .listunspent,
+                                                param: "0",
+                                                completion: getResult)
                             
                         } else {
                             
@@ -164,6 +199,8 @@ class NodeLogic {
     func loadNodeData(completion: @escaping () -> Void) {
         print("loadNodeData")
         
+        let reducer = Reducer()
+        
         var walletName = ""
         
         if wallet != nil {
@@ -180,30 +217,48 @@ class NodeLogic {
                     
                 case BTC_CLI_COMMAND.estimatesmartfee.rawValue:
                     
-                    let result = reducer.dictToReturn
-                    
-                    if let feeRate = result["feerate"] as? Double {
+                    if reducer.dictToReturn != nil {
                         
-                        let btcperbyte = feeRate / 1000
-                        let satsperbyte = (btcperbyte * 100000000).avoidNotation
-                        dictToReturn["feeRate"] = "\(satsperbyte) s/b"
+                        let result = reducer.dictToReturn!
                         
-                    } else {
-                        
-                        if let errors = result["errors"] as? NSArray {
+                        if let feeRate = result["feerate"] as? Double {
                             
-                            dictToReturn["feeRate"] = "\(errors[0] as! String)"
+                            let btcperbyte = feeRate / 1000
+                            let satsperbyte = (btcperbyte * 100000000).avoidNotation
+                            dictToReturn["feeRate"] = "\(satsperbyte) s/b"
                             
+                        } else {
+                            
+                            if let errors = result["errors"] as? NSArray {
+                                
+                                dictToReturn["feeRate"] = "\(errors[0] as! String)"
+                                
+                            }
+                           
                         }
-                       
+                        
                     }
                     
                     completion()
                     
                 case BTC_CLI_COMMAND.getmempoolinfo.rawValue:
                     
-                    let dict = reducer.dictToReturn
-                    dictToReturn["mempoolCount"] = dict["size"] as! Int
+                    if reducer.dictToReturn != nil {
+                        
+                        let dict = reducer.dictToReturn!
+                        
+                        if let mempoolSize = dict["size"] as? Int {
+                            
+                            dictToReturn["mempoolCount"] = mempoolSize
+                            
+                        } else {
+                            
+                            dictToReturn["mempoolCount"] = 0
+                            
+                        }
+                                                
+                    }
+                    
                     let feeRate = UserDefaults.standard.integer(forKey: "feeTarget")
                     
                     reducer.makeCommand(walletName: walletName, command: .estimatesmartfee,
@@ -212,7 +267,11 @@ class NodeLogic {
                     
                 case BTC_CLI_COMMAND.uptime.rawValue:
                     
-                    dictToReturn["uptime"] = Int(reducer.doubleToReturn)
+                    if reducer.doubleToReturn != nil {
+                        
+                        dictToReturn["uptime"] = Int(reducer.doubleToReturn!)
+                                                
+                    }
                     
                     reducer.makeCommand(walletName: walletName, command: .getmempoolinfo,
                                         param: "",
@@ -220,24 +279,26 @@ class NodeLogic {
                     
                 case BTC_CLI_COMMAND.getmininginfo.rawValue:
                     
-                    let miningInfo = reducer.dictToReturn
-                    parseMiningInfo(miningInfo: miningInfo)
+                    if reducer.dictToReturn != nil {
+                        
+                        let miningInfo = reducer.dictToReturn!
+                        parseMiningInfo(miningInfo: miningInfo)
+                        
+                    }
                     
                     reducer.makeCommand(walletName: walletName, command: .uptime,
                                         param: "",
                                         completion: getResult)
                     
-//                case BTC_CLI_COMMAND.getnetworkinfo.rawValue:
-//
-//                    let networkInfo = reducer.dictToReturn
-//                    parseNetworkInfo(networkInfo: networkInfo)
-                    
-                    
                     
                 case BTC_CLI_COMMAND.getpeerinfo.rawValue:
                     
-                    let peerInfo = reducer.arrayToReturn
-                    parsePeerInfo(peerInfo: peerInfo)
+                    if reducer.arrayToReturn != nil {
+                        
+                        let peerInfo = reducer.arrayToReturn!
+                        parsePeerInfo(peerInfo: peerInfo)
+                        
+                    }
                     
                     reducer.makeCommand(walletName: walletName, command: .getmininginfo,
                                         param: "",
@@ -245,8 +306,12 @@ class NodeLogic {
                     
                 case BTC_CLI_COMMAND.getblockchaininfo.rawValue:
                     
-                    let blockchainInfo = reducer.dictToReturn
-                    parseBlockchainInfo(blockchainInfo: blockchainInfo)
+                    if reducer.dictToReturn != nil {
+                        
+                        let blockchainInfo = reducer.dictToReturn!
+                        parseBlockchainInfo(blockchainInfo: blockchainInfo)
+                        
+                    }
                     
                     reducer.makeCommand(walletName: walletName, command: .getpeerinfo,
                                         param: "",
@@ -272,12 +337,12 @@ class NodeLogic {
                             param: "",
                             completion: getResult)
         
-        
-        
     }
     
     func loadTransactionData(completion: @escaping () -> Void) {
         print("loadTransactionData")
+        
+        let reducer = Reducer()
         
         func getResult() {
             
@@ -287,8 +352,13 @@ class NodeLogic {
                     
                 case BTC_CLI_COMMAND.listtransactions.rawValue:
                     
-                    let transactions = reducer.arrayToReturn
-                    parseTransactions(transactions: transactions)
+                    if reducer.arrayToReturn != nil {
+                        
+                        let transactions = reducer.arrayToReturn!
+                        parseTransactions(transactions: transactions)
+                        
+                    }
+                    
                     completion()
                     
                 default:
@@ -330,20 +400,31 @@ class NodeLogic {
         
         for utxo in utxos {
             
-            let utxoDict = utxo as! NSDictionary
-            let spendable = utxoDict["spendable"] as! Bool
-            let confirmations = utxoDict["confirmations"] as! Int
-            
-            if !spendable {
+            if let utxoDict = utxo as? NSDictionary {
                 
-                let balance = utxoDict["amount"] as! Double
-                amount += balance
-                
-            }
-            
-            if confirmations < 1 {
-                
-                dictToReturn["unconfirmed"] = true
+                if let spendable = utxoDict["spendable"] as? Bool {
+                    
+                    if let confirmations = utxoDict["confirmations"] as? Int {
+                        
+                        if !spendable {
+                            
+                            if let balance = utxoDict["amount"] as? Double {
+                                
+                                amount += balance
+                                
+                            }
+                            
+                        }
+                        
+                        if confirmations < 1 {
+                            
+                            dictToReturn["unconfirmed"] = true
+                            
+                        }
+                        
+                    }
+                    
+                }
                 
             }
             
@@ -384,7 +465,6 @@ class NodeLogic {
         
         if let difficultyCheck = blockchainInfo["difficulty"] as? Double {
             
-            
             dictToReturn["difficulty"] = "\(Int(difficultyCheck / 1000000000000).withCommas()) trillion"
             
         }
@@ -422,31 +502,29 @@ class NodeLogic {
         
         for peer in peerInfo {
             
-            let peerDict = peer as! NSDictionary
-            
-            let incoming = peerDict["inbound"] as! Bool
-            
-            if incoming {
+            if let peerDict = peer as? NSDictionary {
                 
-                incomingCount += 1
-                dictToReturn["incomingCount"] = incomingCount
-                
-            } else {
-                
-                outgoingCount += 1
-                dictToReturn["outgoingCount"] = outgoingCount
+                if let incoming = peerDict["inbound"] as? Bool {
+                    
+                    if incoming {
+                        
+                        incomingCount += 1
+                        dictToReturn["incomingCount"] = incomingCount
+                        
+                    } else {
+                        
+                        outgoingCount += 1
+                        dictToReturn["outgoingCount"] = outgoingCount
+                        
+                    }
+                    
+                }
                 
             }
             
         }
         
     }
-    
-//    func parseNetworkInfo(networkInfo: NSDictionary) {
-//
-//
-//
-//    }
     
     func parseTransactions(transactions: NSArray) {
         
@@ -572,9 +650,13 @@ class NodeLogic {
                     
         for tx in transactionArray {
             
-            if !(tx["remove"] as! Bool) {
+            if let remove = tx["remove"] as? Bool {
                 
-                arrayToReturn.append(tx)
+                if !remove {
+                    
+                    arrayToReturn.append(tx)
+                    
+                }
                 
             }
             

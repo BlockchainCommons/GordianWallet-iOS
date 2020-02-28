@@ -24,8 +24,15 @@ class OfflineSignerP2SHSegwit {
             
             if !reducer.errorBool {
                 
-                let decodedPSBT = reducer.dictToReturn
-                parseDecodedPSBT(psbt: decodedPSBT)
+                if let decodedPSBT = reducer.dictToReturn {
+                    
+                    parseDecodedPSBT(psbt: decodedPSBT)
+                    
+                } else {
+                    
+                    completion(nil)
+                    
+                }
                 
             } else {
                 
@@ -38,17 +45,26 @@ class OfflineSignerP2SHSegwit {
         
         func parseDecodedPSBT(psbt: NSDictionary) {
             
-            let inputs = psbt["inputs"] as! NSArray
-            
-            for (i, input) in inputs.enumerated() {
+            if let inputs = psbt["inputs"] as? NSArray {
                 
-                inputMetaDataArray.append(input as! NSDictionary)
-                
-                if i + 1 == inputs.count {
+                for (i, input) in inputs.enumerated() {
                     
-                    let tx = psbt["tx"] as! NSDictionary
-                    parseTx(tx: tx)
-                    
+                    if let dict = input as? NSDictionary {
+                        
+                        inputMetaDataArray.append(dict)
+                        
+                        if i + 1 == inputs.count {
+                            
+                            if let tx = psbt["tx"] as? NSDictionary {
+                                
+                                parseTx(tx: tx)
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                                        
                 }
                 
             }
