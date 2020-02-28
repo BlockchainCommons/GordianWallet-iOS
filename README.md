@@ -205,3 +205,4 @@ This code in this repository is Copyright © 2019 by Blockchain Commons, LLC, an
 ### Contributing
 
 We encourage public contributions through issues and pull-requests! Please review [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our development process. All contributions to this repository require a GPG signed [Contributor License Agreement](./CLA.md).
+
