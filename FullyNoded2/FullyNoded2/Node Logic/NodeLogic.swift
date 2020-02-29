@@ -15,7 +15,6 @@ class NodeLogic {
     var errorDescription = ""
     var dictToReturn = [String:Any]()
     var arrayToReturn = [[String:Any]]()
-    var walletsToReturn = NSArray()
     var walletDisabled = Bool()
     var wallet:WalletStruct!
     
@@ -95,6 +94,12 @@ class NodeLogic {
                         
                     }
                     
+                } else {
+                    
+                    self.errorBool = true
+                    self.errorDescription = "returned object is nil"
+                    completion()
+                    
                 }
                 
             } else {
@@ -126,11 +131,16 @@ class NodeLogic {
                         
                         let utxos = reducer.arrayToReturn!
                         parseUtxos(utxos: utxos)
+                        completion()
+                        
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
                         
                     }
-                    
-                    completion()
-                    
+                                        
                 default:
                     
                     print("break1")
@@ -163,7 +173,7 @@ class NodeLogic {
                         } else {
                             
                             self.errorBool = true
-                            self.errorDescription = "Wallet does not exist, maybe you changed networks? If you want to use the app on a different network please delete the app and install again"
+                            self.errorDescription = "Wallet does not exist, maybe you changed networks? If you want to use the app on a different network you will need to recreate the wallet"
                             completion()
                             
                         }
@@ -237,9 +247,15 @@ class NodeLogic {
                            
                         }
                         
+                        completion()
+                        
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
                     }
-                    
-                    completion()
                     
                 case BTC_CLI_COMMAND.getmempoolinfo.rawValue:
                     
@@ -256,26 +272,38 @@ class NodeLogic {
                             dictToReturn["mempoolCount"] = 0
                             
                         }
+                        
+                        let feeRate = UserDefaults.standard.integer(forKey: "feeTarget")
+                        
+                        reducer.makeCommand(walletName: walletName, command: .estimatesmartfee,
+                                            param: "\(feeRate)",
+                                            completion: getResult)
                                                 
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
                     }
-                    
-                    let feeRate = UserDefaults.standard.integer(forKey: "feeTarget")
-                    
-                    reducer.makeCommand(walletName: walletName, command: .estimatesmartfee,
-                                        param: "\(feeRate)",
-                                        completion: getResult)
                     
                 case BTC_CLI_COMMAND.uptime.rawValue:
                     
                     if reducer.doubleToReturn != nil {
                         
                         dictToReturn["uptime"] = Int(reducer.doubleToReturn!)
+                        
+                        reducer.makeCommand(walletName: walletName, command: .getmempoolinfo,
+                                            param: "",
+                                            completion: getResult)
                                                 
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
                     }
-                    
-                    reducer.makeCommand(walletName: walletName, command: .getmempoolinfo,
-                                        param: "",
-                                        completion: getResult)
                     
                 case BTC_CLI_COMMAND.getmininginfo.rawValue:
                     
@@ -284,12 +312,17 @@ class NodeLogic {
                         let miningInfo = reducer.dictToReturn!
                         parseMiningInfo(miningInfo: miningInfo)
                         
+                        reducer.makeCommand(walletName: walletName, command: .uptime,
+                                            param: "",
+                                            completion: getResult)
+                        
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
                     }
-                    
-                    reducer.makeCommand(walletName: walletName, command: .uptime,
-                                        param: "",
-                                        completion: getResult)
-                    
                     
                 case BTC_CLI_COMMAND.getpeerinfo.rawValue:
                     
@@ -298,11 +331,17 @@ class NodeLogic {
                         let peerInfo = reducer.arrayToReturn!
                         parsePeerInfo(peerInfo: peerInfo)
                         
+                        reducer.makeCommand(walletName: walletName, command: .getmininginfo,
+                                            param: "",
+                                            completion: getResult)
+                        
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
                     }
-                    
-                    reducer.makeCommand(walletName: walletName, command: .getmininginfo,
-                                        param: "",
-                                        completion: getResult)
                     
                 case BTC_CLI_COMMAND.getblockchaininfo.rawValue:
                     
@@ -311,11 +350,17 @@ class NodeLogic {
                         let blockchainInfo = reducer.dictToReturn!
                         parseBlockchainInfo(blockchainInfo: blockchainInfo)
                         
+                        reducer.makeCommand(walletName: walletName, command: .getpeerinfo,
+                                            param: "",
+                                            completion: getResult)
+                        
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
                     }
-                    
-                    reducer.makeCommand(walletName: walletName, command: .getpeerinfo,
-                                        param: "",
-                                        completion: getResult)
                     
                 default:
                     
@@ -356,11 +401,16 @@ class NodeLogic {
                         
                         let transactions = reducer.arrayToReturn!
                         parseTransactions(transactions: transactions)
+                        completion()
+                        
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
                         
                     }
-                    
-                    completion()
-                    
+                                        
                 default:
                     
                     break
@@ -392,7 +442,7 @@ class NodeLogic {
         
     }
     
-    // MARK: Section 0 parsers
+    // MARK: Parsers
     
     func parseUtxos(utxos: NSArray) {
         
@@ -529,7 +579,6 @@ class NodeLogic {
     func parseTransactions(transactions: NSArray) {
         
         var transactionArray = [[String:Any]]()
-        self.arrayToReturn.removeAll()
         
         for item in transactions {
             
@@ -608,8 +657,6 @@ class NodeLogic {
             
         }
         
-        // process self transfers/change
-                    
         for (i, tx) in transactionArray.enumerated() {
             
             if let _ = tx["amount"] as? String {
@@ -647,7 +694,7 @@ class NodeLogic {
             }
             
         }
-                    
+                            
         for tx in transactionArray {
             
             if let remove = tx["remove"] as? Bool {

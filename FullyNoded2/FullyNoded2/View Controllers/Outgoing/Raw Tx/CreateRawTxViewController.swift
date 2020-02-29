@@ -422,8 +422,8 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                         
                         if address != "" {
                             
-                            let dbl = Double(amount)!
-                            let out = [address:dbl]
+                            // .doubleValue extension now handles commas and decimals for Russian localization converting String to double
+                            let out = [address:amount.doubleValue]
                             outputs.append(out)
                             
                         }
@@ -864,12 +864,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
-}
-
-extension String {
-    func toDouble() -> Double? {
-        return NumberFormatter().number(from: self)?.doubleValue
-    }
 }
 
 
