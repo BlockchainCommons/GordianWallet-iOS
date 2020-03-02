@@ -30,6 +30,7 @@ public struct WalletStruct: CustomStringConvertible {
     let mOfNtype:String
     let changeDescriptor:String
     let xprv:Data?
+    let blockheight:Int
     
     init(dictionary: [String: Any]) {
         
@@ -53,6 +54,7 @@ public struct WalletStruct: CustomStringConvertible {
         self.mOfNtype = dictionary["mOfNtype"] as? String ?? ""
         self.changeDescriptor = dictionary["changeDescriptor"] as? String ?? ""
         self.xprv = dictionary["xprv"] as? Data ?? nil
+        self.blockheight = dictionary["blockheight"] as? Int ?? 1
         
     }
     

@@ -90,6 +90,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
             if let vc = segue.destination as? ScannerViewController {
                 
                 vc.isRecovering = true
+                vc.words = "vote night stuff fix journey simple super core accuse spell enlist produce"
                 vc.onDoneRecoveringBlock = { result in
                     
                     DispatchQueue.main.async {

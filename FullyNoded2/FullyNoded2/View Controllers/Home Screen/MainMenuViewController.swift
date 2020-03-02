@@ -8,6 +8,7 @@
 
 import UIKit
 import KeychainSwift
+import LibWally
 
 class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate {
     
@@ -126,7 +127,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
         }
-                
+                    
     }
     
     @IBAction func goToSettings(_ sender: Any) {
@@ -400,6 +401,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         deviceView.layer.cornerRadius = 8
         infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
+        
+        if infoHidden {
+            
+            let image = UIImage(systemName: "rectangle.expand.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        } else {
+            
+            let image = UIImage(systemName: "rectangle.compress.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        }
+        
         self.coldBalance = walletInfo.coldBalance
                         
         if coldBalance == "" {
@@ -515,6 +529,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
         
+        if infoHidden {
+            
+            let image = UIImage(systemName: "rectangle.expand.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        } else {
+            
+            let image = UIImage(systemName: "rectangle.compress.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        }
+        
         self.coldBalance = walletInfo.coldBalance
                         
         if coldBalance == "" {
@@ -628,6 +654,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
         
+        if infoHidden {
+            
+            let image = UIImage(systemName: "rectangle.expand.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        } else {
+            
+            let image = UIImage(systemName: "rectangle.compress.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        }
+        
         self.coldBalance = walletInfo.coldBalance
         
         if coldBalance == "" {
@@ -723,7 +761,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let torStatusLabel = cell.viewWithTag(1) as! UILabel
         let p2pOnionLabel = cell.viewWithTag(3) as! UILabel
         let onionVersionLabel = cell.viewWithTag(4) as! UILabel
-        //let connectionStatusLabel = cell.viewWithTag(5) as! UILabel
         let v3address = cell.viewWithTag(6) as! UILabel
         let torActiveCircle = cell.viewWithTag(7) as! UIImageView
         let spinner = cell.viewWithTag(8) as! UIActivityIndicatorView
@@ -746,6 +783,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         spinner.alpha = 1
         infoButton.alpha = 0
         infoButton.addTarget(self, action: #selector(getTorInfo(_:)), for: .touchUpInside)
+        
+        if torInfoHidden {
+            
+            let image = UIImage(systemName: "rectangle.expand.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        } else {
+            
+            let image = UIImage(systemName: "rectangle.compress.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        }
         
         let onionAddress = (node.onionAddress.split(separator: "."))[0]
         
@@ -779,12 +828,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if torSectionLoaded {
             
-            //connectionStatusLabel.text = "connected to \(node.label)"
             p2pOnionLabel.text = "P2P URL: \(p2pOnionAddress)"
             
         } else {
             
-            //connectionStatusLabel.text = "establishing connection to \(node.label)"
             p2pOnionLabel.text = "fetching network info from your node..."
             
         }
@@ -798,7 +845,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 spinner.stopAnimating()
                 spinner.alpha = 0
                 infoButton.alpha = 1
-                torStatusLabel.text = "connected to \(node.label)"
+                torStatusLabel.text = "\(node.label)"
                 torActiveCircle.tintColor = .systemGreen
                 
             } else if isRefreshingTorData && !torSectionLoaded {
@@ -806,7 +853,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 spinner.startAnimating()
                 spinner.alpha = 1
                 infoButton.alpha = 0
-                torStatusLabel.text = "connecting to \(node.label)..."
+                torStatusLabel.text = "\(node.label)..."
                 torActiveCircle.tintColor = .systemOrange
                 
             }
@@ -823,10 +870,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                torStatusLabel.text = "disconnected from \(node.label)..."
+                torStatusLabel.text = "\(node.label)..."
                 torActiveCircle.tintColor = .systemRed
-                //connectionStatusLabel.text = "disconnected..."
-                
                 spinner.stopAnimating()
                 spinner.alpha = 0
                 infoButton.alpha = 1
@@ -863,6 +908,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let infoButton = cell.viewWithTag(17) as! UIButton
         
         infoButton.addTarget(self, action: #selector(getNodeInfo(_:)), for: .touchUpInside)
+        
+        if !showNodeInfo {
+            
+            let image = UIImage(systemName: "rectangle.expand.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        } else {
+            
+            let image = UIImage(systemName: "rectangle.compress.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        }
         
         network.layer.cornerRadius = 6
         pruned.layer.cornerRadius = 6
@@ -1588,9 +1645,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 self.infoHidden = false
                 
+                //let image = UIImage(systemName: "rectangle.expand.vertical")
+                //sender.setImage(image, for: .normal)
+                
             } else {
                 
                 self.infoHidden = true
+                
+                //let image = UIImage(systemName: "rectangle.compress.vertical")
+                //sender.setImage(image, for: .normal)
                 
             }
             

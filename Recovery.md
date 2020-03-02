@@ -50,17 +50,21 @@ It is worth noting the app also allows a user to import any type of descriptor, 
 
 ## RecoveryQR
 
-The RecoveryQR is to be accesible to the user at anytime by tapping the info button next to the devices seed cell on the Wallets view controller.
+The RecoveryQR is to be accesible to the user at anytime by tapping the info button next to the devices seed cell on the Wallets view controller, the user will be prompted to "Sign in with Apple" at this point for 2FA (two-factor authentication) purposes before any of the seed info will be accessed.
 
-A RecoveryQR is a simple json dictionary which consists of three mandatory values: `descriptor`, `walletName`, and `birthdate`.
+A RecoveryQR is a simple json dictionary which consists of five mandatory values: `entropy`, `descriptor`, `walletName`,  `birthdate` and `blockheight`.
 
 - Single-Signature RecoveryQR example:
 
 ```
 {
+
+    entropy:"ed3032b2f69ad7037d0a1ab388d91065", 
     descriptor:"wpkh([fb41f110/84'/1'/0']tprv8fS7KWqL7UPBPtb8Q5dPKf7BtSyVYb1pGAs23znVpETNkAbEQvx59JNLWhWHBZRuJfkFszUwEjk1rDS6dUz2SFXxGMDMytw1TqSfA5tDBDD/0/*)",
     walletName:"DEFAULT_nue8339_StandUp",
-    birthdate:1582800776
+    birthdate:1582800776,
+    blockheight:61904
+    
 }
 ```
 
@@ -68,29 +72,40 @@ A RecoveryQR is a simple json dictionary which consists of three mandatory value
 
 ```
 {
-    descriptor:"wsh(multi(2,[cc2b88d9/84'/1'/0']tpubDDhKDzr8EeYqLP27xchAptrpUEqWecPGEXnjq3d1pKjzbHd6r7DKRPtBMxtQtjoCCqckVBoX6cfiGkBiJffGJYV3dMtabCp9bro29riQtKL/0/*,[ff7a130e/84'/1'/0']tprv8gEZHzJzKfefuNEzWstVsdzmE86SiMK8i8cZUMNDNVTcEWGZJknhKGYNJvRBoXG3R83BGPnrEWrCH2ogKEFUyUZXP8BgL1taExx2P884qUT/0/*,[8f7dba7b/84'/1'/0']tpubDDauNnbmWAmFaxbUDeYsHfsqgF5EK33eLpbw7W5eJz4V3sJ53tnTD2BjYEzJAX7DDscbZMg877vi9o5dyunG52FNDCqjnu126wKHxujMmzp/0/*))",
-    walletName:"MULTI_nue8339_StandUp",
-    birthdate:1582800776
+   
+   entropy:"ed3032b2f69ad7037d0a1ab388d91065", descriptor:"wsh(multi(2,[cc2b88d9/84'/1'/0']tpubDDhKDzr8EeYqLP27xchAptrpUEqWecPGEXnjq3d1pKjzbHd6r7DKRPtBMxtQtjoCCqckVBoX6cfiGkBiJffGJYV3dMtabCp9bro29riQtKL/0/*,[ff7a130e/84'/1'/0']tprv8gEZHzJzKfefuNEzWstVsdzmE86SiMK8i8cZUMNDNVTcEWGZJknhKGYNJvRBoXG3R83BGPnrEWrCH2ogKEFUyUZXP8BgL1taExx2P884qUT/0/*,[8f7dba7b/84'/1'/0']tpubDDauNnbmWAmFaxbUDeYsHfsqgF5EK33eLpbw7W5eJz4V3sJ53tnTD2BjYEzJAX7DDscbZMg877vi9o5dyunG52FNDCqjnu126wKHxujMmzp/0/*))",
+   walletName:"MULTI_nue8339_StandUp",
+   birthdate:1582800776,
+   blockheight:61904
+   
 }
 ```
 
-- `descriptor` (String)
+- `entropy` (string - hexadecimal representation of the binary entropy used to create your seed/mnemonic)
+
+The string representation of the entropy used to derive your BIP39 mnemonic. We include this in the RecoveryQR so that we do not lose the 12 word mnemonic phrase when recovering wallets. Only the mnemonic used for signing on the device may be derived from this entropy. The multi-sig RecoveryQR will never be capable of signing for more then 1 of the 2 required signatures, therefore in a multi-sig wallet will not allow an attacker to spend your funds if they gain access to the RecoveryQR.
+
+- `descriptor` (string)
 
 Represents the wallets xprv, derivation path, address format and also the extended public keys associated with a multi-sig wallet. For more info about descriptors see this [link](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md).
 
-- `walletName` (String)
+- `walletName` (string)
 
 Represents the wallet.dat files name on the users node. This will be useful in scenarios where a user loses their device but not their node as we can programmatically verify it still exists on the node and connect to it. No rescanning of the blockchain will be necessary when recovering wallets in this manner.
 
-- `birthdate` (Int32)
+- `birthdate` (integer)
 
-Represents the unix timestamp for the birthdate of the seed associated with the wallet. In the scenario where a user loses their node we can use this value directly with the bitcoind rpc command `importmulti` in order to automatically rescan the blockchain from the wallets birthdate.
+Represents the unix timestamp for the birthdate of the seed associated with the wallet. We include this value in the `bitcoin-cli` recovery options under the Seed Info view, that way if the user does recover on their own node the wallet will automatically rescan to show historical transactions/balances.
+
+- `blockheight` (integer)
+
+Represents the blockheight when the wallet was first created, this is used to rescan the blockchain after the wallet is successfully recovered. Because we use multiple `importmulti` commands when creating/recovering wallets we can not use the `birthdate` to rescan for each `importmulti` command.
 
 ### Progress
 
 - [ ] Recovery Scenarios
     - [x] User loses their device and scans a RecoveryQR to recover a single-signature or multi-signature wallet.
-    - [ ] User loses both their device and node - full multi-signature recovery.
+    - [x] User loses both their device and node - full multi-signature recovery.
     - [ ] User loses both their device and node - full single-signature recovery.
     - [ ] Add a signer functionality.
     - [ ] Recover any BIP39 mnemonic.
@@ -98,5 +113,5 @@ Represents the unix timestamp for the birthdate of the seed associated with the 
 
   CAVEATS:
 
-    - We are only including the primary descriptor in the RecoveryQR Code, FullyNoded 2 and StandUp.app are smart enough to parse the descriptor then create and import the change descriptor into the node during the recovery process.
+    - We are only including the primary descriptor in the RecoveryQR Code, FullyNoded 2 is smart enough to parse the descriptor then create and import the change descriptor into the node during the recovery process.
 

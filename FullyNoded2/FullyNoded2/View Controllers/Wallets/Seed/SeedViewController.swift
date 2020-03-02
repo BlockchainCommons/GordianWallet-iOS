@@ -9,6 +9,7 @@
 import KeychainSwift
 import UIKit
 import AuthenticationServices
+import LibWally
 
 class SeedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
@@ -220,6 +221,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func loadData() {
         
+        let enc = Encryption()
         let p = DescriptorParser()
         let s = p.descriptor(self.wallet.descriptor)
         self.publicKeyDescriptor = "\(self.wallet.descriptor)\n\n\(self.wallet.changeDescriptor)"
@@ -227,71 +229,90 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.xprv { (xprv) in
             
             if xprv != "" {
-                            
-                self.xpub(descriptorStruct: s) { (xpub) in
                 
-                    if xpub != "" {
+                let encryptedWords = self.wallet.seed
+                enc.decryptData(dataToDecrypt: encryptedWords) { (decryptedWords) in
+                    
+                    if decryptedWords != nil {
                         
-                        if !s.isMulti {
-                         
-                            // its single sig
-                            var privKeyDesc = self.wallet.descriptor
-                            privKeyDesc = privKeyDesc.replacingOccurrences(of: xpub, with: xprv)
-                            let arr = privKeyDesc.split(separator: "#")
-                            privKeyDesc = "\(arr[0])"
+                        if let words = String(data: decryptedWords!, encoding: .utf8) {
                             
-                            var changeDescriptor = self.wallet.changeDescriptor
-                            changeDescriptor = changeDescriptor.replacingOccurrences(of: xpub, with: xprv)
-                            let arr1 = changeDescriptor.split(separator: "#")
-                            changeDescriptor = "\(arr1[0])"
-                            
-                            let recoveryQr = ["descriptor":"\(privKeyDesc)", "walletName":"\(self.wallet.name)","birthdate":self.wallet.birthdate] as [String : Any]
-                            
-                            if let json = recoveryQr.json() {
+                            if let bip39words = BIP39Mnemonic(words) {
                                 
-                                self.qrGenerator.textInput = json
-                                self.recoveryImage = self.qrGenerator.getQRCode()
+                                let entropyString = bip39words.entropy.description
                                 
+                                self.xpub(descriptorStruct: s) { (xpub) in
+                                
+                                    if xpub != "" {
+                                        
+                                        if !s.isMulti {
+                                         
+                                            // its single sig
+                                            var privKeyDesc = self.wallet.descriptor
+                                            privKeyDesc = privKeyDesc.replacingOccurrences(of: xpub, with: xprv)
+                                            let arr = privKeyDesc.split(separator: "#")
+                                            privKeyDesc = "\(arr[0])"
+                                            
+                                            var changeDescriptor = self.wallet.changeDescriptor
+                                            changeDescriptor = changeDescriptor.replacingOccurrences(of: xpub, with: xprv)
+                                            let arr1 = changeDescriptor.split(separator: "#")
+                                            changeDescriptor = "\(arr1[0])"
+                                            
+                                            let recoveryQr = ["entropy": entropyString, "descriptor":"\(privKeyDesc)", "walletName":"\(self.wallet.name)","birthdate":self.wallet.birthdate, "blockheight":self.wallet.blockheight] as [String : Any]
+                                            
+                                            if let json = recoveryQr.json() {
+                                                
+                                                self.qrGenerator.textInput = json
+                                                self.recoveryImage = self.qrGenerator.getQRCode()
+                                                
+                                            }
+                                            
+                                            self.privateKeyDescriptor = "\(privKeyDesc)\n\n\(changeDescriptor)"
+                                            
+                                            self.recoveryText = "bitcoin-cli importmulti { \"desc\": \"\(privKeyDesc)\", \"timestamp\": \(self.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }\n\nbitcoin-cli importmulti { \"desc\": \"\(changeDescriptor)\", \"timestamp\": \(self.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": true, \"internal\": true }"
+                                            
+                                        } else {
+                                         
+                                            // its multisig
+                                            var primaryDesc = self.wallet.descriptor
+                                            var changeDesc = self.wallet.changeDescriptor
+                                            
+                                            primaryDesc = primaryDesc.replacingOccurrences(of: xpub, with: xprv)
+                                            let arr = primaryDesc.split(separator: "#")
+                                            primaryDesc = "\(arr[0])"
+                                            
+                                            changeDesc = changeDesc.replacingOccurrences(of: xpub, with: xprv)
+                                            let arr1 = changeDesc.split(separator: "#")
+                                            changeDesc = "\(arr1[0])"
+                                            
+                                            let recoveryQr = ["entropy": entropyString, "descriptor":"\(primaryDesc)", "walletName":"\(self.wallet.name)","birthdate":self.wallet.birthdate, "blockheight":self.wallet.blockheight] as [String : Any]
+                                            
+                                            if let json = recoveryQr.json() {
+                                                
+                                                self.qrGenerator.textInput = json
+                                                self.recoveryImage = self.qrGenerator.getQRCode()
+                                                
+                                            }
+                                            
+                                            self.recoveryImage = self.qrGenerator.getQRCode()
+                                            
+                                            self.privateKeyDescriptor = "\(primaryDesc)\n\n\(changeDesc)"
+                                            
+                                            self.recoveryText = "bitcoin-cli -rpcwallet=\(self.wallet.name) importmulti { \"desc\": \"\(primaryDesc)\", \"timestamp\": \(self.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(self.wallet.name) importmulti { \"desc\": \"\(changeDesc)\", \"timestamp\": \(self.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
+                                            
+                                        }
+                                        
+                                        DispatchQueue.main.async {
+                                            
+                                            self.tableView.reloadData()
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                                            
                             }
-                            
-                            self.privateKeyDescriptor = "\(privKeyDesc)\n\n\(changeDescriptor)"
-                            
-                            self.recoveryText = "bitcoin-cli importmulti { \"desc\": \"\(privKeyDesc)\", \"timestamp\": \(self.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }\n\nbitcoin-cli importmulti { \"desc\": \"\(changeDescriptor)\", \"timestamp\": \(self.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": true, \"internal\": true }"
-                            
-                        } else {
-                         
-                            // its multisig
-                            var primaryDesc = self.wallet.descriptor
-                            var changeDesc = self.wallet.changeDescriptor
-                            
-                            primaryDesc = primaryDesc.replacingOccurrences(of: xpub, with: xprv)
-                            let arr = primaryDesc.split(separator: "#")
-                            primaryDesc = "\(arr[0])"
-                            
-                            changeDesc = changeDesc.replacingOccurrences(of: xpub, with: xprv)
-                            let arr1 = changeDesc.split(separator: "#")
-                            changeDesc = "\(arr1[0])"
-                            
-                            let recoveryQr = ["descriptor":"\(primaryDesc)", "walletName":"\(self.wallet.name)","birthdate":self.wallet.birthdate] as [String : Any]
-                            
-                            if let json = recoveryQr.json() {
-                                
-                                self.qrGenerator.textInput = json
-                                self.recoveryImage = self.qrGenerator.getQRCode()
-                                
-                            }
-                            
-                            self.recoveryImage = self.qrGenerator.getQRCode()
-                            
-                            self.privateKeyDescriptor = "\(primaryDesc)\n\n\(changeDesc)"
-                            
-                            self.recoveryText = "bitcoin-cli -rpcwallet=\(self.wallet.name) importmulti { \"desc\": \"\(primaryDesc)\", \"timestamp\": \(self.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(self.wallet.name) importmulti { \"desc\": \"\(changeDesc)\", \"timestamp\": \(self.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
-                            
-                        }
-                        
-                        DispatchQueue.main.async {
-                            
-                            self.tableView.reloadData()
                             
                         }
                         
@@ -303,7 +324,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 // wallet is cold
                 
-                let recoveryQr = ["descriptor":"\(self.wallet.descriptor)", "walletName":"\(self.wallet.name)","birthdate":self.wallet.birthdate] as [String : Any]
+                let recoveryQr = ["descriptor":"\(self.wallet.descriptor)", "walletName":"\(self.wallet.name)","birthdate":self.wallet.birthdate, "blockheight":self.wallet.blockheight] as [String : Any]
                 
                 if let json = recoveryQr.json() {
                     
@@ -966,12 +987,20 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
 
 }
 
-extension UIView {
-    
-    func addBottomBorderWithColor(color: UIColor, width: CGFloat) {
-        let border = CALayer()
-        border.backgroundColor = (color.withAlphaComponent(0.3)).cgColor
-        border.frame = CGRect(x:0, y: (self.frame.size.height - width) + 13, width: (self.frame.size.width * 2) + 15, height: width)
-        self.layer.addSublayer(border)
-    }
-}
+//extension String {
+//    typealias Byte = UInt8
+//    var hexaToBytes: [Byte] {
+//        var start = startIndex
+//        return stride(from: 0, to: count, by: 2).compactMap { _ in   // use flatMap for older Swift versions
+//            let end = index(after: start)
+//            defer { start = index(after: end) }
+//            return Byte(self[start...end], radix: 16)
+//        }
+//    }
+//    var hexaToBinary: String {
+//        return hexaToBytes.map {
+//            let binary = String($0, radix: 2)
+//            return repeatElement("0", count: 8-binary.count) + binary
+//        }.joined()
+//    }
+//}

@@ -510,6 +510,8 @@ class NodeLogic {
         if let currentblockheight = blockchainInfo["blocks"] as? Int {
             
             dictToReturn["blocks"] = currentblockheight
+            let ud = UserDefaults.standard
+            ud.set(currentblockheight, forKey: "blockheight")
             
         }
         

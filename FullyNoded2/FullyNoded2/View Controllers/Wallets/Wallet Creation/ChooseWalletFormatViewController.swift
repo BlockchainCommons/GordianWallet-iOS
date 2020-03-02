@@ -11,6 +11,7 @@ import LibWally
 
 class ChooseWalletFormatViewController: UIViewController {
     
+    var entropy = ""
     var localXprv = ""
     var node:NodeStruct!
     var newWallet = [String:Any]()
@@ -59,12 +60,14 @@ class ChooseWalletFormatViewController: UIViewController {
     
     @IBAction func importAction(_ sender: Any) {
         
-        DispatchQueue.main.async {
-            
-            self.importDoneBlock!(true)
-            self.dismiss(animated: true, completion: nil)
-            
-        }
+        showAlert(vc: self, title: "🛠 Not yet ready", message: "This feature is under active development and not quite ready for testing yet.")
+        
+//        DispatchQueue.main.async {
+//
+//            self.importDoneBlock!(true)
+//            self.dismiss(animated: true, completion: nil)
+//
+//        }
         
     }
     
@@ -196,6 +199,7 @@ class ChooseWalletFormatViewController: UIViewController {
                 
                 self.node = node!
                 self.creatingView.addConnectingView(vc: self, description: "creating your wallet")
+                self.newWallet["blockheight"] = UserDefaults.standard.object(forKey: "blockheight") as? Int ?? 1
                 
                 if self.node.network == "testnet" {
                     
@@ -419,6 +423,7 @@ class ChooseWalletFormatViewController: UIViewController {
                             
                             if !error {
                                 
+                                self.entropy = mnemonic!.entropy.description
                                 let derivation = self.newWallet["derivation"] as! String
                                 
                                 if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
@@ -682,7 +687,7 @@ class ChooseWalletFormatViewController: UIViewController {
                                             
                                             let multiSigCreator = CreateMultiSigWallet()
                                             let wallet = WalletStruct(dictionary: self.newWallet)
-                                            multiSigCreator.create(wallet: wallet, nodeXprv: self.nodesSeed, nodeXpub: self.publickeys[2]) { (success) in
+                                            multiSigCreator.create(wallet: wallet, nodeXprv: self.nodesSeed, nodeXpub: self.publickeys[2]) { (success, error) in
                                                 
                                                 if success {
                                                     
@@ -705,7 +710,7 @@ class ChooseWalletFormatViewController: UIViewController {
                                                                 self.newWallet.removeAll()
                                                                 // include the checksum as we will convert this back to a pubkey descriptor when recovering
                                                                 let hotDescriptor = primaryDescriptor.replacingOccurrences(of: self.publickeys[1], with: self.localXprv)
-                                                                let recoveryQr = ["descriptor":"\(hotDescriptor)", "walletName":"\(wallet.name)","birthdate":wallet.birthdate] as [String : Any]
+                                                                let recoveryQr = ["entropy": self.entropy, "descriptor":"\(hotDescriptor)", "walletName":"\(wallet.name)","birthdate":wallet.birthdate, "blockheight":wallet.blockheight] as [String : Any]
                                                                 
                                                                 if let json = recoveryQr.json() {
                                                                     
@@ -726,7 +731,15 @@ class ChooseWalletFormatViewController: UIViewController {
                                                     
                                                 } else {
                                                     
-                                                    displayAlert(viewController: self, isError: true, message: "failed creating your wallet")
+                                                    if error != nil {
+                                                        
+                                                        displayAlert(viewController: self, isError: true, message: "error creating wallet: \(error!)")
+                                                        
+                                                    } else {
+                                                        
+                                                        displayAlert(viewController: self, isError: true, message: "error creating wallet")
+                                                        
+                                                    }                                                    
                                                     
                                                 }
                                                 

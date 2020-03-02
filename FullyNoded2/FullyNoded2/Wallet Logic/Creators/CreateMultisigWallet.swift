@@ -13,7 +13,7 @@ class CreateMultiSigWallet {
     let cd = CoreDataService()
     let enc = Encryption()
     
-    func create(wallet: WalletStruct, nodeXprv: String, nodeXpub: String, completion: @escaping ((Bool)) -> Void) {
+    func create(wallet: WalletStruct, nodeXprv: String, nodeXpub: String, completion: @escaping ((success: Bool, error: String?)) -> Void) {
         
         let reducer = Reducer()
         
@@ -43,11 +43,11 @@ class CreateMultiSigWallet {
                                     
                                     if !reducer.errorBool {
                                         
-                                        completion(true)
+                                        completion((true, nil))
                                         
                                     } else {
                                         
-                                        completion(false)
+                                        completion((false, reducer.errorDescription))
                                         
                                     }
                                     
@@ -90,8 +90,7 @@ class CreateMultiSigWallet {
                                             
                                             if let error = errorDict["message"] as? String {
                                                 
-                                                print("error importing multi: \(error)")
-                                                completion(false)
+                                                completion((false, "error importing multi: \(error)"))
                                                 
                                             }
                                             
@@ -109,8 +108,7 @@ class CreateMultiSigWallet {
                     
                 } else {
                     
-                    print("error importmulti: \(reducer.errorDescription)")
-                    completion(false)
+                    completion((false, reducer.errorDescription))
                     
                 }
                 
@@ -155,8 +153,7 @@ class CreateMultiSigWallet {
                         
                     } else {
                         
-                        print("error creating wallet")
-                        completion(false)
+                        completion((false, reducer.errorDescription))
                         
                     }
                     

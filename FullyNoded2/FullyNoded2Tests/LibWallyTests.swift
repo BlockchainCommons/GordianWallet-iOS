@@ -15,6 +15,19 @@ class LibwallyTests: XCTestCase {
     let seed = "a7885414fe0b3b948a10b2de777e6ba8cfd38c4e1b7c63d3d87cc03c6886f7ec2a7f6962dded7212ef37d09ebafefb23a526208ed3e9c0b5300103ecf43ea48c"
     let masterKey = "tprv8ZgxMBicQKsPfBdpunno9R8wKwtH2dvKSTJoKVTTGCsBY59eGDhdC978G4xwtGCDQ2DoT7w5YRtbXmj6obgwLzkL3paqjr7LBqGioFdV6kN"
     let fingerprint = "253110e5"
+    let expectedEntropy = "ed3032b2f69ad7037d0a1ab388d91065"
+    
+    func testMnemonicToEntropy() {
+        let mnemonic = BIP39Mnemonic(words)!
+        let entropy = BIP39Entropy(mnemonic.entropy.data)
+        XCTAssertEqual(entropy.description, expectedEntropy)
+    }
+    
+    func testEntropyToMnemonic() {
+        let entropy = BIP39Entropy(expectedEntropy)!
+        let mnemonic = BIP39Mnemonic(entropy)!
+        XCTAssertEqual(mnemonic.words, words.components(separatedBy: " "))
+    }
     
     func testMnemonicIsValid() {
         XCTAssertTrue(BIP39Mnemonic.isValid(words))

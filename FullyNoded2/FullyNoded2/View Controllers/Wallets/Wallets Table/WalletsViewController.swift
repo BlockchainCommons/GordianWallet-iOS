@@ -318,12 +318,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let getWalletInfoButton = cell.viewWithTag(12) as! UIButton
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
-        //let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
         let shareSeedButton = cell.viewWithTag(16) as! UIButton
         let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
         let walletFileLabel = cell.viewWithTag(20) as! UILabel
         let seedOnDeviceView = cell.viewWithTag(21)!
-        //let seedOnNodeView = cell.viewWithTag(22)!
         let isActiveLabel = cell.viewWithTag(24) as! UILabel
         let stackView = cell.viewWithTag(25)!
         let nodeView = cell.viewWithTag(26)!
@@ -331,7 +329,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let deviceXprv = cell.viewWithTag(28) as! UILabel
         let bannerView = cell.viewWithTag(32)!
         let nodeKeysLabel = cell.viewWithTag(33) as! UILabel
-        
         
         if wallet.isActive {
             
@@ -832,51 +829,53 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func makeCold(_ sender: UIButton) {
         
-        let index = Int(sender.restorationIdentifier!)!
+        showAlert(vc: self, title: "🛠 Not yet ready", message: "This feature and other seed related tools are under active development and not quite ready for testing yet.")
         
-        if sortedWallets.count > 0 {
-            
-            let wallet = WalletStruct(dictionary: self.sortedWallets[index])
-            
-            impact()
-            
-            DispatchQueue.main.async {
-                            
-                let alert = UIAlertController(title: "⚠︎ WARNING!", message: "This button WILL DELETE the devices seed FOREVER, and make this wallet a watch-only wallet, there is no going back after this! Make sure you have securely recorded your words, descriptors and recovery command before deleting the seed otherwise you will NOT be able to spend from this wallet.", preferredStyle: .actionSheet)
-
-                alert.addAction(UIAlertAction(title: "⚠︎ DELETE SEED", style: .destructive, handler: { action in
-                    
-                    self.cd.updateEntity(id: wallet.id, keyToUpdate: "seed", newValue: "no seed".dataUsingUTF8StringEncoding, entityName: .wallets) {
-                        
-                        if !self.cd.errorBool {
-                            
-                            self.cd.updateEntity(id: wallet.id, keyToUpdate: "type", newValue: "CUSTOM", entityName: .wallets) {}
-                            
-                            showAlert(vc: self, title: "Seed deleted", message: "")
-                            
-                            DispatchQueue.main.async {
-                                
-                                self.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
-                                
-                            }
-                            
-                        } else {
-                            
-                            showAlert(vc: self, title: "Error", message: "\(self.cd.errorDescription)")
-                            
-                        }
-                        
-                    }
-
-                }))
-                
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                        
-                self.present(alert, animated: true, completion: nil)
-                
-            }
-            
-        }
+//        let index = Int(sender.restorationIdentifier!)!
+//
+//        if sortedWallets.count > 0 {
+//
+//            let wallet = WalletStruct(dictionary: self.sortedWallets[index])
+//
+//            impact()
+//
+//            DispatchQueue.main.async {
+//
+//                let alert = UIAlertController(title: "⚠︎ WARNING!", message: "This button WILL DELETE the devices seed FOREVER, and make this wallet a watch-only wallet, there is no going back after this! Make sure you have securely recorded your words, descriptors and recovery command before deleting the seed otherwise you will NOT be able to spend from this wallet.", preferredStyle: .actionSheet)
+//
+//                alert.addAction(UIAlertAction(title: "⚠︎ DELETE SEED", style: .destructive, handler: { action in
+//
+//                    self.cd.updateEntity(id: wallet.id, keyToUpdate: "seed", newValue: "no seed".dataUsingUTF8StringEncoding, entityName: .wallets) {
+//
+//                        if !self.cd.errorBool {
+//
+//                            self.cd.updateEntity(id: wallet.id, keyToUpdate: "type", newValue: "CUSTOM", entityName: .wallets) {}
+//
+//                            showAlert(vc: self, title: "Seed deleted", message: "")
+//
+//                            DispatchQueue.main.async {
+//
+//                                self.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
+//
+//                            }
+//
+//                        } else {
+//
+//                            showAlert(vc: self, title: "Error", message: "\(self.cd.errorDescription)")
+//
+//                        }
+//
+//                    }
+//
+//                }))
+//
+//                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+//
+//                self.present(alert, animated: true, completion: nil)
+//
+//            }
+//
+//        }
         
     }
     
@@ -1506,7 +1505,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                         self.refresh()
                         
-                        showAlert(vc: self, title: "Success!", message: "Wallet recovered 🤩!\n\nTap it to activate it, you will need to tap the refresh button to load the balance.")
+                        showAlert(vc: self, title: "Success!", message: "Wallet recovered 🤩!\n\nTap it to activate it, the wallet will automatically rescan the blockchain which can take some time, just pull the table to refresh to see rescan status and updated balances.")
                         
                     }
                     

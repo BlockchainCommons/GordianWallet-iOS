@@ -33,20 +33,9 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         saveButtonOutlet.clipsToBounds = true
         saveButtonOutlet.layer.cornerRadius = 8
-        
         derivationLabel.adjustsFontSizeToFitWidth = true
         derivationLabel.text = ""
-        
-        if comingFromSettings {
-            
-            loadActiveWallet()
-            
-        } else {
-            
-            derivationLabel.text = labelText(derivation: derivation)
-            loadProposedWallet()
-            
-        }
+        loadActiveWallet()
         
     }
     
@@ -101,12 +90,6 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-    func loadProposedWallet() {
-        
-        getKeysFromLibWally()
-        
-    }
-    
     func loadActiveWallet() {
         print("loadActiveWallet")
         
@@ -115,48 +98,7 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             if wallet != nil && !error {
                 
                 self.wallet = wallet!
-                let parser = DescriptorParser()
-                let str = parser.descriptor(wallet!.descriptor)
-                
-                if str.isMulti {
-                    
-                    self.getKeysFromBitcoinCore()
-                    
-                } else {
-                    
-                    let enc = Encryption()
-                    
-                    if let encryptedSeed = wallet?.seed {
-                        
-                        enc.decryptData(dataToDecrypt: encryptedSeed) { (decryptedSeed) in
-                            
-                            if decryptedSeed != nil {
-                                
-                                self.words = String(data: decryptedSeed!, encoding: .utf8)!
-                                self.getKeysFromLibWally()
-                                
-                            } else {
-                                
-                                let s = String(bytes: wallet!.seed, encoding: .utf8)
-                                if s == "no seed" {
-                                    
-                                    self.getKeysFromBitcoinCore()
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                    } else {
-                        
-                        self.getKeysFromBitcoinCore()
-                        
-                    }
-                    
-                }
-                
-                self.addExistingDerivationLabel()
+                self.getKeysFromBitcoinCore()
                 
             }
             
@@ -246,105 +188,6 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                 self.connectingView.removeConnectingView()
                 
             }
-            
-        }
-        
-    }
-
-    func getKeysFromLibWally() {
-        
-        let mnemonicCreator = MnemonicCreator()
-        mnemonicCreator.convert(words: words) { (mnemonic, error) in
-            
-            if !error {
-                
-                self.getKeys(mnemonic: mnemonic!)
-                
-                if !self.comingFromSettings {
-                    
-                    displayAlert(viewController: self, isError: false, message: "please verify that these keys match your expected keys, if they don't then do not save your wallet as something is wrong!")
-                    
-                }
-                
-            } else {
-                
-                displayAlert(viewController: self, isError: true, message: "error converting those words into a seed")
-                
-            }
-            
-        }
-        
-    }
-    
-    func getKeys(mnemonic: BIP39Mnemonic) {
-        
-        let derivation = wallet.derivation
-        
-        if let path = BIP32Path(wallet.derivation) {
-            
-            if let masterKey = HDKey((mnemonic.seedHex("")), network(path: derivation)) {
-                
-                do {
-                    
-                    let account = try masterKey.derive(path)
-                    
-                    for i in 0 ... 999 {
-                        
-                        do {
-                            
-                            let key1 = try account.derive(BIP32Path("\(i)")!)
-                            var addressType:AddressType!
-                            
-                            if derivation.contains("84") {
-
-                                addressType = .payToWitnessPubKeyHash
-
-                            } else if derivation.contains("44") {
-
-                                addressType = .payToPubKeyHash
-
-                            } else if derivation.contains("49") {
-
-                                addressType = .payToScriptHashPayToWitnessPubKeyHash
-
-                            }
-                            
-                            let address = key1.address(addressType)
-                            keys.append("\(address)")
-                            
-                            if i == 999 {
-                                
-                                DispatchQueue.main.async {
-                                    
-                                    self.table.reloadData()
-                                    
-                                }
-                                
-                            }
-                            
-                        } catch {
-                            
-                            displayAlert(viewController: self, isError: true, message: "error deriving your wallets keys")
-                            
-                        }
-                        
-                    }
-                    
-                } catch {
-                    
-                    displayAlert(viewController: self, isError: true, message: "error initiating your wallets account")
-                    
-                }
-                
-            } else {
-                
-                displayAlert(viewController: self, isError: true, message: "error initiating your wallets master key")
-                
-            }
-            
-        } else {
-            
-            displayAlert(viewController: self, isError: true, message: "error initiating your wallets path")
             
         }
         
