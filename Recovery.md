@@ -64,6 +64,7 @@ A RecoveryQR is a simple json dictionary which consists of five mandatory values
     walletName:"DEFAULT_nue8339_StandUp",
     birthdate:1582800776,
     blockheight:61904
+    label:"FullyNoded2 - SingleSig"
     
 }
 ```
@@ -76,30 +77,35 @@ A RecoveryQR is a simple json dictionary which consists of five mandatory values
    entropy:"ed3032b2f69ad7037d0a1ab388d91065", descriptor:"wsh(multi(2,[cc2b88d9/84'/1'/0']tpubDDhKDzr8EeYqLP27xchAptrpUEqWecPGEXnjq3d1pKjzbHd6r7DKRPtBMxtQtjoCCqckVBoX6cfiGkBiJffGJYV3dMtabCp9bro29riQtKL/0/*,[ff7a130e/84'/1'/0']tprv8gEZHzJzKfefuNEzWstVsdzmE86SiMK8i8cZUMNDNVTcEWGZJknhKGYNJvRBoXG3R83BGPnrEWrCH2ogKEFUyUZXP8BgL1taExx2P884qUT/0/*,[8f7dba7b/84'/1'/0']tpubDDauNnbmWAmFaxbUDeYsHfsqgF5EK33eLpbw7W5eJz4V3sJ53tnTD2BjYEzJAX7DDscbZMg877vi9o5dyunG52FNDCqjnu126wKHxujMmzp/0/*))",
    walletName:"MULTI_nue8339_StandUp",
    birthdate:1582800776,
-   blockheight:61904
+   blockheight:61904,
+   label:"FullyNoded2 - MultiSig"
    
 }
 ```
 
-- `entropy` (string - hexadecimal representation of the binary entropy used to create your seed/mnemonic)
+- `entropy` (string - required)
 
-The string representation of the entropy used to derive your BIP39 mnemonic. We include this in the RecoveryQR so that we do not lose the 12 word mnemonic phrase when recovering wallets. Only the mnemonic used for signing on the device may be derived from this entropy. The multi-sig RecoveryQR will never be capable of signing for more then 1 of the 2 required signatures, therefore in a multi-sig wallet will not allow an attacker to spend your funds if they gain access to the RecoveryQR.
+The hexadecimal string representation of the binary entropy used to derive your BIP39 mnemonic. We include this in the RecoveryQR so that we do not lose the 12 word mnemonic phrase when recovering wallets. The devices seed may be derived from this entropy. The multi-sig RecoveryQR will never be capable of signing for more then 1 of the 2 required signatures.
 
-- `descriptor` (string)
+- `descriptor` (string -required)
 
-Represents the wallets xprv, derivation path, address format and also the extended public keys associated with a multi-sig wallet. For more info about descriptors see this [link](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md).
+Represents the wallets xprv, derivation path, address format and also the extended public keys associated with a multi-sig wallet. For more info about descriptors see this [link](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md). FullyNoded 2 utilizes descriptors frequently throughout the app, therefore it is efficient programmatically to simply include them in the Recovery QR rather then seperate fields for derivation paths, address format, multi-sig public keys etc.
 
-- `walletName` (string)
+- `walletName` (string - required)
 
 Represents the wallet.dat files name on the users node. This will be useful in scenarios where a user loses their device but not their node as we can programmatically verify it still exists on the node and connect to it. No rescanning of the blockchain will be necessary when recovering wallets in this manner.
 
-- `birthdate` (integer)
+- `birthdate` (integer - required)
 
 Represents the unix timestamp for the birthdate of the seed associated with the wallet. We include this value in the `bitcoin-cli` recovery options under the Seed Info view, that way if the user does recover on their own node the wallet will automatically rescan to show historical transactions/balances.
 
-- `blockheight` (integer)
+- `blockheight` (integer - required)
 
 Represents the blockheight when the wallet was first created, this is used to rescan the blockchain after the wallet is successfully recovered. Because we use multiple `importmulti` commands when creating/recovering wallets we can not use the `birthdate` to rescan for each `importmulti` command.
+
+- `label` (string - optional)
+
+The label a user may add to a wallet to easily identify it. This feature will soon be added to FullyNoded 2 and is therefore included here for forward compatibility.
 
 ### Progress
 

@@ -578,6 +578,8 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
+    
+    // Only included for backwards compatibility
     private func fetchMultiSigKeysFromXprv(xprv: HDKey) {
         
         let parser = DescriptorParser()
@@ -793,24 +795,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         DispatchQueue.main.async {
             
-            self.authView.backgroundColor = .black
-            self.authView.frame = self.view.frame
-            let logInButton = ASAuthorizationAppleIDButton(type: .signIn, style: .whiteOutline)
-            logInButton.sizeToFit()
-            logInButton.addTarget(self, action: #selector(self.handleLogInWithAppleID), for: .touchUpInside)
-            logInButton.frame = CGRect(x: 32, y: 100, width: self.view.frame.width - 64, height: 80)
-            self.view.addSubview(self.authView)
-            self.authView.addSubview(logInButton)
-            
-            let description = UILabel()
-            description.font = .systemFont(ofSize: 16, weight: .light)
-            description.numberOfLines = 0
-            description.frame = CGRect(x: 48, y: logInButton.frame.maxY + 5, width: self.view.frame.width - 96, height: 150)
-            description.text = "Blockchain Commons, LLC and FullyNoded 2 do not use or save your Apple ID data in anyway, it is used solely for 2FA (two-factor authentication) purposes only."
-            description.sizeToFit()
-            description.textAlignment = .left
-            description.textColor = .white
-            self.authView.addSubview(description)
+            self.handleLogInWithAppleID()
             
         }
         

@@ -285,7 +285,10 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                             let arr1 = changeDesc.split(separator: "#")
                                             changeDesc = "\(arr1[0])"
                                             
-                                            let recoveryQr = ["entropy": entropyString, "descriptor":"\(primaryDesc)", "walletName":"\(self.wallet.name)","birthdate":self.wallet.birthdate, "blockheight":self.wallet.blockheight] as [String : Any]
+                                            // we need to preserve the public key descriptor checksum when creating the recovery qr as the descriptor is manipulated and converted back to a public key descriptor during the recovery process. It is more efficient to do it this way then making extra rpc calls to the node during recovery.
+                                            let recoveryDesc = (self.wallet.descriptor).replacingOccurrences(of: xpub, with: xprv)
+                                            
+                                            let recoveryQr = ["entropy": entropyString, "descriptor":"\(recoveryDesc)", "walletName":"\(self.wallet.name)","birthdate":self.wallet.birthdate, "blockheight":self.wallet.blockheight] as [String : Any]
                                             
                                             if let json = recoveryQr.json() {
                                                 

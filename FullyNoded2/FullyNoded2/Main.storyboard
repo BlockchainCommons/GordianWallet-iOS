@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="nU0-zz-6p3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="nU0-zz-6p3">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -625,7 +625,7 @@
                                 <color key="sectionIndexBackgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MainMenuCell" rowHeight="66" id="EVM-FH-EQj">
-                                        <rect key="frame" x="0.0" y="55.5" width="345" height="66"/>
+                                        <rect key="frame" x="15" y="55.5" width="345" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="EVM-FH-EQj" id="6Y2-Fh-R1z">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="66"/>
@@ -682,7 +682,7 @@
                                         <color key="backgroundColor" red="0.090666323016946812" green="0.10264321163773631" blue="0.12232880449385808" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NodeInfo" rowHeight="207" id="LJt-F3-a27">
-                                        <rect key="frame" x="0.0" y="121.5" width="345" height="207"/>
+                                        <rect key="frame" x="15" y="121.5" width="345" height="207"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LJt-F3-a27" id="bIn-ES-gWa">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="207"/>
@@ -1385,7 +1385,7 @@
                                         <color key="backgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="coldStorageCell" rowHeight="188" id="lKm-ad-JjI">
-                                        <rect key="frame" x="15" y="783.5" width="345" height="188"/>
+                                        <rect key="frame" x="0.0" y="783.5" width="345" height="188"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lKm-ad-JjI" id="k7X-TL-xsP">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="188"/>
@@ -2925,6 +2925,82 @@
             </objects>
             <point key="canvasLocation" x="-4418" y="1815"/>
         </scene>
+        <!--Recovery Info View Controller-->
+        <scene sceneID="kFv-7U-kQH">
+            <objects>
+                <viewController id="mpv-4x-lR1" customClass="RecoveryInfoViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="CQD-SJ-6Ik">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zvt-he-qUT">
+                                <rect key="frame" x="16" y="66" width="343" height="317.5"/>
+                                <string key="text">Simply enter your words one by one and/or scan the RecoveryQR, then tap "Recover Now".
+
+FullyNoded 2 allows you to use single signature and multi signature wallets. These wallets work in tandem on your device and node. Therefore there are a number of possible recovery scenarios to account for.
+
+You may either enter a BIP39 recovery phrase (12 or 24 words) or scan a RecoveryQR code.
+
+In the even that you lost your node and device and want to recover a multi-sig wallet you will need to add your Recovery Kit words and scan the RecoveryQR.
+
+For all other scenarios simply scanning the RecoveryQR will work just fine.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="2Zd-8m-YlV">
+                                <rect key="frame" x="16" y="20.5" width="30" height="37"/>
+                                <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="4Ie-J0-7fU"/>
+                                    <constraint firstAttribute="height" constant="38" id="80e-gw-bnN"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recovery Info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kw-5I-2e6">
+                                <rect key="frame" x="64" y="21.5" width="194" height="35"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="29"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mxY-P8-UCi">
+                                <rect key="frame" x="110.5" y="403" width="154" height="57"/>
+                                <color key="backgroundColor" red="0.1194876269" green="0.1194876269" blue="0.1194876269" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="154" id="g7P-GF-l1G"/>
+                                    <constraint firstAttribute="height" constant="57" id="i6d-GA-H3N"/>
+                                </constraints>
+                                <state key="normal" title="Got it!">
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="gotIt:" destination="riv-TL-Tgh" eventType="touchUpInside" id="g9b-Bf-u0z"/>
+                                    <action selector="gotit:" destination="mpv-4x-lR1" eventType="touchUpInside" id="Wx9-Y8-4tD"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="zvt-he-qUT" firstAttribute="top" secondItem="2Zd-8m-YlV" secondAttribute="bottom" constant="8" id="0JN-Ym-Iio"/>
+                            <constraint firstItem="zvt-he-qUT" firstAttribute="leading" secondItem="WSj-P4-KeQ" secondAttribute="leading" constant="16" id="3CB-ss-5k3"/>
+                            <constraint firstItem="WSj-P4-KeQ" firstAttribute="trailing" secondItem="zvt-he-qUT" secondAttribute="trailing" constant="16" id="Bu7-8i-L7t"/>
+                            <constraint firstItem="mxY-P8-UCi" firstAttribute="centerX" secondItem="CQD-SJ-6Ik" secondAttribute="centerX" id="Ekl-Nt-6x6"/>
+                            <constraint firstItem="mxY-P8-UCi" firstAttribute="top" secondItem="zvt-he-qUT" secondAttribute="bottom" constant="19.5" id="IhF-NU-GY4"/>
+                            <constraint firstItem="7kw-5I-2e6" firstAttribute="centerY" secondItem="2Zd-8m-YlV" secondAttribute="centerY" id="Q7B-T0-USx"/>
+                            <constraint firstItem="2Zd-8m-YlV" firstAttribute="leading" secondItem="WSj-P4-KeQ" secondAttribute="leading" constant="16" id="R23-5o-Kxz"/>
+                            <constraint firstItem="2Zd-8m-YlV" firstAttribute="top" secondItem="WSj-P4-KeQ" secondAttribute="top" constant="20" id="dGc-fd-Q7e"/>
+                            <constraint firstItem="7kw-5I-2e6" firstAttribute="leading" secondItem="2Zd-8m-YlV" secondAttribute="trailing" constant="18" id="ng3-lM-wzZ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="WSj-P4-KeQ"/>
+                    </view>
+                    <connections>
+                        <outlet property="gotItOutlet" destination="mxY-P8-UCi" id="Shq-LM-Z6b"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="U6G-UL-aIx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="riv-TL-Tgh" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="-3599.1999999999998" y="1814.8425787106448"/>
+        </scene>
         <!--Export-->
         <scene sceneID="txy-Zb-nWB">
             <objects>
@@ -3352,29 +3428,19 @@ You may export the RecoveryQR Code at anytime but the 12 word recovery kit words
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="type recovery words" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Gyn-mg-Z8d">
-                                <rect key="frame" x="16" y="131" width="310" height="34"/>
+                                <rect key="frame" x="46" y="182" width="283" height="80"/>
+                                <color key="backgroundColor" red="0.1194876269035533" green="0.1194876269035533" blue="0.1194876269035533" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="310" id="3je-cd-Iyp"/>
+                                    <constraint firstAttribute="width" constant="283" id="3je-cd-Iyp"/>
+                                    <constraint firstAttribute="height" constant="80" id="MJp-Ty-l77"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Vj-y5-al5">
-                                <rect key="frame" x="16" y="173" width="343" height="249"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="249" id="yP6-gR-buz"/>
-                                </constraints>
-                                <string key="text">You may recover a single signature wallet with a BIP39 mnemonic *OR* by scanning a RecoveryQR Code.
-
-If you want to *fully* recover a multi signature wallet you will need your recovery kit words *and* the RecoveryQR Code.
-
-If you lost your device and still have your node all that is needed to recover a multi signature wallet is the RecoveryQR Code.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ftm-bz-o4y">
-                                <rect key="frame" x="334" y="136" width="25" height="24"/>
+                                <rect key="frame" x="337" y="210" width="25" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="RHL-1v-2B2"/>
                                     <constraint firstAttribute="width" constant="25" id="mnp-cD-th7"/>
@@ -3385,10 +3451,10 @@ If you lost your device and still have your node all that is needed to recover a
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ir0-SX-h8D">
-                                <rect key="frame" x="16" y="76" width="343" height="47"/>
+                                <rect key="frame" x="16" y="76" width="343" height="90"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="47" id="Rcp-jj-Stb"/>
+                                    <constraint firstAttribute="height" constant="90" id="Rcp-jj-Stb"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tFS-FG-5Pf">
@@ -3399,8 +3465,44 @@ If you lost your device and still have your node all that is needed to recover a
                                     <action selector="close:" destination="Elr-wf-cyI" eventType="touchUpInside" id="Xv0-qZ-WlN"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsz-u9-Mzm">
+                                <rect key="frame" x="46" y="294" width="283" height="58"/>
+                                <color key="backgroundColor" red="0.098023947593815594" green="0.12937268308221372" blue="0.14146254574365491" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="58" id="iQ9-HI-X4s"/>
+                                    <constraint firstAttribute="width" constant="283" id="wT5-bR-fEp"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="  Scan RecoveryQR Code" image="qrcode.viewfinder" catalog="system">
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="scanAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="3za-sk-NIG"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G80-uv-0qq">
+                                <rect key="frame" x="129" y="597" width="117" height="30"/>
+                                <state key="normal" title="more information">
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="moreinfo:" destination="Elr-wf-cyI" eventType="touchUpInside" id="rlz-HJ-CDu"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1n6-iJ-uNl">
+                                <rect key="frame" x="13" y="209.5" width="25" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="25" id="YzY-xp-OWW"/>
+                                    <constraint firstAttribute="height" constant="25" id="ueY-Bs-wjL"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="minus.circle" catalog="system"/>
+                                <connections>
+                                    <action selector="removeWord:" destination="Elr-wf-cyI" eventType="touchUpInside" id="YrZ-5g-lai"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40V-y5-mzs">
-                                <rect key="frame" x="112.5" y="576" width="150" height="51"/>
+                                <rect key="frame" x="112.5" y="370" width="150" height="51"/>
                                 <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="45n-fq-rPl"/>
@@ -3408,47 +3510,36 @@ If you lost your device and still have your node all that is needed to recover a
                                 </constraints>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="Recover Now"/>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsz-u9-Mzm">
-                                <rect key="frame" x="37" y="430" width="300" height="58"/>
-                                <color key="backgroundColor" red="0.098023947593815594" green="0.12937268308221372" blue="0.14146254574365491" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="58" id="iQ9-HI-X4s"/>
-                                    <constraint firstAttribute="width" constant="300" id="wT5-bR-fEp"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Scan RecoveryQR Code" image="qrcode" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
                                 <connections>
-                                    <action selector="scanAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="3za-sk-NIG"/>
+                                    <action selector="recoverNow:" destination="Elr-wf-cyI" eventType="touchUpInside" id="jfI-rs-UUw"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Gyn-mg-Z8d" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="6Y6-aA-Xl4"/>
-                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="37" id="7Cm-sH-wLs"/>
+                            <constraint firstItem="1n6-iJ-uNl" firstAttribute="centerY" secondItem="Gyn-mg-Z8d" secondAttribute="centerY" id="2qR-Mm-zi3"/>
+                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="7Cm-sH-wLs"/>
                             <constraint firstItem="Ir0-SX-h8D" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="7lm-Cd-aWd"/>
-                            <constraint firstItem="5Vj-y5-al5" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="9bu-FF-3pH"/>
+                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="top" secondItem="Gyn-mg-Z8d" secondAttribute="bottom" constant="32" id="8ER-ni-wfI"/>
+                            <constraint firstItem="40V-y5-mzs" firstAttribute="top" secondItem="nsz-u9-Mzm" secondAttribute="bottom" constant="18" id="8ZR-5f-MP9"/>
+                            <constraint firstItem="G80-uv-0qq" firstAttribute="centerX" secondItem="JxN-8Z-mkw" secondAttribute="centerX" id="8c8-zw-TFP"/>
                             <constraint firstItem="Ir0-SX-h8D" firstAttribute="top" secondItem="HK9-eh-evW" secondAttribute="bottom" constant="1.5" id="AEI-tI-VMO"/>
                             <constraint firstItem="ftm-bz-o4y" firstAttribute="centerY" secondItem="Gyn-mg-Z8d" secondAttribute="centerY" id="C6k-g3-QmZ"/>
                             <constraint firstItem="HK9-eh-evW" firstAttribute="centerY" secondItem="MmJ-5B-aeC" secondAttribute="centerY" id="CZn-9Z-ih4"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="bottom" secondItem="G80-uv-0qq" secondAttribute="bottom" constant="20" id="Dgc-DM-XAZ"/>
                             <constraint firstItem="tFS-FG-5Pf" firstAttribute="top" secondItem="duj-2r-qsr" secondAttribute="top" constant="25" id="HID-rz-PEq"/>
-                            <constraint firstItem="Gyn-mg-Z8d" firstAttribute="top" secondItem="Ir0-SX-h8D" secondAttribute="bottom" constant="8" id="Iez-CW-Lk8"/>
-                            <constraint firstItem="duj-2r-qsr" firstAttribute="bottom" secondItem="40V-y5-mzs" secondAttribute="bottom" constant="20" id="Oua-Fi-Ike"/>
+                            <constraint firstItem="Gyn-mg-Z8d" firstAttribute="leading" secondItem="1n6-iJ-uNl" secondAttribute="trailing" constant="8" id="MbT-wA-m1I"/>
                             <constraint firstItem="40V-y5-mzs" firstAttribute="centerX" secondItem="JxN-8Z-mkw" secondAttribute="centerX" id="Pvr-e5-nk3"/>
-                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="5Vj-y5-al5" secondAttribute="trailing" constant="16" id="Qxm-Kr-4B6"/>
-                            <constraint firstItem="5Vj-y5-al5" firstAttribute="top" secondItem="Gyn-mg-Z8d" secondAttribute="bottom" constant="8" id="SQM-ym-SZw"/>
+                            <constraint firstItem="Gyn-mg-Z8d" firstAttribute="top" secondItem="Ir0-SX-h8D" secondAttribute="bottom" constant="16" id="QxM-6a-XGl"/>
                             <constraint firstItem="ftm-bz-o4y" firstAttribute="leading" secondItem="Gyn-mg-Z8d" secondAttribute="trailing" constant="8" id="Wzu-oE-GwV"/>
                             <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="tFS-FG-5Pf" secondAttribute="trailing" constant="16" id="ZGq-Qw-Q5X"/>
-                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="top" secondItem="5Vj-y5-al5" secondAttribute="bottom" constant="8" id="ZM1-lH-HDb"/>
                             <constraint firstItem="MmJ-5B-aeC" firstAttribute="top" secondItem="duj-2r-qsr" secondAttribute="top" constant="25" id="dMJ-ER-G2x"/>
                             <constraint firstItem="HK9-eh-evW" firstAttribute="leading" secondItem="MmJ-5B-aeC" secondAttribute="trailing" constant="8" id="h18-6t-mRJ"/>
                             <constraint firstItem="HK9-eh-evW" firstAttribute="leading" secondItem="MmJ-5B-aeC" secondAttribute="trailing" constant="8" id="hXi-7N-e3S"/>
-                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="nsz-u9-Mzm" secondAttribute="trailing" constant="38" id="hjb-Jw-CsU"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="nsz-u9-Mzm" secondAttribute="trailing" constant="46" id="hjb-Jw-CsU"/>
+                            <constraint firstItem="1n6-iJ-uNl" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="13" id="isd-2K-l23"/>
                             <constraint firstItem="MmJ-5B-aeC" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="nr1-Cp-pQV"/>
-                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="ftm-bz-o4y" secondAttribute="trailing" constant="16" id="od2-7w-97Q"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="ftm-bz-o4y" secondAttribute="trailing" constant="13" id="od2-7w-97Q"/>
                             <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="Ir0-SX-h8D" secondAttribute="trailing" constant="16" id="owI-oC-U78"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="duj-2r-qsr"/>
@@ -3459,6 +3550,7 @@ If you lost your device and still have your node all that is needed to recover a
                         <outlet property="textField" destination="Gyn-mg-Z8d" id="Wxn-zH-bPU"/>
                         <outlet property="wordsView" destination="Ir0-SX-h8D" id="DTo-lZ-eQD"/>
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="scanRecovery" id="zkr-zY-rLG"/>
+                        <segue destination="mpv-4x-lR1" kind="presentation" identifier="showInfo" id="bKo-Oo-Ia3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZKN-I6-Ccq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3643,7 +3735,7 @@ If you lost your device and still have your node all that is needed to recover a
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="coldWalletCell" rowHeight="294" id="Cjy-2R-y2B">
-                                        <rect key="frame" x="0.0" y="55.5" width="345" height="294"/>
+                                        <rect key="frame" x="15" y="55.5" width="345" height="294"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Cjy-2R-y2B" id="85P-mu-gZ2">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="294"/>
@@ -3711,20 +3803,10 @@ If you lost your device and still have your node all that is needed to recover a
                                                             <color key="textColor" red="0.57864717509999997" green="0.57864717509999997" blue="0.57864717509999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" tag="17" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hMg-mQ-qpp">
-                                                            <rect key="frame" x="279" y="41" width="28" height="28"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="28" id="TYd-r6-Ltw"/>
-                                                                <constraint firstAttribute="height" constant="28" id="x2a-Tp-TXE"/>
-                                                            </constraints>
-                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <state key="normal" image="info.circle" catalog="system"/>
-                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.1011690125" green="0.12519398330000001" blue="0.14604344960000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="U7S-4a-NWE" firstAttribute="leading" secondItem="9iN-Rp-yFy" secondAttribute="leading" id="2h6-o4-kn6"/>
-                                                        <constraint firstAttribute="trailing" secondItem="hMg-mQ-qpp" secondAttribute="trailing" constant="7" id="4Pf-H0-75O"/>
                                                         <constraint firstItem="lvy-X2-fvE" firstAttribute="top" secondItem="7cK-yo-h4f" secondAttribute="top" constant="4" id="B8n-Cw-xkA"/>
                                                         <constraint firstItem="LHX-l8-klg" firstAttribute="leading" secondItem="7cK-yo-h4f" secondAttribute="leading" constant="8" id="O1l-VE-aOZ"/>
                                                         <constraint firstItem="ATh-mZ-6tE" firstAttribute="centerY" secondItem="WTY-QO-M67" secondAttribute="centerY" id="SGR-Xo-ToF"/>
@@ -3736,7 +3818,6 @@ If you lost your device and still have your node all that is needed to recover a
                                                         <constraint firstItem="WTY-QO-M67" firstAttribute="top" secondItem="bmo-Oz-X9F" secondAttribute="bottom" constant="2" id="iDH-tI-TDo"/>
                                                         <constraint firstItem="ATh-mZ-6tE" firstAttribute="leading" secondItem="grH-6Y-3Ye" secondAttribute="leading" id="idQ-el-8Hi"/>
                                                         <constraint firstItem="grH-6Y-3Ye" firstAttribute="centerY" secondItem="bmo-Oz-X9F" secondAttribute="centerY" id="kDa-3l-3FN"/>
-                                                        <constraint firstAttribute="bottom" secondItem="hMg-mQ-qpp" secondAttribute="bottom" constant="5" id="lBC-7F-tQu"/>
                                                         <constraint firstItem="bmo-Oz-X9F" firstAttribute="leading" secondItem="7cK-yo-h4f" secondAttribute="leading" constant="8" id="mDW-Ai-rFT"/>
                                                         <constraint firstAttribute="height" constant="74" id="oft-AV-aF7"/>
                                                         <constraint firstItem="9iN-Rp-yFy" firstAttribute="leading" secondItem="lvy-X2-fvE" secondAttribute="trailing" constant="4" id="orx-mE-Qw0"/>
@@ -3874,34 +3955,19 @@ If you lost your device and still have your node all that is needed to recover a
                                                             <rect key="frame" x="8" y="6" width="298" height="26"/>
                                                             <subviews>
                                                                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ymr-tB-rFs">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="19" height="26"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="26" height="26"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <state key="normal" image="square.and.arrow.up" catalog="system"/>
+                                                                    <state key="normal" image="eye" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jAz-Y0-baB">
-                                                                    <rect key="frame" x="53.5" y="0.0" width="22.5" height="26"/>
+                                                                    <rect key="frame" x="140.5" y="0.0" width="22.5" height="26"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="checkmark.seal" catalog="system"/>
                                                                 </button>
-                                                                <button opaque="NO" tag="5" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1rr-R4-xAr">
-                                                                    <rect key="frame" x="110" y="0.0" width="18" height="26"/>
-                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <state key="normal" image="arrow.clockwise" catalog="system"/>
-                                                                </button>
-                                                                <button opaque="NO" tag="6" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ntu-xg-s71">
-                                                                    <rect key="frame" x="162.5" y="0.0" width="19.5" height="26"/>
-                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <state key="normal" image="qrcode" catalog="system"/>
-                                                                </button>
-                                                                <button opaque="NO" tag="9" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RiH-co-PfL">
-                                                                    <rect key="frame" x="216" y="0.0" width="21" height="26"/>
+                                                                <button opaque="NO" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RiH-co-PfL">
+                                                                    <rect key="frame" x="277" y="0.0" width="21" height="26"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="list.number" catalog="system"/>
-                                                                </button>
-                                                                <button opaque="NO" tag="7" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kN2-EO-eEn">
-                                                                    <rect key="frame" x="271.5" y="0.0" width="26.5" height="26"/>
-                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <state key="normal" image="dot.radiowaves.left.and.right" catalog="system"/>
                                                                 </button>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -4237,19 +4303,9 @@ If you lost your device and still have your node all that is needed to recover a
                                                                 <constraint firstAttribute="height" constant="19" id="nEy-Xh-oNg"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ow1-MZ-DSx">
-                                                            <rect key="frame" x="279" y="48" width="28" height="28"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="28" id="reF-wW-LEa"/>
-                                                                <constraint firstAttribute="width" constant="28" id="zrg-Ma-OHQ"/>
-                                                            </constraints>
-                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <state key="normal" image="info.circle" catalog="system"/>
-                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.11157282175978181" green="0.14015675464891095" blue="0.16410052308781731" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="ow1-MZ-DSx" secondAttribute="bottom" constant="8" id="4gl-XU-hH8"/>
                                                         <constraint firstItem="g8x-Ld-Ezw" firstAttribute="top" secondItem="car-yr-b08" secondAttribute="bottom" constant="2" id="66n-Dg-o7p"/>
                                                         <constraint firstItem="g8x-Ld-Ezw" firstAttribute="top" secondItem="car-yr-b08" secondAttribute="bottom" constant="2" id="7dm-GM-Ahm"/>
                                                         <constraint firstItem="i60-gh-Nax" firstAttribute="centerY" secondItem="czI-ur-V3d" secondAttribute="centerY" id="BPt-ru-z3I"/>
@@ -4268,7 +4324,6 @@ If you lost your device and still have your node all that is needed to recover a
                                                         <constraint firstItem="i60-gh-Nax" firstAttribute="leading" secondItem="czI-ur-V3d" secondAttribute="trailing" constant="8" id="qWE-8u-doz"/>
                                                         <constraint firstItem="LpX-Z8-tmr" firstAttribute="leading" secondItem="ev4-Ba-BNf" secondAttribute="leading" id="uHL-Ae-M4f"/>
                                                         <constraint firstItem="g8x-Ld-Ezw" firstAttribute="leading" secondItem="Mus-be-FaA" secondAttribute="leading" constant="8" id="vrr-wp-ppK"/>
-                                                        <constraint firstAttribute="trailing" secondItem="ow1-MZ-DSx" secondAttribute="trailing" constant="8" id="wdt-AB-c7Z"/>
                                                         <constraint firstItem="czI-ur-V3d" firstAttribute="leading" secondItem="Mus-be-FaA" secondAttribute="leading" constant="8" id="xRD-2d-Vda"/>
                                                     </constraints>
                                                 </view>
@@ -4284,32 +4339,17 @@ If you lost your device and still have your node all that is needed to recover a
                                                                     <state key="normal" image="eye" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ix-Mm-4fG">
-                                                                    <rect key="frame" x="60" y="0.0" width="22.5" height="26"/>
+                                                                    <rect key="frame" x="140" y="0.0" width="22.5" height="26"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="checkmark.seal" catalog="system"/>
                                                                 </button>
-                                                                <button opaque="NO" tag="5" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4pY-rI-DWW">
-                                                                    <rect key="frame" x="117" y="0.0" width="18" height="26"/>
-                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <state key="normal" image="arrow.clockwise" catalog="system"/>
-                                                                </button>
-                                                                <button opaque="NO" tag="6" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AT4-Oq-skO">
-                                                                    <rect key="frame" x="169" y="0.0" width="19.5" height="26"/>
-                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <state key="normal" image="qrcode" catalog="system"/>
-                                                                </button>
-                                                                <button opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5s-y7-UKM">
-                                                                    <rect key="frame" x="223" y="0.0" width="21" height="26"/>
+                                                                <button opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5s-y7-UKM">
+                                                                    <rect key="frame" x="276" y="0.0" width="21" height="26"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="list.number" catalog="system">
                                                                         <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     </state>
-                                                                </button>
-                                                                <button opaque="NO" tag="7" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rep-fm-fmf">
-                                                                    <rect key="frame" x="278" y="0.0" width="19" height="26"/>
-                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <state key="normal" image="thermometer.snowflake" catalog="system"/>
                                                                 </button>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -4332,6 +4372,17 @@ If you lost your device and still have your node all that is needed to recover a
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="34" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rescanning 10%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dKI-7v-ZfS">
+                                                    <rect key="frame" x="172" y="56" width="75" height="23"/>
+                                                    <color key="backgroundColor" red="0.1115728218" green="0.14015675459999999" blue="0.16410052310000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="75" id="ClK-9x-ej7"/>
+                                                        <constraint firstAttribute="height" constant="23" id="PzJ-pM-4SS"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="7"/>
+                                                    <color key="textColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
@@ -4342,6 +4393,7 @@ If you lost your device and still have your node all that is needed to recover a
                                                 <constraint firstItem="AMk-q2-GQu" firstAttribute="trailing" secondItem="nN1-0D-mSU" secondAttribute="trailingMargin" id="4bt-rX-sm7"/>
                                                 <constraint firstItem="TQL-WW-Jpr" firstAttribute="leading" secondItem="DLd-eo-yhH" secondAttribute="trailing" constant="8" id="792-19-H3I"/>
                                                 <constraint firstAttribute="bottom" secondItem="egC-uO-FYs" secondAttribute="bottom" constant="8" id="7E3-xI-vHf"/>
+                                                <constraint firstItem="dOn-Dy-2vG" firstAttribute="leading" secondItem="dKI-7v-ZfS" secondAttribute="trailing" constant="8" id="7M7-Ri-SZT"/>
                                                 <constraint firstItem="egC-uO-FYs" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leading" constant="16" id="9tI-4L-g63"/>
                                                 <constraint firstItem="DLd-eo-yhH" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leadingMargin" constant="-1" id="Aib-Z8-KYd"/>
                                                 <constraint firstItem="egC-uO-FYs" firstAttribute="top" secondItem="Mus-be-FaA" secondAttribute="bottom" constant="6" id="Dc1-eQ-iHs"/>
@@ -4353,6 +4405,7 @@ If you lost your device and still have your node all that is needed to recover a
                                                 <constraint firstItem="DLd-eo-yhH" firstAttribute="top" secondItem="6Sm-zd-H8y" secondAttribute="bottom" id="SPw-9m-OWU"/>
                                                 <constraint firstItem="TQL-WW-Jpr" firstAttribute="centerY" secondItem="DLd-eo-yhH" secondAttribute="centerY" id="T9Q-PP-gPW"/>
                                                 <constraint firstAttribute="trailing" secondItem="7yp-J1-Thl" secondAttribute="trailing" id="TaX-4v-sep"/>
+                                                <constraint firstItem="dOn-Dy-2vG" firstAttribute="centerY" secondItem="dKI-7v-ZfS" secondAttribute="centerY" id="XoP-C6-fSz"/>
                                                 <constraint firstItem="6Sm-zd-H8y" firstAttribute="trailing" secondItem="nN1-0D-mSU" secondAttribute="trailingMargin" id="YMO-cS-Wbg"/>
                                                 <constraint firstItem="vxO-CT-ic3" firstAttribute="top" secondItem="DLd-eo-yhH" secondAttribute="bottom" constant="2" id="YjN-qv-xX9"/>
                                                 <constraint firstItem="egC-uO-FYs" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leadingMargin" constant="1" id="ZG9-Ce-jf3"/>
@@ -4546,21 +4599,11 @@ If you lost your device and still have your node all that is needed to recover a
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="am7-wg-kkV">
-                                                            <rect key="frame" x="279" y="13.5" width="28" height="28"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="28" id="F3c-WN-ZTt"/>
-                                                                <constraint firstAttribute="width" constant="28" id="U6W-EO-tDo"/>
-                                                            </constraints>
-                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <state key="normal" image="info.circle" catalog="system"/>
-                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.098183676662712258" green="0.1306873117954245" blue="0.15651240682741119" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="f2l-aT-168" firstAttribute="top" secondItem="Pie-V8-QKM" secondAttribute="top" constant="5" id="4YY-X5-DNb"/>
                                                         <constraint firstItem="cmh-IY-0zE" firstAttribute="top" secondItem="Pie-V8-QKM" secondAttribute="top" constant="2" id="C5v-wq-Q7C"/>
-                                                        <constraint firstAttribute="trailing" secondItem="am7-wg-kkV" secondAttribute="trailing" constant="8" id="GZM-oN-3nL"/>
                                                         <constraint firstItem="hNy-iI-3Iy" firstAttribute="centerY" secondItem="hMn-I7-11U" secondAttribute="centerY" id="Go7-1J-cWX"/>
                                                         <constraint firstItem="hNy-iI-3Iy" firstAttribute="leading" secondItem="f2l-aT-168" secondAttribute="leading" id="H5r-SF-qGT"/>
                                                         <constraint firstItem="hNy-iI-3Iy" firstAttribute="leading" secondItem="hMn-I7-11U" secondAttribute="trailing" constant="6" id="IKs-FV-87u"/>
@@ -4573,7 +4616,6 @@ If you lost your device and still have your node all that is needed to recover a
                                                         <constraint firstItem="sbj-zs-EQC" firstAttribute="centerY" secondItem="4Fz-Xw-tv1" secondAttribute="centerY" id="l8i-El-LSr"/>
                                                         <constraint firstAttribute="trailing" secondItem="f2l-aT-168" secondAttribute="trailing" constant="8" id="mci-M7-sDA"/>
                                                         <constraint firstItem="hMn-I7-11U" firstAttribute="leading" secondItem="Pie-V8-QKM" secondAttribute="leading" constant="8" id="o3x-zw-zAn"/>
-                                                        <constraint firstItem="am7-wg-kkV" firstAttribute="centerY" secondItem="Pie-V8-QKM" secondAttribute="centerY" id="oqS-7j-oVp"/>
                                                         <constraint firstItem="hMn-I7-11U" firstAttribute="top" secondItem="cmh-IY-0zE" secondAttribute="bottom" constant="2" id="wEz-gv-B2I"/>
                                                         <constraint firstItem="RYz-Mu-lfI" firstAttribute="leading" secondItem="cmh-IY-0zE" secondAttribute="trailing" id="xdQ-m4-HBY"/>
                                                     </constraints>
@@ -4695,33 +4737,23 @@ If you lost your device and still have your node all that is needed to recover a
                                                             <color key="textColor" red="0.57864717509999997" green="0.57864717509999997" blue="0.57864717509999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" tag="17" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0tT-hv-us0">
-                                                            <rect key="frame" x="278" y="4.5" width="28" height="28"/>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="desktopcomputer" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="90M-z2-8Dl">
+                                                            <rect key="frame" x="277" y="9.5" width="29" height="18"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="28" id="9Mr-61-65M"/>
-                                                                <constraint firstAttribute="width" constant="28" id="MfX-Fb-Qix"/>
+                                                                <constraint firstAttribute="width" constant="29" id="9Tg-t2-xIm"/>
+                                                                <constraint firstAttribute="height" constant="19" id="OzV-1q-pUU"/>
                                                             </constraints>
-                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <state key="normal" image="info.circle" catalog="system"/>
-                                                        </button>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="💻" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tcQ-uu-jmf">
-                                                            <rect key="frame" x="255" y="10" width="20" height="17"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
+                                                        </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.098183676662712258" green="0.1306873117954245" blue="0.15651240682741119" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstItem="0tT-hv-us0" firstAttribute="leading" secondItem="tcQ-uu-jmf" secondAttribute="trailing" constant="3" id="1uf-S3-M6G"/>
-                                                        <constraint firstItem="0tT-hv-us0" firstAttribute="centerY" secondItem="ZsE-bQ-qYq" secondAttribute="centerY" id="2Iy-4u-tWx"/>
                                                         <constraint firstItem="jEL-PR-0H2" firstAttribute="leading" secondItem="MUJ-wN-rUy" secondAttribute="trailing" constant="5" id="5li-fX-2gq"/>
                                                         <constraint firstItem="MUJ-wN-rUy" firstAttribute="top" secondItem="ZsE-bQ-qYq" secondAttribute="top" constant="4" id="ERc-iP-seJ"/>
-                                                        <constraint firstItem="tcQ-uu-jmf" firstAttribute="centerY" secondItem="ZsE-bQ-qYq" secondAttribute="centerY" id="Fyx-vu-aas"/>
                                                         <constraint firstAttribute="height" constant="37" id="TWT-Sf-2x0"/>
-                                                        <constraint firstAttribute="trailing" secondItem="0tT-hv-us0" secondAttribute="trailing" constant="8" id="bCv-w2-YmV"/>
+                                                        <constraint firstItem="90M-z2-8Dl" firstAttribute="centerY" secondItem="ZsE-bQ-qYq" secondAttribute="centerY" id="cFF-D7-9mh"/>
                                                         <constraint firstItem="jEL-PR-0H2" firstAttribute="centerY" secondItem="MUJ-wN-rUy" secondAttribute="centerY" id="dDM-en-dj5"/>
                                                         <constraint firstItem="MUJ-wN-rUy" firstAttribute="leading" secondItem="ZsE-bQ-qYq" secondAttribute="leading" constant="4" id="dg1-Fv-vG5"/>
+                                                        <constraint firstAttribute="trailing" secondItem="90M-z2-8Dl" secondAttribute="trailing" constant="8" id="pfV-zY-VGH"/>
                                                         <constraint firstItem="6GI-Av-oYU" firstAttribute="leading" secondItem="9rt-PG-G24" secondAttribute="trailing" constant="6" id="snT-db-eJE"/>
                                                         <constraint firstItem="6GI-Av-oYU" firstAttribute="centerY" secondItem="9rt-PG-G24" secondAttribute="centerY" id="th2-uY-b0W"/>
                                                         <constraint firstItem="9rt-PG-G24" firstAttribute="top" secondItem="MUJ-wN-rUy" secondAttribute="bottom" id="wUh-V9-ICy"/>
@@ -4766,32 +4798,22 @@ If you lost your device and still have your node all that is needed to recover a
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="📄" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HnI-vK-gV2">
-                                                            <rect key="frame" x="258" y="10" width="20" height="17"/>
+                                                            <rect key="frame" x="286" y="10" width="20" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" tag="18" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="km0-m6-cl4">
-                                                            <rect key="frame" x="278" y="4.5" width="28" height="28"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="28" id="6bH-DW-bYw"/>
-                                                                <constraint firstAttribute="width" constant="28" id="Be8-Zr-Ewd"/>
-                                                            </constraints>
-                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <state key="normal" image="info.circle" catalog="system"/>
-                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.098183676662712258" green="0.1306873117954245" blue="0.15651240682741119" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstItem="km0-m6-cl4" firstAttribute="leading" secondItem="HnI-vK-gV2" secondAttribute="trailing" id="12g-iG-FCF"/>
                                                         <constraint firstItem="Upj-Sb-mG8" firstAttribute="leading" secondItem="VUM-3h-j6T" secondAttribute="trailing" constant="5" id="Df1-Da-WDu"/>
-                                                        <constraint firstAttribute="trailing" secondItem="km0-m6-cl4" secondAttribute="trailing" constant="8" id="Mkg-wx-Kff"/>
+                                                        <constraint firstItem="HnI-vK-gV2" firstAttribute="centerY" secondItem="pII-Us-N4E" secondAttribute="centerY" id="I1u-lT-uhn"/>
                                                         <constraint firstItem="Z4d-ga-qGm" firstAttribute="top" secondItem="VUM-3h-j6T" secondAttribute="bottom" id="V3E-0Z-Fkx"/>
                                                         <constraint firstItem="VUM-3h-j6T" firstAttribute="leading" secondItem="pII-Us-N4E" secondAttribute="leading" constant="4" id="XO4-C1-aDC"/>
+                                                        <constraint firstAttribute="trailing" secondItem="HnI-vK-gV2" secondAttribute="trailing" constant="8" id="eaZ-za-oC5"/>
                                                         <constraint firstItem="Z4d-ga-qGm" firstAttribute="leading" secondItem="pII-Us-N4E" secondAttribute="leading" constant="4" id="fqt-Zj-dRZ"/>
                                                         <constraint firstItem="RTX-3u-RA1" firstAttribute="leading" secondItem="Z4d-ga-qGm" secondAttribute="trailing" constant="6" id="gKg-1V-NAK"/>
                                                         <constraint firstItem="VUM-3h-j6T" firstAttribute="top" secondItem="pII-Us-N4E" secondAttribute="top" constant="4" id="mV0-CO-jWv"/>
-                                                        <constraint firstItem="km0-m6-cl4" firstAttribute="centerY" secondItem="pII-Us-N4E" secondAttribute="centerY" id="q3b-Uw-UCB"/>
                                                         <constraint firstItem="HnI-vK-gV2" firstAttribute="centerY" secondItem="pII-Us-N4E" secondAttribute="centerY" id="qkD-CT-DZ2"/>
                                                         <constraint firstItem="Upj-Sb-mG8" firstAttribute="centerY" secondItem="VUM-3h-j6T" secondAttribute="centerY" id="u5Q-cO-xmu"/>
                                                         <constraint firstItem="RTX-3u-RA1" firstAttribute="centerY" secondItem="Z4d-ga-qGm" secondAttribute="centerY" id="vZ7-nf-ja2"/>
@@ -4805,27 +4827,17 @@ If you lost your device and still have your node all that is needed to recover a
                                                             <rect key="frame" x="8" y="6" width="298" height="26"/>
                                                             <subviews>
                                                                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A8n-kc-3Gi">
-                                                                    <rect key="frame" x="0.0" y="2" width="33" height="22"/>
+                                                                    <rect key="frame" x="0.0" y="2" width="86" height="22"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="eye" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zca-xL-5Mz">
-                                                                    <rect key="frame" x="53" y="2" width="33" height="22"/>
+                                                                    <rect key="frame" x="106" y="2" width="86" height="22"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="checkmark.seal" catalog="system"/>
                                                                 </button>
-                                                                <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4zK-ut-dro">
-                                                                    <rect key="frame" x="106" y="2" width="33" height="22"/>
-                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <state key="normal" image="arrow.clockwise" catalog="system"/>
-                                                                </button>
-                                                                <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yeV-eN-KAx">
-                                                                    <rect key="frame" x="159" y="2" width="33" height="22"/>
-                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <state key="normal" image="qrcode" catalog="system"/>
-                                                                </button>
                                                                 <button opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IFi-Eu-JzX">
-                                                                    <rect key="frame" x="212" y="0.0" width="33" height="26"/>
+                                                                    <rect key="frame" x="212" y="0.0" width="86" height="26"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="75" id="nnD-px-wRB"/>
@@ -4835,11 +4847,6 @@ If you lost your device and still have your node all that is needed to recover a
                                                                     <state key="normal" image="list.number" catalog="system">
                                                                         <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     </state>
-                                                                </button>
-                                                                <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eSX-pj-Wvd">
-                                                                    <rect key="frame" x="265" y="2" width="33" height="22"/>
-                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <state key="normal" image="thermometer.snowflake" catalog="system"/>
                                                                 </button>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -4857,6 +4864,17 @@ If you lost your device and still have your node all that is needed to recover a
                                                         <constraint firstItem="Dwt-Xd-gsb" firstAttribute="top" secondItem="1Wn-ab-2Sg" secondAttribute="top" constant="6" id="rbU-8S-OrE"/>
                                                     </constraints>
                                                 </view>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="34" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rescanning 10%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="75A-ek-fBM">
+                                                    <rect key="frame" x="171" y="64" width="75" height="23"/>
+                                                    <color key="backgroundColor" red="0.1115728218" green="0.14015675459999999" blue="0.16410052310000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="23" id="MEn-jG-Yru"/>
+                                                        <constraint firstAttribute="width" constant="75" id="v6i-QY-765"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="7"/>
+                                                    <color key="textColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="ZsE-bQ-qYq" firstAttribute="top" secondItem="xIK-fc-Mq4" secondAttribute="bottom" constant="8" id="0Fe-tM-RGt"/>
@@ -4875,12 +4893,14 @@ If you lost your device and still have your node all that is needed to recover a
                                                 <constraint firstItem="kho-sl-W6K" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leading" id="JJF-lh-J2S"/>
                                                 <constraint firstItem="Pie-V8-QKM" firstAttribute="top" secondItem="pII-Us-N4E" secondAttribute="bottom" constant="8" id="LZS-3W-w7G"/>
                                                 <constraint firstItem="Ckd-q3-zNx" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leading" constant="16" id="NeX-tC-pYW"/>
+                                                <constraint firstItem="B1v-ZE-lI2" firstAttribute="centerY" secondItem="75A-ek-fBM" secondAttribute="centerY" id="Np1-Gl-eDW"/>
                                                 <constraint firstItem="ZsE-bQ-qYq" firstAttribute="trailing" secondItem="EKP-cw-XcR" secondAttribute="trailingMargin" id="TWV-oa-u5M"/>
                                                 <constraint firstItem="Ckd-q3-zNx" firstAttribute="top" secondItem="KGY-cW-hyS" secondAttribute="bottom" id="Th2-Z4-huO"/>
                                                 <constraint firstItem="iY3-wV-4kw" firstAttribute="top" secondItem="Ckd-q3-zNx" secondAttribute="bottom" constant="8" id="VUX-G0-X8A"/>
                                                 <constraint firstItem="xiT-PY-mWf" firstAttribute="centerY" secondItem="MfD-7G-p6e" secondAttribute="centerY" id="Vq3-np-hPg"/>
                                                 <constraint firstItem="B1v-ZE-lI2" firstAttribute="centerY" secondItem="oW9-IX-PDE" secondAttribute="centerY" id="bjP-a5-odQ"/>
                                                 <constraint firstItem="pII-Us-N4E" firstAttribute="trailing" secondItem="xIK-fc-Mq4" secondAttribute="trailing" id="cWG-mP-Pwz"/>
+                                                <constraint firstItem="B1v-ZE-lI2" firstAttribute="leading" secondItem="75A-ek-fBM" secondAttribute="trailing" constant="8" id="cti-ce-Jq5"/>
                                                 <constraint firstItem="75R-94-8gm" firstAttribute="leading" secondItem="Ckd-q3-zNx" secondAttribute="trailing" constant="2" id="ddk-jQ-Db9"/>
                                                 <constraint firstAttribute="trailing" secondItem="kho-sl-W6K" secondAttribute="trailing" id="dui-ac-HlT"/>
                                                 <constraint firstItem="kho-sl-W6K" firstAttribute="top" secondItem="EKP-cw-XcR" secondAttribute="top" id="eMO-Ud-rWa"/>
@@ -5499,7 +5519,6 @@ If you lost your device and still have your node all that is needed to recover a
         <image name="Minus" width="30" height="30"/>
         <image name="Settings" width="30" height="30"/>
         <image name="Signature" width="30" height="30"/>
-        <image name="arrow.clockwise" catalog="system" width="56" height="64"/>
         <image name="arrow.down" catalog="system" width="60" height="64"/>
         <image name="arrow.down.circle" catalog="system" width="64" height="60"/>
         <image name="arrow.up" catalog="system" width="60" height="64"/>
@@ -5508,7 +5527,6 @@ If you lost your device and still have your node all that is needed to recover a
         <image name="chevron.right.square.fill" catalog="system" width="64" height="56"/>
         <image name="desktopcomputer" catalog="system" width="64" height="50"/>
         <image name="doc.on.doc" catalog="system" width="58" height="64"/>
-        <image name="dot.radiowaves.left.and.right" catalog="system" width="64" height="44"/>
         <image name="eye" catalog="system" width="64" height="40"/>
         <image name="eye.fill" catalog="system" width="64" height="38"/>
         <image name="eyeglasses" catalog="system" width="64" height="26"/>
@@ -5524,6 +5542,7 @@ If you lost your device and still have your node all that is needed to recover a
         <image name="lock.circle" catalog="system" width="64" height="60"/>
         <image name="lock.icloud" catalog="system" width="64" height="44"/>
         <image name="lock.shield" catalog="system" width="64" height="60"/>
+        <image name="minus.circle" catalog="system" width="64" height="60"/>
         <image name="pencil.circle" catalog="system" width="64" height="60"/>
         <image name="person.3" catalog="system" width="72" height="35"/>
         <image name="qrcode" catalog="system" width="64" height="56"/>
@@ -5536,7 +5555,6 @@ If you lost your device and still have your node all that is needed to recover a
         <image name="square.stack.3d.down.right" catalog="system" width="62" height="64"/>
         <image name="sun.min" catalog="system" width="64" height="60"/>
         <image name="text.bubble" catalog="system" width="64" height="54"/>
-        <image name="thermometer.snowflake" catalog="system" width="56" height="64"/>
         <image name="timer" catalog="system" width="64" height="60"/>
         <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
     </resources>
@@ -5544,8 +5562,8 @@ If you lost your device and still have your node all that is needed to recover a
         <segue reference="UBf-qr-XYG"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="tY7-Ss-m0T"/>
-        <segue reference="LzA-tD-DJD"/>
-        <segue reference="0zN-S6-Zr1"/>
+        <segue reference="zkr-zY-rLG"/>
+        <segue reference="r5v-RV-hIL"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

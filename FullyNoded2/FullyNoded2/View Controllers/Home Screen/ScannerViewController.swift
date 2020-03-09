@@ -15,7 +15,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     var scanningNode = Bool()
     var isRecovering = Bool()
     var closeButton = UIButton()
-    var onDoneRecoveringBlock : ((Bool) -> Void)?
+    var onDoneRecoveringBlock : (([String:Any]) -> Void)?
     var onDoneBlock : ((Bool) -> Void)?
     let qrScanner = QRScanner()
     var isTorchOn = Bool()
@@ -355,40 +355,41 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                                         
                                         if let _ = dict["blockheight"] as? Int {
                                             
-                                            // we can recover the wallet now
-                                            self.connectingView.addConnectingView(vc: self, description: "recovering your wallet")
-                                            let recovery = RecoverWallet()
-                                            recovery.json = dict
-                                            recovery.node = node!
-                                            recovery.words = self.words
-                                            recovery.recover { (success, error) in
+                                            // we know we are coming from wallet recovery view controller
+                                            if self.isRecovering {
                                                 
-                                                if success {
+                                                DispatchQueue.main.async {
                                                     
-                                                    if self.isRecovering {
-                                                        
-                                                        DispatchQueue.main.async {
-                                                            
-                                                            self.connectingView.removeConnectingView()
-                                                            self.onDoneRecoveringBlock!(true)
-                                                            self.dismiss(animated: true, completion: nil)
-                                                            
-                                                        }
-                                                        
-                                                    } else {
+                                                    self.connectingView.removeConnectingView()
+                                                    self.onDoneRecoveringBlock!(dict)
+                                                    self.dismiss(animated: true, completion: nil)
+                                                    
+                                                }
+                                                
+                                            } else {
+                                                
+                                                // we can recover the wallet now
+                                                self.connectingView.addConnectingView(vc: self, description: "recovering your wallet")
+                                                let recovery = RecoverWallet()
+                                                recovery.json = dict
+                                                recovery.node = node!
+                                                recovery.words = self.words
+                                                recovery.recover { (success, error) in
+                                                    
+                                                    if success {
                                                         
                                                         self.connectingView.removeConnectingView()
                                                         showAlert(vc: self, title: "Success!", message: "Wallet recovered 🤩\n\nGo to wallets to activate it.")
                                                         
-                                                    }
-                                                    
-                                                } else {
-                                                    
-                                                    self.connectingView.removeConnectingView()
-                                                    
-                                                    if error != nil {
+                                                    } else {
                                                         
-                                                        showAlert(vc: self, title: "Error!", message: "Wallet recovery error: \(error!)")
+                                                        self.connectingView.removeConnectingView()
+                                                        
+                                                        if error != nil {
+                                                            
+                                                            showAlert(vc: self, title: "Error!", message: "Wallet recovery error: \(error!)")
+                                                            
+                                                        }
                                                         
                                                     }
                                                     

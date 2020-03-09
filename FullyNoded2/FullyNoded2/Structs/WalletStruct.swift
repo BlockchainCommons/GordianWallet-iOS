@@ -31,6 +31,7 @@ public struct WalletStruct: CustomStringConvertible {
     let changeDescriptor:String
     let xprv:Data?
     let blockheight:Int
+    let label:String
     
     init(dictionary: [String: Any]) {
         
@@ -55,6 +56,7 @@ public struct WalletStruct: CustomStringConvertible {
         self.changeDescriptor = dictionary["changeDescriptor"] as? String ?? ""
         self.xprv = dictionary["xprv"] as? Data ?? nil
         self.blockheight = dictionary["blockheight"] as? Int ?? 1
+        self.label = dictionary["label"] as? String ?? "Add a wallet label"
         
     }
     

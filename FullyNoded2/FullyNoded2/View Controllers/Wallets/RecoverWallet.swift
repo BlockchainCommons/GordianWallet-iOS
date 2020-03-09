@@ -11,6 +11,7 @@ import LibWally
 
 class RecoverWallet {
     
+    var derivation = ""
     var words = ""
     var json:[String:Any]!
     var descriptorStruct:DescriptorStruct!
@@ -26,11 +27,11 @@ class RecoverWallet {
     
     private func recoveryType() -> recoveryType {
         
-        if json != nil && words != "" {
+        if json["descriptor"] != nil && words != "" {
             
             return .fullMultiSig
             
-        } else if json != nil && words == "" {
+        } else if json["descriptor"] != nil && words == "" {
             
             if descriptorStruct.isMulti {
                 
@@ -42,7 +43,7 @@ class RecoverWallet {
                 
             }
             
-        } else if json == nil && words != "" {
+        } else if json["descriptor"] == nil && words != "" {
             
             return .singleSig
             
@@ -422,6 +423,7 @@ class RecoverWallet {
         newWallet["nodeId"] = self.node.id
         newWallet["blockheight"] = blockheight
         
+        // when recovering a full multisig wallet we need to switch around the designated keys so that the backup becomes the nodes xprv, the backup is then essentially consumed and the multissig setup is now for all practical purposes a 2 of 2. When a user recovers a multisig wallet in this way we need to advise the user that it would be wise to sweep the wallet to a new multi-sig wallet.
         let oldRecoveryXpub = self.descriptorStruct.multiSigKeys[0]
         let deviceXprv = self.descriptorStruct.multiSigKeys[1]
         let oldNodeXpub = self.descriptorStruct.multiSigKeys[2]
@@ -588,12 +590,100 @@ class RecoverWallet {
         
     }
     
+    private func recoverWordsOnly(completion: @escaping ((success: Bool, error: String?)) -> Void) {
+        
+        if let _ = BIP32Path(self.derivation) {
+                        
+            if let _ = BIP39Mnemonic(self.words) {
+                
+                var newWallet = [String:Any]()
+                newWallet["derivation"] = self.derivation
+                newWallet["type"] = "DEFAULT"
+                newWallet["birthdate"] = keyBirthday()
+                newWallet["name"] = "DEFAULT_\(randomString(length: 10))_StandUp"
+                newWallet["id"] = UUID()
+                newWallet["isActive"] = false
+                newWallet["lastUsed"] = Date()
+                newWallet["lastBalance"] = 0.0
+                newWallet["isArchived"] = false
+                newWallet["nodeId"] = self.node.id
+                newWallet["blockheight"] = 1// user is only importing words, so we need to do a full rescan when recovering
+                
+                let enc = Encryption()
+                enc.encryptData(dataToEncrypt: self.words.dataUsingUTF8StringEncoding) { (encryptedData, error) in
+                    
+                    if !error && encryptedData != nil {
+                        
+                        newWallet["seed"] = encryptedData!
+                        let walletCreator = WalletCreator()
+                        walletCreator.walletDict = newWallet
+                        walletCreator.createStandUpWallet { (success, errorDescription, primaryDescriptor, changeDescriptor) in
+                            
+                            if success {
+                                
+                                newWallet["descriptor"] = primaryDescriptor!
+                                newWallet["changeDescriptor"] = changeDescriptor!
+                                let saver = WalletSaver()
+                                saver.save(walletToSave: newWallet) { (success) in
+                                    
+                                    if success {
+                                        
+                                        let reducer = Reducer()
+                                        reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "1") {
+                                            
+                                            completion((true, nil))
+                                            
+                                        }
+                                                                                
+                                    } else {
+                                        
+                                        completion((false, "error saving your wallet"))
+                                        
+                                    }
+                                    
+                                }
+                                
+                            } else {
+                                
+                                completion((false, errorDescription))
+                                
+                            }
+                            
+                        }
+                        
+                    } else {
+                        
+                        completion((false, "error encrypting your mnemonic"))
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                completion((false, "error converting those words to a valid mnemonic"))
+                
+            }
+            
+        } else {
+            
+            completion((false, "error converting derivation path"))
+            
+        }
+        
+    }
+    
     func recover(completion: @escaping ((success: Bool, error: String?)) -> Void) {
         
         if json != nil {
         
             let p = DescriptorParser()
-            descriptorStruct = p.descriptor(json["descriptor"] as! String)
+            
+            if json["descriptor"] != nil {
+                
+                descriptorStruct = p.descriptor(json["descriptor"] as! String)
+                
+            }
             
             let type = self.recoveryType()
             
@@ -619,6 +709,8 @@ class RecoverWallet {
         } else {
             
             // we know its just words, so it is single signature
+            print("single sig recovery")
+            recoverWordsOnly(completion: completion)
             
         }
         

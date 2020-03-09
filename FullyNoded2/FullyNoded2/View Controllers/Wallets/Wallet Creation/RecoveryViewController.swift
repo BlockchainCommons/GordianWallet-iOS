@@ -23,35 +23,6 @@ class RecoveryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        func setUp() {
-            
-            nextButtonOutlet.clipsToBounds = true
-            nextButtonOutlet.layer.cornerRadius = 10
-            textView.isEditable = false
-            textView.isSelectable = true
-            
-            var wordsToDisplay = ""
-            let arr = recoveryPhrase.split(separator: " ")
-            
-            for (i, word) in arr.enumerated() {
-                
-                wordsToDisplay += "\(i + 1). \(word) "
-            }
-            
-            textView.text = wordsToDisplay
-            let qrGen = QRGenerator()
-            qrGen.textInput = descriptor
-            imageView.image = qrGen.getQRCode()
-            
-            tapQRGesture = UITapGestureRecognizer(target: self,
-                                                  action: #selector(shareQRCode(_:)))
-            
-            imageView.addGestureRecognizer(tapQRGesture)
-            
-            imageView.isUserInteractionEnabled = true
-            
-        }
-        
         let isCaptured = UIScreen.main.isCaptured
         
         if !isCaptured {
@@ -70,7 +41,7 @@ class RecoveryViewController: UIViewController {
                     
                     if !isCaptured1 {
                         
-                        setUp()
+                        self.setUp()
                         
                     } else {
                         
@@ -85,7 +56,37 @@ class RecoveryViewController: UIViewController {
                 self.present(alert, animated: true, completion: nil)
                 
             }
+            
         }
+        
+    }
+    
+    func setUp() {
+        
+        nextButtonOutlet.clipsToBounds = true
+        nextButtonOutlet.layer.cornerRadius = 10
+        textView.isEditable = false
+        textView.isSelectable = true
+        
+        var wordsToDisplay = ""
+        let arr = recoveryPhrase.split(separator: " ")
+        
+        for (i, word) in arr.enumerated() {
+            
+            wordsToDisplay += "\(i + 1). \(word) "
+        }
+        
+        textView.text = wordsToDisplay
+        let qrGen = QRGenerator()
+        qrGen.textInput = descriptor
+        imageView.image = qrGen.getQRCode()
+        
+        tapQRGesture = UITapGestureRecognizer(target: self,
+                                              action: #selector(shareQRCode(_:)))
+        
+        imageView.addGestureRecognizer(tapQRGesture)
+        
+        imageView.isUserInteractionEnabled = true
         
     }
     
