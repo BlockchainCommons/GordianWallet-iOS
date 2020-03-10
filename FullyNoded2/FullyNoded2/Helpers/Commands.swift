@@ -46,5 +46,6 @@ public enum BTC_CLI_COMMAND: String {
     case walletpassphrase = "walletpassphrase"
     case walletlock = "walletlock"
     case walletpassphrasechange = "walletpassphrasechange"
+    case abortrescan = "abortrescan"
     
 }

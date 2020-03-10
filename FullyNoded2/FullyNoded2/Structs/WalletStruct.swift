@@ -32,6 +32,7 @@ public struct WalletStruct: CustomStringConvertible {
     let xprv:Data?
     let blockheight:Int
     let label:String
+    let lastUpdated:Date
     
     init(dictionary: [String: Any]) {
         
@@ -57,6 +58,7 @@ public struct WalletStruct: CustomStringConvertible {
         self.xprv = dictionary["xprv"] as? Data ?? nil
         self.blockheight = dictionary["blockheight"] as? Int ?? 1
         self.label = dictionary["label"] as? String ?? "Add a wallet label"
+        self.lastUpdated = dictionary["lastUpdated"] as? Date ?? Date()
         
     }
     

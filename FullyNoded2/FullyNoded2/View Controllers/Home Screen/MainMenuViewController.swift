@@ -10,8 +10,10 @@ import UIKit
 import KeychainSwift
 import LibWally
 
-class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate {
+class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
     
+    let linkUrl = "https://spdx.org/licenses/BSD-2-Clause-Patent.html"
+    let termsView = UIView()
     var bootStrapping = Bool()
     var showNodeInfo = Bool()
     var torCellIndex = Int()
@@ -25,13 +27,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var torConnected = Bool()
     var nodeSectionLoaded = Bool()
     let imageView = UIImageView()
-    let progressView = UIProgressView(progressViewStyle: .bar)
     var statusLabel = UILabel()
     var timer:Timer!
     var wallet:WalletStruct!
     var node:NodeStruct!
     var walletInfo:HomeStruct!
-    let backView = UIView()
     let ud = UserDefaults.standard
     var hashrateString = String()
     var version = String()
@@ -127,7 +127,77 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
         }
+        
+        if ud.object(forKey: "acceptedTerms") == nil {
+            
+            showTerms()
+            
+        }
                     
+    }
+    
+    private func showTerms() {
+        
+        termsView.backgroundColor = .black
+        termsView.frame = self.tabBarController!.view.frame
+        
+        let label = UITextView()
+        label.text = """
+        The use of FullyNoded 2 is under the "BSD 2-Clause Plus Patent License" (https://spdx.org/licenses/BSD-2-Clause-Patent.html), with the disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+        """
+        label.frame = CGRect(x: 16, y: 50, width: termsView.frame.width - 32, height: termsView.frame.height - 160)
+        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 17)
+        label.isEditable = false
+        label.isSelectable = true
+        label.delegate = self
+        label.addHyperLinksToText(originalText: label.text, hyperLinks: ["https://spdx.org/licenses/BSD-2-Clause-Patent.html": self.linkUrl])
+        
+        let acceptButton = UIButton()
+        acceptButton.setTitle("I Accept", for: .normal)
+        acceptButton.setTitleColor(.systemTeal, for: .normal)
+        acceptButton.frame = CGRect(x: 32, y: termsView.frame.maxY - 60, width: self.termsView.frame.width - 64, height: 50)
+        acceptButton.addTarget(self, action: #selector(iAccept), for: .touchUpInside)
+        acceptButton.clipsToBounds = true
+        acceptButton.layer.cornerRadius = 8
+        acceptButton.backgroundColor = .darkGray
+        
+        DispatchQueue.main.async {
+            
+            self.termsView.addSubview(label)
+            self.termsView.addSubview(acceptButton)
+            self.tabBarController!.view.addSubview(self.termsView)
+            
+        }
+        
+    }
+    
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        
+        if (URL.absoluteString == linkUrl) {
+            UIApplication.shared.open(URL) { (Bool) in }
+        }
+        return false
+    }
+    
+    @objc func iAccept() {
+        
+        UserDefaults.standard.set(true, forKey: "acceptedTerms")
+        
+        DispatchQueue.main.async {
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                
+                self.termsView.frame.origin.y = self.tabBarController!.view.frame.maxY
+                
+            }) { (_) in
+                
+                self.termsView.removeFromSuperview()
+                
+            }
+            
+        }
+        
     }
     
     @IBAction func goToSettings(_ sender: Any) {
@@ -1645,15 +1715,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 self.infoHidden = false
                 
-                //let image = UIImage(systemName: "rectangle.expand.vertical")
-                //sender.setImage(image, for: .normal)
-                
             } else {
                 
                 self.infoHidden = true
-                
-                //let image = UIImage(systemName: "rectangle.compress.vertical")
-                //sender.setImage(image, for: .normal)
                 
             }
             
@@ -1711,35 +1775,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if let newBalance = Double(self.walletInfo.coldBalance) {
             
-            cd.updateEntity(id: wallet.id, keyToUpdate: "lastBalance", newValue: newBalance, entityName: .wallets) {
-                
-                if !self.cd.errorBool {
-                    
-                    print("succesfully updated lastBalance")
-                    
-                } else {
-                    
-                    print("error saving lastBalance")
-                    
-                }
-                
-            }
+            cd.updateEntity(id: wallet.id, keyToUpdate: "lastBalance", newValue: newBalance, entityName: .wallets) {}
             
         }
         
-        cd.updateEntity(id: wallet.id, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) {
-            
-            if !self.cd.errorBool {
-                
-                print("succesfully updated lastUsed")
-                
-            } else {
-                
-                print("error saving lastUsed")
-                
-            }
-            
-        }
+        cd.updateEntity(id: wallet.id, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) {}
+        cd.updateEntity(id: wallet.id, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) {}
         
     }
     

@@ -255,7 +255,8 @@ public func isWalletRPC(command: BTC_CLI_COMMAND) -> Bool {
          .encryptwallet,
          .walletpassphrase,
          .walletpassphrasechange,
-         .walletlock:
+         .walletlock,
+         .abortrescan:
         
         boolToReturn = true
         

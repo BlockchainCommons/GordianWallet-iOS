@@ -15,7 +15,7 @@ class PageViewController: UIViewController, UINavigationControllerDelegate, UITe
     var page: Pages
     var donationLinkUrl = "https://btcpay.blockchaincommons.com"
     var homePageUrl = "www.blockchaincommons.com"
-    var repoLink = "https://github.com/BlockchainCommons/Bitcoin-Standup"
+    var repoLink = "https://github.com/BlockchainCommons/FullyNoded-2"
     var standupAppLink = "https://drive.google.com/open?id=1lXyl_zO6WPJN5tzWAVV3p42WPFtyesCR"
     var scriptLink = "https://github.com/BlockchainCommons/Bitcoin-Standup/tree/master/Scripts"
     
@@ -77,7 +77,7 @@ extension UITextView {
         let fullRange = NSRange(location: 0, length: attributedOriginalText.length)
         attributedOriginalText.addAttribute(NSAttributedString.Key.link, value: urlString, range: linkRange)
         attributedOriginalText.addAttribute(NSAttributedString.Key.paragraphStyle, value: style, range: fullRange)
-        attributedOriginalText.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 13), range: fullRange)
+        attributedOriginalText.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 17), range: fullRange)
         attributedOriginalText.addAttribute(.foregroundColor, value: UIColor.lightGray, range: fullRange)
     }
 

@@ -736,7 +736,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         for i in 0 ... 999 {
             
-            let key1 = try! account.derive(BIP32Path("\(i)")!)
+            let key1 = try! account.derive(BIP32Path("0/\(i)")!)
             var addressType:AddressType!
             
             if derivation.contains("84") {
