@@ -39,13 +39,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         navigationItem.setRightBarButton(addButton, animated: true)
         navigationItem.setLeftBarButton(editButton, animated: true)
         configureRefresher()
+        loadingRefresher.alpha = 0
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        
-        loadingRefresher.startAnimating()
-        loadingRefresher.alpha = 1
         
         refresh()
         
@@ -101,37 +99,46 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if editingStyle == .delete {
             
-            let id = sortedWallets[indexPath.section]["id"] as! UUID
-            cd.updateEntity(id: id, keyToUpdate: "isArchived", newValue: true, entityName: .wallets) {
-                
-                if !self.cd.errorBool {
+            if sortedWallets.count > 0 {
+             
+                let id = sortedWallets[indexPath.section]["id"] as! UUID
+                cd.updateEntity(id: id, keyToUpdate: "isArchived", newValue: true, entityName: .wallets) {
                     
-                    if self.sortedWallets.count == 1 {
+                    if !self.cd.errorBool {
                         
-                        DispatchQueue.main.async {
+                        if self.sortedWallets.count == 1 {
                             
-                            self.sortedWallets.removeAll()
-                            self.editWallets()
-                            self.walletTable.reloadData()
+                            DispatchQueue.main.async {
+                                
+                                self.sortedWallets.removeAll()
+                                self.editWallets()
+                                self.walletTable.reloadData()
+                                
+                            }
+                            
+                        } else {
+                            
+                            DispatchQueue.main.async {
+                                
+                                self.sortedWallets.remove(at: indexPath.section)
+                                tableView.deleteSections(IndexSet(arrayLiteral: indexPath.section), with: .fade)
+                                
+                            }
                             
                         }
                         
                     } else {
                         
-                        DispatchQueue.main.async {
-                            
-                            self.sortedWallets.remove(at: indexPath.section)
-                            tableView.deleteSections(IndexSet(arrayLiteral: indexPath.section), with: .fade)
-                            
-                        }
+                        displayAlert(viewController: self, isError: true, message: "error deleting node")
                         
                     }
                     
-                } else {
-                    
-                    displayAlert(viewController: self, isError: true, message: "error deleting node")
-                    
                 }
+                
+            } else {
+                
+                self.editWallets()
+                displayAlert(viewController: self, isError: true, message: "not allowed")
                 
             }
                         
@@ -194,6 +201,13 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         self.createWallet()
                         
                     } else {
+                        
+                        DispatchQueue.main.async {
+                            
+                            self.loadingRefresher.startAnimating()
+                            self.loadingRefresher.alpha = 1
+                            
+                        }
                         
                         for (i, w) in wallets!.enumerated() {
                             
@@ -1953,7 +1967,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                         self.refresh()
                         
-                        showAlert(vc: self, title: "Success!", message: "Wallet recovered 🤩!\n\nTap it to activate it, the wallet will automatically rescan the blockchain which can take some time, just pull the table to refresh to see rescan status and updated balances.")
+                        showAlert(vc: self, title: "Success!", message: "Wallet recovered 🤩!")
                         
                     }
                     

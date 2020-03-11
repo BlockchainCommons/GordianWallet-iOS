@@ -392,11 +392,55 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         print("tryrawnow")
         
         DispatchQueue.main.async {
+            
             self.addressInput.resignFirstResponder()
             self.amountInput.resignFirstResponder()
+            
         }
         
-        tryRaw()
+        func noNodeOrWallet() {
+            
+            DispatchQueue.main.async {
+                
+                self.addressInput.text = ""
+                self.amountInput.text = ""
+                self.outputs.removeAll()
+                self.outputArray.removeAll()
+                self.outputsString = ""
+                self.outputsTable.reloadData()
+                
+            }
+            
+            displayAlert(viewController: self, isError: true, message: "no active node or no active wallet!")
+            
+        }
+        
+        let enc = Encryption()
+        enc.getNode { (node, error) in
+            
+            if !error && node != nil {
+                
+                getActiveWalletNow { (wallet, error) in
+                    
+                    if !error && wallet != nil {
+                        
+                        self.tryRaw()
+                        
+                    } else {
+                        
+                        noNodeOrWallet()
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                noNodeOrWallet()
+                
+            }
+            
+        }
         
     }
     

@@ -92,6 +92,12 @@ class RecoverWallet {
                                     newWallet["nodeId"] = self.node.id
                                     newWallet["blockheight"] = self.json["blockheight"] as! Int
                                     
+                                    if let label = self.json["label"] as? String {
+                                        
+                                        newWallet["label"] = label
+                                        
+                                    }
+                                    
                                     // need to check if wallet exists on our node or not first
                                     let reducer = Reducer()
                                     reducer.makeCommand(walletName: "", command: .listwalletdir, param: "") {
@@ -268,6 +274,12 @@ class RecoverWallet {
                                     newWallet["nodeId"] = self.node.id
                                     newWallet["blockheight"] = self.json["blockheight"] as! Int
                                     
+                                    if let label = self.json["label"] as? String {
+                                        
+                                        newWallet["label"] = label
+                                        
+                                    }
+                                    
                                     // need to check if wallet exists on our node or not first
                                     let reducer = Reducer()
                                     reducer.makeCommand(walletName: "", command: .listwalletdir, param: "") {
@@ -422,6 +434,12 @@ class RecoverWallet {
         newWallet["derivation"] = localDerivation
         newWallet["nodeId"] = self.node.id
         newWallet["blockheight"] = blockheight
+        
+        if let label = self.json["label"] as? String {
+            
+            newWallet["label"] = label
+            
+        }
         
         // when recovering a full multisig wallet we need to switch around the designated keys so that the backup becomes the nodes xprv, the backup is then essentially consumed and the multissig setup is now for all practical purposes a 2 of 2. When a user recovers a multisig wallet in this way we need to advise the user that it would be wise to sweep the wallet to a new multi-sig wallet.
         let oldRecoveryXpub = self.descriptorStruct.multiSigKeys[0]
