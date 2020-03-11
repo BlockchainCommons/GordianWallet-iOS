@@ -137,7 +137,6 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         safe.text = "Not Safe"
                         safe.textColor = .systemOrange
-                        //cell.backgroundColor = .systemRed
                         
                     }
                     
@@ -145,12 +144,12 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     if (value as! Int) == 1 {
                         
-                        spendable.text = "Spendable"
+                        spendable.text = "Node can spend"
                         spendable.textColor = .systemGreen
                         
                     } else if (value as! Int) == 0 {
                         
-                        spendable.text = "COLD"
+                        spendable.text = "Node can not spend"
                         spendable.textColor = .systemBlue
                         
                     }

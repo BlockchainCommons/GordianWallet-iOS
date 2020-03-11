@@ -12,6 +12,7 @@ import LibWally
 
 class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
     
+    let sponsorBanner = UIButton()
     let linkUrl = "https://spdx.org/licenses/BSD-2-Clause-Patent.html"
     let termsView = UIView()
     var bootStrapping = Bool()
@@ -272,6 +273,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         imageView.layer.cornerRadius = 15
         let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         imageView.frame = titleView.bounds
+        imageView.isUserInteractionEnabled = true
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(logoTapped))
+        imageView.addGestureRecognizer(tapRecognizer)
         titleView.addSubview(imageView)
         self.navigationItem.titleView = titleView
         
@@ -280,6 +284,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidAppear(_ animated: Bool) {
         
         didAppear()
+        
+    }
+    
+    @objc func logoTapped() {
+        
+        impact()
+        
+        DispatchQueue.main.async {
+            
+            self.performSegue(withIdentifier: "goDonate", sender: self)
+            
+        }
         
     }
     
@@ -2009,6 +2025,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     self.impact()
                     self.removeStatusLabel()
+                    self.sponsorThisApp()
                     
                 }
                 
@@ -2455,6 +2472,73 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
         }
+        
+    }
+    
+    private func sponsorThisApp() {
+        
+        sponsorBanner.backgroundColor = .systemBlue
+        sponsorBanner.frame = CGRect(x: 0, y: self.tabBarController!.tabBar.frame.minY + 50, width: self.view.frame.width, height: 50)
+        sponsorBanner.setTitle("Sponsor this app", for: .normal)
+        sponsorBanner.addTarget(self, action: #selector(sponsorNow), for: .touchUpInside)
+        sponsorBanner.setTitleColor(.white, for: .normal)
+        
+        DispatchQueue.main.async {
+            
+            self.view.addSubview(self.sponsorBanner)
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                
+                self.sponsorBanner.frame = CGRect(x: 0, y: self.tabBarController!.tabBar.frame.minY - 50, width: self.view.frame.width, height: 50)
+                
+            }) { (_) in
+                
+                self.timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.animateBannerColor), userInfo: nil, repeats: true)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) {
+                    
+                    self.timer.invalidate()
+                    
+                    UIView.animate(withDuration: 0.3, animations: {
+                        
+                        self.sponsorBanner.frame = CGRect(x: 0, y: self.tabBarController!.tabBar.frame.minY + 50, width: self.view.frame.width, height: 50)
+                        
+                    }) { (_) in
+                        
+                        self.sponsorBanner.removeFromSuperview()
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    @objc func animateBannerColor() {
+        
+        UIView.animate(withDuration: 1.0, delay: 0.0, options: [], animations: {
+            
+            self.sponsorBanner.backgroundColor = .systemTeal
+            
+        }) { (_) in
+         
+            UIView.animate(withDuration: 1.0, delay: 0.0, options: [], animations: {
+                
+                self.sponsorBanner.backgroundColor = .systemBlue
+                
+            })
+            
+        }
+        
+    }
+    
+    @objc func sponsorNow() {
+        
+        impact()
+        UIApplication.shared.open(URL(string: "https://github.com/sponsors/BlockchainCommons")!) { (Bool) in }
         
     }
     

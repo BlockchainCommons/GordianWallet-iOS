@@ -36,8 +36,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="square.and.arrow.up" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="TjX-Y2-Ppu">
-                                <rect key="frame" x="16" y="21" width="25" height="26"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eye" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="TjX-Y2-Ppu">
+                                <rect key="frame" x="16" y="23.5" width="25" height="21.5"/>
                                 <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="lv3-g1-xLb"/>
@@ -1842,6 +1842,7 @@
                         <segue destination="3uQ-0D-YgM" kind="show" identifier="goToWallets" id="fBg-S5-BEW"/>
                         <segue destination="rWu-wq-Agv" kind="presentation" identifier="import" id="0zN-S6-Zr1"/>
                         <segue destination="AS8-ke-Yxh" kind="presentation" identifier="settings" id="hdq-o6-Ing"/>
+                        <segue destination="NHv-UH-1lX" kind="presentation" identifier="goDonate" id="C3T-yU-SMU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dhK-90-srt" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1913,6 +1914,91 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aX8-lc-fq0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-11081" y="392"/>
+        </scene>
+        <!--Donate View Controller-->
+        <scene sceneID="7jc-m3-rrH">
+            <objects>
+                <viewController id="NHv-UH-1lX" customClass="DonateViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="P8x-W2-8Ap">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Support Us!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xwv-9F-5rX">
+                                <rect key="frame" x="16" y="20" width="140" height="30"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="lqt-vP-J6Y">
+                                <rect key="frame" x="16" y="58" width="343" height="237"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="237" id="hCD-Ju-9qf"/>
+                                </constraints>
+                                <mutableString key="text">Blockchain Commons was founded with the goal of supporting blockchain infrastructure and the broader security industry through cryptographic research, cryptographic &amp; privacy protocol implementations, architecture &amp; code reviews, industry standards, etc. In particular, we seek to improve the blockchain ecosystem by focusing on infrastructure and solutions that are decentralized, platform &amp; blockchain neutral and vendor-independent. Blockchain Commons is a “not-for-profit” benefit corporation, with a strong commitment to open source and a defensive patent strategy.</mutableString>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oyX-yi-Zgg">
+                                <rect key="frame" x="326" y="24" width="20" height="22"/>
+                                <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="xmark.circle.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="close:" destination="NHv-UH-1lX" eventType="touchUpInside" id="bWl-t3-yxs"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YN4-mW-j6z">
+                                <rect key="frame" x="16" y="303" width="343" height="63"/>
+                                <color key="backgroundColor" red="0.14536405456852797" green="0.14536405456852797" blue="0.14536405456852797" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="63" id="lSJ-wS-nu9"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Become a Monthly GitHub Sponsor"/>
+                                <connections>
+                                    <action selector="monthlySponsor:" destination="NHv-UH-1lX" eventType="touchUpInside" id="Fo8-au-P3H"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r1x-Ya-Odc">
+                                <rect key="frame" x="16" y="389" width="343" height="63"/>
+                                <color key="backgroundColor" red="0.14536405459999999" green="0.14536405459999999" blue="0.14536405459999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="63" id="3J2-U7-64R"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Donate via BTCPayServer"/>
+                                <connections>
+                                    <action selector="btcpayDonate:" destination="NHv-UH-1lX" eventType="touchUpInside" id="NOE-Yk-fIH"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="r1x-Ya-Odc" firstAttribute="top" secondItem="YN4-mW-j6z" secondAttribute="bottom" constant="23" id="2yC-uE-yOr"/>
+                            <constraint firstItem="oXF-AS-Xvc" firstAttribute="trailing" secondItem="r1x-Ya-Odc" secondAttribute="trailing" constant="16" id="5jP-ST-4xT"/>
+                            <constraint firstItem="oyX-yi-Zgg" firstAttribute="centerY" secondItem="Xwv-9F-5rX" secondAttribute="centerY" id="FhF-iW-5x9"/>
+                            <constraint firstItem="YN4-mW-j6z" firstAttribute="top" secondItem="lqt-vP-J6Y" secondAttribute="bottom" constant="8" id="IOr-3S-seO"/>
+                            <constraint firstItem="lqt-vP-J6Y" firstAttribute="leading" secondItem="oXF-AS-Xvc" secondAttribute="leading" constant="16" id="NHw-YD-UI5"/>
+                            <constraint firstItem="oXF-AS-Xvc" firstAttribute="trailing" secondItem="YN4-mW-j6z" secondAttribute="trailing" constant="16" id="P3G-pP-cxz"/>
+                            <constraint firstItem="oXF-AS-Xvc" firstAttribute="trailing" secondItem="lqt-vP-J6Y" secondAttribute="trailing" constant="16" id="bPw-Wi-Luw"/>
+                            <constraint firstItem="YN4-mW-j6z" firstAttribute="leading" secondItem="oXF-AS-Xvc" secondAttribute="leading" constant="16" id="e6h-h3-Med"/>
+                            <constraint firstItem="r1x-Ya-Odc" firstAttribute="leading" secondItem="oXF-AS-Xvc" secondAttribute="leading" constant="16" id="iaL-FO-KIc"/>
+                            <constraint firstItem="oXF-AS-Xvc" firstAttribute="trailing" secondItem="oyX-yi-Zgg" secondAttribute="trailing" constant="29" id="lNg-CG-GBH"/>
+                            <constraint firstItem="Xwv-9F-5rX" firstAttribute="top" secondItem="oXF-AS-Xvc" secondAttribute="top" constant="20" id="tDG-hw-Ias"/>
+                            <constraint firstItem="Xwv-9F-5rX" firstAttribute="leading" secondItem="oXF-AS-Xvc" secondAttribute="leading" constant="16" id="uGr-xo-0pC"/>
+                            <constraint firstItem="lqt-vP-J6Y" firstAttribute="top" secondItem="Xwv-9F-5rX" secondAttribute="bottom" constant="8" id="wQi-pf-6LL"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="oXF-AS-Xvc"/>
+                    </view>
+                    <connections>
+                        <outlet property="donateOutlet" destination="r1x-Ya-Odc" id="mmc-x3-iha"/>
+                        <outlet property="monthlyOutlet" destination="YN4-mW-j6z" id="xcY-xJ-xcz"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QIk-8U-EDn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-10111.200000000001" y="367.46626686656674"/>
         </scene>
         <!--Transaction-->
         <scene sceneID="VqF-ym-nmL">
@@ -4513,7 +4599,7 @@ You may export the RecoveryQR Code at anytime but the 12 word recovery kit words
                                         <color key="backgroundColor" red="0.085763759910000001" green="0.10179834810000001" blue="0.1143214479" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="multiSigWalletCell" rowHeight="435" id="Pu7-d1-gy4">
-                                        <rect key="frame" x="15" y="712.5" width="345" height="435"/>
+                                        <rect key="frame" x="0.0" y="712.5" width="345" height="435"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Pu7-d1-gy4" id="EKP-cw-XcR">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="435"/>
@@ -4578,12 +4664,12 @@ You may export the RecoveryQR Code at anytime but the 12 word recovery kit words
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="oWp-iO-M9B">
                                                             <rect key="frame" x="142" y="11" width="61.5" height="22"/>
                                                             <subviews>
-                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
+                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
                                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="22"/>
                                                                     <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                                 </button>
-                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
                                                                     <rect key="frame" x="27" y="0.0" width="34.5" height="22"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -5648,7 +5734,6 @@ You may export the RecoveryQR Code at anytime but the 12 word recovery kit words
         <image name="rectangle.stack" catalog="system" width="64" height="60"/>
         <image name="snow" catalog="system" width="60" height="64"/>
         <image name="speaker.3" catalog="system" width="64" height="44"/>
-        <image name="square.and.arrow.up" catalog="system" width="56" height="64"/>
         <image name="square.stack.3d.down.right" catalog="system" width="62" height="64"/>
         <image name="sun.min" catalog="system" width="64" height="60"/>
         <image name="text.bubble" catalog="system" width="64" height="54"/>
@@ -5659,8 +5744,8 @@ You may export the RecoveryQR Code at anytime but the 12 word recovery kit words
         <segue reference="UBf-qr-XYG"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="tY7-Ss-m0T"/>
-        <segue reference="zkr-zY-rLG"/>
-        <segue reference="r5v-RV-hIL"/>
+        <segue reference="LzA-tD-DJD"/>
+        <segue reference="0zN-S6-Zr1"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>
