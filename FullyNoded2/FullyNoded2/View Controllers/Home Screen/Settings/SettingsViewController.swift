@@ -106,7 +106,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func setFee(_ sender: UISlider) {
         
-        let cell = settingsTable.cellForRow(at: IndexPath.init(row: 0, section: 4))
+        let cell = settingsTable.cellForRow(at: IndexPath.init(row: 0, section: 3))
         let label = cell?.viewWithTag(1) as! UILabel
         let numberOfBlocks = Int(sender.value) * -1
         updateFeeLabel(label: label, numberOfBlocks: numberOfBlocks)
