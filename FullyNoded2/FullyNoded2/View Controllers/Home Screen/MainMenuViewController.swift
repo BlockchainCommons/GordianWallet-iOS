@@ -2519,13 +2519,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func animateBannerColor() {
         
-        UIView.animate(withDuration: 1.0, delay: 0.0, options: [], animations: {
+        UIView.animate(withDuration: 1.0, delay: 0.0, options: [.allowUserInteraction], animations: {
             
             self.sponsorBanner.backgroundColor = .systemTeal
             
         }) { (_) in
          
-            UIView.animate(withDuration: 1.0, delay: 0.0, options: [], animations: {
+            UIView.animate(withDuration: 1.0, delay: 0.0, options: [.allowUserInteraction], animations: {
                 
                 self.sponsorBanner.backgroundColor = .systemBlue
                 
