@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import KeychainSwift
+import AuthenticationServices
 
-class ConfirmViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
+class ConfirmViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
     let creatingView = ConnectingView()
     var unsignedPsbt = ""
@@ -30,8 +32,6 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("recipients = \(recipients)")
-        
         navigationController?.delegate = self
         
         if unsignedPsbt == "" {
@@ -52,8 +52,21 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
         if unsignedPsbt == "" {
             
-            creatingView.addConnectingView(vc: self, description: "broadcasting transaction")
-            executeNodeCommand(method: .sendrawtransaction, param: "\"\(signedRawTx)\"")
+            DispatchQueue.main.async {
+                            
+                let alert = UIAlertController(title: "Broadcast transaction?", message: "Once you broadcast there is no going back", preferredStyle: .actionSheet)
+
+                alert.addAction(UIAlertAction(title: "Yes, broadcast now", style: .default, handler: { action in
+                    
+                    self.showAuth()
+                    
+                }))
+                
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                        
+                self.present(alert, animated: true, completion: nil)
+                
+            }
             
         } else {
             
@@ -62,39 +75,6 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         }
         
     }
-    
-    /*
-     let alert = UIAlertController(title: "Share as raw data or text?", message: "Sharing as raw data allows you to send the unsigned psbt directly to your Coldcard Wallets SD card for signing", preferredStyle: .actionSheet)
-     
-     alert.addAction(UIAlertAction(title: "Raw Data", style: .default, handler: { action in
-         
-         self.convertPSBTtoData(string: self.psbt)
-         
-     }))
-     
-     alert.addAction(UIAlertAction(title: "Text", style: .default, handler: { action in
-         
-         DispatchQueue.main.async {
-             
-             let textToShare = [self.psbt]
-             
-             let activityViewController = UIActivityViewController(activityItems: textToShare,
-                                                                   applicationActivities: nil)
-             
-             activityViewController.popoverPresentationController?.sourceView = self.view
-             self.present(activityViewController, animated: true) {}
-             
-         }
-         
-     }))
-     
-     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
-         
-     }))
-     
-     alert.popoverPresentationController?.sourceView = self.view
-     self.present(alert, animated: true) {}
-     */
     
     func showPsbtOptions() {
         
@@ -194,15 +174,20 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     }
                 case .decodepsbt:
                     
-                    let dict = reducer.dictToReturn["tx"] as! NSDictionary
-                    parseTransaction(tx: dict)
+                    if let dict = reducer.dictToReturn?["tx"] as? NSDictionary {
+                        
+                        parseTransaction(tx: dict)
+                        
+                    }
                     
                 case .decoderawtransaction:
                     
-                    let dict = reducer.dictToReturn
-                    
-                    // parse the inputs and outputs and display to user
-                    parseTransaction(tx: dict)
+                    if let dict = reducer.dictToReturn {
+                        
+                        // parse the inputs and outputs and display to user
+                        parseTransaction(tx: dict)
+                        
+                    }
                     
                 default:
                     
@@ -424,17 +409,25 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     
                 case .decoderawtransaction:
                     
-                    let txDict = reducer.dictToReturn
-                    let outputs = txDict["vout"] as! NSArray
-                    parsePrevTxOutput(outputs: outputs, vout: vout)
+                    if let txDict = reducer.dictToReturn {
+                        
+                        if let outputs = txDict["vout"] as? NSArray {
+                            
+                            parsePrevTxOutput(outputs: outputs, vout: vout)
+                            
+                        }
+                        
+                    }
                     
                 case .getrawtransaction:
                     
-                    let rawTransaction = reducer.stringToReturn
-                    
-                    parsePrevTx(method: .decoderawtransaction,
-                                param: "\"\(rawTransaction)\"",
-                                vout: vout)
+                    if let rawTransaction = reducer.stringToReturn {
+                        
+                        parsePrevTx(method: .decoderawtransaction,
+                                    param: "\"\(rawTransaction)\"",
+                                    vout: vout)
+                        
+                    }
                     
                 default:
                     
@@ -691,6 +684,58 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
         }
         
+    }
+    
+    func showAuth() {
+        
+        DispatchQueue.main.async {
+            
+            let request = ASAuthorizationAppleIDProvider().createRequest()
+            let controller = ASAuthorizationController(authorizationRequests: [request])
+            controller.delegate = self
+            controller.presentationContextProvider = self
+            controller.performRequests()
+            
+        }
+        
+    }
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+
+        switch authorization.credential {
+
+        case _ as ASAuthorizationAppleIDCredential:
+            
+            let keychain = KeychainSwift()
+            let authorizationProvider = ASAuthorizationAppleIDProvider()
+            authorizationProvider.getCredentialState(forUserID: keychain.get("userIdentifier")!) { (state, error) in
+                
+                switch (state) {
+                case .authorized:
+                    print("Account Found - Signed In")
+                    self.creatingView.addConnectingView(vc: self, description: "broadcasting transaction")
+                    self.executeNodeCommand(method: .sendrawtransaction, param: "\"\(self.signedRawTx)\"")
+                case .revoked:
+                    print("No Account Found")
+                    fallthrough
+                case .notFound:
+                    print("No Account Found")
+                default:
+                    break
+                }
+                
+            }
+            
+        default:
+
+            break
+
+        }
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

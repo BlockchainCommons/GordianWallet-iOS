@@ -11,11 +11,11 @@ import Foundation
 class Reducer {
     
     let torRPC = MakeRPCCall.sharedInstance
-    var dictToReturn = NSDictionary()
-    var doubleToReturn = Double()
-    var arrayToReturn = NSArray()
-    var stringToReturn = String()
-    var boolToReturn = Bool()
+    var dictToReturn:NSDictionary?
+    var doubleToReturn:Double?
+    var arrayToReturn:NSArray?
+    var stringToReturn:String?
+    var boolToReturn:Bool?
     var errorBool = Bool()
     var errorDescription = ""
     
@@ -49,17 +49,7 @@ class Reducer {
                 
             } else {
                 
-                if command == .unloadwallet {
-                    
-                    self.stringToReturn = "Wallet unloaded"
-                    completion()
-                    
-                } else if command == .importprivkey {
-                    
-                    self.stringToReturn = "Imported key success"
-                    completion()
-                    
-                } else if command == .walletpassphrase {
+                if command == .walletpassphrase {
                     
                     self.stringToReturn = "Wallet decrypted"
                     completion()
@@ -129,7 +119,7 @@ class Reducer {
                                                           completion: getResult)
                             
                         }
-                        
+                                                
                     } else {
                         
                         errorBool = true

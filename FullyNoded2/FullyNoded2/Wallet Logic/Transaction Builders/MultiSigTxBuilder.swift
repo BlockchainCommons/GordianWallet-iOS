@@ -75,7 +75,6 @@ class MultiSigTxBuilder {
                         let bip32derivs = dict["bip32_derivs"] as! NSArray
                         let bip32deriv = bip32derivs[0] as! NSDictionary
                         let path = bip32deriv["path"] as! String
-                        //let index = Int((path.split(separator: "/"))[1])!
                         let keyFetcher = KeyFetcher()
                         if let bip32path = BIP32Path(path) {
                             
@@ -113,8 +112,12 @@ class MultiSigTxBuilder {
                         
                         if !reducer.errorBool {
                             
-                            let dict = reducer.dictToReturn
-                            parsePsbt(decodePsbt: dict, psbt: psbt)
+                            if let dict = reducer.dictToReturn {
+                                
+                                parsePsbt(decodePsbt: dict, psbt: psbt)
+                                
+                            }
+                            
                             
                         } else {
                             
@@ -134,19 +137,24 @@ class MultiSigTxBuilder {
                         
                         if !reducer.errorBool {
                             
-                            let dict = reducer.dictToReturn
-                            let procccessedPsbt = dict["psbt"] as! String
-                            
-                            let descParser = DescriptorParser()
-                            let descStr = descParser.descriptor(wallet!.descriptor)
-                            
-                            if descStr.isHot || String(data: wallet!.seed, encoding: .utf8) != "no seed" {
+                            if let dict = reducer.dictToReturn {
                                 
-                                decodePsbt(psbt: procccessedPsbt)
-                                
-                            } else {
-                                
-                                completion((nil, procccessedPsbt, nil))
+                                if let procccessedPsbt = dict["psbt"] as? String {
+                                    
+                                    let descParser = DescriptorParser()
+                                    let descStr = descParser.descriptor(wallet!.descriptor)
+                                    
+                                    if descStr.isHot || String(data: wallet!.seed, encoding: .utf8) != "no seed" || wallet?.xprv != nil {
+                                        
+                                        decodePsbt(psbt: procccessedPsbt)
+                                        
+                                    } else {
+                                        
+                                        completion((nil, procccessedPsbt, nil))
+                                        
+                                    }
+                                    
+                                }
                                 
                             }
                             
@@ -174,10 +182,23 @@ class MultiSigTxBuilder {
                         
                         if !reducer.errorBool {
                             
-                            let psbtDict = reducer.dictToReturn
-                            let psbt = psbtDict["psbt"] as! String
-                            processPsbt(psbt: psbt)
-                            
+                            if let psbtDict = reducer.dictToReturn {
+                                
+                                if let psbt = psbtDict["psbt"] as? String {
+                                    
+                                    processPsbt(psbt: psbt)
+                                    
+                                } else {
+                                    
+                                    completion((nil, nil, "error creating psbt"))
+                                    
+                                }
+                                
+                            } else {
+                                
+                                completion((nil, nil, "error creating psbt"))
+                                
+                            }
                             
                         } else {
                             

@@ -15,7 +15,6 @@ class NodeLogic {
     var errorDescription = ""
     var dictToReturn = [String:Any]()
     var arrayToReturn = [[String:Any]]()
-    var walletsToReturn = NSArray()
     var walletDisabled = Bool()
     var wallet:WalletStruct!
     
@@ -26,47 +25,82 @@ class NodeLogic {
             
             if !reducer.errorBool {
                 
-                let networkInfo = reducer.dictToReturn
-                let subversion = (networkInfo["subversion"] as! String).replacingOccurrences(of: "/", with: "")
-                self.dictToReturn["subversion"] = subversion.replacingOccurrences(of: "Satoshi:", with: "")
-                
-                let localaddresses = networkInfo["localaddresses"] as! NSArray
-                
-                if localaddresses.count > 0 {
+                if reducer.dictToReturn != nil {
                     
-                    for address in localaddresses {
+                    let networkInfo = reducer.dictToReturn!
+                    
+                    if let subversionCheck = networkInfo["subversion"] as? String {
                         
-                        let dict = address as! NSDictionary
-                        let p2pAddress = dict["address"] as! String
-                        let port = dict["port"] as! Int
+                        let subversion = subversionCheck.replacingOccurrences(of: "/", with: "")
+                        self.dictToReturn["subversion"] = subversion.replacingOccurrences(of: "Satoshi:", with: "")
                         
-                        if p2pAddress.contains("onion") {
+                        if let localaddresses = networkInfo["localaddresses"] as? NSArray {
                             
-                            self.dictToReturn["p2pOnionAddress"] = p2pAddress + ":" + "\(port)"
+                            if localaddresses.count > 0 {
+                                
+                                for address in localaddresses {
+                                    
+                                    if let dict = address as? NSDictionary {
+                                        
+                                        if let p2pAddress = dict["address"] as? String {
+                                            
+                                            if let port = dict["port"] as? Int {
+                                                
+                                                if p2pAddress.contains("onion") {
+                                                    
+                                                    self.dictToReturn["p2pOnionAddress"] = p2pAddress + ":" + "\(port)"
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
                             
                         }
                         
+                        if let networks = networkInfo["networks"] as? NSArray {
+                            
+                            for network in networks {
+                                
+                                if let dict = network as? NSDictionary {
+                                    
+                                    if let name = dict["name"] as? String {
+                                        
+                                        if name == "onion" {
+                                            
+                                            if let reachable = dict["reachable"] as? Bool {
+                                                
+                                                self.dictToReturn["reachable"] = reachable
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                        completion()
+                        
                     }
                     
-                }
-                
-                let networks = networkInfo["networks"] as! NSArray
-                
-                for network in networks {
+                } else {
                     
-                    let dict = network as! NSDictionary
-                    let name = dict["name"] as! String
-                    
-                    if name == "onion" {
-                        
-                        let reachable = dict["reachable"] as! Bool
-                        self.dictToReturn["reachable"] = reachable
-                        
-                    }
+                    self.errorBool = true
+                    self.errorDescription = "returned object is nil"
+                    completion()
                     
                 }
-                
-                completion()
                 
             } else {
                 
@@ -93,10 +127,20 @@ class NodeLogic {
                     
                 case BTC_CLI_COMMAND.listunspent.rawValue:
                     
-                    let utxos = reducer.arrayToReturn
-                    parseUtxos(utxos: utxos)
-                    completion()
-                    
+                    if reducer.arrayToReturn != nil {
+                        
+                        let utxos = reducer.arrayToReturn!
+                        parseUtxos(utxos: utxos)
+                        completion()
+                        
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
+                    }
+                                        
                 default:
                     
                     print("break1")
@@ -108,7 +152,6 @@ class NodeLogic {
                 
                 errorBool = true
                 errorDescription = reducer.errorDescription
-                
                 print("errorDescription = \(errorDescription)")
                 
                 if errorDescription.contains("Requested wallet does not exist or is not loaded") {
@@ -130,7 +173,7 @@ class NodeLogic {
                         } else {
                             
                             self.errorBool = true
-                            self.errorDescription = "Wallet does not exist, maybe you changed networks? If you want to use the app on a different network please delete the app and install again"
+                            self.errorDescription = "Wallet does not exist, maybe you changed networks? If you want to use the app on a different network you will need to recreate the wallet"
                             completion()
                             
                         }
@@ -166,6 +209,8 @@ class NodeLogic {
     func loadNodeData(completion: @escaping () -> Void) {
         print("loadNodeData")
         
+        let reducer = Reducer()
+        
         var walletName = ""
         
         if wallet != nil {
@@ -173,8 +218,6 @@ class NodeLogic {
             walletName = wallet!.name
             
         }
-        
-        let reducer = Reducer()
         
         func getResult() {
             
@@ -184,77 +227,140 @@ class NodeLogic {
                     
                 case BTC_CLI_COMMAND.estimatesmartfee.rawValue:
                     
-                    let result = reducer.dictToReturn
-                    
-                    if let feeRate = result["feerate"] as? Double {
+                    if reducer.dictToReturn != nil {
                         
-                        let btcperbyte = feeRate / 1000
-                        let satsperbyte = (btcperbyte * 100000000).avoidNotation
-                        dictToReturn["feeRate"] = "\(satsperbyte) s/b"
+                        let result = reducer.dictToReturn!
+                        
+                        if let feeRate = result["feerate"] as? Double {
+                            
+                            let btcperbyte = feeRate / 1000
+                            let satsperbyte = (btcperbyte * 100000000).avoidNotation
+                            dictToReturn["feeRate"] = "\(satsperbyte) s/b"
+                            
+                        } else {
+                            
+                            if let errors = result["errors"] as? NSArray {
+                                
+                                dictToReturn["feeRate"] = "\(errors[0] as! String)"
+                                
+                            }
+                           
+                        }
+                        
+                        completion()
                         
                     } else {
                         
-                        if let errors = result["errors"] as? NSArray {
-                            
-                            dictToReturn["feeRate"] = "\(errors[0] as! String)"
-                            
-                        }
-                       
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
                     }
-                    
-                    completion()
                     
                 case BTC_CLI_COMMAND.getmempoolinfo.rawValue:
                     
-                    let dict = reducer.dictToReturn
-                    dictToReturn["mempoolCount"] = dict["size"] as! Int
-                    let feeRate = UserDefaults.standard.integer(forKey: "feeTarget")
-                    
-                    reducer.makeCommand(walletName: walletName, command: .estimatesmartfee,
-                                        param: "\(feeRate)",
-                                        completion: getResult)
+                    if reducer.dictToReturn != nil {
+                        
+                        let dict = reducer.dictToReturn!
+                        
+                        if let mempoolSize = dict["size"] as? Int {
+                            
+                            dictToReturn["mempoolCount"] = mempoolSize
+                            
+                        } else {
+                            
+                            dictToReturn["mempoolCount"] = 0
+                            
+                        }
+                        
+                        let feeRate = UserDefaults.standard.integer(forKey: "feeTarget")
+                        
+                        reducer.makeCommand(walletName: walletName, command: .estimatesmartfee,
+                                            param: "\(feeRate)",
+                                            completion: getResult)
+                                                
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
+                    }
                     
                 case BTC_CLI_COMMAND.uptime.rawValue:
                     
-                    dictToReturn["uptime"] = Int(reducer.doubleToReturn)
-                    
-                    reducer.makeCommand(walletName: walletName, command: .getmempoolinfo,
-                                        param: "",
-                                        completion: getResult)
+                    if reducer.doubleToReturn != nil {
+                        
+                        dictToReturn["uptime"] = Int(reducer.doubleToReturn!)
+                        
+                        reducer.makeCommand(walletName: walletName, command: .getmempoolinfo,
+                                            param: "",
+                                            completion: getResult)
+                                                
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
+                    }
                     
                 case BTC_CLI_COMMAND.getmininginfo.rawValue:
                     
-                    let miningInfo = reducer.dictToReturn
-                    parseMiningInfo(miningInfo: miningInfo)
-                    
-                    reducer.makeCommand(walletName: walletName, command: .uptime,
-                                        param: "",
-                                        completion: getResult)
-                    
-//                case BTC_CLI_COMMAND.getnetworkinfo.rawValue:
-//
-//                    let networkInfo = reducer.dictToReturn
-//                    parseNetworkInfo(networkInfo: networkInfo)
-                    
-                    
+                    if reducer.dictToReturn != nil {
+                        
+                        let miningInfo = reducer.dictToReturn!
+                        parseMiningInfo(miningInfo: miningInfo)
+                        
+                        reducer.makeCommand(walletName: walletName, command: .uptime,
+                                            param: "",
+                                            completion: getResult)
+                        
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
+                    }
                     
                 case BTC_CLI_COMMAND.getpeerinfo.rawValue:
                     
-                    let peerInfo = reducer.arrayToReturn
-                    parsePeerInfo(peerInfo: peerInfo)
-                    
-                    reducer.makeCommand(walletName: walletName, command: .getmininginfo,
-                                        param: "",
-                                        completion: getResult)
+                    if reducer.arrayToReturn != nil {
+                        
+                        let peerInfo = reducer.arrayToReturn!
+                        parsePeerInfo(peerInfo: peerInfo)
+                        
+                        reducer.makeCommand(walletName: walletName, command: .getmininginfo,
+                                            param: "",
+                                            completion: getResult)
+                        
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
+                    }
                     
                 case BTC_CLI_COMMAND.getblockchaininfo.rawValue:
                     
-                    let blockchainInfo = reducer.dictToReturn
-                    parseBlockchainInfo(blockchainInfo: blockchainInfo)
-                    
-                    reducer.makeCommand(walletName: walletName, command: .getpeerinfo,
-                                        param: "",
-                                        completion: getResult)
+                    if reducer.dictToReturn != nil {
+                        
+                        let blockchainInfo = reducer.dictToReturn!
+                        parseBlockchainInfo(blockchainInfo: blockchainInfo)
+                        
+                        reducer.makeCommand(walletName: walletName, command: .getpeerinfo,
+                                            param: "",
+                                            completion: getResult)
+                        
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
+                    }
                     
                 default:
                     
@@ -276,8 +382,6 @@ class NodeLogic {
                             param: "",
                             completion: getResult)
         
-        
-        
     }
     
     func loadTransactionData(completion: @escaping () -> Void) {
@@ -293,10 +397,20 @@ class NodeLogic {
                     
                 case BTC_CLI_COMMAND.listtransactions.rawValue:
                     
-                    let transactions = reducer.arrayToReturn
-                    parseTransactions(transactions: transactions)
-                    completion()
-                    
+                    if reducer.arrayToReturn != nil {
+                        
+                        let transactions = reducer.arrayToReturn!
+                        parseTransactions(transactions: transactions)
+                        completion()
+                        
+                    } else {
+                        
+                        self.errorBool = true
+                        self.errorDescription = "returned object is nil"
+                        completion()
+                        
+                    }
+                                        
                 default:
                     
                     break
@@ -328,7 +442,7 @@ class NodeLogic {
         
     }
     
-    // MARK: Section 0 parsers
+    // MARK: Parsers
     
     func parseUtxos(utxos: NSArray) {
         
@@ -336,20 +450,31 @@ class NodeLogic {
         
         for utxo in utxos {
             
-            let utxoDict = utxo as! NSDictionary
-            let spendable = utxoDict["spendable"] as! Bool
-            let confirmations = utxoDict["confirmations"] as! Int
-            
-            if !spendable {
+            if let utxoDict = utxo as? NSDictionary {
                 
-                let balance = utxoDict["amount"] as! Double
-                amount += balance
-                
-            }
-            
-            if confirmations < 1 {
-                
-                dictToReturn["unconfirmed"] = true
+                if let spendable = utxoDict["spendable"] as? Bool {
+                    
+                    if let confirmations = utxoDict["confirmations"] as? Int {
+                        
+                        if !spendable {
+                            
+                            if let balance = utxoDict["amount"] as? Double {
+                                
+                                amount += balance
+                                
+                            }
+                            
+                        }
+                        
+                        if confirmations < 1 {
+                            
+                            dictToReturn["unconfirmed"] = true
+                            
+                        }
+                        
+                    }
+                    
+                }
                 
             }
             
@@ -371,9 +496,12 @@ class NodeLogic {
     
     func parseMiningInfo(miningInfo: NSDictionary) {
         
-        let hashesPerSecond = miningInfo["networkhashps"] as! Double
-        let exahashesPerSecond = hashesPerSecond / 1000000000000000000
-        dictToReturn["networkhashps"] = Int(exahashesPerSecond).withCommas()
+        if let hashesPerSecond = miningInfo["networkhashps"] as? Double {
+         
+            let exahashesPerSecond = hashesPerSecond / 1000000000000000000
+            dictToReturn["networkhashps"] = Int(exahashesPerSecond).withCommas()
+            
+        }
         
     }
     
@@ -382,11 +510,12 @@ class NodeLogic {
         if let currentblockheight = blockchainInfo["blocks"] as? Int {
             
             dictToReturn["blocks"] = currentblockheight
+            let ud = UserDefaults.standard
+            ud.set(currentblockheight, forKey: "blockheight")
             
         }
         
         if let difficultyCheck = blockchainInfo["difficulty"] as? Double {
-            
             
             dictToReturn["difficulty"] = "\(Int(difficultyCheck / 1000000000000).withCommas()) trillion"
             
@@ -425,19 +554,23 @@ class NodeLogic {
         
         for peer in peerInfo {
             
-            let peerDict = peer as! NSDictionary
-            
-            let incoming = peerDict["inbound"] as! Bool
-            
-            if incoming {
+            if let peerDict = peer as? NSDictionary {
                 
-                incomingCount += 1
-                dictToReturn["incomingCount"] = incomingCount
-                
-            } else {
-                
-                outgoingCount += 1
-                dictToReturn["outgoingCount"] = outgoingCount
+                if let incoming = peerDict["inbound"] as? Bool {
+                    
+                    if incoming {
+                        
+                        incomingCount += 1
+                        dictToReturn["incomingCount"] = incomingCount
+                        
+                    } else {
+                        
+                        outgoingCount += 1
+                        dictToReturn["outgoingCount"] = outgoingCount
+                        
+                    }
+                    
+                }
                 
             }
             
@@ -445,16 +578,9 @@ class NodeLogic {
         
     }
     
-    func parseNetworkInfo(networkInfo: NSDictionary) {
-        
-        
-        
-    }
-    
     func parseTransactions(transactions: NSArray) {
         
         var transactionArray = [[String:Any]]()
-        self.arrayToReturn.removeAll()
         
         for item in transactions {
             
@@ -466,90 +592,102 @@ class NodeLogic {
                 
                 let address = transaction["address"] as? String ?? ""
                 let amount = transaction["amount"] as? Double ?? 0.0
-                let amountString = amount.avoidNotation
-                let confsCheck = transaction["confirmations"] as? Int ?? 0
-                let confirmations = String(confsCheck)
                 
-                if let replaced_by_txid_check = transaction["replaced_by_txid"] as? String {
+                if amount.avoidNotation != "" {
                     
-                    replaced_by_txid = replaced_by_txid_check
+                    let amountString = amount.avoidNotation
+                    let confsCheck = transaction["confirmations"] as? Int ?? 0
+                    let confirmations = "\(confsCheck)"
                     
-                }
-                
-                if let labelCheck = transaction["label"] as? String {
+                    if let replaced_by_txid_check = transaction["replaced_by_txid"] as? String {
+                        
+                        replaced_by_txid = replaced_by_txid_check
+                        
+                    }
                     
-                    label = labelCheck
-                    
-                    if labelCheck == "" {
+                    if let labelCheck = transaction["label"] as? String {
+                        
+                        label = labelCheck
+                        
+                        if labelCheck == "" {
+                            
+                            label = ""
+                            
+                        }
+                        
+                        if labelCheck == "," {
+                            
+                            label = ""
+                            
+                        }
+                        
+                    } else {
                         
                         label = ""
                         
                     }
                     
-                    if labelCheck == "," {
+                    let secondsSince = transaction["time"] as? Double ?? 0.0
+                    let rbf = transaction["bip125-replaceable"] as? String ?? ""
+                    let txID = transaction["txid"] as? String ?? ""
+                    
+                    let date = Date(timeIntervalSince1970: secondsSince)
+                    dateFormatter.dateFormat = "MMM-dd-yyyy HH:mm"
+                    let dateString = dateFormatter.string(from: date)
+                    
+                    if let boolCheck = transaction["involvesWatchonly"] as? Bool {
                         
-                        label = ""
+                        isCold = boolCheck
                         
                     }
                     
-                } else {
-                    
-                    label = ""
-                    
-                }
-                
-                let secondsSince = transaction["time"] as? Double ?? 0.0
-                let rbf = transaction["bip125-replaceable"] as? String ?? ""
-                let txID = transaction["txid"] as? String ?? ""
-                
-                let date = Date(timeIntervalSince1970: secondsSince)
-                dateFormatter.dateFormat = "MMM-dd-yyyy HH:mm"
-                let dateString = dateFormatter.string(from: date)
-                
-                if let boolCheck = transaction["involvesWatchonly"] as? Bool {
-                    
-                    isCold = boolCheck
+                    transactionArray.append(["address": address,
+                                             "amount": amountString,
+                                             "confirmations": confirmations,
+                                             "label": label,
+                                             "date": dateString,
+                                             "rbf": rbf,
+                                             "txID": txID,
+                                             "replacedBy": replaced_by_txid,
+                                             "involvesWatchonly":isCold,
+                                             "selfTransfer":false,
+                                             "remove":false])
                     
                 }
-                
-                
-                                
-                transactionArray.append(["address": address,
-                                         "amount": amountString,
-                                         "confirmations": confirmations,
-                                         "label": label,
-                                         "date": dateString,
-                                         "rbf": rbf,
-                                         "txID": txID,
-                                         "replacedBy": replaced_by_txid,
-                                         "involvesWatchonly":isCold,
-                                         "selfTransfer":false,
-                                         "remove":false])
                 
             }
             
         }
         
-        // process self transfers
-                    
         for (i, tx) in transactionArray.enumerated() {
             
-            let amount = Double(tx["amount"] as! String)!
-            let txID = tx["txID"] as! String
-            
-            for (x, transaction) in transactionArray.enumerated() {
+            if let _ = tx["amount"] as? String {
                 
-                let amountToCompare = Double(transaction["amount"] as! String)!
-                
-                if x != i && txID == (transaction["txID"] as! String) {
+                if let amount = Double(tx["amount"] as! String) {
                     
-                    if amount + amountToCompare == 0 && amount > 0 {
+                    if let txID = tx["txID"] as? String {
                         
-                        transactionArray[i]["selfTransfer"] = true
-                        
-                    } else if amount + amountToCompare == 0 && amount < 0 {
-                        
-                        transactionArray[i]["remove"] = true
+                        for (x, transaction) in transactionArray.enumerated() {
+                            
+                            if let amountToCompare = Double(transaction["amount"] as! String) {
+                                
+                                if x != i && txID == (transaction["txID"] as! String) {
+                                    
+                                    if amount + amountToCompare == 0 && amount > 0 {
+                                        
+                                        transactionArray[i]["selfTransfer"] = true
+                                        
+                                    } else if amount + amountToCompare == 0 && amount < 0 {
+                                        
+                                        transactionArray[i]["remove"] = true
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
                         
                     }
                     
@@ -558,12 +696,16 @@ class NodeLogic {
             }
             
         }
-                    
+                            
         for tx in transactionArray {
             
-            if !(tx["remove"] as! Bool) {
+            if let remove = tx["remove"] as? Bool {
                 
-                arrayToReturn.append(tx)
+                if !remove {
+                    
+                    arrayToReturn.append(tx)
+                    
+                }
                 
             }
             

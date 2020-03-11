@@ -80,9 +80,6 @@ class CoreDataService {
                 
                 let credential = NSManagedObject(entity: entity, insertInto: context)
                 
-                
-
-                
                 for (key, value) in dict {
                     
                     credential.setValue(value, forKey: key)

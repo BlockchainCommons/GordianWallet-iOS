@@ -28,6 +28,11 @@ public struct WalletStruct: CustomStringConvertible {
     let keysImported:Bool
     let isArchived:Bool
     let mOfNtype:String
+    let changeDescriptor:String
+    let xprv:Data?
+    let blockheight:Int
+    let label:String
+    let lastUpdated:Date
     
     init(dictionary: [String: Any]) {
         
@@ -49,6 +54,11 @@ public struct WalletStruct: CustomStringConvertible {
         self.keysImported = dictionary["keysImported"] as? Bool ?? false
         self.isArchived = dictionary["isArchived"] as? Bool ?? false
         self.mOfNtype = dictionary["mOfNtype"] as? String ?? ""
+        self.changeDescriptor = dictionary["changeDescriptor"] as? String ?? ""
+        self.xprv = dictionary["xprv"] as? Data ?? nil
+        self.blockheight = dictionary["blockheight"] as? Int ?? 1
+        self.label = dictionary["label"] as? String ?? "Add a wallet label"
+        self.lastUpdated = dictionary["lastUpdated"] as? Date ?? Date()
         
     }
     

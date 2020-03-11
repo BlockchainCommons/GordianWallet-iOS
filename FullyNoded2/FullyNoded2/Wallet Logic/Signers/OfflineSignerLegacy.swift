@@ -19,40 +19,79 @@ class OfflineSignerLegacy {
         var privKeys = [HDKey]()
         
         getActiveWalletNow { (wallet, error) in
+            
             if !error && wallet != nil {
+                
                 let reducer = Reducer()
+                
                 reducer.makeCommand(walletName: wallet!.name, command: .decodepsbt, param: "\"\(unsignedTx)\"") {
+                    
                     if !reducer.errorBool {
-                        let decodedPSBT = reducer.dictToReturn
-                        parseDecodedPSBT(psbt: decodedPSBT)
+                        
+                        if let decodedPSBT = reducer.dictToReturn {
+                            
+                            parseDecodedPSBT(psbt: decodedPSBT)
+                            
+                        } else {
+                            
+                            completion(nil)
+                            
+                        }
+                        
                     } else {
+                        
                         completion(nil)
+                        
                     }
+                    
                 }
+                
             }
             
             func parseDecodedPSBT(psbt: NSDictionary) {
-                let inputs = psbt["inputs"] as! NSArray
-                for input in inputs {
-                    inputMetaDataArray.append(input as! NSDictionary)
+                
+                if let inputs = psbt["inputs"] as? NSArray {
+                    
+                    for input in inputs {
+                        
+                        inputMetaDataArray.append(input as! NSDictionary)
+                        
+                    }
+                    
+                    if let tx = psbt["tx"] as? NSDictionary {
+                        
+                        parseTx(tx: tx)
+                        
+                    }
+                    
                 }
-                let tx = psbt["tx"] as! NSDictionary
-                parseTx(tx: tx)
+                
             }
             
             func parseTx(tx: NSDictionary) {
-                let vins = tx["vin"] as! NSArray
-                let vouts = tx["vout"] as! NSArray
-                parseVouts(vouts: vouts, vins: vins)
+                
+                if let vins = tx["vin"] as? NSArray {
+                    
+                    if let vouts = tx["vout"] as? NSArray {
+                        
+                        parseVouts(vouts: vouts, vins: vins)
+                        
+                    }
+                    
+                }
+                
             }
             
             func parseVins(vins: NSArray) {
+                
                 for (i, input) in vins.enumerated() {
+                    
                     let vinDict = input as! NSDictionary
                     let txid = vinDict["txid"] as! String
                     let voutInt = UInt32(vinDict["vout"] as! Int)
                     let non_witness_utxo = inputMetaDataArray[i]["non_witness_utxo"] as! NSDictionary
                     let utxoVouts = non_witness_utxo["vout"] as! NSArray
+                    
                     for vout in utxoVouts {
                         let dict = vout as! NSDictionary
                         let n = UInt32(dict["n"] as! Int)

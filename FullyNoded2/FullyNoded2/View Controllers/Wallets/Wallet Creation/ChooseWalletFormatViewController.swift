@@ -11,6 +11,8 @@ import LibWally
 
 class ChooseWalletFormatViewController: UIViewController {
     
+    var entropy = ""
+    var localXprv = ""
     var node:NodeStruct!
     var newWallet = [String:Any]()
     var isBIP84 = Bool()
@@ -30,6 +32,7 @@ class ChooseWalletFormatViewController: UIViewController {
     var importDoneBlock : ((Bool) -> Void)?
     let enc = Encryption()
     let creatingView = ConnectingView()
+    var recoverDoneBlock : ((Bool) -> Void)?
     
     @IBOutlet var formatSwitch: UISegmentedControl!
     @IBOutlet var templateSwitch: UISegmentedControl!
@@ -57,18 +60,24 @@ class ChooseWalletFormatViewController: UIViewController {
     
     @IBAction func importAction(_ sender: Any) {
         
-        DispatchQueue.main.async {
-            
-            self.importDoneBlock!(true)
-            self.dismiss(animated: true, completion: nil)
-            
-        }
+        showAlert(vc: self, title: "🛠 Not yet ready", message: "This feature is under active development and not quite ready for testing yet.")
+        
+//        DispatchQueue.main.async {
+//
+//            self.importDoneBlock!(true)
+//            self.dismiss(animated: true, completion: nil)
+//
+//        }
         
     }
     
     @IBAction func recoverAction(_ sender: Any) {
         
-        showAlert(vc: self, title: "Under Construction", message: "")
+        DispatchQueue.main.async {
+            
+            self.performSegue(withIdentifier: "goRecover", sender: self)
+            
+        }
         
     }
     
@@ -190,20 +199,21 @@ class ChooseWalletFormatViewController: UIViewController {
                 
                 self.node = node!
                 self.creatingView.addConnectingView(vc: self, description: "creating your wallet")
+                self.newWallet["blockheight"] = UserDefaults.standard.object(forKey: "blockheight") as? Int ?? 1
                 
                 if self.node.network == "testnet" {
                     
                     if self.isBIP84 {
                         
-                        self.newWallet["derivation"] = "m/84'/1'/0'/0"
+                        self.newWallet["derivation"] = "m/84'/1'/0'"
                         
                     } else if self.isBIP49 {
                         
-                        self.newWallet["derivation"] = "m/49'/1'/0'/0"
+                        self.newWallet["derivation"] = "m/49'/1'/0'"
                         
                     } else if self.isBIP44 {
                         
-                        self.newWallet["derivation"] = "m/44'/1'/0'/0"
+                        self.newWallet["derivation"] = "m/44'/1'/0'"
                         
                     }
                     
@@ -211,15 +221,15 @@ class ChooseWalletFormatViewController: UIViewController {
                     
                     if self.isBIP84 {
                         
-                        self.newWallet["derivation"] = "m/84'/0'/0'/0"
+                        self.newWallet["derivation"] = "m/84'/0'/0'"
                         
                     } else if self.isBIP49 {
                         
-                        self.newWallet["derivation"] = "m/49'/0'/0'/0"
+                        self.newWallet["derivation"] = "m/49'/0'/0'"
                         
                     } else if self.isBIP44 {
                         
-                        self.newWallet["derivation"] = "m/44'/0'/0'/0"
+                        self.newWallet["derivation"] = "m/44'/0'/0'"
                         
                     }
                     
@@ -273,12 +283,11 @@ class ChooseWalletFormatViewController: UIViewController {
                         self.newWallet["seed"] = encryptedData!
                         let walletCreator = WalletCreator()
                         walletCreator.walletDict = self.newWallet
-                        walletCreator.node = self.node
-                        let derivation = self.newWallet["derivation"] as! String
-                        walletCreator.createStandUpWallet(derivation: derivation) { (success, errorDescription, descriptor) in
+                        walletCreator.createStandUpWallet() { (success, errorDescription, descriptor, changeDescriptor) in
                             
                             if success {
                                 
+                                self.newWallet["changeDescriptor"] = changeDescriptor!
                                 self.newWallet["descriptor"] = descriptor!
                                 let walletSaver = WalletSaver()
                                 walletSaver.save(walletToSave: self.newWallet) { (success) in
@@ -349,7 +358,7 @@ class ChooseWalletFormatViewController: UIViewController {
                             let recoveryFingerPrint = masterKey.fingerprint.hexString
                             self.fingerprints.append(recoveryFingerPrint)
                             
-                            if let path = self.accountPath(derivation) {
+                            if let path = BIP32Path(derivation) {
                                 
                                 do {
                                     
@@ -414,20 +423,32 @@ class ChooseWalletFormatViewController: UIViewController {
                             
                             if !error {
                                 
+                                self.entropy = mnemonic!.entropy.description
                                 let derivation = self.newWallet["derivation"] as! String
                                 
                                 if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
                                     
                                     let localFingerPrint = masterKey.fingerprint.hexString
                                     self.fingerprints.append(localFingerPrint)
-                                    
-                                    if let path = self.accountPath(derivation) {
+                                                                        
+                                    if let path = BIP32Path(derivation) {
                                         
                                         do {
                                             
                                             let account = try masterKey.derive(path)
                                             self.publickeys.append(account.xpub)
-                                            self.createNodesKey()
+                                            
+                                            if account.xpriv != nil {
+                                                
+                                                self.localXprv = account.xpriv!
+                                                self.createNodesKey()
+                                                
+                                            } else {
+                                                
+                                                self.creatingView.removeConnectingView()
+                                                displayAlert(viewController: self, isError: true, message: "failed deriving local xpriv")
+                                                
+                                            }
                                             
                                         } catch {
                                             
@@ -488,81 +509,72 @@ class ChooseWalletFormatViewController: UIViewController {
             
             if !error {
                 
-                if !error {
+                let converter = MnemonicCreator()
+                converter.convert(words: words!) { (mnemonic, error) in
                     
-                    let converter = MnemonicCreator()
-                    converter.convert(words: words!) { (mnemonic, error) in
+                    if !error {
                         
-                        if !error {
+                        let derivation = self.newWallet["derivation"] as! String
+                        
+                        if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
                             
-                            let derivation = self.newWallet["derivation"] as! String
+                            let nodesFingerPrint = masterKey.fingerprint.hexString
+                            self.fingerprints.append(nodesFingerPrint)
                             
-                            if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
+                            if let path = BIP32Path(derivation) {
                                 
-                                let nodesFingerPrint = masterKey.fingerprint.hexString
-                                self.fingerprints.append(nodesFingerPrint)
-                                
-                                if let path = self.accountPath(derivation) {
+                                do {
                                     
-                                    do {
+                                    let account = try masterKey.derive(path)
+                                    self.publickeys.append(account.xpub)
+                                    
+                                    if account.xpriv != nil {
                                         
-                                        let account = try masterKey.derive(path)
-                                        self.publickeys.append(account.xpub)
+                                        self.nodesSeed = account.xpriv!
+                                        self.constructDescriptor(derivation: derivation)
                                         
-                                        if account.xpriv != nil {
-                                            
-                                            self.nodesSeed = account.xpriv!
-                                            self.constructDescriptor(derivation: derivation)
-                                            
-                                        } else {
-                                           
-                                            self.creatingView.removeConnectingView()
-                                            displayAlert(viewController: self, isError: true, message: "failed deriving node's xprv")
-                                            
-                                        }
-                                        
-                                        
-                                    } catch {
+                                    } else {
                                         
                                         self.creatingView.removeConnectingView()
-                                        displayAlert(viewController: self, isError: true, message: "failed deriving xpub")
+                                        displayAlert(viewController: self, isError: true, message: "failed deriving node's xprv")
                                         
                                     }
                                     
-                                } else {
+                                    
+                                } catch {
                                     
                                     self.creatingView.removeConnectingView()
-                                    displayAlert(viewController: self, isError: true, message: "failed initiating bip32 path")
+                                    displayAlert(viewController: self, isError: true, message: "failed deriving xpub")
                                     
                                 }
                                 
                             } else {
                                 
                                 self.creatingView.removeConnectingView()
-                                displayAlert(viewController: self, isError: true, message: "failed creating masterkey")
+                                displayAlert(viewController: self, isError: true, message: "failed initiating bip32 path")
                                 
                             }
                             
                         } else {
                             
                             self.creatingView.removeConnectingView()
-                            displayAlert(viewController: self, isError: true, message: "error converting your words to BIP39 mnmemonic")
+                            displayAlert(viewController: self, isError: true, message: "failed creating masterkey")
                             
                         }
                         
+                    } else {
+                        
+                        self.creatingView.removeConnectingView()
+                        displayAlert(viewController: self, isError: true, message: "error converting your words to BIP39 mnmemonic")
+                        
                     }
-                    
-                } else {
-                    
-                    self.creatingView.removeConnectingView()
-                    displayAlert(viewController: self, isError: true, message: "error encrypting data")
                     
                 }
                 
             } else {
                 
                 self.creatingView.removeConnectingView()
-                displayAlert(viewController: self, isError: true, message: "error creating your recovery key")
+                displayAlert(viewController: self, isError: true, message: "error encrypting data")
                 
             }
             
@@ -579,34 +591,47 @@ class ChooseWalletFormatViewController: UIViewController {
         let localFingerprint = fingerprints[1]
         let nodeFingerprint = fingerprints[2]
         let signatures = 2
+        var changeDescriptor = ""
         
         // MARK: TODO CHANGE MULTI TO SORTEDMULTI - NEEDS BITCOIN CORE V0.20
         
         switch derivation {
             
-        case "m/84'/1'/0'/0":
+        case "m/84'/1'/0'":
                                             
             descriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/84'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/84'/1'/0']\(nodeKey)/0/*))"
             
-        case "m/84'/0'/0'/0":
+            changeDescriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/1'/0']\(recoveryKey)/1/*, [\(localFingerprint)/84'/1'/0']\(localKey)/1/*, [\(nodeFingerprint)/84'/1'/0']\(nodeKey)/1/*))"
+            
+        case "m/84'/0'/0'":
 
             descriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/0'/0']\(recoveryKey)/0/*, [\(localFingerprint)/84'/0'/0']\(localKey)/0/*, [\(nodeFingerprint)/84'/0'/0']\(nodeKey)/0/*))"
+            
+            changeDescriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/0'/0']\(recoveryKey)/1/*, [\(localFingerprint)/84'/0'/0']\(localKey)/1/*, [\(nodeFingerprint)/84'/0'/0']\(nodeKey)/1/*))"
 
-        case "m/44'/1'/0'/0":
+        case "m/44'/1'/0'":
 
             descriptor = "sh(multi(\(signatures),[\(recoveryFingerprint)/44'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/44'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/44'/1'/0']\(nodeKey)/0/*))"
+            
+            changeDescriptor = "sh(multi(\(signatures),[\(recoveryFingerprint)/44'/1'/0']\(recoveryKey)/1/*, [\(localFingerprint)/44'/1'/0']\(localKey)/1/*, [\(nodeFingerprint)/44'/1'/0']\(nodeKey)/1/*))"
 
-        case "m/44'/0'/0'/0":
+        case "m/44'/0'/0'":
 
             descriptor = "sh(multi(\(signatures),[\(recoveryFingerprint)/44'/0'/0']\(recoveryKey)/0/*, [\(localFingerprint)/44'/0'/0']\(localKey)/0/*, [\(nodeFingerprint)/44'/0'/0']\(nodeKey)/0/*))"
+            
+            changeDescriptor = "sh(multi(\(signatures),[\(recoveryFingerprint)/44'/0'/0']\(recoveryKey)/1/*, [\(localFingerprint)/44'/0'/0']\(localKey)/1/*, [\(nodeFingerprint)/44'/0'/0']\(nodeKey)/1/*))"
 
-        case "m/49'/1'/0'/0":
+        case "m/49'/1'/0'":
 
             descriptor = "sh(wsh(multi(\(signatures),[\(recoveryFingerprint)/49'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/49'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/49'/1'/0']\(nodeKey)/0/*)))"
+            
+            changeDescriptor = "sh(wsh(multi(\(signatures),[\(recoveryFingerprint)/49'/1'/0']\(recoveryKey)/1/*, [\(localFingerprint)/49'/1'/0']\(localKey)/1/*, [\(nodeFingerprint)/49'/1'/0']\(nodeKey)/1/*)))"
 
-        case "m/49'/0'/0'/0":
+        case "m/49'/0'/0'":
             
             descriptor = "sh(wsh(multi(\(signatures),[\(recoveryFingerprint)/49'/0'/0']\(recoveryKey)/0/*, [\(localFingerprint)/49'/0'/0']\(localKey)/0/*, [\(nodeFingerprint)/49'/0'/0']\(nodeKey)/0/*)))"
+            
+            changeDescriptor = "sh(wsh(multi(\(signatures),[\(recoveryFingerprint)/49'/0'/0']\(recoveryKey)/1/*, [\(localFingerprint)/49'/0'/0']\(localKey)/1/*, [\(nodeFingerprint)/49'/0'/0']\(nodeKey)/1/*)))"
             
         default:
             
@@ -616,76 +641,115 @@ class ChooseWalletFormatViewController: UIViewController {
         
         descriptor = descriptor.replacingOccurrences(of: "\"", with: "")
         descriptor = descriptor.replacingOccurrences(of: " ", with: "")
-        getInfo(descriptor: descriptor)
+        changeDescriptor = changeDescriptor.replacingOccurrences(of: "\"", with: "")
+        changeDescriptor = changeDescriptor.replacingOccurrences(of: " ", with: "")
+        getInfo(primaryDescriptor: descriptor, changeDescriptor: changeDescriptor)
         
     }
     
-    func getInfo(descriptor: String) {
+    func getInfo(primaryDescriptor: String, changeDescriptor: String) {
         
         DispatchQueue.main.async {
             
-            self.creatingView.label.text = "creating your wallets descriptor"
+            self.creatingView.label.text = "creating your wallets descriptors"
             
         }
         
         let reducer = Reducer()
-        reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(descriptor)\"") {
-            
-            DispatchQueue.main.async {
-                
-                self.creatingView.label.text = "importing your descriptor to your node"
-                
-            }
+        reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(primaryDescriptor)\"") {
             
             if !reducer.errorBool {
                 
-                let result = reducer.dictToReturn
-                let desc = result["descriptor"] as! String
-                let enc = Encryption()
-                enc.getNode { (node, error) in
+                if let result = reducer.dictToReturn {
                     
-                    if !error {
+                    if let primaryDescriptor = result["descriptor"] as? String {
                         
-                        self.newWallet["descriptor"] = desc
-                        self.newWallet["seed"] = self.localSeed
-                        
-                        let multiSigCreator = CreateMultiSigWallet()
-                        let wallet = WalletStruct(dictionary: self.newWallet)
-                        multiSigCreator.create(wallet: wallet, nodeXprv: self.nodesSeed, nodeXpub: self.publickeys[2]) { (success) in
+                        reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDescriptor)\"") {
                             
-                            if success {
+                            DispatchQueue.main.async {
                                 
-                                DispatchQueue.main.async {
-                                   self.creatingView.label.text = "saving your wallet to your device"
-                                }
+                                self.creatingView.label.text = "importing your descriptors to your node"
                                 
-                                let walletSaver = WalletSaver()
-                                walletSaver.save(walletToSave: self.newWallet) { (success) in
+                            }
+                            
+                            if let result = reducer.dictToReturn {
+                                
+                                if let changeDesc = result["descriptor"] as? String {
                                     
-                                    if success {
+                                    let enc = Encryption()
+                                    enc.getNode { (node, error) in
                                         
-                                        self.creatingView.removeConnectingView()
-                                        
-                                        DispatchQueue.main.async {
+                                        if !error {
                                             
-                                            self.nodesSeed = ""
-                                            self.newWallet.removeAll()
-                                            self.multiSigDoneBlock!((true, self.backUpRecoveryPhrase, self.descriptor))
-                                            self.dismiss(animated: true, completion: nil)
+                                            self.newWallet["descriptor"] = primaryDescriptor
+                                            self.newWallet["changeDescriptor"] = changeDesc
+                                            self.newWallet["seed"] = self.localSeed
+                                            
+                                            let multiSigCreator = CreateMultiSigWallet()
+                                            let wallet = WalletStruct(dictionary: self.newWallet)
+                                            multiSigCreator.create(wallet: wallet, nodeXprv: self.nodesSeed, nodeXpub: self.publickeys[2]) { (success, error) in
+                                                
+                                                if success {
+                                                    
+                                                    DispatchQueue.main.async {
+                                                        
+                                                       self.creatingView.label.text = "saving your wallet to your device"
+                                                        
+                                                    }
+                                                    
+                                                    let walletSaver = WalletSaver()
+                                                    walletSaver.save(walletToSave: self.newWallet) { (success) in
+                                                        
+                                                        if success {
+                                                            
+                                                            self.creatingView.removeConnectingView()
+                                                            
+                                                            DispatchQueue.main.async {
+                                                                
+                                                                self.nodesSeed = ""
+                                                                self.newWallet.removeAll()
+                                                                // include the checksum as we will convert this back to a pubkey descriptor when recovering
+                                                                let hotDescriptor = primaryDescriptor.replacingOccurrences(of: self.publickeys[1], with: self.localXprv)
+                                                                let recoveryQr = ["entropy": self.entropy, "descriptor":"\(hotDescriptor)", "walletName":"\(wallet.name)","birthdate":wallet.birthdate, "blockheight":wallet.blockheight] as [String : Any]
+                                                                
+                                                                if let json = recoveryQr.json() {
+                                                                    
+                                                                    self.multiSigDoneBlock!((true, self.backUpRecoveryPhrase, json))
+                                                                    self.dismiss(animated: true, completion: nil)
+                                                                    
+                                                                }
+                                                                
+                                                            }
+                                                            
+                                                        } else {
+                                                            
+                                                            displayAlert(viewController: self, isError: true, message: "error saving wallet")
+                                                            
+                                                        }
+                                                        
+                                                    }
+                                                    
+                                                } else {
+                                                    
+                                                    if error != nil {
+                                                        
+                                                        displayAlert(viewController: self, isError: true, message: "error creating wallet: \(error!)")
+                                                        
+                                                    } else {
+                                                        
+                                                        displayAlert(viewController: self, isError: true, message: "error creating wallet")
+                                                        
+                                                    }                                                    
+                                                    
+                                                }
+                                                
+                                            }
                                             
                                         }
-                                        
-                                    } else {
-                                        
-                                        displayAlert(viewController: self, isError: true, message: "error saving wallet")
                                         
                                     }
                                     
                                 }
-                                
-                            } else {
-                                
-                                displayAlert(viewController: self, isError: true, message: "failed creating your wallet")
                                 
                             }
                             
@@ -694,7 +758,7 @@ class ChooseWalletFormatViewController: UIViewController {
                     }
                     
                 }
-                
+                                
             } else {
                 
                 print("error: \(reducer.errorDescription)")
@@ -705,43 +769,33 @@ class ChooseWalletFormatViewController: UIViewController {
         
     }
     
-    private func accountPath(_ derivation: String) -> BIP32Path? {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        switch derivation {
+        switch segue.identifier {
             
-        case "m/84'/1'/0'/0":
-                                            
-            //param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/0/*)\""
-            return BIP32Path("m/84'/1'/0'")
+        case "goRecover":
             
-        case "m/84'/0'/0'/0":
-            
-            //param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/0/*)\""
-            return BIP32Path("m/84'/0'/0'")
-            
-        case "m/44'/1'/0'/0":
-            
-            //param = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/0/*)\""
-            return BIP32Path("m/44'/1'/0'")
-             
-        case "m/44'/0'/0'/0":
-            
-            //param = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/0/*)\""
-            return BIP32Path("m/44'/0'/0'")
-            
-        case "m/49'/1'/0'/0":
-            
-            //param = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/0/*))\""
-            return BIP32Path("m/49'/1'/0'")
-            
-        case "m/49'/0'/0'/0":
-            
-            //param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/0/*))\""
-            return BIP32Path("m/49'/0'/0'")
+            if let vc = segue.destination as? WalletRecoverViewController {
+                
+                vc.onDoneBlock = { result in
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.dismiss(animated: true) {
+                            
+                            self.recoverDoneBlock!(true)
+                            
+                        }
+                        
+                    }                    
+                    
+                }
+                
+            }
             
         default:
             
-            return nil
+            break
             
         }
         

@@ -26,6 +26,10 @@ public struct DescriptorStruct: CustomStringConvertible {
     let multiSigKeys:[String]
     let multiSigPaths:[String]
     let sigsRequired:UInt
+    let accountXpub:String
+    let accountXprv:String
+    let derivation:String
+    let derivationArray:[String]
     
     init(dictionary: [String: Any]) {
         
@@ -45,6 +49,10 @@ public struct DescriptorStruct: CustomStringConvertible {
         self.multiSigKeys = dictionary["multiSigKeys"] as? [String] ?? [""]
         self.multiSigPaths = dictionary["multiSigPaths"] as? [String] ?? [""]
         self.sigsRequired = dictionary["sigsRequired"] as? UInt ?? 0
+        self.accountXpub = dictionary["accountXpub"] as? String ?? ""
+        self.accountXprv = dictionary["accountXprv"] as? String ?? ""
+        self.derivation = dictionary["derivation"] as? String ?? ""
+        self.derivationArray = dictionary["derivationArray"] as? [String] ?? [""]
         
     }
     

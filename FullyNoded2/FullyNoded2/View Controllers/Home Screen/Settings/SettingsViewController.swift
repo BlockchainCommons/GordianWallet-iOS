@@ -7,6 +7,7 @@
 //
 import KeychainSwift
 import UIKit
+import CoreData
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -125,28 +126,22 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         case 0:
             
             thumbnail.image = UIImage(systemName: "lock.shield")
-            label.text = "Security Center"
+            label.text = "Export Tor V3 Authentication Public Key"
             return settingsCell
             
         case 1:
-            
-            thumbnail.image = UIImage(systemName: "lock.shield")
-            label.text = "Export Authentication Public Key"
-            return settingsCell
-            
-        case 2:
             
             thumbnail.image = UIImage(systemName: "desktopcomputer")
             label.text = "Node Manager"
             return settingsCell
             
-        case 3:
+        case 2:
             
             thumbnail.image = UIImage(systemName: "exclamationmark.triangle")
             label.text = "Reset app"
             return settingsCell
             
-        case 4:
+        case 3:
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "miningFeeCell", for: indexPath)
             let label = cell.viewWithTag(1) as! UILabel
@@ -187,7 +182,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func numberOfSections(in tableView: UITableView) -> Int {
         
-        return 5
+        return 4
         
     }
     
@@ -241,17 +236,13 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             
         case 0:
             
-            goToSecurityCenter()
+            goToAuth()
             
         case 1:
             
-            goToAuth()
-            
-        case 2:
-            
             nodeManager()
             
-        case 3:
+        case 2:
         
             resetApp()
             
@@ -275,88 +266,81 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func resetApp() {
         
-        let cd = CoreDataService()
-        let ud = UserDefaults.standard
-        
-        let domain = Bundle.main.bundleIdentifier!
-        ud.removePersistentDomain(forName: domain)
-        ud.synchronize()
-        
-        cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
-            
-            if nodes != nil {
-                
-               for n in nodes! {
-                    
-                    let str = NodeStruct(dictionary: n)
-                    let id = str.id
-                    
-                    cd.deleteEntity(id: id, entityName: .nodes) {
+        DispatchQueue.main.async {
                         
-                        if !cd.errorBool {
+            let alert = UIAlertController(title: "Are you sure!?", message: "This will delete ALL your wallets from your device, nodes, auth keys, encryption keys and will completely reset the app!\n\nAfter using this button you should force quit the app and reopen it to prevent weird behavior and possible crashes.", preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: "Yes, reset now!", style: .destructive, handler: { action in
+                
+                let cd = CoreDataService()
+                let ud = UserDefaults.standard
+                var didDelete = true
+                
+                let domain = Bundle.main.bundleIdentifier!
+                ud.removePersistentDomain(forName: domain)
+                ud.synchronize()
+                
+                func deleteAllData(entity: ENTITY){
+
+                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+                    let managedContext = appDelegate.persistentContainer.viewContext
+                    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity.rawValue)
+                    fetchRequest.returnsObjectsAsFaults = false
+                    
+                    do {
+                        
+                        let stuff = try managedContext.fetch(fetchRequest)
+                        
+                        for thing in stuff as! [NSManagedObject] {
                             
-                            let success = cd.boolToReturn
-                            
-                            if success {
-                                
-                                cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
-                                    
-                                    if wallets != nil {
-                                        
-                                        for h in wallets! {
-                                            
-                                            let str = WalletStruct(dictionary: h)
-                                            let id = str.id
-                                            
-                                            cd.deleteEntity(id: id, entityName: .wallets) {
-                                                
-                                                if !cd.errorBool {
-                                                    
-                                                    let success = cd.boolToReturn
-                                                    
-                                                    if success {
-                                                        
-                                                        let keychain = KeychainSwift()
-                                                        
-                                                        if keychain.clear() {
-                                                            
-                                                            displayAlert(viewController: self, isError: false, message: "app has been reset")
-                                                            
-                                                        } else {
-                                                            
-                                                            displayAlert(viewController: self, isError: true, message: "app reset partially failed")
-                                                            
-                                                        }
-                                                        
-                                                    } else {
-                                                        
-                                                        displayAlert(viewController: self, isError: true, message: "app reset partially failed")
-                                                        
-                                                    }
-                                                    
-                                                }
-                                                
-                                            }
-                                            
-                                        }
-                                        
-                                    }
-                                    
-                                }
-                                
-                            } else {
-                                
-                                displayAlert(viewController: self, isError: true, message: "app reset failed")
-                                
-                            }
+                            managedContext.delete(thing)
                             
                         }
                         
+                        try managedContext.save()
+                                                
+                    } catch let error as NSError {
+                        
+                        print("delete fail--",error)
+                        didDelete = false
+                        
                     }
+
+                }
+                
+                let entities = [ENTITY.nodes, ENTITY.auth, ENTITY.wallets]
+                
+                for entity in entities {
+                    
+                    deleteAllData(entity: entity)
                     
                 }
                 
-            }
+                let keychain = KeychainSwift()
+                
+                if keychain.clear() {
+                    
+                    if didDelete {
+                        
+                        displayAlert(viewController: self, isError: false, message: "app has been reset, please force quit and reopen the app")
+                        
+                    } else {
+                        
+                        displayAlert(viewController: self, isError: true, message: "app reset partially failed")
+                        
+                    }
+                    
+                } else {
+                    
+                    displayAlert(viewController: self, isError: true, message: "app reset partially failed")
+                    
+                }
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    
+            self.present(alert, animated: true, completion: nil)
             
         }
         

@@ -12,12 +12,12 @@ import AVFoundation
 
 class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    var scanningRecovery = Bool()
     var isScanningNode = Bool()
     var isImporting = Bool()
     let label = UILabel()
     let labelDetail = UILabel()
     let addTestingNodeButton = UIButton()
-    
     let avCaptureSession = AVCaptureSession()
     var imageView = UIImageView()
     var stringToReturn = ""
@@ -25,27 +25,21 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
     var didChooseImage = {}
     var keepRunning = Bool()
     var downSwipeAction = {}
-    
     var vc = UIViewController()
     let imagePicker = UIImagePickerController()
     var qrString = ""
-    
     let textField = UITextField()
     var textFieldPlaceholder = ""
-    
     let uploadButton = UIButton()
     let torchButton = UIButton()
-    
     let closeButton = UIButton()
-    
     let blurView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffect.Style.systemChromeMaterialDark))
-    
     let downSwipe = UISwipeGestureRecognizer()
     
     func configureDontHaveAnodeButton() {
         
         addTestingNodeButton.frame = CGRect(x: 20, y: self.labelDetail.frame.maxY + 5, width: self.blurView.frame.width - 40, height: 20)
-        addTestingNodeButton.setTitleColor(.systemBlue, for: .normal)
+        addTestingNodeButton.setTitleColor(.systemTeal, for: .normal)
         addTestingNodeButton.titleLabel?.font = .systemFont(ofSize: 10)
         addTestingNodeButton.backgroundColor = .clear
         blurView.contentView.addSubview(addTestingNodeButton)
@@ -93,12 +87,24 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
     
     func configureCloseButton() {
     
-        closeButton.frame = CGRect(x: vc.view.frame.midX - 15,
-                                   y: vc.view.frame.maxY - 150,
-                                   width: 30,
-                                   height: 30)
+        closeButton.frame = CGRect(x: blurView.contentView.frame.maxX - 32,
+                                   y: 5,
+                                   width: 20,
+                                   height: 20)
         
-        closeButton.setImage(UIImage(named: "Image-10"), for: .normal)
+        closeButton.setImage(UIImage(systemName: "x.circle.fill"), for: .normal)
+        closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+        blurView.contentView.addSubview(closeButton)
+        
+    }
+    
+    @objc func close() {
+        
+        DispatchQueue.main.async {
+            
+            self.vc.dismiss(animated: true, completion: nil)
+            
+        }
         
     }
     
@@ -280,7 +286,6 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
         configureTextField()
         configureUploadButton()
         configureTorchButton()
-        configureCloseButton()
         configureDownSwipe()
         
         if isScanningNode {
@@ -297,13 +302,26 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
         if isImporting {
             
             label.text = "Scan a Descriptor"
-            labelDetail.text = "StandUp-Remote allows you to import and export your descriptors, this is a great way to recover your private keys or create a watch-only wallet."
+            labelDetail.text = "FullyNoded 2 allows you to import and export your descriptors, this is a great way to recover your private keys or create a watch-only wallet."
             addTestingNodeButton.setTitle("what is a descriptor?", for: .normal)
             configureLabel()
             configureDetailLabel()
             configureDontHaveAnodeButton()
             
         }
+        
+        if scanningRecovery {
+            
+            label.text = "Scan a RecoveryQR"
+            labelDetail.text = "FullyNoded 2 allows you to backup/export a RecoveryQR Code for each wallet you create. You can scan one at anytime to recover lost funds and recreate the wallet on your device."
+            addTestingNodeButton.setTitle("more info please", for: .normal)
+            configureLabel()
+            configureDetailLabel()
+            configureDontHaveAnodeButton()
+            
+        }
+        
+        configureCloseButton()
         
     }
     

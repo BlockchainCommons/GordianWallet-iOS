@@ -76,6 +76,27 @@ class QuickConnect {
                 
             }
             
+            
+            if let check = URLComponents(string: url)?.queryItems {
+                
+                if let labelCheck = (check.first)?.value {
+                    
+                    var removeAllowedChars = label.replacingOccurrences(of: ".", with: "")
+                    removeAllowedChars = removeAllowedChars.replacingOccurrences(of: "%", with: "")
+                    removeAllowedChars = removeAllowedChars.replacingOccurrences(of: "-", with: "")
+                    removeAllowedChars = removeAllowedChars.replacingOccurrences(of: "_", with: "")
+                    
+                    if isValidCharacters(removeAllowedChars) {
+                        
+                        label = labelCheck
+                        print("label = \(label)")
+                        
+                    }
+                    
+                }
+                
+            }
+            
             if rpcUser == "" && rpcPassword == "" {
                 
                 if params.count == 2 {
@@ -97,24 +118,6 @@ class QuickConnect {
                             }
                                                         
                         }
-                        
-                    }
-                    
-                }
-                
-            } else {
-                
-                let url = URL(string: url)
-                
-                if let labelCheck = url?.value(for: "label") {
-                    
-                    var removeAllowedChars = labelCheck.replacingOccurrences(of: ".", with: "")
-                    removeAllowedChars = removeAllowedChars.replacingOccurrences(of: "-", with: "")
-                    removeAllowedChars = removeAllowedChars.replacingOccurrences(of: "_", with: "")
-                    
-                    if isValidCharacters(removeAllowedChars) {
-                        
-                        label = labelCheck
                         
                     }
                     

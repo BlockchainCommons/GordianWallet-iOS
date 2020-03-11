@@ -422,8 +422,8 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                         
                         if address != "" {
                             
-                            let dbl = Double(amount)!
-                            let out = [address:dbl]
+                            // .doubleValue extension now handles commas and decimals for Russian localization converting String to double
+                            let out = [address:amount.doubleValue]
                             outputs.append(out)
                             
                         }
@@ -794,41 +794,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             
         }
         
-//        let rawTransaction = Send()
-//        rawTransaction.outputs = outputsString
-//        let ud = UserDefaults.standard
-//        rawTransaction.numberOfBlocks = ud.object(forKey: "feeTarget") as? Int ?? 6
-//
-//        func getResult() {
-//
-//            if !rawTransaction.errorBool {
-//
-//                self.confirm(raw: rawTransaction.signedRawTx)
-//
-//            } else {
-//
-//                DispatchQueue.main.async {
-//
-//                    self.outputsString = ""
-//                    self.outputs.removeAll()
-//                    self.creatingView.removeConnectingView()
-//
-//                    displayAlert(viewController: self,
-//                                 isError: true,
-//                                 message: rawTransaction.errorDescription)
-//
-//                }
-//
-//            }
-//
-//        }
-//
-//        DispatchQueue.main.async {
-//
-//            rawTransaction.create(completion: getResult)
-//
-//        }
-        
     }
     
     //MARK: Node Commands
@@ -899,12 +864,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
-}
-
-extension String {
-    func toDouble() -> Double? {
-        return NumberFormatter().number(from: self)?.doubleValue
-    }
 }
 
 

@@ -64,36 +64,44 @@ class KeyFetcher {
                 
                 let derivationPath = wallet!.derivation
                 
-                self.enc.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
+                if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
                     
-                    if seed != nil {
+                    self.enc.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
                         
-                        let words = String(data: seed!, encoding: .utf8)!
-                        
-                        let mnenomicCreator = MnemonicCreator()
-                        
-                        mnenomicCreator.convert(words: words) { (mnemonic, error) in
+                        if seed != nil {
                             
-                            if !error {
+                            let words = String(data: seed!, encoding: .utf8)!
+                            
+                            let mnenomicCreator = MnemonicCreator()
+                            
+                            mnenomicCreator.convert(words: words) { (mnemonic, error) in
                                 
-                                if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
+                                if !error {
                                     
-                                    do {
+                                    if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
                                         
-                                        let key = try masterKey.derive(path)
-                                        
-                                        if let keyToReturn = key.privKey {
+                                        do {
                                             
-                                            let wif = keyToReturn.wif
-                                            completion((wif,false))
+                                            let key = try masterKey.derive(path)
                                             
-                                        } else {
+                                            if let keyToReturn = key.privKey {
+                                                
+                                                let wif = keyToReturn.wif
+                                                completion((wif,false))
+                                                
+                                            } else {
+                                                
+                                                completion((nil,true))
+                                                
+                                            }
+                                            
+                                        } catch {
                                             
                                             completion((nil,true))
                                             
                                         }
                                         
-                                    } catch {
+                                    } else {
                                         
                                         completion((nil,true))
                                         
@@ -105,13 +113,89 @@ class KeyFetcher {
                                     
                                 }
                                 
-                            } else {
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                } else {
+                    
+                    if wallet!.xprv != nil {
+                        
+                        // its a recovered wallet without a mnemonic, need to remove the account derivation as we know the psbt will return the full path
+                        var processedDerivation = ""
+                        let arr = "\(path)".split(separator: "/")
+                        for (i, pathComponent) in arr.enumerated() {
+                            
+                            if i > 3 {
                                 
-                                completion((nil,true))
+                                processedDerivation += "/" + "\(pathComponent)"
+                                
+                            }
+                            
+                            if i + 1 == arr.count {
+                                
+                                if let accountLessPath = BIP32Path(processedDerivation) {
+                                    
+                                    self.enc.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
+                                        
+                                        if decryptedXprv != nil {
+                                            
+                                            if let xprvString = String(data: decryptedXprv!, encoding: .utf8) {
+                                                
+                                                if let hdKey = HDKey(xprvString) {
+                                                    
+                                                    do {
+                                                        
+                                                        let key = try hdKey.derive(accountLessPath)
+                                                        
+                                                        if let keyToReturn = key.privKey {
+                                                            
+                                                            let wif = keyToReturn.wif
+                                                            completion((wif,false))
+                                                            
+                                                        } else {
+                                                            
+                                                            completion((nil,true))
+                                                            
+                                                        }
+                                                        
+                                                    } catch {
+                                                        
+                                                        completion((nil,true))
+                                                        print("failed deriving child key")
+                                                        
+                                                    }
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        } else {
+                                            
+                                            completion((nil,true))
+                                            print("failed decrypting xprv")
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                } else {
+                                    
+                                    print("failed deriving processed path")
+                                    completion((nil,true))
+                                    
+                                }
                                 
                             }
                             
                         }
+                        
+                    } else {
+                        
+                        // its a watch-only wallet
+                        completion((nil,true))
                         
                     }
                     
@@ -134,59 +218,34 @@ class KeyFetcher {
                 let enc = Encryption()
                 enc.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
                     
-                    if seed != nil {
+                    if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
                         
-                        let words = String(data: seed!, encoding: .utf8)!
-                        let mnenomicCreator = MnemonicCreator()
-                        mnenomicCreator.convert(words: words) { (mnemonic, error) in
+                        if seed != nil {
                             
-                            if !error {
+                            let words = String(data: seed!, encoding: .utf8)!
+                            let mnenomicCreator = MnemonicCreator()
+                            mnenomicCreator.convert(words: words) { (mnemonic, error) in
                                 
-                                if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
+                                if !error {
                                     
-                                    do {
+                                    if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
                                         
-                                        let key = try masterKey.derive(path)
-                                        completion((key,false))
+                                        do {
+                                            
+                                            let key = try masterKey.derive(path)
+                                            completion((key,false))
+                                            
+                                        } catch {
+                                            
+                                            completion((nil,true))
+                                            
+                                        }
                                         
-                                    } catch {
+                                    } else {
                                         
                                         completion((nil,true))
                                         
                                     }
-                                    
-//                                    if let path = BIP32Path(derivationPath) {
-//
-//                                        do {
-//
-//                                            let account = try masterKey.derive(path)
-//
-//                                            if let childPath = BIP32Path("\(index)") {
-//
-//                                                do {
-//
-//                                                    let key = try account.derive(childPath)
-//                                                    completion((key,false))
-//
-//                                                } catch {
-//
-//                                                    completion((nil,true))
-//
-//                                                }
-//
-//                                            }
-//
-//                                        } catch {
-//
-//                                            completion((nil,true))
-//
-//                                        }
-//
-//                                    } else {
-//
-//                                        completion((nil,true))
-//
-//                                    }
                                     
                                 } else {
                                     
@@ -194,14 +253,74 @@ class KeyFetcher {
                                     
                                 }
                                 
-                            } else {
-                                
-                                completion((nil,true))
-                                
                             }
                             
                         }
                         
+                    } else {
+                        
+                        if wallet!.xprv != nil {
+                            
+                            // its a recovered wallet without a mnemonic, need to remove the account derivation as we know the psbt will return the full path
+                            var processedDerivation = ""
+                            let arr = "\(path)".split(separator: "/")
+                            for (i, pathComponent) in arr.enumerated() {
+                                
+                                if i > 3 {
+                                    
+                                    processedDerivation += "/" + "\(pathComponent)"
+                                    
+                                }
+                                
+                                if i + 1 == arr.count {
+                                    
+                                    if let accountLessPath = BIP32Path(processedDerivation) {
+                                        
+                                        self.enc.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
+                                            
+                                            if decryptedXprv != nil {
+                                                
+                                                if let xprvString = String(data: decryptedXprv!, encoding: .utf8) {
+                                                    
+                                                    if let hdKey = HDKey(xprvString) {
+                                                        
+                                                        do {
+                                                            
+                                                            let key = try hdKey.derive(accountLessPath)
+                                                            completion((key,false))
+                                                            
+                                                        } catch {
+                                                            
+                                                            completion((nil,true))
+                                                            print("failed deriving child key")
+                                                            
+                                                        }
+                                                        
+                                                    }
+                                                    
+                                                }
+                                                
+                                            } else {
+                                                
+                                                completion((nil,true))
+                                                print("failed decrypting xprv")
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    } else {
+                                        
+                                        print("failed deriving processed path")
+                                        completion((nil,true))
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
                     }
                     
                 }
@@ -212,10 +331,69 @@ class KeyFetcher {
         
     }
     
-    func bip32Xpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
+//    func bip32Xpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
+//
+//        let derivationPath = wallet.derivation
+//
+//        let enc = Encryption()
+//        enc.decryptData(dataToDecrypt: wallet.seed) { (seed) in
+//
+//            if seed != nil {
+//
+//                let words = String(data: seed!, encoding: .utf8)!
+//                let mnenomicCreator = MnemonicCreator()
+//                mnenomicCreator.convert(words: words) { (mnemonic, error) in
+//
+//                    if !error {
+//
+//                        if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
+//
+//                            if let path = BIP32Path(derivationPath) {
+//
+//                                do {
+//
+//                                    let account = try masterKey.derive(path)
+//                                    completion((account.xpub,false))
+//
+//                                } catch {
+//
+//                                    completion((nil,true))
+//
+//                                }
+//
+//                            } else {
+//
+//                                completion((nil,true))
+//
+//                            }
+//
+//                        } else {
+//
+//                            completion((nil,true))
+//
+//                        }
+//
+//                    } else {
+//
+//                        completion((nil,true))
+//
+//                    }
+//
+//                }
+//
+//            } else {
+//
+//                completion((nil,true))
+//
+//            }
+//
+//        }
+//
+//    }
+    
+    func xpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
         
         let derivationPath = wallet.derivation
-        
         let enc = Encryption()
         enc.decryptData(dataToDecrypt: wallet.seed) { (seed) in
             
@@ -229,7 +407,7 @@ class KeyFetcher {
                         
                         if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
                             
-                            if let path = BIP32Path(derivationPath) {
+                            if let path = BIP32Path(wallet.derivation) {
                                 
                                 do {
                                     
@@ -272,92 +450,38 @@ class KeyFetcher {
         
     }
     
-    func accountXpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
+    func accountXpub(descriptorStruct: DescriptorStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
         
-        let derivationPath = wallet.derivation
-        
-        let enc = Encryption()
-        enc.decryptData(dataToDecrypt: wallet.seed) { (seed) in
+        if descriptorStruct.isMulti {
             
-            if seed != nil {
+            if descriptorStruct.multiSigKeys.count > 0 {
                 
-                let words = String(data: seed!, encoding: .utf8)!
-                let mnenomicCreator = MnemonicCreator()
-                mnenomicCreator.convert(words: words) { (mnemonic, error) in
+                if descriptorStruct.multiSigKeys[1] != "" {
                     
-                    if !error {
-                        
-                        if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
-                            
-                            var accountDerivation = ""
-                            switch wallet.derivation {
-                            case "m/84'/1'/0'/0":
-                                accountDerivation = "m/84'/1'/0'"
-                                
-                            case "m/84'/0'/0'/0":
-                                accountDerivation = "m/84'/0'/0'"
-                                
-                            case "m/44'/1'/0'/0":
-                                accountDerivation = "m/44'/1'/0'"
-                                
-                            case "m/44'/0'/0'/0":
-                                accountDerivation = "m/44'/0'/0'"
-                                
-                            case "m/49'/1'/0'/0":
-                                accountDerivation = "m/49'/1'/0'"
-                                
-                            case "m/49'/0'/0'/0":
-                                accountDerivation = "m/49'/0'/0'"
-                                
-                            default:
-                                break
-                                
-                            }
-                            
-                            if let path = BIP32Path(accountDerivation) {
-                                
-                                do {
-                                    
-                                    let account = try masterKey.derive(path)
-                                    completion((account.xpub,false))
-                                    
-                                } catch {
-                                    
-                                    completion((nil,true))
-                                    
-                                }
-                                
-                            } else {
-                                
-                                completion((nil,true))
-                                
-                            }
-                            
-                        } else {
-                            
-                            completion((nil,true))
-                            
-                        }
-                        
-                    } else {
-                        
-                        completion((nil,true))
-                        
-                    }
+                    completion((descriptorStruct.multiSigKeys[1], false))
+                    
+                } else {
+                    
+                    completion(("", true))
                     
                 }
                 
             } else {
                 
-                completion((nil,true))
+                completion(("", true))
                 
             }
+            
+        } else {
+           
+            let xpub = descriptorStruct.accountXpub
+            completion((xpub, false))
             
         }
         
     }
     
-    func bip32Xprv(completion: @escaping ((xprv: String?, error: Bool)) -> Void) {
+    func accountXprv(completion: @escaping ((xprv: String?, error: Bool)) -> Void) {
         
         getActiveWalletNow() { (wallet, error) in
             
@@ -448,8 +572,16 @@ class KeyFetcher {
                     if !reducer.errorBool {
                         
                         self.updateIndex(wallet: wallet!)
-                        let address = reducer.arrayToReturn[0] as! String
-                        completion((address,false))
+                        
+                        if let address = reducer.arrayToReturn?[0] as? String {
+                            
+                            completion((address,false))
+                            
+                        } else {
+                            
+                            completion((nil,true))
+                            
+                        }
                         
                     } else {
                         
@@ -473,18 +605,25 @@ class KeyFetcher {
             if wallet != nil && !error {
                 
                 let reducer = Reducer()
-                let index = wallet!.index + 1000
+                let index = wallet!.index
                 
                 if wallet!.index < 1000 {
                     
-                    let param = "\"\(wallet!.descriptor)\", [\(index),\(index)]"
+                    let param = "\"\(wallet!.changeDescriptor)\", [\(index),\(index)]"
                     
                     reducer.makeCommand(walletName: wallet!.name, command: .deriveaddresses, param: param) {
                         
                         if !reducer.errorBool {
                             
-                            let address = reducer.arrayToReturn[0] as! String
-                            completion((address,false))
+                            if let address = reducer.arrayToReturn?[0] as? String {
+                                
+                                completion((address,false))
+                                
+                            } else {
+                                
+                                completion((nil,true))
+                                
+                            }
                             
                         } else {
                             
@@ -512,10 +651,7 @@ class KeyFetcher {
         let cd = CoreDataService()
         cd.updateEntity(id: wallet.id, keyToUpdate: "index", newValue: wallet.index + 1, entityName: .wallets) {
             
-            if !cd.errorBool {
-                
-                
-            } else {
+            if cd.errorBool {
                 
                 print("error updating index: \(cd.errorDescription)")
                 

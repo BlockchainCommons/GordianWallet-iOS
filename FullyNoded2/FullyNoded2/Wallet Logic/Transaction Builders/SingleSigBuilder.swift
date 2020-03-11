@@ -150,7 +150,6 @@ class SingleSigBuilder {
                 let bip32derivs = dict["bip32_derivs"] as! NSArray
                 let bip32deriv = bip32derivs[0] as! NSDictionary
                 let path = bip32deriv["path"] as! String
-                //let index = Int((path.split(separator: "/"))[1])!
                 let keyFetcher = KeyFetcher()
                 if let bip32path = BIP32Path(path) {
                     
@@ -188,8 +187,15 @@ class SingleSigBuilder {
                 
                 if !reducer.errorBool {
                     
-                    let dict = reducer.dictToReturn
-                    parsePsbt(decodePsbt: dict, psbt: psbt)
+                    if let dict = reducer.dictToReturn {
+                        
+                        parsePsbt(decodePsbt: dict, psbt: psbt)
+                        
+                    } else {
+                        
+                        completion((nil, nil, "Error decoding transaction"))
+                        
+                    }
                     
                 } else {
                     
@@ -209,9 +215,15 @@ class SingleSigBuilder {
                 
                 if !reducer.errorBool {
                     
-                    let dict = reducer.dictToReturn
-                    let processedPsbt = dict["psbt"] as! String
-                    decodePsbt(psbt: processedPsbt)
+                    if let dict = reducer.dictToReturn {
+                        
+                        if let processedPsbt = dict["psbt"] as? String {
+                            
+                            decodePsbt(psbt: processedPsbt)
+                            
+                        }
+                        
+                    }
                     
                 } else {
                     
@@ -247,17 +259,6 @@ class SingleSigBuilder {
                 changeType = "legacy"
                 
             }
-            
-//            switch wallet.derivation {
-//            case "m/84'/1'/0'/0", "m/84'/0'/0'/0":
-//                changeType = "bech32"
-//            case "m/44'/1'/0'/0", "m/44'/0'/0'/0":
-//                changeType = "legacy"
-//            case "m/49'/1'/0'/0", "m/49'/0'/0'/0":
-//                changeType = "p2sh-segwit"
-//            default:
-//                break
-//            }
 
             let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"change_type\": \"\(changeType)\"}'', true"
 
@@ -265,48 +266,52 @@ class SingleSigBuilder {
 
                 if !reducer.errorBool {
 
-                    let psbtDict = reducer.dictToReturn
-                    let psbt = psbtDict["psbt"] as! String
-                    
-                    if self.wallet.type == "DEFAULT" || self.wallet.type == "CUSTOM" {
+                    if let psbtDict = reducer.dictToReturn {
                         
-//                        switch self.wallet.derivation {
-//                        case "m/84'/1'/0'/0", "m/84'/0'/0'/0": signSegwit(psbt: psbt)
-//                        case "m/44'/1'/0'/0", "m/44'/0'/0'/0": signLegacy(psbt: psbt)
-//                        case "m/49'/1'/0'/0", "m/49'/0'/0'/0": signSegwitWrapped(psbt: psbt)
-//                        default:
-//                            break
-//                        }
-                        
-                        if str.isHot || String(data: self.wallet.seed, encoding: .utf8) != "no seed" {
+                        if let psbt = psbtDict["psbt"] as? String {
                             
-                            if str.isP2WPKH || str.isBIP84 {
+                            if self.wallet.type == "DEFAULT" || self.wallet.type == "CUSTOM" {
                                 
-                                signSegwit(psbt: psbt)
+                                if str.isHot || String(data: self.wallet.seed, encoding: .utf8) != "no seed" || self.wallet.xprv != nil {
+                                    
+                                    if str.isP2WPKH || str.isBIP84 {
+                                        
+                                        signSegwit(psbt: psbt)
+                                        
+                                    } else if str.isP2SHP2WPKH || str.isBIP49 {
+                                        
+                                        signSegwitWrapped(psbt: psbt)
+                                        
+                                    } else if str.isP2PKH || str.isBIP44 {
+                                        
+                                        signLegacy(psbt: psbt)
+                                        
+                                    }
+                                    
+                                } else {
+                                   
+                                    completion((nil, psbt, nil))
+                                    
+                                }
                                 
-                            } else if str.isP2SHP2WPKH || str.isBIP49 {
                                 
-                                signSegwitWrapped(psbt: psbt)
-                                
-                            } else if str.isP2PKH || str.isBIP44 {
-                                
-                                signLegacy(psbt: psbt)
+                            } else if self.wallet.type == "MULTI" {
+                             
+                                processPsbt(psbt: psbt)
                                 
                             }
                             
                         } else {
-                           
-                            completion((nil, psbt, nil))
+                            
+                            completion((nil, nil, "Error creating psbt"))
                             
                         }
                         
+                    } else {
                         
-                    } else if self.wallet.type == "MULTI" {
-                     
-                        processPsbt(psbt: psbt)
+                        completion((nil, nil, "Error creating psbt"))
                         
                     }
-                    
 
                 } else {
 

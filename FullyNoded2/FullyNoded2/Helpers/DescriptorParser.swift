@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: This parser is designed to work with FullyNoded 2 descriptors, we try and make it extensible and this can be an area to be improved so that it handles any descriptor but for the purposes of the app we can make a few assumptions as we know what type of descriptors the wallet will produce.
+
 // Examples:
 // pk(0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798)
 // pkh(02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5)
@@ -33,52 +35,6 @@ class DescriptorParser {
         
         var dict = [String:Any]()
         
-        if descriptor.contains("[") && descriptor.contains("]") {
-            
-            let arr1 = descriptor.split(separator: "[")
-            let arr2 = arr1[1].split(separator: "]")
-            let derivation = arr2[0]
-            let arr3 = derivation.split(separator: "/")
-            var path = "m"
-            
-            for (i, item) in arr3.enumerated() {
-                
-                switch i {
-                    
-                case 1:
-                    let type = item
-                    path += "/" + type
-                    
-                default:
-                    
-                    path += "/" + item
-                    
-                }
-                
-            }
-            
-            switch path {
-                
-            case "m/44'/0'/0'":
-                dict["isBIP44"] = true
-                dict["isP2PKH"] = true
-                
-            case "m/84'/0'/0'":
-                dict["isBIP84"] = true
-                dict["isP2WPKH"] = true
-                
-            case "m/49'/0'/0'":
-                dict["isBIP49"] = true
-                dict["isP2SHP2WPKH"] = true
-                
-            default:
-                
-                break
-                
-            }
-            
-        }
-        
         if descriptor.contains("multi") {
             
             dict["isMulti"] = true
@@ -98,15 +54,12 @@ class DescriptorParser {
                     switch item {
                         
                     case "multi":
-                        
                         dict["format"] = "Bare-multi"
                         
                     case "wsh":
-                        
                         dict["format"] = "P2WSH"
                         
                     case "sh":
-                        
                         if arr[1] == "wsh" {
                             
                             dict["format"] = "P2SH-P2WSH"
@@ -140,6 +93,7 @@ class DescriptorParser {
                     }
                     var keyArray = [String]()
                     var paths = [String]()
+                    var derivationArray = [String]()
                     // extracting the xpubs and their paths so we can derive the individual multisig addresses locally
                     for key in keysWithPath {
                         var path = String()
@@ -147,6 +101,21 @@ class DescriptorParser {
                             if key.contains("[") && key.contains("]") {
                                 // remove the bracket with deriv/fingerprint
                                 let arr = key.split(separator: "]")
+                                let rootPath = arr[0].replacingOccurrences(of: "[", with: "")
+                                
+                                let rootPathArr = rootPath.split(separator: "/")
+                                var deriv = "m"
+                                for (i, rootPathItem) in rootPathArr.enumerated() {
+                                    
+                                    if i > 0 {
+                                        
+                                        deriv += "/" + "\(rootPathItem)"
+                                        
+                                    }
+                                    
+                                }
+                                derivationArray.append(deriv)
+                                
                                 let processedKey = arr[1]
                                 // it has a path
                                 let pathArray = processedKey.split(separator: "/")
@@ -168,8 +137,46 @@ class DescriptorParser {
                             }
                         }
                     }
+                    
+                    dict["derivationArray"] = derivationArray
                     dict["multiSigKeys"] = keyArray
                     dict["multiSigPaths"] = paths
+                    
+                    for deriv in derivationArray {
+
+                        switch deriv {
+
+                        case "m/44'/0'/0'", "m/44'/1'/0'":
+                            dict["isBIP44"] = true
+                            dict["isP2PKH"] = true
+                            dict["isBIP84"] = false
+                            dict["isP2WPKH"] = false
+                            dict["isBIP49"] = false
+                            dict["isP2SHP2WPKH"] = false
+
+                        case "m/84'/0'/0'", "m/84'/1'/0'":
+                            dict["isBIP84"] = true
+                            dict["isP2WPKH"] = true
+                            dict["isBIP44"] = false
+                            dict["isP2PKH"] = false
+                            dict["isBIP49"] = false
+                            dict["isP2SHP2WPKH"] = false
+
+                        case "m/49'/0'/0'", "m/49'/1'/0'":
+                            dict["isBIP49"] = true
+                            dict["isP2SHP2WPKH"] = true
+                            dict["isBIP44"] = false
+                            dict["isP2PKH"] = false
+                            dict["isBIP84"] = false
+                            dict["isP2WPKH"] = false
+
+                        default:
+
+                            break
+
+                        }
+
+                    }
                     
                 default:
                     break
@@ -177,6 +184,73 @@ class DescriptorParser {
             }
                         
         } else {
+            
+            dict["isMulti"] = false
+            
+            if descriptor.contains("[") && descriptor.contains("]") {
+                
+                let arr1 = descriptor.split(separator: "[")
+                let arr2 = arr1[1].split(separator: "]")
+                let derivation = arr2[0]
+                let extendedKeyWithPath = arr2[1]
+                let arr4 = extendedKeyWithPath.split(separator: "/")
+                let extendedKey = arr4[0]
+                if extendedKey.contains("tpub") || extendedKey.contains("xpub") {
+                    dict["accountXpub"] = "\(extendedKey)"
+                } else if extendedKey.contains("tprv") || extendedKey.contains("xprv") {
+                    dict["accountXprv"] = "\(extendedKey)"
+                }
+                
+                let arr3 = derivation.split(separator: "/")
+                var path = "m"
+                
+                for (i, item) in arr3.enumerated() {
+                    
+                    switch i {
+                        
+                    case 1:
+                        let type = item
+                        path += "/" + type
+                        
+                    default:
+                        
+                        if i != 0 {
+                            
+                            path += "/" + item
+                            
+                        } else {
+                            
+                            break
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+                dict["derivation"] = path
+                
+                switch path {
+                                        
+                case "m/44'/0'/0'":
+                    dict["isBIP44"] = true
+                    dict["isP2PKH"] = true
+                    
+                case "m/84'/0'/0'":
+                    dict["isBIP84"] = true
+                    dict["isP2WPKH"] = true
+                    
+                case "m/49'/0'/0'":
+                    dict["isBIP49"] = true
+                    dict["isP2SHP2WPKH"] = true
+                    
+                default:
+                    
+                    break
+                    
+                }
+                
+            }
             
             if descriptor.contains("combo") {
                 
@@ -193,12 +267,10 @@ class DescriptorParser {
                         switch item {
                             
                         case "wpkh":
-                            
                             dict["format"] = "P2WPKH"
                             dict["isP2WPKH"] = true
                             
                         case "sh":
-                            
                             if arr[1] == "wpkh" {
                                 
                                 dict["format"] = "P2SH-P2WPKH"
@@ -211,11 +283,9 @@ class DescriptorParser {
                             }
                             
                         case "pk":
-                            
                             dict["format"] = "P2PK"
                             
                         case "pkh":
-                            
                             dict["format"] = "P2PKH"
                             dict["isP2PKH"] = true
                             
@@ -249,6 +319,7 @@ class DescriptorParser {
             
         }
         
+        print("dict = \(dict)")
         return DescriptorStruct(dictionary: dict)
         
     }

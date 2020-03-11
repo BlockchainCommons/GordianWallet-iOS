@@ -174,34 +174,47 @@ class LockedViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     
                 case .getrawtransaction:
                     
-                    let dict = reducer.dictToReturn
-                    let outputs = dict["vout"] as! NSArray
-                    
-                    for (i, outputDict) in outputs.enumerated() {
-                        
-                        let output = outputDict as! NSDictionary
-                        let value = output["value"] as! Double
-                        let vout = output["n"] as! Int
-                        
-                        if vout == selectedVout {
+                    if let dict = reducer.dictToReturn {
+                     
+                        if let outputs = dict["vout"] as? NSArray {
                             
-                            helperArray[ind]["amount"] = value
-                            ind = ind + 1
-                            
-                        }
-                        
-                        if i + 1 == outputs.count {
-                            
-                            if ind <= helperArray.count - 1 {
+                            for (i, outputDict) in outputs.enumerated() {
                                 
-                                getAmounts(i: ind)
-                                
-                            } else {
-                                
-                                DispatchQueue.main.async {
+                                if let output = outputDict as? NSDictionary {
                                     
-                                    self.tableView.reloadData()
-                                    self.creatingView.removeConnectingView()
+                                    if let value = output["value"] as? Double {
+                                     
+                                        if let vout = output["n"] as? Int {
+                                         
+                                            if vout == selectedVout {
+                                                
+                                                helperArray[ind]["amount"] = value
+                                                ind = ind + 1
+                                                
+                                            }
+                                            
+                                            if i + 1 == outputs.count {
+                                                
+                                                if ind <= helperArray.count - 1 {
+                                                    
+                                                    getAmounts(i: ind)
+                                                    
+                                                } else {
+                                                    
+                                                    DispatchQueue.main.async {
+                                                        
+                                                        self.tableView.reloadData()
+                                                        self.creatingView.removeConnectingView()
+                                                        
+                                                    }
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
                                     
                                 }
                                 
@@ -213,36 +226,41 @@ class LockedViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     
                 case .listlockunspent:
                     
-                    lockedArray = reducer.arrayToReturn
-                    getHelperArray()
-                    
-                case .lockunspent:
-                    
-                    let result = reducer.doubleToReturn
-                    
-                    if result == 1 {
-                        
-                        displayAlert(viewController: self,
-                                     isError: false,
-                                     message: "UTXO is unlocked and can be selected for spends")
-                        
-                    } else {
-                        
-                        displayAlert(viewController: self,
-                                     isError: true,
-                                     message: "Unable to unlock that UTXO")
+                    if let _ = reducer.arrayToReturn {
+                     
+                        getHelperArray()
                         
                     }
                     
-                    helperArray.removeAll()
+                case .lockunspent:
                     
-                    executeNodeCommand(method: .listlockunspent,
-                                       param: "")
-                    
-                    DispatchQueue.main.async {
+                    if let result = reducer.doubleToReturn {
+                     
+                        if result == 1 {
+                            
+                            displayAlert(viewController: self,
+                                         isError: false,
+                                         message: "UTXO is unlocked and can be selected for spends")
+                            
+                        } else {
+                            
+                            displayAlert(viewController: self,
+                                         isError: true,
+                                         message: "Unable to unlock that UTXO")
+                            
+                        }
                         
-                        self.creatingView.addConnectingView(vc: self,
-                                                            description: "Refreshing")
+                        helperArray.removeAll()
+                        
+                        executeNodeCommand(method: .listlockunspent,
+                                           param: "")
+                        
+                        DispatchQueue.main.async {
+                            
+                            self.creatingView.addConnectingView(vc: self,
+                                                                description: "Refreshing")
+                            
+                        }
                         
                     }
                     

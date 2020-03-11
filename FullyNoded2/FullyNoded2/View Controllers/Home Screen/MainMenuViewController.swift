@@ -8,9 +8,12 @@
 
 import UIKit
 import KeychainSwift
+import LibWally
 
-class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate {
+class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
     
+    let linkUrl = "https://spdx.org/licenses/BSD-2-Clause-Patent.html"
+    let termsView = UIView()
     var bootStrapping = Bool()
     var showNodeInfo = Bool()
     var torCellIndex = Int()
@@ -18,19 +21,17 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var nodeCellIndex = Int()
     var transactionCellIndex = Int()
     var isRefreshingZero = Bool()
-    var isRefreshingOne = Bool()
+    var isRefreshingTorData = Bool()
     var isRefreshingTwo = Bool()
     var existingNodeId = UUID()
     var torConnected = Bool()
     var nodeSectionLoaded = Bool()
     let imageView = UIImageView()
-    let progressView = UIProgressView(progressViewStyle: .bar)
     var statusLabel = UILabel()
     var timer:Timer!
     var wallet:WalletStruct!
     var node:NodeStruct!
     var walletInfo:HomeStruct!
-    let backView = UIView()
     let ud = UserDefaults.standard
     var hashrateString = String()
     var version = String()
@@ -88,7 +89,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         torSectionLoaded = false
         nodeSectionLoaded = false
         transactionsSectionLoaded = false
-        isRefreshingOne = true
+        isRefreshingTorData = true
         setTitleView()
         configureRefresher()
         infoHidden = true
@@ -127,10 +128,76 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        let p = DescriptorParser()
-        let s = p.descriptor("wsh(multi(1,xpub661MyMwAqRbcFW31YEwpkMuc5THy2PSt5bDMsktWQcFF8syAmRUapSCGu8ED9W6oDMSgv6Zz8idoc4a6mr8BDzTJY47LJhkJ8UB7WEGuduB/1/0/*,xpub69H7F5d8KSRgmmdJg2KhpAK8SR3DjMwAdkxj3ZuxV27CprR9LgpeyGmXUbC6wb7ERfvrnKZjXoUmmDznezpbZb7ap6r1D3tgFxHmwMkQTPH/0/0/*))")
+        if ud.object(forKey: "acceptedTerms") == nil {
+            
+            showTerms()
+            
+        }
+                    
+    }
+    
+    private func showTerms() {
         
+        termsView.backgroundColor = .black
+        termsView.frame = self.tabBarController!.view.frame
+        
+        let label = UITextView()
+        label.text = """
+        The use of FullyNoded 2 is under the "BSD 2-Clause Plus Patent License" (https://spdx.org/licenses/BSD-2-Clause-Patent.html), with the disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+        """
+        label.frame = CGRect(x: 16, y: 50, width: termsView.frame.width - 32, height: termsView.frame.height - 160)
+        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 17)
+        label.isEditable = false
+        label.isSelectable = true
+        label.delegate = self
+        label.addHyperLinksToText(originalText: label.text, hyperLinks: ["https://spdx.org/licenses/BSD-2-Clause-Patent.html": self.linkUrl])
+        
+        let acceptButton = UIButton()
+        acceptButton.setTitle("I Accept", for: .normal)
+        acceptButton.setTitleColor(.systemTeal, for: .normal)
+        acceptButton.frame = CGRect(x: 32, y: termsView.frame.maxY - 60, width: self.termsView.frame.width - 64, height: 50)
+        acceptButton.addTarget(self, action: #selector(iAccept), for: .touchUpInside)
+        acceptButton.clipsToBounds = true
+        acceptButton.layer.cornerRadius = 8
+        acceptButton.backgroundColor = .darkGray
+        
+        DispatchQueue.main.async {
+            
+            self.termsView.addSubview(label)
+            self.termsView.addSubview(acceptButton)
+            self.tabBarController!.view.addSubview(self.termsView)
+            
+        }
+        
+    }
+    
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        
+        if (URL.absoluteString == linkUrl) {
+            UIApplication.shared.open(URL) { (Bool) in }
+        }
+        return false
+    }
+    
+    @objc func iAccept() {
+        
+        UserDefaults.standard.set(true, forKey: "acceptedTerms")
+        
+        DispatchQueue.main.async {
+            
+            UIView.animate(withDuration: 0.3, animations: {
                 
+                self.termsView.frame.origin.y = self.tabBarController!.view.frame.maxY
+                
+            }) { (_) in
+                
+                self.termsView.removeFromSuperview()
+                
+            }
+            
+        }
+        
     }
     
     @IBAction func goToSettings(_ sender: Any) {
@@ -223,7 +290,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             self.enc.getNode { (node, error) in
                 
-                if !error {
+                if !error && node != nil {
                                         
                     self.node = node!
                     
@@ -404,6 +471,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         deviceView.layer.cornerRadius = 8
         infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
+        
+        if infoHidden {
+            
+            let image = UIImage(systemName: "rectangle.expand.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        } else {
+            
+            let image = UIImage(systemName: "rectangle.compress.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        }
+        
         self.coldBalance = walletInfo.coldBalance
                         
         if coldBalance == "" {
@@ -467,7 +547,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        keysOnNodeDescription.text = "public keys \(wallet.derivation)/0 to /1999"
+        keysOnNodeDescription.text = "public keys \(wallet.derivation)/0 to /999"
         deviceXprv.text = "xprv \(wallet.derivation)"
         walletNameLabel.text = "\(wallet.name).dat"
         
@@ -518,6 +598,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         deviceView.layer.cornerRadius = 8
         
         infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
+        
+        if infoHidden {
+            
+            let image = UIImage(systemName: "rectangle.expand.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        } else {
+            
+            let image = UIImage(systemName: "rectangle.compress.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        }
         
         self.coldBalance = walletInfo.coldBalance
                         
@@ -581,7 +673,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        nodeXprv.text = "private keys \(wallet.derivation)/0 to /1999"
+        nodeXprv.text = "keys \(wallet.derivation)/0 and 1/0 to /999"
         deviceXprv.text = "xprv \(wallet.derivation)"
         offlineXprvLabel.text = "xprv \(wallet.derivation)"
         
@@ -631,6 +723,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         
         infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
+        
+        if infoHidden {
+            
+            let image = UIImage(systemName: "rectangle.expand.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        } else {
+            
+            let image = UIImage(systemName: "rectangle.compress.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        }
         
         self.coldBalance = walletInfo.coldBalance
         
@@ -686,13 +790,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if descStruct.isHot {
             
             seedOnDeviceLabel.text = "\(node.label) is Hot"
-            keysOnNodeLabel.text = "2,000 private keys on \(node.label)"
+            keysOnNodeLabel.text = "1,000 private keys on \(node.label)"
             watchIcon.image = UIImage(systemName: "pencil.and.ellipsis.rectangle")
             
         } else {
             
             seedOnDeviceLabel.text = "\(node.label) is Cold"
-            keysOnNodeLabel.text = "2,000 public keys on \(node.label)"
+            keysOnNodeLabel.text = "1,000 public keys on \(node.label)"
             watchIcon.image = UIImage(systemName: "eye")
             
         }
@@ -727,16 +831,40 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let torStatusLabel = cell.viewWithTag(1) as! UILabel
         let p2pOnionLabel = cell.viewWithTag(3) as! UILabel
         let onionVersionLabel = cell.viewWithTag(4) as! UILabel
-        let connectionStatusLabel = cell.viewWithTag(5) as! UILabel
         let v3address = cell.viewWithTag(6) as! UILabel
         let torActiveCircle = cell.viewWithTag(7) as! UIImageView
         let spinner = cell.viewWithTag(8) as! UIActivityIndicatorView
         let infoButton = cell.viewWithTag(9) as! UIButton
+        let connectedView = cell.viewWithTag(10)!
+        let clientOnionView = cell.viewWithTag(11)!
+        let excludeExitView = cell.viewWithTag(12)!
+        let p2pView = cell.viewWithTag(13)!
+        let v3OnionView = cell.viewWithTag(14)!
+        let v3View = cell.viewWithTag(15)!
+        
+        v3View.layer.cornerRadius = 8
+        connectedView.layer.cornerRadius = 8
+        clientOnionView.layer.cornerRadius = 8
+        excludeExitView.layer.cornerRadius = 8
+        p2pView.layer.cornerRadius = 8
+        v3OnionView.layer.cornerRadius = 8
         
         spinner.startAnimating()
         spinner.alpha = 1
         infoButton.alpha = 0
         infoButton.addTarget(self, action: #selector(getTorInfo(_:)), for: .touchUpInside)
+        
+        if torInfoHidden {
+            
+            let image = UIImage(systemName: "rectangle.expand.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        } else {
+            
+            let image = UIImage(systemName: "rectangle.compress.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        }
         
         let onionAddress = (node.onionAddress.split(separator: "."))[0]
         
@@ -750,7 +878,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        if isRefreshingOne {
+        if isRefreshingTorData {
             
             spinner.startAnimating()
             spinner.alpha = 1
@@ -770,12 +898,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if torSectionLoaded {
             
-            connectionStatusLabel.text = "connected to \(node.label)"
             p2pOnionLabel.text = "P2P URL: \(p2pOnionAddress)"
             
         } else {
             
-            connectionStatusLabel.text = "establishing connection to \(node.label)"
             p2pOnionLabel.text = "fetching network info from your node..."
             
         }
@@ -784,20 +910,20 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if self.torConnected {
             
-            if torSectionLoaded && !isRefreshingOne {
+            if torSectionLoaded && !isRefreshingTorData {
                 
                 spinner.stopAnimating()
                 spinner.alpha = 0
                 infoButton.alpha = 1
-                torStatusLabel.text = "connected"
+                torStatusLabel.text = "\(node.label)"
                 torActiveCircle.tintColor = .systemGreen
                 
-            } else if isRefreshingOne && !torSectionLoaded {
+            } else if isRefreshingTorData && !torSectionLoaded {
                 
                 spinner.startAnimating()
                 spinner.alpha = 1
                 infoButton.alpha = 0
-                torStatusLabel.text = "connecting..."
+                torStatusLabel.text = "\(node.label)..."
                 torActiveCircle.tintColor = .systemOrange
                 
             }
@@ -814,10 +940,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                torStatusLabel.text = "disconnected..."
+                torStatusLabel.text = "\(node.label)..."
                 torActiveCircle.tintColor = .systemRed
-                connectionStatusLabel.text = "disconnected..."
-                
                 spinner.stopAnimating()
                 spinner.alpha = 0
                 infoButton.alpha = 1
@@ -854,6 +978,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let infoButton = cell.viewWithTag(17) as! UIButton
         
         infoButton.addTarget(self, action: #selector(getNodeInfo(_:)), for: .touchUpInside)
+        
+        if !showNodeInfo {
+            
+            let image = UIImage(systemName: "rectangle.expand.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        } else {
+            
+            let image = UIImage(systemName: "rectangle.compress.vertical")
+            infoButton.setImage(image, for: .normal)
+            
+        }
         
         network.layer.cornerRadius = 6
         pruned.layer.cornerRadius = 6
@@ -1228,11 +1364,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         case 1:
                         
-            return walletCell(indexPath)
+            return nodesCell(indexPath)
             
         case 2:
             
-            return nodesCell(indexPath)
+            return walletCell(indexPath)
             
         default:
             
@@ -1262,14 +1398,14 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         switch section {
             
-        case 0:
+        case self.torCellIndex:
             
             textLabel.text = "Tor Status"
             
             if torSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
                 textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
@@ -1280,14 +1416,14 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             }
             
-        case 1:
+        case self.walletCellIndex:
             
-            textLabel.text = "Wallet Info"
+            textLabel.text = "Active Wallet Info"
             
             if walletSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
                 textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
@@ -1298,14 +1434,14 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             }
             
-        case 2:
+        case self.nodeCellIndex:
             
             textLabel.text = "Full Node Status"
             
             if nodeSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
                 textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
@@ -1323,7 +1459,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if transactionsSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 80, y: 0, width: 20, height: 20)
+                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
                 textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
@@ -1368,10 +1504,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         case self.nodeCellIndex:
             
             self.refreshNodeData(sender)
-            
-//        case self.transactionCellIndex:
-//            
-//            self.refreshTransactions(sender)
             
         default:
             
@@ -1453,7 +1585,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 if torSectionLoaded {
                     
-                    return 52
+                    return 85
                     
                 } else {
                     
@@ -1463,7 +1595,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                return 145
+                return 165
                 
             }
             
@@ -1485,7 +1617,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                return 64
+                return 62
                 
             }
                         
@@ -1521,11 +1653,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         case 1:
             
-            return walletCellHeight()
+            return nodeCellHeight()
                         
         case 2:
             
-            return nodeCellHeight()
+            return walletCellHeight()
             
         default:
             
@@ -1643,35 +1775,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if let newBalance = Double(self.walletInfo.coldBalance) {
             
-            cd.updateEntity(id: wallet.id, keyToUpdate: "lastBalance", newValue: newBalance, entityName: .wallets) {
-                
-                if !self.cd.errorBool {
-                    
-                    print("succesfully updated lastBalance")
-                    
-                } else {
-                    
-                    print("error saving lastBalance")
-                    
-                }
-                
-            }
+            cd.updateEntity(id: wallet.id, keyToUpdate: "lastBalance", newValue: newBalance, entityName: .wallets) {}
             
         }
         
-        cd.updateEntity(id: wallet.id, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) {
-            
-            if !self.cd.errorBool {
-                
-                print("succesfully updated lastUsed")
-                
-            } else {
-                
-                print("error saving lastUsed")
-                
-            }
-            
-        }
+        cd.updateEntity(id: wallet.id, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) {}
+        cd.updateEntity(id: wallet.id, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) {}
         
     }
     
@@ -1687,7 +1796,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func loadWalletData() {
         
-        //self.transactionArray.removeAll()
         self.isRefreshingZero = true
         self.reloadSections([self.walletCellIndex])
         self.updateLabel(text: "     Getting wallet info...")
@@ -1707,17 +1815,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                let dict = self.nodeLogic.dictToReturn
-                self.walletInfo = HomeStruct(dictionary: dict)
+                self.walletInfo = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
                 self.updateWalletMetaData(wallet: self.wallet)
                 self.walletSectionLoaded = true
                 self.isRefreshingZero = false
                 self.reloadSections([self.walletCellIndex])
-                
                 self.impact()
-                
                 self.getDirtyFiatBalance()
                 self.loadTransactionData()
+                
                 
             }
             
@@ -1742,8 +1848,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                let dict = self.nodeLogic.dictToReturn
-                self.walletInfo = HomeStruct(dictionary: dict)
+                self.walletInfo = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
                 self.updateWalletMetaData(wallet: self.wallet)
                 self.walletSectionLoaded = true
                 self.isRefreshingZero = false
@@ -1773,7 +1878,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     self.torReachable = s.torReachable
                     
                     self.torSectionLoaded = true
-                    self.isRefreshingOne = false
+                    self.isRefreshingTorData = false
                     
                     if self.wallet != nil {
                         
@@ -1785,14 +1890,14 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         
                         self.reloadSections([self.torCellIndex, self.nodeCellIndex])
                         self.loadNodeData()
-                                                                        
+                        
                     }
                     
                 } else {
                     
                     self.torSectionLoaded = false
                     self.removeStatusLabel()
-                    self.isRefreshingOne = false
+                    self.isRefreshingTorData = false
                     self.reloadSections([self.torCellIndex])
                     
                     displayAlert(viewController: self,
@@ -1820,14 +1925,14 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     self.version = s.version
                     self.torReachable = s.torReachable
                     self.torSectionLoaded = true
-                    self.isRefreshingOne = false
+                    self.isRefreshingTorData = false
                     self.reloadSections([self.torCellIndex])
                     
                 } else {
                     
                     self.torSectionLoaded = false
                     self.removeStatusLabel()
-                    self.isRefreshingOne = false
+                    self.isRefreshingTorData = false
                     self.reloadSections([self.torCellIndex])
                     
                     displayAlert(viewController: self,
@@ -1843,7 +1948,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func loadNodeData() {
-        print("loadNodeData")
         
         self.isRefreshingTwo = true
         self.reloadSections([self.nodeCellIndex])
@@ -1863,8 +1967,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                let dict = self.nodeLogic.dictToReturn
-                let str = HomeStruct(dictionary: dict)
+                let str = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
                 self.feeRate = str.feeRate
                 self.mempoolCount = str.mempoolCount
                 self.network = str.network
@@ -1932,8 +2035,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                let dict = self.nodeLogic.dictToReturn
-                let str = HomeStruct(dictionary: dict)
+                let str = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
                 self.feeRate = str.feeRate
                 self.mempoolCount = str.mempoolCount
                 self.network = str.network
@@ -1971,12 +2073,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     private func loadTransactionData() {
         
         self.nodeLogic.arrayToReturn.removeAll()
-        //self.transactionArray.removeAll()
         updateLabel(text: "     Getting transactions...")
-        //self.reloadSections([3])
-//        DispatchQueue.main.async {
-//            self.mainMenu.reloadData()
-//        }
         nodeLogic.wallet = wallet
         nodeLogic.walletDisabled = walletDisabled
         nodeLogic.loadTransactionData() {
@@ -1992,39 +2089,14 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                //self.transactionArray.removeAll()
                 self.transactionArray = self.nodeLogic.arrayToReturn.reversed()
                 self.transactionsSectionLoaded = true
                                 
                 DispatchQueue.main.async {
                     
-//                    if self.transactionArray.count > 0 {
-//
-//                        for (i, _) in self.transactionArray.enumerated() {
-//
-//                            self.reloadSections([i + 3])
-//
-//                            if i + 1 == self.transactionArray.count {
-//
-//                                self.impact()
-//                                self.loadNodeData()
-//
-//                            }
-//
-//                        }
-//
-//                    } else {
-//
-//                        self.reloadSections([3])
-//                        self.impact()
-//                        self.loadNodeData()
-//
-//                    }
-                    
                     self.impact()
                     self.mainMenu.reloadData()
                     self.loadNodeData()
-                    
                     
                 }
                 
@@ -2057,23 +2129,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 self.transactionsSectionLoaded = true
                                 
                 DispatchQueue.main.async {
-                    
-//                    if self.transactionArray.count > 1 {
-//
-//                        for (i, _) in self.transactionArray.enumerated() {
-//
-//                            self.reloadSections([i + 3])
-//
-//                        }
-//
-//                        //
-//                        self.mainMenu.reloadData()
-//
-//                    } else {
-//
-//                        self.reloadSections([3])
-//
-//                    }
                     
                     self.mainMenu.reloadData()
                     self.impact()
@@ -2219,8 +2274,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     @objc func refreshNow() {
         print("refresh")
         
-        self.isRefreshingOne = true
-        //self.mainMenu.reloadSections(IndexSet(arrayLiteral: 1), with: .fade)
+        self.isRefreshingTorData = true
         self.reloadTableData()
         
     }
@@ -2266,7 +2320,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 } else {
                     
-                    self.isRefreshingOne = false
+                    self.isRefreshingTorData = false
                     self.removeStatusLabel()
                     displayAlert(viewController: self, isError: true, message: "no active node, please go to node manager and activate one")
                     
@@ -2296,7 +2350,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if !error && node != nil {
                 
                 self.node = node!
-                self.reloadSections([1])
+                self.reloadSections([self.nodeCellIndex])
                 
                 if !self.torConnected {
                     
@@ -2362,6 +2416,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         case "scanNow":
             
             if let vc = segue.destination as? ScannerViewController {
+                
+                vc.scanningNode = true
                 
                 vc.onDoneBlock = { result in
                     

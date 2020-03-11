@@ -10,23 +10,16 @@ import Foundation
 
 class WalletCreator {
     
-    var importingChange = false
-    var descriptor = ""
+    var primaryDescriptor = ""
+    var changeDescriptor = ""
     var errorString = ""
-    var statusDescription = "Creating your wallet..."
-    var progress = Int()
     var walletDict = [String:Any]()
-    var node:NodeStruct!
     
-    func createStandUpWallet(derivation: String, completion: @escaping ((success: Bool, errorDescription: String?, descriptor: String?)) -> Void) {
-        
+    func createStandUpWallet(completion: @escaping ((success: Bool, errorDescription: String?, primaryDescriptor: String?, changeDescriptor: String?)) -> Void) {
         let wallet = WalletStruct.init(dictionary: walletDict)
         
         func createStandUpWallet() {
             
-            self.statusDescription = "Creating the wallet on your node..."
-            self.progress = 40
-            // create it
             let param = "\"\(wallet.name)\", true, true, \"\", true"
             executeNodeCommand(method: .createwallet, param: param)
             
@@ -44,43 +37,64 @@ class WalletCreator {
                         
                     case .createwallet:
                         
-                        let response = reducer.dictToReturn
-                        handleWalletCreation(response: response)
-                        
-                    case .importmulti:
-                        
-                        let result = reducer.arrayToReturn
-                        let success = (result[0] as! NSDictionary)["success"] as! Bool
-                        
-                        if success {
+                        if let response = reducer.dictToReturn {
                             
-                            if self.importingChange {
-                                
-                                self.progress = 100
-                                completion((true, nil, self.descriptor))
-                                
-                            } else {
-                                
-                                importChangeKeys()
-                                
-                            }
-                            
-                        } else {
-                            
-                            let errorDict = (result[0] as! NSDictionary)["error"] as! NSDictionary
-                            let error = errorDict["message"] as! String
-                            completion((false, error, nil))
+                            handleWalletCreation(response: response)
                             
                         }
                         
-                        if let warnings = (result[0] as! NSDictionary)["warnings"] as? NSArray {
+                    case .importmulti:
+                        
+                        if let result = reducer.arrayToReturn {
                             
-                            if warnings.count > 0 {
+                            if result.count > 0 {
                                 
-                                for warning in warnings {
+                                if let dict = result[0] as? NSDictionary {
                                     
-                                    let warn = warning as! String
-                                    self.errorString += warn
+                                    if let success = dict["success"] as? Bool {
+                                        
+                                        if success {
+                                            
+                                            importChangeKeys()
+                                            
+                                        } else {
+                                            
+                                            if let errorDict = dict["error"] as? NSDictionary {
+                                                
+                                                if let error = errorDict["message"] as? String {
+                                                    
+                                                    completion((false, error, nil, nil))
+                                                    
+                                                } else {
+                                                    
+                                                    completion((false, nil, nil, nil))
+                                                    
+                                                }
+                                                
+                                            } else {
+                                                
+                                                completion((false, nil, nil, nil))
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                        if let warnings = dict["warnings"] as? NSArray {
+                                            
+                                            if warnings.count > 0 {
+                                                
+                                                for warning in warnings {
+                                                    
+                                                    let warn = warning as! String
+                                                    self.errorString += warn
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
                                     
                                 }
                                 
@@ -90,14 +104,19 @@ class WalletCreator {
                         
                     case .getdescriptorinfo:
                         
-                        self.progress = 60
-                        let result = reducer.dictToReturn
-                        self.descriptor = result["descriptor"] as! String
-                        
-                        let params = "[{ \"desc\": \"\(self.descriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }]"
-                        
-                        executeNodeCommand(method: .importmulti,
-                                           param: params)
+                        if let result = reducer.dictToReturn {
+                            
+                            if let descriptor = result["descriptor"] as? String {
+                                
+                                self.primaryDescriptor = descriptor
+                                
+                                let params = "[{ \"desc\": \"\(self.primaryDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }]"
+                                
+                                executeNodeCommand(method: .importmulti, param: params)
+                                
+                            }
+                            
+                        }
                         
                     default:
                         
@@ -107,7 +126,7 @@ class WalletCreator {
                     
                 } else {
                     
-                    completion((false,reducer.errorDescription, nil))
+                    completion((false,reducer.errorDescription, nil, nil))
                     
                 }
                 
@@ -123,12 +142,8 @@ class WalletCreator {
             
             let warning = response["warning"] as! String
             
-            if warning == "" {
+            if warning != "" {
                 
-                
-            } else {
-                
-                // should return an error to alert user to anything that may have gone wrong
                 print("warning from bitcoin core: \(warning)")
                 
             }
@@ -138,17 +153,9 @@ class WalletCreator {
         }
         
         func importPrimaryAddresses() {
-            print("importPrimaryAddresses")
             
-            self.statusDescription = "Importing 1,000 addresses into your nodes wallet..."
-            self.progress = 50
-            
-            //get the xpub
             let keyFetcher = KeyFetcher()
-            keyFetcher.accountXpub(wallet: wallet) { (xpub, error) in
-                
-                // example BIP44 descriptor:
-                // pkh([d34db33f/44'/0'/0']xpub6ERApfZwUNrhLCkDtcHTcxd75RbzS1ed54G1LkBUHQVHQKqhMkhgbmJbZRkrgZw4koxb5JaHWkY4ALHY2grBGRjaDMzQLcgJvLJuZZvRcEL/1/*)
+            keyFetcher.xpub(wallet: wallet) { (xpub, error) in
                 
                 if !error {
                     
@@ -160,28 +167,22 @@ class WalletCreator {
                             
                             switch wallet.derivation {
                                 
-                            case "m/84'/1'/0'/0":
-                                                                
+                            case "m/84'/1'/0'":
                                 param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/0/*)\""
                                 
-                            case "m/84'/0'/0'/0":
-                                
+                            case "m/84'/0'/0'":
                                 param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/0/*)\""
                                 
-                            case "m/44'/1'/0'/0":
-                                
+                            case "m/44'/1'/0'":
                                 param = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/0/*)\""
                                  
-                            case "m/44'/0'/0'/0":
-                                
+                            case "m/44'/0'/0'":
                                 param = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/0/*)\""
                                 
-                            case "m/49'/1'/0'/0":
-                                
+                            case "m/49'/1'/0'":
                                 param = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/0/*))\""
                                 
-                            case "m/49'/0'/0'/0":
-                                
+                            case "m/49'/0'/0'":
                                 param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/0/*))\""
                                 
                             default:
@@ -191,14 +192,13 @@ class WalletCreator {
                             }
                             
                             executeNodeCommand(method: .getdescriptorinfo, param: param)
-                            
                         }
                         
                     }
                     
                 } else {
                     
-                    print("error getting xpub")
+                    completion((false, "error getting xpub", nil, nil))
                     
                 }
                 
@@ -207,16 +207,129 @@ class WalletCreator {
         }
         
         func importChangeKeys() {
-            
-            self.statusDescription = "Importing 1,000 change addresses into your nodes wallet..."
-            self.importingChange = true
-            let params = "[{ \"desc\": \"\(self.descriptor)\", \"timestamp\": \"now\", \"range\": [1000,1999], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
-            executeNodeCommand(method: .importmulti, param: params)
-            
+            let keyFetcher = KeyFetcher()
+            keyFetcher.xpub(wallet: wallet) { (xpub, error) in
+                if !error {
+                    keyFetcher.fingerprint(wallet: wallet) { (fingerprint, error) in
+                        if !error && fingerprint != nil {
+                            var changeDescriptor = ""
+                            switch wallet.derivation {
+                                
+                            case "m/84'/1'/0'":
+                                changeDescriptor = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/1/*)\""
+                                
+                            case "m/84'/0'/0'":
+                                changeDescriptor = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/1/*)\""
+                                
+                            case "m/44'/1'/0'":
+                                changeDescriptor = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/1/*)\""
+                                 
+                            case "m/44'/0'/0'":
+                                changeDescriptor = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/1/*)\""
+                                
+                            case "m/49'/1'/0'":
+                                changeDescriptor = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/1/*))\""
+                                
+                            case "m/49'/0'/0'":
+                                changeDescriptor = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/1/*))\""
+                                
+                            default:
+                                break
+                                
+                            }
+                            
+                            let reducer = Reducer()
+                            reducer.makeCommand(walletName: wallet.name, command: .getdescriptorinfo, param: changeDescriptor) {
+                                
+                                if !reducer.errorBool {
+                                    
+                                    if let result = reducer.dictToReturn {
+                                        
+                                        self.changeDescriptor = result["descriptor"] as! String
+                                        
+                                        let params = "[{ \"desc\": \"\(self.changeDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
+                                        
+                                        reducer.makeCommand(walletName: wallet.name, command: .importmulti, param: params) {
+                                            
+                                            if let result = reducer.arrayToReturn {
+                                                
+                                                if result.count > 0 {
+                                                    
+                                                    if let dict = result[0] as? NSDictionary {
+                                                        
+                                                        if let success = dict["success"] as? Bool {
+                                                            
+                                                            if success {
+                                                                
+                                                                completion((true, nil, self.primaryDescriptor, self.changeDescriptor))
+                                                                
+                                                            } else {
+                                                                
+                                                                if let errorDict = dict["error"] as? NSDictionary {
+                                                                    
+                                                                    if let error = errorDict["message"] as? String {
+                                                                        
+                                                                        completion((false, error, nil, nil))
+                                                                        
+                                                                    } else {
+                                                                        
+                                                                        completion((false, nil, nil, nil))
+                                                                        
+                                                                    }
+                                                                    
+                                                                } else {
+                                                                    
+                                                                    completion((false, nil, nil, nil))
+                                                                    
+                                                                }
+                                                                
+                                                            }
+                                                            
+                                                            if let warnings = (result[0] as! NSDictionary)["warnings"] as? NSArray {
+                                                                
+                                                                if warnings.count > 0 {
+                                                                    
+                                                                    for warning in warnings {
+                                                                        
+                                                                        let warn = warning as! String
+                                                                        self.errorString += warn
+                                                                        
+                                                                    }
+                                                                    
+                                                                }
+                                                                
+                                                            }
+                                                            
+                                                        }
+                                                        
+                                                    }
+                                                    
+                                                }
+                                                                                                
+                                            }
+                                                                                        
+                                        }
+                                        
+                                    }
+                                    
+                                } else {
+                                    
+                                    completion((false, reducer.errorDescription, nil, nil))
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                } else {
+                    completion((false, "error getting xpub", nil, nil))
+                }
+            }
         }
         
-        
-        self.progress = 0
         createStandUpWallet()
         
     }

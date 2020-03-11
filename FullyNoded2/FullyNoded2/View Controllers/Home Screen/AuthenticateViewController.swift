@@ -44,7 +44,6 @@ class AuthenticateViewController: UIViewController {
     
     
     func getpubkey() {
-        print("get pubkey")
         
         let cd = CoreDataService()
         cd.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
@@ -148,7 +147,6 @@ class AuthenticateViewController: UIViewController {
     }
     
     func showDescriptor() {
-        print("showDescriptor")
         
         DispatchQueue.main.async {
             
@@ -190,7 +188,6 @@ class AuthenticateViewController: UIViewController {
     }
     
     @objc func shareQRCode(_ sender: UITapGestureRecognizer) {
-        print("shareQRCode")
         
         DispatchQueue.main.async {
             
