@@ -65,6 +65,7 @@ extension Notification.Name {
     public static let torConnecting = Notification.Name(rawValue: "torConnecting")
     public static let didEnterForeground = Notification.Name(rawValue: "enteredForeground")
     public static let didStartBootstrappingTor = Notification.Name(rawValue: "didStartBootstrappingTor")
+    public static let didCompleteOnboarding = Notification.Name(rawValue: "didCompleteOnboarding")
 }
 
 public extension Int {

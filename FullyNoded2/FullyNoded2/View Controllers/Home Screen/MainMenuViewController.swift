@@ -12,9 +12,9 @@ import LibWally
 
 class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
     
+    let background = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    let closeButton = UIButton()
     let sponsorBanner = UIButton()
-    let linkUrl = "https://spdx.org/licenses/BSD-2-Clause-Patent.html"
-    let termsView = UIView()
     var bootStrapping = Bool()
     var showNodeInfo = Bool()
     var torCellIndex = Int()
@@ -85,6 +85,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived(_:)), name: .torConnecting, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(foregroundNotificationReceived(_:)), name: .didEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(torBootStrapping(_:)), name: .didStartBootstrappingTor, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didCompleteOnboarding(_:)), name: .didCompleteOnboarding, object: nil)
         initialLoad = true
         walletSectionLoaded = false
         torSectionLoaded = false
@@ -100,10 +101,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if ud.object(forKey: "firstTime") == nil {
             
             firstTimeHere()
-            
-        } else {
-            
-            showUnlockScreen()
             
         }
         
@@ -129,76 +126,27 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        if ud.object(forKey: "acceptedTerms") == nil {
+        func showIntro() {
             
-            showTerms()
-            
-        }
-                    
-    }
-    
-    private func showTerms() {
-        
-        termsView.backgroundColor = .black
-        termsView.frame = self.tabBarController!.view.frame
-        
-        let label = UITextView()
-        label.text = """
-        The use of FullyNoded 2 is under the "BSD 2-Clause Plus Patent License" (https://spdx.org/licenses/BSD-2-Clause-Patent.html), with the disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-        """
-        label.frame = CGRect(x: 16, y: 50, width: termsView.frame.width - 32, height: termsView.frame.height - 160)
-        label.textColor = .lightGray
-        label.font = .systemFont(ofSize: 17)
-        label.isEditable = false
-        label.isSelectable = true
-        label.delegate = self
-        label.addHyperLinksToText(originalText: label.text, hyperLinks: ["https://spdx.org/licenses/BSD-2-Clause-Patent.html": self.linkUrl])
-        
-        let acceptButton = UIButton()
-        acceptButton.setTitle("I Accept", for: .normal)
-        acceptButton.setTitleColor(.systemTeal, for: .normal)
-        acceptButton.frame = CGRect(x: 32, y: termsView.frame.maxY - 60, width: self.termsView.frame.width - 64, height: 50)
-        acceptButton.addTarget(self, action: #selector(iAccept), for: .touchUpInside)
-        acceptButton.clipsToBounds = true
-        acceptButton.layer.cornerRadius = 8
-        acceptButton.backgroundColor = .darkGray
-        
-        DispatchQueue.main.async {
-            
-            self.termsView.addSubview(label)
-            self.termsView.addSubview(acceptButton)
-            self.tabBarController!.view.addSubview(self.termsView)
-            
-        }
-        
-    }
-    
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
-        
-        if (URL.absoluteString == linkUrl) {
-            UIApplication.shared.open(URL) { (Bool) in }
-        }
-        return false
-    }
-    
-    @objc func iAccept() {
-        
-        UserDefaults.standard.set(true, forKey: "acceptedTerms")
-        
-        DispatchQueue.main.async {
-            
-            UIView.animate(withDuration: 0.3, animations: {
+            DispatchQueue.main.async {
                 
-                self.termsView.frame.origin.y = self.tabBarController!.view.frame.maxY
-                
-            }) { (_) in
-                
-                self.termsView.removeFromSuperview()
+                self.performSegue(withIdentifier: "showIntro", sender: self)
                 
             }
             
         }
         
+        if ud.object(forKey: "acceptedDisclaimer") == nil {
+            
+            ud.set(false, forKey: "acceptedDisclaimer")
+            showIntro()
+            
+        } else if ud.object(forKey: "acceptedDisclaimer") as! Bool == false {
+            
+            showIntro()
+            
+        }
+                    
     }
     
     @IBAction func goToSettings(_ sender: Any) {
@@ -210,6 +158,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             self.performSegue(withIdentifier: "settings", sender: self)
             
         }
+        
+    }
+    
+    @objc func didCompleteOnboarding(_ notification: Notification) {
+        
+        didAppear()
         
     }
     
@@ -364,11 +318,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
 
     }
     
-    @IBAction func lockButton(_ sender: Any) {
-        
-        showUnlockScreen()
-        
-    }
+//    @IBAction func lockButton(_ sender: Any) {
+//
+//        showUnlockScreen()
+//
+//    }
     
     private func setFeeTarget() {
         
@@ -380,21 +334,21 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    private func showUnlockScreen() {
-        
-        let keychain = KeychainSwift()
-        
-        if keychain.get("UnlockPassword") != nil {
-            
-            DispatchQueue.main.async {
-                
-                self.performSegue(withIdentifier: "lockScreen", sender: self)
-                
-            }
-            
-        }
-        
-    }
+//    private func showUnlockScreen() {
+//
+//        let keychain = KeychainSwift()
+//
+//        if keychain.get("UnlockPassword") != nil {
+//
+//            DispatchQueue.main.async {
+//
+//                self.performSegue(withIdentifier: "lockScreen", sender: self)
+//
+//            }
+//
+//        }
+//
+//    }
     
     //MARK: Tableview Methods
     
@@ -2025,7 +1979,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     self.impact()
                     self.removeStatusLabel()
-                    self.sponsorThisApp()
                     
                 }
                 
@@ -2114,6 +2067,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     self.impact()
                     self.mainMenu.reloadData()
                     self.loadNodeData()
+                    self.sponsorThisApp()
                     
                 }
                 
@@ -2298,24 +2252,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func addNode() {
         
-        if ud.object(forKey: "showIntro") == nil {
+        DispatchQueue.main.async {
             
-            DispatchQueue.main.async {
-                
-                self.performSegue(withIdentifier: "showIntro", sender: self)
-                
-            }
-            
-        } else {
-            
-            DispatchQueue.main.async {
-                
-                self.performSegue(withIdentifier: "scanNow", sender: self)
-                
-            }
+            self.performSegue(withIdentifier: "scanNow", sender: self)
             
         }
-        
+            
     }
     
     private func reloadTableData() {
@@ -2463,7 +2405,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if success {
                 
-                self.showUnlockScreen()
+                //self.showUnlockScreen()
                 
             } else {
                 
@@ -2477,35 +2419,51 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func sponsorThisApp() {
         
-        sponsorBanner.backgroundColor = .systemBlue
-        sponsorBanner.frame = CGRect(x: 0, y: self.tabBarController!.tabBar.frame.minY + 50, width: self.view.frame.width, height: 50)
-        sponsorBanner.setTitle("Sponsor this app", for: .normal)
-        sponsorBanner.addTarget(self, action: #selector(sponsorNow), for: .touchUpInside)
-        sponsorBanner.setTitleColor(.white, for: .normal)
-        
         DispatchQueue.main.async {
             
+            self.background.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
+            
+            self.sponsorBanner.backgroundColor = .clear
+            self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
+            let sponsorImage = UIImage(systemName: "heart")
+            self.sponsorBanner.setTitle(" Sponsor Blockchain Commons!", for: .normal)
+            self.sponsorBanner.setImage(sponsorImage, for: .normal)
+            self.sponsorBanner.tintColor = .systemPink
+            self.sponsorBanner.addTarget(self, action: #selector(self.sponsorNow), for: .touchUpInside)
+            self.sponsorBanner.setTitleColor(.white, for: .normal)
+            
+            self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 30, y: self.navigationController!.view.frame.minY - 50, width: 20, height: 20)
+            self.closeButton.addTarget(self, action: #selector(self.closeSponsorButton), for: .touchUpInside)
+            let closeImage = UIImage(systemName: "x.circle.fill")!
+            self.closeButton.setImage(closeImage, for: .normal)
+            self.closeButton.tintColor = .lightGray
+            self.closeButton.backgroundColor = .clear
+            
+            self.view.addSubview(self.background)
             self.view.addSubview(self.sponsorBanner)
+            self.view.addSubview(self.closeButton)
             
             UIView.animate(withDuration: 0.3, animations: {
                 
-                self.sponsorBanner.frame = CGRect(x: 0, y: self.tabBarController!.tabBar.frame.minY - 50, width: self.view.frame.width, height: 50)
+                self.background.frame = CGRect(x: 0, y: self.navigationController!.navigationBar.frame.maxY, width: self.view.frame.width, height: 50)
+                self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.navigationBar.frame.maxY, width: self.view.frame.width, height: 50)
+                self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 30, y: self.navigationController!.navigationBar.frame.maxY + 15, width: 20, height: 20)
                 
             }) { (_) in
-                
-                self.timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.animateBannerColor), userInfo: nil, repeats: true)
-                
+                                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) {
-                    
-                    self.timer.invalidate()
-                    
+                                        
                     UIView.animate(withDuration: 0.3, animations: {
                         
-                        self.sponsorBanner.frame = CGRect(x: 0, y: self.tabBarController!.tabBar.frame.minY + 50, width: self.view.frame.width, height: 50)
+                        self.background.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
+                        self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
+                        self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 25, y: self.navigationController!.view.frame.minY - 50, width: 20, height: 20)
                         
                     }) { (_) in
                         
                         self.sponsorBanner.removeFromSuperview()
+                        self.background.removeFromSuperview()
+                        self.closeButton.removeFromSuperview()
                         
                     }
                     
@@ -2517,19 +2475,23 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    @objc func animateBannerColor() {
+    @objc func closeSponsorButton() {
         
-        UIView.animate(withDuration: 1.0, delay: 0.0, options: [.allowUserInteraction], animations: {
+        DispatchQueue.main.async {
             
-            self.sponsorBanner.backgroundColor = .systemTeal
-            
-        }) { (_) in
-         
-            UIView.animate(withDuration: 1.0, delay: 0.0, options: [.allowUserInteraction], animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 
-                self.sponsorBanner.backgroundColor = .systemBlue
+                self.background.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
+                self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
+                self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 25, y: self.navigationController!.view.frame.minY - 50, width: 20, height: 20)
                 
-            })
+            }) { (_) in
+                
+                self.sponsorBanner.removeFromSuperview()
+                self.background.removeFromSuperview()
+                self.closeButton.removeFromSuperview()
+                
+            }
             
         }
         

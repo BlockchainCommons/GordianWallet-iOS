@@ -7,17 +7,36 @@
 //
 
 import UIKit
+import AuthenticationServices
+import KeychainSwift
 
-class PageViewController: UIViewController, UINavigationControllerDelegate, UITextViewDelegate {
-
+class PageViewController: UIViewController, UITextViewDelegate, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    
+    var doneBlock : ((Bool) -> Void)?
+    let declineButton = UIButton()
+    let acceptButton = UIButton()
     var titleLabel = UILabel()
     var textView = UITextView()
+    var imageView = UIImageView()
     var page: Pages
     var donationLinkUrl = "https://btcpay.blockchaincommons.com"
     var homePageUrl = "www.blockchaincommons.com"
     var repoLink = "https://github.com/BlockchainCommons/FullyNoded-2"
     var standupAppLink = "https://drive.google.com/open?id=1lXyl_zO6WPJN5tzWAVV3p42WPFtyesCR"
     var scriptLink = "https://github.com/BlockchainCommons/Bitcoin-Standup/tree/master/Scripts"
+    var recoveryUrl = "https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Recovery.md"
+    var libwallyLink = "https://github.com/blockchain/libwally-swift/blob/master/README.md"
+    var sponsorLink = "https://github.com/sponsors/BlockchainCommons"
+    var myNodeLink = "http://www.mynodebtc.com"
+    var raspiBlitzLink = "https://raspiblitz.com"
+    var nodlLink = "https://www.nodl.it"
+    var btcpayLink = "https://btcpayserver.org"
+    var fullynoded1Link = "https://apps.apple.com/us/app/fully-noded/id1436425586"
+    var torLink = "https://www.torproject.org"
+    var hiddenServiceLink = "https://blog.torproject.org/tors-fall-harvest-next-generation-onion-services"
+    var authLink = "https://matt.traudt.xyz/p/FgbdRTFr.html"
+    var licenseLink = "https://spdx.org/licenses/BSD-2-Clause-Patent.html"
+    var quickConnectLink = "https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup"
     
     init(with page: Pages) {
         self.page = page
@@ -32,27 +51,145 @@ class PageViewController: UIViewController, UINavigationControllerDelegate, UITe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .black
         textView.delegate = self
-        navigationController?.delegate = self
         
-        titleLabel = UILabel(frame: CGRect(x: 16, y: self.navigationController!.navigationBar.frame.maxY + 20, width: self.view.frame.width - 32, height: 21))
+        imageView.frame = CGRect(x: 16, y: 100, width: 40, height: 40)
+        imageView.image = page.image
+        if page.index == 2 {
+            imageView.tintColor = .systemPink
+        } else {
+            imageView.tintColor = .lightGray
+        }
+        
+        imageView.contentMode = .scaleAspectFit
+        view.addSubview(imageView)
+        
+        let logoView = UIImageView()
+        logoView.image = UIImage(imageLiteralResourceName: "1024.png")
+        logoView.frame = CGRect(x: view.frame.midX - 25, y: 30, width: 50, height: 50)
+        logoView.contentMode = .scaleAspectFit
+        view.addSubview(logoView)
+        
+        titleLabel.frame = CGRect(x: imageView.frame.maxX + 5, y: imageView.frame.origin.y, width: (view.frame.width - 16) - (imageView.frame.width + 5), height: 30)
         titleLabel.textAlignment = NSTextAlignment.left
         titleLabel.numberOfLines = 0
-        titleLabel.font = UIFont.systemFont(ofSize: 25, weight: .black)
+        titleLabel.font = UIFont.systemFont(ofSize: 30, weight: .heavy)
         titleLabel.text = page.title
+        titleLabel.textColor = .lightGray
         titleLabel.sizeToFit()
-        self.view.addSubview(titleLabel)
+        view.addSubview(titleLabel)
         
-        textView.frame = CGRect(x:16, y:self.titleLabel.frame.maxY + 20, width: self.view.frame.width - 32, height: self.view.frame.height - (self.navigationController!.navigationBar.frame.height + self.titleLabel.frame.height + 80))
+        textView.frame = CGRect(x: 16, y: titleLabel.frame.maxY + 20, width: view.frame.width - 32, height: view.frame.height - 350)
         textView.text = page.body
         textView.isUserInteractionEnabled = true
         textView.isScrollEnabled = true
         textView.textAlignment = .left
         textView.textColor = .white
         textView.font = UIFont.systemFont(ofSize: 13)
-        textView.addHyperLinksToText(originalText: page.body, hyperLinks: ["here": donationLinkUrl, "blockchaincommons.com": homePageUrl, "GitHub": repoLink, "StandUp.app": standupAppLink, "StandUp.sh": scriptLink])
+        textView.isEditable = false
+        textView.addHyperLinksToText(originalText: page.body, hyperLinks: ["BTCPayServer": donationLinkUrl, "blockchaincommons.com": homePageUrl, "GitHub repo": repoLink, "StandUp.app": standupAppLink, "StandUp.sh scripts": scriptLink, "Recovery.md": recoveryUrl, "LibWally": libwallyLink, "GitHub Sponsor": sponsorLink, "MyNode": myNodeLink, "RaspiBlitz": raspiBlitzLink, "Nodl": nodlLink, "BTCPay": btcpayLink, "FullyNoded 1": fullynoded1Link, "Tor": torLink, "V3 hidden service": hiddenServiceLink, "Tor V3 authentication": authLink, "https://spdx.org/licenses/BSD-2-Clause-Patent.html": licenseLink, "QuickConnect QR": quickConnectLink])
 
-        self.view.addSubview(textView)
+        view.addSubview(textView)
+        
+        let buttonwidth = (((view.frame.width - 64) / 2) - 15)
+        
+        acceptButton.frame = CGRect(x: 32, y: textView.frame.maxY + 20, width: buttonwidth, height: 50)
+        acceptButton.clipsToBounds = true
+        acceptButton.layer.cornerRadius = 8
+        acceptButton.setTitle("Accept", for: .normal)
+        acceptButton.backgroundColor = #colorLiteral(red: 0.05172085258, green: 0.05855310153, blue: 0.06978280196, alpha: 1)
+        acceptButton.setTitleColor(.systemTeal, for: .normal)
+        acceptButton.addTarget(self, action: #selector(accept), for: .touchUpInside)
+        
+        declineButton.frame = CGRect(x: view.frame.maxX - (buttonwidth + 32), y: textView.frame.maxY + 20, width: buttonwidth, height: 50)
+        declineButton.clipsToBounds = true
+        declineButton.layer.cornerRadius = 8
+        declineButton.setTitle("Decline", for: .normal)
+        declineButton.backgroundColor = #colorLiteral(red: 0.05172085258, green: 0.05855310153, blue: 0.06978280196, alpha: 1)
+        declineButton.setTitleColor(.systemRed, for: .normal)
+        declineButton.addTarget(self, action: #selector(decline), for: .touchUpInside)
+        
+        if page.index == 5 {
+        
+            view.addSubview(acceptButton)
+            view.addSubview(declineButton)
+            
+        } else {
+            
+            acceptButton.removeFromSuperview()
+            declineButton.removeFromSuperview()
+            
+        }
+
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        let logInButton = ASAuthorizationAppleIDButton(type: .signIn, style: .whiteOutline)
+        logInButton.sizeToFit()
+        logInButton.addTarget(self, action: #selector(handleLogInWithAppleID), for: .touchUpInside)
+        logInButton.frame = CGRect(x: 32, y: view.frame.maxY - 100, width: view.frame.width - 64, height: 80)
+        
+        if page.index == 6 {
+            
+            if UserDefaults.standard.object(forKey: "acceptedDisclaimer") as! Bool == false {
+                
+                showAlert(vc: self, title: "Oops", message: "You have not yet accepted the disclaimer, please go back and accept it to move forward.")
+                
+            } else {
+                
+                view.addSubview(logInButton)
+                
+            }
+            
+        }
+        
+    }
+    
+    @objc func handleLogInWithAppleID() {
+        print("handleLogInWithAppleID")
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        controller.delegate = self
+        controller.presentationContextProvider = self
+        controller.performRequests()
+    }
+    
+    private func impact() {
+        
+        DispatchQueue.main.async {
+            
+            let impact = UIImpactFeedbackGenerator()
+            impact.impactOccurred()
+            
+        }
+        
+    }
+    
+    @objc func accept() {
+        
+        impact()
+        
+        DispatchQueue.main.async {
+            
+            self.acceptButton.removeFromSuperview()
+            self.declineButton.removeFromSuperview()
+            
+        }
+        
+        UserDefaults.standard.set(true, forKey: "acceptedDisclaimer")
+        
+        showAlert(vc: self, title: "Accepted!", message: "Please swipe left to the final step.")
+        
+    }
+    
+    @objc func decline() {
+        
+        impact()
+        
+        showAlert(vc: self, title: "Are you sure?", message: "If you do not accept the disclaimer then unfortunately you will not be able to use the app.")
+        
     }
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
@@ -62,6 +199,30 @@ class PageViewController: UIViewController, UINavigationControllerDelegate, UITe
             }
         }
         return false
+    }
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        
+        return self.view.window!
+        
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        
+        switch authorization.credential {
+        case let appleIDCredential as ASAuthorizationAppleIDCredential:
+            let userIdentifier = appleIDCredential.user
+            let keychain = KeychainSwift()
+            keychain.set(userIdentifier, forKey: "userIdentifier")
+            DispatchQueue.main.async {
+                self.dismiss(animated: true) {
+                    NotificationCenter.default.post(name: .didCompleteOnboarding, object: nil, userInfo: nil)
+                }
+            }
+        default:
+            break
+        }
+
     }
 
 }
@@ -82,8 +243,7 @@ extension UITextView {
     }
 
     self.linkTextAttributes = [
-        NSAttributedString.Key.foregroundColor: UIColor.systemTeal,
-        NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
+        NSAttributedString.Key.foregroundColor: UIColor.systemTeal
     ]
     self.attributedText = attributedOriginalText
   }

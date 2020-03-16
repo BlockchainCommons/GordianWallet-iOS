@@ -11,6 +11,9 @@ import LibWally
 
 class ChooseWalletFormatViewController: UIViewController {
     
+    var id:UUID!
+    var derivation = ""
+    var recoveryQr = ""
     var entropy = ""
     var localXprv = ""
     var node:NodeStruct!
@@ -27,7 +30,7 @@ class ChooseWalletFormatViewController: UIViewController {
     var descriptor = ""
     var recoveryPubkey = ""
     var backUpRecoveryPhrase = ""
-    var singleSigDoneBlock : ((Bool) -> Void)?
+    var walletDoneBlock : ((Bool) -> Void)?
     var multiSigDoneBlock : (((success: Bool, recoveryPhrase: String, descriptor: String)) -> Void)?
     var importDoneBlock : ((Bool) -> Void)?
     let enc = Encryption()
@@ -40,7 +43,6 @@ class ChooseWalletFormatViewController: UIViewController {
     @IBOutlet var seedDescription: UILabel!
     @IBOutlet var importButtonOutlet: UIButton!
     @IBOutlet var recoverWalletOutlet: UIButton!
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -180,7 +182,7 @@ class ChooseWalletFormatViewController: UIViewController {
             break
             
         }
-        
+                
     }
     
     @IBAction func createAction(_ sender: Any) {
@@ -206,14 +208,17 @@ class ChooseWalletFormatViewController: UIViewController {
                     if self.isBIP84 {
                         
                         self.newWallet["derivation"] = "m/84'/1'/0'"
+                        self.derivation = "BIP84 m/84'/1'/0'"
                         
                     } else if self.isBIP49 {
                         
                         self.newWallet["derivation"] = "m/49'/1'/0'"
+                        self.derivation = "BIP49 m/49'/1'/0'"
                         
                     } else if self.isBIP44 {
                         
                         self.newWallet["derivation"] = "m/44'/1'/0'"
+                        self.derivation = "BIP44 m/44'/1'/0'"
                         
                     }
                     
@@ -222,21 +227,25 @@ class ChooseWalletFormatViewController: UIViewController {
                     if self.isBIP84 {
                         
                         self.newWallet["derivation"] = "m/84'/0'/0'"
+                        self.derivation = "BIP84 m/84'/0'/0'"
                         
                     } else if self.isBIP49 {
                         
                         self.newWallet["derivation"] = "m/49'/0'/0'"
+                        self.derivation = "BIP49 m/44'/0'/0'"
                         
                     } else if self.isBIP44 {
                         
                         self.newWallet["derivation"] = "m/44'/0'/0'"
+                        self.derivation = "BIP44 m/44'/0'/0'"
                         
                     }
                     
                 }
                 
                 self.newWallet["birthdate"] = keyBirthday()
-                self.newWallet["id"] = UUID()
+                self.id = UUID()
+                self.newWallet["id"] = self.id
                 self.newWallet["isActive"] = false
                 self.newWallet["lastUsed"] = Date()
                 self.newWallet["lastBalance"] = 0.0
@@ -259,6 +268,7 @@ class ChooseWalletFormatViewController: UIViewController {
                 
             } else {
                 
+                self.creatingView.removeConnectingView()
                 displayAlert(viewController: self, isError: true, message: "no active node")
                 
             }
@@ -297,11 +307,19 @@ class ChooseWalletFormatViewController: UIViewController {
                                         print("wallet saved")
                                         
                                         self.creatingView.removeConnectingView()
-                                        self.singleSigDoneBlock!(true)
+                                        let w = WalletStruct(dictionary: self.newWallet)
                                         
-                                        DispatchQueue.main.async {
+                                        let recoveryQr = ["entropy": BIP39Mnemonic(mnemonic!)!.entropy.description, "descriptor":"\(descriptor!)", "walletName":"\(w.name)","birthdate":w.birthdate, "blockheight":w.blockheight,"label":""] as [String : Any]
+                                        
+                                        if let json = recoveryQr.json() {
                                             
-                                            self.dismiss(animated: true, completion: nil)
+                                            DispatchQueue.main.async {
+                                                
+                                                self.backUpRecoveryPhrase = mnemonic!
+                                                self.recoveryQr = json
+                                                self.performSegue(withIdentifier: "walletCreated", sender: self)
+                                                
+                                            }
                                             
                                         }
                                         
@@ -369,24 +387,28 @@ class ChooseWalletFormatViewController: UIViewController {
                                     
                                 } catch {
                                     
+                                    self.creatingView.removeConnectingView()
                                     displayAlert(viewController: self, isError: true, message: "failed deriving xpub")
                                     
                                 }
                                 
                             } else {
                                 
+                                self.creatingView.removeConnectingView()
                                 displayAlert(viewController: self, isError: true, message: "failed initiating bip32 path")
                                 
                             }
                             
                         } else {
                             
+                            self.creatingView.removeConnectingView()
                             displayAlert(viewController: self, isError: true, message: "failed creating masterkey")
                             
                         }
                         
                     } else {
                         
+                        self.creatingView.removeConnectingView()
                         displayAlert(viewController: self, isError: true, message: "error getting xpub from your recovery key")
                         
                     }
@@ -395,6 +417,7 @@ class ChooseWalletFormatViewController: UIViewController {
                 
             } else {
                 
+                self.creatingView.removeConnectingView()
                 displayAlert(viewController: self, isError: true, message: "error creating your recovery key")
                 
             }
@@ -710,12 +733,16 @@ class ChooseWalletFormatViewController: UIViewController {
                                                                 self.newWallet.removeAll()
                                                                 // include the checksum as we will convert this back to a pubkey descriptor when recovering
                                                                 let hotDescriptor = primaryDescriptor.replacingOccurrences(of: self.publickeys[1], with: self.localXprv)
-                                                                let recoveryQr = ["entropy": self.entropy, "descriptor":"\(hotDescriptor)", "walletName":"\(wallet.name)","birthdate":wallet.birthdate, "blockheight":wallet.blockheight] as [String : Any]
+                                                                let recoveryQr = ["entropy": self.entropy, "descriptor":"\(hotDescriptor)", "walletName":"\(wallet.name)","birthdate":wallet.birthdate, "blockheight":wallet.blockheight, "label":""] as [String : Any]
                                                                 
                                                                 if let json = recoveryQr.json() {
                                                                     
-                                                                    self.multiSigDoneBlock!((true, self.backUpRecoveryPhrase, json))
-                                                                    self.dismiss(animated: true, completion: nil)
+                                                                    DispatchQueue.main.async {
+                                                                        
+                                                                        self.recoveryQr = json
+                                                                        self.performSegue(withIdentifier: "walletCreated", sender: self)
+                                                                        
+                                                                    }
                                                                     
                                                                 }
                                                                 
@@ -723,6 +750,7 @@ class ChooseWalletFormatViewController: UIViewController {
                                                             
                                                         } else {
                                                             
+                                                            self.creatingView.removeConnectingView()
                                                             displayAlert(viewController: self, isError: true, message: "error saving wallet")
                                                             
                                                         }
@@ -733,10 +761,12 @@ class ChooseWalletFormatViewController: UIViewController {
                                                     
                                                     if error != nil {
                                                         
+                                                        self.creatingView.removeConnectingView()
                                                         displayAlert(viewController: self, isError: true, message: "error creating wallet: \(error!)")
                                                         
                                                     } else {
                                                         
+                                                        self.creatingView.removeConnectingView()
                                                         displayAlert(viewController: self, isError: true, message: "error creating wallet")
                                                         
                                                     }                                                    
@@ -772,6 +802,32 @@ class ChooseWalletFormatViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier {
+            
+        case "walletCreated":
+            
+            if let vc = segue.destination as? WalletCreatedViewController {
+                
+                vc.isMulti = self.isMultiSig
+                vc.derivationPath = self.derivation
+                vc.recoveryPhrase = self.backUpRecoveryPhrase
+                vc.recoveryQr = self.recoveryQr
+                vc.walletId = self.id
+                
+                vc.walletDoneNowBlock = { result in
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.dismiss(animated: true) {
+                            
+                            self.walletDoneBlock!(true)
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
             
         case "goRecover":
             

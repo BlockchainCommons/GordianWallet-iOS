@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LibWally
 
 class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     
@@ -41,6 +42,12 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
        textField.attributedPlaceholder = NSAttributedString(string: "recovery words",
                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         
+        DispatchQueue.main.async {
+            
+            self.performSegue(withIdentifier: "showInfo", sender: self)
+            
+        }
+        
     }
     
     @IBAction func recoverNow(_ sender: Any) {
@@ -59,10 +66,20 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                     DispatchQueue.main.async {
                         
                         let network = node!.network
+                        var chain = ""
                         
                         let alert = UIAlertController(title: "Choose a derivation", message: "When only using words to recover you need to let us know which derivation scheme you want to utilize, if you are not sure you can recover the wallet three times, once for each derivation.", preferredStyle: .actionSheet)
                         
-                        alert.addAction(UIAlertAction(title: "BIP84", style: .default, handler: { action in
+                        switch network {
+                        case "testnet":
+                            chain = "1'"
+                        case "mainnet":
+                            chain = "0'"
+                        default:
+                            break
+                        }
+                                                
+                        alert.addAction(UIAlertAction(title: "BIP84 - m/84'/\(chain)/0'/0", style: .default, handler: { action in
                             
                             switch network {
                             case "testnet":
@@ -77,7 +94,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                             
                         }))
                         
-                        alert.addAction(UIAlertAction(title: "BIP44", style: .default, handler: { action in
+                        alert.addAction(UIAlertAction(title: "BIP44 - m/44'/\(chain)/0'/0", style: .default, handler: { action in
                             
                             switch network {
                             case "testnet":
@@ -92,7 +109,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                             
                         }))
                         
-                        alert.addAction(UIAlertAction(title: "BIP49", style: .default, handler: { action in
+                        alert.addAction(UIAlertAction(title: "BIP49 - m/49'/\(chain)/0'/0", style: .default, handler: { action in
                             
                             switch network {
                             case "testnet":
@@ -155,7 +172,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    @IBAction func addWord(_ sender: Any) {
+    func processTextfieldInput() {
         
         let impact = UIImpactFeedbackGenerator()
         
@@ -167,14 +184,71 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         
         if textField.text != "" {
             
-            let processedWord = textField.text!.replacingOccurrences(of: " ", with: "")
+            //check if user pasted more then one word
+            let processed = processedCharacters(textField.text!)
+            let userAddedWords = (processed).split(separator: " ")
             
-            for word in bip39Words {
+            if userAddedWords.count > 1 {
                 
-                if processedWord == word {
+                //user add multiple words
+                print("user added multiple words")
+                
+                for (i, word) in userAddedWords.enumerated() {
                     
-                    addWord(word: processedWord)
-                    textField.text = ""
+                    //let processedString = processedCharacters(String(word))
+                    
+                    var isValid = false
+                    
+                    for bip39Word in bip39Words {
+                        
+                        if word == bip39Word {
+                            
+                            isValid = true
+                            
+                        }
+                        
+                    }
+                    
+                    if i + 1 == userAddedWords.count {
+                        
+                        // we finished our checks
+                        if isValid {
+                            
+                            // they are valid bip39 words
+                            for word in userAddedWords {
+                                
+                                addWord(word: "\(word)")
+                                
+                            }
+                            
+                            textField.text = ""
+                            
+                        } else {
+                            
+                            //they are not all valid bip39 words
+                            textField.text = ""
+                            
+                            showAlert(vc: self, title: "Error", message: "At least one of those words is not a valid BIP39 word. We suggest inputting them one at a time so you can utilize our autosuggest feature which will prevent typos.")
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                //its one word
+                let processedWord = textField.text!.replacingOccurrences(of: " ", with: "")
+                
+                for word in bip39Words {
+                    
+                    if processedWord == word {
+                        
+                        addWord(word: processedWord)
+                        textField.text = ""
+                        
+                    }
                     
                 }
                 
@@ -185,6 +259,11 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
             shakeAlert(viewToShake: textField)
             
         }
+    }
+    
+    @IBAction func addWord(_ sender: Any) {
+        
+        processTextfieldInput()
         
     }
     
@@ -280,7 +359,19 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
             timer = .scheduledTimer(withTimeInterval: 0.01, repeats: false, block: { (timer) in //7
                 
                 self.textField.text = substring
-                self.textField.textColor = .systemRed
+                
+                print("textfield = \(self.processedCharacters(self.textField.text!))")
+                
+                if let _ = BIP39Mnemonic(self.processedCharacters(self.textField.text!)) {
+                    
+                    self.textField.textColor = .systemGreen
+                    
+                } else {
+                    
+                    self.textField.textColor = .systemRed
+                    
+                }
+                
                 
             })
             
@@ -311,22 +402,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
-        if textField.text != "" {
-            
-            let processedWord = textField.text!.replacingOccurrences(of: " ", with: "")
-            
-            for word in bip39Words {
-                
-                if processedWord == word {
-                    
-                    addWord(word: processedWord)
-                    textField.text = ""
-                    
-                }
-                
-            }
-            
-        }
+        processTextfieldInput()
         
         return true
         
@@ -509,6 +585,14 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         }
         
     }
+    
+    private func processedCharacters(_ string: String) -> String {
+        
+        var result = string.filter("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ".contains)
+        result = result.condenseWhitespace()
+        return result
+        
+    }
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -544,6 +628,12 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         }
         
     }
-    
 
+}
+
+extension String {
+    func condenseWhitespace() -> String {
+        let components = self.components(separatedBy: .whitespacesAndNewlines)
+        return components.filter { !$0.isEmpty }.joined(separator: " ")
+    }
 }
