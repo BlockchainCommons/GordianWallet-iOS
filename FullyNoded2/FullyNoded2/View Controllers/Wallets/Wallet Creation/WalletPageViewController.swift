@@ -316,7 +316,8 @@ class WalletPageViewController: UIViewController, UITextViewDelegate, UITextFiel
                 }
                 
             }))
-                    
+            
+            alert.popoverPresentationController?.sourceView = self.view
             self.present(alert, animated: true, completion: nil)
             
         }

@@ -342,7 +342,43 @@ class RecoverWallet {
                                                                         
                                                                     } else {
                                                                         
-                                                                        completion((false, "wallet does not exist, are you aure you are connected to the correct node?"))
+                                                                        //NEED TO FULLY RECOVER FROM THE QR HERE...
+                                                                        print("recreating the wallet")
+                                                                        let walletCreator = WalletCreator()
+                                                                        walletCreator.walletDict = newWallet
+                                                                        walletCreator.createStandUpWallet { (success, errorDescription, primaryDescriptor, changeDescriptor) in
+                                                                            
+                                                                            if success {
+                                                                                
+                                                                                newWallet["descriptor"] = primaryDescriptor!
+                                                                                newWallet["changeDescriptor"] = changeDescriptor!
+                                                                                let saver = WalletSaver()
+                                                                                saver.save(walletToSave: newWallet) { (success) in
+                                                                                    
+                                                                                    if success {
+                                                                                        
+                                                                                        let reducer = Reducer()
+                                                                                        reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "\(self.json["blockheight"] as! Int)") {
+                                                                                            
+                                                                                            completion((true, nil))
+                                                                                            
+                                                                                        }
+                                                                                                                                
+                                                                                    } else {
+                                                                                        
+                                                                                        completion((false, "error saving your wallet"))
+                                                                                        
+                                                                                    }
+                                                                                    
+                                                                                }
+                                                                                
+                                                                            } else {
+                                                                                
+                                                                                completion((false, errorDescription))
+                                                                                
+                                                                            }
+                                                                            
+                                                                        }
                                                                         
                                                                     }
                                                                     
@@ -528,8 +564,29 @@ class RecoverWallet {
                                                                         
                                                                     } else if error != nil {
                                                                         
-                                                                        completion((false, error!))
-                                                                        
+                                                                        // incase user inputs both the words and recoveryQR we revert to partial recovery
+                                                                        if error!.contains("already exists") {
+                                                                            
+                                                                            self.recoverPartialMultiSigQR { (success, errorDescription) in
+                                                                                
+                                                                                if success {
+                                                                                    
+                                                                                    completion((true, nil))
+                                                                                    
+                                                                                } else {
+                                                                                    
+                                                                                    completion((false, errorDescription!))
+                                                                                    
+                                                                                }
+                                                                                
+                                                                            }
+                                                                            
+                                                                        } else {
+                                                                            
+                                                                            completion((false, error!))
+                                                                            
+                                                                        }
+                                                                                                                                                
                                                                     } else {
                                                                         
                                                                         completion((false, "error creating wallet: unknown error"))

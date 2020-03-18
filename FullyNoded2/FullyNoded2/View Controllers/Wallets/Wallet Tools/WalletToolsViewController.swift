@@ -227,6 +227,7 @@ class WalletToolsViewController: UIViewController {
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
             
+            alert.popoverPresentationController?.sourceView = self.view
             self.present(alert, animated: true, completion: nil)
             
         }

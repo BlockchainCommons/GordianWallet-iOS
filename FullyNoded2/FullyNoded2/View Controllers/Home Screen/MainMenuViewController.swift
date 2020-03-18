@@ -12,6 +12,7 @@ import LibWally
 
 class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
     
+    var sponsorShowing = Bool()
     let background = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     let closeButton = UIButton()
     let sponsorBanner = UIButton()
@@ -2188,13 +2189,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         DispatchQueue.main.async {
             
-            self.mainMenu.translatesAutoresizingMaskIntoConstraints = false
-            
             UIView.animate(withDuration: 0.5, animations: {
                 
-                self.statusLabel.frame.origin.y = -50
-                self.mainMenu.frame.origin.y = 40
-                self.mainMenu.frame = CGRect(x: 0, y: 40, width: self.mainMenu.frame.width, height: self.view.frame.height)
+                if !self.sponsorShowing {
+                    
+                    self.statusLabel.frame.origin.y = -50
+                    self.mainMenu.frame.origin.y = 40
+                    
+                } else {
+
+                    self.mainMenu.frame.origin.y = self.sponsorBanner.frame.maxY
+
+                }
                 
             }) { (_) in
                 
@@ -2419,7 +2425,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func sponsorThisApp() {
         
+        sponsorShowing = true
+        
         DispatchQueue.main.async {
+            
+            self.mainMenu.translatesAutoresizingMaskIntoConstraints = true
             
             self.background.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
             
@@ -2429,14 +2439,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             self.sponsorBanner.setTitle(" Sponsor Blockchain Commons!", for: .normal)
             self.sponsorBanner.setImage(sponsorImage, for: .normal)
             self.sponsorBanner.tintColor = .systemPink
+            self.sponsorBanner.titleLabel?.font = .systemFont(ofSize: 15)
             self.sponsorBanner.addTarget(self, action: #selector(self.sponsorNow), for: .touchUpInside)
             self.sponsorBanner.setTitleColor(.white, for: .normal)
             
-            self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 30, y: self.navigationController!.view.frame.minY - 50, width: 20, height: 20)
+            self.closeButton.frame = CGRect(x: self.navigationController!.view.frame.maxX - 50, y: self.navigationController!.view.frame.minY - 50, width: 20, height: 20)
             self.closeButton.addTarget(self, action: #selector(self.closeSponsorButton), for: .touchUpInside)
-            let closeImage = UIImage(systemName: "x.circle.fill")!
+            let closeImage = UIImage(systemName: "x.circle")!
             self.closeButton.setImage(closeImage, for: .normal)
-            self.closeButton.tintColor = .lightGray
+            self.closeButton.tintColor = .white
             self.closeButton.backgroundColor = .clear
             
             self.view.addSubview(self.background)
@@ -2445,25 +2456,35 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             UIView.animate(withDuration: 0.3, animations: {
                 
+                self.mainMenu.frame.origin.y +=  50
+                self.statusLabel.frame.origin.y += 50
                 self.background.frame = CGRect(x: 0, y: self.navigationController!.navigationBar.frame.maxY, width: self.view.frame.width, height: 50)
                 self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.navigationBar.frame.maxY, width: self.view.frame.width, height: 50)
-                self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 30, y: self.navigationController!.navigationBar.frame.maxY + 15, width: 20, height: 20)
+                self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 50, y: self.navigationController!.navigationBar.frame.maxY + 15, width: 20, height: 20)
                 
             }) { (_) in
                                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) {
-                                        
-                    UIView.animate(withDuration: 0.3, animations: {
+                    
+                    if self.sponsorShowing {
                         
-                        self.background.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
-                        self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
-                        self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 25, y: self.navigationController!.view.frame.minY - 50, width: 20, height: 20)
+                        //self.mainMenu.translatesAutoresizingMaskIntoConstraints = false
                         
-                    }) { (_) in
-                        
-                        self.sponsorBanner.removeFromSuperview()
-                        self.background.removeFromSuperview()
-                        self.closeButton.removeFromSuperview()
+                        UIView.animate(withDuration: 0.3, animations: {
+                            
+                            self.background.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
+                            self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
+                            self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 25, y: self.navigationController!.view.frame.minY - 50, width: 20, height: 20)
+                            self.mainMenu.frame.origin.y -= 50
+                            self.statusLabel.frame.origin.y -= 50
+                            
+                        }) { (_) in
+                            
+                            self.sponsorBanner.removeFromSuperview()
+                            self.background.removeFromSuperview()
+                            self.closeButton.removeFromSuperview()
+                            
+                        }
                         
                     }
                     
@@ -2477,13 +2498,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func closeSponsorButton() {
         
+        sponsorShowing = false
+        
         DispatchQueue.main.async {
+            
+            self.mainMenu.translatesAutoresizingMaskIntoConstraints = false
             
             UIView.animate(withDuration: 0.3, animations: {
                 
                 self.background.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
                 self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
                 self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 25, y: self.navigationController!.view.frame.minY - 50, width: 20, height: 20)
+                self.mainMenu.frame.origin.y -= 50
+                self.statusLabel.frame.origin.y -= 50
                 
             }) { (_) in
                 

@@ -1713,15 +1713,15 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                 }
                 
-                vc.importDoneBlock = { result in
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.performSegue(withIdentifier: "importCustom", sender: self)
-                        
-                    }
-                    
-                }
+//                vc.importDoneBlock = { result in
+//
+//                    DispatchQueue.main.async {
+//
+//                        self.performSegue(withIdentifier: "importCustom", sender: self)
+//
+//                    }
+//
+//                }
                 
                 vc.recoverDoneBlock = { result in
                     
@@ -1738,35 +1738,35 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             }
             
-        case "showRecoveryKit":
+//        case "showRecoveryKit":
+//
+//            if let vc = segue.destination as? RecoveryViewController {
+//
+//                vc.recoveryPhrase = self.recoveryPhrase
+//                vc.descriptor = self.descriptor
+//
+//                vc.onDoneBlock2 = { result in
+//
+//                    self.isLoading = true
+//                    self.refresh()
+//
+//                }
+//
+//            }
             
-            if let vc = segue.destination as? RecoveryViewController {
-                
-                vc.recoveryPhrase = self.recoveryPhrase
-                vc.descriptor = self.descriptor
-                
-                vc.onDoneBlock2 = { result in
-                    
-                    self.isLoading = true
-                    self.refresh()
-                    
-                }
-                
-            }
-            
-        case "importCustom":
-            
-            if let vc = segue.destination as? ImportViewController {
-                
-                vc.importComplete = { result in
-                    
-                    showAlert(vc: self, title: "Success!", message: "Wallet imported! Tap it to active it.")
-                    self.isLoading = true
-                    self.refresh()
-                    
-                }
-                
-            }
+//        case "importCustom":
+//
+//            if let vc = segue.destination as? ImportViewController {
+//
+//                vc.importComplete = { result in
+//
+//                    showAlert(vc: self, title: "Success!", message: "Wallet imported! Tap it to active it.")
+//                    self.isLoading = true
+//                    self.refresh()
+//
+//                }
+//
+//            }
             
         default:
             

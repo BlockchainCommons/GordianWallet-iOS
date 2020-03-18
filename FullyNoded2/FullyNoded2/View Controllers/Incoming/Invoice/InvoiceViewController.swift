@@ -253,6 +253,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             
             self.addressOutlet.frame = CGRect(x: 32, y: self.qrView.frame.maxY + 5, width: self.view.frame.width - 64, height: 20)
             self.addressOutlet.adjustsFontSizeToFitWidth = true
+            self.addressOutlet.textAlignment = .center
             self.view.addSubview(self.addressOutlet)
             
             self.descriptionLabel.frame = CGRect(x: 10, y: self.tabBarController!.tabBar.frame.minY - 20, width: self.view.frame.width - 20, height: 20)

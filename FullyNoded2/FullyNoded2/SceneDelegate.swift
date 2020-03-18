@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import KeychainSwift
-import AuthenticationServices
+//import KeychainSwift
+//import AuthenticationServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -43,56 +43,56 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to undo the changes made on entering the background.
         
         // Disable Sign In with Apple on simulator
-        #if !targetEnvironment(simulator)
-        
-        func showLogIn() {
-            
-            DispatchQueue.main.async {
-                
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let loginVC = storyboard.instantiateViewController(withIdentifier: "LogIn")
-                loginVC.modalPresentationStyle = .fullScreen
-                let topVC = self.window?.rootViewController?.topViewController()
-                
-                if topVC!.restorationIdentifier != "LogIn" {
-                                      
-                    topVC!.present(loginVC, animated: true, completion: nil)
-                                       
-                }
-                
-            }
-            
-        }
-        
-        let keychain = KeychainSwift()
-        if keychain.get("userIdentifier") != nil {
-            
-            let authorizationProvider = ASAuthorizationAppleIDProvider()
-            authorizationProvider.getCredentialState(forUserID: keychain.get("userIdentifier")!) { (state, error) in
-                
-                switch (state) {
-                case .authorized:
-                    print("Account Found - Signed In")
-                    break
-                case .revoked:
-                    print("No Account Found")
-                    fallthrough
-                case .notFound:
-                     print("No Account Found")
-                     showLogIn()
-                default:
-                    break
-                }
-                
-            }
-            
-        } else {
-            
-            showLogIn()
-            
-        }
-        
-        #endif
+//        #if !targetEnvironment(simulator)
+//
+//        func showLogIn() {
+//
+//            DispatchQueue.main.async {
+//
+//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                let loginVC = storyboard.instantiateViewController(withIdentifier: "LogIn")
+//                loginVC.modalPresentationStyle = .fullScreen
+//                let topVC = self.window?.rootViewController?.topViewController()
+//
+//                if topVC!.restorationIdentifier != "LogIn" {
+//
+//                    topVC!.present(loginVC, animated: true, completion: nil)
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//        let keychain = KeychainSwift()
+//        if keychain.get("userIdentifier") != nil {
+//
+//            let authorizationProvider = ASAuthorizationAppleIDProvider()
+//            authorizationProvider.getCredentialState(forUserID: keychain.get("userIdentifier")!) { (state, error) in
+//
+//                switch (state) {
+//                case .authorized:
+//                    print("Account Found - Signed In")
+//                    break
+//                case .revoked:
+//                    print("No Account Found")
+//                    fallthrough
+//                case .notFound:
+//                     print("No Account Found")
+//                     showLogIn()
+//                default:
+//                    break
+//                }
+//
+//            }
+//
+//        } else {
+//
+//            showLogIn()
+//
+//        }
+//
+//        #endif
         
         NotificationCenter.default.post(name: .didEnterForeground, object: nil, userInfo: nil)
         

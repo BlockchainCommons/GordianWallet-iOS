@@ -38,7 +38,7 @@ public struct WalletStruct: CustomStringConvertible {
         
         self.birthdate = dictionary["birthdate"] as? Int32 ?? 0
         self.derivation = dictionary["derivation"] as? String ?? ""
-        self.id = dictionary["id"] as! UUID
+        self.id = dictionary["id"] as? UUID ?? UUID()
         self.identity = dictionary["identity"] as? Data ?? "no identity yet".data(using: .utf8)!
         self.isActive = dictionary["isActive"] as? Bool ?? false
         self.name = dictionary["name"] as? String ?? ""
