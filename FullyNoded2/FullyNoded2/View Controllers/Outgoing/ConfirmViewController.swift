@@ -12,6 +12,7 @@ import AuthenticationServices
 
 class ConfirmViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
+    var doneBlock: ((Bool) -> Void)?
     let creatingView = ConnectingView()
     var unsignedPsbt = ""
     var signedRawTx = ""
@@ -26,8 +27,9 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     var miningFee = ""
     var recipients = [String]()
     var addressToVerify = ""
-    @IBOutlet var playButton: UIBarButtonItem!
+    var sweeping = Bool()
     @IBOutlet var confirmTable: UITableView!
+    @IBOutlet var broadcastButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -162,14 +164,32 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                         UIPasteboard.general.string = result
                         self.creatingView.removeConnectingView()
                         self.navigationItem.title = "Sent ✓"
-                        self.playButton.tintColor = UIColor.white.withAlphaComponent(0)
+                        self.broadcastButton.alpha = 0
                         
                         displayAlert(viewController: self,
                                      isError: false,
                                      message: "Transaction sent ✓")
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
-                            self.navigationController?.popToRootViewController(animated: true)
+                        if !self.sweeping {
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                
+                                self.navigationController?.popToRootViewController(animated: true)
+                                
+                            }
+                            
+                        } else {
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                
+                                self.dismiss(animated: true) {
+                                    
+                                    self.doneBlock!(true)
+                                    
+                                }
+                                
+                            }
+                            
                         }
                         
                     }
@@ -309,6 +329,12 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             }
             
+            if sweeping {
+                
+                isChange = false
+                
+            }
+            
             let outputDict:[String:Any] = [
             
                 "index": number,
@@ -317,8 +343,6 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 "isChange": isChange
             
             ]
-            
-            print("outputdict = \(outputDict)")
             
             outputArray.append(outputDict)
             

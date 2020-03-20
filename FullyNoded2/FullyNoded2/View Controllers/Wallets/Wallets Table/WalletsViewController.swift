@@ -1134,11 +1134,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let textLabel = UILabel()
             textLabel.textAlignment = .left
             textLabel.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
-            if wallet.isActive {
-                textLabel.textColor = .white
-            } else {
-                textLabel.textColor = .systemGray
-            }
             textLabel.text = wallet.label
             textLabel.frame = CGRect(x: 0, y: 0, width: self.walletTable.frame.width / 2.2, height: 30)
             textLabel.adjustsFontSizeToFitWidth = true
@@ -1146,7 +1141,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let refreshButton = UIButton()
             let image = UIImage(systemName: "arrow.clockwise")
             refreshButton.setImage(image, for: .normal)
-            refreshButton.tintColor = .white
             refreshButton.tag = section
             refreshButton.addTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
             refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
@@ -1155,7 +1149,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let toolsButton = UIButton()
             let toolImage = UIImage(systemName: "hammer")
             toolsButton.setImage(toolImage, for: .normal)
-            toolsButton.tintColor = .white
             toolsButton.tag = section
             toolsButton.addTarget(self, action: #selector(walletTools(_:)), for: .touchUpInside)
             toolsButton.frame = CGRect(x: refreshButton.frame.minX - 40, y: 0, width: 20, height: 20)
@@ -1164,11 +1157,34 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let editButton = UIButton()
             let editImage = UIImage(systemName: "pencil")
             editButton.setImage(editImage, for: .normal)
-            editButton.tintColor = .white
             editButton.tag = section
             editButton.addTarget(self, action: #selector(editLabel(_:)), for: .touchUpInside)
             editButton.frame = CGRect(x: toolsButton.frame.minX - 40, y: 0, width: 20, height: 20)
             editButton.center.y = textLabel.center.y
+            
+            if wallet.isActive {
+                
+                textLabel.textColor = .white
+                editButton.tintColor = .white
+                toolsButton.tintColor = .white
+                refreshButton.tintColor = .white
+                
+                editButton.isEnabled = true
+                toolsButton.isEnabled = true
+                refreshButton.isEnabled = true
+                
+            } else {
+                
+                editButton.tintColor = .systemGray
+                toolsButton.tintColor = .systemGray
+                refreshButton.tintColor = .systemGray
+                textLabel.textColor = .systemGray
+                
+                editButton.isEnabled = false
+                toolsButton.isEnabled = false
+                refreshButton.isEnabled = false
+                
+            }
             
             header.addSubview(textLabel)
             header.addSubview(refreshButton)
@@ -1247,13 +1263,21 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func walletTools(_ sender: UIButton) {
         
-        impact()
-        
-        DispatchQueue.main.async {
+        if !isLoading {
             
-            let w = WalletStruct(dictionary: self.sortedWallets[sender.tag])
-            self.wallet = w
-            self.performSegue(withIdentifier: "goToTools", sender: self)
+            impact()
+            
+            DispatchQueue.main.async {
+                
+                let w = WalletStruct(dictionary: self.sortedWallets[sender.tag])
+                self.wallet = w
+                self.performSegue(withIdentifier: "goToTools", sender: self)
+                
+            }
+            
+        } else {
+            
+            showAlert(vc: self, title: "Please be patient", message: "We are fetching data from your node, wait until the spinner disappears then try again.")
             
         }
         
@@ -1618,10 +1642,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         } else {
             
-            self.isLoading = false
-            self.loadingRefresher.alpha = 0
-            self.loadingRefresher.stopAnimating()
-            self.refresher.endRefreshing()
+            DispatchQueue.main.async {
+                
+                self.isLoading = false
+                self.loadingRefresher.alpha = 0
+                self.loadingRefresher.stopAnimating()
+                self.refresher.endRefreshing()
+                
+            }
             
         }
         
@@ -1682,6 +1710,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if let vc = segue.destination as? WalletToolsViewController {
                 
                 vc.wallet = self.wallet
+                vc.sweepDoneBlock = { result in
+                    
+                    self.refresh()
+                    showAlert(vc: self, title: "Wallet Sweeped! 🤩", message: "We are refreshing your balances now.")
+                    
+                }
                 
             }
             

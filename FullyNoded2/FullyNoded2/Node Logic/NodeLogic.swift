@@ -448,6 +448,16 @@ class NodeLogic {
         
         var amount = 0.0
         
+        if utxos.count == 0 {
+            
+            dictToReturn["noUtxos"] = true
+            
+        } else {
+            
+            dictToReturn["noUtxos"] = false
+            
+        }
+        
         for utxo in utxos {
             
             if let utxoDict = utxo as? NSDictionary {
@@ -469,6 +479,10 @@ class NodeLogic {
                         if confirmations < 1 {
                             
                             dictToReturn["unconfirmed"] = true
+                            
+                        } else {
+                            
+                            dictToReturn["unconfirmed"] = false
                             
                         }
                         

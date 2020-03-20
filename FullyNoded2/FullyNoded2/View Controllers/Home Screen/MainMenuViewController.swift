@@ -319,12 +319,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
 
     }
     
-//    @IBAction func lockButton(_ sender: Any) {
-//
-//        showUnlockScreen()
-//
-//    }
-    
     private func setFeeTarget() {
         
         if ud.object(forKey: "feeTarget") == nil {
@@ -334,22 +328,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
     }
-    
-//    private func showUnlockScreen() {
-//
-//        let keychain = KeychainSwift()
-//
-//        if keychain.get("UnlockPassword") != nil {
-//
-//            DispatchQueue.main.async {
-//
-//                self.performSegue(withIdentifier: "lockScreen", sender: self)
-//
-//            }
-//
-//        }
-//
-//    }
     
     //MARK: Tableview Methods
     
@@ -497,7 +475,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        confirmedIcon.alpha = 1
+        if walletInfo.noUtxos {
+            
+            confirmedIcon.alpha = 0
+            
+        } else {
+            
+            confirmedIcon.alpha = 1
+            
+        }
         
         coldBalanceLabel.adjustsFontSizeToFitWidth = true
         
@@ -619,7 +605,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        confirmedIcon.alpha = 1
+        if walletInfo.noUtxos {
+            
+            confirmedIcon.alpha = 0
+            
+        } else {
+            
+            confirmedIcon.alpha = 1
+            
+        }
         
         coldBalanceLabel.adjustsFontSizeToFitWidth = true
         
@@ -744,8 +738,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        confirmedIcon.alpha = 1
-        
+        if walletInfo.noUtxos {
+            
+            confirmedIcon.alpha = 0
+            
+        } else {
+            
+            confirmedIcon.alpha = 1
+            
+        }
+                
         coldBalanceLabel.adjustsFontSizeToFitWidth = true
         
         if descStruct.isMulti {
@@ -1114,8 +1116,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         labelLabel.alpha = 1
         dateLabel.alpha = 1
         
-        print("indexPath.section - 3 = \(indexPath.section - 3)")
-        print("transactionArray.count = \(transactionArray.count)")
         let dict = self.transactionArray[indexPath.section - 3]
                         
         confirmationsLabel.text = (dict["confirmations"] as! String) + " " + "confs"
@@ -2195,6 +2195,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     self.statusLabel.frame.origin.y = -50
                     self.mainMenu.frame.origin.y = 40
+                    self.mainMenu.translatesAutoresizingMaskIntoConstraints = false
                     
                 } else {
 
@@ -2468,7 +2469,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     if self.sponsorShowing {
                         
-                        //self.mainMenu.translatesAutoresizingMaskIntoConstraints = false
+                        self.mainMenu.translatesAutoresizingMaskIntoConstraints = false
                         
                         UIView.animate(withDuration: 0.3, animations: {
                             

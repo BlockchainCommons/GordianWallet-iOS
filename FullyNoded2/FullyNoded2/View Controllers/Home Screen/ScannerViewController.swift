@@ -65,7 +65,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     func addnode() {
         
         // Testnet Linode instance:
-        let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=Testing%20Node"
+        let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=BlockchainCommons%20Testing%20Node"
         addBtcRpcQr(url: url)
         
     }
@@ -332,9 +332,8 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             
             func invalidAlert() {
                 
-                displayAlert(viewController: self,
-                             isError: true,
-                             message: "invalid RecoveryQR")
+                showAlert(vc: self, title: "Error", message: "Invalid Recovery QR")
+                
             }
             
             let enc = Encryption()
