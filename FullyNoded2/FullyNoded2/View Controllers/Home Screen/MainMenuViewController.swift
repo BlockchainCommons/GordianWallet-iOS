@@ -9,9 +9,11 @@
 import UIKit
 import KeychainSwift
 import LibWally
+import CryptoKit
 
 class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
     
+    var walletExists = Bool()
     var sponsorShowing = Bool()
     let background = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     let closeButton = UIButton()
@@ -49,7 +51,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var connectingView = ConnectingView()
     let cd = CoreDataService()
     let enc = Encryption()
-    let nodeLogic = NodeLogic()
     var nodes = [[String:Any]]()
     var uptime = Int()
     var initialLoad = Bool()
@@ -118,7 +119,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         
                         self.wallet = wallet
                         self.existingWalletName = wallet!.name
-                        
+                                                
                     }
                     
                 }
@@ -506,7 +507,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         keysOnNodeDescription.text = "public keys \(wallet.derivation)/0 to /999"
         deviceXprv.text = "xprv \(wallet.derivation)"
-        walletNameLabel.text = "\(wallet.name).dat"
+        walletNameLabel.text = reducedName(name: wallet.name)
         
         return cell
         
@@ -642,7 +643,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         deviceXprv.text = "xprv \(wallet.derivation)"
         offlineXprvLabel.text = "xprv \(wallet.derivation)"
         
-        walletNameLabel.text = "\(wallet.name).dat"
+        walletNameLabel.text = reducedName(name: wallet.name)
         
         return cell
         
@@ -777,7 +778,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         derivationPathLabel.text = descStruct.format
         
-        walletNameLabel.text = "\(wallet.name).dat"
+        walletNameLabel.text = reducedName(name: wallet.name)
         
         return cell
         
@@ -1197,24 +1198,32 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if walletSectionLoaded {
             
-            let type = wallet.type
-            
-            switch type {
+            if walletExists {
                 
-            // Single sig wallet
-            case "DEFAULT":
-                return defaultWalletCell(indexPath)
+                let type = wallet.type
                 
-            // Multi sig wallet
-            case "MULTI":
-                return multiWalletCell(indexPath)
+                switch type {
+                    
+                // Single sig wallet
+                case "DEFAULT":
+                    return defaultWalletCell(indexPath)
+                    
+                // Multi sig wallet
+                case "MULTI":
+                    return multiWalletCell(indexPath)
+                    
+                // Custom wallet (can be antyhing the user imports), to parse it we use the DescriptorParser.swift
+                case "CUSTOM":
+                    return customWalletCell(indexPath)
+                    
+                default:
+                    return blankCell()
+                }
                 
-            // Custom wallet (can be antyhing the user imports), to parse it we use the DescriptorParser.swift
-            case "CUSTOM":
-                return customWalletCell(indexPath)
+            } else {
                 
-            default:
                 return blankCell()
+                
             }
             
         } else {
@@ -1770,23 +1779,27 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         self.isRefreshingZero = true
         self.reloadSections([self.walletCellIndex])
         self.updateLabel(text: "     Getting wallet info...")
-                        
+        
+        let nodeLogic = NodeLogic()
         nodeLogic.wallet = self.wallet
         self.existingWalletName = self.wallet.name
         nodeLogic.walletDisabled = false
         nodeLogic.loadWalletData() {
             
-            if self.nodeLogic.errorBool {
+            if nodeLogic.errorBool {
                 
-                self.walletSectionLoaded = false
+                self.walletSectionLoaded = true
                 self.removeStatusLabel()
                 self.isRefreshingZero = false
+                self.walletExists = false
                 self.reloadSections([self.walletCellIndex])
-                displayAlert(viewController: self, isError: true, message: self.nodeLogic.errorDescription)
+                self.loadNodeData()
+                displayAlert(viewController: self, isError: true, message: nodeLogic.errorDescription)
                 
             } else {
                 
-                self.walletInfo = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
+                self.walletExists = true
+                self.walletInfo = HomeStruct(dictionary: nodeLogic.dictToReturn)
                 self.updateWalletMetaData(wallet: self.wallet)
                 self.walletSectionLoaded = true
                 self.isRefreshingZero = false
@@ -1805,21 +1818,22 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     private func refreshWalletData(_ sender: UIButton) {
         
         self.isRefreshingZero = true
+        let nodeLogic = NodeLogic()
         nodeLogic.wallet = self.wallet
         nodeLogic.walletDisabled = false
         nodeLogic.loadWalletData() {
             
-            if self.nodeLogic.errorBool {
+            if nodeLogic.errorBool {
                 
                 self.walletSectionLoaded = false
                 self.removeStatusLabel()
                 self.isRefreshingZero = false
                 self.reloadSections([self.walletCellIndex])
-                displayAlert(viewController: self, isError: true, message: self.nodeLogic.errorDescription)
+                displayAlert(viewController: self, isError: true, message: nodeLogic.errorDescription)
                 
             } else {
                 
-                self.walletInfo = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
+                self.walletInfo = HomeStruct(dictionary: nodeLogic.dictToReturn)
                 self.updateWalletMetaData(wallet: self.wallet)
                 self.walletSectionLoaded = true
                 self.isRefreshingZero = false
@@ -1839,11 +1853,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             reloadSections([self.torCellIndex])
             updateLabel(text: "     Getting Tor network data from your node...")
+            let nodeLogic = NodeLogic()
             nodeLogic.loadTorData {
                 
-                if !self.nodeLogic.errorBool {
+                if !nodeLogic.errorBool {
                     
-                    let s = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
+                    let s = HomeStruct(dictionary: nodeLogic.dictToReturn)
                     self.p2pOnionAddress = s.p2pOnionAddress
                     self.version = s.version
                     self.torReachable = s.torReachable
@@ -1873,7 +1888,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     displayAlert(viewController: self,
                                  isError: true,
-                                 message: self.nodeLogic.errorDescription)
+                                 message: nodeLogic.errorDescription)
                                         
                 }
                 
@@ -1887,11 +1902,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if self.node != nil {
             
+            let nodeLogic = NodeLogic()
             nodeLogic.loadTorData {
                 
-                if !self.nodeLogic.errorBool {
+                if !nodeLogic.errorBool {
                     
-                    let s = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
+                    let s = HomeStruct(dictionary: nodeLogic.dictToReturn)
                     self.p2pOnionAddress = s.p2pOnionAddress
                     self.version = s.version
                     self.torReachable = s.torReachable
@@ -1908,7 +1924,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     displayAlert(viewController: self,
                                  isError: true,
-                                 message: self.nodeLogic.errorDescription)
+                                 message: nodeLogic.errorDescription)
                                         
                 }
                 
@@ -1924,21 +1940,22 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         self.reloadSections([self.nodeCellIndex])
         self.updateLabel(text: "     Getting Full Node data...")
         
+        let nodeLogic = NodeLogic()
         nodeLogic.wallet = wallet
         nodeLogic.walletDisabled = walletDisabled
         nodeLogic.loadNodeData() {
             
-            if self.nodeLogic.errorBool {
+            if nodeLogic.errorBool {
                 
                 self.nodeSectionLoaded = false
                 self.removeStatusLabel()
                 self.isRefreshingTwo = false
                 self.reloadSections([self.nodeCellIndex])
-                displayAlert(viewController: self, isError: true, message: self.nodeLogic.errorDescription)
+                displayAlert(viewController: self, isError: true, message: nodeLogic.errorDescription)
                 
             } else {
                 
-                let str = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
+                let str = HomeStruct(dictionary: nodeLogic.dictToReturn)
                 self.feeRate = str.feeRate
                 self.mempoolCount = str.mempoolCount
                 self.network = str.network
@@ -1993,20 +2010,21 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         print("refreshNodeData")
         
         self.isRefreshingTwo = true
+        let nodeLogic = NodeLogic()
         nodeLogic.wallet = wallet
         nodeLogic.walletDisabled = walletDisabled
         nodeLogic.loadNodeData() {
             
-            if self.nodeLogic.errorBool {
+            if nodeLogic.errorBool {
                 
                 self.nodeSectionLoaded = false
                 self.isRefreshingTwo = false
                 self.reloadSections([self.nodeCellIndex])
-                displayAlert(viewController: self, isError: true, message: self.nodeLogic.errorDescription)
+                displayAlert(viewController: self, isError: true, message: nodeLogic.errorDescription)
                 
             } else {
                 
-                let str = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
+                let str = HomeStruct(dictionary: nodeLogic.dictToReturn)
                 self.feeRate = str.feeRate
                 self.mempoolCount = str.mempoolCount
                 self.network = str.network
@@ -2043,24 +2061,25 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func loadTransactionData() {
         
-        self.nodeLogic.arrayToReturn.removeAll()
+        let nodeLogic = NodeLogic()
+        nodeLogic.arrayToReturn.removeAll()
         updateLabel(text: "     Getting transactions...")
         nodeLogic.wallet = wallet
         nodeLogic.walletDisabled = walletDisabled
         nodeLogic.loadTransactionData() {
             
-            if self.nodeLogic.errorBool {
+            if nodeLogic.errorBool {
                 
                 self.transactionsSectionLoaded = false
                 self.removeStatusLabel()
                 
                 displayAlert(viewController: self,
                              isError: true,
-                             message: self.nodeLogic.errorDescription)
+                             message: nodeLogic.errorDescription)
                 
             } else {
                 
-                self.transactionArray = self.nodeLogic.arrayToReturn.reversed()
+                self.transactionArray = nodeLogic.arrayToReturn.reversed()
                 self.transactionsSectionLoaded = true
                                 
                 DispatchQueue.main.async {
@@ -2080,24 +2099,25 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func refreshTransactions(_ sender: UIButton) {
         
+        let nodeLogic = NodeLogic()
         nodeLogic.arrayToReturn.removeAll()
         nodeLogic.wallet = wallet
         nodeLogic.walletDisabled = walletDisabled
         nodeLogic.loadTransactionData() {
             
-            if self.nodeLogic.errorBool {
+            if nodeLogic.errorBool {
                 
                 self.transactionsSectionLoaded = false
                 self.removeStatusLabel()
                 
                 displayAlert(viewController: self,
                              isError: true,
-                             message: self.nodeLogic.errorDescription)
+                             message: nodeLogic.errorDescription)
                 
             } else {
                 
                 self.transactionArray.removeAll()
-                self.transactionArray = self.nodeLogic.arrayToReturn.reversed()
+                self.transactionArray = nodeLogic.arrayToReturn.reversed()
                 self.transactionsSectionLoaded = true
                                 
                 DispatchQueue.main.async {
@@ -2529,6 +2549,14 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         impact()
         UIApplication.shared.open(URL(string: "https://github.com/sponsors/BlockchainCommons")!) { (Bool) in }
+        
+    }
+    
+    private func reducedName(name: String) -> String {
+        
+        let first = String(name.prefix(5))
+        let last = String(name.suffix(5))
+        return "\(first)*****\(last).dat"
         
     }
     

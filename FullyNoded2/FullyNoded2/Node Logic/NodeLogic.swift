@@ -211,13 +211,13 @@ class NodeLogic {
         
         let reducer = Reducer()
         
-        var walletName = ""
-        
-        if wallet != nil {
-            
-            walletName = wallet!.name
-            
-        }
+//        var walletName = ""
+//        
+//        if wallet != nil {
+//            
+//            walletName = wallet!.name
+//            
+//        }
         
         func getResult() {
             
@@ -275,7 +275,7 @@ class NodeLogic {
                         
                         let feeRate = UserDefaults.standard.integer(forKey: "feeTarget")
                         
-                        reducer.makeCommand(walletName: walletName, command: .estimatesmartfee,
+                        reducer.makeCommand(walletName: "", command: .estimatesmartfee,
                                             param: "\(feeRate)",
                                             completion: getResult)
                                                 
@@ -293,7 +293,7 @@ class NodeLogic {
                         
                         dictToReturn["uptime"] = Int(reducer.doubleToReturn!)
                         
-                        reducer.makeCommand(walletName: walletName, command: .getmempoolinfo,
+                        reducer.makeCommand(walletName: "", command: .getmempoolinfo,
                                             param: "",
                                             completion: getResult)
                                                 
@@ -312,7 +312,7 @@ class NodeLogic {
                         let miningInfo = reducer.dictToReturn!
                         parseMiningInfo(miningInfo: miningInfo)
                         
-                        reducer.makeCommand(walletName: walletName, command: .uptime,
+                        reducer.makeCommand(walletName: "", command: .uptime,
                                             param: "",
                                             completion: getResult)
                         
@@ -331,7 +331,7 @@ class NodeLogic {
                         let peerInfo = reducer.arrayToReturn!
                         parsePeerInfo(peerInfo: peerInfo)
                         
-                        reducer.makeCommand(walletName: walletName, command: .getmininginfo,
+                        reducer.makeCommand(walletName: "", command: .getmininginfo,
                                             param: "",
                                             completion: getResult)
                         
@@ -350,7 +350,7 @@ class NodeLogic {
                         let blockchainInfo = reducer.dictToReturn!
                         parseBlockchainInfo(blockchainInfo: blockchainInfo)
                         
-                        reducer.makeCommand(walletName: walletName, command: .getpeerinfo,
+                        reducer.makeCommand(walletName: "", command: .getpeerinfo,
                                             param: "",
                                             completion: getResult)
                         
@@ -378,7 +378,7 @@ class NodeLogic {
             
         }
         
-        reducer.makeCommand(walletName: walletName, command: .getblockchaininfo,
+        reducer.makeCommand(walletName: "", command: .getblockchaininfo,
                             param: "",
                             completion: getResult)
         

@@ -8,6 +8,7 @@
 
 import UIKit
 import LibWally
+import CryptoKit
 
 class ChooseWalletFormatViewController: UIViewController {
     
@@ -254,13 +255,11 @@ class ChooseWalletFormatViewController: UIViewController {
                                 
                 if self.isMultiSig {
                     
-                    self.newWallet["name"] = "MULTI_\(randomString(length: 10))_StandUp"
                     self.newWallet["type"] = "MULTI"
                     self.createMultiSig()
                     
                 } else if self.isSingleSig {
                     
-                    self.newWallet["name"] = "DEFAULT_\(randomString(length: 10))_StandUp"
                     self.newWallet["type"] = "DEFAULT"
                     self.createSingleSig()
                     
@@ -291,57 +290,7 @@ class ChooseWalletFormatViewController: UIViewController {
                     if !error {
                         
                         self.newWallet["seed"] = encryptedData!
-                        let walletCreator = WalletCreator()
-                        walletCreator.walletDict = self.newWallet
-                        walletCreator.createStandUpWallet() { (success, errorDescription, descriptor, changeDescriptor) in
-                            
-                            if success {
-                                
-                                self.newWallet["changeDescriptor"] = changeDescriptor!
-                                self.newWallet["descriptor"] = descriptor!
-                                let walletSaver = WalletSaver()
-                                walletSaver.save(walletToSave: self.newWallet) { (success) in
-                                    
-                                    if success {
-                                        
-                                        print("wallet saved")
-                                        
-                                        self.creatingView.removeConnectingView()
-                                        let w = WalletStruct(dictionary: self.newWallet)
-                                        
-                                        let recoveryQr = ["entropy": BIP39Mnemonic(mnemonic!)!.entropy.description, "descriptor":"\(descriptor!)", "walletName":"\(w.name)","birthdate":w.birthdate, "blockheight":w.blockheight,"label":""] as [String : Any]
-                                        
-                                        if let json = recoveryQr.json() {
-                                            
-                                            DispatchQueue.main.async {
-                                                
-                                                self.backUpRecoveryPhrase = mnemonic!
-                                                self.recoveryQr = json
-                                                self.performSegue(withIdentifier: "walletCreated", sender: self)
-                                                
-                                            }
-                                            
-                                        }
-                                        
-                                    } else {
-                                        
-                                        print("error saving wallet")
-                                        self.creatingView.removeConnectingView()
-                                        displayAlert(viewController: self, isError: true, message: "There was an error saving your wallet")
-                                        
-                                    }
-                                    
-                                }
-                                
-                            } else {
-                                
-                                self.creatingView.removeConnectingView()
-                                displayAlert(viewController: self, isError: true, message: "There was an error creating your wallet: \(errorDescription!)")
-                                
-                            }
-                            
-                        }
-
+                        self.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: self.newWallet))
                         
                     } else {
                         
@@ -350,6 +299,286 @@ class ChooseWalletFormatViewController: UIViewController {
                     }
                     
                 }
+                
+            }
+            
+        }
+        
+    }
+    
+    func constructSingleSigPrimaryDescriptor(wallet: WalletStruct) {
+        
+        let keyFetcher = KeyFetcher()
+        keyFetcher.xpub(wallet: wallet) { (xpub, error) in
+            
+            if !error {
+                
+                keyFetcher.fingerprint(wallet: wallet) { (fingerprint, error) in
+                    
+                    if !error && fingerprint != nil {
+                        
+                        var param = ""
+                        
+                        switch wallet.derivation {
+                            
+                        case "m/84'/1'/0'":
+                            param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/0/*)\""
+                            
+                        case "m/84'/0'/0'":
+                            param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/0/*)\""
+                            
+                        case "m/44'/1'/0'":
+                            param = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/0/*)\""
+                             
+                        case "m/44'/0'/0'":
+                            param = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/0/*)\""
+                            
+                        case "m/49'/1'/0'":
+                            param = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/0/*))\""
+                            
+                        case "m/49'/0'/0'":
+                            param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/0/*))\""
+                            
+                        default:
+                            
+                            break
+                            
+                        }
+                        
+                        let reducer = Reducer()
+                        reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) {
+                            
+                            if !reducer.errorBool {
+                                
+                                if let dict = reducer.dictToReturn {
+                                    
+                                    let primaryDescriptor = dict["descriptor"] as! String
+                                    self.newWallet["descriptor"] = primaryDescriptor
+                                    let digest = SHA256.hash(data: primaryDescriptor.dataUsingUTF8StringEncoding)
+                                    let stringHash = digest.map { String(format: "%02hhx", $0) }.joined()
+                                    self.newWallet["name"] = stringHash
+                                    self.constructSingleSigChangeDescriptor(wallet: WalletStruct(dictionary: self.newWallet))
+                                    
+                                }
+                                
+                            } else {
+                                
+                                self.creatingView.removeConnectingView()
+                                displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                self.creatingView.removeConnectingView()
+                displayAlert(viewController: self, isError: true, message: "error fetching xpub")
+                
+            }
+            
+        }
+        
+    }
+    
+    func constructSingleSigChangeDescriptor(wallet: WalletStruct) {
+        
+        let keyFetcher = KeyFetcher()
+        keyFetcher.xpub(wallet: wallet) { (xpub, error) in
+            
+            if !error {
+                
+                keyFetcher.fingerprint(wallet: wallet) { (fingerprint, error) in
+                    
+                    if !error && fingerprint != nil {
+                        
+                        var param = ""
+                        
+                        switch wallet.derivation {
+                            
+                        case "m/84'/1'/0'":
+                            param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/1/*)\""
+                            
+                        case "m/84'/0'/0'":
+                            param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/1/*)\""
+                            
+                        case "m/44'/1'/0'":
+                            param = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/1/*)\""
+                             
+                        case "m/44'/0'/0'":
+                            param = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/1/*)\""
+                            
+                        case "m/49'/1'/0'":
+                            param = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/1/*))\""
+                            
+                        case "m/49'/0'/0'":
+                            param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/1/*))\""
+                            
+                        default:
+                            
+                            break
+                            
+                        }
+                        
+                        let reducer = Reducer()
+                        reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) {
+                            
+                            if !reducer.errorBool {
+                                
+                                if let dict = reducer.dictToReturn {
+                                    
+                                    let changeDescriptor = dict["descriptor"] as! String
+                                    self.newWallet["changeDescriptor"] = changeDescriptor
+                                    self.createSingleSigWallet()
+                                    
+                                }
+                                
+                            } else {
+                                
+                                self.creatingView.removeConnectingView()
+                                displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                self.creatingView.removeConnectingView()
+                displayAlert(viewController: self, isError: true, message: "error fetching xpub")
+                
+            }
+            
+        }
+        
+    }
+    
+    func createSingleSigWallet() {
+        
+        let walletCreator = WalletCreator()
+        walletCreator.walletDict = self.newWallet
+        walletCreator.createStandUpWallet() { (success, errorDescription) in
+            
+            if success {
+                
+                let walletSaver = WalletSaver()
+                walletSaver.save(walletToSave: self.newWallet) { (success) in
+                    
+                    if success {
+                        
+                        self.creatingView.removeConnectingView()
+                        let w = WalletStruct(dictionary: self.newWallet)
+                        
+                        let encryptedMnemonic = w.seed
+                        self.enc.decryptData(dataToDecrypt: encryptedMnemonic) { (mnemonic) in
+                            
+                            if mnemonic != nil {
+                                
+                                if let words = String(data: mnemonic!, encoding: .utf8) {
+                                    
+                                    if let bip39mnemonic = BIP39Mnemonic(words) {
+                                        
+                                        let seed = bip39mnemonic.seedHex()
+                                        
+                                        if let mk = HDKey(seed, network(path: w.derivation)) {
+                                            
+                                            if let path = BIP32Path(w.derivation) {
+                                                
+                                                do {
+                                                    
+                                                    if let xprv = try mk.derive(path).xpriv {
+                                                        
+                                                        let p = DescriptorParser()
+                                                        let str = p.descriptor(w.descriptor)
+                                                        
+                                                        let hotDesc = (w.descriptor).replacingOccurrences(of: str.accountXpub, with: xprv)
+                                                        
+                                                        let recoveryQr = ["entropy": bip39mnemonic.entropy.description, "descriptor":"\(hotDesc)", "birthdate":w.birthdate, "blockheight":w.blockheight,"label":""] as [String : Any]
+                                                        
+                                                        if let json = recoveryQr.json() {
+                                                            
+                                                            DispatchQueue.main.async {
+                                                                
+                                                                self.backUpRecoveryPhrase = words
+                                                                self.recoveryQr = json
+                                                                self.performSegue(withIdentifier: "walletCreated", sender: self)
+                                                                
+                                                            }
+                                                            
+                                                        } else {
+                                                            
+                                                            self.creatingView.removeConnectingView()
+                                                            displayAlert(viewController: self, isError: true, message: "error converting to json")
+                                                            
+                                                        }
+                                                        
+                                                    } else {
+                                                        
+                                                        self.creatingView.removeConnectingView()
+                                                        displayAlert(viewController: self, isError: true, message: "error deriving xprv")
+                                                        
+                                                    }
+                                                    
+                                                } catch {
+                                                    
+                                                    self.creatingView.removeConnectingView()
+                                                    displayAlert(viewController: self, isError: true, message: "error deriving xprv")
+                                                    
+                                                }
+                                                
+                                            } else {
+                                                
+                                                self.creatingView.removeConnectingView()
+                                                displayAlert(viewController: self, isError: true, message: "error deriving bip32path")
+                                                
+                                            }
+                                            
+                                        } else {
+                                            
+                                            self.creatingView.removeConnectingView()
+                                            displayAlert(viewController: self, isError: true, message: "error deriving master key")
+                                            
+                                        }
+                                                                                
+                                    } else {
+                                        
+                                        self.creatingView.removeConnectingView()
+                                        displayAlert(viewController: self, isError: true, message: "error deriving bip39mnemonic")
+                                        
+                                    }
+                                    
+                                }
+                                
+                            } else {
+                                
+                                self.creatingView.removeConnectingView()
+                                displayAlert(viewController: self, isError: true, message: "error decrypting seed")
+                                
+                            }
+                            
+                        }
+                        
+                    } else {
+                        
+                        self.creatingView.removeConnectingView()
+                        displayAlert(viewController: self, isError: true, message: "There was an error saving your wallet")
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                self.creatingView.removeConnectingView()
+                displayAlert(viewController: self, isError: true, message: "There was an error creating your wallet: \(errorDescription!)")
                 
             }
             
@@ -707,6 +936,9 @@ class ChooseWalletFormatViewController: UIViewController {
                                             self.newWallet["descriptor"] = primaryDescriptor
                                             self.newWallet["changeDescriptor"] = changeDesc
                                             self.newWallet["seed"] = self.localSeed
+                                            let digest = SHA256.hash(data: primaryDescriptor.dataUsingUTF8StringEncoding)
+                                            let stringHash = digest.map { String(format: "%02hhx", $0) }.joined()
+                                            self.newWallet["name"] = stringHash
                                             
                                             let multiSigCreator = CreateMultiSigWallet()
                                             let wallet = WalletStruct(dictionary: self.newWallet)
@@ -733,7 +965,7 @@ class ChooseWalletFormatViewController: UIViewController {
                                                                 self.newWallet.removeAll()
                                                                 // include the checksum as we will convert this back to a pubkey descriptor when recovering
                                                                 let hotDescriptor = primaryDescriptor.replacingOccurrences(of: self.publickeys[1], with: self.localXprv)
-                                                                let recoveryQr = ["entropy": self.entropy, "descriptor":"\(hotDescriptor)", "walletName":"\(wallet.name)","birthdate":wallet.birthdate, "blockheight":wallet.blockheight, "label":""] as [String : Any]
+                                                                let recoveryQr = ["entropy": self.entropy, "descriptor":"\(hotDescriptor)", "birthdate":wallet.birthdate, "blockheight":wallet.blockheight, "label":""] as [String : Any]
                                                                 
                                                                 if let json = recoveryQr.json() {
                                                                     

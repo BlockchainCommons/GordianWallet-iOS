@@ -8,6 +8,7 @@
 
 import UIKit
 import LibWally
+import CryptoKit
 
 class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -17,6 +18,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     var confirmedDoneBlock: ((Bool) -> Void)?
     var addresses = [String]()
     var descriptorStruct:DescriptorStruct!
+    
     @IBOutlet var walletLabel: UILabel!
     @IBOutlet var walletName: UILabel!
     @IBOutlet var walletDerivation: UILabel!
@@ -44,7 +46,6 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             let parser = DescriptorParser()
             descriptorStruct = parser.descriptor(walletDict["descriptor"] as! String)
             walletLabel.text = walletDict["label"] as? String ?? "no wallet label"
-            walletName.text = "\(walletDict["walletName"] as! String).dat"
             walletBirthdate.text = getDate(unixTime: walletDict["birthdate"] as! Int32)
             walletNetwork.text = descriptorStruct.chain
             walletBalance.text = "...fetching balance"
@@ -76,7 +77,6 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             let parser = DescriptorParser()
             descriptorStruct = parser.descriptor(walletDict["descriptor"] as! String)
             walletLabel.text = walletDict["label"] as? String ?? "no wallet label"
-            walletName.text = "\(walletDict["walletName"] as! String).dat"
             walletBirthdate.text = getDate(unixTime: walletDict["birthdate"] as! Int32)
             walletNetwork.text = descriptorStruct.chain
             walletBalance.text = "...fetching balance"
@@ -93,7 +93,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     private func loadAddressesFromLibWally() {
         
         walletLabel.text = "no data available"
-        walletName.text = "no data available"
+        walletName.text = "loading..."
         walletBirthdate.text = "no data available"
         walletNetwork.text = "no data available"
         walletBalance.text = "no data available"
@@ -107,6 +107,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             if !error && mnemonic != nil {
                 
                 let mk = HDKey(mnemonic!.seedHex(), network(path: stringPath))!
+                let fingerprint = mk.fingerprint.hexString
                 
                 for i in 0...4 {
                     
@@ -126,6 +127,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                         } else if stringPath.contains("49") {
                             
                             addressType = .payToScriptHashPayToWitnessPubKeyHash
+                            
                         }
                         
                         let address = key.address(addressType).description
@@ -139,15 +141,79 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                     
                 }
                 
-                DispatchQueue.main.async {
+                var param = ""
+                
+                do {
                     
-                    self.addressTable.reloadData()
+                    let xpub = try mk.derive(BIP32Path(stringPath)!).xpub
+                    
+                    switch stringPath {
+                        
+                    case "m/84'/1'/0'":
+                        param = "\"wpkh([\(fingerprint)/84'/1'/0']\(xpub)/0/*)\""
+                        
+                    case "m/84'/0'/0'":
+                        param = "\"wpkh([\(fingerprint)/84'/0'/0']\(xpub)/0/*)\""
+                        
+                    case "m/44'/1'/0'":
+                        param = "\"pkh([\(fingerprint)/44'/1'/0']\(xpub)/0/*)\""
+                         
+                    case "m/44'/0'/0'":
+                        param = "\"pkh([\(fingerprint)/44'/0'/0']\(xpub)/0/*)\""
+                        
+                    case "m/49'/1'/0'":
+                        param = "\"sh(wpkh([\(fingerprint)/49'/1'/0']\(xpub)/0/*))\""
+                        
+                    case "m/49'/0'/0'":
+                        param = "\"sh(wpkh([\(fingerprint)/49'/0'/0']\(xpub)/0/*))\""
+                        
+                    default:
+                        
+                        break
+                        
+                    }
+                    
+                    let reducer = Reducer()
+                    reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) {
+                        
+                        if !reducer.errorBool {
+                            
+                            if let dict = reducer.dictToReturn {
+                                
+                                let desc = dict["descriptor"] as! String
+                                let digest = SHA256.hash(data: desc.dataUsingUTF8StringEncoding)
+                                let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
+                                
+                                DispatchQueue.main.async {
+                                    
+                                    self.walletName.text = self.reducedName(name: walletName)
+                                    self.addressTable.reloadData()
+                                    
+                                }
+                                
+                            } else {
+                                
+                                displayAlert(viewController: self, isError: true, message: "unknown error")
+                                
+                            }
+                            
+                        } else {
+                            
+                            displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
+                            
+                        }
+                        
+                    }
+                                        
+                } catch {
+                    
+                    displayAlert(viewController: self, isError: true, message: "error constructing descriptor")
                     
                 }
                 
             } else {
                 
-                displayAlert(viewController: self, isError: false, message: "error deriving addresses from those words")
+                displayAlert(viewController: self, isError: true, message: "error deriving addresses from those words")
                 
             }
             
@@ -162,15 +228,24 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         let xprv = descriptorStruct.accountXprv
         let xpub = HDKey(xprv)!.xpub
         let desc = (walletDict["descriptor"] as! String).replacingOccurrences(of: xprv, with: xpub)
+        let digest = SHA256.hash(data: desc.dataUsingUTF8StringEncoding)
+        let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
+        
+        DispatchQueue.main.async {
+            
+            self.walletName.text = self.reducedName(name: walletName)
+            
+        }
+        
         let reducer = Reducer()
-        reducer.makeCommand(walletName: (walletDict["walletName"] as! String), command: .getdescriptorinfo, param: "\"\(desc)\"") {
+        reducer.makeCommand(walletName: walletName, command: .getdescriptorinfo, param: "\"\(desc)\"") {
             
             if !reducer.errorBool {
                 
                 if let result = reducer.dictToReturn {
                     
                     let descriptor = result["descriptor"] as! String
-                    reducer.makeCommand(walletName: (self.walletDict["walletName"] as! String), command: .deriveaddresses, param: "\"\(descriptor)\", [0,4]") {
+                    reducer.makeCommand(walletName: walletName, command: .deriveaddresses, param: "\"\(descriptor)\", [0,4]") {
                         
                         if !reducer.errorBool {
                             
@@ -198,7 +273,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                             }
                             
                             let nodeLogic = NodeLogic()
-                            self.walletDict["name"] = self.walletDict["walletName"] as! String
+                            self.walletDict["name"] = walletName
                             nodeLogic.wallet = WalletStruct(dictionary: self.walletDict)
                             nodeLogic.loadWalletData {
                                 
@@ -263,9 +338,17 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         let xprv = descriptorStruct.multiSigKeys[1]
         let xpub = HDKey(xprv)!.xpub
         let desc = (walletDict["descriptor"] as! String).replacingOccurrences(of: xprv, with: xpub)
+        let digest = SHA256.hash(data: desc.dataUsingUTF8StringEncoding)
+        let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
+        
+        DispatchQueue.main.async {
+            
+            self.walletName.text = self.reducedName(name: walletName)
+            
+        }
         
         let reducer = Reducer()
-        reducer.makeCommand(walletName: (walletDict["walletName"] as! String), command: .deriveaddresses, param: "\"\(desc)\", [0,4]") {
+        reducer.makeCommand(walletName: walletName, command: .deriveaddresses, param: "\"\(desc)\", [0,4]") {
             
             if !reducer.errorBool {
                 
@@ -293,7 +376,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 }
                 
                 let nodeLogic = NodeLogic()
-                self.walletDict["name"] = self.walletDict["walletName"] as! String
+                self.walletDict["name"] = walletName
                 nodeLogic.wallet = WalletStruct(dictionary: self.walletDict)
                 nodeLogic.loadWalletData {
                     
@@ -393,6 +476,14 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         dateFormatter.dateFormat = "yyyy-MMM-dd hh:mm" //Specify your format that you want
         let strDate = dateFormatter.string(from: date)
         return strDate
+        
+    }
+    
+    private func reducedName(name: String) -> String {
+        
+        let first = String(name.prefix(5))
+        let last = String(name.suffix(5))
+        return "\(first)*****\(last).dat"
         
     }
     

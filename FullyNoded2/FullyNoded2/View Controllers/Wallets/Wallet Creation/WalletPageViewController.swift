@@ -85,15 +85,30 @@ class WalletPageViewController: UIViewController, UITextViewDelegate, UITextFiel
     private func addQr() {
         
         qrView.frame = CGRect(x: 75, y: textView.frame.maxY, width: self.view.frame.width - 150, height: self.view.frame.width - 150)
-        qrGenerator.textInput = page.recoveryItem
-        qrView.image = qrGenerator.getQRCode()
-        qrView.isUserInteractionEnabled = true
-        view.addSubview(qrView)
-        
-        tapQRGesture = UITapGestureRecognizer(target: self,
-                                              action: #selector(shareQRCode(_:)))
-        
-        qrView.addGestureRecognizer(tapQRGesture)
+        let cd = CoreDataService()
+        cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+            
+            for wallet in wallets! {
+                
+                let w = WalletStruct(dictionary: wallet)
+                if w.id == self.page.walletId {
+                    
+                    let recovery = (self.page.recoveryItem).replacingOccurrences(of: "\"label\":\"\"", with: "\"label\":\"\(w.label)\"")
+                    self.qrGenerator.textInput = recovery
+                    self.qrView.image = self.qrGenerator.getQRCode()
+                    self.qrView.isUserInteractionEnabled = true
+                    self.view.addSubview(self.qrView)
+                    
+                    self.tapQRGesture = UITapGestureRecognizer(target: self,
+                                                               action: #selector(self.shareQRCode(_:)))
+                    
+                    self.qrView.addGestureRecognizer(self.tapQRGesture)
+                    
+                }
+                
+            }
+            
+        }
         
     }
     
@@ -173,7 +188,7 @@ class WalletPageViewController: UIViewController, UITextViewDelegate, UITextFiel
         labelInput.frame = CGRect(x: 32, y: textView.frame.maxY + 5, width: view.frame.width - 64, height: 70)
         labelInput.clipsToBounds = true
         labelInput.layer.cornerRadius = 8
-        labelInput.backgroundColor = .lightGray//#colorLiteral(red: 0.05172085258, green: 0.05855310153, blue: 0.06978280196, alpha: 1)
+        labelInput.backgroundColor = .lightGray
         labelInput.tintColor = .black
         labelInput.textColor = .black
         labelInput.attributedPlaceholder = NSAttributedString(string: " add wallet label here", attributes: [NSAttributedString.Key.foregroundColor: UIColor.darkGray])

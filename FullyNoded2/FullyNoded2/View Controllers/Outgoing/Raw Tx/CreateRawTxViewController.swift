@@ -174,7 +174,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         if outputArray.count > 0 && amountInput.text == "" && addressInput.text == "" {
             
-            tryRaw()
+            //tryRaw()
             
         } else {
          

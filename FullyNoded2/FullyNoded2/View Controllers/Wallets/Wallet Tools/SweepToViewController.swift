@@ -62,7 +62,7 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let wallet = WalletStruct(dictionary: wallets[indexPath.section])
         walletLabel.text = wallet.label
-        walletName.text = wallet.name
+        walletName.text = reducedName(name: wallet.name)
         walletBalance.text = "\(wallet.lastBalance)"
         walletDerivation.text = wallet.derivation + "/0"
         walletBirthdate.text = getDate(unixTime: wallet.birthdate)
@@ -779,6 +779,14 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         self.connectingView.removeConnectingView()
         showAlert(vc: self, title: title, message: message)
+        
+    }
+    
+    private func reducedName(name: String) -> String {
+        
+        let first = String(name.prefix(5))
+        let last = String(name.suffix(5))
+        return "\(first)*****\(last).dat"
         
     }
     

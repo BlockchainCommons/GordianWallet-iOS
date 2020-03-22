@@ -17,52 +17,6 @@ class CoreDataService {
     var errorBool = Bool()
     var errorDescription = ""
     
-//    func saveSeed(seed: Data, completion: @escaping () -> Void) {
-//        print("saveSeedToCoreData")
-//
-//        DispatchQueue.main.async {
-//
-//            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-//
-//                let context = appDelegate.persistentContainer.viewContext
-//                guard let entity = NSEntityDescription.entity(forEntityName: "Seed", in: context) else {
-//                    self.errorBool = true
-//                    self.errorDescription = "unable to access Seed"
-//                    completion()
-//                    return
-//                }
-//
-//                let credential = NSManagedObject(entity: entity, insertInto: context)
-//
-//                credential.setValue(seed, forKey: "seed")
-//
-//                do {
-//
-//                    try context.save()
-//                    self.boolToReturn = true
-//                    print("Saved seed")
-//
-//                } catch {
-//
-//                    self.errorBool = true
-//                    self.errorDescription = "Failed saving seed"
-//
-//                }
-//
-//                completion()
-//
-//            } else {
-//
-//                self.errorBool = true
-//                self.errorDescription = "Unable to access app delegate for core data"
-//                completion()
-//
-//            }
-//
-//        }
-//
-//    }
-    
     func saveEntity(dict: [String:Any], entityName: ENTITY, completion: @escaping () -> Void) {
         print("saveEntityToCoreData")
         
@@ -88,12 +42,10 @@ class CoreDataService {
                         
                         try context.save()
                         self.boolToReturn = true
-                        print("Saved credential \(key) = \(value)")
                         
                     } catch {
                         
                         self.errorBool = true
-                        self.errorDescription = "Failed saving credential \(key) = \(value)"
                         
                     }
                     
@@ -150,78 +102,163 @@ class CoreDataService {
         
     }
     
-    func updateEntity(id: UUID, keyToUpdate: String, newValue: Any, entityName: ENTITY, completion: @escaping () -> Void) {
+    func updateNode(nodeToUpdate: UUID, newCredentials: [String:Any], completion: @escaping () -> Void) {
         print("updateEntity")
         
-       DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            
+            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
                 
-                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                let context = appDelegate.persistentContainer.viewContext
+                let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: ENTITY.nodes.rawValue)
+                fetchRequest.returnsObjectsAsFaults = false
+                
+                do {
                     
-                    let context = appDelegate.persistentContainer.viewContext
-                    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName.rawValue)
-                    fetchRequest.returnsObjectsAsFaults = false
+                    let results = try context.fetch(fetchRequest) as [NSManagedObject]
                     
-                    do {
+                    if results.count > 0 {
                         
-                        let results = try context.fetch(fetchRequest) as [NSManagedObject]
-                        
-                        if results.count > 0 {
+                        for data in results {
                             
-                            for data in results {
+                            if nodeToUpdate == data.value(forKey: "id") as? UUID {
                                 
-                                if id == data.value(forKey: "id") as? UUID {
-                                    
-                                    print("set \(newValue) for key \(keyToUpdate)")
+                                var success = false
+                                                                
+                                for (keyToUpdate, newValue) in newCredentials {
+                                                                        
                                     data.setValue(newValue, forKey: keyToUpdate)
                                     
                                     do {
                                         
                                         try context.save()
-                                        self.errorBool = false
-                                        self.boolToReturn = true
                                         print("updated successfully")
-                                        completion()
+                                        success = true
                                         
                                     } catch {
                                         
                                         print("error editing")
-                                        self.errorBool = true
-                                        self.errorDescription = "error editing"
-                                        completion()
+                                        success = false
                                         
                                     }
                                     
                                 }
                                 
+                                if success {
+                                    
+                                    self.errorBool = false
+                                    self.boolToReturn = true
+                                    completion()
+                                    
+                                } else {
+                                    
+                                    self.errorBool = true
+                                    self.errorDescription = "error editing"
+                                    completion()
+                                    
+                                }
+                                
                             }
-                                                       
-                        } else {
                             
-                            print("no results")
-                            self.errorBool = true
-                            self.errorDescription = "no results"
-                            completion()
                         }
                         
-                    } catch {
+                    } else {
                         
-                        print("Failed")
+                        print("no results")
                         self.errorBool = true
-                        self.errorDescription = "failed"
+                        self.errorDescription = "no results"
                         completion()
                     }
                     
-                } else {
+                } catch {
                     
+                    print("Failed")
                     self.errorBool = true
-                    self.errorDescription = "Something strange has happened and we do not have access to app delegate, please try again."
+                    self.errorDescription = "failed"
                     completion()
-                    
                 }
+                
+            } else {
+                
+                self.errorBool = true
+                self.errorDescription = "Something strange has happened and we do not have access to app delegate, please try again."
+                completion()
                 
             }
             
-        //}
+        }
+        
+    }
+    
+    func updateEntity(id: UUID, keyToUpdate: String, newValue: Any, entityName: ENTITY, completion: @escaping () -> Void) {
+        print("updateEntity")
+        
+        DispatchQueue.main.async {
+            
+            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                
+                let context = appDelegate.persistentContainer.viewContext
+                let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName.rawValue)
+                fetchRequest.returnsObjectsAsFaults = false
+                
+                do {
+                    
+                    let results = try context.fetch(fetchRequest) as [NSManagedObject]
+                    
+                    if results.count > 0 {
+                        
+                        for data in results {
+                            
+                            if id == data.value(forKey: "id") as? UUID {
+                                
+                                data.setValue(newValue, forKey: keyToUpdate)
+                                
+                                do {
+                                    
+                                    try context.save()
+                                    self.errorBool = false
+                                    self.boolToReturn = true
+                                    print("updated successfully")
+                                    completion()
+                                    
+                                } catch {
+                                    
+                                    print("error editing")
+                                    self.errorBool = true
+                                    self.errorDescription = "error editing"
+                                    completion()
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    } else {
+                        
+                        print("no results")
+                        self.errorBool = true
+                        self.errorDescription = "no results"
+                        completion()
+                    }
+                    
+                } catch {
+                    
+                    print("Failed")
+                    self.errorBool = true
+                    self.errorDescription = "failed"
+                    completion()
+                }
+                
+            } else {
+                
+                self.errorBool = true
+                self.errorDescription = "Something strange has happened and we do not have access to app delegate, please try again."
+                completion()
+                
+            }
+            
+        }
         
     }
     

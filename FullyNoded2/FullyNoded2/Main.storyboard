@@ -494,7 +494,7 @@
             <objects>
                 <viewController id="FI5-Kv-Y72" customClass="AuthenticateViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xx3-cn-bLQ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="574"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In order to authenticate your connection you need to add this public key to the macOS StandUp.app in &quot;Settings&quot;. " lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xaH-Sk-RIJ">
@@ -536,79 +536,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0dh-vH-Z0p" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7458.3999999999996" y="2000.1499250374814"/>
-        </scene>
-        <!--Security View Controller-->
-        <scene sceneID="iZu-HS-qu2">
-            <objects>
-                <viewController id="nFU-Iq-QMx" customClass="SecurityViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="dwH-7u-E8e">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.shield" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zZm-wl-uDo">
-                                <rect key="frame" x="16" y="13.5" width="22" height="44"/>
-                                <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="22" id="FMb-i3-Bf0"/>
-                                    <constraint firstAttribute="height" constant="45" id="IDA-lY-e4Z"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Security Center" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uyv-vm-NIu">
-                                <rect key="frame" x="46" y="19.5" width="208" height="32"/>
-                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="26"/>
-                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Uma-0Y-kMk">
-                                <rect key="frame" x="0.0" y="66" width="375" height="581"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="securityCell" id="l80-89-tb2">
-                                        <rect key="frame" x="15" y="55.5" width="345" height="43.5"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="l80-89-tb2" id="8dB-9K-MpZ">
-                                            <rect key="frame" x="0.0" y="0.0" width="345" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.050706155599999997" green="0.05862525851" blue="0.071102283899999993" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="nFU-Iq-QMx" id="QRK-zn-Ms9"/>
-                                    <outlet property="delegate" destination="nFU-Iq-QMx" id="AiP-bq-SYZ"/>
-                                </connections>
-                            </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ay2-oL-4Qj">
-                                <rect key="frame" x="339" y="24.5" width="20" height="22"/>
-                                <state key="normal" image="xmark.circle.fill" catalog="system"/>
-                                <connections>
-                                    <action selector="close:" destination="nFU-Iq-QMx" eventType="touchUpInside" id="tja-Z6-ODM"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" red="0.074236519629999997" green="0.082159139219999996" blue="0.094636552040000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="zZm-wl-uDo" firstAttribute="leading" secondItem="5GC-ob-r2z" secondAttribute="leading" constant="16" id="4Dv-e7-loM"/>
-                            <constraint firstItem="5GC-ob-r2z" firstAttribute="trailing" secondItem="ay2-oL-4Qj" secondAttribute="trailing" constant="16" id="8KA-lJ-C5x"/>
-                            <constraint firstItem="zZm-wl-uDo" firstAttribute="top" secondItem="5GC-ob-r2z" secondAttribute="top" constant="13" id="LgU-0h-FNC"/>
-                            <constraint firstItem="Uma-0Y-kMk" firstAttribute="bottom" secondItem="5GC-ob-r2z" secondAttribute="bottom" id="NQz-iL-Pk7"/>
-                            <constraint firstItem="Uma-0Y-kMk" firstAttribute="top" secondItem="zZm-wl-uDo" secondAttribute="bottom" constant="8" id="UyP-Uh-OME"/>
-                            <constraint firstItem="Uma-0Y-kMk" firstAttribute="trailing" secondItem="5GC-ob-r2z" secondAttribute="trailing" id="ZZo-Gy-w7E"/>
-                            <constraint firstItem="Uyv-vm-NIu" firstAttribute="centerY" secondItem="zZm-wl-uDo" secondAttribute="centerY" id="nIL-oo-2a2"/>
-                            <constraint firstItem="Uyv-vm-NIu" firstAttribute="leading" secondItem="zZm-wl-uDo" secondAttribute="trailing" constant="8" id="oZY-Tl-5hy"/>
-                            <constraint firstItem="Uma-0Y-kMk" firstAttribute="leading" secondItem="5GC-ob-r2z" secondAttribute="leading" id="sBl-cc-Hid"/>
-                            <constraint firstItem="ay2-oL-4Qj" firstAttribute="centerY" secondItem="Uyv-vm-NIu" secondAttribute="centerY" id="yii-jZ-hCg"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="5GC-ob-r2z"/>
-                    </view>
-                    <connections>
-                        <outlet property="table" destination="Uma-0Y-kMk" id="856-d3-1Mu"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="T3m-1s-5Vo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-7458.3999999999996" y="2754.872563718141"/>
+            <point key="canvasLocation" x="-6878" y="1235"/>
         </scene>
         <!--Home-->
         <scene sceneID="erx-5N-Kcy">
@@ -1841,7 +1769,7 @@
                         <segue destination="I2N-Ql-8qz" kind="presentation" identifier="showIntro" modalPresentationStyle="overFullScreen" id="a8G-G5-GSa"/>
                         <segue destination="3uQ-0D-YgM" kind="show" identifier="goToWallets" id="fBg-S5-BEW"/>
                         <segue destination="rWu-wq-Agv" kind="presentation" identifier="import" id="0zN-S6-Zr1"/>
-                        <segue destination="AS8-ke-Yxh" kind="presentation" identifier="settings" id="hdq-o6-Ing"/>
+                        <segue destination="AS8-ke-Yxh" kind="show" identifier="settings" id="hdq-o6-Ing"/>
                         <segue destination="NHv-UH-1lX" kind="presentation" identifier="goDonate" id="C3T-yU-SMU"/>
                     </connections>
                 </viewController>
@@ -2288,9 +2216,6 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                             </textView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hCl-Q8-hd5">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.up" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="JLR-gA-CSX">
                                 <rect key="frame" x="16" y="50" width="30" height="53"/>
                                 <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
@@ -2317,6 +2242,9 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
                                     <action selector="tryRawNow:" destination="pUo-bf-sNm" eventType="touchUpInside" id="7lb-nH-UBN"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hCl-Q8-hd5">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -2590,16 +2518,16 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
             </objects>
             <point key="canvasLocation" x="4194" y="-498"/>
         </scene>
-        <!--v0.0.39-->
+        <!--v0.0.65-->
         <scene sceneID="Ajv-p7-tUm">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" id="AS8-ke-Yxh" customClass="SettingsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="A3f-zZ-K5e">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="hcp-eG-lok">
-                                <rect key="frame" x="0.0" y="59" width="375" height="588"/>
+                                <rect key="frame" x="0.0" y="103" width="375" height="515"/>
                                 <color key="separatorColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="settingsCell" id="9RO-xu-o8H">
@@ -2682,52 +2610,41 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
                                 </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6yC-hz-mR8">
-                                <rect key="frame" x="41" y="5" width="156" height="45.5"/>
+                                <rect key="frame" x="41" y="49" width="156" height="45.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="38"/>
                                 <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gear" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="0e4-sp-otB">
-                                <rect key="frame" x="16" y="12.5" width="24" height="31"/>
+                                <rect key="frame" x="16" y="56.5" width="24" height="31"/>
                                 <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="24" id="INA-sx-i4l"/>
                                     <constraint firstAttribute="height" constant="30.5" id="aKT-j1-aOV"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p80-54-GiB">
-                                <rect key="frame" x="339" y="17" width="20" height="22"/>
-                                <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="xmark.circle.fill" catalog="system"/>
-                                <connections>
-                                    <action selector="close:" destination="AS8-ke-Yxh" eventType="touchUpInside" id="FJe-Wm-LZn"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Cze-jj-bFe" firstAttribute="trailing" secondItem="p80-54-GiB" secondAttribute="trailing" constant="16" id="81A-Xr-JRZ"/>
                             <constraint firstItem="6yC-hz-mR8" firstAttribute="centerY" secondItem="0e4-sp-otB" secondAttribute="centerY" id="9Yx-fh-awr"/>
                             <constraint firstItem="6yC-hz-mR8" firstAttribute="top" secondItem="Cze-jj-bFe" secondAttribute="top" constant="5" id="F9s-gw-EbY"/>
                             <constraint firstItem="hcp-eG-lok" firstAttribute="leading" secondItem="Cze-jj-bFe" secondAttribute="leading" id="FXI-eA-xj4"/>
                             <constraint firstItem="hcp-eG-lok" firstAttribute="trailing" secondItem="Cze-jj-bFe" secondAttribute="trailing" id="IIg-gN-qVf"/>
                             <constraint firstItem="hcp-eG-lok" firstAttribute="bottom" secondItem="Cze-jj-bFe" secondAttribute="bottom" id="dam-qF-WBL"/>
                             <constraint firstItem="hcp-eG-lok" firstAttribute="top" secondItem="6yC-hz-mR8" secondAttribute="bottom" constant="8.5" id="hMn-R7-uiL"/>
-                            <constraint firstItem="p80-54-GiB" firstAttribute="centerY" secondItem="6yC-hz-mR8" secondAttribute="centerY" id="k0J-gV-zuq"/>
                             <constraint firstItem="0e4-sp-otB" firstAttribute="leading" secondItem="Cze-jj-bFe" secondAttribute="leading" constant="16" id="tqa-C6-ODz"/>
                             <constraint firstItem="6yC-hz-mR8" firstAttribute="leading" secondItem="0e4-sp-otB" secondAttribute="trailing" constant="1" id="xdJ-ah-WiS"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Cze-jj-bFe"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Settings" id="n34-O3-Fyo"/>
-                    <navigationItem key="navigationItem" title="v0.0.39" id="YNb-Gd-Hqq"/>
+                    <navigationItem key="navigationItem" title="v0.0.65" id="YNb-Gd-Hqq"/>
                     <connections>
                         <outlet property="settingsTable" destination="hcp-eG-lok" id="xPg-8r-KBs"/>
                         <segue destination="bKH-sI-MiM" kind="show" identifier="goLogIn" id="qed-hl-jG5"/>
                         <segue destination="bKH-sI-MiM" kind="show" identifier="reenterCredentials" id="ckQ-WD-ole"/>
                         <segue destination="FI5-Kv-Y72" kind="show" identifier="goToAuth" id="FYa-hr-w4j"/>
                         <segue destination="DOn-IQ-sOy" kind="show" identifier="nodeManager" id="SNM-Ay-Yq0"/>
-                        <segue destination="nFU-Iq-QMx" kind="presentation" identifier="security" id="uYa-Es-8DF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k6b-ep-z2U" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3582,11 +3499,11 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" id="DOn-IQ-sOy" customClass="NodeManagerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VaW-dM-vZL">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="desktopcomputer" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="hUj-Oq-aob">
-                                <rect key="frame" x="16" y="10" width="22" height="44"/>
+                                <rect key="frame" x="16" y="54" width="22" height="44"/>
                                 <color key="tintColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="8YX-ym-zyp"/>
@@ -3594,7 +3511,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Node Manager" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZDy-HF-H1J">
-                                <rect key="frame" x="46" y="5" width="225.5" height="54"/>
+                                <rect key="frame" x="46" y="49" width="225.5" height="54"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="54" id="nwD-z7-6gw"/>
                                 </constraints>
@@ -3603,7 +3520,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="2hj-fw-DNn">
-                                <rect key="frame" x="16" y="56" width="343" height="591"/>
+                                <rect key="frame" x="16" y="100" width="343" height="518"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="nodeCell" rowHeight="58" id="MFC-uJ-64C">
@@ -3646,21 +3563,12 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                     <outlet property="delegate" destination="DOn-IQ-sOy" id="SG2-VV-WWI"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gcH-HD-Aa1">
-                                <rect key="frame" x="339" y="21" width="20" height="22"/>
-                                <state key="normal" image="xmark.circle.fill" catalog="system"/>
-                                <connections>
-                                    <action selector="close:" destination="DOn-IQ-sOy" eventType="touchUpInside" id="E0p-CR-ata"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="hUj-Oq-aob" firstAttribute="leading" secondItem="Mym-HT-kr5" secondAttribute="leading" constant="16" id="2VG-Ob-HEq"/>
                             <constraint firstItem="Mym-HT-kr5" firstAttribute="trailing" secondItem="2hj-fw-DNn" secondAttribute="trailing" constant="16" id="3wc-h3-KDg"/>
-                            <constraint firstItem="gcH-HD-Aa1" firstAttribute="centerY" secondItem="ZDy-HF-H1J" secondAttribute="centerY" id="5pg-z8-bJb"/>
                             <constraint firstItem="2hj-fw-DNn" firstAttribute="top" secondItem="hUj-Oq-aob" secondAttribute="bottom" constant="1.5" id="HaH-vk-AOk"/>
-                            <constraint firstItem="Mym-HT-kr5" firstAttribute="trailing" secondItem="gcH-HD-Aa1" secondAttribute="trailing" constant="16" id="Oqm-6d-cbX"/>
                             <constraint firstItem="ZDy-HF-H1J" firstAttribute="leading" secondItem="hUj-Oq-aob" secondAttribute="trailing" constant="8" id="cPY-In-RbO"/>
                             <constraint firstItem="ZDy-HF-H1J" firstAttribute="centerY" secondItem="hUj-Oq-aob" secondAttribute="centerY" id="dcf-6f-ncN"/>
                             <constraint firstItem="ZDy-HF-H1J" firstAttribute="top" secondItem="Mym-HT-kr5" secondAttribute="top" constant="5" id="nTz-Af-ijx"/>
@@ -3673,11 +3581,13 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                     <navigationItem key="navigationItem" id="eAo-Ly-Bxa"/>
                     <connections>
                         <outlet property="table" destination="2hj-fw-DNn" id="N5l-s9-Oyp"/>
+                        <segue destination="o69-RN-9VD" kind="presentation" identifier="addNode" id="N8R-BU-J52"/>
+                        <segue destination="o69-RN-9VD" kind="presentation" identifier="updateNode" id="4j4-Il-RUv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8UK-q3-fY3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7458" y="1225"/>
+            <point key="canvasLocation" x="-8089" y="1235"/>
         </scene>
         <!--Wallet Recover View Controller-->
         <scene sceneID="k9E-E2-70I">
@@ -4347,7 +4257,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="coldWalletCell" rowHeight="294" id="Cjy-2R-y2B">
-                                        <rect key="frame" x="15" y="55.5" width="345" height="294"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="345" height="294"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Cjy-2R-y2B" id="85P-mu-gZ2">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="294"/>
@@ -5054,7 +4964,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                         <color key="backgroundColor" red="0.085763759910000001" green="0.10179834810000001" blue="0.1143214479" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="multiSigWalletCell" rowHeight="435" id="Pu7-d1-gy4">
-                                        <rect key="frame" x="0.0" y="712.5" width="345" height="435"/>
+                                        <rect key="frame" x="15" y="712.5" width="345" height="435"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Pu7-d1-gy4" id="EKP-cw-XcR">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="435"/>
@@ -5212,14 +5122,8 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Node" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RYz-Mu-lfI">
-                                                            <rect key="frame" x="32" y="3.5" width="34.5" height="16"/>
-                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
-                                                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="27" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Testing Node" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2l-aT-168">
-                                                            <rect key="frame" x="120" y="5" width="187" height="16"/>
+                                                            <rect key="frame" x="40" y="3.5" width="85" height="16"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -5227,22 +5131,19 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.098183676662712258" green="0.1306873117954245" blue="0.15651240682741119" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstItem="f2l-aT-168" firstAttribute="top" secondItem="Pie-V8-QKM" secondAttribute="top" constant="5" id="4YY-X5-DNb"/>
                                                         <constraint firstItem="cmh-IY-0zE" firstAttribute="top" secondItem="Pie-V8-QKM" secondAttribute="top" constant="2" id="C5v-wq-Q7C"/>
                                                         <constraint firstItem="hNy-iI-3Iy" firstAttribute="centerY" secondItem="hMn-I7-11U" secondAttribute="centerY" id="Go7-1J-cWX"/>
-                                                        <constraint firstItem="hNy-iI-3Iy" firstAttribute="leading" secondItem="f2l-aT-168" secondAttribute="leading" id="H5r-SF-qGT"/>
                                                         <constraint firstItem="hNy-iI-3Iy" firstAttribute="leading" secondItem="hMn-I7-11U" secondAttribute="trailing" constant="6" id="IKs-FV-87u"/>
                                                         <constraint firstItem="sbj-zs-EQC" firstAttribute="leading" secondItem="hNy-iI-3Iy" secondAttribute="leading" id="Jv9-Gi-Ss1"/>
                                                         <constraint firstItem="cmh-IY-0zE" firstAttribute="leading" secondItem="Pie-V8-QKM" secondAttribute="leading" constant="3" id="K4Y-XA-4i7"/>
                                                         <constraint firstItem="4Fz-Xw-tv1" firstAttribute="leading" secondItem="Pie-V8-QKM" secondAttribute="leading" constant="8" id="Oxw-CQ-4AB"/>
                                                         <constraint firstItem="4Fz-Xw-tv1" firstAttribute="top" secondItem="hMn-I7-11U" secondAttribute="bottom" constant="2" id="STS-zt-pIT"/>
-                                                        <constraint firstItem="RYz-Mu-lfI" firstAttribute="centerY" secondItem="cmh-IY-0zE" secondAttribute="centerY" id="Wtq-aI-OIO"/>
+                                                        <constraint firstItem="f2l-aT-168" firstAttribute="leading" secondItem="cmh-IY-0zE" secondAttribute="trailing" constant="8" id="YKy-y1-gKt"/>
                                                         <constraint firstAttribute="height" constant="55" id="jh0-Ur-rEi"/>
                                                         <constraint firstItem="sbj-zs-EQC" firstAttribute="centerY" secondItem="4Fz-Xw-tv1" secondAttribute="centerY" id="l8i-El-LSr"/>
-                                                        <constraint firstAttribute="trailing" secondItem="f2l-aT-168" secondAttribute="trailing" constant="8" id="mci-M7-sDA"/>
+                                                        <constraint firstItem="f2l-aT-168" firstAttribute="centerY" secondItem="cmh-IY-0zE" secondAttribute="centerY" id="lw5-7U-CEg"/>
                                                         <constraint firstItem="hMn-I7-11U" firstAttribute="leading" secondItem="Pie-V8-QKM" secondAttribute="leading" constant="8" id="o3x-zw-zAn"/>
                                                         <constraint firstItem="hMn-I7-11U" firstAttribute="top" secondItem="cmh-IY-0zE" secondAttribute="bottom" constant="2" id="wEz-gv-B2I"/>
-                                                        <constraint firstItem="RYz-Mu-lfI" firstAttribute="leading" secondItem="cmh-IY-0zE" secondAttribute="trailing" id="xdQ-m4-HBY"/>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Signers:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iY3-wV-4kw">
@@ -6139,7 +6040,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
             <objects>
                 <viewController storyboardIdentifier="LogIn" extendedLayoutIncludesOpaqueBars="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bKH-sI-MiM" customClass="LogInViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Wt8-Mt-3Mi">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="EbK-Bw-j4E"/>
@@ -6199,11 +6100,11 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
         <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="UBf-qr-XYG"/>
+        <segue reference="qed-hl-jG5"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="cZz-Rg-m7M"/>
         <segue reference="tY7-Ss-m0T"/>
-        <segue reference="zkr-zY-rLG"/>
+        <segue reference="4j4-Il-RUv"/>
         <segue reference="r5v-RV-hIL"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

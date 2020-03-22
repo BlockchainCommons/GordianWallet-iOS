@@ -6,6 +6,7 @@
 //  Copyright © 2020 Blockchain Commons, LLC. All rights reserved.
 //
 
+import CryptoKit
 import Foundation
 import LibWally
 
@@ -76,7 +77,6 @@ class RecoverWallet {
                                 
                                 if !error && encryptedData != nil {
                                     
-                                    let walletName = self.json["walletName"] as! String
                                     var newWallet = [String:Any]()
                                     newWallet["xprv"] = encryptedData!
                                     newWallet["birthdate"] = self.json["birthdate"] as! Int32
@@ -86,7 +86,6 @@ class RecoverWallet {
                                     newWallet["lastUsed"] = Date()
                                     newWallet["lastBalance"] = 0.0
                                     newWallet["isArchived"] = false
-                                    newWallet["name"] = walletName
                                     newWallet["type"] = "MULTI"
                                     newWallet["seed"] = encryptedSeed!
                                     newWallet["nodeId"] = self.node.id
@@ -98,92 +97,104 @@ class RecoverWallet {
                                         
                                     }
                                     
-                                    // need to check if wallet exists on our node or not first
-                                    let reducer = Reducer()
-                                    reducer.makeCommand(walletName: "", command: .listwalletdir, param: "") {
+                                    let hdXprv = HDKey(self.descriptorStruct.multiSigKeys[1])
+                                    if let accountXpub = hdXprv?.xpub {
                                         
-                                        if !reducer.errorBool {
+                                        self.descriptor = (self.json["descriptor"] as! String)
+                                        let primaryPublicKeyDescriptor = self.descriptor.replacingOccurrences(of: self.descriptorStruct.multiSigKeys[1], with: accountXpub)
+                                        newWallet["descriptor"] = primaryPublicKeyDescriptor
+                                        let digest = SHA256.hash(data: primaryPublicKeyDescriptor.dataUsingUTF8StringEncoding)
+                                        let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
+                                        newWallet["name"] = walletName
+                                        
+                                        // need to check if wallet exists on our node or not first
+                                        let reducer = Reducer()
+                                        reducer.makeCommand(walletName: "", command: .listwalletdir, param: "") {
                                             
-                                            if let dict = reducer.dictToReturn {
+                                            if !reducer.errorBool {
                                                 
-                                                let wallets = dict["wallets"] as! NSArray
-                                                var walletExists = false
-                                                
-                                                for (i, wallet) in wallets.enumerated() {
+                                                if let dict = reducer.dictToReturn {
                                                     
-                                                    let name = (wallet as! NSDictionary)["name"] as! String
+                                                    let wallets = dict["wallets"] as! NSArray
+                                                    var walletExists = false
                                                     
-                                                    if name == walletName {
+                                                    for (i, wallet) in wallets.enumerated() {
                                                         
-                                                        walletExists = true
+                                                        let name = (wallet as! NSDictionary)["name"] as! String
                                                         
-                                                    }
-                                                    
-                                                    if i + 1 == wallets.count {
-                                                        
-                                                        if walletExists {
+                                                        if name == walletName {
                                                             
-                                                            print("we have a winner, the wallet is on our node")
-                                                            // need to convert existing descriptor to a public key descriptor and a change descriptor
-                                                            let hdXprv = HDKey(self.descriptorStruct.multiSigKeys[1])
-                                                            if let accountXpub = hdXprv?.xpub {
+                                                            walletExists = true
+                                                            
+                                                        }
+                                                        
+                                                        if i + 1 == wallets.count {
+                                                            
+                                                            if walletExists {
                                                                 
-                                                                self.descriptor = (self.json["descriptor"] as! String)
-                                                                let primaryPublicKeyDescriptor = self.descriptor.replacingOccurrences(of: self.descriptorStruct.multiSigKeys[1], with: accountXpub)
-                                                                newWallet["descriptor"] = primaryPublicKeyDescriptor
-                                                                var changeDesc = primaryPublicKeyDescriptor.replacingOccurrences(of: "\(accountXpub)/0/*", with: "\(accountXpub)/1/*")
-                                                                changeDesc = changeDesc.replacingOccurrences(of: "\(self.descriptorStruct.multiSigKeys[0])/0/*", with: "\(self.descriptorStruct.multiSigKeys[0])/1/*")
-                                                                changeDesc = changeDesc.replacingOccurrences(of: "\(self.descriptorStruct.multiSigKeys[2])/0/*", with: "\(self.descriptorStruct.multiSigKeys[2])/1/*")
-                                                                
-                                                                let arr = changeDesc.split(separator: "#")
-                                                                changeDesc = "\(arr[0])"
-                                                                reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") {
+                                                                print("we have a winner, the wallet is on our node")
+                                                                // need to convert existing descriptor to a public key descriptor and a change descriptor
+                                                                let hdXprv = HDKey(self.descriptorStruct.multiSigKeys[1])
+                                                                if let accountXpub = hdXprv?.xpub {
                                                                     
-                                                                    if !reducer.errorBool {
+                                                                    self.descriptor = (self.json["descriptor"] as! String)
+                                                                    let primaryPublicKeyDescriptor = self.descriptor.replacingOccurrences(of: self.descriptorStruct.multiSigKeys[1], with: accountXpub)
+                                                                    newWallet["descriptor"] = primaryPublicKeyDescriptor
+                                                                    var changeDesc = primaryPublicKeyDescriptor.replacingOccurrences(of: "\(accountXpub)/0/*", with: "\(accountXpub)/1/*")
+                                                                    changeDesc = changeDesc.replacingOccurrences(of: "\(self.descriptorStruct.multiSigKeys[0])/0/*", with: "\(self.descriptorStruct.multiSigKeys[0])/1/*")
+                                                                    changeDesc = changeDesc.replacingOccurrences(of: "\(self.descriptorStruct.multiSigKeys[2])/0/*", with: "\(self.descriptorStruct.multiSigKeys[2])/1/*")
+                                                                    
+                                                                    let arr = changeDesc.split(separator: "#")
+                                                                    changeDesc = "\(arr[0])"
+                                                                    reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") {
                                                                         
-                                                                        if let result = reducer.dictToReturn {
+                                                                        if !reducer.errorBool {
                                                                             
-                                                                            if let changeDescriptor = result["descriptor"] as? String {
+                                                                            if let result = reducer.dictToReturn {
                                                                                 
-                                                                                newWallet["changeDescriptor"] = changeDescriptor
-                                                                                let walletSaver = WalletSaver()
-                                                                                walletSaver.save(walletToSave: newWallet) { (success) in
+                                                                                if let changeDescriptor = result["descriptor"] as? String {
                                                                                     
-                                                                                    if success {
+                                                                                    newWallet["changeDescriptor"] = changeDescriptor
+                                                                                    let walletSaver = WalletSaver()
+                                                                                    walletSaver.save(walletToSave: newWallet) { (success) in
                                                                                         
-                                                                                        completion((true, nil))
-                                                                                        
-                                                                                    } else {
-                                                                                        
-                                                                                        completion((false, "failed saving wallet to device"))
+                                                                                        if success {
+                                                                                            
+                                                                                            completion((true, nil))
+                                                                                            
+                                                                                        } else {
+                                                                                            
+                                                                                            completion((false, "failed saving wallet to device"))
+                                                                                            
+                                                                                        }
                                                                                         
                                                                                     }
                                                                                     
                                                                                 }
                                                                                 
+                                                                                
                                                                             }
                                                                             
+                                                                        } else {
+                                                                            
+                                                                            completion((false, reducer.errorDescription))
                                                                             
                                                                         }
                                                                         
-                                                                    } else {
-                                                                        
-                                                                        completion((false, reducer.errorDescription))
-                                                                        
                                                                     }
+                                                                    
+                                                                } else {
+                                                                    
+                                                                    completion((false, "failed deriving account xpub"))
                                                                     
                                                                 }
                                                                 
+                                                                
                                                             } else {
                                                                 
-                                                                completion((false, "failed deriving account xpub"))
+                                                                completion((false, "wallet does not exist, are you sure you are connected to the correct node?"))
                                                                 
                                                             }
-                                                            
-                                                            
-                                                        } else {
-                                                            
-                                                            completion((false, "wallet does not exist, are you sure you are connected to the correct node?"))
                                                             
                                                         }
                                                         
@@ -191,16 +202,20 @@ class RecoverWallet {
                                                     
                                                 }
                                                 
+                                            } else {
+                                                
+                                                completion((false, reducer.errorDescription))
+                                                
                                             }
-                                            
-                                        } else {
-                                            
-                                            completion((false, reducer.errorDescription))
                                             
                                         }
                                         
+                                    } else {
+                                        
+                                        completion((false, "failed deriving account xpub"))
+                                        
                                     }
-                                    
+                                                                        
                                 } else {
                                     
                                     completion((false, "failed encrypting mnemonic"))
@@ -258,7 +273,6 @@ class RecoverWallet {
                                 
                                 if !error && encryptedData != nil {
                                     
-                                    let walletName = self.json["walletName"] as! String
                                     var newWallet = [String:Any]()
                                     newWallet["xprv"] = encryptedData!
                                     newWallet["birthdate"] = self.json["birthdate"] as! Int32
@@ -268,7 +282,6 @@ class RecoverWallet {
                                     newWallet["lastUsed"] = Date()
                                     newWallet["lastBalance"] = 0.0
                                     newWallet["isArchived"] = false
-                                    newWallet["name"] = walletName
                                     newWallet["type"] = "DEFAULT"
                                     newWallet["seed"] = encryptedSeed!
                                     newWallet["nodeId"] = self.node.id
@@ -280,93 +293,128 @@ class RecoverWallet {
                                         
                                     }
                                     
-                                    // need to check if wallet exists on our node or not first
-                                    let reducer = Reducer()
-                                    reducer.makeCommand(walletName: "", command: .listwalletdir, param: "") {
+                                    let hdXprv = HDKey(self.descriptorStruct.accountXprv)
+                                    if let accountXpub = hdXprv?.xpub {
                                         
-                                        if !reducer.errorBool {
+                                        self.descriptor = (self.json["descriptor"] as! String)
+                                        let primaryPublicKeyDescriptor = self.descriptor.replacingOccurrences(of: self.descriptorStruct.accountXprv, with: accountXpub)
+                                        
+                                        let reducer = Reducer()
+                                        reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(primaryPublicKeyDescriptor)\"") {
                                             
-                                            if let dict = reducer.dictToReturn {
+                                            if !reducer.errorBool {
                                                 
-                                                if let wallets = dict["wallets"] as? NSArray {
+                                                if let dict = reducer.dictToReturn {
                                                     
-                                                    var walletExists = false
+                                                    let primaryDescriptor = dict["descriptor"] as! String
+                                                    newWallet["descriptor"] = primaryDescriptor
+                                                    let digest = SHA256.hash(data: primaryDescriptor.dataUsingUTF8StringEncoding)
+                                                    let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
+                                                    newWallet["name"] = walletName
                                                     
-                                                    for (i, wallet) in wallets.enumerated() {
+                                                    var changeDesc = primaryPublicKeyDescriptor.replacingOccurrences(of: "\(accountXpub)/0/*", with: "\(accountXpub)/1/*")
+                                                    let arr = changeDesc.split(separator: "#")
+                                                    changeDesc = "\(arr[0])"
+                                                    
+                                                    reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") {
                                                         
-                                                        if let walletDict = wallet as? NSDictionary {
+                                                        if !reducer.errorBool {
                                                             
-                                                            if let name = walletDict["name"] as? String {
+                                                            if let dict = reducer.dictToReturn {
                                                                 
-                                                                if name == walletName {
-                                                                    
-                                                                    walletExists = true
-                                                                    
-                                                                }
+                                                                let changeDescriptor = dict["descriptor"] as! String
+                                                                newWallet["changeDescriptor"] = changeDescriptor
                                                                 
-                                                                if i + 1 == wallets.count {
+                                                                // need to check if wallet exists on our node or not first
+                                                                let reducer = Reducer()
+                                                                reducer.makeCommand(walletName: "", command: .listwalletdir, param: "") {
                                                                     
-                                                                    if walletExists {
+                                                                    if !reducer.errorBool {
                                                                         
-                                                                        print("we have a winner, the wallet is on our node")
-                                                                        // need to convert existing descriptor to a public key descriptor and a change descriptor
-                                                                        let hdXprv = HDKey(self.descriptorStruct.accountXprv)
-                                                                        if let accountXpub = hdXprv?.xpub {
+                                                                        if let dict = reducer.dictToReturn {
                                                                             
-                                                                            self.descriptor = (self.json["descriptor"] as! String)
-                                                                            let primaryPublicKeyDescriptor = self.descriptor.replacingOccurrences(of: self.descriptorStruct.accountXprv, with: accountXpub)
-                                                                            newWallet["descriptor"] = primaryPublicKeyDescriptor
-                                                                            newWallet["changeDescriptor"] = primaryPublicKeyDescriptor.replacingOccurrences(of: "\(accountXpub)/0/*", with: "\(accountXpub)/1/*")
-                                                                            
-                                                                            let walletSaver = WalletSaver()
-                                                                            walletSaver.save(walletToSave: newWallet) { (success) in
+                                                                            if let wallets = dict["wallets"] as? NSArray {
                                                                                 
-                                                                                if success {
-                                                                                    
-                                                                                    completion((true, nil))
-                                                                                    
-                                                                                } else {
-                                                                                    
-                                                                                    completion((false, "failed saving wallet"))
-                                                                                    
-                                                                                }
+                                                                                var walletExists = false
                                                                                 
-                                                                            }
-                                                                            
-                                                                        } else {
-                                                                            
-                                                                            completion((false, "failed deriving account xpub"))
-                                                                            
-                                                                        }
-                                                                        
-                                                                        
-                                                                    } else {
-                                                                        
-                                                                        //NEED TO FULLY RECOVER FROM THE QR HERE...
-                                                                        print("recreating the wallet")
-                                                                        let walletCreator = WalletCreator()
-                                                                        walletCreator.walletDict = newWallet
-                                                                        walletCreator.createStandUpWallet { (success, errorDescription, primaryDescriptor, changeDescriptor) in
-                                                                            
-                                                                            if success {
-                                                                                
-                                                                                newWallet["descriptor"] = primaryDescriptor!
-                                                                                newWallet["changeDescriptor"] = changeDescriptor!
-                                                                                let saver = WalletSaver()
-                                                                                saver.save(walletToSave: newWallet) { (success) in
+                                                                                for (i, wallet) in wallets.enumerated() {
                                                                                     
-                                                                                    if success {
+                                                                                    if let walletDict = wallet as? NSDictionary {
                                                                                         
-                                                                                        let reducer = Reducer()
-                                                                                        reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "\(self.json["blockheight"] as! Int)") {
+                                                                                        if let name = walletDict["name"] as? String {
                                                                                             
-                                                                                            completion((true, nil))
+                                                                                            if name == walletName {
+                                                                                                
+                                                                                                walletExists = true
+                                                                                                
+                                                                                            }
+                                                                                            
+                                                                                            if i + 1 == wallets.count {
+                                                                                                
+                                                                                                if walletExists {
+                                                                                                    
+                                                                                                    print("we have a winner, the wallet is on our node")
+                                                                                                    let walletSaver = WalletSaver()
+                                                                                                    walletSaver.save(walletToSave: newWallet) { (success) in
+                                                                                                        
+                                                                                                        if success {
+                                                                                                            
+                                                                                                            completion((true, nil))
+                                                                                                            
+                                                                                                        } else {
+                                                                                                            
+                                                                                                            completion((false, "failed saving wallet"))
+                                                                                                            
+                                                                                                        }
+                                                                                                        
+                                                                                                    }
+                                                                                                    
+                                                                                                } else {
+                                                                                                    
+                                                                                                    //NEED TO FULLY RECOVER FROM THE QR HERE...
+                                                                                                    let walletCreator = WalletCreator()
+                                                                                                    walletCreator.walletDict = newWallet
+                                                                                                    walletCreator.createStandUpWallet { (success, errorDescription) in
+                                                                                                        
+                                                                                                        if success {
+                                                                                                            
+                                                                                                            let saver = WalletSaver()
+                                                                                                            saver.save(walletToSave: newWallet) { (success) in
+                                                                                                                
+                                                                                                                if success {
+                                                                                                                    
+                                                                                                                    let reducer = Reducer()
+                                                                                                                    reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "\(self.json["blockheight"] as! Int)") {
+                                                                                                                        
+                                                                                                                        completion((true, nil))
+                                                                                                                        
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                } else {
+                                                                                                                    
+                                                                                                                    completion((false, "error saving your wallet"))
+                                                                                                                    
+                                                                                                                }
+                                                                                                                
+                                                                                                            }
+                                                                                                            
+                                                                                                        } else {
+                                                                                                            
+                                                                                                            completion((false, errorDescription))
+                                                                                                            
+                                                                                                        }
+                                                                                                        
+                                                                                                    }
+                                                                                                                                                                
+                                                                                                }
+                                                                                                
+                                                                                            }
                                                                                             
                                                                                         }
-                                                                                                                                
+                                                                                        
                                                                                     } else {
                                                                                         
-                                                                                        completion((false, "error saving your wallet"))
+                                                                                        completion((false, "unable to parse wallets from bitcoind"))
                                                                                         
                                                                                     }
                                                                                     
@@ -374,11 +422,19 @@ class RecoverWallet {
                                                                                 
                                                                             } else {
                                                                                 
-                                                                                completion((false, errorDescription))
+                                                                                completion((false, "no wallets exist on that node?"))
                                                                                 
                                                                             }
                                                                             
+                                                                        } else {
+                                                                            
+                                                                            completion((false, "invalid response from bitcoind"))
+                                                                            
                                                                         }
+                                                                        
+                                                                    } else {
+                                                                        
+                                                                        completion((false, reducer.errorDescription))
                                                                         
                                                                     }
                                                                     
@@ -386,31 +442,23 @@ class RecoverWallet {
                                                                 
                                                             }
                                                             
-                                                        } else {
-                                                            
-                                                            completion((false, "unable to parse wallets from bitcoind"))
-                                                            
                                                         }
                                                         
                                                     }
-                                                    
-                                                } else {
-                                                    
-                                                    completion((false, "no wallets exist on that node?"))
                                                     
                                                 }
                                                 
                                             } else {
                                                 
-                                                completion((false, "invalid response from bitcoind"))
+                                                completion((false, reducer.errorDescription))
                                                 
                                             }
                                             
-                                        } else {
-                                            
-                                            completion((false, reducer.errorDescription))
-                                            
                                         }
+
+                                    } else {
+                                        
+                                        completion((false, "failed deriving account xpub"))
                                         
                                     }
                                     
@@ -454,13 +502,11 @@ class RecoverWallet {
         
         let enc = Encryption()
         let hotDescriptor = self.json["descriptor"] as! String
-        let walletName = self.json["walletName"] as! String
         let blockheight = self.json["blockheight"] as! Int
         let localDerivation = self.descriptorStruct.derivationArray[1]
         let nodeDerivation = self.descriptorStruct.derivationArray[0]
         var newWallet = [String:Any]()
         newWallet["birthdate"] = self.json["birthdate"] as! Int32
-        newWallet["name"] = walletName
         newWallet["id"] = UUID()
         newWallet["isActive"] = false
         newWallet["lastUsed"] = Date()
@@ -503,6 +549,9 @@ class RecoverWallet {
                                 let deviceXpub = deviceKey.xpub
                                 let primaryDescriptor = hotDescriptor.replacingOccurrences(of: deviceXprv, with: deviceXpub)
                                 newWallet["descriptor"] = primaryDescriptor
+                                let digest = SHA256.hash(data: primaryDescriptor.dataUsingUTF8StringEncoding)
+                                let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
+                                newWallet["name"] = walletName
                                 
                                 // then we need to get the change descriptor and set it to the new wallet
                                 var changeDescriptor = primaryDescriptor.replacingOccurrences(of: "\(oldRecoveryXpub)/0/*", with: "\(oldRecoveryXpub)/1/*")
@@ -675,7 +724,6 @@ class RecoverWallet {
                 newWallet["derivation"] = self.derivation
                 newWallet["type"] = "DEFAULT"
                 newWallet["birthdate"] = keyBirthday()
-                newWallet["name"] = "DEFAULT_\(randomString(length: 10))_StandUp"
                 newWallet["id"] = UUID()
                 newWallet["isActive"] = false
                 newWallet["lastUsed"] = Date()
@@ -690,29 +738,143 @@ class RecoverWallet {
                     if !error && encryptedData != nil {
                         
                         newWallet["seed"] = encryptedData!
-                        let walletCreator = WalletCreator()
-                        walletCreator.walletDict = newWallet
-                        walletCreator.createStandUpWallet { (success, errorDescription, primaryDescriptor, changeDescriptor) in
+                        
+                        let keyFetcher = KeyFetcher()
+                        let w = WalletStruct(dictionary: newWallet)
+                        keyFetcher.xpub(wallet: w) { (xpub, error) in
                             
-                            if success {
+                            if !error {
                                 
-                                newWallet["descriptor"] = primaryDescriptor!
-                                newWallet["changeDescriptor"] = changeDescriptor!
-                                let saver = WalletSaver()
-                                saver.save(walletToSave: newWallet) { (success) in
+                                keyFetcher.fingerprint(wallet: w) { (fingerprint, error) in
                                     
-                                    if success {
+                                    if !error && fingerprint != nil {
                                         
-                                        let reducer = Reducer()
-                                        reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "1") {
+                                        var param = ""
+                                        
+                                        switch w.derivation {
                                             
-                                            completion((true, nil))
+                                        case "m/84'/1'/0'":
+                                            param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/0/*)\""
+                                            
+                                        case "m/84'/0'/0'":
+                                            param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/0/*)\""
+                                            
+                                        case "m/44'/1'/0'":
+                                            param = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/0/*)\""
+                                             
+                                        case "m/44'/0'/0'":
+                                            param = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/0/*)\""
+                                            
+                                        case "m/49'/1'/0'":
+                                            param = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/0/*))\""
+                                            
+                                        case "m/49'/0'/0'":
+                                            param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/0/*))\""
+                                            
+                                        default:
+                                            
+                                            break
                                             
                                         }
-                                                                                
-                                    } else {
                                         
-                                        completion((false, "error saving your wallet"))
+                                        let reducer = Reducer()
+                                        reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) {
+                                            
+                                            if !reducer.errorBool {
+                                                
+                                                if let dict = reducer.dictToReturn {
+                                                    
+                                                    let primaryDescriptor = dict["descriptor"] as! String
+                                                    newWallet["descriptor"] = primaryDescriptor
+                                                    let digest = SHA256.hash(data: primaryDescriptor.dataUsingUTF8StringEncoding)
+                                                    let stringHash = digest.map { String(format: "%02hhx", $0) }.joined()
+                                                    newWallet["name"] = stringHash
+                                                    
+                                                    switch w.derivation {
+                                                        
+                                                    case "m/84'/1'/0'":
+                                                        param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/1/*)\""
+                                                        
+                                                    case "m/84'/0'/0'":
+                                                        param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/1/*)\""
+                                                        
+                                                    case "m/44'/1'/0'":
+                                                        param = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/1/*)\""
+                                                         
+                                                    case "m/44'/0'/0'":
+                                                        param = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/1/*)\""
+                                                        
+                                                    case "m/49'/1'/0'":
+                                                        param = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/1/*))\""
+                                                        
+                                                    case "m/49'/0'/0'":
+                                                        param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/1/*))\""
+                                                        
+                                                    default:
+                                                        
+                                                        break
+                                                        
+                                                    }
+                                                    
+                                                    reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) {
+                                                        
+                                                        if !reducer.errorBool {
+                                                            
+                                                            if let dict = reducer.dictToReturn {
+                                                                
+                                                                let changeDescriptor = dict["descriptor"] as! String
+                                                                newWallet["changeDescriptor"] = changeDescriptor
+                                                                
+                                                                let walletCreator = WalletCreator()
+                                                                walletCreator.walletDict = newWallet
+                                                                walletCreator.createStandUpWallet { (success, errorDescription) in
+                                                                    
+                                                                    if success {
+                                                                        
+                                                                        let saver = WalletSaver()
+                                                                        saver.save(walletToSave: newWallet) { (success) in
+                                                                            
+                                                                            if success {
+                                                                                
+                                                                                let reducer = Reducer()
+                                                                                reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "1") {
+                                                                                    
+                                                                                    completion((true, nil))
+                                                                                    
+                                                                                }
+                                                                                                                        
+                                                                            } else {
+                                                                                
+                                                                                completion((false, "error saving your wallet"))
+                                                                                
+                                                                            }
+                                                                            
+                                                                        }
+                                                                        
+                                                                    } else {
+                                                                        
+                                                                        completion((false, errorDescription))
+                                                                        
+                                                                    }
+                                                                    
+                                                                }
+
+                                                                
+                                                            }
+                                                            
+                                                        }
+                                                        
+                                                    }
+                                                    
+                                                }
+                                                
+                                            } else {
+                                                
+                                                completion((false, reducer.errorDescription))
+                                                
+                                            }
+                                            
+                                        }
                                         
                                     }
                                     
@@ -720,7 +882,7 @@ class RecoverWallet {
                                 
                             } else {
                                 
-                                completion((false, errorDescription))
+                                completion((false, "error getting xpub"))
                                 
                             }
                             

@@ -539,7 +539,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         deviceXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
-        walletFileLabel.text = wallet.name + ".dat"
+        walletFileLabel.text = reducedName(name: wallet.name)
         
         for n in nodes {
             
@@ -733,7 +733,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         offlineXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
-        walletFileLabel.text = wallet.name + ".dat"
+        walletFileLabel.text = reducedName(name: wallet.name)
         
         for n in nodes {
             
@@ -910,7 +910,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
-        walletFileLabel.text = wallet.name + ".dat"
+        walletFileLabel.text = reducedName(name: wallet.name)
         
         for n in nodes {
             
@@ -1319,7 +1319,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             DispatchQueue.main.async {
                                 
                                 sender.loadingIndicator(show: false)
-                                sender.tintColor = .systemTeal
                                 self.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
                                 self.isLoading = false
                                 
@@ -1329,6 +1328,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             self.cd.updateEntity(id: wallet.id, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) {}
                             
                         }
+                        
+                    }
+                    
+                } else {
+                    
+                    DispatchQueue.main.async {
+                        
+                        sender.loadingIndicator(show: false)
+                        self.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
+                        self.isLoading = false
+                        showAlert(vc: self, title: "Error", message: nodeLogic.errorDescription)
                         
                     }
                     
@@ -1696,6 +1706,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
+    private func reducedName(name: String) -> String {
+        
+        let first = String(name.prefix(5))
+        let last = String(name.suffix(5))
+        return "\(first)*****\(last).dat"
+        
+    }
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -1719,13 +1737,13 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             }
             
-        case "walletInfo":
-            
-            if let vc = segue.destination as? WalletInfoViewController {
-                
-                vc.walletname = name
-                
-            }
+//        case "walletInfo":
+//            
+//            if let vc = segue.destination as? WalletInfoViewController {
+//                
+//                vc.walletname = name
+//                
+//            }
             
         case "verifyAddresses":
             
@@ -1764,7 +1782,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         self.isLoading = true
                         self.refresh()
                         
-                        showAlert(vc: self, title: "Success!", message: "Wallet recovered 🤩!")
+                        showAlert(vc: self, title: "Success!", message: "Wallet recovered 🤩!\n\nYour node is now rescanning the blockchain, balances may not show until the rescan completes.")
                         
                     }
                     

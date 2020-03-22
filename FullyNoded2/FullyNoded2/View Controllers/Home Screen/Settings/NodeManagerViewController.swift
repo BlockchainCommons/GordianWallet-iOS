@@ -14,6 +14,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     var nodes = [[String:Any]]()
     var addButton = UIBarButtonItem()
     var editButton = UIBarButtonItem()
+    var id:UUID!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,23 +86,53 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         
         if editingStyle == .delete {
             
+            let cd = CoreDataService()
             let id = nodes[indexPath.section]["id"] as! UUID
             
-            let cd = CoreDataService()
-            cd.deleteEntity(id: id, entityName: .nodes) {
+            cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
                 
-                if !cd.errorBool {
-                                        
-                    DispatchQueue.main.async {
+                if errorDescription == nil && wallets != nil {
+                    
+                    var walletsExist = false
+                    
+                    for wallet in wallets! {
                         
-                        self.nodes.remove(at: indexPath.section)
-                        tableView.deleteSections(IndexSet.init(arrayLiteral: indexPath.section), with: .fade)
+                        let w = WalletStruct(dictionary: wallet)
+                        
+                        if w.nodeId == id && !w.isArchived {
+                            
+                            walletsExist = true
+                            
+                        }
                         
                     }
                     
-                } else {
-                    
-                    displayAlert(viewController: self, isError: true, message: "error deleting node")
+                    if !walletsExist {
+                        
+                        cd.deleteEntity(id: id, entityName: .nodes) {
+                            
+                            if !cd.errorBool {
+                                                    
+                                DispatchQueue.main.async {
+                                    
+                                    self.nodes.remove(at: indexPath.section)
+                                    tableView.deleteSections(IndexSet.init(arrayLiteral: indexPath.section), with: .fade)
+                                    
+                                }
+                                
+                            } else {
+                                
+                                displayAlert(viewController: self, isError: true, message: "error deleting node")
+                                
+                            }
+                            
+                        }
+                        
+                    } else {
+                        
+                        showAlert(vc: self, title: "Warning!", message: "That node has wallets associated with it! If you want to delete a node you first need to delete its wallets, ensure you sweep those wallets to a new node first or recover them on your new node.\n\nOnce all wallets associated with this node have been deleted you may delete the node, we do this to prevent you from accidentally deleting a node with wallets.")
+                        
+                    }
                     
                 }
                 
@@ -115,16 +146,43 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         
         let section = indexPath.section
         let node = nodes[section]
-        let idToActivate = NodeStruct.init(dictionary: node).id
+        id = NodeStruct.init(dictionary: node).id
          
         //turning on
-        makeActive(nodeToActivate: idToActivate)
+        //makeActive(nodeToActivate: idToActivate)
         
         DispatchQueue.main.async {
 
             let impact = UIImpactFeedbackGenerator()
             impact.impactOccurred()
 
+        }
+        
+        refreshCredentials()
+        
+    }
+    
+    private func refreshCredentials() {
+        
+        DispatchQueue.main.async {
+            
+            let alert = UIAlertController(title: "Update this nodes credentials?", message: "It is considered good practice to refresh your nodes hidden service from time to time, this tool allows you to scan a new QuickConnect QR code in order to update this nodes credentials.\n\nPlease ensure you understand the implications of this! If you simply want to add a new node do that by tapping the + button instead.", preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: "Update this node", style: .default, handler: { action in
+                
+                DispatchQueue.main.async {
+                    
+                    self.performSegue(withIdentifier: "updateNode", sender: self)
+                    
+                }
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            
+            alert.popoverPresentationController?.sourceView = self.view
+            self.present(alert, animated: true, completion: nil)
+            
         }
         
     }
@@ -279,7 +337,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                                     
                                 } else {
                                     
-                                    displayAlert(viewController: self, isError: true, message: "error deactivating wallet")
+                                    displayAlert(viewController: self, isError: true, message: "error deactivating node")
                                     
                                 }
                                 
@@ -293,7 +351,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                 
             } else {
                 
-                displayAlert(viewController: self, isError: true, message: "error deactivating wallets: \(errorDescription!)")
+                displayAlert(viewController: self, isError: true, message: "error deactivating node: \(errorDescription!)")
                 
             }
             
@@ -350,6 +408,21 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         let id = segue.identifier
         
         switch id {
+            
+        case "updateNode":
+            
+            if let vc = segue.destination as? ScannerViewController {
+                
+                vc.updatingNode = true
+                vc.nodeId = self.id
+                vc.onDoneBlock = { result in
+                    
+                    showAlert(vc: self, title: "Node Updated!", message: "The nodes credentials were successfully updated")
+                    self.load()
+                    
+                }
+                
+            }
             
         case "addNode":
             

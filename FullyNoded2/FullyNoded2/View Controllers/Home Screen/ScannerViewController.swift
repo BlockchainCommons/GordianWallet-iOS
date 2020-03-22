@@ -11,6 +11,8 @@ import LibWally
 
 class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
+    var updatingNode = Bool()
+    var nodeId:UUID!
     var words = ""
     var scanningNode = Bool()
     var isRecovering = Bool()
@@ -318,11 +320,28 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             
         }
         
-        print("url = \(url)")
+        func updateNode() {
+            
+            qc.nodeToUpdate = self.nodeId
+            
+            qc.addNode(vc: self,
+                       url: url,
+                       completion: nodeAdded)
+            
+        }
         
         if url.hasPrefix("btcrpc://") || url.hasPrefix("btcstandup://") {
             
-            addnode()
+            if !updatingNode {
+                
+                addnode()
+                
+            } else {
+                
+                updateNode()
+                
+            }
+            
             
         } else if let _ = Data(base64Encoded: url) {
             
@@ -345,7 +364,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                         
                         let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
                         
-                        if let _ = dict["walletName"] as? String {
+                        //if let _ = dict["walletName"] as? String {
                             
                             if let _ = dict["descriptor"] as? String {
                                 
@@ -417,11 +436,11 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                                 
                             }
                             
-                        } else {
-                            
-                            invalidAlert()
-                            
-                        }
+//                        } else {
+//
+//                            invalidAlert()
+//
+//                        }
                                         
                     } catch let error as NSError {
                         
