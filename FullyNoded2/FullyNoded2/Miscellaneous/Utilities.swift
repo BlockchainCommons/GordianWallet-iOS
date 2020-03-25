@@ -27,7 +27,6 @@ public extension String {
 }
 
 public extension Dictionary {
-    
     func json() -> String? {
         if let json = try? JSONSerialization.data(withJSONObject: self, options: []) {
             if let jsonString = String(data: json, encoding: .utf8) {
@@ -62,10 +61,11 @@ public extension UIButton {
 }
 
 extension Notification.Name {
-    public static let torConnecting = Notification.Name(rawValue: "torConnecting")
-    public static let didEnterForeground = Notification.Name(rawValue: "enteredForeground")
+    //public static let torConnecting = Notification.Name(rawValue: "torConnecting")
+    //public static let didEnterForeground = Notification.Name(rawValue: "enteredForeground")
     public static let didStartBootstrappingTor = Notification.Name(rawValue: "didStartBootstrappingTor")
     public static let didCompleteOnboarding = Notification.Name(rawValue: "didCompleteOnboarding")
+    public static let didEstablishTorConnection = Notification.Name(rawValue: "didEstablishTorConnection")
 }
 
 public extension Int {
@@ -77,19 +77,12 @@ public extension Int {
 }
 
 public func isValidCharacters(_ string: String) -> Bool {
-    
     let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-    
     if string.rangeOfCharacter(from: characterset.inverted) != nil {
-        
         return false
-        
     } else {
-        
         return true
-        
     }
-    
 }
 
 public func getActiveWalletNow(completion: @escaping ((wallet: WalletStruct?, error: Bool)) -> Void) {
@@ -337,6 +330,8 @@ public extension UIDevice {
             case "iPhone10,1", "iPhone10,4":                return "iPhone 8"
             case "iPhone10,2", "iPhone10,5":                return "iPhone 8 Plus"
             case "iPhone10,3", "iPhone10,6":                return "iPhone X"
+            case "iPhone12,1":                              return "iPhone 11"
+            case "iPhone12,3":                              return "iPhone 11 Pro"
             case "iPhone12,5":                              return "iPhone 11 pro max"
             case "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4":return "iPad 2"
             case "iPad3,1", "iPad3,2", "iPad3,3":           return "iPad 3"

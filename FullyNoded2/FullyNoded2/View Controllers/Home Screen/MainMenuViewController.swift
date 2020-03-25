@@ -47,7 +47,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var transactionArray = [[String:Any]]()
     @IBOutlet var mainMenu: UITableView!
     var refresher: UIRefreshControl!
-    var connector:Connector!
     var connectingView = ConnectingView()
     let cd = CoreDataService()
     let enc = Encryption()
@@ -84,10 +83,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         mainMenu.delegate = self
         tabBarController?.delegate = self
         navigationController?.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived(_:)), name: .torConnecting, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(foregroundNotificationReceived(_:)), name: .didEnterForeground, object: nil)
+        
+        //NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived(_:)), name: .torConnecting, object: nil)
+        //NotificationCenter.default.addObserver(self, selector: #selector(foregroundNotificationReceived(_:)), name: .didEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(torBootStrapping(_:)), name: .didStartBootstrappingTor, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didCompleteOnboarding(_:)), name: .didCompleteOnboarding, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(torConnected(_:)), name: .didEstablishTorConnection, object: nil)
+        
         initialLoad = true
         walletSectionLoaded = false
         torSectionLoaded = false
@@ -127,6 +129,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
         }
+        
+        bootStrapping = true
+        addStatusLabel(description: "     Bootstrapping Tor...")
+        reloadSections([torCellIndex])
         
         func showIntro() {
             
@@ -178,23 +184,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    
-    @objc func notificationReceived(_ notification: Notification) {
-        print("notificationReceived TorConnected")
+    @objc func torConnected(_ notification: Notification) {
         
         bootStrapping = false
         torConnected = true
         reloadSections([torCellIndex])
         didAppear()
-
-    }
-    
-    // We can ignore this now as we are no longer force resigning tor when the app enters the background. It may be used again as tor reconnection is an ongoing issue.
-    @objc func foregroundNotificationReceived(_ notification: Notification) {
-        print("foreground NotificationReceived")
         
-
-
     }
     
     @IBAction func goToWallets(_ sender: Any) {
@@ -280,6 +276,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                 if !error && w != nil {
                                     
                                     self.wallet = w!
+                                                                        
+                                    if w!.index >= w!.maxRange - 100 {
+                                        
+                                        self.showIndexWarning()
+                                        
+                                    }
                                     
                                     if self.existingWalletName != w!.name && self.existingNodeId != node!.id {
                                         
@@ -318,6 +320,54 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         
         }
 
+    }
+    
+    private func showIndexWarning() {
+        
+        var message = ""
+        var actionTitle = ""
+        var alertAction: (() -> Void)!
+        
+        if self.wallet.type == "MULTI" {
+            
+            message = "Your node only has \(self.wallet.maxRange - self.wallet.index) more keys left to sign with. We urge you to roll this wallet over to a new one ASAP. If you exeed the limit the your node will no longer be able to sign this wallets transactions."
+            actionTitle = "Roll Over"
+            
+            alertAction = {
+                
+                print("roll over")
+                
+            }
+            
+        } else {
+            
+            message = "Your node only has \(self.wallet.maxRange - self.wallet.index) more public keys. We need to import more public keys into your node at this point to ensure your node is able to verify this wallets balances and build psbt's for us."
+            actionTitle = "Refill Keypool"
+            
+            alertAction = {
+                
+                print("refill keypool")
+                
+            }
+            
+        }
+        
+        DispatchQueue.main.async {
+                        
+            let alert = UIAlertController(title: "Warning!", message: message, preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { action in
+                
+                alertAction()
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    
+            self.present(alert, animated: true, completion: nil)
+            
+        }
+        
     }
     
     private func setFeeTarget() {
@@ -2152,29 +2202,29 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func getDirtyFiatBalance() {
         
-        let converter = FiatConverter()
-        
-        func getResult() {
-            
-            if !converter.errorBool {
-                
-                let rate = converter.fxRate
-                
-                guard let coldDouble = Double(self.coldBalance.replacingOccurrences(of: ",", with: "")) else {
-                    
-                    return
-                    
-                }
-                
-                let formattedColdDouble = ((coldDouble * rate).rounded()).withCommas()
-                self.fiatBalance = "﹩\(formattedColdDouble) USD"
-                self.reloadSections([self.walletCellIndex])
-                
-            }
-            
-        }
-        
-        converter.getFxRate(completion: getResult)
+//        let converter = FiatConverter()
+//        
+//        func getResult() {
+//            
+//            if !converter.errorBool {
+//                
+//                let rate = converter.fxRate
+//                
+//                guard let coldDouble = Double(self.coldBalance.replacingOccurrences(of: ",", with: "")) else {
+//                    
+//                    return
+//                    
+//                }
+//                
+//                let formattedColdDouble = ((coldDouble * rate).rounded()).withCommas()
+//                self.fiatBalance = "﹩\(formattedColdDouble) USD"
+//                self.reloadSections([self.walletCellIndex])
+//                
+//            }
+//            
+//        }
+//        
+//        converter.getFxRate(completion: getResult)
     }
     
     //MARK: User Interface
@@ -2338,15 +2388,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 self.node = node!
                 self.reloadSections([self.nodeCellIndex])
                 
-                if !self.torConnected {
+                //if !self.torConnected {
                     
-                    TorClient.sharedInstance.start {
+                    //TorClient.sharedInstance.start {
                         
                         self.didAppear()
                         
-                    }
+                    //}
                     
-                }
+                //}
                 
             }
             

@@ -124,7 +124,7 @@ class WalletToolsViewController: UIViewController {
                         } else {
                             
                             self.creatingView.removeConnectingView()
-                            displayAlert(viewController: self, isError: true, message: "unable to determine if wallet is rescanning")
+                            showAlert(vc: self, title: "Error", message: "Unable to determine if wallet is rescanning.")
                             
                         }
                         
@@ -178,12 +178,12 @@ class WalletToolsViewController: UIViewController {
                         } else if (result["scanning"] as? Int) == 0 {
                             
                             self.creatingView.removeConnectingView()
-                            displayAlert(viewController: self, isError: true, message: "wallet not rescanning")
+                            showAlert(vc: self, title: "Scan Complete", message: "The wallet is not currently scanning.")
                             
                         } else {
                             
                             self.creatingView.removeConnectingView()
-                            displayAlert(viewController: self, isError: true, message: "unable to determine if wallet is rescanning")
+                            showAlert(vc: self, title: "Scan Complete", message: "Unable to determine if wallet is rescanning.")
                             
                         }
                         
@@ -226,12 +226,12 @@ class WalletToolsViewController: UIViewController {
                     } else if (result["scanning"] as? Int) == 0 {
                         
                         self.creatingView.removeConnectingView()
-                        displayAlert(viewController: self, isError: true, message: "wallet not rescanning")
+                        showAlert(vc: self, title: "Scan Complete", message: "Wallet not rescanning.")
                         
                     } else {
                         
                         self.creatingView.removeConnectingView()
-                        displayAlert(viewController: self, isError: true, message: "unable to determine if wallet is rescanning")
+                        showAlert(vc: self, title: "Error", message: "Unable to determine if wallet is rescanning.")
                         
                     }
                     
@@ -258,12 +258,12 @@ class WalletToolsViewController: UIViewController {
             if !reducer.errorBool {
                 
                 self.creatingView.removeConnectingView()
-                displayAlert(viewController: self, isError: false, message: "Rescan aborted")
+                showAlert(vc: self, title: "Rescan aborted", message: "")
                 
             } else {
                 
                 self.creatingView.removeConnectingView()
-                displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
+                showAlert(vc: self, title: "Error", message: reducer.errorDescription)
                 
             }
             

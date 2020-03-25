@@ -28,6 +28,7 @@ class ChooseWalletFormatViewController: UIViewController {
     var fingerprints = [String]()
     var localSeed = Data()
     var nodesSeed = ""
+    var nodesHdSeed = ""
     var descriptor = ""
     var recoveryPubkey = ""
     var backUpRecoveryPhrase = ""
@@ -203,6 +204,7 @@ class ChooseWalletFormatViewController: UIViewController {
                 self.node = node!
                 self.creatingView.addConnectingView(vc: self, description: "creating your wallet")
                 self.newWallet["blockheight"] = UserDefaults.standard.object(forKey: "blockheight") as? Int ?? 1
+                self.newWallet["maxRange"] = 2500
                 
                 if self.node.network == "testnet" {
                     
@@ -764,11 +766,23 @@ class ChooseWalletFormatViewController: UIViewController {
                 let converter = MnemonicCreator()
                 converter.convert(words: words!) { (mnemonic, error) in
                     
+                    print("nodes words  = \(String(describing: words))")
+                    
                     if !error {
                         
                         let derivation = self.newWallet["derivation"] as! String
                         
                         if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
+                            
+                            do {
+                                
+                                let hdSeed = try masterKey.derive(BIP32Path("m/0'/0'")!)
+                                print("hdseed = \(String(describing: hdSeed.xpriv))")
+                                
+                            } catch {
+                                
+                                
+                            }
                             
                             let nodesFingerPrint = masterKey.fingerprint.hexString
                             self.fingerprints.append(nodesFingerPrint)
@@ -852,7 +866,7 @@ class ChooseWalletFormatViewController: UIViewController {
         case "m/84'/1'/0'":
                                             
             descriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/84'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/84'/1'/0']\(nodeKey)/0/*))"
-            
+
             changeDescriptor = "wsh(multi(\(signatures),[\(recoveryFingerprint)/84'/1'/0']\(recoveryKey)/1/*, [\(localFingerprint)/84'/1'/0']\(localKey)/1/*, [\(nodeFingerprint)/84'/1'/0']\(nodeKey)/1/*))"
             
         case "m/84'/0'/0'":

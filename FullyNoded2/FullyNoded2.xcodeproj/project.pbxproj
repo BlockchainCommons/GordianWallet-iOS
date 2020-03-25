@@ -74,7 +74,6 @@
 		D09D734423F0F3C000847DC8 /* TorClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72D123F0F3C000847DC8 /* TorClient.swift */; };
 		D09D734523F0F3C000847DC8 /* Encryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72D223F0F3C000847DC8 /* Encryption.swift */; };
 		D09D734623F0F3C000847DC8 /* AddressParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72D323F0F3C000847DC8 /* AddressParser.swift */; };
-		D09D734723F0F3C000847DC8 /* Connector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72D423F0F3C000847DC8 /* Connector.swift */; };
 		D09D734823F0F3C000847DC8 /* FiatConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72D523F0F3C000847DC8 /* FiatConverter.swift */; };
 		D09D734923F0F3C000847DC8 /* whiteBroom.png in Resources */ = {isa = PBXBuildFile; fileRef = D09D72D723F0F3C000847DC8 /* whiteBroom.png */; };
 		D09D734A23F0F3C000847DC8 /* 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = D09D72D823F0F3C000847DC8 /* 1024.png */; };
@@ -226,7 +225,6 @@
 		D09D72D123F0F3C000847DC8 /* TorClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TorClient.swift; sourceTree = "<group>"; };
 		D09D72D223F0F3C000847DC8 /* Encryption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Encryption.swift; sourceTree = "<group>"; };
 		D09D72D323F0F3C000847DC8 /* AddressParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressParser.swift; sourceTree = "<group>"; };
-		D09D72D423F0F3C000847DC8 /* Connector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connector.swift; sourceTree = "<group>"; };
 		D09D72D523F0F3C000847DC8 /* FiatConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiatConverter.swift; sourceTree = "<group>"; };
 		D09D72D723F0F3C000847DC8 /* whiteBroom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteBroom.png; sourceTree = "<group>"; };
 		D09D72D823F0F3C000847DC8 /* 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1024.png; sourceTree = "<group>"; };
@@ -613,7 +611,6 @@
 				D09D72CF23F0F3C000847DC8 /* Tor */,
 				D09D72D223F0F3C000847DC8 /* Encryption.swift */,
 				D09D72D323F0F3C000847DC8 /* AddressParser.swift */,
-				D09D72D423F0F3C000847DC8 /* Connector.swift */,
 				D09D72D523F0F3C000847DC8 /* FiatConverter.swift */,
 				D0A0EAEF23F7C06E004F9E15 /* DescriptorParser.swift */,
 				D0D0F5632410CB8F007E0763 /* BIP39Words.swift */,
@@ -1165,7 +1162,6 @@
 				D09D736F23F0F3C000847DC8 /* OfflineSigner.swift in Sources */,
 				D09D731E23F0F3C000847DC8 /* WalletInfoViewController.swift in Sources */,
 				D0967BD6241CA20A006B5F58 /* WalletPageViewController.swift in Sources */,
-				D09D734723F0F3C000847DC8 /* Connector.swift in Sources */,
 				D09D735E23F0F3C000847DC8 /* QRGenerator.swift in Sources */,
 				D0967BD22419EF89006B5F58 /* WalletCreatedViewController.swift in Sources */,
 				D09D732E23F0F3C000847DC8 /* MainMenuViewController.swift in Sources */,
@@ -1327,7 +1323,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.65;
+				CURRENT_PROJECT_VERSION = 0.0.71;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1340,7 +1336,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.65;
+				MARKETING_VERSION = 0.0.71;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1356,7 +1352,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.65;
+				CURRENT_PROJECT_VERSION = 0.0.71;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1369,7 +1365,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.65;
+				MARKETING_VERSION = 0.0.71;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

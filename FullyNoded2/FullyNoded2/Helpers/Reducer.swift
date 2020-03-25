@@ -112,13 +112,13 @@ class Reducer {
                         
                         print("restarting tor")
                         
-                        TorClient.sharedInstance.start {
-                            
-                            self.torRPC.executeRPCCommand(walletName: walletName, method: command,
-                                                          param: param,
-                                                          completion: getResult)
-                            
-                        }
+//                        TorClient.sharedInstance.start {
+//                            
+//                            self.torRPC.executeRPCCommand(walletName: walletName, method: command,
+//                                                          param: param,
+//                                                          completion: getResult)
+//                            
+//                        }
                                                 
                     } else {
                         
@@ -133,7 +133,7 @@ class Reducer {
                 
             }
             
-            if TorClient.sharedInstance.isOperational {
+            if TorClient.sharedInstance.state == .connected {
                 
                 torRPC.executeRPCCommand(walletName: walletName, method: command,
                                          param: param,

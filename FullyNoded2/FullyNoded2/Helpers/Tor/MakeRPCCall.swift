@@ -52,7 +52,11 @@ class MakeRPCCall {
                 }
                 
                 var request = URLRequest(url: url)
-                request.timeoutInterval = 10
+                var timeout = 10.0
+                if method == .importmulti {
+                    timeout = 100.0
+                }
+                request.timeoutInterval = timeout
                 request.httpMethod = "POST"
                 request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
                 request.httpBody = "{\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}".data(using: .utf8)

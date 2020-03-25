@@ -460,7 +460,71 @@ class NodeLogic {
         
         for utxo in utxos {
             
+            print("utxo = \(utxo)")
+            
             if let utxoDict = utxo as? NSDictionary {
+                
+                // Here we check the utxos descriptor to see what the path is for each pubkey.
+                // We take the highest index for each pubkey and compare it to the wallets index.
+                // If the wallets index is less than or equal to the highest utxo index we increase
+                // the wallets index to be greater then the highest utxo index. This way we avoid
+                // reusing an address in the scenario where a user may use external software to
+                // receive to the app or for example they export their keys within the app and use
+                // random addresses as invoices.
+                
+                if let desc = utxoDict["desc"] as? String {
+                    
+                    print("desc = \(desc)")
+                    let p = DescriptorParser()
+                    let str = p.descriptor(desc)
+                    let paths = str.derivationArray
+                    print("paths = \(paths)")
+                    var index = 0
+                    for path in paths {
+                        
+                        let arr = path.split(separator: "/")
+                        
+                        for (i, comp) in arr.enumerated() {
+                            
+                            if i + 1 == arr.count {
+                                
+                                if let int = Int(comp) {
+                                    
+                                    if int > index {
+                                        
+                                        index = int
+                                        
+                                    }
+                                    
+                                }
+                                                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                    print("index = \(index)")
+                    if wallet.index <= index {
+                        
+                        let cd = CoreDataService()
+                        cd.updateEntity(id: wallet.id, keyToUpdate: "index", newValue: index, entityName: .wallets) {
+                            
+                            if !cd.errorBool {
+                                
+                                print("updated index from utxo")
+                                
+                            } else {
+                                
+                                print("failed to update index from utxo")
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
                 
                 if let spendable = utxoDict["spendable"] as? Bool {
                     

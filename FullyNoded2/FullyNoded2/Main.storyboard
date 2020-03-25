@@ -497,7 +497,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="574"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In order to authenticate your connection you need to add this public key to the macOS StandUp.app in &quot;Settings&quot;. " lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xaH-Sk-RIJ">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="In order to authenticate your connection you need to add this public key to the macOS StandUp.app in &quot;Settings&quot;. " lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xaH-Sk-RIJ">
                                 <rect key="frame" x="16" y="44" width="343" height="70"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="70" id="T1E-VO-2Hs"/>
@@ -506,25 +506,10 @@
                                 <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3d6-K5-tGz">
-                                <rect key="frame" x="326" y="10" width="20" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="20" id="9iJ-hs-a9m"/>
-                                    <constraint firstAttribute="height" constant="22" id="vBL-qM-lmD"/>
-                                </constraints>
-                                <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="xmark.circle.fill" catalog="system"/>
-                                <connections>
-                                    <action selector="close:" destination="FI5-Kv-Y72" eventType="touchUpInside" id="0JZ-9g-6UY"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.074236519629999997" green="0.082159139219999996" blue="0.094636552040000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="3d6-K5-tGz" firstAttribute="top" secondItem="4te-9n-iGJ" secondAttribute="top" constant="10" id="0py-wc-0lo"/>
-                            <constraint firstItem="xaH-Sk-RIJ" firstAttribute="top" secondItem="3d6-K5-tGz" secondAttribute="bottom" constant="12" id="5Ph-an-kq7"/>
                             <constraint firstItem="4te-9n-iGJ" firstAttribute="trailing" secondItem="xaH-Sk-RIJ" secondAttribute="trailing" constant="16" id="ZYz-ZD-P3F"/>
-                            <constraint firstItem="4te-9n-iGJ" firstAttribute="trailing" secondItem="3d6-K5-tGz" secondAttribute="trailing" constant="29" id="a5b-Hc-ULC"/>
                             <constraint firstItem="xaH-Sk-RIJ" firstAttribute="leading" secondItem="4te-9n-iGJ" secondAttribute="leading" constant="16" id="qbF-zw-4Ta"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="4te-9n-iGJ"/>
@@ -2518,7 +2503,7 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
             </objects>
             <point key="canvasLocation" x="4194" y="-498"/>
         </scene>
-        <!--v0.0.65-->
+        <!--v0.0.69-->
         <scene sceneID="Ajv-p7-tUm">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" id="AS8-ke-Yxh" customClass="SettingsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -2638,7 +2623,7 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
                         <viewLayoutGuide key="safeArea" id="Cze-jj-bFe"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Settings" id="n34-O3-Fyo"/>
-                    <navigationItem key="navigationItem" title="v0.0.65" id="YNb-Gd-Hqq"/>
+                    <navigationItem key="navigationItem" title="v0.0.69" id="YNb-Gd-Hqq"/>
                     <connections>
                         <outlet property="settingsTable" destination="hcp-eG-lok" id="xPg-8r-KBs"/>
                         <segue destination="bKH-sI-MiM" kind="show" identifier="goLogIn" id="qed-hl-jG5"/>
@@ -4257,7 +4242,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="coldWalletCell" rowHeight="294" id="Cjy-2R-y2B">
-                                        <rect key="frame" x="0.0" y="55.5" width="345" height="294"/>
+                                        <rect key="frame" x="15" y="55.5" width="345" height="294"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Cjy-2R-y2B" id="85P-mu-gZ2">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="294"/>
@@ -4518,6 +4503,13 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                     <color key="textColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="35" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key index #2 out of 2,500" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bzZ-ai-pt2">
+                                                    <rect key="frame" x="190" y="145" width="140" height="11"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" red="0.085763759910000001" green="0.10179834810000001" blue="0.1143214479" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
@@ -4530,6 +4522,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                 <constraint firstItem="FGC-6L-vwx" firstAttribute="top" secondItem="kXO-nW-Lzb" secondAttribute="bottom" constant="5" id="CHI-Pm-kVJ"/>
                                                 <constraint firstItem="RxJ-Ev-lE6" firstAttribute="centerY" secondItem="x5l-4J-eDF" secondAttribute="centerY" id="DQy-D9-7tl"/>
                                                 <constraint firstItem="kXO-nW-Lzb" firstAttribute="top" secondItem="XbB-vm-j8N" secondAttribute="bottom" id="Ef7-ej-E7B"/>
+                                                <constraint firstItem="5Pt-N6-gH3" firstAttribute="trailing" secondItem="bzZ-ai-pt2" secondAttribute="trailing" id="EhA-Cy-sOq"/>
                                                 <constraint firstItem="x5l-4J-eDF" firstAttribute="leading" secondItem="MI7-5S-Hm8" secondAttribute="trailing" constant="8" id="F2V-wL-LaT"/>
                                                 <constraint firstItem="7cK-yo-h4f" firstAttribute="trailing" secondItem="85P-mu-gZ2" secondAttribute="trailingMargin" constant="-1" id="Fkx-8E-izv"/>
                                                 <constraint firstAttribute="trailing" secondItem="W1t-FH-89R" secondAttribute="trailing" constant="16" id="GI8-If-ZNe"/>
@@ -4545,6 +4538,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                 <constraint firstItem="RxJ-Ev-lE6" firstAttribute="trailing" secondItem="85P-mu-gZ2" secondAttribute="trailingMargin" id="XDV-tl-LBw"/>
                                                 <constraint firstItem="W1t-FH-89R" firstAttribute="bottom" secondItem="85P-mu-gZ2" secondAttribute="bottomMargin" constant="1" id="c9X-1M-qNi"/>
                                                 <constraint firstAttribute="trailing" secondItem="5Pt-N6-gH3" secondAttribute="trailing" constant="16" id="eXh-hO-dgc"/>
+                                                <constraint firstItem="bzZ-ai-pt2" firstAttribute="top" secondItem="5Pt-N6-gH3" secondAttribute="bottom" constant="1" id="gVQ-yK-EJt"/>
                                                 <constraint firstItem="MI7-5S-Hm8" firstAttribute="leading" secondItem="85P-mu-gZ2" secondAttribute="leadingMargin" id="gyQ-b2-gnC"/>
                                                 <constraint firstItem="RxJ-Ev-lE6" firstAttribute="leading" secondItem="4dG-Ad-uJW" secondAttribute="trailing" constant="8" id="iPL-kA-UaX"/>
                                                 <constraint firstItem="5Pt-N6-gH3" firstAttribute="centerY" secondItem="heW-e1-Z7l" secondAttribute="centerY" id="otN-xT-iqm"/>
@@ -4598,13 +4592,13 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="13" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2020-Feb-09 15:48" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kYv-xd-YpP">
-                                                    <rect key="frame" x="240" y="136" width="87.5" height="11"/>
+                                                    <rect key="frame" x="241.5" y="136" width="87.5" height="11"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="9"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Updated:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gEN-a7-pZj">
-                                                    <rect key="frame" x="191" y="136" width="40.5" height="11"/>
+                                                    <rect key="frame" x="192.5" y="136" width="40.5" height="11"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="9"/>
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -4918,6 +4912,13 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                     <color key="textColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="35" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key index #2 out of 2,500" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Fge-o4-xNG">
+                                                    <rect key="frame" x="181" y="149" width="148" height="12"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
@@ -4937,6 +4938,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                 <constraint firstItem="gEN-a7-pZj" firstAttribute="centerY" secondItem="DLd-eo-yhH" secondAttribute="centerY" id="GOp-sy-Myb"/>
                                                 <constraint firstItem="Mus-be-FaA" firstAttribute="trailing" secondItem="AMk-q2-GQu" secondAttribute="trailing" id="Kzr-MK-vL7"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="kYv-xd-YpP" secondAttribute="trailing" constant="2.5" id="MNz-r5-Ims"/>
+                                                <constraint firstItem="Fge-o4-xNG" firstAttribute="top" secondItem="kYv-xd-YpP" secondAttribute="bottom" constant="2" id="MqM-ly-LHo"/>
                                                 <constraint firstItem="DLd-eo-yhH" firstAttribute="top" secondItem="6Sm-zd-H8y" secondAttribute="bottom" id="SPw-9m-OWU"/>
                                                 <constraint firstItem="TQL-WW-Jpr" firstAttribute="centerY" secondItem="DLd-eo-yhH" secondAttribute="centerY" id="T9Q-PP-gPW"/>
                                                 <constraint firstAttribute="trailing" secondItem="7yp-J1-Thl" secondAttribute="trailing" id="TaX-4v-sep"/>
@@ -4947,6 +4949,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                 <constraint firstAttribute="trailing" secondItem="egC-uO-FYs" secondAttribute="trailing" constant="16" id="aVG-FX-eUq"/>
                                                 <constraint firstItem="4rs-FI-UmB" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leadingMargin" id="aq3-Ch-tiE"/>
                                                 <constraint firstItem="7yp-J1-Thl" firstAttribute="top" secondItem="nN1-0D-mSU" secondAttribute="top" id="dNb-Es-J4R"/>
+                                                <constraint firstItem="kYv-xd-YpP" firstAttribute="trailing" secondItem="Fge-o4-xNG" secondAttribute="trailing" id="eZf-61-nbX"/>
                                                 <constraint firstItem="tdt-Ap-iVt" firstAttribute="leading" secondItem="SPc-CN-QXX" secondAttribute="trailing" constant="8" id="etg-uT-yW5"/>
                                                 <constraint firstItem="Mus-be-FaA" firstAttribute="top" secondItem="4rs-FI-UmB" secondAttribute="bottom" constant="4" id="lWq-q2-bGY"/>
                                                 <constraint firstItem="7yp-J1-Thl" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leading" id="p5i-3d-X6S"/>
@@ -4964,7 +4967,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                         <color key="backgroundColor" red="0.085763759910000001" green="0.10179834810000001" blue="0.1143214479" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="multiSigWalletCell" rowHeight="435" id="Pu7-d1-gy4">
-                                        <rect key="frame" x="15" y="712.5" width="345" height="435"/>
+                                        <rect key="frame" x="0.0" y="712.5" width="345" height="435"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Pu7-d1-gy4" id="EKP-cw-XcR">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="435"/>
@@ -5401,11 +5404,18 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                     <color key="textColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="35" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key index #2 out of 2,500" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sXt-Lh-5Ga">
+                                                    <rect key="frame" x="215.5" y="156" width="113.5" height="11"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="ZsE-bQ-qYq" firstAttribute="top" secondItem="xIK-fc-Mq4" secondAttribute="bottom" constant="8" id="0Fe-tM-RGt"/>
                                                 <constraint firstItem="pII-Us-N4E" firstAttribute="top" secondItem="ZsE-bQ-qYq" secondAttribute="bottom" constant="8" id="1YV-Ms-ht8"/>
                                                 <constraint firstItem="1Wn-ab-2Sg" firstAttribute="bottom" secondItem="EKP-cw-XcR" secondAttribute="bottomMargin" id="21F-IG-Zxg"/>
+                                                <constraint firstItem="sXt-Lh-5Ga" firstAttribute="top" secondItem="xiT-PY-mWf" secondAttribute="bottom" constant="3" id="3Xk-8z-MrD"/>
                                                 <constraint firstItem="oW9-IX-PDE" firstAttribute="centerY" secondItem="1u0-OO-HE9" secondAttribute="centerY" id="5EC-Mw-2Ri"/>
                                                 <constraint firstItem="ZsE-bQ-qYq" firstAttribute="leading" secondItem="xIK-fc-Mq4" secondAttribute="leading" id="6lZ-XX-pwM"/>
                                                 <constraint firstItem="xiT-PY-mWf" firstAttribute="leading" secondItem="MfD-7G-p6e" secondAttribute="trailing" constant="4.5" id="9Ik-c9-8Bd"/>
@@ -5424,6 +5434,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                 <constraint firstItem="Ckd-q3-zNx" firstAttribute="top" secondItem="KGY-cW-hyS" secondAttribute="bottom" id="Th2-Z4-huO"/>
                                                 <constraint firstItem="iY3-wV-4kw" firstAttribute="top" secondItem="Ckd-q3-zNx" secondAttribute="bottom" constant="8" id="VUX-G0-X8A"/>
                                                 <constraint firstItem="xiT-PY-mWf" firstAttribute="centerY" secondItem="MfD-7G-p6e" secondAttribute="centerY" id="Vq3-np-hPg"/>
+                                                <constraint firstItem="sXt-Lh-5Ga" firstAttribute="trailing" secondItem="xiT-PY-mWf" secondAttribute="trailing" id="YZu-fm-ebH"/>
                                                 <constraint firstItem="B1v-ZE-lI2" firstAttribute="centerY" secondItem="oW9-IX-PDE" secondAttribute="centerY" id="bjP-a5-odQ"/>
                                                 <constraint firstItem="pII-Us-N4E" firstAttribute="trailing" secondItem="xIK-fc-Mq4" secondAttribute="trailing" id="cWG-mP-Pwz"/>
                                                 <constraint firstItem="B1v-ZE-lI2" firstAttribute="leading" secondItem="75A-ek-fBM" secondAttribute="trailing" constant="8" id="cti-ce-Jq5"/>

@@ -413,6 +413,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let bannerView = cell.viewWithTag(32)!
         let nodeKeysLabel = cell.viewWithTag(33) as! UILabel
         let rescanLabel = cell.viewWithTag(34) as! UILabel
+        let keyIndexLabel = cell.viewWithTag(35) as! UILabel
+        
+        keyIndexLabel.text = "Key Index #\(wallet.index) out of #\(wallet.maxRange)"
         
         rescanLabel.alpha = 0
         rescanLabel.adjustsFontSizeToFitWidth = true
@@ -600,6 +603,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let offlineXprv = cell.viewWithTag(31) as! UILabel
         let bannerView = cell.viewWithTag(33)!
         let rescanLabel = cell.viewWithTag(34) as! UILabel
+        let keyIndexLabel = cell.viewWithTag(35) as! UILabel
+        
+        keyIndexLabel.text = "Key Index #\(wallet.index) out of #\(wallet.maxRange)"
         
         rescanLabel.alpha = 0
         rescanLabel.adjustsFontSizeToFitWidth = true
@@ -791,6 +797,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let typeLabel = cell.viewWithTag(29) as! UILabel
         let bannerView = cell.viewWithTag(32)!
         let rescanLabel = cell.viewWithTag(34) as! UILabel
+        let keyIndexLabel = cell.viewWithTag(35) as! UILabel
         
         rescanLabel.alpha = 0
         rescanLabel.adjustsFontSizeToFitWidth = true
@@ -821,6 +828,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             
         }
+        
+        keyIndexLabel.text = "Key Index #\(wallet.index) out of #\(wallet.maxRange)"
         
         if wallet.isActive {
             
@@ -1285,10 +1294,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func reloadSection(_ sender: UIButton) {
         
+        impact()
+        
         if !isLoading {
             
             isLoading = true
-            impact()
             let index = sender.tag
             
             DispatchQueue.main.async {
@@ -1468,7 +1478,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let date = Date(timeIntervalSince1970: TimeInterval(unixTime))
         dateFormatter.timeZone = .current
-        dateFormatter.dateFormat = "yyyy-MMM-dd hh:mm" //Specify your format that you want
+        dateFormatter.dateFormat = "yyyy-MMM-dd hh:mm"
         let strDate = dateFormatter.string(from: date)
         return strDate
         
@@ -1477,7 +1487,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     func formatDate(date: Date) -> String {
         
         dateFormatter.timeZone = .current
-        dateFormatter.dateFormat = "yyyy-MMM-dd hh:mm" //Specify your format that you want
+        dateFormatter.dateFormat = "yyyy-MMM-dd hh:mm"
         let strDate = dateFormatter.string(from: date)
         return strDate
         
@@ -1550,19 +1560,25 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if !error && node != nil {
                     
-                    if node!.network != "mainnet" {
+                    DispatchQueue.main.async {
                         
-                        DispatchQueue.main.async {
-                            
-                            self.performSegue(withIdentifier: "addWallet", sender: self)
-                            
-                        }
-                        
-                    } else {
-                        
-                        displayAlert(viewController: self, isError: true, message: "Mainnet wallets not yet allowed! Sorry.")
+                        self.performSegue(withIdentifier: "addWallet", sender: self)
                         
                     }
+                    
+//                    if node!.network != "mainnet" {
+//
+//                        DispatchQueue.main.async {
+//
+//                            self.performSegue(withIdentifier: "addWallet", sender: self)
+//
+//                        }
+//
+//                    } else {
+//
+//                        displayAlert(viewController: self, isError: true, message: "Mainnet wallets not yet allowed! Sorry.")
+//
+//                    }
                     
                 } else {
                     
@@ -1667,41 +1683,49 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func getRescanStatus(i: Int, walletName: String, completion: @escaping () -> Void) {
         
-        print("get rescan status")
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: walletName, command: .getwalletinfo, param: "") {
+        if i < self.sortedWallets.count {
+            
+            print("get rescan status")
+            let reducer = Reducer()
+            reducer.makeCommand(walletName: walletName, command: .getwalletinfo, param: "") {
 
-            if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
+                if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
 
-                if let result = reducer.dictToReturn {
+                    if let result = reducer.dictToReturn {
 
-                    if let scanning = result["scanning"] as? NSDictionary {
+                        if let scanning = result["scanning"] as? NSDictionary {
 
-                        if let _ = scanning["duration"] as? Int {
+                            if let _ = scanning["duration"] as? Int {
 
-                            let progress = (scanning["progress"] as! Double) * 100
-                            self.sortedWallets[i]["progress"] = "\(Int(progress))"
-                            self.sortedWallets[i]["isRescanning"] = true
+                                let progress = (scanning["progress"] as! Double) * 100
+                                self.sortedWallets[i]["progress"] = "\(Int(progress))"
+                                self.sortedWallets[i]["isRescanning"] = true
+                                completion()
+
+                            }
+
+                        } else {
+
+                            self.sortedWallets[i]["isRescanning"] = false
                             completion()
 
                         }
 
-                    } else {
-
-                        self.sortedWallets[i]["isRescanning"] = false
-                        completion()
-
                     }
+
+                } else {
+
+                    self.sortedWallets[i]["isRescanning"] = false
+                    completion()
 
                 }
 
-            } else {
-
-                self.sortedWallets[i]["isRescanning"] = false
-                completion()
-
             }
-
+            
+        } else {
+            
+            completion()
+            
         }
         
     }

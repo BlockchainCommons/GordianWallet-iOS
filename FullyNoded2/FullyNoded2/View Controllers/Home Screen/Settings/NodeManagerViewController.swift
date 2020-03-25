@@ -317,13 +317,13 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     func makeActive(nodeToActivate: UUID) {
         
         let cd = CoreDataService()
-        cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+        cd.retrieveEntity(entityName: .nodes) { (nodess, errorDescription) in
             
             if errorDescription == nil {
                 
-                if nodes!.count > 0 {
+                if nodess!.count > 0 {
                     
-                    for node in nodes! {
+                    for node in nodess! {
                         
                         let str = NodeStruct.init(dictionary: node)
                         
@@ -363,13 +363,13 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         print("deactivateOtherNodes")
         
         let cd = CoreDataService()
-        cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+        cd.retrieveEntity(entityName: .nodes) { (nodess, errorDescription) in
             
             if errorDescription == nil {
                 
-                if nodes!.count > 0 {
+                if nodess!.count > 0 {
                     
-                    for node in nodes! {
+                    for (i, node) in nodess!.enumerated() {
                         
                         let str = NodeStruct.init(dictionary: node)
                         
@@ -379,7 +379,11 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                                 
                                 if !cd.errorBool {
                                     
-                                    self.load()
+                                    if i + 1 == nodess!.count {
+                                        
+                                        self.load()
+                                        
+                                    }
                                     
                                 } else {
                                     
