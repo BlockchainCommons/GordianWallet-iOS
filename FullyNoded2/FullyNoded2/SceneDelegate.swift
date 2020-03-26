@@ -7,8 +7,6 @@
 //
 
 import UIKit
-//import KeychainSwift
-//import AuthenticationServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -27,8 +25,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
         
-        
-        
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
@@ -36,14 +32,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
         print("did become active")
         
-        
-        
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
-        
         
     }
 
@@ -51,20 +44,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
         
+        // We start the tor thread automatically here whenever the app enters the foreground.
         let mgr = TorClient.sharedInstance
-        
+
         if mgr.state != .started && mgr.state != .connected  {
-                        
+
             mgr.start(delegate: nil) {
-                
+
                 DispatchQueue.main.async {
-                    
+
                     NotificationCenter.default.post(name: .didEstablishTorConnection, object: self)
-                    
+
                 }
-                
+
             }
-            
+
         }
         
     }
@@ -73,10 +67,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
-            
-        //let device = UIDevice.modelName
         
-        //if device != "iPhone 11 pro max" && device != "iPhone 11 Pro"  && device != "iPhone 11" {
+        // We force quit the tor thread when the app enters the background as it can not stay alive
+        // for extended periods of time in the background. We only do this on non iPhone 11 models
+        // as for some reason resigning the Tor thread crashes iPhone 11's.
+        let device = UIDevice.modelName
+        
+        if device != "iPhone 11 pro max" && device != "iPhone 11 Pro"  && device != "iPhone 11" {
             
             let mgr = TorClient.sharedInstance
             
@@ -86,7 +83,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 
             }
             
-        //}
+        }
 
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
@@ -94,6 +91,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         
+        // This code executes when a btcstandup:// uri or btcrpc:// uri link is clicked
         let urlcontexts = URLContexts.first
         let url = urlcontexts?.url
         addNode(url: "\(url!)")
@@ -102,6 +100,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     
     func addNode(url: String) {
+        
+        // MARK: TODO
+        // Add an alert letting user know whether the node was added successfully or not.
         
         if let myTabBar = self.window?.rootViewController as? UITabBarController {
             

@@ -10,7 +10,7 @@ import UIKit
 import LibWally
 import CryptoKit
 
-class ChooseWalletFormatViewController: UIViewController {
+class ChooseWalletFormatViewController: UIViewController, UINavigationControllerDelegate {
     
     var id:UUID!
     var derivation = ""
@@ -48,7 +48,8 @@ class ChooseWalletFormatViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        navigationController?.delegate = self
         buttonOutlet.clipsToBounds = true
         buttonOutlet.layer.cornerRadius = 10
         importButtonOutlet.layer.cornerRadius = 10
@@ -202,7 +203,7 @@ class ChooseWalletFormatViewController: UIViewController {
             if !error && node != nil {
                 
                 self.node = node!
-                self.creatingView.addConnectingView(vc: self, description: "creating your wallet")
+                self.creatingView.addConnectingView(vc: self.navigationController!, description: "creating your wallet")
                 self.newWallet["blockheight"] = UserDefaults.standard.object(forKey: "blockheight") as? Int ?? 1
                 self.newWallet["maxRange"] = 2500
                 
@@ -975,8 +976,8 @@ class ChooseWalletFormatViewController: UIViewController {
                                                             
                                                             DispatchQueue.main.async {
                                                                 
-                                                                self.nodesSeed = ""
-                                                                self.newWallet.removeAll()
+                                                                //self.nodesSeed = ""
+                                                                //self.newWallet.removeAll()
                                                                 // include the checksum as we will convert this back to a pubkey descriptor when recovering
                                                                 let hotDescriptor = primaryDescriptor.replacingOccurrences(of: self.publickeys[1], with: self.localXprv)
                                                                 let recoveryQr = ["entropy": self.entropy, "descriptor":"\(hotDescriptor)", "birthdate":wallet.birthdate, "blockheight":wallet.blockheight, "label":""] as [String : Any]
@@ -1051,27 +1052,28 @@ class ChooseWalletFormatViewController: UIViewController {
             
         case "walletCreated":
             
-            if let vc = segue.destination as? WalletCreatedViewController {
+            if let vc = segue.destination as? WalletCreatedSuccessViewController {
                 
-                vc.isMulti = self.isMultiSig
-                vc.derivationPath = self.derivation
+                //vc.isMulti = self.isMultiSig
+                //vc.derivationPath = self.derivation
                 vc.recoveryPhrase = self.backUpRecoveryPhrase
                 vc.recoveryQr = self.recoveryQr
-                vc.walletId = self.id
+                //vc.walletId = self.id
+                vc.wallet = self.newWallet
                 
-                vc.walletDoneNowBlock = { result in
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.dismiss(animated: true) {
-                            
-                            self.walletDoneBlock!(true)
-                            
-                        }
-                        
-                    }
-                    
-                }
+//                vc.walletDoneNowBlock = { result in
+//
+//                    DispatchQueue.main.async {
+//
+//                        self.dismiss(animated: true) {
+//
+//                            self.walletDoneBlock!(true)
+//
+//                        }
+//
+//                    }
+//
+//                }
                 
             }
             
@@ -1083,11 +1085,8 @@ class ChooseWalletFormatViewController: UIViewController {
                     
                     DispatchQueue.main.async {
                         
-                        self.dismiss(animated: true) {
-                            
-                            self.recoverDoneBlock!(true)
-                            
-                        }
+                        self.recoverDoneBlock!(true)
+                        self.navigationController!.popToRootViewController(animated: true)
                         
                     }                    
                     

@@ -61,7 +61,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 alert.addAction(UIAlertAction(title: "Yes, broadcast now", style: .default, handler: { action in
                     
                     self.showAuth()
-                    
+                                        
                 }))
                 
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))

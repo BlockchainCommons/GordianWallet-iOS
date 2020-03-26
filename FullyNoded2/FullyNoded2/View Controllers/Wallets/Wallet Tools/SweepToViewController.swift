@@ -175,7 +175,7 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
                              
                                 for w in entity! {
                                     
-                                    if !(w["isArchived"] as! Bool) && (w["id"] as! UUID) != wallet!.id {
+                                    if !(w["isArchived"] as! Bool) && (w["id"] as! UUID) != wallet!.id && wallet!.nodeId == (w["nodeId"] as! UUID) {
                                         
                                         self.wallets.append(w)
                                         

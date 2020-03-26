@@ -39,6 +39,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createWallet))
         navigationItem.setRightBarButton(addButton, animated: true)
         navigationItem.setLeftBarButton(editButton, animated: true)
+        setTitleView()
         configureRefresher()
         loadingRefresher.alpha = 0
         
@@ -54,6 +55,19 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.walletTable.setContentOffset(.zero, animated: true)
             
         }
+        
+    }
+    
+    private func setTitleView() {
+        
+        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.frame = titleView.bounds
+        titleView.addSubview(imageView)
+        self.navigationItem.titleView = titleView
         
     }
     
@@ -226,13 +240,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                     } else {
                         
-                        DispatchQueue.main.async {
-                            
-                            self.loadingRefresher.startAnimating()
-                            self.loadingRefresher.alpha = 1
-                            
-                        }
-                        
                         for (i, w) in wallets!.enumerated() {
                             
                             let s = WalletStruct(dictionary: w)
@@ -281,6 +288,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                         
                                         DispatchQueue.main.async {
                                             
+                                            self.loadingRefresher.startAnimating()
+                                            self.loadingRefresher.alpha = 1
                                             self.walletTable.reloadData()
                                             self.index = 0
                                             self.getBalances()
@@ -538,7 +547,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        nodeKeysLabel.text = "holds public keys \(wallet.derivation)/0 to /999"
+        nodeKeysLabel.text = "holds public keys \(wallet.derivation)/0 to /\(wallet.maxRange)"
         deviceXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
@@ -735,7 +744,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         deviceXprv.text = "xprv \(wallet.derivation)"
-        nodeKeys.text = "keys \(wallet.derivation)/0 and 1/0 to /999"
+        nodeKeys.text = "keys \(wallet.derivation)/0 and 1/0 to /\(wallet.maxRange)"
         offlineXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
@@ -935,11 +944,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if descStr.isHot {
                     
-                    keysOnNodeLabel.text = "1,000 private keys on \(s.label)"
+                    keysOnNodeLabel.text = "\(wallet.maxRange) private keys on \(s.label)"
                     
                 } else {
                     
-                    keysOnNodeLabel.text = "1,000 public keys on \(s.label)"
+                    keysOnNodeLabel.text = "\(wallet.maxRange) public keys on \(s.label)"
                     
                 }
                 
@@ -1143,7 +1152,18 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let textLabel = UILabel()
             textLabel.textAlignment = .left
             textLabel.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
-            textLabel.text = wallet.label
+            
+            if wallet.label.count > 20 {
+                
+                textLabel.text = reduceLabel(label: wallet.label)
+                
+            } else {
+                
+                textLabel.text = wallet.label
+                
+            }
+            
+            
             textLabel.frame = CGRect(x: 0, y: 0, width: self.walletTable.frame.width / 2.2, height: 30)
             textLabel.adjustsFontSizeToFitWidth = true
             
@@ -1735,6 +1755,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let first = String(name.prefix(5))
         let last = String(name.suffix(5))
         return "\(first)*****\(last).dat"
+        
+    }
+    
+    private func reduceLabel(label: String) -> String {
+        
+        let first = String(label.prefix(5))
+        let last = String(label.suffix(5))
+        return "\(first)...\(last)"
         
     }
     

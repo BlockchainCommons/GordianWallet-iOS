@@ -84,8 +84,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         tabBarController?.delegate = self
         navigationController?.delegate = self
         
-        //NotificationCenter.default.addObserver(self, selector: #selector(notificationReceived(_:)), name: .torConnecting, object: nil)
-        //NotificationCenter.default.addObserver(self, selector: #selector(foregroundNotificationReceived(_:)), name: .didEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(torBootStrapping(_:)), name: .didStartBootstrappingTor, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didCompleteOnboarding(_:)), name: .didCompleteOnboarding, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(torConnected(_:)), name: .didEstablishTorConnection, object: nil)
@@ -133,6 +131,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         bootStrapping = true
         addStatusLabel(description: "     Bootstrapping Tor...")
         reloadSections([torCellIndex])
+                    
+    }
+    
+    private func goToIntro() {
         
         func showIntro() {
             
@@ -144,17 +146,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        if ud.object(forKey: "acceptedDisclaimer") == nil {
+        let keychain = KeychainSwift()
+                
+        if ud.object(forKey: "acceptedDisclaimer1") == nil || keychain.get("userIdentifier") == nil {
             
-            ud.set(false, forKey: "acceptedDisclaimer")
+            ud.set(false, forKey: "acceptedDisclaimer1")
             showIntro()
             
-        } else if ud.object(forKey: "acceptedDisclaimer") as! Bool == false {
+        } else if ud.object(forKey: "acceptedDisclaimer1") as! Bool == false {
             
             showIntro()
             
         }
-                    
+        
     }
     
     @IBAction func goToSettings(_ sender: Any) {
@@ -235,6 +239,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidAppear(_ animated: Bool) {
         
+        goToIntro()
         didAppear()
         
     }
@@ -295,6 +300,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                     }
                                     
                                 } else {
+                                    
+                                    self.existingWalletName = ""
                                     
                                     if self.existingNodeId != node!.id {
                                         
@@ -406,7 +413,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         let blank = blankCell()
         let spinner = UIActivityIndicatorView()
-        spinner.frame = CGRect(x: blank.contentView.frame.maxX, y: (blank.frame.height / 2) - 10, width: 20, height: 20)
+        spinner.frame = CGRect(x: mainMenu.frame.maxX - 80, y: (blank.frame.height / 2) - 10, width: 20, height: 20)
         blank.addSubview(spinner)
         spinner.startAnimating()
         return blank
@@ -433,6 +440,20 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    private func noActiveWalletCell(_ indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = descriptionCell(description: "⚠︎ No active wallet")
+        let addWalletButton = UIButton()
+        addWalletButton.frame = CGRect(x: mainMenu.frame.maxX - 80, y: (cell.frame.height / 2) - 10, width: 20, height: 20)
+        addWalletButton.addTarget(self, action: #selector(addWallet), for: .touchUpInside)
+        let image = UIImage(systemName: "plus")
+        addWalletButton.setImage(image, for: .normal)
+        addWalletButton.tintColor = .systemBlue
+        cell.addSubview(addWalletButton)
+        return cell
+        
+    }
+    
     private func defaultWalletCell(_ indexPath: IndexPath) -> UITableViewCell {
         
         let cell = mainMenu.dequeueReusableCell(withIdentifier: "singleSigCell", for: indexPath)
@@ -447,7 +468,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let infoButton = cell.viewWithTag(12) as! UIButton
         let deviceXprv = cell.viewWithTag(15) as! UILabel
         let deviceView = cell.viewWithTag(16)!
-        let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
+        //let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
         let nodeView = cell.viewWithTag(24)!
         let keysOnNodeDescription = cell.viewWithTag(25) as! UILabel
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
@@ -458,16 +479,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         nodeView.layer.cornerRadius = 8
         
-        if isRefreshingZero {
-            
-            refreshingSpinner.alpha = 1
-            refreshingSpinner.startAnimating()
-            
-        } else {
-            
-            refreshingSpinner.alpha = 0
-            refreshingSpinner.stopAnimating()
-        }
+//        if isRefreshingZero {
+//
+//            refreshingSpinner.alpha = 1
+//            refreshingSpinner.startAnimating()
+//
+//        } else {
+//
+//            refreshingSpinner.alpha = 0
+//            refreshingSpinner.stopAnimating()
+//        }
         
         deviceView.layer.cornerRadius = 8
         infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
@@ -555,7 +576,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        keysOnNodeDescription.text = "public keys \(wallet.derivation)/0 to /999"
+        keysOnNodeDescription.text = "public keys \(wallet.derivation)/0 to /\(wallet.maxRange)"
         deviceXprv.text = "xprv \(wallet.derivation)"
         walletNameLabel.text = reducedName(name: wallet.name)
         
@@ -583,23 +604,23 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let nodeView = cell.viewWithTag(18)!
         let offlineView = cell.viewWithTag(19)!
         let offlineXprvLabel = cell.viewWithTag(22) as! UILabel
-        let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
+        //let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
         
         coldBalanceLabel.isUserInteractionEnabled = true
         let tap = UIGestureRecognizer()
         tap.addTarget(self, action: #selector(switchBalances(_:)))
         
-        if isRefreshingZero {
-            
-            refreshingSpinner.alpha = 1
-            refreshingSpinner.startAnimating()
-            
-        } else {
-            
-            refreshingSpinner.alpha = 0
-            refreshingSpinner.stopAnimating()
-        }
+//        if isRefreshingZero {
+//
+//            refreshingSpinner.alpha = 1
+//            refreshingSpinner.startAnimating()
+//
+//        } else {
+//
+//            refreshingSpinner.alpha = 0
+//            refreshingSpinner.stopAnimating()
+//        }
         
         nodeView.layer.cornerRadius = 8
         offlineView.layer.cornerRadius = 8
@@ -689,7 +710,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        nodeXprv.text = "keys \(wallet.derivation)/0 and 1/0 to /999"
+        nodeXprv.text = "keys \(wallet.derivation)/0 and 1/0 to /\(wallet.maxRange)"
         deviceXprv.text = "xprv \(wallet.derivation)"
         offlineXprvLabel.text = "xprv \(wallet.derivation)"
         
@@ -714,7 +735,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let seedOnDeviceLabel = cell.viewWithTag(8) as! UILabel
         let dirtyFiatLabel = cell.viewWithTag(11) as! UILabel
         let infoButton = cell.viewWithTag(12) as! UIButton
-        let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
+        //let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
         let nodeView = cell.viewWithTag(24)!
         let watchIcon = cell.viewWithTag(25) as! UIImageView
         let keysOnNodeLabel = cell.viewWithTag(26) as! UILabel
@@ -726,16 +747,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         nodeView.layer.cornerRadius = 8
         
-        if isRefreshingZero {
-            
-            refreshingSpinner.alpha = 1
-            refreshingSpinner.startAnimating()
-            
-        } else {
-            
-            refreshingSpinner.alpha = 0
-            refreshingSpinner.stopAnimating()
-        }
+//        if isRefreshingZero {
+//
+//            refreshingSpinner.alpha = 1
+//            refreshingSpinner.startAnimating()
+//
+//        } else {
+//
+//            refreshingSpinner.alpha = 0
+//            refreshingSpinner.stopAnimating()
+//        }
         
         
         infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
@@ -814,13 +835,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if descStruct.isHot {
             
             seedOnDeviceLabel.text = "\(node.label) is Hot"
-            keysOnNodeLabel.text = "1,000 private keys on \(node.label)"
+            keysOnNodeLabel.text = "\(wallet.maxRange) private keys on \(node.label)"
             watchIcon.image = UIImage(systemName: "pencil.and.ellipsis.rectangle")
             
         } else {
             
             seedOnDeviceLabel.text = "\(node.label) is Cold"
-            keysOnNodeLabel.text = "1,000 public keys on \(node.label)"
+            keysOnNodeLabel.text = "\(wallet.maxRange) public keys on \(node.label)"
             watchIcon.image = UIImage(systemName: "eye")
             
         }
@@ -834,20 +855,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    private func noActiveWalletCell(_ indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = descriptionCell(description: "⚠︎ No active wallet")
-        let addWalletButton = UIButton()
-        addWalletButton.frame = CGRect(x: cell.frame.maxX, y: (cell.frame.height / 2) - 10, width: 20, height: 20)
-        addWalletButton.addTarget(self, action: #selector(addWallet), for: .touchUpInside)
-        let image = UIImage(systemName: "plus")
-        addWalletButton.setImage(image, for: .normal)
-        addWalletButton.tintColor = .systemBlue
-        cell.addSubview(addWalletButton)
-        return cell
-        
-    }
-    
     private func torCell(_ indexPath: IndexPath) -> UITableViewCell {
         
         let cell = mainMenu.dequeueReusableCell(withIdentifier: "torCell", for: indexPath)
@@ -857,7 +864,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let onionVersionLabel = cell.viewWithTag(4) as! UILabel
         let v3address = cell.viewWithTag(6) as! UILabel
         let torActiveCircle = cell.viewWithTag(7) as! UIImageView
-        let spinner = cell.viewWithTag(8) as! UIActivityIndicatorView
+        //let spinner = cell.viewWithTag(8) as! UIActivityIndicatorView
         let infoButton = cell.viewWithTag(9) as! UIButton
         let connectedView = cell.viewWithTag(10)!
         let clientOnionView = cell.viewWithTag(11)!
@@ -998,7 +1005,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let sizeLabel = cell.viewWithTag(13) as! UILabel
         let feeRate = cell.viewWithTag(14) as! UILabel
         let isHot = cell.viewWithTag(15) as! UILabel
-        let refreshingSpinner = cell.viewWithTag(16) as! UIActivityIndicatorView
+        //let refreshingSpinner = cell.viewWithTag(16) as! UIActivityIndicatorView
         let infoButton = cell.viewWithTag(17) as! UIButton
         
         infoButton.addTarget(self, action: #selector(getNodeInfo(_:)), for: .touchUpInside)
@@ -1030,16 +1037,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         feeRate.layer.cornerRadius = 6
         isHot.layer.cornerRadius = 6
         
-        if isRefreshingTwo {
-            
-            refreshingSpinner.alpha = 1
-            refreshingSpinner.startAnimating()
-            
-        } else {
-            
-            refreshingSpinner.alpha = 0
-            refreshingSpinner.stopAnimating()
-        }
+//        if isRefreshingTwo {
+//
+//            refreshingSpinner.alpha = 1
+//            refreshingSpinner.startAnimating()
+//
+//        } else {
+//
+//            refreshingSpinner.alpha = 0
+//            refreshingSpinner.stopAnimating()
+//        }
         
         sizeLabel.text = "\(self.size) size"
         difficultyLabel.text = "\(self.difficulty) difficulty"
@@ -1299,22 +1306,30 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     private func torsCell(_ indexPath: IndexPath) -> UITableViewCell {
         
         self.torCellIndex = indexPath.section
-     
-        if node != nil {
+        
+        if !torConnected {
             
-            if !torSectionLoaded {
-                
-                return spinningCell()
-                
-            } else {
-                
-                return torCell(indexPath)
-                
-            }
-                        
+            return descriptionCell(description: "⚠︎ Tor not connected")
+            
         } else {
             
-            return blankCell()
+            if node != nil {
+                
+                if !torSectionLoaded {
+                    
+                    return spinningCell()
+                    
+                } else {
+                    
+                    return torCell(indexPath)
+                    
+                }
+                            
+            } else {
+                
+                return blankCell()
+                
+            }
             
         }
         
@@ -1356,7 +1371,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else if self.wallet != nil && nodeSectionLoaded {
                 
-                return descriptionCell(description: "No transactions")
+                return descriptionCell(description: "⚠︎ No transactions")
                 
             } else {
                 
@@ -1409,14 +1424,14 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
+                
         let header = UIView()
         header.backgroundColor = UIColor.clear
-        header.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 30)
+        header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
         
         let textLabel = UILabel()
         textLabel.textAlignment = .left
-        textLabel.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
+        textLabel.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         textLabel.textColor = .systemGray
         
         let refreshButton = UIButton()
@@ -1425,80 +1440,95 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         refreshButton.tintColor = .white
         refreshButton.tag = section
         refreshButton.addTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
+        let refreshButtonX = header.frame.maxX - 32
         
         switch section {
             
         case self.torCellIndex:
             
-            textLabel.text = "Tor Status"
-            
-            if torSectionLoaded {
+            //if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: self.torCellIndex)) {
                 
-                refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
-                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                textLabel.text = "Tor Status"
                 
-            } else {
+                if torSectionLoaded {
+                    
+                    refreshButton.alpha = 1
+                    refreshButton.frame = CGRect(x: refreshButtonX, y: 0, width: 15, height: 18)
+                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                    
+                } else {
+                    
+                    refreshButton.alpha = 0
+                    refreshButton.frame = CGRect(x: 0, y: 0, width: 15, height: 18)
+                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                    
+                }
                 
-                refreshButton.alpha = 0
-                refreshButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
-                
-            }
+            //}
             
         case self.walletCellIndex:
             
-            textLabel.text = "Active Wallet Info"
-            
-            if walletSectionLoaded {
+            //if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: self.walletCellIndex)) {
                 
-                refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
-                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                textLabel.text = "Active Wallet Info"
                 
-            } else {
+                if walletSectionLoaded {
+                    
+                    refreshButton.alpha = 1
+                    refreshButton.frame = CGRect(x: refreshButtonX, y: 0, width: 15, height: 18)
+                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                    
+                } else {
+                    
+                    refreshButton.alpha = 0
+                    refreshButton.frame = CGRect(x: 0, y: 0, width: 15, height: 18)
+                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                    
+                }
                 
-                refreshButton.alpha = 0
-                refreshButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
-                
-            }
+            //}
             
         case self.nodeCellIndex:
             
+            //let cell = tableView.cellForRow(at: IndexPath(row: 0, section: self.nodeCellIndex))
+                
             textLabel.text = "Full Node Status"
             
             if nodeSectionLoaded {
                 
                 refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
+                refreshButton.frame = CGRect(x: refreshButtonX, y: 0, width: 15, height: 18)
                 textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             } else {
                 
                 refreshButton.alpha = 0
-                refreshButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+                refreshButton.frame = CGRect(x: 0, y: 0, width: 15, height: 18)
                 textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
             }
             
         case 3:
             
-            textLabel.text = "Transaction History"
-            
-            if transactionsSectionLoaded {
+            //if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 3)) {
                 
-                refreshButton.alpha = 1
-                refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
-                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                textLabel.text = "Transaction History"
                 
-            } else {
+                if transactionsSectionLoaded {
+                    
+                    refreshButton.alpha = 1
+                    refreshButton.frame = CGRect(x: refreshButtonX, y: 0, width: 15, height: 18)
+                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                    
+                } else {
+                    
+                    refreshButton.alpha = 0
+                    refreshButton.frame = CGRect(x: 0, y: 0, width: 15, height: 18)
+                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                    
+                }
                 
-                refreshButton.alpha = 0
-                refreshButton.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
-                
-            }
+            //}
             
         default:
             
@@ -1609,29 +1639,37 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func torCellHeight() -> CGFloat {
         
-        if self.node != nil {
+        if !torConnected {
             
-            if torInfoHidden {
+            return 47
+            
+        } else {
+            
+            if self.node != nil {
                 
-                if torSectionLoaded {
+                if torInfoHidden {
                     
-                    return 85
+                    if torSectionLoaded {
+                        
+                        return 85
+                        
+                    } else {
+                        
+                        return 47
+                        
+                    }
                     
                 } else {
                     
-                    return 47
+                    return 165
                     
                 }
                 
             } else {
                 
-                return 165
+                return 47
                 
             }
-            
-        } else {
-            
-            return 47
             
         }
         
@@ -1663,8 +1701,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if transactionsSectionLoaded {
             
-            return 80
-            
+            if transactionArray.count > 0 {
+                
+                return 80
+                
+            } else {
+                
+                return 47
+                
+            }
+                        
         } else {
             
             return 47
@@ -2129,11 +2175,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                self.transactionArray = nodeLogic.arrayToReturn.reversed()
-                self.transactionsSectionLoaded = true
-                                
                 DispatchQueue.main.async {
                     
+                    self.transactionArray = nodeLogic.arrayToReturn.reversed()
+                    self.transactionsSectionLoaded = true
                     self.impact()
                     self.mainMenu.reloadData()
                     self.loadNodeData()
@@ -2303,7 +2348,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         refresher = UIRefreshControl()
         refresher.tintColor = UIColor.white
-        refresher.attributedTitle = NSAttributedString(string: "refresh data", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+        refresher.attributedTitle = NSAttributedString(string: "", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         refresher.addTarget(self, action: #selector(self.refreshNow), for: UIControl.Event.valueChanged)
         mainMenu.addSubview(refresher)
         
@@ -2339,8 +2384,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func reloadTableData() {
         
-        self.refresher.endRefreshing()
-        self.addStatusLabel(description: "     Connecting Tor...")
+        DispatchQueue.main.async {
+            
+            self.torSectionLoaded = false
+            self.walletSectionLoaded = false
+            self.transactionsSectionLoaded = false
+            self.nodeSectionLoaded = false
+            self.transactionArray.removeAll()
+            self.refresher.endRefreshing()
+            self.addStatusLabel(description: "     Connecting Tor...")
+            self.mainMenu.reloadData()
+            
+        }
         
         getActiveWalletNow() { (w, error) in
                 
