@@ -14,7 +14,7 @@ class WalletCreatedWordsViewController: UIViewController, UINavigationController
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var savedOutlet: UIButton!
     var recoverPhrase = ""
-    var wallet:WalletStruct!
+    var wallet = [String:Any]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +25,9 @@ class WalletCreatedWordsViewController: UIViewController, UINavigationController
         setTitleView()
         savedOutlet.layer.cornerRadius = 8
         
-        if wallet.type == "MULTI" {
+        let w = WalletStruct(dictionary: wallet)
+        
+        if w.type == "MULTI" {
             
             textView.text = """
             On the next screen we will display 12 very important words.

@@ -342,7 +342,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                 
             }
             
-            
         } else if let _ = Data(base64Encoded: url) {
             
             signPSBT(psbt: url)

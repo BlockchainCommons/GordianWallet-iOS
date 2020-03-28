@@ -144,23 +144,24 @@ class TorClient {
                             
                             let _ = self.controller?.addObserver(forCircuitEstablished: { established in
                                 
-                                self.state = .connected
-                                                                
-                                self.controller?.getSessionConfiguration() { sessionConfig in
+                                if established {
                                     
-                                    self.session = URLSession(configuration: sessionConfig!)
+                                    self.state = .connected
+                                    
+                                    self.sessionConfiguration.connectionProxyDictionary = [kCFProxyTypeKey: kCFProxyTypeSOCKS, kCFStreamPropertySOCKSProxyHost: "localhost", kCFStreamPropertySOCKSProxyPort: 29050]
+                                    self.session = URLSession(configuration:self.sessionConfiguration)
                                     self.session.configuration.urlCache = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
                                     weakDelegate?.torConnFinished()
                                     
-                                }
-                                
-                                DispatchQueue.main.async {
+                                    DispatchQueue.main.async {
+                                        
+                                        NotificationCenter.default.post(name: .didEstablishTorConnection, object: self)
+                                        
+                                    }
                                     
-                                    NotificationCenter.default.post(name: .didEstablishTorConnection, object: self)
+                                    completion()
                                     
                                 }
-                                
-                                completion()
                                 
                             })
                                         

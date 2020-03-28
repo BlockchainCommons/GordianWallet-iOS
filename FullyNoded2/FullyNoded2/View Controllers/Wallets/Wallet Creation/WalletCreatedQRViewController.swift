@@ -13,7 +13,7 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
     @IBOutlet var qrView: UIImageView!
     @IBOutlet var nextOutlet: UIButton!
     
-    var wallet:WalletStruct!
+    var wallet = [String:Any]()
     var recoveryPhrase = ""
     var recoveryQr = ""
     var tapQRGesture = UITapGestureRecognizer()

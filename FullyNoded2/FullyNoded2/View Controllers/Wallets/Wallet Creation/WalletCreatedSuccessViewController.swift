@@ -157,7 +157,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
                 
                 vc.recoveryPhrase = self.recoveryPhrase
                 vc.recoveryQr = self.recoveryQr.replacingOccurrences(of: "\"label\":\"\"", with: "\"label\":\"\(textField.text!)\"")
-                vc.wallet = self.w
+                vc.wallet = self.wallet
             }
             
         default:

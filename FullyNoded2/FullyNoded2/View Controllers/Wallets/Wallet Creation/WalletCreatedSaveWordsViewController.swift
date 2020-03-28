@@ -16,7 +16,8 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
     @IBOutlet var derivationLabel: UILabel!
     @IBOutlet var birthdateLabel: UILabel!
     
-    var wallet:WalletStruct!
+    var wallet = [String:Any]()
+    var w:WalletStruct!
     var words = ""
     var mnemonic = ""
     
@@ -29,6 +30,7 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
         setTitleView()
         saveOutlet.layer.cornerRadius = 8
         textView.layer.cornerRadius = 8
+        w = WalletStruct(dictionary: wallet)
         let wordArray = words.split(separator: " ")
         
         for (i, word) in wordArray.enumerated() {
@@ -38,10 +40,10 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
         }
         
         textView.text = mnemonic
-        mnemonic += "\nDerivation: \(wallet.derivation + "/0")\n"
-        mnemonic += "Birthdate unix: \(wallet.birthdate)"
-        birthdateLabel.text = "\(wallet.birthdate)"
-        derivationLabel.text = wallet.derivation + "/0"
+        mnemonic += "\nDerivation: \(w.derivation + "/0")\n"
+        mnemonic += "Birthdate unix: \(w.birthdate)"
+        birthdateLabel.text = "\(w.birthdate)"
+        derivationLabel.text = w.derivation + "/0"
         
     }
     
@@ -66,7 +68,7 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
             
             var message = ""
             
-            if self.wallet.type == "MULTI" {
+            if self.w.type == "MULTI" {
                 
                 message = "Once you tap \"Yes, I saved them\" the backup words will be gone forever! If you tap \"Oops, I forgot\" we will show them to you again so you may save them."
                 
