@@ -73,14 +73,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // as for some reason resigning the Tor thread crashes iPhone 11's.
         let device = UIDevice.modelName
         
-        if device != "iPhone 11 pro max" && device != "iPhone 11 Pro"  && device != "iPhone 11" {
+        if device != "iPhone 11 pro max" {
             
             let mgr = TorClient.sharedInstance
             
             if mgr.state != .stopped {
-                
+                                    
                 mgr.resign()
-                
+                                                    
             }
             
         }

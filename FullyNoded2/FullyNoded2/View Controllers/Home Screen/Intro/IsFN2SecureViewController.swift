@@ -8,7 +8,7 @@
 
 import UIKit
 
-class IsFN2SecureViewController: UIViewController, UITextViewDelegate {
+class IsFN2SecureViewController: UIViewController, UITextViewDelegate, UINavigationControllerDelegate {
 
     @IBOutlet var textView: UITextView!
     @IBOutlet var nextOutlet: UIButton!
@@ -22,11 +22,27 @@ class IsFN2SecureViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        navigationController?.delegate = self
+        setTitleView()
         nextOutlet.layer.cornerRadius = 8
         titleLabel.adjustsFontSizeToFitWidth = true
         textView.delegate = self
         
         textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["Tor": torLink, "V3 hidden service": hiddenServiceLink, "Tor V3 authentication": authLink])
+        
+    }
+    
+    private func setTitleView() {
+        
+        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.frame = titleView.bounds
+        imageView.isUserInteractionEnabled = true
+        titleView.addSubview(imageView)
+        self.navigationItem.titleView = titleView
         
     }
     

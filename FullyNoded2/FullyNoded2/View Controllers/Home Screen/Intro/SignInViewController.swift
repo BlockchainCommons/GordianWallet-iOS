@@ -23,11 +23,26 @@ class SignInViewController: UIViewController, ASAuthorizationControllerDelegate,
 
         // Do any additional setup after loading the view.
         navigationController?.delegate = self
+        setTitleView()
         authenticateOutlet.layer.cornerRadius = 8
         titleLabel.adjustsFontSizeToFitWidth = true
         textView.delegate = self
         
         textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["Sign in with Apple": signInWithAppleUrl])
+    }
+    
+    private func setTitleView() {
+        
+        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.frame = titleView.bounds
+        imageView.isUserInteractionEnabled = true
+        titleView.addSubview(imageView)
+        self.navigationItem.titleView = titleView
+        
     }
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {

@@ -1580,25 +1580,25 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if !error && node != nil {
                     
-                    DispatchQueue.main.async {
-                        
-                        self.performSegue(withIdentifier: "addWallet", sender: self)
-                        
-                    }
-                    
-//                    if node!.network != "mainnet" {
-//
-//                        DispatchQueue.main.async {
-//
-//                            self.performSegue(withIdentifier: "addWallet", sender: self)
-//
-//                        }
-//
-//                    } else {
-//
-//                        displayAlert(viewController: self, isError: true, message: "Mainnet wallets not yet allowed! Sorry.")
-//
+//                    DispatchQueue.main.async {
+//                        
+//                        self.performSegue(withIdentifier: "addWallet", sender: self)
+//                        
 //                    }
+                    
+                    if node!.network != "mainnet" {
+
+                        DispatchQueue.main.async {
+
+                            self.performSegue(withIdentifier: "addWallet", sender: self)
+
+                        }
+
+                    } else {
+
+                        displayAlert(viewController: self, isError: true, message: "Mainnet wallets not yet allowed! Sorry.")
+
+                    }
                     
                 } else {
                     
@@ -1780,6 +1780,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if let vc = segue.destination as? WalletToolsViewController {
                 
                 vc.wallet = self.wallet
+                
                 vc.sweepDoneBlock = { result in
                     
                     self.refresh()
@@ -1787,15 +1788,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                 }
                 
+                vc.refillDoneBlock = { result in
+                    
+                    self.refresh()
+                    showAlert(vc: self, title: "Success!", message: "Keypool refilled 🤩")
+                    
+                }
+                
             }
-            
-//        case "walletInfo":
-//            
-//            if let vc = segue.destination as? WalletInfoViewController {
-//                
-//                vc.walletname = name
-//                
-//            }
             
         case "verifyAddresses":
             

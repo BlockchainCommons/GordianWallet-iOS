@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WhatIsFN2ViewController: UIViewController, UITextViewDelegate {
+class WhatIsFN2ViewController: UIViewController, UITextViewDelegate, UINavigationControllerDelegate {
 
     @IBOutlet var nextOutlet: UIButton!
     @IBOutlet var titleLabel: UILabel!
@@ -22,11 +22,27 @@ class WhatIsFN2ViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        navigationController?.delegate = self
+        setTitleView()
         nextOutlet.layer.cornerRadius = 8
         titleLabel.adjustsFontSizeToFitWidth = true
         textView.delegate = self
         
         textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["Recovery.md": recoveryUrl, "LibWally": libwallyLink, "FullyNoded 1": fullynoded1Link])
+        
+    }
+    
+    private func setTitleView() {
+        
+        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.frame = titleView.bounds
+        imageView.isUserInteractionEnabled = true
+        titleView.addSubview(imageView)
+        self.navigationItem.titleView = titleView
         
     }
     

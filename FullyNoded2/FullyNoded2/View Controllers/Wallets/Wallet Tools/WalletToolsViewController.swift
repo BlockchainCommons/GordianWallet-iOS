@@ -11,9 +11,11 @@ import UIKit
 class WalletToolsViewController: UIViewController {
     
     var wallet:WalletStruct!
-    var sweepDoneBlock : ((Bool) -> Void)?
+    var sweepDoneBlock: ((Bool) -> Void)?
+    var refillDoneBlock: ((Bool) -> Void)?
     @IBOutlet var rescanOutlet: UIButton!
     @IBOutlet var sweepToOutlet: UIButton!
+    @IBOutlet var refillOutlet: UIButton!
     
     let creatingView = ConnectingView()
     
@@ -22,8 +24,73 @@ class WalletToolsViewController: UIViewController {
 
         rescanOutlet.layer.cornerRadius = 8
         sweepToOutlet.layer.cornerRadius = 8
+        refillOutlet.layer.cornerRadius = 8
+        
+        if wallet.type == "MULTI" {
+            
+            refillOutlet.alpha = 0
+            
+        } else {
+            
+            refillOutlet.alpha = 1
+            
+        }
         
     }
+    
+    @IBAction func refillKeypool(_ sender: Any) {
+        
+        DispatchQueue.main.async {
+                        
+            let alert = UIAlertController(title: "Refill Keypool", message: "", preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: "Refill Now", style: .default, handler: { action in
+                
+                self.creatingView.addConnectingView(vc: self, description: "Refilling the keypool")
+                
+                let singleSig = RefillSingleSig()
+                singleSig.refill(wallet: self.wallet) { (success, error) in
+                    
+                    if success {
+                        
+                        self.creatingView.removeConnectingView()
+                        DispatchQueue.main.async {
+                            
+                            self.dismiss(animated: true) {
+                                
+                                self.refillDoneBlock!(true)
+                                
+                            }
+                            
+                        }
+                        
+                    } else {
+                        
+                        self.creatingView.removeConnectingView()
+                        showAlert(vc: self, title: "Error!", message: "There was an error refilling the keypool: \(String(describing: error))")
+                        
+                    }
+                    
+                }
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "What is this?", style: .default, handler: { action in
+               
+                let message = "This tool allows you to manually refill the keypool associated with this wallet on your node at anytime. Due to the way the app works we have to choose a limited number of keys to import into your node during the wallet creation process (currently 0 to 2500). This can be an issue when you reach your last key as your node will not hold the keys necessary to build transactions or produce addresses. Therefore we offer you the ability to manually refill your nodes keypool. The app is smart eough to know how many keys are in your keypool and will import an additional 2500 keys. This will be reflected on your wallet just under the \"Updated:\" label and in the node pane on the wallet."
+                
+                showAlert(vc: self, title: "Keypool Refill Info", message: message)
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    
+            self.present(alert, animated: true, completion: nil)
+            
+        }
+        
+    }
+    
     
     @IBAction func close(_ sender: Any) {
         

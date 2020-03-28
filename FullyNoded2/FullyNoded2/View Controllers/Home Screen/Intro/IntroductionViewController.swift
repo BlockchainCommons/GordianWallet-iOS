@@ -8,7 +8,7 @@
 
 import UIKit
 
-class IntroductionViewController: UIViewController, UITextViewDelegate {
+class IntroductionViewController: UIViewController, UITextViewDelegate, UINavigationControllerDelegate {
 
     @IBOutlet var nextOutlet: UIButton!
     @IBOutlet var titleLabel: UILabel!
@@ -20,12 +20,28 @@ class IntroductionViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        navigationController?.delegate = self
+        setTitleView()
         nextOutlet.layer.cornerRadius = 8
         titleLabel.adjustsFontSizeToFitWidth = true
         textView.delegate = self
         hideBackButton()
         
         textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["BTCPayServer": donationLinkUrl])
+    }
+    
+    private func setTitleView() {
+        
+        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.frame = titleView.bounds
+        imageView.isUserInteractionEnabled = true
+        titleView.addSubview(imageView)
+        self.navigationItem.titleView = titleView
+        
     }
     
     private func hideBackButton() {

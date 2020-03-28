@@ -134,33 +134,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
     }
     
-    private func goToIntro() {
-        
-        func showIntro() {
-            
-            DispatchQueue.main.async {
-                
-                self.performSegue(withIdentifier: "showIntro", sender: self)
-                
-            }
-            
-        }
-        
-        let keychain = KeychainSwift()
-                
-        if ud.object(forKey: "acceptedDisclaimer1") == nil || keychain.get("userIdentifier") == nil {
-            
-            ud.set(false, forKey: "acceptedDisclaimer1")
-            showIntro()
-            
-        } else if ud.object(forKey: "acceptedDisclaimer1") as! Bool == false {
-            
-            showIntro()
-            
-        }
-        
-    }
-    
     @IBAction func goToSettings(_ sender: Any) {
         
         impact()
@@ -239,9 +212,33 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidAppear(_ animated: Bool) {
         
-        goToIntro()
-        didAppear()
+        func showIntro() {
+            
+            DispatchQueue.main.async {
+                
+                self.performSegue(withIdentifier: "showIntro", sender: self)
+                
+            }
+            
+        }
         
+        let keychain = KeychainSwift()
+                
+        if ud.object(forKey: "acceptedDisclaimer1") == nil || keychain.get("userIdentifier") == nil {
+            
+            ud.set(false, forKey: "acceptedDisclaimer1")
+            showIntro()
+            
+        } else if ud.object(forKey: "acceptedDisclaimer1") as! Bool == false {
+            
+            showIntro()
+            
+        } else {
+            
+            didAppear()
+            
+        }
+                
     }
     
     @objc func logoTapped() {
@@ -281,13 +278,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                 if !error && w != nil {
                                     
                                     self.wallet = w!
-                                                                        
-                                    if w!.index >= w!.maxRange - 100 {
-                                        
-                                        self.showIndexWarning()
-                                        
-                                    }
-                                    
+                                                                                                            
                                     if self.existingWalletName != w!.name && self.existingNodeId != node!.id {
                                         
                                         self.existingNodeId = node!.id
@@ -331,47 +322,114 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func showIndexWarning() {
         
-        var message = ""
-        var actionTitle = ""
-        var alertAction: (() -> Void)!
-        
-        if self.wallet.type == "MULTI" {
+        if wallet != nil {
             
-            message = "Your node only has \(self.wallet.maxRange - self.wallet.index) more keys left to sign with. We urge you to roll this wallet over to a new one ASAP. If you exeed the limit the your node will no longer be able to sign this wallets transactions."
-            actionTitle = "Roll Over"
+            var message = ""
+            var actionTitle = ""
+            var alertAction: (() -> Void)!
             
-            alertAction = {
+            func rollOverMultiSig() {
                 
-                print("roll over")
-                
-            }
-            
-        } else {
-            
-            message = "Your node only has \(self.wallet.maxRange - self.wallet.index) more public keys. We need to import more public keys into your node at this point to ensure your node is able to verify this wallets balances and build psbt's for us."
-            actionTitle = "Refill Keypool"
-            
-            alertAction = {
-                
-                print("refill keypool")
-                
-            }
-            
-        }
-        
-        DispatchQueue.main.async {
-                        
-            let alert = UIAlertController(title: "Warning!", message: message, preferredStyle: .actionSheet)
+                DispatchQueue.main.async {
+                                
+                    let alert = UIAlertController(title: "Multi-Sig options", message: "", preferredStyle: .actionSheet)
 
-            alert.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { action in
-                
-                alertAction()
-                
-            }))
-            
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    alert.addAction(UIAlertAction(title: "Refill Existing Keypool", style: .default, handler: { action in
+                        
+                        
+                        
+                    }))
                     
-            self.present(alert, animated: true, completion: nil)
+                    alert.addAction(UIAlertAction(title: "Rollover", style: .default, handler: { action in
+                        
+                        
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                            
+                    self.present(alert, animated: true, completion: nil)
+                    
+                }
+                
+            }
+            
+            func refillSingleSig() {
+                
+                DispatchQueue.main.async {
+                                
+                    let alert = UIAlertController(title: "Refill Keypool", message: message, preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Refill Now", style: .default, handler: { action in
+                        
+                        self.connectingView.addConnectingView(vc: self.tabBarController!, description: "Refilling the keypool")
+                        
+                        let singleSig = RefillSingleSig()
+                        singleSig.refill(wallet: self.wallet) { (success, error) in
+                            
+                            if success {
+                                
+                                self.connectingView.removeConnectingView()
+                                showAlert(vc: self, title: "Success!", message: "Keypool refilled 🤩")
+                                
+                            } else {
+                                
+                                self.connectingView.removeConnectingView()
+                                showAlert(vc: self, title: "Error!", message: "There was an error refilling the keypool: \(String(describing: error))")
+                                
+                            }
+                            
+                        }
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                            
+                    self.present(alert, animated: true, completion: nil)
+                    
+                }
+                
+            }
+            
+            if self.wallet.type == "MULTI" {
+                
+                message = "Your node only has \(self.wallet.maxRange - self.wallet.index) more keys left to sign with. We urge you to roll this wallet over to a new one ASAP. If you exeed the limit the your node will no longer be able to sign this wallets transactions."
+                actionTitle = "Roll Over"
+                
+                alertAction = {
+                    
+                    rollOverMultiSig()
+                    
+                }
+                
+            } else {
+                
+                message = "Your node only has \(self.wallet.maxRange - self.wallet.index) more public keys. We need to import more public keys into your node at this point to ensure your node is able to verify this wallets balances and build psbt's for us."
+                actionTitle = "Refill Keypool"
+                
+                alertAction = {
+                    
+                    refillSingleSig()
+                    
+                }
+                
+            }
+            
+            DispatchQueue.main.async {
+                            
+                let alert = UIAlertController(title: "Warning!", message: message, preferredStyle: .actionSheet)
+
+                alert.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { action in
+                    
+                    alertAction()
+                    
+                }))
+                
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                        
+                self.present(alert, animated: true, completion: nil)
+                
+            }
             
         }
         
@@ -2088,6 +2146,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     } else {
                         
                         self.reloadSections([self.nodeCellIndex])
+                        
+                        if self.wallet.index >= self.wallet.maxRange - 100 {
+                            
+                            self.showIndexWarning()
+                            
+                        }
                         
                     }
                     

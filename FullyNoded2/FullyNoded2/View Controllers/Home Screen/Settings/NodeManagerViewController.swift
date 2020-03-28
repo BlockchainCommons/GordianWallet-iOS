@@ -15,6 +15,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     var addButton = UIBarButtonItem()
     var editButton = UIBarButtonItem()
     var id:UUID!
+    var url = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -145,12 +146,9 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let section = indexPath.section
-        let node = nodes[section]
-        id = NodeStruct.init(dictionary: node).id
+        let node = NodeStruct.init(dictionary: nodes[section])
+        id = node.id
          
-        //turning on
-        //makeActive(nodeToActivate: idToActivate)
-        
         DispatchQueue.main.async {
 
             let impact = UIImpactFeedbackGenerator()
@@ -158,21 +156,36 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
 
         }
         
-        refreshCredentials()
+        refreshCredentials(node: node)
         
     }
     
-    private func refreshCredentials() {
+    private func refreshCredentials(node: NodeStruct!) {
         
         DispatchQueue.main.async {
             
-            let alert = UIAlertController(title: "Update this nodes credentials?", message: "It is considered good practice to refresh your nodes hidden service from time to time, this tool allows you to scan a new QuickConnect QR code in order to update this nodes credentials.\n\nPlease ensure you understand the implications of this! If you simply want to add a new node do that by tapping the + button instead.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Choose an option", message: "You may update the nodes credentials which is useful if you have changed your hidden service url or rpc credentials. Or you may share the node with trusted others.", preferredStyle: .actionSheet)
 
             alert.addAction(UIAlertAction(title: "Update this node", style: .default, handler: { action in
                 
                 DispatchQueue.main.async {
                     
                     self.performSegue(withIdentifier: "updateNode", sender: self)
+                    
+                }
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Share this node", style: .default, handler: { action in
+                
+                DispatchQueue.main.async {
+                    
+                    let onionAddress = node.onionAddress
+                    let rpcusername = node.rpcuser
+                    let rpcpassword = node.rpcpassword
+                    let label = (node.label).replacingOccurrences(of: " ", with: "%20")
+                    self.url = "btcstandup://\(rpcusername):\(rpcpassword)@\(onionAddress)/?label=\(label)"
+                    self.performSegue(withIdentifier: "shareNode", sender: self)
                     
                 }
                 
@@ -437,6 +450,14 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                     self.load()
                     
                 }
+                
+            }
+            
+        case "shareNode":
+            
+            if let vc = segue.destination as? QRDisplayerViewController {
+                
+                vc.address = url
                 
             }
             

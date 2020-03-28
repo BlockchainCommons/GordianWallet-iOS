@@ -10,40 +10,46 @@ import UIKit
 
 class WalletCreatedWordsViewController: UIViewController, UINavigationControllerDelegate {
     
-    @IBOutlet var savedOutlet: UIButton!
-    @IBOutlet var wordsLabel: UILabel!
     @IBOutlet var textView: UITextView!
-    
-    var tapTextViewGesture = UITapGestureRecognizer()
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var savedOutlet: UIButton!
     var recoverPhrase = ""
     var wallet:WalletStruct!
-    var mnemonic = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         navigationController?.delegate = self
+        titleLabel.adjustsFontSizeToFitWidth = true
         setTitleView()
         savedOutlet.layer.cornerRadius = 8
-        wordsLabel.isUserInteractionEnabled = true
-        wordsLabel.sizeToFit()
-        tapTextViewGesture = UITapGestureRecognizer(target: self,
-                                                    action: #selector(shareRawText(_:)))
         
-        wordsLabel.addGestureRecognizer(tapTextViewGesture)
-        
-        let wordArray = recoverPhrase.split(separator: " ")
-        
-        mnemonic = "Derivation: \(wallet.derivation + "/0")\n\n"
-        
-        for (i, word) in wordArray.enumerated() {
+        if wallet.type == "MULTI" {
             
-            mnemonic += "\(i + 1). \(word)     "
+            textView.text = """
+            On the next screen we will display 12 very important words.
+
+            You *MUST* write these 12 words down and save them seperately from the RecoveryQR, *THEY ARE REQUIRED* to recover a multi-signature wallet if you lose your node.
+
+            These words **WILL BE DELETED FOREVER** once you tap the "I saved them" button!
+
+            At a minimum we recommend writing these words down on water proof paper with a permanent marker.
+            """
+            
+        } else {
+            
+            textView.text = """
+            On the next screen we will display your devices seed as a 12 word BIP39 mnemonic.
+
+            You should write these 12 words down and save them seperately from the Recovery QR.
+            
+            The seed is also included in the Recovery QR so these words act as a redundant back up that can be used with other apps.
+
+            At a minimum we recommend writing these words down on water proof paper with a permanent marker.
+            """
             
         }
-        
-        wordsLabel.text = mnemonic
         
     }
     
@@ -64,122 +70,33 @@ class WalletCreatedWordsViewController: UIViewController, UINavigationController
         
         DispatchQueue.main.async {
             
-            self.savedOutlet.alpha = 0
-            self.wordsLabel.alpha = 0
-            
-            var message = ""
-            
-            if self.wallet.type == "MULTI" {
-                
-                message = "Once you tap \"Yes, I saved them\" the backup words will be gone forever! If you tap \"Oops, I forgot\" we will show them to you again so you may save them."
-                
-            } else {
-                
-                message = ""
-                
-            }
-            
-            let alert = UIAlertController(title: "Are you sure you saved the recovery items?", message: message, preferredStyle: .actionSheet)
-            
-            alert.view.superview?.subviews[0].isUserInteractionEnabled = false
-
-            alert.addAction(UIAlertAction(title: "Yes, I saved them", style: .default, handler: { action in
-                                
-                DispatchQueue.main.async {
-                    
-                    self.navigationController?.popToRootViewController(animated: true)
-
-                }
-                
-            }))
-            
-            alert.addAction(UIAlertAction(title: "Oops, I forgot", style: .default, handler: { action in
-                                
-                DispatchQueue.main.async {
-                    
-                    self.savedOutlet.alpha = 1
-                    self.wordsLabel.alpha = 1
-                    
-                }
-                
-            }))
-            
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
-                                
-                DispatchQueue.main.async {
-                    
-                    self.savedOutlet.alpha = 1
-                    self.wordsLabel.alpha = 1
-                    
-                }
-                
-            }))
-            
-            alert.popoverPresentationController?.sourceView = self.view
-            self.present(alert, animated: true, completion: nil)
+            self.performSegue(withIdentifier: "goSaveWords", sender: self)
             
         }
         
     }
     
-    @objc func shareRawText(_ sender: UITapGestureRecognizer) {
-        
-        DispatchQueue.main.async {
-            
-            UIView.animate(withDuration: 0.2, animations: {
-                
-                self.wordsLabel.alpha = 0
-                
-            }) { _ in
-                
-                UIView.animate(withDuration: 0.2, animations: {
-                    
-                    self.wordsLabel.alpha = 1
-                    
-                })
-                
-            }
-                            
-            let textToShare = [self.mnemonic + "\n\n" + "birthdate unix: \(self.wallet.birthdate)"]
-            
-            let activityViewController = UIActivityViewController(activityItems: textToShare,
-                                                                  applicationActivities: nil)
-            
-            activityViewController.popoverPresentationController?.sourceView = self.view
-            self.present(activityViewController, animated: true) {}
-            
-        }
-        
-    }
-    
-    @IBAction func exportAsQR(_ sender: Any) {
-        
-        DispatchQueue.main.async {
-            
-            let qrGen = QRGenerator()
-            qrGen.textInput = self.mnemonic + "\n\n" + "birthdate unix: \(self.wallet.birthdate)"
-            let image = qrGen.getQRCode()
-            let objectsToShare = [image]
-            
-            let activityController = UIActivityViewController(activityItems: objectsToShare,
-                                                              applicationActivities: nil)
-            
-            activityController.popoverPresentationController?.sourceView = self.view
-            self.present(activityController, animated: true) {}
-            
-        }
-        
-    }
-    
-    
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        switch segue.identifier {
+            
+        case "goSaveWords":
+            
+            if let vc = segue.destination as? WalletCreatedSaveWordsViewController {
+                
+                vc.wallet = wallet
+                vc.words = recoverPhrase
+                
+            }
+            
+        default:
+            break
+        }
     }
-    */
+    
 
 }

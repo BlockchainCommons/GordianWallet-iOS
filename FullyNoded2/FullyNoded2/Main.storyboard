@@ -538,7 +538,7 @@
                                 <color key="sectionIndexBackgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MainMenuCell" rowHeight="66" id="EVM-FH-EQj">
-                                        <rect key="frame" x="0.0" y="55.5" width="345" height="66"/>
+                                        <rect key="frame" x="15" y="55.5" width="345" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="EVM-FH-EQj" id="6Y2-Fh-R1z">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="66"/>
@@ -595,7 +595,7 @@
                                         <color key="backgroundColor" red="0.090666323016946812" green="0.10264321163773631" blue="0.12232880449385808" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NodeInfo" rowHeight="207" id="LJt-F3-a27">
-                                        <rect key="frame" x="0.0" y="121.5" width="345" height="207"/>
+                                        <rect key="frame" x="15" y="121.5" width="345" height="207"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LJt-F3-a27" id="bIn-ES-gWa">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="207"/>
@@ -1280,7 +1280,7 @@
                                         <color key="backgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="coldStorageCell" rowHeight="188" id="lKm-ad-JjI">
-                                        <rect key="frame" x="15" y="783.5" width="345" height="188"/>
+                                        <rect key="frame" x="0.0" y="783.5" width="345" height="188"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lKm-ad-JjI" id="k7X-TL-xsP">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="188"/>
@@ -1442,7 +1442,7 @@
                                         <color key="backgroundColor" red="0.0" green="0.13545817230621357" blue="0.28083359771573602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="singleSigCell" rowHeight="255" id="nLp-7u-fn2">
-                                        <rect key="frame" x="15" y="971.5" width="345" height="255"/>
+                                        <rect key="frame" x="0.0" y="971.5" width="345" height="255"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nLp-7u-fn2" id="Vqk-up-C8V">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="255"/>
@@ -1734,13 +1734,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1024.png" translatesAutoresizingMaskIntoConstraints="NO" id="ckH-Fz-YHr">
-                                <rect key="frame" x="167.5" y="64" width="40" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="HJd-oa-9Px"/>
-                                    <constraint firstAttribute="width" constant="40" id="kgy-Oi-OP5"/>
-                                </constraints>
-                            </imageView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOS-fx-6lm">
                                 <rect key="frame" x="153.5" y="568" width="68" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1755,7 +1748,7 @@
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="lsS-j6-ZOY">
-                                <rect key="frame" x="16" y="175" width="343" height="374"/>
+                                <rect key="frame" x="16" y="107" width="343" height="442"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <string key="text">Thanks for trying out FullyNoded 2!
 
@@ -1769,7 +1762,7 @@ We appreciate your attention and patience!</string>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hand.thumbsup" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="v2c-iT-NG2">
-                                <rect key="frame" x="20" y="128.5" width="21" height="21"/>
+                                <rect key="frame" x="20" y="60.5" width="21" height="21"/>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="21" id="ZXx-xw-oCh"/>
@@ -1777,7 +1770,7 @@ We appreciate your attention and patience!</string>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to FullyNoded 2!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oBE-mt-kCx">
-                                <rect key="frame" x="49" y="112" width="310" height="55"/>
+                                <rect key="frame" x="49" y="44" width="310" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="diz-EA-jbd"/>
                                 </constraints>
@@ -1788,14 +1781,12 @@ We appreciate your attention and patience!</string>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="oBE-mt-kCx" firstAttribute="top" secondItem="e6m-81-nrW" secondAttribute="top" id="Ay5-tP-XFz"/>
                             <constraint firstItem="fOS-fx-6lm" firstAttribute="centerX" secondItem="brz-ev-3wV" secondAttribute="centerX" id="B2U-Gw-edI"/>
                             <constraint firstItem="lsS-j6-ZOY" firstAttribute="leading" secondItem="e6m-81-nrW" secondAttribute="leading" constant="16" id="F7Y-a8-3jb"/>
-                            <constraint firstItem="ckH-Fz-YHr" firstAttribute="top" secondItem="e6m-81-nrW" secondAttribute="top" constant="20" id="IL0-AT-Jal"/>
                             <constraint firstItem="v2c-iT-NG2" firstAttribute="leading" secondItem="e6m-81-nrW" secondAttribute="leading" constant="20" id="KHl-dJ-TPJ"/>
                             <constraint firstItem="oBE-mt-kCx" firstAttribute="leading" secondItem="v2c-iT-NG2" secondAttribute="trailing" constant="8" id="PSk-PJ-Wbb"/>
-                            <constraint firstItem="oBE-mt-kCx" firstAttribute="top" secondItem="ckH-Fz-YHr" secondAttribute="bottom" constant="8" id="cso-T6-DK5"/>
                             <constraint firstItem="e6m-81-nrW" firstAttribute="bottom" secondItem="fOS-fx-6lm" secondAttribute="bottom" constant="20" id="dCY-b0-pAa"/>
-                            <constraint firstItem="ckH-Fz-YHr" firstAttribute="centerX" secondItem="brz-ev-3wV" secondAttribute="centerX" id="eDA-rO-hWN"/>
                             <constraint firstItem="fOS-fx-6lm" firstAttribute="top" secondItem="lsS-j6-ZOY" secondAttribute="bottom" constant="19" id="heR-Xb-I6W"/>
                             <constraint firstItem="e6m-81-nrW" firstAttribute="trailing" secondItem="oBE-mt-kCx" secondAttribute="trailing" constant="16" id="itF-dc-iqo"/>
                             <constraint firstItem="lsS-j6-ZOY" firstAttribute="top" secondItem="oBE-mt-kCx" secondAttribute="bottom" constant="8" id="rj6-WO-6ca"/>
@@ -1824,17 +1815,23 @@ We appreciate your attention and patience!</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="574"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1024.png" translatesAutoresizingMaskIntoConstraints="NO" id="bo3-Wj-ymj">
-                                <rect key="frame" x="167.5" y="20" width="40" height="40"/>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EwF-Re-53J">
+                                <rect key="frame" x="153.5" y="476" width="68" height="30"/>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="ehE-pO-LE8"/>
-                                    <constraint firstAttribute="width" constant="40" id="s2r-Ku-jM9"/>
+                                    <constraint firstAttribute="height" constant="30" id="buj-Tp-n0k"/>
+                                    <constraint firstAttribute="width" constant="68" id="y0q-Pe-Ze8"/>
                                 </constraints>
-                            </imageView>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Next"/>
+                                <connections>
+                                    <action selector="nextAction:" destination="bbG-OT-g8S" eventType="touchUpInside" id="nVL-s5-jaN"/>
+                                </connections>
+                            </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="SrH-4k-3KF">
-                                <rect key="frame" x="16" y="131" width="343" height="337"/>
+                                <rect key="frame" x="16" y="83" width="343" height="385"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <mutableString key="text">FullyNoded 2 is the successor app to FullyNoded 1.
+                                <string key="text">FullyNoded 2 is the successor app to FullyNoded 1.
 
 The apps are very similiar yet very different in what they do. You can think of FullyNoded1 as a powerful, raw interface between you and your node where all the functionality is quite manual and meant for expert users.
 
@@ -1852,26 +1849,13 @@ Multi-signature wallets:
 
 2 of 3 multi-sig wallet whereby your device holds one seed for signing locally, your node holds 5,000 private keys derived from a second seed and you securely store a third seed offline in the form of a 12 word BIP39 recovery phrase along with a RecoveryQR code to use in the unlikely event that you ever lose your node AND device. This is beneficial because if anyone stole your node or hacked their way into it they would not have any access to your funds, same goes for the offline recovery words. In short FullyNoded 2 makes using multi-signature easy for anyone.
 
-For more information regarding wallet recovery please see our Recovery.md file.</mutableString>
+For more information regarding wallet recovery please see our Recovery.md file.</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EwF-Re-53J">
-                                <rect key="frame" x="153.5" y="476" width="68" height="30"/>
-                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="buj-Tp-n0k"/>
-                                    <constraint firstAttribute="width" constant="68" id="y0q-Pe-Ze8"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Next"/>
-                                <connections>
-                                    <action selector="nextAction:" destination="bbG-OT-g8S" eventType="touchUpInside" id="nVL-s5-jaN"/>
-                                </connections>
-                            </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ewd-tn-TpP">
-                                <rect key="frame" x="16" y="86" width="20" height="19"/>
+                                <rect key="frame" x="16" y="38" width="20" height="19"/>
                                 <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="1Qg-Yq-x4C"/>
@@ -1879,7 +1863,7 @@ For more information regarding wallet recovery please see our Recovery.md file.<
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What is FullyNoded 2?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hqs-hU-o5J">
-                                <rect key="frame" x="49" y="68" width="310" height="55"/>
+                                <rect key="frame" x="49" y="20" width="310" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="iQh-GT-WP9"/>
                                 </constraints>
@@ -1891,15 +1875,13 @@ For more information regarding wallet recovery please see our Recovery.md file.<
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="SrH-4k-3KF" firstAttribute="leading" secondItem="22w-q5-snU" secondAttribute="leading" constant="16" id="A9O-BX-P5W"/>
-                            <constraint firstItem="bo3-Wj-ymj" firstAttribute="centerX" secondItem="oTR-K6-o1V" secondAttribute="centerX" id="BUs-sN-uZ8"/>
                             <constraint firstItem="22w-q5-snU" firstAttribute="trailing" secondItem="SrH-4k-3KF" secondAttribute="trailing" constant="16" id="FFa-qe-XFN"/>
                             <constraint firstItem="22w-q5-snU" firstAttribute="bottom" secondItem="EwF-Re-53J" secondAttribute="bottom" constant="19" id="LPv-vV-ipl"/>
                             <constraint firstItem="SrH-4k-3KF" firstAttribute="top" secondItem="hqs-hU-o5J" secondAttribute="bottom" constant="8" id="OW0-Yv-f2F"/>
-                            <constraint firstItem="hqs-hU-o5J" firstAttribute="top" secondItem="bo3-Wj-ymj" secondAttribute="bottom" constant="8" id="PGD-9S-hTP"/>
                             <constraint firstItem="ewd-tn-TpP" firstAttribute="centerY" secondItem="hqs-hU-o5J" secondAttribute="centerY" id="SR8-eE-Nhu"/>
                             <constraint firstItem="EwF-Re-53J" firstAttribute="top" secondItem="SrH-4k-3KF" secondAttribute="bottom" constant="8" id="U4p-B3-EF7"/>
                             <constraint firstItem="EwF-Re-53J" firstAttribute="centerX" secondItem="oTR-K6-o1V" secondAttribute="centerX" id="VqK-nP-3aI"/>
-                            <constraint firstItem="bo3-Wj-ymj" firstAttribute="top" secondItem="22w-q5-snU" secondAttribute="top" constant="20" id="klB-5r-mJp"/>
+                            <constraint firstItem="hqs-hU-o5J" firstAttribute="top" secondItem="22w-q5-snU" secondAttribute="top" constant="20" id="gU4-iz-kkT"/>
                             <constraint firstItem="hqs-hU-o5J" firstAttribute="leading" secondItem="ewd-tn-TpP" secondAttribute="trailing" constant="13" id="ppd-hH-ofq"/>
                             <constraint firstItem="ewd-tn-TpP" firstAttribute="leading" secondItem="22w-q5-snU" secondAttribute="leading" constant="16" id="vVQ-gH-rg0"/>
                             <constraint firstItem="22w-q5-snU" firstAttribute="trailing" secondItem="hqs-hU-o5J" secondAttribute="trailing" constant="16" id="w5I-na-7Jc"/>
@@ -1926,44 +1908,6 @@ For more information regarding wallet recovery please see our Recovery.md file.<
                         <rect key="frame" x="0.0" y="0.0" width="375" height="574"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1024.png" translatesAutoresizingMaskIntoConstraints="NO" id="0aM-qZ-wAo">
-                                <rect key="frame" x="167.5" y="20" width="40" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="dlq-1p-4eu"/>
-                                    <constraint firstAttribute="width" constant="40" id="xWo-8n-iMn"/>
-                                </constraints>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="heart" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="67Q-BY-YRS">
-                                <rect key="frame" x="16" y="87" width="20.5" height="17.5"/>
-                                <color key="tintColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="20.5" id="YYJ-5h-bSp"/>
-                                    <constraint firstAttribute="height" constant="20" id="ztC-3F-nnL"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to support development of FullyNoded 2?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eBw-zi-FS5">
-                                <rect key="frame" x="49" y="68" width="310" height="55"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="55" id="AGW-eq-Cdd"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="m5T-sk-K3t">
-                                <rect key="frame" x="16" y="131" width="343" height="336"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">FullyNoded 2 is made possible by Blockchain Commons, A "not-for-profit" benefit corporation. Founded to support blockchain infrastructure &amp; the broader security industry through cryptographic &amp; privacy protocol implementations, research, and standards.
-
-Please consider sponsoring this specific project by becoming a GitHub Sponsor.
-
-Please consider supporting us via donations at our BTCPayServer.
-
-Checkout the GitHub repo which includes the source code and detailed information about how the app works.</string>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iho-wu-ghx">
                                 <rect key="frame" x="153.5" y="475" width="68" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1977,16 +1921,45 @@ Checkout the GitHub repo which includes the source code and detailed information
                                     <action selector="nextAction:" destination="2py-0n-Ew1" eventType="touchUpInside" id="Eey-QB-Mvp"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="heart" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="67Q-BY-YRS">
+                                <rect key="frame" x="16" y="39" width="20.5" height="17.5"/>
+                                <color key="tintColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20.5" id="YYJ-5h-bSp"/>
+                                    <constraint firstAttribute="height" constant="20" id="ztC-3F-nnL"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to support development of FullyNoded 2?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eBw-zi-FS5">
+                                <rect key="frame" x="49" y="20" width="310" height="55"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="AGW-eq-Cdd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="m5T-sk-K3t">
+                                <rect key="frame" x="16" y="83" width="343" height="384"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">FullyNoded 2 is made possible by Blockchain Commons, A "not-for-profit" benefit corporation. Founded to support blockchain infrastructure &amp; the broader security industry through cryptographic &amp; privacy protocol implementations, research, and standards.
+
+Please consider sponsoring this specific project by becoming a GitHub Sponsor.
+
+Please consider supporting us via donations at our BTCPayServer.
+
+Checkout the GitHub repo which includes the source code and detailed information about how the app works.</string>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="0aM-qZ-wAo" firstAttribute="top" secondItem="FeO-6l-t5k" secondAttribute="top" constant="20" id="2Di-9J-Ow1"/>
                             <constraint firstItem="m5T-sk-K3t" firstAttribute="top" secondItem="eBw-zi-FS5" secondAttribute="bottom" constant="8" id="3aD-4l-hNy"/>
-                            <constraint firstItem="0aM-qZ-wAo" firstAttribute="centerX" secondItem="gvZ-RO-lUM" secondAttribute="centerX" id="4LQ-oF-b4d"/>
                             <constraint firstItem="m5T-sk-K3t" firstAttribute="leading" secondItem="FeO-6l-t5k" secondAttribute="leading" constant="16" id="4sB-hn-HyT"/>
-                            <constraint firstItem="eBw-zi-FS5" firstAttribute="top" secondItem="0aM-qZ-wAo" secondAttribute="bottom" constant="8" id="6Rq-pw-xKP"/>
                             <constraint firstItem="FeO-6l-t5k" firstAttribute="trailing" secondItem="m5T-sk-K3t" secondAttribute="trailing" constant="16" id="A8g-2Z-aLg"/>
                             <constraint firstItem="eBw-zi-FS5" firstAttribute="leading" secondItem="67Q-BY-YRS" secondAttribute="trailing" constant="12.5" id="EpE-fD-ROK"/>
+                            <constraint firstItem="eBw-zi-FS5" firstAttribute="top" secondItem="FeO-6l-t5k" secondAttribute="top" constant="20" id="X4e-DL-Tx5"/>
                             <constraint firstItem="eBw-zi-FS5" firstAttribute="centerY" secondItem="67Q-BY-YRS" secondAttribute="centerY" id="eMA-Yh-ntj"/>
                             <constraint firstItem="FeO-6l-t5k" firstAttribute="trailing" secondItem="eBw-zi-FS5" secondAttribute="trailing" constant="16" id="f1I-mM-eQn"/>
                             <constraint firstItem="iho-wu-ghx" firstAttribute="top" secondItem="m5T-sk-K3t" secondAttribute="bottom" constant="8" id="gpz-ts-xSv"/>
@@ -2016,40 +1989,6 @@ Checkout the GitHub repo which includes the source code and detailed information
                         <rect key="frame" x="0.0" y="0.0" width="375" height="574"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1024.png" translatesAutoresizingMaskIntoConstraints="NO" id="j4d-lL-czY">
-                                <rect key="frame" x="167.5" y="20" width="40" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="chP-e0-PqC"/>
-                                    <constraint firstAttribute="width" constant="40" id="fuc-S5-e0k"/>
-                                </constraints>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wrench" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="rq8-2A-df7">
-                                <rect key="frame" x="16" y="82.5" width="25" height="25"/>
-                                <color key="tintColor" systemColor="systemPurpleColor" red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="HzZ-k8-Ycl"/>
-                                    <constraint firstAttribute="width" constant="25" id="qMd-BO-3j7"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to use FullyNoded 2?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ch6-hj-Nt0">
-                                <rect key="frame" x="49" y="67" width="310" height="55"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="55" id="Wgj-Su-njh"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="6rx-RC-kl0">
-                                <rect key="frame" x="16" y="130" width="343" height="336"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">Connect to your node by scanning the QuickConnect QR code that your node software produces, supporting node software includes StandUp.app (MacOS), BTCPay, MyNode, RaspiBlitz and Nodl. Of course you may do this yourself by following the instructions on our github or you can also use our simple StandUp.sh scripts for linux.
-
-The app will then do all the hard work for you. Using FullyNoded 2 is straightforward, to create a Bitcoin invoice just tap the "In" button, to spend Bitcoin just tap the "Out" button.</string>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rK7-49-kzZ">
                                 <rect key="frame" x="153.5" y="474" width="68" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2063,21 +2002,46 @@ The app will then do all the hard work for you. Using FullyNoded 2 is straightfo
                                     <action selector="nextAction:" destination="2h3-RM-OBN" eventType="touchUpInside" id="OJo-aJ-u8u"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wrench" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="rq8-2A-df7">
+                                <rect key="frame" x="16" y="35.5" width="25" height="25"/>
+                                <color key="tintColor" systemColor="systemPurpleColor" red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="22" id="HzZ-k8-Ycl"/>
+                                    <constraint firstAttribute="width" constant="25" id="qMd-BO-3j7"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to use FullyNoded 2?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ch6-hj-Nt0">
+                                <rect key="frame" x="49" y="20" width="310" height="55"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="Wgj-Su-njh"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="6rx-RC-kl0">
+                                <rect key="frame" x="16" y="83" width="343" height="383"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">Connect to your node by scanning the QuickConnect QR code that your node software produces, supporting node software includes StandUp.app (MacOS), BTCPay, MyNode, RaspiBlitz and Nodl. Of course you may do this yourself by following the instructions on our github or you can also use our simple StandUp.sh scripts for linux.
+
+The app will then do all the hard work for you. Using FullyNoded 2 is straightforward, to create a Bitcoin invoice just tap the "In" button, to spend Bitcoin just tap the "Out" button.</string>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="rK7-49-kzZ" firstAttribute="top" secondItem="6rx-RC-kl0" secondAttribute="bottom" constant="8" id="4nF-lO-J6k"/>
                             <constraint firstItem="rq8-2A-df7" firstAttribute="centerY" secondItem="ch6-hj-Nt0" secondAttribute="centerY" id="9WZ-1D-8c7"/>
-                            <constraint firstItem="j4d-lL-czY" firstAttribute="top" secondItem="fC3-qT-tTY" secondAttribute="top" constant="20" id="BdO-AO-enw"/>
                             <constraint firstItem="fC3-qT-tTY" firstAttribute="trailing" secondItem="6rx-RC-kl0" secondAttribute="trailing" constant="16" id="OgV-7a-zmp"/>
                             <constraint firstItem="fC3-qT-tTY" firstAttribute="trailing" secondItem="ch6-hj-Nt0" secondAttribute="trailing" constant="16" id="UtP-fd-a85"/>
                             <constraint firstItem="6rx-RC-kl0" firstAttribute="leading" secondItem="fC3-qT-tTY" secondAttribute="leading" constant="16" id="b7v-od-np3"/>
+                            <constraint firstItem="ch6-hj-Nt0" firstAttribute="top" secondItem="fC3-qT-tTY" secondAttribute="top" constant="20" id="gom-pl-ZJw"/>
                             <constraint firstItem="6rx-RC-kl0" firstAttribute="top" secondItem="ch6-hj-Nt0" secondAttribute="bottom" constant="8" id="hnD-Wr-f9z"/>
                             <constraint firstItem="rK7-49-kzZ" firstAttribute="centerX" secondItem="30J-zW-bYp" secondAttribute="centerX" id="iTO-C4-Waj"/>
                             <constraint firstItem="ch6-hj-Nt0" firstAttribute="leading" secondItem="rq8-2A-df7" secondAttribute="trailing" constant="8" id="pa6-tA-0La"/>
                             <constraint firstItem="fC3-qT-tTY" firstAttribute="bottom" secondItem="rK7-49-kzZ" secondAttribute="bottom" constant="21" id="ppV-oc-9nD"/>
-                            <constraint firstItem="j4d-lL-czY" firstAttribute="centerX" secondItem="30J-zW-bYp" secondAttribute="centerX" id="s5g-6V-i1W"/>
-                            <constraint firstItem="ch6-hj-Nt0" firstAttribute="top" secondItem="j4d-lL-czY" secondAttribute="bottom" constant="7" id="sJ9-YV-W5l"/>
                             <constraint firstItem="rq8-2A-df7" firstAttribute="leading" secondItem="fC3-qT-tTY" secondAttribute="leading" constant="16" id="zt5-Eu-Nhx"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fC3-qT-tTY"/>
@@ -2102,42 +2066,6 @@ The app will then do all the hard work for you. Using FullyNoded 2 is straightfo
                         <rect key="frame" x="0.0" y="0.0" width="375" height="574"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1024.png" translatesAutoresizingMaskIntoConstraints="NO" id="Hkt-05-Z8T">
-                                <rect key="frame" x="167.5" y="20" width="40" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="Yfr-GW-hCy"/>
-                                    <constraint firstAttribute="width" constant="40" id="tZy-dc-RL9"/>
-                                </constraints>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.shield" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zh8-Pf-Kj9">
-                                <rect key="frame" x="16" y="83" width="25" height="25"/>
-                                <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="25" id="HB7-rg-vOa"/>
-                                    <constraint firstAttribute="height" constant="26" id="uTA-ol-gCP"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Is FullyNoded 2 secure?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DTh-CK-kbL">
-                                <rect key="frame" x="49" y="68" width="310" height="55"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="55" id="wBB-4C-gDa"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="rde-as-Mcu">
-                                <rect key="frame" x="16" y="131" width="343" height="336"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <mutableString key="text">FullyNoded 2 runs a Tor node which it uses to connect to your nodes V3 hidden service over the onion network. This way you can privately and securely control your nodes wallet functionality remotely from anywhere in the world, allowing you to keep your node completely behind a firewall with no port forwarding required. The app uses a lot of security minded features to avoid any sensitive info being recorded to your devices memory regarding the Tor traffic. Clearnet traffic is strictly disabled, the Tor config settings excludes exit nodes from your Tor circuit meaning it will only ever interact with the Tor network.
-
-FullyNoded 2 uses powerful encryption to secure your your nodes hidden service urls and private keys. Initially a private key is created which is stored on your devices keychain which is itself encrypted. That private key is used to decrypt/encrypt the apps sensitive data. Whenever your device goes into the background all the apps data becomes encrypted yet again. No sensitive info is ever stored unencrypted or transmitted over the internet in clear text. All Tor traffic is highly encrypted by default.
-
-FullyNoded 2 utilizes the latest generation of hidden services and allows you to take advantage of Tor V3 authentication, meaning your device is capable of producing a private/public key offline where you may upload the public to your node to ensure that your device is the only device in the world that can access your node EVEN IF an attacker managed to get your nodes hidden service url. This means of authentication is particularly handy if you want to share your node with trusted others, ensuring only they have access. This is possible because you as the user never have access to the private key used for authentication, so even if users share their public keys with an attacker it would be useless to them. To be clear the way it works is FullyNoded will create the ultra secret private key, encrypt it and store it locally, it then get decrypted when the Tor node starts up, whenever your app goes into the background the private key is deleted from your Tor config, the file the private key is saved on is also maximally protected by native iOS encryption on top of a secondary layer of encryption we give it, you as theuser will never see or have access to the private key and without that private key no device or attacker can possibly get access to your nodes hidden service. Of course there may be attack vectors we are not aware of and it is important you do your own research and look at the codebase if you are curious.</mutableString>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cwh-VB-Aix">
                                 <rect key="frame" x="153.5" y="475" width="68" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2151,17 +2079,44 @@ FullyNoded 2 utilizes the latest generation of hidden services and allows you to
                                     <action selector="nextAction:" destination="HFs-mJ-jw5" eventType="touchUpInside" id="zha-UA-x8v"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.shield" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zh8-Pf-Kj9">
+                                <rect key="frame" x="16" y="35" width="25" height="25"/>
+                                <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="25" id="HB7-rg-vOa"/>
+                                    <constraint firstAttribute="height" constant="26" id="uTA-ol-gCP"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Is FullyNoded 2 secure?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DTh-CK-kbL">
+                                <rect key="frame" x="49" y="20" width="310" height="55"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="wBB-4C-gDa"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="rde-as-Mcu">
+                                <rect key="frame" x="16" y="83" width="343" height="384"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">FullyNoded 2 runs a Tor node which it uses to connect to your nodes V3 hidden service over the onion network. This way you can privately and securely control your nodes wallet functionality remotely from anywhere in the world, allowing you to keep your node completely behind a firewall with no port forwarding required. The app uses a lot of security minded features to avoid any sensitive info being recorded to your devices memory regarding the Tor traffic. Clearnet traffic is strictly disabled, the Tor config settings excludes exit nodes from your Tor circuit meaning it will only ever interact with the Tor network.
+
+FullyNoded 2 uses powerful encryption to secure your your nodes hidden service urls and private keys. Initially a private key is created which is stored on your devices keychain which is itself encrypted. That private key is used to decrypt/encrypt the apps sensitive data. Whenever your device goes into the background all the apps data becomes encrypted yet again. No sensitive info is ever stored unencrypted or transmitted over the internet in clear text. All Tor traffic is highly encrypted by default.
+
+FullyNoded 2 utilizes the latest generation of hidden services and allows you to take advantage of Tor V3 authentication, meaning your device is capable of producing a private/public key offline where you may upload the public to your node to ensure that your device is the only device in the world that can access your node EVEN IF an attacker managed to get your nodes hidden service url. This means of authentication is particularly handy if you want to share your node with trusted others, ensuring only they have access. This is possible because you as the user never have access to the private key used for authentication, so even if users share their public keys with an attacker it would be useless to them. To be clear the way it works is FullyNoded will create the ultra secret private key, encrypt it and store it locally, it then get decrypted when the Tor node starts up, whenever your app goes into the background the private key is deleted from your Tor config, the file the private key is saved on is also maximally protected by native iOS encryption on top of a secondary layer of encryption we give it, you as theuser will never see or have access to the private key and without that private key no device or attacker can possibly get access to your nodes hidden service. Of course there may be attack vectors we are not aware of and it is important you do your own research and look at the codebase if you are curious.</string>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="DTh-CK-kbL" firstAttribute="top" secondItem="Hkt-05-Z8T" secondAttribute="bottom" constant="8" id="CK4-zI-5xZ"/>
                             <constraint firstItem="Cwh-VB-Aix" firstAttribute="centerX" secondItem="uyg-gE-hOL" secondAttribute="centerX" id="HWj-aW-70O"/>
                             <constraint firstItem="zh8-Pf-Kj9" firstAttribute="leading" secondItem="DnU-6C-1us" secondAttribute="leading" constant="16" id="PVt-Y6-lDj"/>
                             <constraint firstItem="zh8-Pf-Kj9" firstAttribute="centerY" secondItem="DTh-CK-kbL" secondAttribute="centerY" id="Tqb-AQ-e3W"/>
                             <constraint firstItem="rde-as-Mcu" firstAttribute="leading" secondItem="DnU-6C-1us" secondAttribute="leading" constant="16" id="Wft-i8-Coi"/>
                             <constraint firstItem="DnU-6C-1us" firstAttribute="trailing" secondItem="rde-as-Mcu" secondAttribute="trailing" constant="16" id="Y9v-lx-0Qx"/>
-                            <constraint firstItem="Hkt-05-Z8T" firstAttribute="centerX" secondItem="uyg-gE-hOL" secondAttribute="centerX" id="fNM-eu-12V"/>
-                            <constraint firstItem="Hkt-05-Z8T" firstAttribute="top" secondItem="DnU-6C-1us" secondAttribute="top" constant="20" id="kt9-7U-1MB"/>
+                            <constraint firstItem="DTh-CK-kbL" firstAttribute="top" secondItem="DnU-6C-1us" secondAttribute="top" constant="20" id="dEh-2v-3di"/>
                             <constraint firstItem="DTh-CK-kbL" firstAttribute="leading" secondItem="zh8-Pf-Kj9" secondAttribute="trailing" constant="8" id="lKP-hg-rB6"/>
                             <constraint firstItem="rde-as-Mcu" firstAttribute="top" secondItem="DTh-CK-kbL" secondAttribute="bottom" constant="8" id="nad-aS-P8C"/>
                             <constraint firstItem="DnU-6C-1us" firstAttribute="bottom" secondItem="Cwh-VB-Aix" secondAttribute="bottom" constant="20" id="nfX-2e-Gl6"/>
@@ -2180,7 +2135,7 @@ FullyNoded 2 utilizes the latest generation of hidden services and allows you to
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H7h-bV-I2Q" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-12078" y="3347"/>
+            <point key="canvasLocation" x="-12079.200000000001" y="3346.776611694153"/>
         </scene>
         <!--License Disclaimer View Controller-->
         <scene sceneID="GsQ-g5-4MW">
@@ -2190,40 +2145,6 @@ FullyNoded 2 utilizes the latest generation of hidden services and allows you to
                         <rect key="frame" x="0.0" y="0.0" width="375" height="574"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1024.png" translatesAutoresizingMaskIntoConstraints="NO" id="IE7-Yl-42H">
-                                <rect key="frame" x="167.5" y="20" width="40" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="40" id="8aZ-K1-D2y"/>
-                                    <constraint firstAttribute="height" constant="40" id="paF-5t-Swn"/>
-                                </constraints>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="exclamationmark.bubble" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="x49-pb-enS">
-                                <rect key="frame" x="16" y="83.5" width="25" height="25"/>
-                                <color key="tintColor" systemColor="systemOrangeColor" red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="25.5" id="4oV-1r-9XY"/>
-                                    <constraint firstAttribute="width" constant="25" id="SdR-te-jzZ"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="License &amp; Disclaimer" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qB9-lt-UHh">
-                                <rect key="frame" x="49" y="68" width="310" height="55"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="55" id="Msl-pS-5Zd"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="DF7-MS-J8d">
-                                <rect key="frame" x="16" y="131" width="343" height="336"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <mutableString key="text">Please read and accept the terms of our disclaimer:
-
-The use of FullyNoded 2 is under the "BSD 2-Clause Plus Patent License" (https://spdx.org/licenses/BSD-2-Clause-Patent.html). Copyright © 2019 BlockchainCommons. All rights reserved. With the disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</mutableString>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="sHd-5x-hFU">
                                 <rect key="frame" x="112.5" y="475" width="150" height="30"/>
                                 <subviews>
@@ -2257,21 +2178,46 @@ The use of FullyNoded 2 is under the "BSD 2-Clause Plus Patent License" (https:/
                                     <constraint firstAttribute="width" constant="150" id="icg-iZ-UQQ"/>
                                 </constraints>
                             </stackView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="exclamationmark.bubble" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="x49-pb-enS">
+                                <rect key="frame" x="16" y="35.5" width="25" height="25"/>
+                                <color key="tintColor" systemColor="systemOrangeColor" red="1" green="0.58431372550000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25.5" id="4oV-1r-9XY"/>
+                                    <constraint firstAttribute="width" constant="25" id="SdR-te-jzZ"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="License &amp; Disclaimer" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qB9-lt-UHh">
+                                <rect key="frame" x="49" y="20" width="310" height="55"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="Msl-pS-5Zd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="DF7-MS-J8d">
+                                <rect key="frame" x="16" y="83" width="343" height="384"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">Please read and accept the terms of our disclaimer:
+
+The use of FullyNoded 2 is under the "BSD 2-Clause Plus Patent License" (https://spdx.org/licenses/BSD-2-Clause-Patent.html). Copyright © 2019 BlockchainCommons. All rights reserved. With the disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</string>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="DF7-MS-J8d" firstAttribute="top" secondItem="qB9-lt-UHh" secondAttribute="bottom" constant="8" id="2NV-Ge-Rqo"/>
-                            <constraint firstItem="IE7-Yl-42H" firstAttribute="centerX" secondItem="tnV-vd-CtN" secondAttribute="centerX" id="Feu-Vu-NVZ"/>
                             <constraint firstItem="Smg-1P-USG" firstAttribute="trailing" secondItem="qB9-lt-UHh" secondAttribute="trailing" constant="16" id="NoL-la-gJB"/>
                             <constraint firstItem="x49-pb-enS" firstAttribute="leading" secondItem="Smg-1P-USG" secondAttribute="leading" constant="16" id="ThF-7O-hxz"/>
                             <constraint firstItem="DF7-MS-J8d" firstAttribute="leading" secondItem="Smg-1P-USG" secondAttribute="leading" constant="16" id="ZMi-hv-eb0"/>
+                            <constraint firstItem="qB9-lt-UHh" firstAttribute="top" secondItem="Smg-1P-USG" secondAttribute="top" constant="20" id="eRQ-Jb-EBX"/>
                             <constraint firstItem="Smg-1P-USG" firstAttribute="trailing" secondItem="DF7-MS-J8d" secondAttribute="trailing" constant="16" id="g8E-Cy-If1"/>
                             <constraint firstItem="sHd-5x-hFU" firstAttribute="top" secondItem="DF7-MS-J8d" secondAttribute="bottom" constant="8" id="i9P-RM-Kqn"/>
                             <constraint firstItem="x49-pb-enS" firstAttribute="centerY" secondItem="qB9-lt-UHh" secondAttribute="centerY" id="jPb-ji-Lxz"/>
                             <constraint firstItem="sHd-5x-hFU" firstAttribute="centerX" secondItem="tnV-vd-CtN" secondAttribute="centerX" id="ndG-2n-KyA"/>
-                            <constraint firstItem="IE7-Yl-42H" firstAttribute="top" secondItem="Smg-1P-USG" secondAttribute="top" constant="20" id="qg5-Q3-Za0"/>
                             <constraint firstItem="Smg-1P-USG" firstAttribute="bottom" secondItem="sHd-5x-hFU" secondAttribute="bottom" constant="20" id="qlW-LR-1iV"/>
-                            <constraint firstItem="qB9-lt-UHh" firstAttribute="top" secondItem="IE7-Yl-42H" secondAttribute="bottom" constant="8" id="rbz-BE-o0s"/>
                             <constraint firstItem="qB9-lt-UHh" firstAttribute="leading" secondItem="x49-pb-enS" secondAttribute="trailing" constant="8" id="tTM-6p-Z13"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Smg-1P-USG"/>
@@ -2297,44 +2243,6 @@ The use of FullyNoded 2 is under the "BSD 2-Clause Plus Patent License" (https:/
                         <rect key="frame" x="0.0" y="0.0" width="375" height="574"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1024.png" translatesAutoresizingMaskIntoConstraints="NO" id="ZAt-cR-Nby">
-                                <rect key="frame" x="167.5" y="20" width="40" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="3ln-7b-eGq"/>
-                                    <constraint firstAttribute="width" constant="40" id="n0a-Or-xLF"/>
-                                </constraints>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.crop.circle.badge.checkmark" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ziC-sb-yhF">
-                                <rect key="frame" x="16" y="83" width="25" height="25"/>
-                                <color key="tintColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="25" id="Fsk-fw-OoN"/>
-                                    <constraint firstAttribute="height" constant="26" id="IVy-m0-jBp"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Two-factor authentication" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UVf-f9-YnB">
-                                <rect key="frame" x="49" y="68" width="310" height="55"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="55" id="9ba-4r-bsJ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ecb-v8-vHB">
-                                <rect key="frame" x="16" y="131" width="343" height="326"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <mutableString key="text">Fully Noded 2 uses the "Sign in with Apple" tool for 2FA (two-factor authentication) purposes.
-
-We save your Apple ID username to the devices Secure Enclave upon signing in successfully here, then whenever you go to broadcast a transaction or expose a private key/seed we will prompt you to authenticate again to enure only you can spend your bitcoins.
-
-Depending on your devices settings you will either be prompted with biometrics or manual password entry for your Apple ID.
-
-Blockchain Commons and Fully Noded 2 never share any data with any third party ever, the only server the app connects to is your own node over Tor. "Sign in with Apple" is simply a secure way of ensuring no one else can spend your funds.</mutableString>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g2d-Mu-hXI">
                                 <rect key="frame" x="116.5" y="465" width="142" height="40"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2348,16 +2256,45 @@ Blockchain Commons and Fully Noded 2 never share any data with any third party e
                                     <action selector="authenticate:" destination="Z5o-kT-X3Z" eventType="touchUpInside" id="I8d-q3-sYP"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.crop.circle.badge.checkmark" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ziC-sb-yhF">
+                                <rect key="frame" x="16" y="35" width="25" height="25"/>
+                                <color key="tintColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="25" id="Fsk-fw-OoN"/>
+                                    <constraint firstAttribute="height" constant="26" id="IVy-m0-jBp"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Two-factor authentication" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UVf-f9-YnB">
+                                <rect key="frame" x="49" y="20" width="310" height="55"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="9ba-4r-bsJ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ecb-v8-vHB">
+                                <rect key="frame" x="16" y="83" width="343" height="374"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">Fully Noded 2 uses the "Sign in with Apple" tool for 2FA (two-factor authentication) purposes.
+
+We save your Apple ID username to the devices Secure Enclave upon signing in successfully here, then whenever you go to broadcast a transaction or expose a private key/seed we will prompt you to authenticate again to enure only you can spend your bitcoins.
+
+Depending on your devices settings you will either be prompted with biometrics or manual password entry for your Apple ID.
+
+Blockchain Commons and Fully Noded 2 never share any data with any third party ever, the only server the app connects to is your own node over Tor. "Sign in with Apple" is simply a secure way of ensuring no one else can spend your funds.</string>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="mLg-Zs-ZWb" firstAttribute="trailing" secondItem="UVf-f9-YnB" secondAttribute="trailing" constant="16" id="6iF-sS-HUd"/>
                             <constraint firstItem="g2d-Mu-hXI" firstAttribute="top" secondItem="ecb-v8-vHB" secondAttribute="bottom" constant="8" id="Arx-iE-npf"/>
-                            <constraint firstItem="UVf-f9-YnB" firstAttribute="top" secondItem="ZAt-cR-Nby" secondAttribute="bottom" constant="8" id="DWS-LK-1rO"/>
-                            <constraint firstItem="ZAt-cR-Nby" firstAttribute="top" secondItem="mLg-Zs-ZWb" secondAttribute="top" constant="20" id="FFq-JW-WOA"/>
                             <constraint firstItem="mLg-Zs-ZWb" firstAttribute="bottom" secondItem="g2d-Mu-hXI" secondAttribute="bottom" constant="20" id="FMv-Kg-kmg"/>
+                            <constraint firstItem="UVf-f9-YnB" firstAttribute="top" secondItem="mLg-Zs-ZWb" secondAttribute="top" constant="20" id="QyU-si-w9y"/>
                             <constraint firstItem="g2d-Mu-hXI" firstAttribute="centerX" secondItem="jWO-gu-MiD" secondAttribute="centerX" id="U4K-8H-niN"/>
-                            <constraint firstItem="ZAt-cR-Nby" firstAttribute="centerX" secondItem="jWO-gu-MiD" secondAttribute="centerX" id="bdV-Kg-Xuq"/>
                             <constraint firstItem="ziC-sb-yhF" firstAttribute="leading" secondItem="mLg-Zs-ZWb" secondAttribute="leading" constant="16" id="ddV-Nf-O3O"/>
                             <constraint firstItem="UVf-f9-YnB" firstAttribute="leading" secondItem="ziC-sb-yhF" secondAttribute="trailing" constant="8" id="fNJ-IM-QXW"/>
                             <constraint firstItem="ecb-v8-vHB" firstAttribute="leading" secondItem="mLg-Zs-ZWb" secondAttribute="leading" constant="16" id="o8q-Nt-WGK"/>
@@ -3104,7 +3041,7 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
             </objects>
             <point key="canvasLocation" x="4194" y="-498"/>
         </scene>
-        <!--v0.0.72-->
+        <!--v0.0.74-->
         <scene sceneID="Ajv-p7-tUm">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" id="AS8-ke-Yxh" customClass="SettingsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -3224,7 +3161,7 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
                         <viewLayoutGuide key="safeArea" id="Cze-jj-bFe"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Settings" id="n34-O3-Fyo"/>
-                    <navigationItem key="navigationItem" title="v0.0.72" id="YNb-Gd-Hqq"/>
+                    <navigationItem key="navigationItem" title="v0.0.74" id="YNb-Gd-Hqq"/>
                     <connections>
                         <outlet property="settingsTable" destination="hcp-eG-lok" id="xPg-8r-KBs"/>
                         <segue destination="bKH-sI-MiM" kind="show" identifier="goLogIn" id="qed-hl-jG5"/>
@@ -3707,6 +3644,179 @@ You should make mutliple backups of each and store them in seperate locations.</
             </objects>
             <point key="canvasLocation" x="-4436" y="1828.3358320839582"/>
         </scene>
+        <!--Wallet Created Save Words View Controller-->
+        <scene sceneID="Mbu-zT-oG5">
+            <objects>
+                <viewController id="pka-dK-9G9" customClass="WalletCreatedSaveWordsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="OOS-O4-V6n">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="574"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list.number" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Hj5-ET-c1S">
+                                <rect key="frame" x="16" y="2" width="30" height="30"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="b1k-IZ-YwB"/>
+                                    <constraint firstAttribute="height" constant="34" id="wbd-yv-aMZ"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP39 Recovery Phrase" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LBX-4T-1op">
+                                <rect key="frame" x="54" y="5" width="305" height="24"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ufy-g0-TWi">
+                                <rect key="frame" x="16" y="69" width="343" height="218"/>
+                                <color key="backgroundColor" red="0.0827972114717649" green="0.096391990463774654" blue="0.10330466230299495" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="218" id="fxO-Sf-qSu"/>
+                                </constraints>
+                                <string key="text">1. ant
+2. ant
+3. ant
+4. ant
+5. ant
+6. ant
+7. ant
+8. ant
+9. ant
+10. ant
+11. ant
+12. ant</string>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XLw-9b-ixq">
+                                <rect key="frame" x="133.5" y="477" width="108" height="30"/>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="0pu-CH-uyz"/>
+                                    <constraint firstAttribute="width" constant="108" id="Vkz-tf-uII"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="I saved them"/>
+                                <connections>
+                                    <action selector="saveAction:" destination="pka-dK-9G9" eventType="touchUpInside" id="iai-oM-B2d"/>
+                                </connections>
+                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="1uX-03-JBB">
+                                <rect key="frame" x="277" y="37" width="82" height="23.5"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UHO-z4-l7D">
+                                        <rect key="frame" x="0.0" y="0.0" width="21.5" height="23.5"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="doc.on.doc" catalog="system"/>
+                                        <connections>
+                                            <action selector="copyText:" destination="pka-dK-9G9" eventType="touchUpInside" id="gbK-R2-zWg"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8cm-eD-c0q">
+                                        <rect key="frame" x="31.5" y="0.0" width="19.5" height="23.5"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="qrcode" catalog="system"/>
+                                        <connections>
+                                            <action selector="exportQr:" destination="pka-dK-9G9" eventType="touchUpInside" id="q2g-LL-1kw"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jjJ-UQ-7YG">
+                                        <rect key="frame" x="61" y="0.0" width="21" height="23.5"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="arrowshape.turn.up.right" catalog="system"/>
+                                        <connections>
+                                            <action selector="shareAction:" destination="pka-dK-9G9" eventType="touchUpInside" id="Rv8-zk-YE7"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="5Gx-7n-W8Q">
+                                <rect key="frame" x="73" y="335" width="116.5" height="14.5"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Ahv-TG-rIh">
+                                <rect key="frame" x="20" y="295" width="335" height="29"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f8Z-KN-x4m">
+                                        <rect key="frame" x="0.0" y="0.0" width="335" height="14.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Derivation:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pIs-fd-bCr">
+                                                <rect key="frame" x="0.0" y="0.0" width="100" height="14.5"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="l3C-gP-w5n"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="m'/84'/0'/0'/0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ofy-n1-kBT">
+                                                <rect key="frame" x="100" y="0.0" width="235" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFS-od-lPk">
+                                        <rect key="frame" x="0.0" y="14.5" width="335" height="14.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unix Birthdate:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="du8-Xd-t6I">
+                                                <rect key="frame" x="0.0" y="0.0" width="100" height="14.5"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="cTg-2z-DZ1"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="19384747" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZJo-Sa-r8x">
+                                                <rect key="frame" x="100" y="0.0" width="235" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="29" id="GMD-75-rsp"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="mpF-UN-6zB" firstAttribute="trailing" secondItem="Ahv-TG-rIh" secondAttribute="trailing" constant="20" id="5ig-2G-wp4"/>
+                            <constraint firstItem="LBX-4T-1op" firstAttribute="centerY" secondItem="Hj5-ET-c1S" secondAttribute="centerY" id="9lT-P6-0hn"/>
+                            <constraint firstItem="LBX-4T-1op" firstAttribute="leading" secondItem="Hj5-ET-c1S" secondAttribute="trailing" constant="8" id="BCZ-Y9-zWT"/>
+                            <constraint firstItem="Ufy-g0-TWi" firstAttribute="top" secondItem="1uX-03-JBB" secondAttribute="bottom" constant="8.5" id="DGV-gh-4eV"/>
+                            <constraint firstItem="Ahv-TG-rIh" firstAttribute="leading" secondItem="mpF-UN-6zB" secondAttribute="leading" constant="20" id="IZ4-og-ArE"/>
+                            <constraint firstItem="mpF-UN-6zB" firstAttribute="bottom" secondItem="XLw-9b-ixq" secondAttribute="bottom" constant="18" id="IdT-0f-BDg"/>
+                            <constraint firstItem="mpF-UN-6zB" firstAttribute="trailing" secondItem="Ufy-g0-TWi" secondAttribute="trailing" constant="16" id="OXv-N6-0WT"/>
+                            <constraint firstItem="XLw-9b-ixq" firstAttribute="centerX" secondItem="OOS-O4-V6n" secondAttribute="centerX" id="Y8T-NI-0bd"/>
+                            <constraint firstItem="Hj5-ET-c1S" firstAttribute="leading" secondItem="mpF-UN-6zB" secondAttribute="leading" constant="16" id="a9q-da-TNj"/>
+                            <constraint firstItem="Ahv-TG-rIh" firstAttribute="top" secondItem="Ufy-g0-TWi" secondAttribute="bottom" constant="8" id="bJI-cw-ngb"/>
+                            <constraint firstItem="Ufy-g0-TWi" firstAttribute="leading" secondItem="mpF-UN-6zB" secondAttribute="leading" constant="16" id="gqp-8I-t1k"/>
+                            <constraint firstItem="Hj5-ET-c1S" firstAttribute="top" secondItem="mpF-UN-6zB" secondAttribute="top" id="tkE-sP-epA"/>
+                            <constraint firstItem="mpF-UN-6zB" firstAttribute="trailing" secondItem="1uX-03-JBB" secondAttribute="trailing" constant="16" id="toI-uP-cGY"/>
+                            <constraint firstItem="mpF-UN-6zB" firstAttribute="trailing" secondItem="LBX-4T-1op" secondAttribute="trailing" constant="16" id="ySV-0B-OAB"/>
+                            <constraint firstItem="1uX-03-JBB" firstAttribute="top" secondItem="LBX-4T-1op" secondAttribute="bottom" constant="8" id="zRm-Wg-ama"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="mpF-UN-6zB"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="5t2-f1-VoZ"/>
+                    <connections>
+                        <outlet property="birthdateLabel" destination="ZJo-Sa-r8x" id="pBn-bb-57A"/>
+                        <outlet property="derivationLabel" destination="Ofy-n1-kBT" id="TRs-DI-PWN"/>
+                        <outlet property="saveOutlet" destination="XLw-9b-ixq" id="N7q-mX-i5P"/>
+                        <outlet property="textView" destination="Ufy-g0-TWi" id="scu-be-nUN"/>
+                        <outlet property="titleLabel" destination="LBX-4T-1op" id="9Ey-bv-jwa"/>
+                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="mnemonicQr" id="HTQ-38-5NU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Baa-YC-UbI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4426.3999999999996" y="3279.3103448275865"/>
+        </scene>
         <!--Wallet Created Words View Controller-->
         <scene sceneID="PTw-4b-9Ka">
             <objects>
@@ -3716,7 +3826,7 @@ You should make mutliple backups of each and store them in seperate locations.</
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list.number" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Z8E-Ec-kcx">
-                                <rect key="frame" x="16" y="21.5" width="30" height="30"/>
+                                <rect key="frame" x="16" y="8.5" width="30" height="30"/>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="1TJ-cw-Rj7"/>
@@ -3724,51 +3834,40 @@ You should make mutliple backups of each and store them in seperate locations.</
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP39 Recovery Phrase" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="392-xc-rOY">
-                                <rect key="frame" x="54" y="8" width="305" height="57"/>
+                                <rect key="frame" x="54" y="8" width="305" height="31"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="57" id="8nT-vQ-3KG"/>
+                                    <constraint firstAttribute="height" constant="31" id="8nT-vQ-3KG"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AFT-F7-8fK">
-                                <rect key="frame" x="16" y="73" width="343" height="200"/>
+                                <rect key="frame" x="16" y="48" width="343" height="427"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="200" id="oxH-u0-izX"/>
+                                    <constraint firstAttribute="height" constant="427" id="oxH-u0-izX"/>
                                 </constraints>
-                                <string key="text">You *MUST* write these words down and save them seperately from the RecoveryQR, *THEY ARE REQUIRED* to recover a multi-signature wallet if you lose your node.
+                                <string key="text">On the next screen we will display 12 very important words.
 
-These words **WILL BE DELETED FOREVER** once you navigate away from this page.
+You *MUST* write these 12 words down and save them seperately from the RecoveryQR, *THEY ARE REQUIRED* to recover a multi-signature wallet if you lose your node.
+
+These words **WILL BE DELETED FOREVER** once you tap the "I saved them" button!
 
 At a minimum we recommend writing these words down on water proof paper with a permanent marker.</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u1P-x5-oY9">
-                                <rect key="frame" x="16" y="281" width="343" height="54"/>
-                                <string key="text">1. regret   2. region   3. picture   4. enhance   5. poetry   6. leaf   7. helmet   8. sadness   9. coyote   10. staff   11. movie   12. vast</string>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <color key="textColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="tap to export" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WaN-Mb-Kig">
-                                <rect key="frame" x="153.5" y="343" width="68" height="14"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MpI-zv-VI9">
-                                <rect key="frame" x="92.5" y="475" width="190" height="30"/>
+                                <rect key="frame" x="155" y="483" width="65" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="190" id="k41-6l-4JX"/>
+                                    <constraint firstAttribute="width" constant="65" id="KaA-jr-Lbd"/>
                                     <constraint firstAttribute="height" constant="30" id="yW8-oZ-Nzs"/>
                                 </constraints>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="I saved the QR and words"/>
+                                <state key="normal" title="Next"/>
                                 <connections>
                                     <action selector="savedAction:" destination="94S-m3-HcE" eventType="touchUpInside" id="FCW-rG-mPe"/>
                                 </connections>
@@ -3778,34 +3877,23 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <constraints>
                             <constraint firstItem="gD1-Bt-o1p" firstAttribute="trailing" secondItem="392-xc-rOY" secondAttribute="trailing" constant="16" id="31j-tD-JjT"/>
                             <constraint firstItem="AFT-F7-8fK" firstAttribute="leading" secondItem="gD1-Bt-o1p" secondAttribute="leading" constant="16" id="5PQ-2Q-NjG"/>
-                            <constraint firstItem="WaN-Mb-Kig" firstAttribute="top" secondItem="u1P-x5-oY9" secondAttribute="bottom" constant="8" id="BT0-Om-t7e"/>
                             <constraint firstItem="392-xc-rOY" firstAttribute="centerY" secondItem="Z8E-Ec-kcx" secondAttribute="centerY" id="DVW-C8-VKc"/>
-                            <constraint firstItem="u1P-x5-oY9" firstAttribute="leading" secondItem="gD1-Bt-o1p" secondAttribute="leading" constant="16" id="MFz-0W-2s0"/>
                             <constraint firstItem="392-xc-rOY" firstAttribute="leading" secondItem="Z8E-Ec-kcx" secondAttribute="trailing" constant="8" id="NEK-M9-u0z"/>
                             <constraint firstItem="gD1-Bt-o1p" firstAttribute="trailing" secondItem="AFT-F7-8fK" secondAttribute="trailing" constant="16" id="Nq3-Nu-1Zo"/>
                             <constraint firstItem="392-xc-rOY" firstAttribute="top" secondItem="gD1-Bt-o1p" secondAttribute="top" constant="8" id="OLK-mG-b9p"/>
-                            <constraint firstItem="u1P-x5-oY9" firstAttribute="top" secondItem="AFT-F7-8fK" secondAttribute="bottom" constant="8" id="QmA-ZG-WBd"/>
-                            <constraint firstItem="AFT-F7-8fK" firstAttribute="top" secondItem="392-xc-rOY" secondAttribute="bottom" constant="8" id="Ufc-Tk-Ejx"/>
-                            <constraint firstItem="gD1-Bt-o1p" firstAttribute="bottom" secondItem="MpI-zv-VI9" secondAttribute="bottom" constant="20" id="WTL-gP-6Dj"/>
+                            <constraint firstItem="AFT-F7-8fK" firstAttribute="top" secondItem="392-xc-rOY" secondAttribute="bottom" constant="9" id="Ufc-Tk-Ejx"/>
+                            <constraint firstItem="gD1-Bt-o1p" firstAttribute="bottom" secondItem="MpI-zv-VI9" secondAttribute="bottom" constant="12" id="WTL-gP-6Dj"/>
                             <constraint firstItem="MpI-zv-VI9" firstAttribute="centerX" secondItem="rIJ-HM-PbH" secondAttribute="centerX" id="c0d-Jd-ZLn"/>
                             <constraint firstItem="Z8E-Ec-kcx" firstAttribute="leading" secondItem="gD1-Bt-o1p" secondAttribute="leading" constant="16" id="fgG-hT-34i"/>
-                            <constraint firstItem="gD1-Bt-o1p" firstAttribute="trailing" secondItem="u1P-x5-oY9" secondAttribute="trailing" constant="16" id="gBR-n1-Siu"/>
-                            <constraint firstItem="WaN-Mb-Kig" firstAttribute="centerX" secondItem="rIJ-HM-PbH" secondAttribute="centerX" id="xhQ-dB-rmP"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gD1-Bt-o1p"/>
                     </view>
-                    <navigationItem key="navigationItem" id="KVk-aL-TNs">
-                        <barButtonItem key="rightBarButtonItem" image="qrcode" catalog="system" id="MnQ-RX-OxW">
-                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <connections>
-                                <action selector="exportAsQR:" destination="94S-m3-HcE" id="rPq-f7-xoX"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="KVk-aL-TNs"/>
                     <connections>
                         <outlet property="savedOutlet" destination="MpI-zv-VI9" id="7sK-7l-Yfj"/>
-                        <outlet property="textView" destination="AFT-F7-8fK" id="pZJ-43-lPF"/>
-                        <outlet property="wordsLabel" destination="u1P-x5-oY9" id="V14-L7-uAV"/>
+                        <outlet property="textView" destination="AFT-F7-8fK" id="Yve-1a-QOk"/>
+                        <outlet property="titleLabel" destination="392-xc-rOY" id="gEe-Oh-CoE"/>
+                        <segue destination="pka-dK-9G9" kind="show" identifier="goSaveWords" id="c5y-jb-z8M"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XKh-yp-pOP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -4439,6 +4527,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <outlet property="table" destination="2hj-fw-DNn" id="N5l-s9-Oyp"/>
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="addNode" id="N8R-BU-J52"/>
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="updateNode" id="4j4-Il-RUv"/>
+                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="shareNode" id="dWo-28-ynr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8UK-q3-fY3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -4815,14 +4904,31 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                     <action selector="sweepToAction:" destination="51a-bL-HRe" eventType="touchUpInside" id="0Gm-oP-hMt"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xJG-pY-hmO">
+                                <rect key="frame" x="60.5" y="246" width="254" height="52"/>
+                                <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="BFJ-ad-Jo1"/>
+                                    <constraint firstAttribute="width" constant="254" id="ihh-2x-n2Y"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="   Refill keypool        " image="arrow.2.circlepath" catalog="system">
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="refillKeypool:" destination="51a-bL-HRe" eventType="touchUpInside" id="Wo2-2I-9Ed"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="DL0-Ou-l95" firstAttribute="top" secondItem="dSZ-4Z-lCQ" secondAttribute="bottom" constant="17" id="33r-q3-ihj"/>
                             <constraint firstItem="MCx-Xd-LMB" firstAttribute="leading" secondItem="Z18-R2-hHJ" secondAttribute="trailing" constant="8" id="BG3-Xr-GTP"/>
                             <constraint firstItem="dSZ-4Z-lCQ" firstAttribute="centerX" secondItem="gv9-ry-GoN" secondAttribute="centerX" id="Gvq-1k-Vnw"/>
+                            <constraint firstItem="xJG-pY-hmO" firstAttribute="top" secondItem="DL0-Ou-l95" secondAttribute="bottom" constant="22" id="NgC-Pa-CAs"/>
                             <constraint firstItem="v75-Xo-dcA" firstAttribute="trailing" secondItem="eAO-Ky-4Gr" secondAttribute="trailing" constant="16" id="gLN-SC-TWZ"/>
                             <constraint firstItem="eAO-Ky-4Gr" firstAttribute="centerY" secondItem="MCx-Xd-LMB" secondAttribute="centerY" id="hFw-lP-2Dh"/>
+                            <constraint firstItem="xJG-pY-hmO" firstAttribute="centerX" secondItem="gv9-ry-GoN" secondAttribute="centerX" id="i8L-6a-MmF"/>
                             <constraint firstItem="MCx-Xd-LMB" firstAttribute="centerY" secondItem="Z18-R2-hHJ" secondAttribute="centerY" id="t6E-Wk-Jvs"/>
                             <constraint firstItem="Z18-R2-hHJ" firstAttribute="leading" secondItem="v75-Xo-dcA" secondAttribute="leading" constant="16" id="tyX-Fj-OMe"/>
                             <constraint firstItem="DL0-Ou-l95" firstAttribute="centerX" secondItem="gv9-ry-GoN" secondAttribute="centerX" id="uRU-81-SCz"/>
@@ -4832,6 +4938,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <viewLayoutGuide key="safeArea" id="v75-Xo-dcA"/>
                     </view>
                     <connections>
+                        <outlet property="refillOutlet" destination="xJG-pY-hmO" id="Cod-JP-uX8"/>
                         <outlet property="rescanOutlet" destination="dSZ-4Z-lCQ" id="fZw-hH-Heu"/>
                         <outlet property="sweepToOutlet" destination="DL0-Ou-l95" id="4fL-aZ-GTO"/>
                         <segue destination="dWg-DF-dx5" kind="presentation" identifier="goSweep" modalPresentationStyle="fullScreen" id="b4q-N2-pxV"/>
@@ -4839,7 +4946,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vmz-N1-e8G" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="761" y="367"/>
+            <point key="canvasLocation" x="760.79999999999995" y="366.56671664167919"/>
         </scene>
         <!--Sweep To View Controller-->
         <scene sceneID="pAe-Ty-iWF">
@@ -5903,12 +6010,12 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="oWp-iO-M9B">
                                                             <rect key="frame" x="142" y="11" width="61.5" height="22"/>
                                                             <subviews>
-                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
+                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
                                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="22"/>
                                                                     <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                                 </button>
-                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
                                                                     <rect key="frame" x="27" y="0.0" width="34.5" height="22"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -6921,14 +7028,15 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
         </scene>
     </scenes>
     <resources>
-        <image name="1024.png" width="1024" height="1024"/>
         <image name="Settings" width="30" height="30"/>
         <image name="Signature" width="30" height="30"/>
         <image name="antenna.radiowaves.left.and.right" catalog="system" width="64" height="54"/>
+        <image name="arrow.2.circlepath" catalog="system" width="64" height="50"/>
         <image name="arrow.down" catalog="system" width="60" height="64"/>
         <image name="arrow.down.circle" catalog="system" width="64" height="60"/>
         <image name="arrow.up" catalog="system" width="60" height="64"/>
         <image name="arrow.up.circle" catalog="system" width="64" height="60"/>
+        <image name="arrowshape.turn.up.right" catalog="system" width="64" height="52"/>
         <image name="blockchain-commons-logo.png" width="500" height="148"/>
         <image name="checkmark.circle" catalog="system" width="64" height="60"/>
         <image name="checkmark.seal" catalog="system" width="64" height="60"/>
@@ -6976,9 +7084,10 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
     <inferredMetricsTieBreakers>
         <segue reference="qed-hl-jG5"/>
         <segue reference="fBg-S5-BEW"/>
+        <segue reference="dWo-28-ynr"/>
         <segue reference="OVL-GL-HPC"/>
         <segue reference="tY7-Ss-m0T"/>
-        <segue reference="zkr-zY-rLG"/>
+        <segue reference="N8R-BU-J52"/>
         <segue reference="0zN-S6-Zr1"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

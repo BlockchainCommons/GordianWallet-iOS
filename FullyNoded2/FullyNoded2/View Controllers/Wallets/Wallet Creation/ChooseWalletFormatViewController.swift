@@ -1054,11 +1054,8 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
             if let vc = segue.destination as? WalletCreatedSuccessViewController {
                 
-                //vc.isMulti = self.isMultiSig
-                //vc.derivationPath = self.derivation
                 vc.recoveryPhrase = self.backUpRecoveryPhrase
                 vc.recoveryQr = self.recoveryQr
-                //vc.walletId = self.id
                 vc.wallet = self.newWallet
                 
 //                vc.walletDoneNowBlock = { result in
