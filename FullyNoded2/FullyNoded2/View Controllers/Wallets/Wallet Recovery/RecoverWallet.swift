@@ -90,6 +90,7 @@ class RecoverWallet {
                                     newWallet["seed"] = encryptedSeed!
                                     newWallet["nodeId"] = self.node.id
                                     newWallet["blockheight"] = self.json["blockheight"] as! Int
+                                    newWallet["maxRange"] = 2500
                                     
                                     if let label = self.json["label"] as? String {
                                         
@@ -286,6 +287,7 @@ class RecoverWallet {
                                     newWallet["seed"] = encryptedSeed!
                                     newWallet["nodeId"] = self.node.id
                                     newWallet["blockheight"] = self.json["blockheight"] as! Int
+                                    newWallet["maxRange"] = 2500
                                     
                                     if let label = self.json["label"] as? String {
                                         
@@ -516,6 +518,7 @@ class RecoverWallet {
         newWallet["derivation"] = localDerivation
         newWallet["nodeId"] = self.node.id
         newWallet["blockheight"] = blockheight
+        newWallet["maxRange"] = 2500
         
         if let label = self.json["label"] as? String {
             
@@ -731,6 +734,7 @@ class RecoverWallet {
                 newWallet["isArchived"] = false
                 newWallet["nodeId"] = self.node.id
                 newWallet["blockheight"] = 1// user is only importing words, so we need to do a full rescan when recovering
+                newWallet["maxRange"] = 2500
                 
                 let enc = Encryption()
                 enc.encryptData(dataToEncrypt: self.words.dataUsingUTF8StringEncoding) { (encryptedData, error) in

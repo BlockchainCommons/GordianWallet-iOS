@@ -26,13 +26,44 @@ class WalletToolsViewController: UIViewController {
         sweepToOutlet.layer.cornerRadius = 8
         refillOutlet.layer.cornerRadius = 8
         
-        if wallet.type == "MULTI" {
+    }
+    
+    private func refillMultisig() {
+        
+        DispatchQueue.main.async {
             
-            refillOutlet.alpha = 0
+            self.performSegue(withIdentifier: "refillMultisig", sender: self)
             
-        } else {
+        }
+        
+    }
+    
+    private func refillSingleSig() {
+        
+        self.creatingView.addConnectingView(vc: self, description: "Refilling the keypool")
+        
+        let singleSig = RefillSingleSig()
+        singleSig.refill(wallet: self.wallet) { (success, error) in
             
-            refillOutlet.alpha = 1
+            if success {
+                
+                self.creatingView.removeConnectingView()
+                DispatchQueue.main.async {
+                    
+                    self.dismiss(animated: true) {
+                        
+                        self.refillDoneBlock!(true)
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                self.creatingView.removeConnectingView()
+                showAlert(vc: self, title: "Error!", message: "There was an error refilling the keypool: \(String(describing: error))")
+                
+            }
             
         }
         
@@ -46,30 +77,13 @@ class WalletToolsViewController: UIViewController {
 
             alert.addAction(UIAlertAction(title: "Refill Now", style: .default, handler: { action in
                 
-                self.creatingView.addConnectingView(vc: self, description: "Refilling the keypool")
-                
-                let singleSig = RefillSingleSig()
-                singleSig.refill(wallet: self.wallet) { (success, error) in
+                if self.wallet.type == "MULTI" {
                     
-                    if success {
-                        
-                        self.creatingView.removeConnectingView()
-                        DispatchQueue.main.async {
-                            
-                            self.dismiss(animated: true) {
-                                
-                                self.refillDoneBlock!(true)
-                                
-                            }
-                            
-                        }
-                        
-                    } else {
-                        
-                        self.creatingView.removeConnectingView()
-                        showAlert(vc: self, title: "Error!", message: "There was an error refilling the keypool: \(String(describing: error))")
-                        
-                    }
+                    self.refillMultisig()
+                    
+                } else {
+                    
+                    self.refillSingleSig()
                     
                 }
                 
@@ -338,7 +352,6 @@ class WalletToolsViewController: UIViewController {
         
     }
     
-    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -359,6 +372,27 @@ class WalletToolsViewController: UIViewController {
                         self.dismiss(animated: true) {
                             
                             self.sweepDoneBlock!(true)
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        case "refillMultisig":
+            
+            if let vc = segue.destination as? RefillMultisigViewController {
+                
+                vc.wallet = wallet
+                vc.multiSigRefillDoneBlock = { result in
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.dismiss(animated: true) {
+                            
+                            self.refillDoneBlock!(true)
                             
                         }
                         

@@ -51,6 +51,10 @@ class MakeRPCCall {
                     return
                 }
                 
+                #if DEBUG
+                print("url = \(url)")
+                #endif
+                
                 var request = URLRequest(url: url)
                 var timeout = 10.0
                 if method == .importmulti {
@@ -60,7 +64,9 @@ class MakeRPCCall {
                 request.httpMethod = "POST"
                 request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
                 request.httpBody = "{\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}".data(using: .utf8)
+                #if DEBUG
                 print("request = {\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}")
+                #endif
                 let queue = DispatchQueue(label: "com.FullyNoded.torQueue")
                 queue.async {
                     
@@ -93,9 +99,13 @@ class MakeRPCCall {
                                     
                                     do {
                                         
-                                        let jsonAddressResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
+                                        let json = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
+                                        
+                                        #if DEBUG
+                                        print("response = \(json)")
+                                        #endif
                                                                                 
-                                        if let errorCheck = jsonAddressResult["error"] as? NSDictionary {
+                                        if let errorCheck = json["error"] as? NSDictionary {
                                             
                                             if let errorMessage = errorCheck["message"] as? String {
                                                 
@@ -115,7 +125,7 @@ class MakeRPCCall {
                                             
                                             self.errorBool = false
                                             self.errorDescription = ""
-                                            self.objectToReturn = jsonAddressResult["result"]
+                                            self.objectToReturn = json["result"]
                                             completion()
                                             
                                         }

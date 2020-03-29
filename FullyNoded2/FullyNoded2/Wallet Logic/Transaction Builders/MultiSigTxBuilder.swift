@@ -235,7 +235,7 @@ class MultiSigTxBuilder {
                     
                     let keyFetcher = KeyFetcher()
                     
-                    keyFetcher.musigChangeAddress { (address, error) in
+                    keyFetcher.musigChangeAddress { (address, error, errorDescription) in
                         
                         if !error {
                             
@@ -243,7 +243,7 @@ class MultiSigTxBuilder {
                             
                         } else {
                             
-                            completion((nil, nil, "error getting change address"))
+                            completion((nil, nil, errorDescription ?? "error getting change address"))
                             
                         }
                         

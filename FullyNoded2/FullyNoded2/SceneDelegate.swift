@@ -11,20 +11,20 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
-    
-    func registerBackgroundTask() {
-      backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-        self?.endBackgroundTask()
-      }
-      assert(backgroundTask != .invalid)
-    }
-      
-    func endBackgroundTask() {
-      print("Background task ended.")
-      UIApplication.shared.endBackgroundTask(backgroundTask)
-      backgroundTask = .invalid
-    }
+//    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+//
+//    func registerBackgroundTask() {
+//      backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+//        self?.endBackgroundTask()
+//      }
+//      assert(backgroundTask != .invalid)
+//    }
+//
+//    func endBackgroundTask() {
+//      print("Background task ended.")
+//      UIApplication.shared.endBackgroundTask(backgroundTask)
+//      backgroundTask = .invalid
+//    }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -65,13 +65,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
             mgr.start(delegate: nil) {
                 
-                self.registerBackgroundTask()
+                //self.registerBackgroundTask()
 
-                DispatchQueue.main.async {
-                    
-                    NotificationCenter.default.post(name: .didEstablishTorConnection, object: self)
-
-                }
+//                DispatchQueue.main.async {
+//
+//                    NotificationCenter.default.post(name: .didEstablishTorConnection, object: self)
+//
+//                }
 
             }
 
@@ -87,25 +87,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // We force quit the tor thread when the app enters the background as it can not stay alive
         // for extended periods of time in the background. We only do this on non iPhone 11 models
         // as for some reason resigning the Tor thread crashes iPhone 11's.
-        //let device = UIDevice.modelName
+        let device = UIDevice.modelName
         
-        //if device != "iPhone 11 pro max" {
+        if device != "iPhone 11 pro max" {
             
             let mgr = TorClient.sharedInstance
             
             if mgr.state != .stopped {
+                
+                mgr.state = .refreshing
                                     
                 mgr.resign()
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    
-                    self.endBackgroundTask()
-                    
-                }
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//
+//                    self.endBackgroundTask()
+//
+//                }
                                                     
             }
             
-        //}
+        }
 
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()

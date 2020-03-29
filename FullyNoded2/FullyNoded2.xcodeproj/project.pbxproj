@@ -135,6 +135,8 @@
 		D0CA5415240750AA0096EE26 /* RecoverWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA5414240750AA0096EE26 /* RecoverWallet.swift */; };
 		D0D0F5642410CB8F007E0763 /* BIP39Words.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F5632410CB8F007E0763 /* BIP39Words.swift */; };
 		D0D0F5662410E3F0007E0763 /* RecoveryInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F5652410E3F0007E0763 /* RecoveryInfoViewController.swift */; };
+		D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */; };
+		D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FC24306B060085E3CC /* RefillMultiSig.swift */; };
 		D0D8DC162400D85000110A78 /* LibWallyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D8DC152400D85000110A78 /* LibWallyTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -297,6 +299,8 @@
 		D0CA5414240750AA0096EE26 /* RecoverWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverWallet.swift; sourceTree = "<group>"; };
 		D0D0F5632410CB8F007E0763 /* BIP39Words.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BIP39Words.swift; sourceTree = "<group>"; };
 		D0D0F5652410E3F0007E0763 /* RecoveryInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryInfoViewController.swift; sourceTree = "<group>"; };
+		D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillMultisigViewController.swift; sourceTree = "<group>"; };
+		D0D561FC24306B060085E3CC /* RefillMultiSig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillMultiSig.swift; sourceTree = "<group>"; };
 		D0D8DC152400D85000110A78 /* LibWallyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibWallyTests.swift; sourceTree = "<group>"; };
 		DDDEC206181E8985B8D9E919 /* Pods-FullyNoded2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FullyNoded2.debug.xcconfig"; path = "Target Support Files/Pods-FullyNoded2/Pods-FullyNoded2.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -364,6 +368,7 @@
 			isa = PBXGroup;
 			children = (
 				D047DE0C242D984E004BC26D /* RefillSingleSig.swift */,
+				D0D561FC24306B060085E3CC /* RefillMultiSig.swift */,
 			);
 			path = Refillers;
 			sourceTree = "<group>";
@@ -773,6 +778,7 @@
 				D09D729923F0F3BF00847DC8 /* QRViewController.swift */,
 				D0C4E63024173F1B00E49DA5 /* WalletToolsViewController.swift */,
 				D047DDF62423464A004BC26D /* SweepToViewController.swift */,
+				D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */,
 			);
 			path = "Wallet Tools";
 			sourceTree = "<group>";
@@ -1166,6 +1172,7 @@
 				D09D732423F0F3C000847DC8 /* CreateRawTxViewController.swift in Sources */,
 				D09D737123F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift in Sources */,
 				D09D737223F0F3C000847DC8 /* OfflineSignerLegacy.swift in Sources */,
+				D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */,
 				D047DDFF242B331F004BC26D /* HowToUseFN2ViewController.swift in Sources */,
 				D09D732223F0F3C000847DC8 /* RecoveryViewController.swift in Sources */,
 				D09D731023F0F3C000847DC8 /* NodeLogic.swift in Sources */,
@@ -1206,6 +1213,7 @@
 				D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */,
 				D047DDFB242B324A004BC26D /* WhatIsFN2ViewController.swift in Sources */,
 				D09D736F23F0F3C000847DC8 /* OfflineSigner.swift in Sources */,
+				D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */,
 				D09D731E23F0F3C000847DC8 /* WalletInfoViewController.swift in Sources */,
 				D09D735E23F0F3C000847DC8 /* QRGenerator.swift in Sources */,
 				D09D732E23F0F3C000847DC8 /* MainMenuViewController.swift in Sources */,
@@ -1367,7 +1375,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.76;
+				CURRENT_PROJECT_VERSION = 0.0.78;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1380,7 +1388,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.76;
+				MARKETING_VERSION = 0.0.78;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1396,7 +1404,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.76;
+				CURRENT_PROJECT_VERSION = 0.0.78;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1409,7 +1417,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.76;
+				MARKETING_VERSION = 0.0.78;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

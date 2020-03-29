@@ -30,12 +30,13 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        recoverNowOutlet.isEnabled = false
+        recoverNowOutlet.alpha = 0
         textField.delegate = self
         tap.addTarget(self, action: #selector(handleTap))
         view.addGestureRecognizer(tap)
         scanButton.layer.cornerRadius = 8
         recoverNowOutlet.layer.cornerRadius = 8
+        wordsView.layer.cornerRadius = 8
         let wordList = Bip39Words()
         bip39Words = wordList.validWords
         
@@ -297,11 +298,12 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                 
                 if self.justWords.count == 12 || self.justWords.count == 24 {
                     
-                    self.recoverNowOutlet.isEnabled = true
+                    self.recoverNowOutlet.alpha = 1
+                    self.validWordsAdded()
                     
                 } else {
                     
-                    self.recoverNowOutlet.isEnabled = false
+                    self.recoverNowOutlet.alpha = 0
                     
                 }
                 
@@ -311,12 +313,12 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    
     func validRecoveryScanned() {
         
         DispatchQueue.main.async {
             
             self.qrValid = true
+            self.recoverNowOutlet.alpha = 1
             self.scanButton.setTitle("  RecoveryQR is Valid", for: .normal)
             self.scanButton.setTitleColor(.systemGreen, for: .normal)
             self.scanButton.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
@@ -367,6 +369,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                 if let _ = BIP39Mnemonic(self.processedCharacters(self.textField.text!)) {
                     
                     self.textField.textColor = .systemGreen
+                    self.validWordsAdded()
                     
                 } else {
                     
@@ -378,6 +381,18 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
             })
             
             autoCompleteCharacterCount = 0
+            
+        }
+        
+    }
+    
+    private func validWordsAdded() {
+        
+        DispatchQueue.main.async {
+            
+            self.textField.resignFirstResponder()
+            
+            showAlert(vc: self, title: "Valid mnemonic", message: "Thats a valid recovery phrase, you can now tap \"Tap to recover\" to recover with just words.")
             
         }
         
@@ -489,11 +504,12 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
             
             if self.justWords.count == 12 || self.justWords.count == 24 {
                 
-                self.recoverNowOutlet.isEnabled = true
+                self.recoverNowOutlet.alpha = 1
+                self.validWordsAdded()
                 
             } else {
                 
-                self.recoverNowOutlet.isEnabled = false
+                self.recoverNowOutlet.alpha = 0
                 
             }
             
@@ -660,7 +676,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                     DispatchQueue.main.async {
                         
                         self.recoverNowOutlet.isEnabled = true
-                        displayAlert(viewController: self, isError: false, message: "Valid RecoveryQR scanned, you can now tap \"Recover Now\"")
+                        showAlert(vc: self, title: "Valid Recovery QR", message: "You can now tap \"Tap to recover\"")
 
                     }
                     

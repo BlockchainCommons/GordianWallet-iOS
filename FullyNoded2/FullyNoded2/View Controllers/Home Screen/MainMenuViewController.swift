@@ -278,6 +278,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                 if !error && w != nil {
                                     
                                     self.wallet = w!
+                                    
+//                                    self.cd.updateEntity(id: self.wallet.id, keyToUpdate: "index", newValue: 2501, entityName: .wallets) {
+//                                        
+//                                        if !self.cd.errorBool {
+//                                            
+//                                            print("updated index to 2501")
+//                                            
+//                                        }
+//                                        
+//                                    }
                                                                                                             
                                     if self.existingWalletName != w!.name && self.existingNodeId != node!.id {
                                         

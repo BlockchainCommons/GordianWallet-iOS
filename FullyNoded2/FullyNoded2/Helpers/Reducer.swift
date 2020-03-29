@@ -138,7 +138,6 @@ class Reducer {
             
             torRPC.errorBool = false
             torRPC.errorDescription = ""
-            
             torRPC.executeRPCCommand(walletName: walletName, method: command, param: param, completion: getResult)
             
         }
@@ -212,7 +211,9 @@ class Reducer {
             
         }
         
-        if TorClient.sharedInstance.state == .connected {
+        let mgr = TorClient.sharedInstance
+        
+        if mgr.state == .connected || mgr.state == .refreshing {
             
             torCommand()
             

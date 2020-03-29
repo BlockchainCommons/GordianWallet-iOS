@@ -3041,7 +3041,7 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
             </objects>
             <point key="canvasLocation" x="4194" y="-498"/>
         </scene>
-        <!--v0.0.74-->
+        <!--v0.0.78-->
         <scene sceneID="Ajv-p7-tUm">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" id="AS8-ke-Yxh" customClass="SettingsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -3161,7 +3161,7 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
                         <viewLayoutGuide key="safeArea" id="Cze-jj-bFe"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Settings" id="n34-O3-Fyo"/>
-                    <navigationItem key="navigationItem" title="v0.0.74" id="YNb-Gd-Hqq"/>
+                    <navigationItem key="navigationItem" title="v0.0.78" id="YNb-Gd-Hqq"/>
                     <connections>
                         <outlet property="settingsTable" destination="hcp-eG-lok" id="xPg-8r-KBs"/>
                         <segue destination="bKH-sI-MiM" kind="show" identifier="goLogIn" id="qed-hl-jG5"/>
@@ -4560,31 +4560,29 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="type recovery words" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Gyn-mg-Z8d">
-                                <rect key="frame" x="46" y="182" width="283" height="80"/>
-                                <color key="backgroundColor" red="0.1194876269035533" green="0.1194876269035533" blue="0.1194876269035533" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="46" y="250" width="283" height="34"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="283" id="3je-cd-Iyp"/>
-                                    <constraint firstAttribute="height" constant="80" id="MJp-Ty-l77"/>
                                 </constraints>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ftm-bz-o4y">
-                                <rect key="frame" x="337" y="210" width="25" height="24"/>
+                                <rect key="frame" x="339" y="255" width="25" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="RHL-1v-2B2"/>
                                     <constraint firstAttribute="width" constant="25" id="mnp-cD-th7"/>
                                 </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <action selector="addWord:" destination="Elr-wf-cyI" eventType="touchUpInside" id="g4D-PV-wUb"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ir0-SX-h8D">
-                                <rect key="frame" x="16" y="76" width="343" height="90"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ir0-SX-h8D">
+                                <rect key="frame" x="16" y="144" width="343" height="90"/>
+                                <color key="backgroundColor" red="0.074940864802642976" green="0.098907470980397844" blue="0.10815036300253822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="Rcp-jj-Stb"/>
                                 </constraints>
@@ -4598,7 +4596,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 </connections>
                             </button>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsz-u9-Mzm">
-                                <rect key="frame" x="46" y="294" width="283" height="58"/>
+                                <rect key="frame" x="46" y="78" width="283" height="58"/>
                                 <color key="backgroundColor" red="0.098023947593815594" green="0.12937268308221372" blue="0.14146254574365491" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="58" id="iQ9-HI-X4s"/>
@@ -4615,33 +4613,41 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G80-uv-0qq">
                                 <rect key="frame" x="129" y="597" width="117" height="30"/>
                                 <state key="normal" title="more information">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="moreinfo:" destination="Elr-wf-cyI" eventType="touchUpInside" id="rlz-HJ-CDu"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1n6-iJ-uNl">
-                                <rect key="frame" x="13" y="209.5" width="25" height="25"/>
+                                <rect key="frame" x="16" y="254.5" width="25" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="25" id="YzY-xp-OWW"/>
                                     <constraint firstAttribute="height" constant="25" id="ueY-Bs-wjL"/>
                                 </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" image="minus.circle" catalog="system"/>
                                 <connections>
                                     <action selector="removeWord:" destination="Elr-wf-cyI" eventType="touchUpInside" id="YrZ-5g-lai"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40V-y5-mzs">
-                                <rect key="frame" x="112.5" y="370" width="150" height="51"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="you can scan a QR and/or input words" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mbR-RQ-Wax">
+                                <rect key="frame" x="88" y="292" width="199" height="13.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40V-y5-mzs">
+                                <rect key="frame" x="46" y="521" width="283" height="58"/>
                                 <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="150" id="45n-fq-rPl"/>
-                                    <constraint firstAttribute="height" constant="51" id="lqk-IK-qyu"/>
+                                    <constraint firstAttribute="width" constant="283" id="45n-fq-rPl"/>
+                                    <constraint firstAttribute="height" constant="58" id="khm-vN-UI5"/>
                                 </constraints>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Recover Now"/>
+                                <state key="normal" title="  Tap to recover" image="checkmark.circle.fill" catalog="system">
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="recoverNow:" destination="Elr-wf-cyI" eventType="touchUpInside" id="jfI-rs-UUw"/>
                                 </connections>
@@ -4650,29 +4656,31 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="1n6-iJ-uNl" firstAttribute="centerY" secondItem="Gyn-mg-Z8d" secondAttribute="centerY" id="2qR-Mm-zi3"/>
+                            <constraint firstItem="mbR-RQ-Wax" firstAttribute="centerX" secondItem="JxN-8Z-mkw" secondAttribute="centerX" id="6ae-um-8PE"/>
                             <constraint firstItem="nsz-u9-Mzm" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="7Cm-sH-wLs"/>
                             <constraint firstItem="Ir0-SX-h8D" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="7lm-Cd-aWd"/>
-                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="top" secondItem="Gyn-mg-Z8d" secondAttribute="bottom" constant="32" id="8ER-ni-wfI"/>
-                            <constraint firstItem="40V-y5-mzs" firstAttribute="top" secondItem="nsz-u9-Mzm" secondAttribute="bottom" constant="18" id="8ZR-5f-MP9"/>
                             <constraint firstItem="G80-uv-0qq" firstAttribute="centerX" secondItem="JxN-8Z-mkw" secondAttribute="centerX" id="8c8-zw-TFP"/>
-                            <constraint firstItem="Ir0-SX-h8D" firstAttribute="top" secondItem="HK9-eh-evW" secondAttribute="bottom" constant="1.5" id="AEI-tI-VMO"/>
                             <constraint firstItem="ftm-bz-o4y" firstAttribute="centerY" secondItem="Gyn-mg-Z8d" secondAttribute="centerY" id="C6k-g3-QmZ"/>
                             <constraint firstItem="HK9-eh-evW" firstAttribute="centerY" secondItem="MmJ-5B-aeC" secondAttribute="centerY" id="CZn-9Z-ih4"/>
                             <constraint firstItem="duj-2r-qsr" firstAttribute="bottom" secondItem="G80-uv-0qq" secondAttribute="bottom" constant="20" id="Dgc-DM-XAZ"/>
                             <constraint firstItem="tFS-FG-5Pf" firstAttribute="top" secondItem="duj-2r-qsr" secondAttribute="top" constant="25" id="HID-rz-PEq"/>
-                            <constraint firstItem="Gyn-mg-Z8d" firstAttribute="leading" secondItem="1n6-iJ-uNl" secondAttribute="trailing" constant="8" id="MbT-wA-m1I"/>
+                            <constraint firstItem="Gyn-mg-Z8d" firstAttribute="leading" secondItem="1n6-iJ-uNl" secondAttribute="trailing" constant="5" id="MbT-wA-m1I"/>
                             <constraint firstItem="40V-y5-mzs" firstAttribute="centerX" secondItem="JxN-8Z-mkw" secondAttribute="centerX" id="Pvr-e5-nk3"/>
                             <constraint firstItem="Gyn-mg-Z8d" firstAttribute="top" secondItem="Ir0-SX-h8D" secondAttribute="bottom" constant="16" id="QxM-6a-XGl"/>
-                            <constraint firstItem="ftm-bz-o4y" firstAttribute="leading" secondItem="Gyn-mg-Z8d" secondAttribute="trailing" constant="8" id="Wzu-oE-GwV"/>
+                            <constraint firstItem="G80-uv-0qq" firstAttribute="top" secondItem="40V-y5-mzs" secondAttribute="bottom" constant="18" id="Tv5-qd-Dx8"/>
+                            <constraint firstItem="ftm-bz-o4y" firstAttribute="leading" secondItem="Gyn-mg-Z8d" secondAttribute="trailing" constant="10" id="Wzu-oE-GwV"/>
                             <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="tFS-FG-5Pf" secondAttribute="trailing" constant="16" id="ZGq-Qw-Q5X"/>
                             <constraint firstItem="MmJ-5B-aeC" firstAttribute="top" secondItem="duj-2r-qsr" secondAttribute="top" constant="25" id="dMJ-ER-G2x"/>
                             <constraint firstItem="HK9-eh-evW" firstAttribute="leading" secondItem="MmJ-5B-aeC" secondAttribute="trailing" constant="8" id="h18-6t-mRJ"/>
                             <constraint firstItem="HK9-eh-evW" firstAttribute="leading" secondItem="MmJ-5B-aeC" secondAttribute="trailing" constant="8" id="hXi-7N-e3S"/>
                             <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="nsz-u9-Mzm" secondAttribute="trailing" constant="46" id="hjb-Jw-CsU"/>
-                            <constraint firstItem="1n6-iJ-uNl" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="13" id="isd-2K-l23"/>
+                            <constraint firstItem="1n6-iJ-uNl" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="isd-2K-l23"/>
+                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="top" secondItem="HK9-eh-evW" secondAttribute="bottom" constant="3.5" id="mPJ-iG-YBK"/>
                             <constraint firstItem="MmJ-5B-aeC" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="nr1-Cp-pQV"/>
-                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="ftm-bz-o4y" secondAttribute="trailing" constant="13" id="od2-7w-97Q"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="ftm-bz-o4y" secondAttribute="trailing" constant="11" id="od2-7w-97Q"/>
                             <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="Ir0-SX-h8D" secondAttribute="trailing" constant="16" id="owI-oC-U78"/>
+                            <constraint firstItem="Ir0-SX-h8D" firstAttribute="top" secondItem="nsz-u9-Mzm" secondAttribute="bottom" constant="8" id="upm-Jk-k8v"/>
+                            <constraint firstItem="mbR-RQ-Wax" firstAttribute="top" secondItem="Gyn-mg-Z8d" secondAttribute="bottom" constant="8" id="zh1-hx-yLd"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="duj-2r-qsr"/>
                     </view>
@@ -4688,7 +4696,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZKN-I6-Ccq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3255" y="1101"/>
+            <point key="canvasLocation" x="-3255.1999999999998" y="1100.5997001499252"/>
         </scene>
         <!--Displayer View Controller-->
         <scene sceneID="2P1-G0-q27">
@@ -4942,11 +4950,113 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <outlet property="rescanOutlet" destination="dSZ-4Z-lCQ" id="fZw-hH-Heu"/>
                         <outlet property="sweepToOutlet" destination="DL0-Ou-l95" id="4fL-aZ-GTO"/>
                         <segue destination="dWg-DF-dx5" kind="presentation" identifier="goSweep" modalPresentationStyle="fullScreen" id="b4q-N2-pxV"/>
+                        <segue destination="reL-7P-R3q" kind="presentation" identifier="refillMultisig" id="uaX-te-aDX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vmz-N1-e8G" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="760.79999999999995" y="366.56671664167919"/>
+        </scene>
+        <!--Refill Multisig View Controller-->
+        <scene sceneID="GrC-rC-yST">
+            <objects>
+                <viewController id="reL-7P-R3q" customClass="RefillMultisigViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ZRF-hf-jJd">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Refill multisig" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mMn-CG-X8D">
+                                <rect key="frame" x="54" y="17.5" width="188.5" height="36"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.2.circlepath" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="AZG-Ql-JGR">
+                                <rect key="frame" x="16" y="20.5" width="30" height="30"/>
+                                <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="IyC-xb-ce6"/>
+                                    <constraint firstAttribute="height" constant="31" id="g69-Tf-Lrd"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In order to refill the keypool for multisig wallets you need to enter your offline recover phrase." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="np9-Jt-mqz">
+                                <rect key="frame" x="16" y="58" width="343" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="ynN-yl-bJb"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y4A-rC-7g8">
+                                <rect key="frame" x="16" y="146" width="343" height="133"/>
+                                <color key="backgroundColor" red="0.10182027284263961" green="0.10182027284263961" blue="0.10182027284263961" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="133" id="qqO-Om-Ulf"/>
+                                </constraints>
+                            </view>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="recovery words" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PUj-6s-7Hk">
+                                <rect key="frame" x="44" y="287" width="287" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Keb-UP-Izd">
+                                <rect key="frame" x="16" y="293" width="20" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="PbQ-R3-TsB"/>
+                                    <constraint firstAttribute="height" constant="22" id="XLm-lW-kxj"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="minus.circle" catalog="system"/>
+                                <connections>
+                                    <action selector="minusAction:" destination="reL-7P-R3q" eventType="touchUpInside" id="fM4-w2-r2V"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zu8-9H-CiC">
+                                <rect key="frame" x="339" y="293" width="20" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="76P-A3-eeA"/>
+                                    <constraint firstAttribute="height" constant="22" id="aSZ-zt-yKs"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="plus.circle" catalog="system"/>
+                                <connections>
+                                    <action selector="addAction:" destination="reL-7P-R3q" eventType="touchUpInside" id="iYX-hS-PDO"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="mv9-LM-BsN" firstAttribute="trailing" secondItem="Zu8-9H-CiC" secondAttribute="trailing" constant="16" id="1TH-Vt-8jH"/>
+                            <constraint firstItem="np9-Jt-mqz" firstAttribute="top" secondItem="AZG-Ql-JGR" secondAttribute="bottom" constant="7" id="578-QR-qvt"/>
+                            <constraint firstItem="mMn-CG-X8D" firstAttribute="centerY" secondItem="AZG-Ql-JGR" secondAttribute="centerY" id="59M-m0-L0d"/>
+                            <constraint firstItem="Y4A-rC-7g8" firstAttribute="top" secondItem="np9-Jt-mqz" secondAttribute="bottom" constant="8" id="5e5-fS-8Z9"/>
+                            <constraint firstItem="mMn-CG-X8D" firstAttribute="leading" secondItem="AZG-Ql-JGR" secondAttribute="trailing" constant="8" id="8vv-k6-BnR"/>
+                            <constraint firstItem="AZG-Ql-JGR" firstAttribute="top" secondItem="mv9-LM-BsN" secondAttribute="top" constant="20" id="9Hl-O4-SoA"/>
+                            <constraint firstItem="AZG-Ql-JGR" firstAttribute="leading" secondItem="mv9-LM-BsN" secondAttribute="leading" constant="16" id="I12-n6-vde"/>
+                            <constraint firstItem="Keb-UP-Izd" firstAttribute="centerY" secondItem="PUj-6s-7Hk" secondAttribute="centerY" id="Ikj-sA-gIE"/>
+                            <constraint firstItem="Zu8-9H-CiC" firstAttribute="leading" secondItem="PUj-6s-7Hk" secondAttribute="trailing" constant="8" id="Lf4-hX-oJq"/>
+                            <constraint firstItem="PUj-6s-7Hk" firstAttribute="leading" secondItem="Keb-UP-Izd" secondAttribute="trailing" constant="8" id="Ml4-5w-da1"/>
+                            <constraint firstItem="np9-Jt-mqz" firstAttribute="leading" secondItem="mv9-LM-BsN" secondAttribute="leading" constant="16" id="Oah-ae-OYq"/>
+                            <constraint firstItem="Zu8-9H-CiC" firstAttribute="centerY" secondItem="PUj-6s-7Hk" secondAttribute="centerY" id="VzJ-7H-pad"/>
+                            <constraint firstItem="mv9-LM-BsN" firstAttribute="trailing" secondItem="np9-Jt-mqz" secondAttribute="trailing" constant="16" id="WfI-WG-WC9"/>
+                            <constraint firstItem="Keb-UP-Izd" firstAttribute="leading" secondItem="mv9-LM-BsN" secondAttribute="leading" constant="16" id="hyF-cK-rjZ"/>
+                            <constraint firstItem="Y4A-rC-7g8" firstAttribute="leading" secondItem="mv9-LM-BsN" secondAttribute="leading" constant="16" id="on0-0K-oWW"/>
+                            <constraint firstItem="mv9-LM-BsN" firstAttribute="trailing" secondItem="Y4A-rC-7g8" secondAttribute="trailing" constant="16" id="uHX-3U-RPu"/>
+                            <constraint firstItem="Keb-UP-Izd" firstAttribute="top" secondItem="Y4A-rC-7g8" secondAttribute="bottom" constant="14" id="wfv-Fw-7FO"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="mv9-LM-BsN"/>
+                    </view>
+                    <connections>
+                        <outlet property="descriptionLabel" destination="np9-Jt-mqz" id="C4D-1r-yHA"/>
+                        <outlet property="textField" destination="PUj-6s-7Hk" id="Sut-R9-dPF"/>
+                        <outlet property="titleLabel" destination="mMn-CG-X8D" id="G5T-lP-l8T"/>
+                        <outlet property="wordsView" destination="Y4A-rC-7g8" id="dwa-UV-F6R"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4tH-gj-Xwq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="589.60000000000002" y="1121.2893553223389"/>
         </scene>
         <!--Sweep To View Controller-->
         <scene sceneID="pAe-Ty-iWF">
@@ -5190,7 +5300,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="s47-J3-cCu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="761" y="1128"/>
+            <point key="canvasLocation" x="1266" y="1129"/>
         </scene>
         <!--Verify Address View Controller-->
         <scene sceneID="Cog-vC-RD4">
@@ -7039,6 +7149,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
         <image name="arrowshape.turn.up.right" catalog="system" width="64" height="52"/>
         <image name="blockchain-commons-logo.png" width="500" height="148"/>
         <image name="checkmark.circle" catalog="system" width="64" height="60"/>
+        <image name="checkmark.circle.fill" catalog="system" width="64" height="60"/>
         <image name="checkmark.seal" catalog="system" width="64" height="60"/>
         <image name="checkmark.square" catalog="system" width="64" height="56"/>
         <image name="chevron.right.square.fill" catalog="system" width="64" height="56"/>
@@ -7068,6 +7179,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
         <image name="pencil.circle" catalog="system" width="64" height="60"/>
         <image name="person.3" catalog="system" width="72" height="35"/>
         <image name="person.crop.circle.badge.checkmark" catalog="system" width="64" height="50"/>
+        <image name="plus.circle" catalog="system" width="64" height="60"/>
         <image name="qrcode" catalog="system" width="64" height="56"/>
         <image name="qrcode.viewfinder" catalog="system" width="64" height="56"/>
         <image name="rectangle.expand.vertical" catalog="system" width="64" height="60"/>
@@ -7087,7 +7199,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
         <segue reference="dWo-28-ynr"/>
         <segue reference="OVL-GL-HPC"/>
         <segue reference="tY7-Ss-m0T"/>
-        <segue reference="N8R-BU-J52"/>
+        <segue reference="zkr-zY-rLG"/>
         <segue reference="0zN-S6-Zr1"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
