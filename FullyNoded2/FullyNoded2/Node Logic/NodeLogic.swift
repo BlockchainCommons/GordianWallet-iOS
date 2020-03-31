@@ -115,7 +115,6 @@ class NodeLogic {
     }
     
     func loadWalletData(completion: @escaping () -> Void) {
-        print("loadWalletData")
         
         let reducer = Reducer()
         
@@ -152,39 +151,7 @@ class NodeLogic {
                 
                 errorBool = true
                 errorDescription = reducer.errorDescription
-                print("errorDescription = \(errorDescription)")
-                
-                if errorDescription.contains("Requested wallet does not exist or is not loaded") {
-                    
-                    // possibly changed from mainnet to testnet or vice versa, try and load once
-                    reducer.errorDescription = ""
-                    reducer.errorBool = false
-                    errorDescription = ""
-                    errorBool = false
-                    
-                    reducer.makeCommand(walletName: wallet.name, command: .loadwallet, param: "\"\(wallet.name)\"") {
-                        
-                        if !reducer.errorBool {
-                            
-                            reducer.makeCommand(walletName: self.wallet.name, command: .listunspent,
-                                                param: "0",
-                                                completion: getResult)
-                            
-                        } else {
-                            
-                            self.errorBool = true
-                            self.errorDescription = "Wallet does not exist, maybe you changed networks? If you want to use the app on a different network you will need to recreate the wallet"
-                            completion()
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                     completion()
-                    
-                }
+                completion()
                 
             }
             
@@ -207,17 +174,8 @@ class NodeLogic {
     }
     
     func loadNodeData(completion: @escaping () -> Void) {
-        print("loadNodeData")
         
         let reducer = Reducer()
-        
-//        var walletName = ""
-//        
-//        if wallet != nil {
-//            
-//            walletName = wallet!.name
-//            
-//        }
         
         func getResult() {
             
@@ -385,7 +343,6 @@ class NodeLogic {
     }
     
     func loadTransactionData(completion: @escaping () -> Void) {
-        print("loadTransactionData")
         
         let reducer = Reducer()
         
@@ -459,9 +416,7 @@ class NodeLogic {
         }
         
         for utxo in utxos {
-            
-            print("utxo = \(utxo)")
-            
+                        
             if let utxoDict = utxo as? NSDictionary {
                 
                 // Here we check the utxos descriptor to see what the path is for each pubkey.
@@ -474,11 +429,9 @@ class NodeLogic {
                 
                 if let desc = utxoDict["desc"] as? String {
                     
-                    print("desc = \(desc)")
                     let p = DescriptorParser()
                     let str = p.descriptor(desc)
                     let paths = str.derivationArray
-                    print("paths = \(paths)")
                     var index = 0
                     for path in paths {
                         
@@ -508,7 +461,7 @@ class NodeLogic {
                     if wallet.index <= index {
                         
                         let cd = CoreDataService()
-                        cd.updateEntity(id: wallet.id, keyToUpdate: "index", newValue: index, entityName: .wallets) {
+                        cd.updateEntity(id: wallet.id, keyToUpdate: "index", newValue: index + 1, entityName: .wallets) {
                             
                             if !cd.errorBool {
                                 

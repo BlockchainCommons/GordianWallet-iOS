@@ -401,13 +401,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let isActive = cell.viewWithTag(2) as! UISwitch
         let exportKeysButton = cell.viewWithTag(3) as! UIButton
         let verifyAddresses = cell.viewWithTag(4) as! UIButton
-        //let refreshData = cell.viewWithTag(5) as! UIButton
-        //let showInvoice = cell.viewWithTag(6) as! UIButton
-        //let makeItCold = cell.viewWithTag(7) as! UIButton
         let networkLabel = cell.viewWithTag(8) as! UILabel
         let utxosButton = cell.viewWithTag(9) as! UIButton
         let derivationLabel = cell.viewWithTag(11) as! UILabel
-        //let getWalletInfoButton = cell.viewWithTag(12) as! UIButton
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
         let shareSeedButton = cell.viewWithTag(16) as! UIButton
@@ -422,9 +418,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let bannerView = cell.viewWithTag(32)!
         let nodeKeysLabel = cell.viewWithTag(33) as! UILabel
         let rescanLabel = cell.viewWithTag(34) as! UILabel
-        let keyIndexLabel = cell.viewWithTag(35) as! UILabel
-        
-        keyIndexLabel.text = "Key Index #\(wallet.index) out of #\(wallet.maxRange)"
+        let nodeChangeKeys = cell.viewWithTag(36) as! UILabel
         
         rescanLabel.alpha = 0
         rescanLabel.adjustsFontSizeToFitWidth = true
@@ -480,33 +474,22 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if isActive.isOn {
             
             utxosButton.addTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
-            //makeItCold.addTarget(self, action: #selector(makeCold(_:)), for: .touchUpInside)
-            //showInvoice.addTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
             shareSeedButton.addTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             exportKeysButton.addTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
-            //getWalletInfoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             verifyAddresses.addTarget(self, action: #selector(verifyAddresses(_:)), for: .touchUpInside)
-            //refreshData.addTarget(self, action: #selector(refreshData(_:)), for: .touchUpInside)
             
         } else {
             
             utxosButton.removeTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
-            //makeItCold.removeTarget(self, action: #selector(makeCold(_:)), for: .touchUpInside)
-            //showInvoice.removeTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
             shareSeedButton.removeTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             exportKeysButton.removeTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
-            //getWalletInfoButton.removeTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             verifyAddresses.removeTarget(self, action: #selector(verifyAddresses(_:)), for: .touchUpInside)
-            //refreshData.removeTarget(self, action: #selector(refreshData(_:)), for: .touchUpInside)
             
         }
         
-        //makeItCold.restorationIdentifier = "\(indexPath.section)"
         shareSeedButton.restorationIdentifier = "\(indexPath.section)"
         exportKeysButton.restorationIdentifier = "\(indexPath.section)"
-        //getWalletInfoButton.restorationIdentifier = "\(indexPath.section)"
         verifyAddresses.restorationIdentifier = "\(indexPath.section)"
-        //refreshData.restorationIdentifier = "\(indexPath.section)"
         
         rescanLabel.layer.cornerRadius = 8
         nodeView.layer.cornerRadius = 8
@@ -547,7 +530,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        nodeKeysLabel.text = "holds public keys \(wallet.derivation)/0 to /\(wallet.maxRange)"
+        nodeKeysLabel.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
+        nodeChangeKeys.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
         deviceXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
@@ -585,19 +569,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let isActive = cell.viewWithTag(2) as! UISwitch
         let exportKeysButton = cell.viewWithTag(3) as! UIButton
         let verifyAddresses = cell.viewWithTag(4) as! UIButton
-        //let refreshData = cell.viewWithTag(5) as! UIButton
-        //let showInvoice = cell.viewWithTag(6) as! UIButton
-        //let makeItCold = cell.viewWithTag(7) as! UIButton
         let networkLabel = cell.viewWithTag(8) as! UILabel
         let utxosButton = cell.viewWithTag(9) as! UIButton
         let derivationLabel = cell.viewWithTag(11) as! UILabel
-        //let getWalletInfoButton = cell.viewWithTag(12) as! UIButton
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
-        let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
         let shareSeedButton = cell.viewWithTag(16) as! UIButton
-        //let getNodeSeedInfoButton = cell.viewWithTag(17) as! UIButton
-        //let getOfflineSeedInfoButton = cell.viewWithTag(18) as! UIButton
         let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
         let walletFileLabel = cell.viewWithTag(20) as! UILabel
         let seedOnDeviceView = cell.viewWithTag(21)!
@@ -612,10 +589,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let offlineXprv = cell.viewWithTag(31) as! UILabel
         let bannerView = cell.viewWithTag(33)!
         let rescanLabel = cell.viewWithTag(34) as! UILabel
-        let keyIndexLabel = cell.viewWithTag(35) as! UILabel
-        
-        keyIndexLabel.text = "Key Index #\(wallet.index) out of #\(wallet.maxRange)"
-        
+        let nodeChangeKeysLabel = cell.viewWithTag(35) as! UILabel
+                
         rescanLabel.alpha = 0
         rescanLabel.adjustsFontSizeToFitWidth = true
         
@@ -670,37 +645,22 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if isActive.isOn {
             
             utxosButton.addTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
-            //makeItCold.addTarget(self, action: #selector(makeCold(_:)), for: .touchUpInside)
-            //showInvoice.addTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
             shareSeedButton.addTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             exportKeysButton.addTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
-            //getWalletInfoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             verifyAddresses.addTarget(self, action: #selector(verifyAddresses(_:)), for: .touchUpInside)
-            //refreshData.addTarget(self, action: #selector(refreshData(_:)), for: .touchUpInside)
-            //getNodeSeedInfoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
-            //getOfflineSeedInfoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             
         } else {
             
             utxosButton.removeTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
-            //makeItCold.removeTarget(self, action: #selector(makeCold(_:)), for: .touchUpInside)
-            //showInvoice.removeTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
             shareSeedButton.removeTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             exportKeysButton.removeTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
-            //getWalletInfoButton.removeTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             verifyAddresses.removeTarget(self, action: #selector(verifyAddresses(_:)), for: .touchUpInside)
-            //refreshData.removeTarget(self, action: #selector(refreshData(_:)), for: .touchUpInside)
-            //getNodeSeedInfoButton.removeTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
-            //getOfflineSeedInfoButton.removeTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             
         }
         
-        //makeItCold.restorationIdentifier = "\(indexPath.section)"
         shareSeedButton.restorationIdentifier = "\(indexPath.section)"
         exportKeysButton.restorationIdentifier = "\(indexPath.section)"
-        //getWalletInfoButton.restorationIdentifier = "\(indexPath.section)"
         verifyAddresses.restorationIdentifier = "\(indexPath.section)"
-        //refreshData.restorationIdentifier = "\(indexPath.section)"
         
         rescanLabel.layer.cornerRadius = 8
         nodeView.layer.cornerRadius = 8
@@ -744,7 +704,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         deviceXprv.text = "xprv \(wallet.derivation)"
-        nodeKeys.text = "keys \(wallet.derivation)/0 and 1/0 to /\(wallet.maxRange)"
+        nodeKeys.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
+        nodeChangeKeysLabel.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
         offlineXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
@@ -761,7 +722,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let last15 = String(rpcOnion.suffix(15))
                 rpcOnionLabel.text = "\(first10)*****\(last15)"
                 nodeLabel.text = s.label
-                nodeSeedLabel.text = "1 Seedless \(s.label)"
                 
             }
             
@@ -1763,6 +1723,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let first = String(label.prefix(5))
         let last = String(label.suffix(5))
         return "\(first)...\(last)"
+        
+    }
+    
+    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
+        
+        walletTable.reloadData()
         
     }
     

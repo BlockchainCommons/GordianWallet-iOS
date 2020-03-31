@@ -82,9 +82,7 @@ class Reducer {
                     parseResponse(response: response as Any)
                     
                 } else {
-                    
-                    print("torRPC.errorDescription = \(torRPC.errorDescription)")
-                    
+                                        
                     if torRPC.errorDescription.contains("Requested wallet does not exist or is not loaded") {
                         
                         errorDescription = ""
@@ -211,18 +209,22 @@ class Reducer {
             
         }
         
-        let mgr = TorClient.sharedInstance
+        // For now we hardcode tor, for a dev environment we can uncomment the below code and the app will try and connect to
+        // a local node.
+        torCommand()
         
-        if mgr.state == .connected || mgr.state == .refreshing {
-            
-            torCommand()
-            
-        } else {
-            
-            // this is for dev environment only... can be the begginings of mac app
-            localCommand()
-            
-        }
+//        let mgr = TorClient.sharedInstance
+//
+//        if mgr.state == .connected || mgr.state == .refreshing {
+//
+//            torCommand()
+//
+//        } else {
+//
+//            // this is for dev environment only... can be the begginings of mac app
+//            localCommand()
+//
+//        }
         
     }
     

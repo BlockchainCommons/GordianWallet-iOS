@@ -32,7 +32,9 @@ class WalletCreatedWordsViewController: UIViewController, UINavigationController
             textView.text = """
             On the next screen we will display 12 very important words.
 
-            You *MUST* write these 12 words down and save them seperately from the RecoveryQR, *THEY ARE REQUIRED* to recover a multi-signature wallet if you lose your node.
+            You *MUST* write these 12 words down and save them seperately from the Recovery QR, *THEY ARE REQUIRED* to recover a multi-signature wallet if you lose your node.
+            
+            They are also required to add more keys to your node, we imported 2,500 keys into your node, when you use your 2,400th key we will prompt you to refill the keypool with these words. If you lose these words you should immediately create a new multi-sig wallet and "sweep to" it.
 
             These words **WILL BE DELETED FOREVER** once you tap the "I saved them" button!
 

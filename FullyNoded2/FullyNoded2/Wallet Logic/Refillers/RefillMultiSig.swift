@@ -37,7 +37,7 @@ class RefillMultiSig {
                                 
                                 let hotDescriptor = "\(array[0])" + "#" + checksum
                                 
-                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [\(wallet.maxRange),\(wallet.maxRange + 2500)], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
+                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [\(wallet.maxRange),\(wallet.maxRange + 2500)], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
                                 params = params.replacingOccurrences(of: recoveryXpub, with: recoveryXprv)
                                 reducer.makeCommand(walletName: wallet.name, command: .importmulti, param: params) {
                                     
@@ -51,7 +51,7 @@ class RefillMultiSig {
                                                 
                                             } else {
                                                 
-                                                completion((false, "Wrror updating wallet maxRange property. Wallet refill was successfull though!"))
+                                                completion((false, "Error updating wallet maxRange property. Wallet refill was successfull though!"))
                                                 
                                             }
                                             
@@ -146,7 +146,7 @@ class RefillMultiSig {
                                 let array = updatedDescriptor.split(separator: "#")
                                 let hotDescriptor = "\(array[0])" + "#" + checksum
                                 
-                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [\(wallet.maxRange),\(wallet.maxRange + 2500)], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
+                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [\(wallet.maxRange),\(wallet.maxRange + 2500)], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
                                 params = params.replacingOccurrences(of: recoveryXpub, with: recoveryXprv)
                                 importMulti(param: params)
                                 

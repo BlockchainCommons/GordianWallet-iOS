@@ -347,6 +347,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         
         DispatchQueue.main.async {
             
+            self.textField.text = ""
             self.textField.resignFirstResponder()
                         
         }
@@ -473,6 +474,24 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         processTextfieldInput()
         
     }
+    
+    @IBAction func lostWords(_ sender: Any) {
+        
+        showAlert(vc: self, title: "Lost your offline recovery words?", message: "If you lost your offline recovery words don't worry, you can still create a new multi-sig wallet then use the \"sweep to\" tool to send all your funds to the new wallet.\n\nMake sure you keep safe backups of the QR and words this time!")
+        
+    }
+    
+    @IBAction func close(_ sender: Any) {
+        
+        DispatchQueue.main.async {
+            
+            self.dismiss(animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    
     
     /*
     // MARK: - Navigation

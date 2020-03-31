@@ -19,10 +19,8 @@ class MakeRPCCall {
     var attempts = 0
     
     func executeRPCCommand(walletName: String, method: BTC_CLI_COMMAND, param: Any, completion: @escaping () -> Void) {
-        print("executeTorRPCCommand")
         
         attempts += 1
-        
         let enc = Encryption()
         enc.getNode { (node, error) in
             
@@ -85,7 +83,9 @@ class MakeRPCCall {
                                     
                                     self.attempts = 0
                                     self.errorBool = true
+                                    #if DEBUG
                                     print("error description = \(error!.localizedDescription)")
+                                    #endif
                                     self.errorDescription = error!.localizedDescription
                                     completion()
                                     

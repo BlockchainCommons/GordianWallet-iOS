@@ -14,10 +14,6 @@ import CryptoKit
 class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
     
     var walletExists = Bool()
-    var sponsorShowing = Bool()
-    let background = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-    let closeButton = UIButton()
-    let sponsorBanner = UIButton()
     var bootStrapping = Bool()
     var showNodeInfo = Bool()
     var torCellIndex = Int()
@@ -75,6 +71,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var transactionsSectionLoaded = Bool()
     var infoHidden = Bool()
     var torInfoHidden = Bool()
+    @IBOutlet var sponsorView: UIView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,11 +81,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         mainMenu.delegate = self
         tabBarController?.delegate = self
         navigationController?.delegate = self
-        
         NotificationCenter.default.addObserver(self, selector: #selector(torBootStrapping(_:)), name: .didStartBootstrappingTor, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didCompleteOnboarding(_:)), name: .didCompleteOnboarding, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(torConnected(_:)), name: .didEstablishTorConnection, object: nil)
-        
+        sponsorView.alpha = 0
         initialLoad = true
         walletSectionLoaded = false
         torSectionLoaded = false
@@ -99,6 +96,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         infoHidden = true
         torInfoHidden = true
         showNodeInfo = false
+        
+        mainMenu.translatesAutoresizingMaskIntoConstraints = true
+        mainMenu.frame = CGRect(x: 8, y: 30, width: self.mainMenu.frame.width, height: self.view.frame.height - 30)
         
         if ud.object(forKey: "firstTime") == nil {
             
@@ -254,7 +254,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func didAppear() {
-        print("didappear")
                 
         DispatchQueue.main.async {
             
@@ -278,17 +277,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                 if !error && w != nil {
                                     
                                     self.wallet = w!
-                                    
-//                                    self.cd.updateEntity(id: self.wallet.id, keyToUpdate: "index", newValue: 2501, entityName: .wallets) {
-//                                        
-//                                        if !self.cd.errorBool {
-//                                            
-//                                            print("updated index to 2501")
-//                                            
-//                                        }
-//                                        
-//                                    }
-                                                                                                            
+                                                                                                                                                
                                     if self.existingWalletName != w!.name && self.existingNodeId != node!.id {
                                         
                                         self.existingNodeId = node!.id
@@ -335,91 +324,47 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if wallet != nil {
             
             var message = ""
-            var actionTitle = ""
+            let actionTitle = "Refill keypool"
             var alertAction: (() -> Void)!
-            
-            func rollOverMultiSig() {
-                
-                DispatchQueue.main.async {
-                                
-                    let alert = UIAlertController(title: "Multi-Sig options", message: "", preferredStyle: .actionSheet)
-
-                    alert.addAction(UIAlertAction(title: "Refill Existing Keypool", style: .default, handler: { action in
-                        
-                        
-                        
-                    }))
-                    
-                    alert.addAction(UIAlertAction(title: "Rollover", style: .default, handler: { action in
-                        
-                        
-                        
-                    }))
-                    
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                            
-                    self.present(alert, animated: true, completion: nil)
-                    
-                }
-                
-            }
-            
-            func refillSingleSig() {
-                
-                DispatchQueue.main.async {
-                                
-                    let alert = UIAlertController(title: "Refill Keypool", message: message, preferredStyle: .actionSheet)
-
-                    alert.addAction(UIAlertAction(title: "Refill Now", style: .default, handler: { action in
-                        
-                        self.connectingView.addConnectingView(vc: self.tabBarController!, description: "Refilling the keypool")
-                        
-                        let singleSig = RefillSingleSig()
-                        singleSig.refill(wallet: self.wallet) { (success, error) in
-                            
-                            if success {
-                                
-                                self.connectingView.removeConnectingView()
-                                showAlert(vc: self, title: "Success!", message: "Keypool refilled 🤩")
-                                
-                            } else {
-                                
-                                self.connectingView.removeConnectingView()
-                                showAlert(vc: self, title: "Error!", message: "There was an error refilling the keypool: \(String(describing: error))")
-                                
-                            }
-                            
-                        }
-                        
-                    }))
-                    
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                            
-                    self.present(alert, animated: true, completion: nil)
-                    
-                }
-                
-            }
             
             if self.wallet.type == "MULTI" {
                 
-                message = "Your node only has \(self.wallet.maxRange - self.wallet.index) more keys left to sign with. We urge you to roll this wallet over to a new one ASAP. If you exeed the limit the your node will no longer be able to sign this wallets transactions."
-                actionTitle = "Roll Over"
+                message = "Your node only has \(self.wallet.maxRange - self.wallet.index) more keys left to sign with. In order for your node to be able to continue signing transactions you need to refill the keypool, you will need your offline recovery words."
                 
                 alertAction = {
                     
-                    rollOverMultiSig()
+                    DispatchQueue.main.async {
+                        
+                        self.performSegue(withIdentifier: "refillMsigFromHome", sender: self)
+                        
+                    }
                     
                 }
                 
             } else {
                 
                 message = "Your node only has \(self.wallet.maxRange - self.wallet.index) more public keys. We need to import more public keys into your node at this point to ensure your node is able to verify this wallets balances and build psbt's for us."
-                actionTitle = "Refill Keypool"
                 
                 alertAction = {
                     
-                    refillSingleSig()
+                    self.connectingView.addConnectingView(vc: self.tabBarController!, description: "Refilling the keypool")
+                    
+                    let singleSig = RefillSingleSig()
+                    singleSig.refill(wallet: self.wallet) { (success, error) in
+                        
+                        if success {
+                            
+                            self.connectingView.removeConnectingView()
+                            showAlert(vc: self, title: "Success!", message: "Keypool refilled 🤩")
+                            
+                        } else {
+                            
+                            self.connectingView.removeConnectingView()
+                            showAlert(vc: self, title: "Error!", message: "There was an error refilling the keypool: \(String(describing: error))")
+                            
+                        }
+                        
+                    }
                     
                 }
                 
@@ -536,27 +481,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let infoButton = cell.viewWithTag(12) as! UIButton
         let deviceXprv = cell.viewWithTag(15) as! UILabel
         let deviceView = cell.viewWithTag(16)!
-        //let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
         let nodeView = cell.viewWithTag(24)!
         let keysOnNodeDescription = cell.viewWithTag(25) as! UILabel
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
+        let changeKeysOnNodeDescription = cell.viewWithTag(27) as! UILabel
         
         coldBalanceLabel.isUserInteractionEnabled = true
         let tap = UIGestureRecognizer()
         tap.addTarget(self, action: #selector(switchBalances(_:)))
         
         nodeView.layer.cornerRadius = 8
-        
-//        if isRefreshingZero {
-//
-//            refreshingSpinner.alpha = 1
-//            refreshingSpinner.startAnimating()
-//
-//        } else {
-//
-//            refreshingSpinner.alpha = 0
-//            refreshingSpinner.stopAnimating()
-//        }
         
         deviceView.layer.cornerRadius = 8
         infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
@@ -644,7 +578,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        keysOnNodeDescription.text = "public keys \(wallet.derivation)/0 to /\(wallet.maxRange)"
+        keysOnNodeDescription.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
+        changeKeysOnNodeDescription.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
         deviceXprv.text = "xprv \(wallet.derivation)"
         walletNameLabel.text = reducedName(name: wallet.name)
         
@@ -672,23 +607,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let nodeView = cell.viewWithTag(18)!
         let offlineView = cell.viewWithTag(19)!
         let offlineXprvLabel = cell.viewWithTag(22) as! UILabel
-        //let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
+        let keysOnNodeDescription = cell.viewWithTag(27) as! UILabel
         
         coldBalanceLabel.isUserInteractionEnabled = true
         let tap = UIGestureRecognizer()
         tap.addTarget(self, action: #selector(switchBalances(_:)))
-        
-//        if isRefreshingZero {
-//
-//            refreshingSpinner.alpha = 1
-//            refreshingSpinner.startAnimating()
-//
-//        } else {
-//
-//            refreshingSpinner.alpha = 0
-//            refreshingSpinner.stopAnimating()
-//        }
         
         nodeView.layer.cornerRadius = 8
         offlineView.layer.cornerRadius = 8
@@ -757,7 +681,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         coldBalanceLabel.adjustsFontSizeToFitWidth = true
         
-        walletTypeLabel.text = "2 of 3 multisig"
+        walletTypeLabel.text = "\(str.mOfNType) multisig"
         backUpSeedLabel.text = "1 Seed Offline"
         seedOnNodeLabel.text = "1 Seedless \(node.label)"
         seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
@@ -778,7 +702,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        nodeXprv.text = "keys \(wallet.derivation)/0 and 1/0 to /\(wallet.maxRange)"
+        nodeXprv.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
+        keysOnNodeDescription.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
         deviceXprv.text = "xprv \(wallet.derivation)"
         offlineXprvLabel.text = "xprv \(wallet.derivation)"
         
@@ -803,7 +728,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let seedOnDeviceLabel = cell.viewWithTag(8) as! UILabel
         let dirtyFiatLabel = cell.viewWithTag(11) as! UILabel
         let infoButton = cell.viewWithTag(12) as! UIButton
-        //let refreshingSpinner = cell.viewWithTag(23) as! UIActivityIndicatorView
         let nodeView = cell.viewWithTag(24)!
         let watchIcon = cell.viewWithTag(25) as! UIImageView
         let keysOnNodeLabel = cell.viewWithTag(26) as! UILabel
@@ -814,18 +738,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         tap.addTarget(self, action: #selector(switchBalances(_:)))
         
         nodeView.layer.cornerRadius = 8
-        
-//        if isRefreshingZero {
-//
-//            refreshingSpinner.alpha = 1
-//            refreshingSpinner.startAnimating()
-//
-//        } else {
-//
-//            refreshingSpinner.alpha = 0
-//            refreshingSpinner.stopAnimating()
-//        }
-        
         
         infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
         
@@ -932,7 +844,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let onionVersionLabel = cell.viewWithTag(4) as! UILabel
         let v3address = cell.viewWithTag(6) as! UILabel
         let torActiveCircle = cell.viewWithTag(7) as! UIImageView
-        //let spinner = cell.viewWithTag(8) as! UIActivityIndicatorView
         let infoButton = cell.viewWithTag(9) as! UIButton
         let connectedView = cell.viewWithTag(10)!
         let clientOnionView = cell.viewWithTag(11)!
@@ -1073,7 +984,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let sizeLabel = cell.viewWithTag(13) as! UILabel
         let feeRate = cell.viewWithTag(14) as! UILabel
         let isHot = cell.viewWithTag(15) as! UILabel
-        //let refreshingSpinner = cell.viewWithTag(16) as! UIActivityIndicatorView
         let infoButton = cell.viewWithTag(17) as! UIButton
         
         infoButton.addTarget(self, action: #selector(getNodeInfo(_:)), for: .touchUpInside)
@@ -1104,17 +1014,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         sizeLabel.layer.cornerRadius = 6
         feeRate.layer.cornerRadius = 6
         isHot.layer.cornerRadius = 6
-        
-//        if isRefreshingTwo {
-//
-//            refreshingSpinner.alpha = 1
-//            refreshingSpinner.startAnimating()
-//
-//        } else {
-//
-//            refreshingSpinner.alpha = 0
-//            refreshingSpinner.stopAnimating()
-//        }
         
         sizeLabel.text = "\(self.size) size"
         difficultyLabel.text = "\(self.difficulty) difficulty"
@@ -1513,53 +1412,43 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         switch section {
             
         case self.torCellIndex:
+                            
+            textLabel.text = "Tor Status"
             
-            //if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: self.torCellIndex)) {
+            if torSectionLoaded {
                 
-                textLabel.text = "Tor Status"
+                refreshButton.alpha = 1
+                refreshButton.frame = CGRect(x: refreshButtonX, y: 0, width: 15, height: 18)
+                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
-                if torSectionLoaded {
-                    
-                    refreshButton.alpha = 1
-                    refreshButton.frame = CGRect(x: refreshButtonX, y: 0, width: 15, height: 18)
-                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
-                    
-                } else {
-                    
-                    refreshButton.alpha = 0
-                    refreshButton.frame = CGRect(x: 0, y: 0, width: 15, height: 18)
-                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
-                    
-                }
+            } else {
                 
-            //}
-            
+                refreshButton.alpha = 0
+                refreshButton.frame = CGRect(x: 0, y: 0, width: 15, height: 18)
+                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                
+            }
+                            
         case self.walletCellIndex:
+                            
+            textLabel.text = "Active Wallet Info"
             
-            //if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: self.walletCellIndex)) {
+            if walletSectionLoaded {
                 
-                textLabel.text = "Active Wallet Info"
+                refreshButton.alpha = 1
+                refreshButton.frame = CGRect(x: refreshButtonX, y: 0, width: 15, height: 18)
+                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
-                if walletSectionLoaded {
-                    
-                    refreshButton.alpha = 1
-                    refreshButton.frame = CGRect(x: refreshButtonX, y: 0, width: 15, height: 18)
-                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
-                    
-                } else {
-                    
-                    refreshButton.alpha = 0
-                    refreshButton.frame = CGRect(x: 0, y: 0, width: 15, height: 18)
-                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
-                    
-                }
+            } else {
                 
-            //}
-            
+                refreshButton.alpha = 0
+                refreshButton.frame = CGRect(x: 0, y: 0, width: 15, height: 18)
+                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                
+            }
+                            
         case self.nodeCellIndex:
             
-            //let cell = tableView.cellForRow(at: IndexPath(row: 0, section: self.nodeCellIndex))
-                
             textLabel.text = "Full Node Status"
             
             if nodeSectionLoaded {
@@ -1577,27 +1466,23 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
         case 3:
+                            
+            textLabel.text = "Transaction History"
             
-            //if let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 3)) {
+            if transactionsSectionLoaded {
                 
-                textLabel.text = "Transaction History"
+                refreshButton.alpha = 1
+                refreshButton.frame = CGRect(x: refreshButtonX, y: 0, width: 15, height: 18)
+                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
                 
-                if transactionsSectionLoaded {
-                    
-                    refreshButton.alpha = 1
-                    refreshButton.frame = CGRect(x: refreshButtonX, y: 0, width: 15, height: 18)
-                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
-                    
-                } else {
-                    
-                    refreshButton.alpha = 0
-                    refreshButton.frame = CGRect(x: 0, y: 0, width: 15, height: 18)
-                    textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
-                    
-                }
+            } else {
                 
-            //}
-            
+                refreshButton.alpha = 0
+                refreshButton.frame = CGRect(x: 0, y: 0, width: 15, height: 18)
+                textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+                
+            }
+                            
         default:
             
             break
@@ -1667,7 +1552,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 } else {
                    
-                    return 290
+                    return 310
                     
                 }
                 
@@ -1691,7 +1576,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 } else {
                     
-                    return 255
+                    return 263
                     
                 }
                 
@@ -2045,6 +1930,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 } else {
                     
+                    self.torConnected = false
                     self.torSectionLoaded = false
                     self.removeStatusLabel()
                     self.isRefreshingTorData = false
@@ -2167,6 +2053,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     self.impact()
                     self.removeStatusLabel()
+                    self.sponsorThisApp()
                     
                 }
                 
@@ -2177,7 +2064,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func refreshNodeData(_ sender: UIButton) {
-        print("refreshNodeData")
         
         self.isRefreshingTwo = true
         let nodeLogic = NodeLogic()
@@ -2256,7 +2142,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     self.impact()
                     self.mainMenu.reloadData()
                     self.loadNodeData()
-                    self.sponsorThisApp()
+                    //self.sponsorThisApp()
                     
                 }
                 
@@ -2366,9 +2252,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             UIView.animate(withDuration: 0.5, animations: {
                 
                 self.statusLabel.frame = CGRect(x: 16, y: self.navigationController!.navigationBar.frame.maxY + 5, width: self.view.frame.width - 32, height: 13)
-                self.mainMenu.frame = CGRect(x: 0, y: self.statusLabel.frame.maxY + 15, width: self.mainMenu.frame.width, height: self.mainMenu.frame.height)
                 
-            })
+            }) { (_) in
+                
+                self.mainMenu.translatesAutoresizingMaskIntoConstraints = false
+                
+            }
             
         }
         
@@ -2378,19 +2267,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         DispatchQueue.main.async {
             
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 
-                if !self.sponsorShowing {
-                    
-                    self.statusLabel.frame.origin.y = -50
-                    self.mainMenu.frame.origin.y = 40
-                    self.mainMenu.translatesAutoresizingMaskIntoConstraints = false
-                    
-                } else {
-
-                    self.mainMenu.frame.origin.y = self.sponsorBanner.frame.maxY
-
-                }
+                self.statusLabel.alpha = 0
                 
             }) { (_) in
                 
@@ -2439,7 +2318,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @objc func refreshNow() {
-        print("refresh")
         
         self.isRefreshingTorData = true
         self.reloadTableData()
@@ -2508,7 +2386,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func nodeJustAdded() {
-        print("nodeJustAdded")
         
         self.enc.getNode { (node, error) in
             
@@ -2516,16 +2393,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 self.node = node!
                 self.reloadSections([self.nodeCellIndex])
-                
-                //if !self.torConnected {
-                    
-                    //TorClient.sharedInstance.start {
-                        
-                        self.didAppear()
-                        
-                    //}
-                    
-                //}
+                self.didAppear()
                 
             }
             
@@ -2592,6 +2460,20 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             }
             
+        case "refillMsigFromHome":
+            
+            if let vc = segue.destination as? RefillMultisigViewController {
+                
+                vc.wallet = self.wallet
+                vc.multiSigRefillDoneBlock = { result in
+                    
+                    showAlert(vc: self, title: "Success! 🤩", message: "Keypool refilled")
+                    self.didAppear()
+                    
+                }
+                
+            }
+            
         default:
             
             break
@@ -2609,11 +2491,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let firstTime = FirstTime()
         firstTime.firstTimeHere { (success) in
             
-            if success {
-                
-                //self.showUnlockScreen()
-                
-            } else {
+            if !success {
                 
                 displayAlert(viewController: self, isError: true, message: "Something very wrong has happened... Please delete the app and try again.")
                 
@@ -2623,70 +2501,25 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    @IBAction func sponsorNow(_ sender: Any) {
+        
+        sponsorNow()
+        
+    }
+    
     private func sponsorThisApp() {
-        
-        sponsorShowing = true
-        
+                
         DispatchQueue.main.async {
-            
-            self.mainMenu.translatesAutoresizingMaskIntoConstraints = true
-            
-            self.background.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
-            
-            self.sponsorBanner.backgroundColor = .clear
-            self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
-            let sponsorImage = UIImage(systemName: "heart")
-            self.sponsorBanner.setTitle(" Sponsor Blockchain Commons!", for: .normal)
-            self.sponsorBanner.setImage(sponsorImage, for: .normal)
-            self.sponsorBanner.tintColor = .systemPink
-            self.sponsorBanner.titleLabel?.font = .systemFont(ofSize: 15)
-            self.sponsorBanner.addTarget(self, action: #selector(self.sponsorNow), for: .touchUpInside)
-            self.sponsorBanner.setTitleColor(.white, for: .normal)
-            
-            self.closeButton.frame = CGRect(x: self.navigationController!.view.frame.maxX - 50, y: self.navigationController!.view.frame.minY - 50, width: 20, height: 20)
-            self.closeButton.addTarget(self, action: #selector(self.closeSponsorButton), for: .touchUpInside)
-            let closeImage = UIImage(systemName: "x.circle")!
-            self.closeButton.setImage(closeImage, for: .normal)
-            self.closeButton.tintColor = .white
-            self.closeButton.backgroundColor = .clear
-            
-            self.view.addSubview(self.background)
-            self.view.addSubview(self.sponsorBanner)
-            self.view.addSubview(self.closeButton)
             
             UIView.animate(withDuration: 0.3, animations: {
                 
-                self.mainMenu.frame.origin.y +=  50
-                self.statusLabel.frame.origin.y += 50
-                self.background.frame = CGRect(x: 0, y: self.navigationController!.navigationBar.frame.maxY, width: self.view.frame.width, height: 50)
-                self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.navigationBar.frame.maxY, width: self.view.frame.width, height: 50)
-                self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 50, y: self.navigationController!.navigationBar.frame.maxY + 15, width: 20, height: 20)
+                self.sponsorView.alpha = 1
                 
             }) { (_) in
-                                
+                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) {
                     
-                    if self.sponsorShowing {
-                        
-                        self.mainMenu.translatesAutoresizingMaskIntoConstraints = false
-                        
-                        UIView.animate(withDuration: 0.3, animations: {
-                            
-                            self.background.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
-                            self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
-                            self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 25, y: self.navigationController!.view.frame.minY - 50, width: 20, height: 20)
-                            self.mainMenu.frame.origin.y -= 50
-                            self.statusLabel.frame.origin.y -= 50
-                            
-                        }) { (_) in
-                            
-                            self.sponsorBanner.removeFromSuperview()
-                            self.background.removeFromSuperview()
-                            self.closeButton.removeFromSuperview()
-                            
-                        }
-                        
-                    }
+                    self.closeSponsorButton()
                     
                 }
                 
@@ -2696,29 +2529,21 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    @IBAction func closeSponsorBanner(_ sender: Any) {
+        
+        closeSponsorButton()
+        
+    }
+    
     @objc func closeSponsorButton() {
         
-        sponsorShowing = false
-        
         DispatchQueue.main.async {
-            
-            self.mainMenu.translatesAutoresizingMaskIntoConstraints = false
-            
+                        
             UIView.animate(withDuration: 0.3, animations: {
                 
-                self.background.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
-                self.sponsorBanner.frame = CGRect(x: 0, y: self.navigationController!.view.frame.minY - 50, width: self.view.frame.width, height: 50)
-                self.closeButton.frame = CGRect(x: self.sponsorBanner.frame.maxX - 25, y: self.navigationController!.view.frame.minY - 50, width: 20, height: 20)
-                self.mainMenu.frame.origin.y -= 50
-                self.statusLabel.frame.origin.y -= 50
+                self.sponsorView.alpha = 0
                 
-            }) { (_) in
-                
-                self.sponsorBanner.removeFromSuperview()
-                self.background.removeFromSuperview()
-                self.closeButton.removeFromSuperview()
-                
-            }
+            })
             
         }
         
@@ -2736,6 +2561,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let first = String(name.prefix(5))
         let last = String(name.suffix(5))
         return "\(first)*****\(last).dat"
+        
+    }
+    
+    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
+        
+        mainMenu.reloadData()
         
     }
     

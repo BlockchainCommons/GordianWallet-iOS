@@ -60,7 +60,11 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
 
                 alert.addAction(UIAlertAction(title: "Yes, broadcast now", style: .default, handler: { action in
                     
+                    #if !targetEnvironment(simulator)
                     self.showAuth()
+                    #else
+                    self.broadcast()
+                    #endif
                                         
                 }))
                 
@@ -650,7 +654,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
         (view as! UITableViewHeaderFooterView).backgroundView?.backgroundColor = UIColor.clear
         (view as! UITableViewHeaderFooterView).textLabel?.textAlignment = .left
-        (view as! UITableViewHeaderFooterView).textLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)//UIFont.systemFont(ofSize: 12)
+        (view as! UITableViewHeaderFooterView).textLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.white
         (view as! UITableViewHeaderFooterView).textLabel?.alpha = 1
         
@@ -711,6 +715,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
     }
     
+    private func broadcast() {
+        
+        self.creatingView.addConnectingView(vc: self, description: "broadcasting transaction")
+        self.executeNodeCommand(method: .sendrawtransaction, param: "\"\(self.signedRawTx)\"")
+        
+    }
+    
     func showAuth() {
         
         DispatchQueue.main.async {
@@ -742,8 +753,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 switch (state) {
                 case .authorized:
                     print("Account Found - Signed In")
-                    self.creatingView.addConnectingView(vc: self, description: "broadcasting transaction")
-                    self.executeNodeCommand(method: .sendrawtransaction, param: "\"\(self.signedRawTx)\"")
+                    self.broadcast()
                 case .revoked:
                     print("No Account Found")
                     fallthrough

@@ -37,7 +37,7 @@ class CreateMultiSigWallet {
                                 
                                 let hotDescriptor = "\(array[0])" + "#" + checksum
                                 
-                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
+                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
                                 params = params.replacingOccurrences(of: nodeXpub, with: nodeXprv)
                                 reducer.makeCommand(walletName: wallet.name, command: .importmulti, param: params) {
                                     
@@ -139,7 +139,7 @@ class CreateMultiSigWallet {
                                         let array = updatedDescriptor.split(separator: "#")
                                         let hotDescriptor = "\(array[0])" + "#" + checksum
                                         
-                                        var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
+                                        var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
                                         params = params.replacingOccurrences(of: nodeXpub, with: nodeXprv)
                                         importMulti(param: params)
                                         
