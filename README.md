@@ -142,7 +142,7 @@ Upon tapping confirm the wallet will be added and the node will rescan the block
 
 `bitcoin-cli createwallet <your wallets name>, true, true, "", true`
 
-###### Multi-sig wallets
+##### Multi-sig wallets
 
 `bitcoin-cli createwallet <your wallets name>, false, true, "", true`
 
@@ -283,7 +283,8 @@ For multi-sig wallets because Bitcoin Core does not add multi-sig keys to the ke
 
 Once a change address is created we use:
 
-```bitcoin-cli walletcreatefundedpsbt [[], {"tb1qlesv3vv5zlu6gzha53xhdu4kpzuqr60gxeyhr94jegktj9laxguq5pe49v": 0.0001}, 0, {"includeWatching": true, "replaceable": true, "conf_target": 2, "changeAddress": "tb1qn7lkzrylfyhz9lm6mqnmwlgpavcq7qs9ctxpsyjuaky4zuzr5x2qxrw069"}, true]
+```
+bitcoin-cli walletcreatefundedpsbt [[], {"tb1qlesv3vv5zlu6gzha53xhdu4kpzuqr60gxeyhr94jegktj9laxguq5pe49v": 0.0001}, 0, {"includeWatching": true, "replaceable": true, "conf_target": 2, "changeAddress": "tb1qn7lkzrylfyhz9lm6mqnmwlgpavcq7qs9ctxpsyjuaky4zuzr5x2qxrw069"}, true]
 ```
 
 For single-sig wallets we do not need to specify a change address, instead we simply specify a `change_type` which conforms to the wallet's derivation. We do this because by default bitcoind will use a `p2sh-segwit` format address for change, yet it is important that we keep all the wallets inputs to conform with the wallet derivation scheme. The other difference is when it comes to signing for some reason LibWally has a bug where it will not sign single-sig psbt's, therefore we convert the psbt to an unsigned raw transaction and then sign the transaction locally with the appropriate private key.
