@@ -86,10 +86,10 @@ class TorRPC {
                                                 completion(.failure(.JSONError(message: "Unknown Error")))
                                             }
                                         } else {
-                                            if let responseString = self.checkCommandForResponse(command: command) {
-                                                completion(.success(responseString))
+                                            if let json = jsonResult["result"] {
+                                                completion(.success(json))
                                             } else {
-                                                completion(.success(jsonResult["result"]!))
+                                                completion(.failure(.JSONError(message: "Result error")))
                                             }
                                         }
                                     } catch {
@@ -105,26 +105,6 @@ class TorRPC {
                 completion(.failure(.JSONError(message: "Data error")))
             }
         }
-    }
-    
-    /**
-     Helper function that returns a String for a given command.
-     
-     If not one of the explicit commands, returns nil.
-     */
-    private func checkCommandForResponse(command: BTC_CLI_COMMAND) -> String? {
-        var returnString: String?
-        switch command {
-        case .walletpassphrase:
-            returnString = "Wallet Decrypted"
-        case .walletpassphrasechange:
-            returnString = "Passphrase Updated"
-        case .encryptwallet, .walletlock:
-            returnString = "Wallet Encrypted"
-        default:
-            returnString = nil
-        }
-        return returnString
     }
 }
 
