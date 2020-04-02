@@ -54,7 +54,7 @@ It is extremely important for multi-sig wallets that the recovery words are save
 
 <img src="./Images/wallets_screen.PNG" alt="" width="250"/> <img src="./Images/seed_export.PNG" alt="" width="250"/> <img src="./Images/utxos.jpeg" alt="" width="250"/> 
 
-<img src="./Images/export_keys" alt="" width="250"/> <img src="./Images/verify_addresses" alt="" width="250"/>
+<img src="./Images/export_keys.PNG" alt="" width="250"/> <img src="./Images/verify_addresses.PNG" alt="" width="250"/>
 
 After creating a wallet you will see it on the "Wallets" page. Tap it to activate it. Tap the info button to display and export your device's seed info and the Recovery QR at anytime, you will always be prompted for 2FA whenever you export a seed or a private key. Tap the eyeball to export all the keys associated with the wallet, these keys will be derived from the device if possible. For now LibWally will not derive BIP44 and 49 multi-sig addresses or scripts. These addresses must be fetched from your node. BIP84 multi-sig addresses and scripts will be derived locally using LibWally. Tap the verify button to fetch the addresses purely from your node so you may "verify" that the addresses your device derives are the same as the one your node derives. Tap the list button to see the wallet's utxo's. This fetches your wallet's utxo's from your node. From your node's perspective the utxo's are always watch-only as your node is never holding enough private keys to fully spend one of them. You may tap each utxo to see all the info in json format that your node holds for that utxo.
 
