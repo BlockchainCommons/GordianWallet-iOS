@@ -63,17 +63,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if mgr.state != .started && mgr.state != .connected  {
 
-            mgr.start(delegate: nil) {
-                
-                //self.registerBackgroundTask()
-
-//                DispatchQueue.main.async {
-//
-//                    NotificationCenter.default.post(name: .didEstablishTorConnection, object: self)
-//
-//                }
-
-            }
+            mgr.start(delegate: nil) {}
 
         }
         
@@ -89,7 +79,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // as for some reason resigning the Tor thread crashes iPhone 11's.
         let device = UIDevice.modelName
         
-        if device != "iPhone 11 pro max" {
+        if device != "iPhone 11 pro max" && device != "iPhone XS Max" {
             
             let mgr = TorClient.sharedInstance
             
@@ -98,12 +88,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 mgr.state = .refreshing
                                     
                 mgr.resign()
-                
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//
-//                    self.endBackgroundTask()
-//
-//                }
                                                     
             }
             

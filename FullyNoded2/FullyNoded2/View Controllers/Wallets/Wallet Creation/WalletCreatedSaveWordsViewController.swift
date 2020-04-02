@@ -143,7 +143,7 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
             
         }
         
-        displayAlert(viewController: self.navigationController!, isError: false, message: "text copied to clipboard for 60 seconds")
+        displayAlert(viewController: self, isError: false, message: "text copied to clipboard for 60 seconds")
         
     }
     

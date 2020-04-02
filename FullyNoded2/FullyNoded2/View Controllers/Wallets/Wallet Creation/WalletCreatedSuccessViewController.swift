@@ -124,11 +124,11 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
                 
                 if !cd.errorBool {
                     
-                    displayAlert(viewController: self.navigationController!, isError: false, message: "Label saved")
+                    displayAlert(viewController: self, isError: false, message: "Label saved")
                     
                 } else {
                     
-                    displayAlert(viewController: self.navigationController!, isError: true, message: "Label not saved")
+                    displayAlert(viewController: self, isError: true, message: "Label not saved")
                     
                 }
                 

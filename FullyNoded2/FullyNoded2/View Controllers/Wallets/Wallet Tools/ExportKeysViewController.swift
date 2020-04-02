@@ -280,7 +280,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                 
             }
             
-            displayAlert(viewController: self, isError: false, message: "public key copied to clipboard for 60 seconds")
+            displayAlert(viewController: self, isError: false, message: "script copied to clipboard for 60 seconds")
         }
         
     }

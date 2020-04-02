@@ -153,7 +153,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @objc func torBootStrapping(_ notification: Notification) {
-        print("torBootStrapping")
         
         bootStrapping = true
         addStatusLabel(description: "     Bootstrapping Tor...")
@@ -279,25 +278,35 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                     self.wallet = w!
                                                                                                                                                 
                                     if self.existingWalletName != w!.name && self.existingNodeId != node!.id {
+                                        // user switched to a different wallet on a different node
                                         
                                         self.existingNodeId = node!.id
                                         self.refreshNow()
                                         
                                     } else if self.existingWalletName != w!.name {
+                                        // user switched wallets
                                         
                                         self.loadWalletData()
                                         
                                     }
                                     
                                 } else {
-                                    
-                                    self.existingWalletName = ""
-                                    
+                                                                        
                                     if self.existingNodeId != node!.id {
+                                        // this means the node was changed in node manager or a wallet on a different node was activated
                                         
                                         self.refreshNow()
                                         
+                                    } else if self.existingWalletName != "" {
+                                        // this means the wallet was deleted without getting deactivated first, so we just force refresh
+                                        // and manually set the wallet to nil
+                                        
+                                        self.wallet = nil
+                                        self.refreshNow()
+                                        
                                     }
+                                    
+                                    self.existingWalletName = ""
                                     
                                 }
                                 
