@@ -40,61 +40,41 @@ Upon on initial use the user may choose to connect to their own node by scanning
 
 Once you are connected to a node you may go to the "Wallets" tab and create either a single-sig or multi-sig wallet:
 
-<img src="./Images/choose_wallet_type_screen.PNG" alt="" width="250"/>
+<img src="./Images/choose_wallet_type_screen.PNG" alt="" width="250"/> <img src="./Images/wallet_label_screen.PNG" alt="" width="250"/> <img src="./Images/wallet_recovery_QR.PNG" alt="" width="250"/> <img src="./Images/wallet_recovery_QR_export.PNG" alt="" width="250"/>
 
-Once the wallet the wallet is successfully created on your node you will be guided through a confirmation flow:
+Once the wallet the wallet is successfully created on your node you will be guided through a confirmation flow. You will first need to give your wallet a label so that you can easily recognize it. It should be noted that this label is accounted for in the Recovery QR so if you use the Recovery QR to recover the wallet the label will persist. We urge the user that they must save the recovery items in order to be able to recover a wallet! If you do not do this you are at risk of permanently losing your funds. The recovery QR can be tapped to export it and save it. It should not be saved onto your device as the whole point is that you will need it if you lose your device. We recommend printing it on waterproof paper and saving it in multiple secure locations.
 
-<img src="./Images/wallet_label_screen.PNG" alt="" width="250"/>
+<img src="./Images/wallet_recovery_phrase_intro.PNG" alt="" width="250"/> <img src="./Images/wallet_offline_recovery_words.PNG" alt="" width="250"/>
 
-You will first need to give your wallet a label so that you can easily recognize it. It should be noted that this label is accounted for in the Recovery QR so if you use the Recovery QR to recover the wallet the label will persist.
-
-Here we urge the user that they must save the recovery items in order to be able to recover a wallet! If you do not do this you are at risk of permanently losing your funds.
-
-<img src="./Images/wallet_recovery_QR.PNG" alt="" width="250"/>
-
-Here we display the recovery QR which can be tapped to export it and save it. It should not be saved onto your device as the whole point is that you will need it if you lose your device. We recommend printing it on waterproof paper and saving it in multiple secure locations.
-
-<img src="./Images/wallet_recovery_QR_export.PNG" alt="" width="250"/>
-
-Here we communicate to the user what the offline recovery words represent and how they should be saved. It is extremely important for multi-sig wallets that these words are saved, for single-sig it is redundant to the Recovery QR.
-
-<img src="./Images/wallet_recovery_phrase_intro.PNG" alt="" width="250"/>
-
-The final screen in the wallet created confirmation flow is the offline recovery words. From here you can copy them to clipboard, export them or display them in QR code format. It is recommended you write these down on waterproof paper and save them securely in multiple locations. For multi-sig wallets they are required for wallet recovery and refilling the keypool.
-
-<img src="./Images/wallet_offline_recovery_words.PNG" alt="" width="250"/>
+It is extremely important for multi-sig wallets that the recovery words are saved, for single-sig it is redundant to the Recovery QR. The final screen in the wallet created confirmation flow is the offline recovery words. From here you can copy them to clipboard, export them or display them in QR code format. It is recommended you write these down on waterproof paper and save them securely in multiple locations. For multi-sig wallets they are required for wallet recovery and refilling the keypool.
 
 
-#### Using wallets
+#### Wallets
 
-After creating a wallet you will see it on the "Wallets" page:
+<img src="./Images/wallets_screen.PNG" alt="" width="250"/> <img src="./Images/seed_export.PNG" alt="" width="250"/> <img src="./Images/utxos.jpeg" alt="" width="250"/> <img src="./Images/export_keys" alt="" width="250"/> <img src="./Images/verify_addresses" alt="" width="250"/>
 
-<img src="./Images/wallets_screen.PNG" alt="" width="250"/>
+After creating a wallet you will see it on the "Wallets" page. Tap it to activate it. Tap the info button to display and export your device's seed info and the Recovery QR at anytime, you will always be prompted for 2FA whenever you export a seed or a private key. Tap the eyeball to export all the keys associated with the wallet, these keys will be derived from the device if possible. For now LibWally will not derive BIP44 and 49 multi-sig addresses or scripts. These addresses must be fetched from your node. BIP84 multi-sig addresses and scripts will be derived locally using LibWally. Tap the verify button to fetch the addresses purely from your node so you may "verify" that the addresses your device derives are the same as the one your node derives. Tap the list button to see the wallet's utxo's. This fetches your wallet's utxo's from your node. From your node's perspective the utxo's are always watch-only as your node is never holding enough private keys to fully spend one of them. You may tap each utxo to see all the info in json format that your node holds for that utxo.
 
-You can tap the info button to display and export your device's seed info and the Recovery QR at anytime, you will always be prompted for 2FA whenever you export a seed or a private key:
+##### Receiving
 
-<img src="./Images/seed_export.PNG" alt="" width="250"/>
+<img src="./Images/create_invoice.PNG" alt="" width="250"/>
 
-From the wallet cell you may also tap the eyeball to export all the keys associated with the wallet, these keys will be derived from the device if possible. For now LibWally will not derive BIP44 and 49 multi-sig addresses or scripts. These addresses must be fetched from your node. BIP84 multi-sig addresses and scripts will be derived locally using LibWally.
+Just activate the wallet you want to spend from and then tap the "In" tab, it will fetch a receiving address from your node for your active wallet, to fetch another one tap the refresh button in the top right corner. The "amount" and "label" field conform to BIP21, you can add amounts and a label so the spender can simply scan the QR and it will automatically populate the amount field on their end if their software is BIP21 compatible.
 
-You may tap the verify button to fetch the addresses purely from your node so you may "verify" that the addresses your device derives are the same as the one your node derives.
+##### Spending
 
-You may also tap the list button to see the wallet's utxo's:
+<img src="./Images/pay_invoice.PNG" alt="" width="250"/> <img src="./Images/confirm_transaction.PNG" alt="" width="250"/>
 
-<img src="./Images/utxos.jpeg" alt="" width="250"/>
-
-This fetches your wallet's utxo's from your node. From your node's perspective the utxo's are always watch-only as your node is never holding enough private keys to fully spend one of them. You may tap each utxo to see all the info in json format that your node holds for that utxo.
+To send just tap the "In" tab. From here you can tap the scanner button to scan a BIP21 compatible QR code or an address. You can also tap the + button to add multiple outputs to your transaction (batching), whenever you are ready to build the transaction just tap "next".
 
 
 #### Home screen
 
-You may expand the cells to show more info about your Tor connection, node statistics and wallet by tapping the expand/collapse buttons:
+<img src="./Images/home_screen_expanded.PNG" alt="" width="250"/> <img src="./Images/home_screen_balance_transactions.PNG" alt="" width="250"/>
 
-<img src="./Images/home_screen_expanded.PNG" alt="" width="250"/>
+You may expand the cells to show more info about your Tor connection, node statistics and wallet by tapping the expand/collapse buttons.
 
 You can see all the details associated with your wallet along with transaction history. You will see an ⚠︎ icon for any unconfirmed balances and their associated transactions. You can tap the refresh buttons to reload individual sections or pull the screen to reload all sections.
-
-<img src="./Images/home_screen_balance_transactions.PNG" alt="" width="250"/>
 
 It is worth noting that the three panes in a multi-sig wallet are communicating the wallets derivation scheme and what is held by the device, node and offline backup. Your device holds the seed so it can sign for any key, your node however holds a very specific range of keys, here we show you the current wallet index and the maximum index range. Whenever your wallet's current index reaches 100 keys from the maximum range imported into your node you will automatically be notified and prompted to refill the keypool. It should be noted you can refill the keypool at anytime.
 
@@ -112,15 +92,9 @@ The "scan Recovery QR" button will also display that the QR was valid after scan
 
 Depending on what you are recovering you may either tap "Recover now" once a valid QR and/or words are added.
 
-<img src="./Images/wallet_recovery_add_words.PNG" alt="" width="250"/>
+<img src="./Images/wallet_recovery_add_words.PNG" alt="" width="250"/> <img src="./Images/wallet_recovery_valid_mnmemonic.PNG" alt="" width="250"/> <img src="./Images/wallet_recovery_valid_QR.PNG" alt="" width="250"/> <img src="./Images/confirm_recovery.PNG" alt="" width="250"/>
 
-<img src="./Images/wallet_recovery_valid_mnmemonic.PNG" alt="" width="250"/>
-
-<img src="./Images/wallet_recovery_valid_QR.PNG" alt="" width="250"/>
-
-Upon tapping "Tap to recover" you will be presented with a "Recovery Confirmation" screen:
-
-<img src="./Images/confirm_recovery.PNG" alt="" width="250"/>
+Upon tapping "Tap to recover" you will be presented with a "Recovery Confirmation" screen.
 
 If you used a Recovery QR *FN2* will be able to display all the wallets met data to you for confirmation. If the wallet still exists on your node it will also be able to fetch the balance. if you are only using words we will only be able to fetch the wallet name, addresses and derivation type.
 
@@ -289,13 +263,13 @@ bitcoin-cli walletcreatefundedpsbt [[], {"tb1qlesv3vv5zlu6gzha53xhdu4kpzuqr60gxe
 
 For single-sig wallets we do not need to specify a change address, instead we simply specify a `change_type` which conforms to the wallet's derivation. We do this because by default bitcoind will use a `p2sh-segwit` format address for change, yet it is important that we keep all the wallets inputs to conform with the wallet derivation scheme. The other difference is when it comes to signing for some reason LibWally has a bug where it will not sign single-sig psbt's, therefore we convert the psbt to an unsigned raw transaction and then sign the transaction locally with the appropriate private key.
 
-`[]` which is an empty array of inputs tells the node to handle coin selection for us which leverages Bitcoin Core's sophisticated coin selection algorithm.
-`{"tb1qlesv3vv5zlu6gzha53xhdu4kpzuqr60gxeyhr94jegktj9laxguq5pe49v": 0.0001}` is our output.
-`0` is our locktime.
-`"includeWatching": true` as our node's wallets are always watch-only.
-`"replaceable": true` to ensure we can use RBF if needed.
-`"conf_target": 2` this represents the mining fee target you can set in *FN2* settings. It tells the node how many blocks we want the transaction to be confirmed in. This allows *FN2* to leverage Bitcoin Core's fee optimization.
-`"changeAddress": "tb1qn7lkzrylfyhz9lm6mqnmwlgpavcq7qs9ctxpsyjuaky4zuzr5x2qxrw069"` here we specify the change address we want to use which was initially fetched before building the `psbt`.
+- `[]` which is an empty array of inputs tells the node to handle coin selection for us which leverages Bitcoin Core's sophisticated coin selection algorithm. Whenever you itilize the sweep to tool we will simply fetch all of the wallets UTXO's from your node parse them and add them as inputs here
+- `{"tb1qlesv3vv5zlu6gzha53xhdu4kpzuqr60gxeyhr94jegktj9laxguq5pe49v": 0.0001}` is our output.
+- `0` is our locktime.
+- `"includeWatching": true` as our node's wallets are always watch-only.
+- `"replaceable": true` to ensure we can use RBF if needed.
+- `"conf_target": 2` this represents the mining fee target you can set in *FN2* settings. It tells the node how many blocks we want the transaction to be confirmed in. This allows *FN2* to leverage Bitcoin Core's fee optimization.
+- `"changeAddress": "tb1qn7lkzrylfyhz9lm6mqnmwlgpavcq7qs9ctxpsyjuaky4zuzr5x2qxrw069"` here we specify the change address we want to use which was initially fetched before building the `psbt`.
 
 The node will then respond with a `psbt`, *FN2* takes that `psbt` and issues a second command to the node:
 
@@ -306,7 +280,7 @@ The `walletprocesspsbt` tells our node to sign the `psbt` if it can, it will the
 
 After the device fully signs the `psbt` we `finalize` it locally using LibWally which converts it from `psbt` format to a raw transaction.
 
-Your node will then decode the signed raw transaction and parse each input, output and calculate the actual mining fee to be paid by totaling the inputs amount and outputs amount and subtracting them from each other, remember mining fees are implicit not explicit.
+Your node will then decode the signed raw transaction, parse each input, output and calculate the mining fee to be paid by totaling the inputs and outputs, subtracting the total from each other.
 
 This list of inputs/outputs and the mining fee is then displayed to the user for confirmation before being broadcast. *FN2* allows you to tap each input and output, doing this runs the `bitcoin-cli getaddressinfo` command and fetches whatever info the node's wallet knows about the respective address. In this way users can verify without a doubt that the input belongs to them, the change output belongs to them and that the recipient does or doesn't belong to them.
 
@@ -366,7 +340,8 @@ It is worth noting the app is fully capable of creating unsigned transactions an
 
 Run `brew --version` in a terminal, if you get a valid response you have brew installed already, if not:
 
-```cd /usr/local
+```
+cd /usr/local
 mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
 ```
 Wait for bew to finish.
@@ -375,23 +350,40 @@ Wait for bew to finish.
 
 Follow these [instructions](https://brewinstall.org/install-carthage-on-mac-with-brew/)
 
-##### Install Tor.Framework Dependencies
-
-`brew install automake autoconf libtool gettext`
-
 ##### Install XCode
 
-- Install [Xcode](https://itunes.apple.com/id/app/xcode/id497799835?mt=12)
-- You will need a free Apple developer account [create one here](https://developer.apple.com/programs/enroll/)
+- [Install Xcode](https://itunes.apple.com/id/app/xcode/id497799835?mt=12)
+- You will need a free Apple developer account create one [here](https://developer.apple.com/programs/enroll/)
 - In XCode, click "XCode" -> "preferences" -> "Accounts" -> add your github account
 - Go to the [repo](https://github.com/BlockchainCommons/FullyNoded-2) click `Clone and Download` -> `Open in XCode`
-- Open Terminal
-- `cd <into the project>`
-- run `carthage update --platform iOS` and wait for carthage to finish
+- Once it opens go ahead an close it for now and quit XCode
+
+##### Install Tor.Framework Dependencies
+
+These steps will ensure Tor.framework builds successfully, it will create a completely separate Tor.framework directory on your machine which should not be confused with *FN2* or it's Tor.framework.
+
+```
+brew install automake
+brew install autoconf
+brew install libtool
+brew install gettext
+git clone git@github.com:iCepa/Tor.framework
+cd Tor.framework
+git submodule init
+git submodule update
+carthage build --no-skip-current --platform iOS
+```
+It is normal to see an error about XCFrameworks in the above process. It can be ignored.
+
+Once the above process completes you can:
+```
+cd <into FullyNoded 2>
+carthage update --platform iOS
+```
 
 ##### Install LibWally-Swift with Cocoapods
 
-- If you don't have Cocoapods install it: `sudo gem install cocoapods`
+- If you don't have Cocoapods install it with `sudo gem install cocoapods`
 - `cd <into the project>` (FullyNoded 2)
 - run `pod install`
 - If you run into an error you may need to follow the instructions from [LibWally-Swift](https://github.com/blockchain/libwally-swift) in order for it to build.
@@ -421,9 +413,9 @@ You can import a key by running the following command with that individual’s f
 
 ### Built with
 - [Tor.framework](https://github.com/iCepa/Tor.framework) by the [iCepa project](https://github.com/iCepa) - for communicating with your nodes hidden service
-- [LibWally-Swift](https://github.com/blockchain/libwally-swift) built by @sjors - for BIP39 mnemonic creation and HD key derivation
-- [Base32](https://github.com/norio-nomura/Base32/blob/master/Sources/Base32) built by @norio-nomura - for Tor V3 authentication key encoding
-- [Keychain-Swift](https://github.com/evgenyneu/keychain-swift) built by @evgenyneu for securely storing sensitive data on your devices keychain
+- [LibWally-Swift](https://github.com/blockchain/libwally-swift) built by [@Sjors](https://github.com/Sjors) - for BIP39 mnemonic creation and HD key derivation
+- [Base32](https://github.com/norio-nomura/Base32/blob/master/Sources/Base32) built by [@norio-nomura](https://github.com/norio-nomura) - for Tor V3 authentication key encoding
+- [Keychain-Swift](https://github.com/evgenyneu/keychain-swift) built by [@evgenyneu](https://github.com/evgenyneu) for securely storing sensitive data on your devices keychain
 
 ### Copyright & License
 
