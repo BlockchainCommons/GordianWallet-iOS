@@ -28,6 +28,7 @@
         <attribute name="lastBalance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="lastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastUsed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="maxRange" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="mOfNtype" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="nodeId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -38,6 +39,6 @@
     <elements>
         <element name="Auth" positionX="-63" positionY="-18" width="128" height="73"/>
         <element name="Nodes" positionX="-54" positionY="-9" width="128" height="148"/>
-        <element name="Wallets" positionX="-36" positionY="9" width="128" height="343"/>
+        <element name="Wallets" positionX="-36" positionY="9" width="128" height="358"/>
     </elements>
 </model>

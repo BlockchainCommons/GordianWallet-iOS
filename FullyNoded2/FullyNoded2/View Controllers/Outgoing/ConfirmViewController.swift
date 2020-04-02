@@ -12,6 +12,7 @@ import AuthenticationServices
 
 class ConfirmViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
+    var doneBlock: ((Bool) -> Void)?
     let creatingView = ConnectingView()
     var unsignedPsbt = ""
     var signedRawTx = ""
@@ -26,8 +27,9 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     var miningFee = ""
     var recipients = [String]()
     var addressToVerify = ""
-    @IBOutlet var playButton: UIBarButtonItem!
+    var sweeping = Bool()
     @IBOutlet var confirmTable: UITableView!
+    @IBOutlet var broadcastButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,12 +60,17 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
 
                 alert.addAction(UIAlertAction(title: "Yes, broadcast now", style: .default, handler: { action in
                     
+                    #if !targetEnvironment(simulator)
                     self.showAuth()
-                    
+                    #else
+                    self.broadcast()
+                    #endif
+                                        
                 }))
                 
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                        
+                
+                alert.popoverPresentationController?.sourceView = self.view
                 self.present(alert, animated: true, completion: nil)
                 
             }
@@ -161,14 +168,32 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                         UIPasteboard.general.string = result
                         self.creatingView.removeConnectingView()
                         self.navigationItem.title = "Sent ✓"
-                        self.playButton.tintColor = UIColor.white.withAlphaComponent(0)
+                        self.broadcastButton.alpha = 0
                         
                         displayAlert(viewController: self,
                                      isError: false,
                                      message: "Transaction sent ✓")
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
-                            self.navigationController?.popToRootViewController(animated: true)
+                        if !self.sweeping {
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                
+                                self.navigationController?.popToRootViewController(animated: true)
+                                
+                            }
+                            
+                        } else {
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                
+                                self.dismiss(animated: true) {
+                                    
+                                    self.doneBlock!(true)
+                                    
+                                }
+                                
+                            }
+                            
                         }
                         
                     }
@@ -308,6 +333,12 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             }
             
+            if sweeping {
+                
+                isChange = false
+                
+            }
+            
             let outputDict:[String:Any] = [
             
                 "index": number,
@@ -316,8 +347,6 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 "isChange": isChange
             
             ]
-            
-            print("outputdict = \(outputDict)")
             
             outputArray.append(outputDict)
             
@@ -625,7 +654,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
         (view as! UITableViewHeaderFooterView).backgroundView?.backgroundColor = UIColor.clear
         (view as! UITableViewHeaderFooterView).textLabel?.textAlignment = .left
-        (view as! UITableViewHeaderFooterView).textLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)//UIFont.systemFont(ofSize: 12)
+        (view as! UITableViewHeaderFooterView).textLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.white
         (view as! UITableViewHeaderFooterView).textLabel?.alpha = 1
         
@@ -686,6 +715,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
     }
     
+    private func broadcast() {
+        
+        self.creatingView.addConnectingView(vc: self, description: "broadcasting transaction")
+        self.executeNodeCommand(method: .sendrawtransaction, param: "\"\(self.signedRawTx)\"")
+        
+    }
+    
     func showAuth() {
         
         DispatchQueue.main.async {
@@ -717,8 +753,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 switch (state) {
                 case .authorized:
                     print("Account Found - Signed In")
-                    self.creatingView.addConnectingView(vc: self, description: "broadcasting transaction")
-                    self.executeNodeCommand(method: .sendrawtransaction, param: "\"\(self.signedRawTx)\"")
+                    self.broadcast()
                 case .revoked:
                     print("No Account Found")
                     fallthrough

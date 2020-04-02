@@ -85,16 +85,16 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             textToCopy = recoveryQr
             message = "your recovery QR text was copied to your clipboard and will be erased in one minute"
         case 1:
-            textToCopy = seed
+            textToCopy = "Devices seed:" + " " + seed + "derivation: \(wallet.derivation)/0" + "birthdate unix: \(wallet.birthdate)"
             message = "your seed was copied to your clipboard and will be erased in one minute"
         case 2:
-            textToCopy = publicKeyDescriptor
+            textToCopy = "Public Key Descriptors: \(publicKeyDescriptor)"
             message = "your public key descriptor was copied to your clipboard and will be erased in one minute"
         case 3:
-            textToCopy = privateKeyDescriptor
+            textToCopy = "Private Key Descriptors: \(privateKeyDescriptor)"
             message = "your private key descriptor was copied to your clipboard and will be erased in one minute"
         case 4:
-            textToCopy = recoveryText
+            textToCopy = "Bitcoin Core recovery commands: \(recoveryText)"
             message = "your recovery command was copied to your clipboard and will be erased in one minute"
             
         default:
@@ -250,6 +250,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                             // its single sig
                                             var privKeyDesc = self.wallet.descriptor
                                             privKeyDesc = privKeyDesc.replacingOccurrences(of: xpub, with: xprv)
+                                            let recoveryDesc = privKeyDesc.replacingOccurrences(of: xpub, with: xprv)
                                             let arr = privKeyDesc.split(separator: "#")
                                             privKeyDesc = "\(arr[0])"
                                             
@@ -258,7 +259,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                             let arr1 = changeDescriptor.split(separator: "#")
                                             changeDescriptor = "\(arr1[0])"
                                             
-                                            let recoveryQr = ["entropy": entropyString, "descriptor":"\(privKeyDesc)", "walletName":"\(self.wallet.name)","birthdate":self.wallet.birthdate, "blockheight":self.wallet.blockheight, "label": self.wallet.label] as [String : Any]
+                                            let recoveryQr = ["entropy": entropyString, "descriptor":"\(recoveryDesc)","birthdate":self.wallet.birthdate, "blockheight":self.wallet.blockheight, "label": self.wallet.label] as [String : Any]
                                             
                                             if let json = recoveryQr.json() {
                                                 
@@ -288,7 +289,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                             // we need to preserve the public key descriptor checksum when creating the recovery qr as the descriptor is manipulated and converted back to a public key descriptor during the recovery process. It is more efficient to do it this way then making extra rpc calls to the node during recovery.
                                             let recoveryDesc = (self.wallet.descriptor).replacingOccurrences(of: xpub, with: xprv)
                                             
-                                            let recoveryQr = ["entropy": entropyString, "descriptor":"\(recoveryDesc)", "walletName":"\(self.wallet.name)","birthdate":self.wallet.birthdate, "blockheight":self.wallet.blockheight, "label": self.wallet.label] as [String : Any]
+                                            let recoveryQr = ["entropy": entropyString, "descriptor":"\(recoveryDesc)","birthdate":self.wallet.birthdate, "blockheight":self.wallet.blockheight, "label": self.wallet.label] as [String : Any]
                                             
                                             if let json = recoveryQr.json() {
                                                 
@@ -327,7 +328,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 // wallet is cold
                 
-                let recoveryQr = ["descriptor":"\(self.wallet.descriptor)", "walletName":"\(self.wallet.name)","birthdate":self.wallet.birthdate, "blockheight":self.wallet.blockheight] as [String : Any]
+                let recoveryQr = ["descriptor":"\(self.wallet.descriptor)","birthdate":self.wallet.birthdate, "blockheight":self.wallet.blockheight] as [String : Any]
                 
                 if let json = recoveryQr.json() {
                     
@@ -542,7 +543,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         let textLabel = UILabel()
         textLabel.textAlignment = .left
-        textLabel.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
+        textLabel.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
         textLabel.textColor = .systemGray
         textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
         
@@ -561,7 +562,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         qrButton.tintColor = .systemTeal
         qrButton.tag = section
         qrButton.addTarget(self, action: #selector(handleQRTap(_:)), for: .touchUpInside)
-        qrButton.frame = CGRect(x: shareButton.frame.minX - 40, y: 0, width: 20, height: 20)
+        qrButton.frame = CGRect(x: shareButton.frame.minX - 30, y: 0, width: 20, height: 20)
         qrButton.center.y = textLabel.center.y
         
         let copyButton = UIButton()
@@ -570,7 +571,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         copyButton.tintColor = .systemTeal
         copyButton.tag = section
         copyButton.addTarget(self, action: #selector(handleCopyTap(_:)), for: .touchUpInside)
-        copyButton.frame = CGRect(x: qrButton.frame.minX - 40, y: 0, width: 20, height: 20)
+        copyButton.frame = CGRect(x: qrButton.frame.minX - 30, y: 0, width: 20, height: 20)
         copyButton.center.y = textLabel.center.y
         
         switch section {

@@ -19,10 +19,8 @@ class MakeRPCCall {
     var attempts = 0
     
     func executeRPCCommand(walletName: String, method: BTC_CLI_COMMAND, param: Any, completion: @escaping () -> Void) {
-        print("executeTorRPCCommand")
         
         attempts += 1
-        
         let enc = Encryption()
         enc.getNode { (node, error) in
             
@@ -51,12 +49,22 @@ class MakeRPCCall {
                     return
                 }
                 
+                #if DEBUG
+                print("url = \(url)")
+                #endif
+                
                 var request = URLRequest(url: url)
-                request.timeoutInterval = 10
+                var timeout = 10.0
+                if method == .importmulti {
+                    timeout = 100.0
+                }
+                request.timeoutInterval = timeout
                 request.httpMethod = "POST"
                 request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
                 request.httpBody = "{\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}".data(using: .utf8)
+                #if DEBUG
                 print("request = {\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}")
+                #endif
                 let queue = DispatchQueue(label: "com.FullyNoded.torQueue")
                 queue.async {
                     
@@ -75,7 +83,9 @@ class MakeRPCCall {
                                     
                                     self.attempts = 0
                                     self.errorBool = true
+                                    #if DEBUG
                                     print("error description = \(error!.localizedDescription)")
+                                    #endif
                                     self.errorDescription = error!.localizedDescription
                                     completion()
                                     
@@ -89,9 +99,13 @@ class MakeRPCCall {
                                     
                                     do {
                                         
-                                        let jsonAddressResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
+                                        let json = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
+                                        
+                                        #if DEBUG
+                                        print("response = \(json)")
+                                        #endif
                                                                                 
-                                        if let errorCheck = jsonAddressResult["error"] as? NSDictionary {
+                                        if let errorCheck = json["error"] as? NSDictionary {
                                             
                                             if let errorMessage = errorCheck["message"] as? String {
                                                 
@@ -111,7 +125,7 @@ class MakeRPCCall {
                                             
                                             self.errorBool = false
                                             self.errorDescription = ""
-                                            self.objectToReturn = jsonAddressResult["result"]
+                                            self.objectToReturn = json["result"]
                                             completion()
                                             
                                         }

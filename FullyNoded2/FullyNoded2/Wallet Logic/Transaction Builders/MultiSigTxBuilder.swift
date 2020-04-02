@@ -18,11 +18,11 @@ class MultiSigTxBuilder {
             if wallet != nil && !error {
                 
                 func signPsbt(psbt: String, privateKeys: [String]) {
+                    print("signPsbt")
                     
                     do {
                         
                         let chain = network(path: wallet!.derivation)
-                        
                         var localPSBT = try PSBT(psbt, chain)
                         
                         for (i, key) in privateKeys.enumerated() {
@@ -45,11 +45,19 @@ class MultiSigTxBuilder {
                                             
                                         } else {
                                             
-                                            completion((nil, nil, "Error: PSBT incomplete"))
+                                            completion((nil, localPSBT.description, nil))
                                             
                                         }
                                         
+                                    } else {
+                                        
+                                        completion((nil, localPSBT.description, nil))
+                                        
                                     }
+                                    
+                                } else {
+                                    
+                                    completion((nil, localPSBT.description, nil))
                                     
                                 }
                                 
@@ -69,36 +77,49 @@ class MultiSigTxBuilder {
                     
                     var privateKeys = [String]()
                     let inputs = decodePsbt["inputs"] as! NSArray
-                    for (i, input) in inputs.enumerated() {
+                    
+                    if inputs.count > 0 {
                         
-                        let dict = input as! NSDictionary
-                        let bip32derivs = dict["bip32_derivs"] as! NSArray
-                        let bip32deriv = bip32derivs[0] as! NSDictionary
-                        let path = bip32deriv["path"] as! String
-                        let keyFetcher = KeyFetcher()
-                        if let bip32path = BIP32Path(path) {
+                        for (i, input) in inputs.enumerated() {
                             
-                            keyFetcher.privKey(path: bip32path) { (privKey, error) in
+                            let dict = input as! NSDictionary
+                            let bip32derivs = dict["bip32_derivs"] as! NSArray
+                            let bip32deriv = bip32derivs[0] as! NSDictionary
+                            let path = bip32deriv["path"] as! String
+                            let keyFetcher = KeyFetcher()
+                            if let bip32path = BIP32Path(path) {
                                 
-                                if !error {
+                                keyFetcher.privKey(path: bip32path) { (privKey, error) in
                                     
-                                    privateKeys.append(privKey!)
-                                    
-                                    if i + 1 == inputs.count {
+                                    if !error {
                                         
-                                        signPsbt(psbt: psbt, privateKeys: privateKeys)
+                                        privateKeys.append(privKey!)
+                                        
+                                        if i + 1 == inputs.count {
+                                            
+                                            signPsbt(psbt: psbt, privateKeys: privateKeys)
+                                            
+                                        }
+                                        
+                                    } else {
+                                        
+                                        completion((nil, nil, "Error fetching private key"))
                                         
                                     }
                                     
-                                } else {
-                                    
-                                    completion((nil, nil, "Error fetching private key"))
-                                    
                                 }
+                                
+                            } else {
+                                
+                                completion((nil, nil, "Error converting bip32 path from psbt"))
                                 
                             }
                             
                         }
+                        
+                    } else {
+                        
+                        completion((nil, nil, "Error, no inputs"))
                         
                     }
                     
@@ -214,7 +235,7 @@ class MultiSigTxBuilder {
                     
                     let keyFetcher = KeyFetcher()
                     
-                    keyFetcher.musigChangeAddress { (address, error) in
+                    keyFetcher.musigChangeAddress { (address, error, errorDescription) in
                         
                         if !error {
                             
@@ -222,7 +243,7 @@ class MultiSigTxBuilder {
                             
                         } else {
                             
-                            completion((nil, nil, "error getting change address"))
+                            completion((nil, nil, errorDescription ?? "error getting change address"))
                             
                         }
                         

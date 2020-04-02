@@ -7,12 +7,24 @@
 //
 
 import UIKit
-import KeychainSwift
-import AuthenticationServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+//    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+//
+//    func registerBackgroundTask() {
+//      backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+//        self?.endBackgroundTask()
+//      }
+//      assert(backgroundTask != .invalid)
+//    }
+//
+//    func endBackgroundTask() {
+//      print("Background task ended.")
+//      UIApplication.shared.endBackgroundTask(backgroundTask)
+//      backgroundTask = .invalid
+//    }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -26,85 +38,43 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This occurs shortly after the scene enters the background, or when its session is discarded.
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
+        
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        print("did become active")
+        
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
+        
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
         
-        // Disable Sign In with Apple on simulator
-        #if !targetEnvironment(simulator)
-        
-        func showLogIn() {
-            
-            DispatchQueue.main.async {
+        // We start the tor thread automatically here whenever the app enters the foreground.
+        let mgr = TorClient.sharedInstance
+
+        if mgr.state != .started && mgr.state != .connected  {
+
+            mgr.start(delegate: nil) {
                 
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let loginVC = storyboard.instantiateViewController(withIdentifier: "LogIn")
-                loginVC.modalPresentationStyle = .fullScreen
-                let topVC = self.window?.rootViewController?.topViewController()
-                
-                if topVC!.restorationIdentifier != "LogIn" {
-                                      
-                    topVC!.present(loginVC, animated: true, completion: nil)
-                                       
-                }
-                
+                //self.registerBackgroundTask()
+
+//                DispatchQueue.main.async {
+//
+//                    NotificationCenter.default.post(name: .didEstablishTorConnection, object: self)
+//
+//                }
+
             }
-            
-        }
-        
-        let keychain = KeychainSwift()
-        if keychain.get("userIdentifier") != nil {
-            
-            let authorizationProvider = ASAuthorizationAppleIDProvider()
-            authorizationProvider.getCredentialState(forUserID: keychain.get("userIdentifier")!) { (state, error) in
-                
-                switch (state) {
-                case .authorized:
-                    print("Account Found - Signed In")
-                    break
-                case .revoked:
-                    print("No Account Found")
-                    fallthrough
-                case .notFound:
-                     print("No Account Found")
-                     showLogIn()
-                default:
-                    break
-                }
-                
-            }
-            
-        } else {
-            
-            showLogIn()
-            
-        }
-        
-        #endif
-        
-        NotificationCenter.default.post(name: .didEnterForeground, object: nil, userInfo: nil)
-        
-        let enc = Encryption()
-        enc.getNode { (node, error) in
-            
-            if !error && node != nil && !TorClient.sharedInstance.isOperational {
-                
-                TorClient.sharedInstance.start {}
-                
-            }
-            
+
         }
         
     }
@@ -114,14 +84,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
         
-        // Removes caches for security
-        let caches = (NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.cachesDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0])
-        let appId = Bundle.main.infoDictionary!["CFBundleIdentifier"] as! String
-        let path = String(format:"%@/%@/Cache.db-wal",caches, appId)
-        do {
-            try FileManager.default.removeItem(atPath: path)
-        } catch {
-           print("ERROR DESCRIPTION: \(error)")
+        // We force quit the tor thread when the app enters the background as it can not stay alive
+        // for extended periods of time in the background. We only do this on non iPhone 11 models
+        // as for some reason resigning the Tor thread crashes iPhone 11's.
+        let device = UIDevice.modelName
+        
+        if device != "iPhone 11 pro max" {
+            
+            let mgr = TorClient.sharedInstance
+            
+            if mgr.state != .stopped {
+                
+                mgr.state = .refreshing
+                                    
+                mgr.resign()
+                
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//
+//                    self.endBackgroundTask()
+//
+//                }
+                                                    
+            }
+            
         }
 
         // Save changes in the application's managed object context when the application transitions to the background.
@@ -130,13 +115,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         
+        // This code executes when a btcstandup:// uri or btcrpc:// uri link is clicked
         let urlcontexts = URLContexts.first
         let url = urlcontexts?.url
         addNode(url: "\(url!)")
+        
     }
     
     
     func addNode(url: String) {
+        
+        // MARK: TODO
+        // Add an alert letting user know whether the node was added successfully or not.
         
         if let myTabBar = self.window?.rootViewController as? UITabBarController {
             
@@ -147,6 +137,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 if !qc.errorBool {
                     
                     print("success adding quick connect")
+                    
+                    DispatchQueue.main.async {
+                        
+                        myTabBar.selectedIndex = 0
+                        
+                    }
                     
                 } else {
                     

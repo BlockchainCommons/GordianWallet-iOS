@@ -280,4 +280,71 @@ class Encryption {
         
     }
     
+    func updateNode(newCredentials: [String:Any], nodeToUpdate: UUID, completion: @escaping ((success: Bool, error: String?)) -> Void) {
+        
+        if #available(iOS 13.0, *) {
+            
+            if let key = self.keychain.getData("privateKey") {
+                
+                let cd = CoreDataService()
+                let pk = SymmetricKey(data: key)
+                var encryptedNode = newCredentials
+                
+                for (k, value) in newCredentials {
+                    
+                    if k != "id" && k != "isActive" && k != "network" {
+                        
+                        let stringToEncrypt = value as! String
+                        
+                        if let dataToEncrypt = stringToEncrypt.data(using: .utf8) {
+                            
+                            if let sealedBox = try? ChaChaPoly.seal(dataToEncrypt, using: pk) {
+                                
+                                let encryptedData = sealedBox.combined
+                                encryptedNode[k] = encryptedData
+                                
+                            } else {
+                                
+                                completion((false, "node encryption failed"))
+                                
+                            }
+                            
+                        } else {
+                            
+                            completion((false, "node encryption failed"))
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+                cd.updateNode(nodeToUpdate: nodeToUpdate, newCredentials: encryptedNode) {
+                    
+                    if !cd.errorBool {
+                        
+                        completion((true, nil))
+                        
+                    } else {
+                        
+                        completion((false, nil))
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                completion((false, nil))
+                
+            }
+            
+        } else {
+            
+            completion((false, nil))
+            
+        }
+        
+    }
+    
 }

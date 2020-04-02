@@ -598,7 +598,7 @@ class KeyFetcher {
         
     }
     
-    func musigChangeAddress(completion: @escaping ((address: String?, error: Bool)) -> Void) {
+    func musigChangeAddress(completion: @escaping ((address: String?, error: Bool, errorDescription: String?)) -> Void) {
         
         getActiveWalletNow { (wallet, error) in
             
@@ -607,7 +607,7 @@ class KeyFetcher {
                 let reducer = Reducer()
                 let index = wallet!.index
                 
-                if wallet!.index < 1000 {
+                if wallet!.index < wallet!.maxRange {
                     
                     let param = "\"\(wallet!.changeDescriptor)\", [\(index),\(index)]"
                     
@@ -617,18 +617,17 @@ class KeyFetcher {
                             
                             if let address = reducer.arrayToReturn?[0] as? String {
                                 
-                                completion((address,false))
+                                completion((address,false,nil))
                                 
                             } else {
                                 
-                                completion((nil,true))
+                                completion((nil,true,"error fecthing change address"))
                                 
                             }
                             
                         } else {
                             
-                            print("error deriving addresses: \(reducer.errorDescription)")
-                            completion((nil,true))
+                            completion((nil,true,"error deriving addresses: \(reducer.errorDescription)"))
                             
                         }
                         
@@ -636,7 +635,7 @@ class KeyFetcher {
                     
                 } else {
                     
-                    print("error, need to import more keys")
+                    completion((nil,true,"You need to refill the keypool in order to create more transactions"))
                     
                 }
                 

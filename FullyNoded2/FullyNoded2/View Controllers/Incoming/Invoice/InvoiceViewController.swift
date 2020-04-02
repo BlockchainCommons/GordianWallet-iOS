@@ -13,6 +13,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     let spinner = UIActivityIndicatorView(style: .medium)
     var textToShareViaQRCode = String()
     var addressString = String()
+    var qrView = UIImageView()
     var qrCode = UIImage()
     let descriptionLabel = UILabel()
     var tapQRGesture = UITapGestureRecognizer()
@@ -29,12 +30,11 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     var initialLoad = Bool()
     var wallet:WalletStruct!
     var presentingModally = Bool()
-    @IBOutlet var closeButtonOutlet: UIButton!
+    var addressOutlet = UILabel()
     
+    @IBOutlet var closeButtonOutlet: UIButton!
     @IBOutlet var amountField: UITextField!
     @IBOutlet var labelField: UITextField!
-    @IBOutlet var qrView: UIImageView!
-    @IBOutlet var addressOutlet: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +44,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         addressOutlet.text = ""
         amountField.delegate = self
         labelField.delegate = self
+        self.addressOutlet.alpha = 0
         configureCopiedLabel()
         
         amountField.addTarget(self,
@@ -247,19 +248,22 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             self.qrView.image = self.qrCode
             self.qrView.isUserInteractionEnabled = true
             self.qrView.alpha = 0
+            self.qrView.frame = CGRect(x: 32, y: self.amountField.frame.maxY + 20, width: self.view.frame.width - 64, height: self.view.frame.width - 64)
             self.view.addSubview(self.qrView)
             
-            self.descriptionLabel.frame = CGRect(x: 10,
-                                            y: self.view.frame.maxY - 30,
-                                            width: self.view.frame.width - 20,
-                                            height: 20)
+            self.addressOutlet.frame = CGRect(x: 32, y: self.qrView.frame.maxY + 5, width: self.view.frame.width - 64, height: 20)
+            self.addressOutlet.adjustsFontSizeToFitWidth = true
+            self.addressOutlet.textAlignment = .center
+            self.view.addSubview(self.addressOutlet)
+            
+            self.descriptionLabel.frame = CGRect(x: 10, y: self.tabBarController!.tabBar.frame.minY - 20, width: self.view.frame.width - 20, height: 20)
             
             self.descriptionLabel.textAlignment = .center
             
             self.descriptionLabel.font = UIFont.init(name: "HelveticaNeue-Light",
                                                 size: 12)
             
-            self.descriptionLabel.textColor = UIColor.white
+            self.descriptionLabel.textColor = .lightGray
             self.descriptionLabel.text = "Tap the QR Code or text to copy/save/share"
             self.descriptionLabel.adjustsFontSizeToFitWidth = true
             self.descriptionLabel.alpha = 0

@@ -131,6 +131,8 @@ class NativeSegwitOfflineSigner {
             
             func parseVouts(vouts: NSArray, vins: NSArray) {
                 
+                print("vouts = \(vouts)")
+                
                 for (i, vout) in vouts.enumerated() {
                     
                     let dict = vout as! NSDictionary

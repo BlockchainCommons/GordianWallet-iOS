@@ -10,7 +10,6 @@ import Foundation
 
 class Reducer {
     
-    let torRPC = MakeRPCCall.sharedInstance
     var dictToReturn:NSDictionary?
     var doubleToReturn:Double?
     var arrayToReturn:NSArray?
@@ -73,6 +72,7 @@ class Reducer {
         func torCommand() {
             
             print("tor")
+            let torRPC = MakeRPCCall.sharedInstance
             
             func getResult() {
                 
@@ -82,9 +82,7 @@ class Reducer {
                     parseResponse(response: response as Any)
                     
                 } else {
-                    
-                    print("torRPC.errorDescription = \(torRPC.errorDescription)")
-                    
+                                        
                     if torRPC.errorDescription.contains("Requested wallet does not exist or is not loaded") {
                         
                         errorDescription = ""
@@ -92,9 +90,9 @@ class Reducer {
                         
                         torRPC.executeRPCCommand(walletName: walletName, method: .loadwallet, param: "\"\(walletName)\"") {
                             
-                            if !self.torRPC.errorBool {
+                            if !torRPC.errorBool {
                                 
-                                self.torRPC.executeRPCCommand(walletName: walletName, method: command,
+                                torRPC.executeRPCCommand(walletName: walletName, method: command,
                                                               param: param,
                                                               completion: getResult)
                                 
@@ -112,9 +110,12 @@ class Reducer {
                         
                         print("restarting tor")
                         
-                        TorClient.sharedInstance.start {
+                        let mgr = TorClient.sharedInstance
+                        mgr.resign()
+                        
+                        mgr.start(delegate: nil) {
                             
-                            self.torRPC.executeRPCCommand(walletName: walletName, method: command,
+                            torRPC.executeRPCCommand(walletName: walletName, method: command,
                                                           param: param,
                                                           completion: getResult)
                             
@@ -133,24 +134,97 @@ class Reducer {
                 
             }
             
-            if TorClient.sharedInstance.isOperational {
+            torRPC.errorBool = false
+            torRPC.errorDescription = ""
+            torRPC.executeRPCCommand(walletName: walletName, method: command, param: param, completion: getResult)
+            
+        }
+        
+        func localCommand() {
+            
+            print("local")
+                        
+            let localRPC = LocalNode.sharedInstance
+            localRPC.command(walletName: walletName, method: command, param: param) { (success, errorDescription, result) in
                 
-                torRPC.executeRPCCommand(walletName: walletName, method: command,
-                                         param: param,
-                                         completion: getResult)
-                
-            } else {
-                
-                errorBool = true
-                errorDescription = "tor not connected"
+                if success {
+                    
+                    if result != nil {
+                        
+                        parseResponse(response: result as Any)
+                        
+                    }
+                    
+                } else {
+                    
+                    if errorDescription != nil {
+                        
+                        if errorDescription!.contains("Requested wallet does not exist or is not loaded") {
+                                                
+                            localRPC.command(walletName: walletName, method: .loadwallet, param: "\"\(walletName)\"") { (success, errorDescription, result) in
+                                
+                                if success {
+                                 
+                                    localRPC.command(walletName: walletName, method: command, param: param) { (success, errorDescription, result) in
+                                        
+                                        if success {
+                                            
+                                            if result != nil {
+                                                
+                                                parseResponse(response: result as Any)
+                                                
+                                            }
+                                            
+                                        } else {
+                                         
+                                            if errorDescription != nil {
+                                                
+                                                self.errorBool = true
+                                                self.errorDescription = errorDescription!
+                                                completion()
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                } else {
+                                 
+                                    self.errorBool = true
+                                    self.errorDescription = "Wallet does not exist, maybe your node changed networks?"
+                                    completion()
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
                 
             }
             
         }
         
-        torRPC.errorBool = false
-        torRPC.errorDescription = ""
+        // For now we hardcode tor, for a dev environment we can uncomment the below code and the app will try and connect to
+        // a local node.
         torCommand()
+        
+//        let mgr = TorClient.sharedInstance
+//
+//        if mgr.state == .connected || mgr.state == .refreshing {
+//
+//            torCommand()
+//
+//        } else {
+//
+//            // this is for dev environment only... can be the begginings of mac app
+//            localCommand()
+//
+//        }
         
     }
     

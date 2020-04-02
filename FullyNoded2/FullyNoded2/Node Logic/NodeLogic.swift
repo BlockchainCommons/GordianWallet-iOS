@@ -115,7 +115,6 @@ class NodeLogic {
     }
     
     func loadWalletData(completion: @escaping () -> Void) {
-        print("loadWalletData")
         
         let reducer = Reducer()
         
@@ -152,39 +151,7 @@ class NodeLogic {
                 
                 errorBool = true
                 errorDescription = reducer.errorDescription
-                print("errorDescription = \(errorDescription)")
-                
-                if errorDescription.contains("Requested wallet does not exist or is not loaded") {
-                    
-                    // possibly changed from mainnet to testnet or vice versa, try and load once
-                    reducer.errorDescription = ""
-                    reducer.errorBool = false
-                    errorDescription = ""
-                    errorBool = false
-                    
-                    reducer.makeCommand(walletName: wallet.name, command: .loadwallet, param: "\"\(wallet.name)\"") {
-                        
-                        if !reducer.errorBool {
-                            
-                            reducer.makeCommand(walletName: self.wallet.name, command: .listunspent,
-                                                param: "0",
-                                                completion: getResult)
-                            
-                        } else {
-                            
-                            self.errorBool = true
-                            self.errorDescription = "Wallet does not exist, maybe you changed networks? If you want to use the app on a different network you will need to recreate the wallet"
-                            completion()
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                     completion()
-                    
-                }
+                completion()
                 
             }
             
@@ -207,17 +174,8 @@ class NodeLogic {
     }
     
     func loadNodeData(completion: @escaping () -> Void) {
-        print("loadNodeData")
         
         let reducer = Reducer()
-        
-        var walletName = ""
-        
-        if wallet != nil {
-            
-            walletName = wallet!.name
-            
-        }
         
         func getResult() {
             
@@ -275,7 +233,7 @@ class NodeLogic {
                         
                         let feeRate = UserDefaults.standard.integer(forKey: "feeTarget")
                         
-                        reducer.makeCommand(walletName: walletName, command: .estimatesmartfee,
+                        reducer.makeCommand(walletName: "", command: .estimatesmartfee,
                                             param: "\(feeRate)",
                                             completion: getResult)
                                                 
@@ -293,7 +251,7 @@ class NodeLogic {
                         
                         dictToReturn["uptime"] = Int(reducer.doubleToReturn!)
                         
-                        reducer.makeCommand(walletName: walletName, command: .getmempoolinfo,
+                        reducer.makeCommand(walletName: "", command: .getmempoolinfo,
                                             param: "",
                                             completion: getResult)
                                                 
@@ -312,7 +270,7 @@ class NodeLogic {
                         let miningInfo = reducer.dictToReturn!
                         parseMiningInfo(miningInfo: miningInfo)
                         
-                        reducer.makeCommand(walletName: walletName, command: .uptime,
+                        reducer.makeCommand(walletName: "", command: .uptime,
                                             param: "",
                                             completion: getResult)
                         
@@ -331,7 +289,7 @@ class NodeLogic {
                         let peerInfo = reducer.arrayToReturn!
                         parsePeerInfo(peerInfo: peerInfo)
                         
-                        reducer.makeCommand(walletName: walletName, command: .getmininginfo,
+                        reducer.makeCommand(walletName: "", command: .getmininginfo,
                                             param: "",
                                             completion: getResult)
                         
@@ -350,7 +308,7 @@ class NodeLogic {
                         let blockchainInfo = reducer.dictToReturn!
                         parseBlockchainInfo(blockchainInfo: blockchainInfo)
                         
-                        reducer.makeCommand(walletName: walletName, command: .getpeerinfo,
+                        reducer.makeCommand(walletName: "", command: .getpeerinfo,
                                             param: "",
                                             completion: getResult)
                         
@@ -378,14 +336,13 @@ class NodeLogic {
             
         }
         
-        reducer.makeCommand(walletName: walletName, command: .getblockchaininfo,
+        reducer.makeCommand(walletName: "", command: .getblockchaininfo,
                             param: "",
                             completion: getResult)
         
     }
     
     func loadTransactionData(completion: @escaping () -> Void) {
-        print("loadTransactionData")
         
         let reducer = Reducer()
         
@@ -448,9 +405,79 @@ class NodeLogic {
         
         var amount = 0.0
         
-        for utxo in utxos {
+        if utxos.count == 0 {
             
+            dictToReturn["noUtxos"] = true
+            
+        } else {
+            
+            dictToReturn["noUtxos"] = false
+            
+        }
+        
+        for utxo in utxos {
+                        
             if let utxoDict = utxo as? NSDictionary {
+                
+                // Here we check the utxos descriptor to see what the path is for each pubkey.
+                // We take the highest index for each pubkey and compare it to the wallets index.
+                // If the wallets index is less than or equal to the highest utxo index we increase
+                // the wallets index to be greater then the highest utxo index. This way we avoid
+                // reusing an address in the scenario where a user may use external software to
+                // receive to the app or for example they export their keys within the app and use
+                // random addresses as invoices.
+                
+                if let desc = utxoDict["desc"] as? String {
+                    
+                    let p = DescriptorParser()
+                    let str = p.descriptor(desc)
+                    let paths = str.derivationArray
+                    var index = 0
+                    for path in paths {
+                        
+                        let arr = path.split(separator: "/")
+                        
+                        for (i, comp) in arr.enumerated() {
+                            
+                            if i + 1 == arr.count {
+                                
+                                if let int = Int(comp) {
+                                    
+                                    if int > index {
+                                        
+                                        index = int
+                                        
+                                    }
+                                    
+                                }
+                                                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                    print("index = \(index)")
+                    if wallet.index <= index {
+                        
+                        let cd = CoreDataService()
+                        cd.updateEntity(id: wallet.id, keyToUpdate: "index", newValue: index + 1, entityName: .wallets) {
+                            
+                            if !cd.errorBool {
+                                
+                                print("updated index from utxo")
+                                
+                            } else {
+                                
+                                print("failed to update index from utxo")
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
                 
                 if let spendable = utxoDict["spendable"] as? Bool {
                     
@@ -469,6 +496,10 @@ class NodeLogic {
                         if confirmations < 1 {
                             
                             dictToReturn["unconfirmed"] = true
+                            
+                        } else {
+                            
+                            dictToReturn["unconfirmed"] = false
                             
                         }
                         

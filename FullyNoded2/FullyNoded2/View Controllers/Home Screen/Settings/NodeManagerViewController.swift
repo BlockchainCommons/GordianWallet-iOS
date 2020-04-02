@@ -14,6 +14,8 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     var nodes = [[String:Any]]()
     var addButton = UIBarButtonItem()
     var editButton = UIBarButtonItem()
+    var id:UUID!
+    var url = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,23 +87,53 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         
         if editingStyle == .delete {
             
+            let cd = CoreDataService()
             let id = nodes[indexPath.section]["id"] as! UUID
             
-            let cd = CoreDataService()
-            cd.deleteEntity(id: id, entityName: .nodes) {
+            cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
                 
-                if !cd.errorBool {
-                                        
-                    DispatchQueue.main.async {
+                if errorDescription == nil && wallets != nil {
+                    
+                    var walletsExist = false
+                    
+                    for wallet in wallets! {
                         
-                        self.nodes.remove(at: indexPath.section)
-                        tableView.deleteSections(IndexSet.init(arrayLiteral: indexPath.section), with: .fade)
+                        let w = WalletStruct(dictionary: wallet)
+                        
+                        if w.nodeId == id && !w.isArchived {
+                            
+                            walletsExist = true
+                            
+                        }
                         
                     }
                     
-                } else {
-                    
-                    displayAlert(viewController: self, isError: true, message: "error deleting node")
+                    if !walletsExist {
+                        
+                        cd.deleteEntity(id: id, entityName: .nodes) {
+                            
+                            if !cd.errorBool {
+                                                    
+                                DispatchQueue.main.async {
+                                    
+                                    self.nodes.remove(at: indexPath.section)
+                                    tableView.deleteSections(IndexSet.init(arrayLiteral: indexPath.section), with: .fade)
+                                    
+                                }
+                                
+                            } else {
+                                
+                                displayAlert(viewController: self, isError: true, message: "error deleting node")
+                                
+                            }
+                            
+                        }
+                        
+                    } else {
+                        
+                        showAlert(vc: self, title: "Warning!", message: "That node has wallets associated with it! If you want to delete a node you first need to delete its wallets, ensure you sweep those wallets to a new node first or recover them on your new node.\n\nOnce all wallets associated with this node have been deleted you may delete the node, we do this to prevent you from accidentally deleting a node with wallets.")
+                        
+                    }
                     
                 }
                 
@@ -114,17 +146,56 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let section = indexPath.section
-        let node = nodes[section]
-        let idToActivate = NodeStruct.init(dictionary: node).id
+        let node = NodeStruct.init(dictionary: nodes[section])
+        id = node.id
          
-        //turning on
-        makeActive(nodeToActivate: idToActivate)
-        
         DispatchQueue.main.async {
 
             let impact = UIImpactFeedbackGenerator()
             impact.impactOccurred()
 
+        }
+        
+        refreshCredentials(node: node)
+        
+    }
+    
+    private func refreshCredentials(node: NodeStruct!) {
+        
+        DispatchQueue.main.async {
+            
+            let alert = UIAlertController(title: "Choose an option", message: "You may update the nodes credentials which is useful if you have changed your hidden service url or rpc credentials. Or you may share the node with trusted others.", preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: "Update this node", style: .default, handler: { action in
+                
+                DispatchQueue.main.async {
+                    
+                    self.performSegue(withIdentifier: "updateNode", sender: self)
+                    
+                }
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Share this node", style: .default, handler: { action in
+                
+                DispatchQueue.main.async {
+                    
+                    let onionAddress = node.onionAddress
+                    let rpcusername = node.rpcuser
+                    let rpcpassword = node.rpcpassword
+                    let label = (node.label).replacingOccurrences(of: " ", with: "%20")
+                    self.url = "btcstandup://\(rpcusername):\(rpcpassword)@\(onionAddress)/?label=\(label)"
+                    self.performSegue(withIdentifier: "shareNode", sender: self)
+                    
+                }
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            
+            alert.popoverPresentationController?.sourceView = self.view
+            self.present(alert, animated: true, completion: nil)
+            
         }
         
     }
@@ -259,13 +330,13 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     func makeActive(nodeToActivate: UUID) {
         
         let cd = CoreDataService()
-        cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+        cd.retrieveEntity(entityName: .nodes) { (nodess, errorDescription) in
             
             if errorDescription == nil {
                 
-                if nodes!.count > 0 {
+                if nodess!.count > 0 {
                     
-                    for node in nodes! {
+                    for node in nodess! {
                         
                         let str = NodeStruct.init(dictionary: node)
                         
@@ -279,7 +350,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                                     
                                 } else {
                                     
-                                    displayAlert(viewController: self, isError: true, message: "error deactivating wallet")
+                                    displayAlert(viewController: self, isError: true, message: "error deactivating node")
                                     
                                 }
                                 
@@ -293,7 +364,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                 
             } else {
                 
-                displayAlert(viewController: self, isError: true, message: "error deactivating wallets: \(errorDescription!)")
+                displayAlert(viewController: self, isError: true, message: "error deactivating node: \(errorDescription!)")
                 
             }
             
@@ -305,13 +376,13 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         print("deactivateOtherNodes")
         
         let cd = CoreDataService()
-        cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+        cd.retrieveEntity(entityName: .nodes) { (nodess, errorDescription) in
             
             if errorDescription == nil {
                 
-                if nodes!.count > 0 {
+                if nodess!.count > 0 {
                     
-                    for node in nodes! {
+                    for (i, node) in nodess!.enumerated() {
                         
                         let str = NodeStruct.init(dictionary: node)
                         
@@ -321,7 +392,11 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                                 
                                 if !cd.errorBool {
                                     
-                                    self.load()
+                                    if i + 1 == nodess!.count {
+                                        
+                                        self.load()
+                                        
+                                    }
                                     
                                 } else {
                                     
@@ -351,6 +426,21 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         
         switch id {
             
+        case "updateNode":
+            
+            if let vc = segue.destination as? ScannerViewController {
+                
+                vc.updatingNode = true
+                vc.nodeId = self.id
+                vc.onDoneBlock = { result in
+                    
+                    showAlert(vc: self, title: "Node Updated!", message: "The nodes credentials were successfully updated")
+                    self.load()
+                    
+                }
+                
+            }
+            
         case "addNode":
             
             if let vc = segue.destination as? ScannerViewController {
@@ -360,6 +450,14 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                     self.load()
                     
                 }
+                
+            }
+            
+        case "shareNode":
+            
+            if let vc = segue.destination as? QRDisplayerViewController {
+                
+                vc.address = url
                 
             }
             
