@@ -99,7 +99,7 @@ Depending on what you are recovering you may either tap "Recover now" once a val
 
 Upon tapping "Tap to recover" you will be presented with a "Recovery Confirmation" screen.
 
-If you used a Recovery QR *FN2* will be able to display all the wallets met data to you for confirmation. If the wallet still exists on your node it will also be able to fetch the balance. if you are only using words we will only be able to fetch the wallet name, addresses and derivation type.
+If you used a Recovery QR *FN2* will be able to display all the wallets meta data to you for confirmation. If the wallet still exists on your node it will also be able to fetch the balance. if you are only using words we will only be able to fetch the wallet name, addresses and derivation type.
 
 The important part of this page is that it displays the first five addresses derived from the seed. If you you know what addresses to expect you can verify that they match here.
 
@@ -175,7 +175,7 @@ For multi-sig wallets the device converts seed #1 and #2 to xpub's and seed #3 t
 ```
 [10c791f9/84'/1'/0']tpubDCDH16GTAZQojSwiTbDsjJLf5GqCHacQQvG4A1rgJiH5bVwkyhcALaZbFdAoYzJDuL5p1z4uJw47W57oAMjG7M1FMLzeVvoESXQhcK3iV9a/0/*,[183d7575/84'/1'/0']tpubDCT7BpTfsrYKwtcErnu32pMdsphzCdXJkdECmgnKQeYWvfci2bKN1TGgqGqLCY2ciT4VcRymqvZJnLrCyiqZryzYhcT5RCZTt5kPEEZv3vu/0/*,[f7fa2687/84'/1'/0']tprv8ftRxc6xTpRsmi2MVzFhF5NiJiG8vPWGLZyaMZ4Y86VyPSHKYv2PySV9fTg4obY3Gchx7211p5eg7kMrG7ct6gxWYEUUvvxyisHKCZ9vhnX/0/*
 ```
-represents the three extended keys. Notice the final key is an `xprv` and represents the nodes designated seed. The order of these keys is highly significant and it is crucial to note that the order matters very much. For example when we recover multi-sig wallets *FN2* knows the order as described above and will swap out the offline seed's `xpub` for an `xprv` and will swap the node's `xprv` for the `xpub`. If these keys are added in the incorrect order the wallet will create different addresses.
+The above represents the three extended keys. Notice the final key is an `xprv` and represents the nodes designated seed. The order of these keys is highly significant and it is crucial to note that the order matters very much. For example when we recover multi-sig wallets *FN2* knows the order as described above and will swap out the offline seed's `xpub` for an `xprv` and will swap the node's `xprv` for the `xpub`. If these keys are added in the incorrect order the wallet will create different addresses.
 `[10c791f9/84'/1'/0']` this section of the extended key represents the derivation path, where `10c791f9` represents the master key fingerprint for that seed. Altogether we are telling bitcoin core that this extended key is a BIP84 testnet account extended key. The appended `/0/*` denotes the remaining path components with the `*` representing the keys we actually want to derive and import into the node.
 
 Remember when we initially create the wallet with `bitcoin-cli createwallet` we tell the node to create the wallet with a blank keypool.
@@ -228,7 +228,7 @@ For your change keys:
 bitcoin-cli importmulti [{ "desc": "wpkh([6010283d/84'/1'/0']tpubDC9yDKwrjmyBGAdWdhpVn1rtiQR7vgZ4FUzHbC8b1aQTwRBAVtBcon8iaamPGq9NiH2yCV3bLp6ZAWsNntcVYeWBX7fBzTmL2T6f2EcbxDi/1/*)#zc09t4nh", "timestamp": "now", "range": [0,2500], "watchonly": true, "keypool": true, "internal": true }]
 ```
 
-Notice this is still a BIP84 derivation but because it is single-sig we use `wpkh` (witness public key hash) instead of its multi-sig equivalent `wsh`. We actually to import the keys into the keypool and we only import the `xpub` so it is truly a watch-only wallet as far as the node is concerned.
+Notice this is still a BIP84 derivation but because it is single-sig we use `wpkh` (witness public key hash) instead of its multi-sig equivalent `wsh`. We only import the `xpub` so it is truly a watch-only wallet as far as the node is concerned.
 
 #### Receiving
 
@@ -236,7 +236,7 @@ To generate addresses to receieve to in *FN2* we take two approaches, one for ea
 
 ##### Single-sig
 
-For single-sig it is straightforward, we completely rely on your node to handle it a it created the wallet with `avoid_reuse` set to true and has the actual key in its keypool we can do that.
+For single-sig it is straightforward, we completely rely on your node to handle it as we created the wallet with `avoid_reuse` set to true and the nodes wallet holds the derived keys in its keypool.
 
 It is simply a matter of `bitcoin-cli getnewaddress` with an argument of either `legacy`, `bech32` or `p2sh-segwit` depending on your wallets derivation scheme. It is worth noting your node is capable of producing any address type for the public keys you imported into it. However from *FN2* point of view we specifiy a specific wallet derivation scheme so the user knows exactly what they are dealing with.
 
@@ -279,7 +279,7 @@ The node will then respond with a `psbt`, *FN2* takes that `psbt` and issues a s
 ```
 bitcoin-cli walletprocesspsbt ["cHNidP8BAIkCAAAAAd7uRtRwGBZSW7qrrIlwfxlmKozNGbd9Gy4ZQNeFpd3oAAAAAAD9////AlbBDwAAAAAAIgAgn79hDJ9JLiL/etgnt30B6zAPAgXCzBgSXO2JUXBDoZQQJwAAAAAAACIAIP5gyLGUF/mkCv2kTXbytgi4AenoNklxlrLKLLkX/TI4AAAAAAABASsx6Q8AAAAAACIAIKvuCzMLCyyw70Qm2zY48KG54nH+QQlQMRjg2jdBp5DtAQVpUiECcKUM+E4AR+y7zm2kYeXxJYXd3ytLdrcr6XT+oKXtaZ4hAhvjMJ6ZhLAUXtzrPn7lloCSYiCD7SdEeJb42SqqkTeiIQMnwBac6tHVFuIErUHuvFlFg+cb6yHF4LOgiD+8fF3OolOuIgYCG+MwnpmEsBRe3Os+fuWWgJJiIIPtJ0R4lvjZKqqRN6IY3A50rVQAAIABAACAAAAAgAEAAADRCQAAIgYCcKUM+E4AR+y7zm2kYeXxJYXd3ytLdrcr6XT+oKXtaZ4Yd7g/IFQAAIABAACAAAAAgAEAAADRCQAAIgYDJ8AWnOrR1RbiBK1B7rxZRYPnG+shxeCzoIg/vHxdzqIY5jJD5VQAAIABAACAAAAAgAEAAADRCQAAAAEBaVIhAmPcWcmdikDkPgwK+7NTMy+LgYIdbaGLthKX5sh0bfnhIQMxjckX2OwSv2q2JohrNs62Sq3O8Uff3t71n7DmiCC1EiEDSptrn3vKdwBT5474wGPUuyJsgx1KJ7gWEO9a/lgbM/JTriICAmPcWcmdikDkPgwK+7NTMy+LgYIdbaGLthKX5sh0bfnhGHe4PyBUAACAAQAAgAAAAIABAAAA2QkAACICAzGNyRfY7BK/arYmiGs2zrZKrc7xR9/e3vWfsOaIILUSGNwOdK1UAACAAQAAgAAAAIABAAAA2QkAACICA0qba597yncAU+eO+MBj1LsibIMdSie4FhDvWv5YGzPyGOYyQ+VUAACAAQAAgAAAAIABAAAA2QkAAAABAWlSIQJ4DaqZKYHp4ni9Com5K4fMldgJ7dmfH8hZd2uIiq9jwiEDrqtuo68Jty4mjmFe68AZzogMTviOVFBqqG0EzK1bC1ghAsJGkJTs32gEDxQrThcv/PfQsalhTO8y29JBVSA+iGqWU64iAgJ4DaqZKYHp4ni9Com5K4fMldgJ7dmfH8hZd2uIiq9jwhh3uD8gVAAAgAEAAIAAAACAAAAAANkJAAAiAgLCRpCU7N9oBA8UK04XL/z30LGpYUzvMtvSQVUgPohqlhjmMkPlVAAAgAEAAIAAAACAAAAAANkJAAAiAgOuq26jrwm3LiaOYV7rwBnOiAxO+I5UUGqobQTMrVsLWBjcDnStVAAAgAEAAIAAAACAAAAAANkJAAAA", true, "ALL", true]
 ```
-The `walletprocesspsbt` tells our node to sign the `psbt` if it can, it will then sign and return the resulting partially signed `psbt`. At this point *FN2* will decode the `psbt` to see fetch the bip32 path for the inputs. From the input we can get the UTXO's index, from that index we fetch the same private key from its respective path and the device then signs the `psbt` locally. At this point the `psbt` should be fully signed.
+The `walletprocesspsbt` tells our node to sign the `psbt` if it can, it will then sign and return the partially signed `psbt`. At this point *FN2* will decode the `psbt` to fetch the bip32 path for the inputs. From the input's path we can get the UTXO's address index, from that index we fetch the corresponding private key, the device then signs the `psbt` locally with that private key. At this point the `psbt` should be fully signed.
 
 After the device fully signs the `psbt` we `finalize` it locally using LibWally which converts it from `psbt` format to a raw transaction.
 
