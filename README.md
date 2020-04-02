@@ -40,14 +40,15 @@ Upon on initial use the user may choose to connect to their own node by scanning
 
 Once you are connected to a node you may go to the "Wallets" tab and create either a single-sig or multi-sig wallet:
 
-<img src="./Images/choose_wallet_type_screen.PNG" alt="" width="250"/> <img src="./Images/wallet_label_screen.PNG" alt="" width="250"/> <img src="./Images/wallet_recovery_QR.PNG" alt="" width="250"/> <img src="./Images/wallet_recovery_QR_export.PNG" alt="" width="250"/>
+<img src="./Images/choose_wallet_type_screen.PNG" alt="" width="250"/> <img src="./Images/wallet_label_screen.PNG" alt="" width="250"/> 
 
 Once the wallet the wallet is successfully created on your node you will be guided through a confirmation flow. You will first need to give your wallet a label so that you can easily recognize it. It should be noted that this label is accounted for in the Recovery QR so if you use the Recovery QR to recover the wallet the label will persist. We urge the user that they must save the recovery items in order to be able to recover a wallet! If you do not do this you are at risk of permanently losing your funds. The recovery QR can be tapped to export it and save it. It should not be saved onto your device as the whole point is that you will need it if you lose your device. We recommend printing it on waterproof paper and saving it in multiple secure locations.
+
+<img src="./Images/wallet_recovery_QR.PNG" alt="" width="250"/> <img src="./Images/wallet_recovery_QR_export.PNG" alt="" width="250"/>
 
 <img src="./Images/wallet_recovery_phrase_intro.PNG" alt="" width="250"/> <img src="./Images/wallet_offline_recovery_words.PNG" alt="" width="250"/>
 
 It is extremely important for multi-sig wallets that the recovery words are saved, for single-sig it is redundant to the Recovery QR. The final screen in the wallet created confirmation flow is the offline recovery words. From here you can copy them to clipboard, export them or display them in QR code format. It is recommended you write these down on waterproof paper and save them securely in multiple locations. For multi-sig wallets they are required for wallet recovery and refilling the keypool.
-
 
 #### Wallets
 
