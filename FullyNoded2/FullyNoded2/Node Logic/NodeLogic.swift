@@ -18,100 +18,22 @@ class NodeLogic {
     var walletDisabled = Bool()
     var wallet:WalletStruct!
     
-    func loadTorData(completion: @escaping () -> Void) {
-        
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: "", command: .getnetworkinfo, param: "") {
-            
-            if !reducer.errorBool {
+    /**
+     
+     */
+    func loadTorData(completion: @escaping (Result<Any, TorRPCError>) -> Void) {
                 
-                if reducer.dictToReturn != nil {
-                    
-                    let networkInfo = reducer.dictToReturn!
-                    
-                    if let subversionCheck = networkInfo["subversion"] as? String {
-                        
-                        let subversion = subversionCheck.replacingOccurrences(of: "/", with: "")
-                        self.dictToReturn["subversion"] = subversion.replacingOccurrences(of: "Satoshi:", with: "")
-                        
-                        if let localaddresses = networkInfo["localaddresses"] as? NSArray {
-                            
-                            if localaddresses.count > 0 {
-                                
-                                for address in localaddresses {
-                                    
-                                    if let dict = address as? NSDictionary {
-                                        
-                                        if let p2pAddress = dict["address"] as? String {
-                                            
-                                            if let port = dict["port"] as? Int {
-                                                
-                                                if p2pAddress.contains("onion") {
-                                                    
-                                                    self.dictToReturn["p2pOnionAddress"] = p2pAddress + ":" + "\(port)"
-                                                    
-                                                }
-                                                
-                                            }
-                                            
-                                        }
-                                        
-                                    }
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                        if let networks = networkInfo["networks"] as? NSArray {
-                            
-                            for network in networks {
-                                
-                                if let dict = network as? NSDictionary {
-                                    
-                                    if let name = dict["name"] as? String {
-                                        
-                                        if name == "onion" {
-                                            
-                                            if let reachable = dict["reachable"] as? Bool {
-                                                
-                                                self.dictToReturn["reachable"] = reachable
-                                                
-                                            }
-                                            
-                                        }
-                                        
-                                    }
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                        completion()
-                        
-                    }
-                    
-                } else {
-                    
-                    self.errorBool = true
-                    self.errorDescription = "returned object is nil"
-                    completion()
-                    
-                }
+        TorRPC.sharedInstance.executeRPCCommand(walletName: "", command: .getnetworkinfo, parameters: "") { (result) in
+            switch result {
+            case .success(let response):
+                let responseDictionary = response as! NSDictionary
+                let dictToReturn = RPCResponseHandler.instance.getNetworkInfo(fromResponse: responseDictionary)
                 
-            } else {
-                
-                self.errorBool = true
-                self.errorDescription = "\(reducer.errorDescription)"
-                completion()
-                
+                completion(.success(dictToReturn))
+            case .failure(let error):
+                completion(.failure(error))
             }
-            
         }
-        
     }
     
     func loadWalletData(completion: @escaping () -> Void) {

@@ -1865,86 +1865,63 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     private func loadTorData() {
         
         if self.node != nil {
-            
             reloadSections([self.torCellIndex])
-            updateLabel(text: "     Getting Tor network data from your node...")
-            nodeLogic.loadTorData {
-                
-                if !self.nodeLogic.errorBool {
-                    
-                    let s = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
+            updateLabel(text: "     Getting Tor network data...")
+            nodeLogic.loadTorData { (result) in
+                switch result {
+                case .success(let response):
+                    let dict = response as! [String:Any]
+                    let s = HomeStruct(dictionary: dict)
                     self.p2pOnionAddress = s.p2pOnionAddress
                     self.version = s.version
                     self.torReachable = s.torReachable
-                    
                     self.torSectionLoaded = true
                     self.isRefreshingTorData = false
                     
                     if self.wallet != nil {
-                        
                         self.reloadSections([self.torCellIndex, self.walletCellIndex])
                         self.loadWalletData()
-                        
-                        
                     } else {
-                        
                         self.reloadSections([self.torCellIndex, self.nodeCellIndex])
                         self.loadNodeData()
-                        
                     }
-                    
-                } else {
-                    
+                case .failure(let error):
                     self.torSectionLoaded = false
                     self.removeStatusLabel()
                     self.isRefreshingTorData = false
                     self.reloadSections([self.torCellIndex])
                     
-                    displayAlert(viewController: self,
-                                 isError: true,
-                                 message: self.nodeLogic.errorDescription)
-                                        
+                    displayAlert(viewController: self, isError: true, message: "\(error)")
                 }
-                
             }
-            
         }
-        
     }
     
     private func refreshTorData(_ sender: UIButton) {
         
         if self.node != nil {
             
-            nodeLogic.loadTorData {
-                
-                if !self.nodeLogic.errorBool {
-                    
-                    let s = HomeStruct(dictionary: self.nodeLogic.dictToReturn)
+            nodeLogic.loadTorData { (result) in
+                switch result {
+                case .success(let response):
+                    let dict = response as! [String:Any]
+                    let s = HomeStruct(dictionary: dict)
                     self.p2pOnionAddress = s.p2pOnionAddress
                     self.version = s.version
                     self.torReachable = s.torReachable
                     self.torSectionLoaded = true
                     self.isRefreshingTorData = false
                     self.reloadSections([self.torCellIndex])
-                    
-                } else {
-                    
+                case .failure(let error):
                     self.torSectionLoaded = false
                     self.removeStatusLabel()
                     self.isRefreshingTorData = false
                     self.reloadSections([self.torCellIndex])
                     
-                    displayAlert(viewController: self,
-                                 isError: true,
-                                 message: self.nodeLogic.errorDescription)
-                                        
+                    displayAlert(viewController: self, isError: true, message: "\(error)")
                 }
-                
             }
-            
         }
-        
     }
     
     private func loadNodeData() {
