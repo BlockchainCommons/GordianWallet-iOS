@@ -14,6 +14,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
     @IBOutlet var textField: UITextField!
     @IBOutlet var nextOutlet: UIButton!
     
+    weak var cd = CoreDataService.sharedInstance
     let tap = UITapGestureRecognizer()
     var wallet = [String:Any]()
     var recoveryPhrase = ""
@@ -82,12 +83,19 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         
         if textField.text != "" {
             
-            let cd = CoreDataService()
-            cd.updateEntity(id: w.id, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) {
+            cd?.updateEntity(id: w.id, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
                 
-                DispatchQueue.main.async {
+                if success {
                     
-                    self.performSegue(withIdentifier: "toRecoveryQr", sender: self)
+                    DispatchQueue.main.async {
+                        
+                        vc.performSegue(withIdentifier: "toRecoveryQr", sender: vc)
+                        
+                    }
+                    
+                } else {
+                    
+                    showAlert(vc: vc, title: "Error", message: errorDesc ?? "error saving label")
                     
                 }
                 
@@ -119,16 +127,15 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         
         if textField.text != "" {
             
-            let cd = CoreDataService()
-            cd.updateEntity(id: w.id, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) {
+            self.cd?.updateEntity(id: w.id, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
                 
-                if !cd.errorBool {
+                if success {
                     
-                    displayAlert(viewController: self, isError: false, message: "Label saved")
+                    displayAlert(viewController: vc, isError: false, message: "Label saved")
                     
                 } else {
                     
-                    displayAlert(viewController: self, isError: true, message: "Label not saved")
+                    displayAlert(viewController: vc, isError: true, message: "Label not saved")
                     
                 }
                 

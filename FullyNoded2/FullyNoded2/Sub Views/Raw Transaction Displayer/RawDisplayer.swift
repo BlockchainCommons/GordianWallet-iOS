@@ -179,8 +179,7 @@ class RawDisplayer {
     
     func generateQrCode(key: String) -> UIImage {
         
-        self.qrGenerator.textInput = key
-        let imageToReturn = self.qrGenerator.getQRCode()
+        let imageToReturn = self.qrGenerator.getQRCode(textInput: key)
         return imageToReturn
         
     }

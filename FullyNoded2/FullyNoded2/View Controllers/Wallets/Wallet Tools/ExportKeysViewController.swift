@@ -367,9 +367,9 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         func getPrivKeys() {
             let mnemonicCreator = MnemonicCreator()
-            mnemonicCreator.convert(words: words) { (mnemonic, error) in
+            mnemonicCreator.convert(words: words) { [unowned vc = self] (mnemonic, error) in
                 if !error {
-                    let derivation = self.wallet.derivation
+                    let derivation = vc.wallet.derivation
                     for i in 0 ... 999 {
                         let path = derivation + "/" + "\(i)"
                         if let bip32path = BIP32Path(path) {
@@ -377,8 +377,8 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                                 do {
                                     let childKey = try key.derive(bip32path)
                                     if let privKey = childKey.privKey {
-                                        if self.keys.count > 0 {
-                                            self.keys[i]["wif"] = privKey.wif
+                                        if vc.keys.count > 0 {
+                                            vc.keys[i]["wif"] = privKey.wif
                                         }
                                     }
                                 } catch {
@@ -388,8 +388,8 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                         }
                         if i == 999 {
                             DispatchQueue.main.async {
-                                self.table.reloadData()
-                                self.connectingView.removeConnectingView()
+                                vc.table.reloadData()
+                                vc.connectingView.removeConnectingView()
                             }
                         }
                     }
@@ -412,10 +412,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                             if k + 1 == keys.count {
                                 let scriptPubKey = ScriptPubKey(multisig: pubkeys, threshold: sigsRequired, bip67: false)
                                 var multiSigAddress:Address!
-                                var processedPubkeys = "\(pubkeyStrings)".replacingOccurrences(of: "[", with: "")
-                                processedPubkeys = processedPubkeys.replacingOccurrences(of: "]", with: "")
-                                processedPubkeys = processedPubkeys.replacingOccurrences(of: "\"", with: "")
-                                processedPubkeys = processedPubkeys.replacingOccurrences(of: ",", with: "\n")
+                                let processedPubkeys = processedKeys(pubkeys: pubkeyStrings)
                                 // LibWally only produces bech32 multisig addresses, so need to fetch other formats from the node
                                 if wallet.derivation.contains("84") || s.isBIP84 || s.isP2WPKH {
                                     multiSigAddress = Address(scriptPubKey, network(path: wallet.derivation))
@@ -455,32 +452,32 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
        
        let reducer = Reducer()
        let param = "\"\(wallet.descriptor)\", ''[0,999]''"
-       reducer.makeCommand(walletName: "", command: .deriveaddresses, param: param) {
+       reducer.makeCommand(walletName: "", command: .deriveaddresses, param: param) { [unowned vc = self] in
         
             if !reducer.errorBool {
                 
                 if let result = reducer.arrayToReturn {
                     
                     for (i, address) in result.enumerated() {
-                        if self.keys.count > 0 {
-                            self.keys[i]["address"] = (address as! String)
+                        if vc.keys.count > 0 {
+                            vc.keys[i]["address"] = (address as! String)
                         }
                         if i + 1 == result.count {
                             DispatchQueue.main.async {
-                                self.table.reloadData()
+                                vc.table.reloadData()
                             }
                         }
                     }
                     
                 } else {
                     
-                    displayAlert(viewController: self, isError: true, message: "error getting addresses from your node")
+                    displayAlert(viewController: vc, isError: true, message: "error getting addresses from your node")
                     
                 }
                
             } else {
                 
-                displayAlert(viewController: self, isError: true, message: "error getting addresses from your node")
+                displayAlert(viewController: vc, isError: true, message: "error getting addresses from your node")
                 
             }
         }
@@ -489,12 +486,12 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func getWords() {
         
-        getActiveWalletNow { (wallet, error) in
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
             if wallet != nil && !error {
                 
-                let enc = Encryption()
-                self.wallet = wallet!
+                let enc = Encryption.sharedInstance
+                vc.wallet = wallet!
                 let parser = DescriptorParser()
                 let s = parser.descriptor(wallet!.descriptor)
                 
@@ -508,11 +505,11 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                                 
                                 if s.isMulti {
                                     
-                                    self.getMultiSigKeys(words: words)
+                                    vc.getMultiSigKeys(words: words)
                                     
                                 } else {
                                     
-                                    self.getSingleSigKeys(words: words)
+                                    vc.getSingleSigKeys(words: words)
                                     
                                 }
                                 
@@ -534,11 +531,11 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                                     
                                     if s.isMulti {
                                         
-                                        self.fetchMultiSigKeysFromXprv(xprv: xprv)
+                                        vc.fetchMultiSigKeysFromXprv(xprv: xprv)
                                         
                                     } else {
                                         
-                                        self.fetchKeysFromXprv(xprv: xprv)
+                                        vc.fetchKeysFromXprv(xprv: xprv)
                                         
                                     }
                                     
@@ -561,16 +558,16 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     func getSingleSigKeys(words: String) {
         
         let mnemonicCreator = MnemonicCreator()
-        mnemonicCreator.convert(words: words) { (mnemonic, error) in
+        mnemonicCreator.convert(words: words) { [unowned vc = self] (mnemonic, error) in
             
             if !error {
                 
-                self.getKeys(mnemonic: mnemonic!)
+                vc.getKeys(mnemonic: mnemonic!)
                 
             } else {
                 
-                self.connectingView.removeConnectingView()
-                displayAlert(viewController: self, isError: true, message: "error converting those words into a seed")
+                vc.connectingView.removeConnectingView()
+                displayAlert(viewController: vc, isError: true, message: "error converting those words into a seed")
                 
             }
             
@@ -630,10 +627,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                             if k + 1 == keys.count {
                                 let scriptPubKey = ScriptPubKey(multisig: pubkeys, threshold: sigsRequired, bip67: false)
                                 var multiSigAddress:Address!
-                                var processedPubkeys = "\(pubkeyStrings)".replacingOccurrences(of: "[", with: "")
-                                processedPubkeys = processedPubkeys.replacingOccurrences(of: "]", with: "")
-                                processedPubkeys = processedPubkeys.replacingOccurrences(of: "\"", with: "")
-                                processedPubkeys = processedPubkeys.replacingOccurrences(of: ",", with: "\n")
+                                let processedPubkeys = processedKeys(pubkeys: pubkeyStrings)
                                 // LibWally only produces bech32 multisig addresses, so need to fetch other formats from the node
                                 if wallet.derivation.contains("84") || s.isBIP84 || s.isP2WPKH {
                                     multiSigAddress = Address(scriptPubKey, network(path: wallet.derivation))
@@ -780,17 +774,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-    func impact() {
-        
-        DispatchQueue.main.async {
-            
-            let impact = UIImpactFeedbackGenerator()
-            impact.impactOccurred()
-            
-        }
-        
-    }
-    
     func showAuth() {
         
         DispatchQueue.main.async {
@@ -824,8 +807,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             
             if self.showQr {
                 
-                self.impact()
-                
                 if self.keys[self.section]["wif"] != nil {
                     
                     self.qrString = self.keys[self.section]["wif"] ?? "no wif"
@@ -840,8 +821,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                 }
                 
             } else if self.copyText {
-                
-                self.impact()
                 
                 let wif = self.keys[self.section]["wif"] ?? "no wif exists"
                 self.copyText = false
@@ -866,6 +845,15 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
 
         }
 
+    }
+    
+    private func processedKeys(pubkeys: [String]) -> String {
+        
+        var processedPubkeys = "\(pubkeys)".replacingOccurrences(of: "[", with: "")
+        processedPubkeys = processedPubkeys.replacingOccurrences(of: "]", with: "")
+        processedPubkeys = processedPubkeys.replacingOccurrences(of: "\"", with: "")
+        return processedPubkeys.replacingOccurrences(of: ",", with: "\n")
+        
     }
     
     // MARK: - Navigation

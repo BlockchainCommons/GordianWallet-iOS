@@ -26,8 +26,7 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
         // Do any additional setup after loading the view.
         navigationController?.delegate = self
         setTitleView()
-        qrGenerator.textInput = recoveryQr
-        qrView.image = qrGenerator.getQRCode()
+        qrView.image = qrGenerator.getQRCode(textInput: recoveryQr)
         nextOutlet.layer.cornerRadius = 8
         qrView.isUserInteractionEnabled = true
         tapQRGesture = UITapGestureRecognizer(target: self, action: #selector(self.shareQRCode(_:)))
@@ -62,15 +61,15 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
         
         DispatchQueue.main.async {
             
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                 
-                self.qrView.alpha = 0
+                vc.qrView.alpha = 0
                 
             }) { _ in
                 
-                UIView.animate(withDuration: 0.2, animations: {
+                UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                     
-                    self.qrView.alpha = 1
+                    vc.qrView.alpha = 1
                     
                 })
                 

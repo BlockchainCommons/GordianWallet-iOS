@@ -24,7 +24,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     let connectingView = ConnectingView()
     let qrGenerator = QRGenerator()
     let copiedLabel = UILabel()
-    let cd = CoreDataService()
+    weak var cd = CoreDataService.sharedInstance
     var refreshButton = UIBarButtonItem()
     var dataRefresher = UIBarButtonItem()
     var initialLoad = Bool()
@@ -126,30 +126,30 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         
         connectingView.addConnectingView(vc: self, description: "fetching invoice address from your node")
         
-        getActiveWalletNow() { (wallet, error) in
+        getActiveWalletNow() { [unowned vc = self] (wallet, error) in
             
             if !error && wallet != nil {
                 
-                self.wallet = wallet!
+                vc.wallet = wallet!
                 
-                self.addNavBarSpinner()
+                vc.addNavBarSpinner()
                 
-                if !self.initialLoad {
+                if !vc.initialLoad {
                     
                     DispatchQueue.main.async {
                         
                         UIView.animate(withDuration: 0.3, animations: {
                             
-                            self.addressOutlet.alpha = 0
-                            self.qrView.alpha = 0
+                            vc.addressOutlet.alpha = 0
+                            vc.qrView.alpha = 0
                             
                         }) { (_) in
                             
-                            self.addressOutlet.text = ""
-                            self.qrView.image = nil
-                            self.addressOutlet.alpha = 1
-                            self.qrView.alpha = 1
-                            self.showAddress()
+                            vc.addressOutlet.text = ""
+                            vc.qrView.image = nil
+                            vc.addressOutlet.alpha = 1
+                            vc.qrView.alpha = 1
+                            vc.showAddress()
                             
                         }
                         
@@ -157,15 +157,15 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
                     
                 } else {
                     
-                    self.showAddress()
+                    vc.showAddress()
                     
                 }
                 
             } else if error {
                 
-                self.connectingView.removeConnectingView()
-                self.removeLoader()
-                showAlert(vc: self, title: "Error", message: "No active wallets")
+                vc.connectingView.removeConnectingView()
+                vc.removeLoader()
+                showAlert(vc: vc, title: "Error", message: "No active wallets")
                 
             }
             
@@ -217,19 +217,19 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         print("getMsigAddress")
         
         let keyFetcher = KeyFetcher()
-        keyFetcher.musigAddress { (address, error) in
+        keyFetcher.musigAddress { [unowned vc = self] (address, error) in
             
             if !error {
                 
-                self.connectingView.removeConnectingView()
-                self.removeLoader()
-                self.addressString = address!
-                self.showAddress(address: address!)
+                vc.connectingView.removeConnectingView()
+                vc.removeLoader()
+                vc.addressString = address!
+                vc.showAddress(address: address!)
                 
             } else {
                 
-                self.connectingView.removeConnectingView()
-                displayAlert(viewController: self, isError: true, message: "error getting musig address")
+                vc.connectingView.removeConnectingView()
+                displayAlert(viewController: vc, isError: true, message: "error getting musig address")
                 
             }
             
@@ -279,16 +279,16 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             
             self.qrView.addGestureRecognizer(self.tapQRGesture)
             
-            UIView.animate(withDuration: 0.3, animations: {
+            UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
                 
-                self.descriptionLabel.alpha = 1
-                self.qrView.alpha = 1
-                self.addressOutlet.alpha = 1
+                vc.descriptionLabel.alpha = 1
+                vc.qrView.alpha = 1
+                vc.addressOutlet.alpha = 1
                 
-            }) { _ in
+            }) { [unowned vc = self] _ in
                 
-                self.addressOutlet.text = address
-                self.addCopiedLabel()
+                vc.addressOutlet.text = address
+                vc.addCopiedLabel()
                 
             }
             
@@ -302,13 +302,13 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             
-            UIView.animate(withDuration: 0.3, animations: {
+            UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
                 
-                if self.tabBarController != nil {
+                if vc.tabBarController != nil {
                     
-                    self.copiedLabel.frame = CGRect(x: 0,
-                                                    y: self.tabBarController!.tabBar.frame.minY - 50,
-                                                    width: self.view.frame.width,
+                    vc.copiedLabel.frame = CGRect(x: 0,
+                                                    y: vc.tabBarController!.tabBar.frame.minY - 50,
+                                                    width: vc.view.frame.width,
                                                     height: 50)
                     
                 }
@@ -317,16 +317,16 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
                 
-                UIView.animate(withDuration: 0.3, animations: {
+                UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
                     
-                    self.copiedLabel.frame = CGRect(x: 0,
-                                                    y: self.view.frame.maxY + 100,
-                                                    width: self.view.frame.width,
+                    vc.copiedLabel.frame = CGRect(x: 0,
+                                                    y: vc.view.frame.maxY + 100,
+                                                    width: vc.view.frame.width,
                                                     height: 50)
                     
-                }, completion: { _ in
+                }, completion: { [unowned vc = self] _ in
                     
-                    self.copiedLabel.removeFromSuperview()
+                    vc.copiedLabel.removeFromSuperview()
                     
                 })
                 
@@ -338,15 +338,15 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     
     @objc func shareAddressText(_ sender: UITapGestureRecognizer) {
         
-        UIView.animate(withDuration: 0.2, animations: {
+        UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
             
-            self.addressOutlet.alpha = 0
+            vc.addressOutlet.alpha = 0
             
         }) { _ in
             
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                 
-                self.addressOutlet.alpha = 1
+                vc.addressOutlet.alpha = 1
                 
             })
             
@@ -368,23 +368,23 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     
     @objc func shareQRCode(_ sender: UITapGestureRecognizer) {
         
-        UIView.animate(withDuration: 0.2, animations: {
+        UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
             
-            self.qrView.alpha = 0
+            vc.qrView.alpha = 0
             
         }) { _ in
             
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                 
-                self.qrView.alpha = 1
+                vc.qrView.alpha = 1
                 
-            }) { _ in
+            }) { [unowned vc = self] _ in
                 
-                let activityController = UIActivityViewController(activityItems: [self.qrView.image!],
+                let activityController = UIActivityViewController(activityItems: [vc.qrView.image!],
                                                                   applicationActivities: nil)
                 
-                activityController.popoverPresentationController?.sourceView = self.view
-                self.present(activityController, animated: true) {}
+                activityController.popoverPresentationController?.sourceView = vc.view
+                vc.present(activityController, animated: true) {}
                 
             }
             
@@ -395,54 +395,39 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     func executeNodeCommand(method: BTC_CLI_COMMAND, param: String) {
         
         let reducer = Reducer()
-        
-        func getResult() {
-            
+        reducer.makeCommand(walletName: wallet.name, command: method, param: param) { [unowned vc = self] in
+                           
             if !reducer.errorBool {
                 
-                switch method {
+                DispatchQueue.main.async {
                     
-                case .getnewaddress:
+                    vc.connectingView.removeConnectingView()
+                    vc.initialLoad = false
+                    let address = reducer.stringToReturn
+                    vc.removeLoader()
                     
-                    DispatchQueue.main.async {
+                    if address != nil {
                         
-                        self.connectingView.removeConnectingView()
-                        self.initialLoad = false
-                        let address = reducer.stringToReturn
-                        self.removeLoader()
-                        
-                        if address != nil {
-                            
-                            self.addressString = address!
-                            self.addressOutlet.text = address!
-                            self.showAddress(address: address!)
-                            
-                        }
+                        vc.addressString = address!
+                        vc.addressOutlet.text = address!
+                        vc.showAddress(address: address!)
                         
                     }
-                    
-                default:
-                    
-                    break
                     
                 }
                 
             } else {
                 
-                self.connectingView.removeConnectingView()
-                self.removeLoader()
+                vc.connectingView.removeConnectingView()
+                vc.removeLoader()
                 
-                displayAlert(viewController: self,
+                displayAlert(viewController: vc,
                              isError: true,
                              message: reducer.errorDescription)
+                
             }
-            
+                                
         }
-        
-        reducer.makeCommand(walletName: wallet.name, command: method,
-                                    param: param,
-                                    completion: getResult)
-                            
         
     }
     
@@ -454,8 +439,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     
     func generateQrCode(key: String) -> UIImage {
         
-        qrGenerator.textInput = key
-        return qrGenerator.getQRCode()
+        return qrGenerator.getQRCode(textInput: key)
         
     }
     
@@ -492,9 +476,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
                               options: .transitionCrossDissolve,
                               animations: { self.qrView.image = newImage },
                               completion: nil)
-            
-            let impact = UIImpactFeedbackGenerator()
-            impact.impactOccurred()
             
         }
         

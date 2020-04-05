@@ -42,44 +42,55 @@ class TransactionViewController: UIViewController {
 
     func executeNodeCommand(method: BTC_CLI_COMMAND, param: String) {
         
-        let reducer = Reducer()
-        
-        func getResult() {
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
-            if !reducer.errorBool {
+            let reducer = Reducer()
+            
+            func getResult() {
                 
-                switch method {
+                if !reducer.errorBool {
                     
-                case BTC_CLI_COMMAND.gettransaction:
-                    
-                    let dict = reducer.dictToReturn
-                    
-                    DispatchQueue.main.async {
+                    switch method {
                         
-                        self.textView.text = "\(dict)"
-                        self.creatingView.removeConnectingView()
+                    case BTC_CLI_COMMAND.gettransaction:
+                        
+                        if let dict = reducer.dictToReturn {
+                            
+                            DispatchQueue.main.async {
+                                
+                                vc.textView.text = "\(dict)"
+                                vc.creatingView.removeConnectingView()
+                                
+                            }
+                            
+                        } else {
+                            
+                            vc.creatingView.removeConnectingView()
+                            
+                            displayAlert(viewController: vc,
+                                         isError: true,
+                                         message: "error")
+                            
+                        }
+                        
+                    default:
+                        
+                        break
                         
                     }
                     
-                default:
+                } else {
                     
-                    break
+                    vc.creatingView.removeConnectingView()
+                    
+                    displayAlert(viewController: vc,
+                                 isError: true,
+                                 message: reducer.errorDescription)
                     
                 }
                 
-            } else {
-                
-                creatingView.removeConnectingView()
-                
-                displayAlert(viewController: self,
-                             isError: true,
-                             message: reducer.errorDescription)
-                
             }
-            
-        }
-        
-        getActiveWalletNow { (wallet, error) in
+
             
             if wallet != nil && !error {
                 

@@ -82,31 +82,31 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
             
             alert.view.superview?.subviews[0].isUserInteractionEnabled = false
 
-            alert.addAction(UIAlertAction(title: "Yes, I saved them", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "Yes, I saved them", style: .default, handler: { [unowned vc = self] action in
                                 
                 DispatchQueue.main.async {
                     
-                    self.navigationController?.popToRootViewController(animated: true)
+                    vc.navigationController?.popToRootViewController(animated: true)
 
                 }
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Oops, I forgot", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "Oops, I forgot", style: .default, handler: { [unowned vc = self] action in
                                 
                 DispatchQueue.main.async {
                     
-                    self.textView.alpha = 1
+                    vc.textView.alpha = 1
                     
                 }
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { [unowned vc = self] action in
                                 
                 DispatchQueue.main.async {
                     
-                    self.textView.alpha = 1
+                    vc.textView.alpha = 1
                     
                 }
                 
@@ -119,21 +119,7 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
         
     }
     
-    private func impact() {
-        
-        DispatchQueue.main.async {
-            
-            let impact = UIImpactFeedbackGenerator()
-            impact.impactOccurred()
-            
-        }
-        
-    }
-    
-    
     @IBAction func copyText(_ sender: Any) {
-        
-        impact()
         
         UIPasteboard.general.string = mnemonic
         
@@ -149,24 +135,22 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
     
     @IBAction func exportQr(_ sender: Any) {
         
-        impact()
-        
         DispatchQueue.main.async {
             
             let alert = UIAlertController(title: "Choose an option", message: "You can either export the QR or simply display it for scanning.", preferredStyle: .actionSheet)
             
 
-            alert.addAction(UIAlertAction(title: "Export", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "Export", style: .default, handler: { [unowned vc = self] action in
                                 
-                self.exportAsQr()
+                vc.exportAsQr()
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Display QR", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "Display QR", style: .default, handler: { [unowned vc = self] action in
                                 
                 DispatchQueue.main.async {
                     
-                    self.performSegue(withIdentifier: "mnemonicQr", sender: self)
+                    vc.performSegue(withIdentifier: "mnemonicQr", sender: vc)
                     
                 }
                 
@@ -182,8 +166,6 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
     }
     
     @IBAction func shareAction(_ sender: Any) {
-        
-        impact()
         
         DispatchQueue.main.async {
             
@@ -201,18 +183,17 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
     
     private func exportAsQr() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
             let qrGen = QRGenerator()
-            qrGen.textInput = self.mnemonic
-            let image = qrGen.getQRCode()
+            let image = qrGen.getQRCode(textInput: vc.mnemonic)
             let objectsToShare = [image]
             
             let activityController = UIActivityViewController(activityItems: objectsToShare,
                                                               applicationActivities: nil)
             
-            activityController.popoverPresentationController?.sourceView = self.view
-            self.present(activityController, animated: true) {}
+            activityController.popoverPresentationController?.sourceView = vc.view
+            vc.present(activityController, animated: true) {}
             
         }
         

@@ -87,7 +87,7 @@ extension Notification.Name {
     //public static let didEnterForeground = Notification.Name(rawValue: "enteredForeground")
     public static let didStartBootstrappingTor = Notification.Name(rawValue: "didStartBootstrappingTor")
     public static let didCompleteOnboarding = Notification.Name(rawValue: "didCompleteOnboarding")
-    public static let didEstablishTorConnection = Notification.Name(rawValue: "didEstablishTorConnection")
+    //public static let didEstablishTorConnection = Notification.Name(rawValue: "didEstablishTorConnection")
 }
 
 public extension Int {
@@ -109,8 +109,8 @@ public func isValidCharacters(_ string: String) -> Bool {
 
 public func getActiveWalletNow(completion: @escaping ((wallet: WalletStruct?, error: Bool)) -> Void) {
     
-    let enc = Encryption()
-    let cd = CoreDataService()
+    let enc = Encryption.sharedInstance
+    let cd = CoreDataService.sharedInstance
     cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
         
         if errorDescription == nil {

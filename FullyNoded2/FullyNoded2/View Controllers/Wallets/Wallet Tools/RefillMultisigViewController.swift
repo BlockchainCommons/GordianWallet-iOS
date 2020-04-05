@@ -52,15 +52,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     
     func processTextfieldInput() {
         
-        let impact = UIImpactFeedbackGenerator()
-        
-        DispatchQueue.main.async {
-            
-            impact.impactOccurred()
-            
-        }
-        
-        if textField.text != "" {
+       if textField.text != "" {
             
             //check if user pasted more then one word
             let processed = processedCharacters(textField.text!)
@@ -195,28 +187,28 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         
         if suggestions.count > 0 {
             
-            timer = .scheduledTimer(withTimeInterval: 0.01, repeats: false, block: { (timer) in
+            timer = .scheduledTimer(withTimeInterval: 0.01, repeats: false, block: { [unowned vc = self] (timer) in
                 
-                let autocompleteResult = self.formatAutocompleteResult(substring: substring, possibleMatches: suggestions)
-                self.putColorFormattedTextInTextField(autocompleteResult: autocompleteResult, userQuery : userQuery)
-                self.moveCaretToEndOfUserQueryPosition(userQuery: userQuery)
+                let autocompleteResult = vc.formatAutocompleteResult(substring: substring, possibleMatches: suggestions)
+                vc.putColorFormattedTextInTextField(autocompleteResult: autocompleteResult, userQuery : userQuery)
+                vc.moveCaretToEndOfUserQueryPosition(userQuery: userQuery)
                 
             })
             
         } else {
             
-            timer = .scheduledTimer(withTimeInterval: 0.01, repeats: false, block: { (timer) in //7
+            timer = .scheduledTimer(withTimeInterval: 0.01, repeats: false, block: { [unowned vc = self] (timer) in //7
                 
-                self.textField.text = substring
+                vc.textField.text = substring
                 
-                if let _ = BIP39Mnemonic(self.processedCharacters(self.textField.text!)) {
+                if let _ = BIP39Mnemonic(vc.processedCharacters(vc.textField.text!)) {
                     
-                    self.textField.textColor = .systemGreen
-                    self.validWordsAdded()
+                    vc.textField.textColor = .systemGreen
+                    vc.validWordsAdded()
                     
                 } else {
                     
-                    self.textField.textColor = .systemRed
+                    vc.textField.textColor = .systemRed
                     
                 }
                 
@@ -291,7 +283,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     
     func moveCaretToEndOfUserQueryPosition(userQuery : String) {
         
-        if let newPosition = self.textField.position(from: self.textField.beginningOfDocument, offset: userQuery.count) {
+        if let newPosition = self.textField.position(from: self.textField.beginningOfDocument, offset: userQuery.count) { 
             
             self.textField.selectedTextRange = self.textField.textRange(from: newPosition, to: newPosition)
             
@@ -359,7 +351,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         let derivation = self.wallet.derivation
         
         let mnemonicCreator = MnemonicCreator()
-        mnemonicCreator.convert(words: justWords.joined(separator: " ")) { (mnemonic, error) in
+        mnemonicCreator.convert(words: justWords.joined(separator: " ")) { [unowned vc = self] (mnemonic, error) in
             
             if !error && mnemonic != nil {
                 
@@ -377,43 +369,43 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                                 
                                 // from here we can refill
                                 DispatchQueue.main.async {
-                                   self.connectingView.label.text = "xpub's match, refilling keypool"
+                                   vc.connectingView.label.text = "xpub's match, refilling keypool"
                                 }
                                 
-                                self.refillMulti(hdKey: hdKey)
+                                vc.refillMulti(hdKey: hdKey)
                                 
                             } else {
                                 
-                                self.connectingView.removeConnectingView()
-                                showAlert(vc: self, title: "Error", message: "that recovery phrase does not match the required recovery phrase for this wallet")
+                                vc.connectingView.removeConnectingView()
+                                showAlert(vc: vc, title: "Error", message: "that recovery phrase does not match the required recovery phrase for this wallet")
                                 
                             }
                             
                         } catch {
                             
-                            self.connectingView.removeConnectingView()
-                            showAlert(vc: self, title: "Error", message: "error deriving xpub from master key")
+                            vc.connectingView.removeConnectingView()
+                            showAlert(vc: vc, title: "Error", message: "error deriving xpub from master key")
                             
                         }
                         
                     } else {
                         
-                        self.connectingView.removeConnectingView()
-                        showAlert(vc: self, title: "Error", message: "error converting derivation to bip32 path")
+                        vc.connectingView.removeConnectingView()
+                        showAlert(vc: vc, title: "Error", message: "error converting derivation to bip32 path")
                         
                     }
                     
                 } else {
                     
-                    self.connectingView.removeConnectingView()
-                    showAlert(vc: self, title: "Error", message: "error deriving master key")
+                    vc.connectingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "error deriving master key")
                     
                 }
                 
             } else {
                 
-                self.connectingView.removeConnectingView()
-                showAlert(vc: self, title: "Error", message: "error converting your words to a valid mnemonic")
+                vc.connectingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error", message: "error converting your words to a valid mnemonic")
                 
             }
             
@@ -427,17 +419,17 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         if let backUpXprv = hdKey.xpriv {
             
             let refillMultiSig = RefillMultiSig()
-            refillMultiSig.refill(wallet: wallet, recoveryXprv: backUpXprv, recoveryXpub: backUpXpub) { (success, error) in
+            refillMultiSig.refill(wallet: wallet, recoveryXprv: backUpXprv, recoveryXpub: backUpXpub) { [unowned vc = self] (success, error) in
                 
                 if success {
                     
-                    self.connectingView.removeConnectingView()
+                    vc.connectingView.removeConnectingView()
                     
                     DispatchQueue.main.async {
                         
-                        self.dismiss(animated: true) {
+                        vc.dismiss(animated: true) {
                             
-                            self.multiSigRefillDoneBlock!(true)
+                            vc.multiSigRefillDoneBlock!(true)
                             
                         }
                         
@@ -445,8 +437,8 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                     
                 } else {
                     
-                    self.connectingView.removeConnectingView()
-                    showAlert(vc: self, title: "Error", message: error!)
+                    vc.connectingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: error!)
                     
                 }
                 

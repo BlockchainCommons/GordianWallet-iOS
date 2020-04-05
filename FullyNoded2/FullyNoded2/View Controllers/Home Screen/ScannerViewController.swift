@@ -354,7 +354,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                 
             }
             
-            let enc = Encryption()
+            let enc = Encryption.sharedInstance
             enc.getNode { (node, error) in
                 
                 if !error && node != nil {

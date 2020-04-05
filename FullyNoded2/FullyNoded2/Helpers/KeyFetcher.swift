@@ -11,7 +11,8 @@ import LibWally
 
 class KeyFetcher {
     
-    let enc = Encryption()
+    let cd = CoreDataService.sharedInstance
+    let enc = Encryption.sharedInstance
     
     func fingerprint(wallet: WalletStruct, completion: @escaping ((fingerprint: String?, error: Bool)) -> Void) {
         
@@ -215,7 +216,7 @@ class KeyFetcher {
                 
                 let derivationPath = wallet!.derivation
                 
-                let enc = Encryption()
+                let enc = Encryption.sharedInstance
                 enc.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
                     
                     if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
@@ -394,7 +395,7 @@ class KeyFetcher {
     func xpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
         
         let derivationPath = wallet.derivation
-        let enc = Encryption()
+        let enc = Encryption.sharedInstance
         enc.decryptData(dataToDecrypt: wallet.seed) { (seed) in
             
             if seed != nil {
@@ -488,7 +489,7 @@ class KeyFetcher {
             if wallet != nil && !error {
                 
                 let derivationPath = wallet!.derivation
-                let enc = Encryption()
+                let enc = Encryption.sharedInstance
                 enc.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
                     
                     if seed != nil {
@@ -647,12 +648,11 @@ class KeyFetcher {
     
     private func updateIndex(wallet: WalletStruct) {
         
-        let cd = CoreDataService()
-        cd.updateEntity(id: wallet.id, keyToUpdate: "index", newValue: wallet.index + 1, entityName: .wallets) {
+        self.cd.updateEntity(id: wallet.id, keyToUpdate: "index", newValue: wallet.index + 1, entityName: .wallets) { (success, errorDescription) in
             
-            if cd.errorBool {
+            if !success {
                 
-                print("error updating index: \(cd.errorDescription)")
+                print("error updating index: \(errorDescription ?? "unknown error")")
                 
             }
             

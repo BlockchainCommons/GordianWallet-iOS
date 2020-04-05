@@ -11,6 +11,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    private var startingUp = true
 //    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 //
 //    func registerBackgroundTask() {
@@ -61,10 +62,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // We start the tor thread automatically here whenever the app enters the foreground.
         let mgr = TorClient.sharedInstance
 
-        if mgr.state != .started && mgr.state != .connected  {
+        if !startingUp && mgr.state != .started && mgr.state != .connected  {
 
-            mgr.start(delegate: nil) {}
+            mgr.start(delegate: nil)
 
+        } else {
+            
+            startingUp = false
+            
         }
         
     }
@@ -86,7 +91,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if mgr.state != .stopped {
                 
                 mgr.state = .refreshing
-                                    
                 mgr.resign()
                                                     
             }
@@ -94,7 +98,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         // Save changes in the application's managed object context when the application transitions to the background.
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        //(UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        CoreDataService.sharedInstance.saveContext()
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

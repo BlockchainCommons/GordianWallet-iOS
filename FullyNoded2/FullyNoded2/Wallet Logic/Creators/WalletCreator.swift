@@ -109,7 +109,7 @@ class WalletCreator {
                     
                 } else {
                     
-                    completion((false,reducer.errorDescription))
+                    completion((false, reducer.errorDescription))
                     
                 }
                 

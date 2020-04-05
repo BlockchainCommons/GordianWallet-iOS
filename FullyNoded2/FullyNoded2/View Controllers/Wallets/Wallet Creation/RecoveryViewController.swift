@@ -35,17 +35,17 @@ class RecoveryViewController: UIViewController {
                             
                 let alert = UIAlertController(title: "Security Alert!", message: "Your device is taking a screen recording, for security we can not display your recovery kit, please stop the recording.", preferredStyle: .actionSheet)
 
-                alert.addAction(UIAlertAction(title: "I stopped it", style: .default, handler: { action in
+                alert.addAction(UIAlertAction(title: "I stopped it", style: .default, handler: { [unowned vc = self] action in
                     
                     let isCaptured1 = UIScreen.main.isCaptured
                     
                     if !isCaptured1 {
                         
-                        self.setUp()
+                        vc.setUp()
                         
                     } else {
                         
-                        showAlert(vc: self, title: "Still recording!", message: "You should delete this wallet and start over, your device may be compromised.")
+                        showAlert(vc: vc, title: "Still recording!", message: "You should delete this wallet and start over, your device may be compromised.")
                         
                     }
                     
@@ -78,8 +78,7 @@ class RecoveryViewController: UIViewController {
         
         textView.text = wordsToDisplay
         let qrGen = QRGenerator()
-        qrGen.textInput = descriptor
-        imageView.image = qrGen.getQRCode()
+        imageView.image = qrGen.getQRCode(textInput: descriptor)
         
         tapQRGesture = UITapGestureRecognizer(target: self,
                                               action: #selector(shareQRCode(_:)))
@@ -108,15 +107,15 @@ class RecoveryViewController: UIViewController {
         
         DispatchQueue.main.async {
             
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                 
-                self.imageView.alpha = 0
+                vc.imageView.alpha = 0
                 
             }) { _ in
                 
-                UIView.animate(withDuration: 0.2, animations: {
+                UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                     
-                    self.imageView.alpha = 1
+                    vc.imageView.alpha = 1
                     
                 })
                 

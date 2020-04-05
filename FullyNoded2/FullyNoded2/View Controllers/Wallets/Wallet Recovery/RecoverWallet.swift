@@ -58,14 +58,14 @@ class RecoverWallet {
     
     private func recoverPartialMultiSigQR(completion: @escaping ((success: Bool, error: String?)) -> Void) {
         
-        let enc = Encryption()
+        let enc = Encryption.sharedInstance
         if let unEncryptedXprv = descriptorStruct.multiSigKeys[1].data(using: .utf8) {
             
-            enc.encryptData(dataToEncrypt: unEncryptedXprv) { (encryptedData, error) in
+            enc.encryptData(dataToEncrypt: unEncryptedXprv) { [unowned vc = self] (encryptedData, error) in
                 
                 if !error && encryptedData != nil {
                     
-                    let unencryptedEntropy = self.json["entropy"] as! String
+                    let unencryptedEntropy = vc.json["entropy"] as! String
                     
                     if let bip39Entropy = BIP39Entropy(unencryptedEntropy) {
                         
@@ -79,8 +79,8 @@ class RecoverWallet {
                                     
                                     var newWallet = [String:Any]()
                                     newWallet["xprv"] = encryptedData!
-                                    newWallet["birthdate"] = self.json["birthdate"] as! Int32
-                                    newWallet["derivation"] = self.descriptorStruct.derivationArray[1]
+                                    newWallet["birthdate"] = vc.json["birthdate"] as! Int32
+                                    newWallet["derivation"] = vc.descriptorStruct.derivationArray[1]
                                     newWallet["id"] = UUID()
                                     newWallet["isActive"] = false
                                     newWallet["lastUsed"] = Date()
@@ -88,21 +88,21 @@ class RecoverWallet {
                                     newWallet["isArchived"] = false
                                     newWallet["type"] = "MULTI"
                                     newWallet["seed"] = encryptedSeed!
-                                    newWallet["nodeId"] = self.node.id
-                                    newWallet["blockheight"] = self.json["blockheight"] as! Int
+                                    newWallet["nodeId"] = vc.node.id
+                                    newWallet["blockheight"] = vc.json["blockheight"] as! Int
                                     newWallet["maxRange"] = 2500
                                     
-                                    if let label = self.json["label"] as? String {
+                                    if let label = vc.json["label"] as? String {
                                         
                                         newWallet["label"] = label
                                         
                                     }
                                     
-                                    let hdXprv = HDKey(self.descriptorStruct.multiSigKeys[1])
+                                    let hdXprv = HDKey(vc.descriptorStruct.multiSigKeys[1])
                                     if let accountXpub = hdXprv?.xpub {
                                         
-                                        self.descriptor = (self.json["descriptor"] as! String)
-                                        let primaryPublicKeyDescriptor = self.descriptor.replacingOccurrences(of: self.descriptorStruct.multiSigKeys[1], with: accountXpub)
+                                        self.descriptor = (vc.json["descriptor"] as! String)
+                                        let primaryPublicKeyDescriptor = self.descriptor.replacingOccurrences(of: vc.descriptorStruct.multiSigKeys[1], with: accountXpub)
                                         newWallet["descriptor"] = primaryPublicKeyDescriptor
                                         let digest = SHA256.hash(data: primaryPublicKeyDescriptor.dataUsingUTF8StringEncoding)
                                         let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
@@ -135,15 +135,15 @@ class RecoverWallet {
                                                                 
                                                                 print("we have a winner, the wallet is on our node")
                                                                 // need to convert existing descriptor to a public key descriptor and a change descriptor
-                                                                let hdXprv = HDKey(self.descriptorStruct.multiSigKeys[1])
+                                                                let hdXprv = HDKey(vc.descriptorStruct.multiSigKeys[1])
                                                                 if let accountXpub = hdXprv?.xpub {
                                                                     
-                                                                    self.descriptor = (self.json["descriptor"] as! String)
-                                                                    let primaryPublicKeyDescriptor = self.descriptor.replacingOccurrences(of: self.descriptorStruct.multiSigKeys[1], with: accountXpub)
+                                                                    vc.descriptor = (vc.json["descriptor"] as! String)
+                                                                    let primaryPublicKeyDescriptor = vc.descriptor.replacingOccurrences(of: vc.descriptorStruct.multiSigKeys[1], with: accountXpub)
                                                                     newWallet["descriptor"] = primaryPublicKeyDescriptor
                                                                     var changeDesc = primaryPublicKeyDescriptor.replacingOccurrences(of: "\(accountXpub)/0/*", with: "\(accountXpub)/1/*")
-                                                                    changeDesc = changeDesc.replacingOccurrences(of: "\(self.descriptorStruct.multiSigKeys[0])/0/*", with: "\(self.descriptorStruct.multiSigKeys[0])/1/*")
-                                                                    changeDesc = changeDesc.replacingOccurrences(of: "\(self.descriptorStruct.multiSigKeys[2])/0/*", with: "\(self.descriptorStruct.multiSigKeys[2])/1/*")
+                                                                    changeDesc = changeDesc.replacingOccurrences(of: "\(vc.descriptorStruct.multiSigKeys[0])/0/*", with: "\(vc.descriptorStruct.multiSigKeys[0])/1/*")
+                                                                    changeDesc = changeDesc.replacingOccurrences(of: "\(vc.descriptorStruct.multiSigKeys[2])/0/*", with: "\(vc.descriptorStruct.multiSigKeys[2])/1/*")
                                                                     
                                                                     let arr = changeDesc.split(separator: "#")
                                                                     changeDesc = "\(arr[0])"
@@ -255,14 +255,14 @@ class RecoverWallet {
     
     private func recoverSingleSigQR(completion: @escaping ((success: Bool, error: String?)) -> Void) {
         
-        let enc = Encryption()
+        let enc = Encryption.sharedInstance
         if let unEncryptedXprv = descriptorStruct.accountXprv.data(using: .utf8) {
             
-            enc.encryptData(dataToEncrypt: unEncryptedXprv) { (encryptedData, error) in
+            enc.encryptData(dataToEncrypt: unEncryptedXprv) { [unowned vc = self] (encryptedData, error) in
                 
                 if !error && encryptedData != nil {
                     
-                    let unencryptedEntropy = self.json["entropy"] as! String
+                    let unencryptedEntropy = vc.json["entropy"] as! String
                     
                     if let bip39Entropy = BIP39Entropy(unencryptedEntropy) {
                         
@@ -276,8 +276,8 @@ class RecoverWallet {
                                     
                                     var newWallet = [String:Any]()
                                     newWallet["xprv"] = encryptedData!
-                                    newWallet["birthdate"] = self.json["birthdate"] as! Int32
-                                    newWallet["derivation"] = self.descriptorStruct.derivation
+                                    newWallet["birthdate"] = vc.json["birthdate"] as! Int32
+                                    newWallet["derivation"] = vc.descriptorStruct.derivation
                                     newWallet["id"] = UUID()
                                     newWallet["isActive"] = false
                                     newWallet["lastUsed"] = Date()
@@ -285,21 +285,21 @@ class RecoverWallet {
                                     newWallet["isArchived"] = false
                                     newWallet["type"] = "DEFAULT"
                                     newWallet["seed"] = encryptedSeed!
-                                    newWallet["nodeId"] = self.node.id
-                                    newWallet["blockheight"] = self.json["blockheight"] as! Int
+                                    newWallet["nodeId"] = vc.node.id
+                                    newWallet["blockheight"] = vc.json["blockheight"] as! Int
                                     newWallet["maxRange"] = 2500
                                     
-                                    if let label = self.json["label"] as? String {
+                                    if let label = vc.json["label"] as? String {
                                         
                                         newWallet["label"] = label
                                         
                                     }
                                     
-                                    let hdXprv = HDKey(self.descriptorStruct.accountXprv)
+                                    let hdXprv = HDKey(vc.descriptorStruct.accountXprv)
                                     if let accountXpub = hdXprv?.xpub {
                                         
-                                        self.descriptor = (self.json["descriptor"] as! String)
-                                        let primaryPublicKeyDescriptor = self.descriptor.replacingOccurrences(of: self.descriptorStruct.accountXprv, with: accountXpub)
+                                        vc.descriptor = (vc.json["descriptor"] as! String)
+                                        let primaryPublicKeyDescriptor = vc.descriptor.replacingOccurrences(of: vc.descriptorStruct.accountXprv, with: accountXpub)
                                         
                                         let reducer = Reducer()
                                         reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(primaryPublicKeyDescriptor)\"") {
@@ -386,7 +386,7 @@ class RecoverWallet {
                                                                                                                 if success {
                                                                                                                     
                                                                                                                     let reducer = Reducer()
-                                                                                                                    reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "\(self.json["blockheight"] as! Int)") {
+                                                                                                                    reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "\(vc.json["blockheight"] as! Int)") {
                                                                                                                         
                                                                                                                         completion((true, nil))
                                                                                                                         
@@ -502,7 +502,7 @@ class RecoverWallet {
     
     private func fullMultiSigRecovery(completion: @escaping ((success: Bool, error: String?)) -> Void) {
         
-        let enc = Encryption()
+        let enc = Encryption.sharedInstance
         let hotDescriptor = self.json["descriptor"] as! String
         let blockheight = self.json["blockheight"] as! Int
         let localDerivation = self.descriptorStruct.derivationArray[1]
@@ -564,7 +564,7 @@ class RecoverWallet {
                                 changeDescriptor = "\(arr[0])"
                                 
                                 let reducer = Reducer()
-                                reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDescriptor)\"") {
+                                reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDescriptor)\"") { [unowned vc = self] in
                                     
                                     if !reducer.errorBool {
                                         
@@ -574,7 +574,7 @@ class RecoverWallet {
                                                 
                                                 newWallet["changeDescriptor"] = changeDescriptor
                                                 // now we can actually create the wallet
-                                                let entropy = self.json["entropy"] as! String
+                                                let entropy = vc.json["entropy"] as! String
                                                 
                                                 if let bip39Entropy = BIP39Entropy(entropy) {
                                                     
@@ -619,7 +619,7 @@ class RecoverWallet {
                                                                         // incase user inputs both the words and recoveryQR we revert to partial recovery
                                                                         if error!.contains("already exists") {
                                                                             
-                                                                            self.recoverPartialMultiSigQR { (success, errorDescription) in
+                                                                            vc.recoverPartialMultiSigQR { (success, errorDescription) in
                                                                                 
                                                                                 if success {
                                                                                     
@@ -736,7 +736,7 @@ class RecoverWallet {
                 newWallet["blockheight"] = 1// user is only importing words, so we need to do a full rescan when recovering
                 newWallet["maxRange"] = 2500
                 
-                let enc = Encryption()
+                let enc = Encryption.sharedInstance
                 enc.encryptData(dataToEncrypt: self.words.dataUsingUTF8StringEncoding) { (encryptedData, error) in
                     
                     if !error && encryptedData != nil {
@@ -857,14 +857,51 @@ class RecoverWallet {
                                                                         
                                                                     } else {
                                                                         
-                                                                        completion((false, errorDescription))
+                                                                        if errorDescription != nil {
+                                                                            
+                                                                            if errorDescription!.contains("already exists") {
+                                                                                
+                                                                                let saver = WalletSaver()
+                                                                                saver.save(walletToSave: newWallet) { (success) in
+                                                                                    
+                                                                                    if success {
+                                                                                        
+                                                                                        let reducer = Reducer()
+                                                                                        reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "1") {
+                                                                                            
+                                                                                            completion((true, nil))
+                                                                                            
+                                                                                        }
+                                                                                                                                
+                                                                                    } else {
+                                                                                        
+                                                                                        completion((false, "error saving your wallet"))
+                                                                                        
+                                                                                    }
+                                                                                    
+                                                                                }
+                                                                                
+                                                                            } else {
+                                                                                
+                                                                                completion((false, errorDescription))
+                                                                                
+                                                                            }
+                                                                            
+                                                                        } else {
+                                                                            
+                                                                            completion((false, "unknown error"))
+                                                                            
+                                                                        }
                                                                         
                                                                     }
                                                                     
                                                                 }
-
                                                                 
                                                             }
+                                                            
+                                                        } else {
+                                                            
+                                                            completion((false, reducer.errorDescription))
                                                             
                                                         }
                                                         

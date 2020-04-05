@@ -10,8 +10,8 @@ import Foundation
 
 class CreateMultiSigWallet {
     
-    let cd = CoreDataService()
-    let enc = Encryption()
+    let cd = CoreDataService.sharedInstance
+    let enc = Encryption.sharedInstance
     
     func create(wallet: WalletStruct, nodeXprv: String, nodeXpub: String, completion: @escaping ((success: Bool, error: String?)) -> Void) {
         

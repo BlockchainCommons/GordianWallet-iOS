@@ -9,6 +9,8 @@
 import Foundation
 
 class RefillSingleSig {
+    
+    let cd = CoreDataService.sharedInstance
         
     func refill(wallet: WalletStruct, completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         
@@ -104,16 +106,15 @@ class RefillSingleSig {
                                 
                                 if success {
                                     
-                                    let cd = CoreDataService()
-                                    cd.updateEntity(id: wallet.id, keyToUpdate: "maxRange", newValue: wallet.maxRange + 2500, entityName: .wallets) {
+                                    self.cd.updateEntity(id: wallet.id, keyToUpdate: "maxRange", newValue: wallet.maxRange + 2500, entityName: .wallets) { (success, errorDescription) in
                                         
-                                        if !cd.errorBool {
+                                        if success {
                                             
                                             completion((true, nil))
                                             
                                         } else {
                                             
-                                            completion((false, "Error updating your wallet, please refill again"))
+                                            completion((false, errorDescription ?? "Error updating your wallet, please refill again"))
                                             
                                         }
                                         
