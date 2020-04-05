@@ -91,7 +91,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                                 break
                             }
                             
-                            vc.recoveryDict["derivation"] = vc.derivation
+                            //vc.recoveryDict["derivation"] = vc.derivation
                             vc.confirm()
                             
                         }))
@@ -107,7 +107,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                                 break
                             }
                             
-                            vc.recoveryDict["derivation"] = vc.derivation
+                            //vc.recoveryDict["derivation"] = vc.derivation
                             vc.confirm()
                             
                         }))
@@ -123,7 +123,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                                 break
                             }
                             
-                            vc.recoveryDict["derivation"] = vc.derivation
+                            //vc.recoveryDict["derivation"] = vc.derivation
                             vc.confirm()
                             
                         }))
@@ -542,25 +542,28 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
             
             if !error && node != nil {
                 
-                recovery.node = node!
-                
+                var words:String?
+                var derivation:String?
+                var json:[String:Any]?
+                                
                 if vc.justWords.count == 12 || vc.justWords.count == 24 {
                     
-                    recovery.words = vc.justWords.joined(separator: " ")
+                    words = vc.justWords.joined(separator: " ")
                     
                 }
                 
-                if dict["descriptor"] != nil {
+                if dict["descriptor"] == nil {
                     
-                    recovery.json = dict
+                    derivation = vc.derivation
+                    json = nil
                     
                 } else {
                     
-                    recovery.derivation = vc.derivation
+                    json = dict
                     
                 }
                 
-                recovery.recover { (success, error) in
+                recovery.recover(node: node!, json: json, words: words, derivation: derivation) { (success, error) in
                     
                     if success {
                         
@@ -628,6 +631,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                 }
                 
                 vc.walletDict = self.recoveryDict
+                vc.derivation = self.derivation
                 vc.confirmedDoneBlock = { [unowned thisVc = self] result in
                     
                     if result {

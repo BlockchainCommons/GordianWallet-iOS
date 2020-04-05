@@ -171,12 +171,16 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
                              
                                 for w in entity! {
                                     
-                                    if !(w["isArchived"] as! Bool) && (w["id"] as! UUID) != wallet!.id && wallet!.nodeId == (w["nodeId"] as! UUID) {
+                                    if w["id"] != nil {
                                         
-                                        vc.wallets.append(w)
+                                        if !(w["isArchived"] as! Bool) && (w["id"] as! UUID) != wallet!.id && wallet!.nodeId == (w["nodeId"] as! UUID) {
+                                            
+                                            vc.wallets.append(w)
+                                            
+                                        }
                                         
                                     }
-                                                                
+                                                                                                    
                                 }
                                 
                                 DispatchQueue.main.async {

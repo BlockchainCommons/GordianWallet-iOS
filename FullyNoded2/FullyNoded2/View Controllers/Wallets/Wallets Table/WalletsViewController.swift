@@ -231,7 +231,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         func loadWallets() {
                         
             self.cd?.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
-                
+                                
                 if errorDescription == nil {
                     
                     if wallets!.count == 0 {
@@ -244,7 +244,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             
                             let s = WalletStruct(dictionary: w)
                             
-                            if !s.isArchived {
+                            if !s.isArchived && w["id"] != nil {
                                 
                                 vc.sortedWallets.append(w)
                                 
@@ -817,9 +817,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if !isCaptured {
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [unowned vc = self] in
                 
-                self.performSegue(withIdentifier: "exportSeed", sender: self)
+                vc.performSegue(withIdentifier: "exportSeed", sender: vc)
                 
             }
             

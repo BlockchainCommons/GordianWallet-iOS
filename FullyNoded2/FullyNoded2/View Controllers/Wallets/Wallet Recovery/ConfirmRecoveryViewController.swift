@@ -16,6 +16,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     let connectingView = ConnectingView()
     var words = ""
     var walletDict = [String:Any]()
+    var derivation = ""
     var confirmedDoneBlock: ((Bool) -> Void)?
     var addresses = [String]()
     var descriptorStruct:DescriptorStruct!
@@ -99,33 +100,32 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         walletNetwork.text = "no data available"
         walletBalance.text = "no data available"
         walletType.text = "Single-sig"
-        let stringPath = self.walletDict["derivation"] as! String
-        walletDerivation.text = "\(stringPath)/0"
+        walletDerivation.text = "\(derivation)/0"
         
         let mnemonicCreator = MnemonicCreator()
         mnemonicCreator.convert(words: words) { [unowned vc = self] (mnemonic, error) in
             
             if !error && mnemonic != nil {
                 
-                let mk = HDKey(mnemonic!.seedHex(), network(path: stringPath))!
+                let mk = HDKey(mnemonic!.seedHex(), network(path: vc.derivation))!
                 let fingerprint = mk.fingerprint.hexString
                 
                 for i in 0...4 {
                     
                     do {
                         
-                        let key = try mk.derive(BIP32Path("\(stringPath)/0/\(i)")!)
+                        let key = try mk.derive(BIP32Path("\(vc.derivation)/0/\(i)")!)
                         var addressType:AddressType!
                         
-                        if stringPath.contains("84") {
+                        if vc.derivation.contains("84") {
                             
                             addressType = .payToWitnessPubKeyHash
                             
-                        } else if stringPath.contains("44") {
+                        } else if vc.derivation.contains("44") {
                             
                             addressType = .payToPubKeyHash
                             
-                        } else if stringPath.contains("49") {
+                        } else if vc.derivation.contains("49") {
                             
                             addressType = .payToScriptHashPayToWitnessPubKeyHash
                             
@@ -146,9 +146,9 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 
                 do {
                     
-                    let xpub = try mk.derive(BIP32Path(stringPath)!).xpub
+                    let xpub = try mk.derive(BIP32Path(vc.derivation)!).xpub
                     
-                    switch stringPath {
+                    switch vc.derivation {
                         
                     case "m/84'/1'/0'":
                         param = "\"wpkh([\(fingerprint)/84'/1'/0']\(xpub)/0/*)\""

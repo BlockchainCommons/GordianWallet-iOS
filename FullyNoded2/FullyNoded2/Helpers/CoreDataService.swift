@@ -42,11 +42,11 @@ class CoreDataService {
         })
         return container
     }()
-    
-    lazy var context = persistentContainer.viewContext
-    
+        
     // MARK: - Core Data Saving support
     func saveContext () {
+        
+        let context = persistentContainer.viewContext
         
         if context.hasChanges {
             do {
@@ -60,16 +60,16 @@ class CoreDataService {
         }
     }
     
-    
-    
     func saveEntity(dict: [String:Any], entityName: ENTITY, completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         print("saveEntityToCoreData")
+        
+        let context = persistentContainer.viewContext
                 
         guard let entity = NSEntityDescription.entity(forEntityName: entityName.rawValue, in: context) else {
             completion((false, "unable to access \(entityName.rawValue)"))
             return
         }
-        
+                
         let credential = NSManagedObject(entity: entity, insertInto: context)
         var succ = Bool()
         
@@ -105,6 +105,8 @@ class CoreDataService {
     func retrieveEntity(entityName: ENTITY, completion: @escaping ((entity: [[String:Any]]?, errorDescription: String?)) -> Void) {
         print("retrieveEntity")
         
+        let context = persistentContainer.viewContext
+        
         var fetchRequest:NSFetchRequest<NSFetchRequestResult>? = NSFetchRequest<NSFetchRequestResult>(entityName: entityName.rawValue)
         fetchRequest?.returnsObjectsAsFaults = false
         fetchRequest?.resultType = .dictionaryResultType
@@ -138,6 +140,8 @@ class CoreDataService {
     
     func updateNode(nodeToUpdate: UUID, newCredentials: [String:Any], completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         print("updateEntity")
+        
+        let context = persistentContainer.viewContext
         
         var fetchRequest:NSFetchRequest<NSManagedObject>? = NSFetchRequest<NSManagedObject>(entityName: ENTITY.nodes.rawValue)
         fetchRequest?.returnsObjectsAsFaults = false
@@ -223,6 +227,8 @@ class CoreDataService {
     func updateEntity(id: UUID, keyToUpdate: String, newValue: Any, entityName: ENTITY, completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         print("updateEntity")
         
+        let context = persistentContainer.viewContext
+        
         var fetchRequest:NSFetchRequest<NSManagedObject>? = NSFetchRequest<NSManagedObject>(entityName: entityName.rawValue)
         fetchRequest?.returnsObjectsAsFaults = false
         
@@ -238,7 +244,7 @@ class CoreDataService {
                         
                         var success = false
                         
-                        for data in results! {
+                        for (i, data) in results!.enumerated() {
                             
                             if id == data.value(forKey: "id") as? UUID {
                                 
@@ -257,21 +263,28 @@ class CoreDataService {
                                 
                             }
                             
+                            if i + 1 == results!.count {
+                                
+                                fetchRequest = nil
+                                results = nil
+                                
+                                if success {
+                                    
+                                    #if DEBUG
+                                    print("updated successfully")
+                                    #endif
+                                    completion((true, nil))
+                                    
+                                } else {
+                                    
+                                    completion((false, "error editing"))
+                                    
+                                }
+                                
+                            }
+                            
                         }
-                        
-                        fetchRequest = nil
-                        results = nil
-                        
-                        if success {
-                            
-                            completion((true, nil))
-                            
-                        } else {
-                            
-                            completion((false, "error editing"))
-                            
-                        }
-                        
+                                                
                     } else {
                         
                         completion((false, "no results"))
@@ -291,6 +304,8 @@ class CoreDataService {
     }
     
     func deleteEntity(id: UUID, entityName: ENTITY, completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
+        
+        let context = persistentContainer.viewContext
         
         var fetchRequest:NSFetchRequest<NSManagedObject>? = NSFetchRequest<NSManagedObject>(entityName: entityName.rawValue)
         fetchRequest?.returnsObjectsAsFaults = false

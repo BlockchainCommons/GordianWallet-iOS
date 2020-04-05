@@ -288,12 +288,12 @@ class NodeLogic {
                     
                 case BTC_CLI_COMMAND.getblockchaininfo.rawValue:
                     
-                    if reducer.dictToReturn != nil {
-                        
-                        let blockchainInfo = reducer.dictToReturn!
+                    if let blockchainInfo = reducer.dictToReturn {
+                                                
                         if let currentblockheight = blockchainInfo["blocks"] as? Int {
                             
                             dictToReturn["blocks"] = currentblockheight
+                            print("currentblockheight = \(currentblockheight)")
                             let ud = UserDefaults.standard
                             ud.set(currentblockheight, forKey: "blockheight")
                             

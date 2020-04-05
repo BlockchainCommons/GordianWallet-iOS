@@ -28,8 +28,13 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         table.delegate = self
         table.dataSource = self
-        getWords()
         connectingView.addConnectingView(vc: self, description: "fetching your keys")
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        getWords()
         
     }
     

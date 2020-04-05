@@ -899,9 +899,13 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                         
                         if wallet != nil && !error {
                             
-                            vc.tableView.alpha = 1
-                            vc.wallet = wallet!
-                            vc.loadData()
+                            DispatchQueue.main.async { [unowned vc = self] in
+                                
+                                vc.tableView.alpha = 1
+                                vc.wallet = wallet!
+                                vc.loadData()
+                                
+                            }
                             
                         } else {
                             
