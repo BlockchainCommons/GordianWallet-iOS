@@ -10,8 +10,8 @@ import Foundation
 
 class RefillMultiSig {
     
-    let cd = CoreDataService()
-    let enc = Encryption()
+    let cd = CoreDataService.sharedInstance
+    let enc = Encryption.sharedInstance
     
     func refill(wallet: WalletStruct, recoveryXprv: String, recoveryXpub: String, completion: @escaping ((success: Bool, error: String?)) -> Void) {
         
@@ -43,9 +43,9 @@ class RefillMultiSig {
                                     
                                     if !reducer.errorBool {
                                         
-                                        self.cd.updateEntity(id: wallet.id, keyToUpdate: "maxRange", newValue: wallet.maxRange + 2500, entityName: .wallets) {
+                                        self.cd.updateEntity(id: wallet.id, keyToUpdate: "maxRange", newValue: wallet.maxRange + 2500, entityName: .wallets) { (success, errorDescription) in
                                             
-                                            if !self.cd.errorBool {
+                                            if success {
                                                 
                                                 completion((true, nil))
                                                 

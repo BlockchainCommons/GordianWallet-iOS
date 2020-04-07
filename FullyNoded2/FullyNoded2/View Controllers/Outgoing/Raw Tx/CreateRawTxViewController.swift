@@ -137,9 +137,9 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                     self.scannerView.addSubview(self.qrScanner.closeButton)
                     self.isFirstTime = false
                     
-                    UIView.animate(withDuration: 0.3, animations: {
+                    UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
                         
-                        self.scannerView.alpha = 1
+                        vc.scannerView.alpha = 1
                         
                     })
                     
@@ -154,9 +154,9 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 
                 DispatchQueue.main.async {
                     
-                    UIView.animate(withDuration: 0.3, animations: {
+                    UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
                         
-                        self.scannerView.alpha = 1
+                        vc.scannerView.alpha = 1
                         
                     })
                     
@@ -407,8 +407,8 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             
         }
         
-        let enc = Encryption()
-        enc.getNode { (node, error) in
+        let enc = Encryption.sharedInstance
+        enc.getNode { [unowned vc = self] (node, error) in
             
             if !error && node != nil {
                 
@@ -416,7 +416,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                     
                     if !error && wallet != nil {
                         
-                        self.tryRaw()
+                        vc.tryRaw()
                         
                     } else {
                         
@@ -721,17 +721,17 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     func getRawTx() {
         print("getRawTx")
         
-        getActiveWalletNow { (wallet, error) in
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
             if wallet != nil && !error {
                 
                 if wallet!.type == "MULTI" {
                     
-                    self.createMultiSig(wallet: wallet!)
+                    vc.createMultiSig(wallet: wallet!)
                     
                 } else if wallet!.type == "DEFAULT" {
                     
-                    self.createSingleSig()
+                    vc.createSingleSig()
                     
                 } else {
                     
@@ -740,11 +740,11 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                     
                     if descStr.isMulti {
                         
-                        self.createMultiSig(wallet: wallet!)
+                        vc.createMultiSig(wallet: wallet!)
                         
                     } else {
                         
-                        self.createSingleSig()
+                        vc.createSingleSig()
                         
                     }
                     
@@ -768,25 +768,25 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         }
         
         let multiSigTxBuilder = MultiSigTxBuilder()
-        multiSigTxBuilder.build(outputs: outputs) { (signedTx, unsignedPsbt, errorDescription) in
+        multiSigTxBuilder.build(outputs: outputs) { [unowned vc = self] (signedTx, unsignedPsbt, errorDescription) in
             
             if signedTx != nil {
                 
-                self.confirm(raw: signedTx!)
+                vc.confirm(raw: signedTx!)
                 
             } else if unsignedPsbt != nil {
                 
-                self.confirmUnsigned(psbt: unsignedPsbt!)
+                vc.confirmUnsigned(psbt: unsignedPsbt!)
                 
             } else {
                 
                 DispatchQueue.main.async {
                     
-                    self.outputsString = ""
-                    self.outputs.removeAll()
-                    self.creatingView.removeConnectingView()
+                    vc.outputsString = ""
+                    vc.outputs.removeAll()
+                    vc.creatingView.removeConnectingView()
                     
-                    displayAlert(viewController: self,
+                    displayAlert(viewController: vc,
                                  isError: true,
                                  message: errorDescription!)
                     
@@ -802,25 +802,25 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         print("createSingleSig")
         
         let builder = SingleSigBuilder()
-        builder.build(outputs: outputs) { (signedTx, psbt, errorDescription) in
+        builder.build(outputs: outputs) { [unowned vc = self] (signedTx, psbt, errorDescription) in
             
             if signedTx != nil {
                 
-                self.confirm(raw: signedTx!)
+                vc.confirm(raw: signedTx!)
                 
             } else if psbt != nil {
                 
-                self.confirmUnsigned(psbt: psbt!)
+                vc.confirmUnsigned(psbt: psbt!)
                 
             } else {
                 
                 DispatchQueue.main.async {
                     
-                    self.outputsString = ""
-                    self.outputs.removeAll()
-                    self.creatingView.removeConnectingView()
+                    vc.outputsString = ""
+                    vc.outputs.removeAll()
+                    vc.creatingView.removeConnectingView()
                     
-                    displayAlert(viewController: self,
+                    displayAlert(viewController: vc,
                                  isError: true,
                                  message: errorDescription!)
                     

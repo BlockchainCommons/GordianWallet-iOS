@@ -24,33 +24,35 @@ class VerifyViewController: UIViewController {
     
     func getAddressInfo(address: String) {
         
-        let reducer = Reducer()
+        let param = "\"\(address)\""
         
-        func getResult() {
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
-            if !reducer.errorBool {
+            let reducer = Reducer()
+            
+            func getResult() {
                 
-                let dict = reducer.dictToReturn
-                
-                DispatchQueue.main.async {
+                if !reducer.errorBool {
                     
-                    self.connectingView.removeConnectingView()
-                    self.textView.text = "\(dict)"
+                    if let dict = reducer.dictToReturn {
+                        
+                        DispatchQueue.main.async {
+                            
+                            vc.connectingView.removeConnectingView()
+                            vc.textView.text = "\(dict)"
+                            
+                        }
+                        
+                    }
+                    
+                } else {
+                    
+                    vc.connectingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: reducer.errorDescription)
                     
                 }
                 
-            } else {
-                
-                self.connectingView.removeConnectingView()
-                displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
-                
             }
-            
-        }
-        
-        let param = "\"\(address)\""
-        
-        getActiveWalletNow { (wallet, error) in
             
             if wallet != nil && !error {
                 

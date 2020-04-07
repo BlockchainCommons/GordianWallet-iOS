@@ -93,12 +93,12 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     func loadActiveWallet() {
         print("loadActiveWallet")
         
-        getActiveWalletNow { (wallet, error) in
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
             if wallet != nil && !error {
                 
-                self.wallet = wallet!
-                self.getKeysFromBitcoinCore()
+                vc.wallet = wallet!
+                vc.getKeysFromBitcoinCore()
                 
             }
             
@@ -167,25 +167,25 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         connectingView.addConnectingView(vc: self, description: "getting the addresses from your node")
         
         let reducer = Reducer()
-        reducer.makeCommand(walletName: wallet.name, command: .deriveaddresses, param: "\"\(wallet.descriptor)\", ''[0,999]''") {
+        reducer.makeCommand(walletName: wallet.name, command: .deriveaddresses, param: "\"\(wallet.descriptor)\", ''[0,999]''") { [unowned vc = self] in
             
             if !reducer.errorBool {
                 
                 let result = reducer.arrayToReturn
-                self.keys = result as! [String]
+                vc.keys = result as! [String]
                 
                 DispatchQueue.main.async {
                     
-                    self.table.reloadData()
+                    vc.table.reloadData()
                     
                 }
                 
-                self.connectingView.removeConnectingView()
+                vc.connectingView.removeConnectingView()
                 
             } else {
                 
-                displayAlert(viewController: self, isError: true, message: "error getting addresses from your node")
-                self.connectingView.removeConnectingView()
+                displayAlert(viewController: vc, isError: true, message: "error getting addresses from your node")
+                vc.connectingView.removeConnectingView()
                 
             }
             

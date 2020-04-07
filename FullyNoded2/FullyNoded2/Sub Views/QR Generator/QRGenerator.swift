@@ -11,9 +11,7 @@ import UIKit
 
 class QRGenerator: UIView {
     
-    var textInput = ""
-    
-    func getQRCode() -> UIImage {
+    func getQRCode(textInput: String) -> UIImage {
         
         let imageToReturn = UIImage(named: "clear.png")!
         
@@ -39,7 +37,9 @@ class QRGenerator: UIView {
         let colored = (output.applyingFilter("CIFalseColor", parameters: colorParameters))
         
         func renderedImage(uiImage: UIImage) -> UIImage? {
+            
             let image = uiImage
+            
             return UIGraphicsImageRenderer(size: image.size,
                                            format: image.imageRendererFormat).image { _ in
                                             image.draw(in: CGRect(origin: .zero, size: image.size))

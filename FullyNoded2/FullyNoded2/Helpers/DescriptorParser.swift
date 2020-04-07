@@ -319,7 +319,6 @@ class DescriptorParser {
             
         }
         
-        print("dict = \(dict)")
         return DescriptorStruct(dictionary: dict)
         
     }

@@ -31,6 +31,7 @@ class TorClient {
     }
     
     static let sharedInstance = TorClient()
+    let cd = CoreDataService.sharedInstance
     public var state = TorState.none
     private var config: TorConfiguration = TorConfiguration()
     private var thread: TorThread?
@@ -47,7 +48,7 @@ class TorClient {
     lazy var session = URLSession(configuration: sessionConfiguration)
 
     // Start the tor client.
-    func start(delegate: OnionManagerDelegate?, completion: @escaping () -> Void) {
+    func start(delegate: OnionManagerDelegate?) {
         print("start")
         
         weak var weakDelegate = delegate
@@ -62,19 +63,19 @@ class TorClient {
         self.session = URLSession(configuration:self.sessionConfiguration)
         self.session.configuration.urlCache = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
         
-        self.clearAuthKeys {
+        self.clearAuthKeys { [unowned vc = self] in
             
-            self.addAuthKeysToAuthDirectory {
+            vc.addAuthKeysToAuthDirectory { [unowned vc = self] in
                 
-                self.thread = nil
+                vc.thread = nil
                 
-                self.config.options = [
+                vc.config.options = [
                     
                     "DNSPort": "12346",
                     "AutomapHostsOnResolve": "1",
                     "SocksPort": "29050 OnionTrafficOnly",
                     "AvoidDiskWrites": "1",
-                    "ClientOnionAuthDir": "\(self.authDirPath)",
+                    "ClientOnionAuthDir": "\(vc.authDirPath)",
                     "LearnCircuitBuildTimeout": "1",
                     "NumEntryGuards": "8",
                     "SafeSocks": "1",
@@ -87,31 +88,31 @@ class TorClient {
                     
                 ]
                 
-                self.config.cookieAuthentication = true
-                self.config.dataDirectory = URL(fileURLWithPath: torDir)
-                self.config.controlSocket = self.config.dataDirectory?.appendingPathComponent("cp")
-                self.config.arguments = ["--ignore-missing-torrc"]
+                vc.config.cookieAuthentication = true
+                vc.config.dataDirectory = URL(fileURLWithPath: torDir)
+                vc.config.controlSocket = vc.config.dataDirectory?.appendingPathComponent("cp")
+                vc.config.arguments = ["--ignore-missing-torrc"]
                 
                 // Initiate the controller.
-                if self.controller == nil {
-                    self.controller = TorController(socketURL: self.config.controlSocket!)
+                if vc.controller == nil {
+                    vc.controller = TorController(socketURL: vc.config.controlSocket!)
                 }
                 
-                self.thread = TorThread(configuration: self.config)
+                vc.thread = TorThread(configuration: vc.config)
                 
                 // Start a tor thread.
-                self.thread?.start()
+                vc.thread?.start()
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     // Connect Tor controller.
                     
                     do {
                         
-                        if !(self.controller?.isConnected ?? false) {
+                        if !(vc.controller?.isConnected ?? false) {
                             
                             do {
                                 
-                                try self.controller?.connect()
+                                try vc.controller?.connect()
                                 
                             } catch {
                                 
@@ -123,12 +124,12 @@ class TorClient {
                         
                         let cookie = try Data(
                             
-                            contentsOf: self.config.dataDirectory!.appendingPathComponent("control_auth_cookie"),
+                            contentsOf: vc.config.dataDirectory!.appendingPathComponent("control_auth_cookie"),
                             options: NSData.ReadingOptions(rawValue: 0)
                             
                         )
                                                 
-                        self.controller?.authenticate(with: cookie) { success, error in
+                        self.controller?.authenticate(with: cookie) { [unowned vc = self] (success, error) in
                             
                             if let error = error {
                                 
@@ -137,19 +138,37 @@ class TorClient {
                                 
                             }
                             
-                            var obvs:Any!
-                            obvs = self.controller?.addObserver(forCircuitEstablished: { established in
+                            var progressObs: Any?
+                            progressObs = vc.controller?.addObserver(forStatusEvents: {
+                                (type: String, severity: String, action: String, arguments: [String : String]?) -> Bool in
                                 
+                                #if DEBUG
+                                print("args = \(String(describing: arguments))")
+                                #endif
+
+                                if type == "STATUS_CLIENT" && action == "BOOTSTRAP" {
+                                    let progress = Int(arguments!["PROGRESS"]!)!
+
+                                    weakDelegate?.torConnProgress(progress)
+
+                                    if progress >= 100 {
+                                        vc.controller?.removeObserver(progressObs)
+                                    }
+
+                                    return true
+                                }
+
+                                return false
+                            })
+                            
+                            var obvs:Any!
+                            obvs = vc.controller?.addObserver(forCircuitEstablished: { established in
                                 
                                 func connected() {
                                     
-                                    self.state = .connected
+                                    vc.state = .connected
                                     weakDelegate?.torConnFinished()
-                                    DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .didEstablishTorConnection, object: self)
-                                    }
-                                    completion()
-                                    self.controller?.removeObserver(obvs)
+                                    vc.controller?.removeObserver(obvs)
                                     
                                 }
                                 
@@ -161,7 +180,7 @@ class TorClient {
                                     
                                     connected()
                                     
-                                } else if self.state == .refreshing {
+                                } else if vc.state == .refreshing {
                                     
                                     connected()
                                     
@@ -174,8 +193,9 @@ class TorClient {
                     } catch {
                         
                         print("failed connecting tor")
-                        self.state = .none
-                        completion()
+                        weakDelegate?.torConnDifficulties()
+                        vc.state = .none
+                        //completion()
                         
                     }
                     
@@ -200,11 +220,8 @@ class TorClient {
         
         self.controller?.disconnect()
         self.controller = nil
-        
-        // More cleanup
         self.thread?.cancel()
         self.thread = nil
-        
         self.clearAuthKeys {}
         state = .stopped
         
@@ -279,9 +296,8 @@ class TorClient {
         print("addAuthKeysToAuthDirectory")
         
         let authPath = self.authDirPath
-        let cd = CoreDataService()
-        let enc = Encryption()
-        cd.retrieveEntity(entityName: .nodes) { (entity, errorDescription) in
+        let enc = Encryption.sharedInstance
+        cd.retrieveEntity(entityName: .nodes) { [unowned vc = self] (entity, errorDescription) in
             
             if entity != nil {
                 
@@ -291,7 +307,7 @@ class TorClient {
                     
                     for (i, n) in entity!.enumerated() {
                                                                         
-                        cd.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
+                        vc.cd.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
                             
                             if errorDescription == nil {
                                 

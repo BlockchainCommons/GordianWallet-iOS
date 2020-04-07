@@ -11,6 +11,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    private var startingUp = true
 //    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 //
 //    func registerBackgroundTask() {
@@ -61,20 +62,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // We start the tor thread automatically here whenever the app enters the foreground.
         let mgr = TorClient.sharedInstance
 
-        if mgr.state != .started && mgr.state != .connected  {
+        if !startingUp && mgr.state != .started && mgr.state != .connected  {
 
-            mgr.start(delegate: nil) {
-                
-                //self.registerBackgroundTask()
+            mgr.start(delegate: nil)
 
-//                DispatchQueue.main.async {
-//
-//                    NotificationCenter.default.post(name: .didEstablishTorConnection, object: self)
-//
-//                }
-
-            }
-
+        } else {
+            
+            startingUp = false
+            
         }
         
     }
@@ -89,28 +84,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // as for some reason resigning the Tor thread crashes iPhone 11's.
         let device = UIDevice.modelName
         
-        if device != "iPhone 11 pro max" {
+        if device != "iPhone 11 pro max" && device != "iPhone XS Max" {
             
             let mgr = TorClient.sharedInstance
             
             if mgr.state != .stopped {
                 
                 mgr.state = .refreshing
-                                    
                 mgr.resign()
-                
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//
-//                    self.endBackgroundTask()
-//
-//                }
                                                     
             }
             
         }
 
         // Save changes in the application's managed object context when the application transitions to the background.
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        //(UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        CoreDataService.sharedInstance.saveContext()
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

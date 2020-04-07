@@ -51,12 +51,15 @@ class IntroductionViewController: UIViewController, UITextViewDelegate, UINaviga
     }
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        
         if (URL.absoluteString == donationLinkUrl) {
-            UIApplication.shared.open(URL) { (Bool) in
-
-            }
+            
+            UIApplication.shared.open(URL) { (Bool) in }
+            
         }
+        
         return false
+        
     }
     
     @IBAction func nextAction(_ sender: Any) {

@@ -46,7 +46,7 @@ class ImportCustomDescriptor {
             
         }
         
-        let enc = Encryption()
+        let enc = Encryption.sharedInstance
         enc.getNode { (node, error) in
             
             if node != nil && !error {

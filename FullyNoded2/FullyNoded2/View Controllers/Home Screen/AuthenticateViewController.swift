@@ -10,6 +10,7 @@ import UIKit
 
 class AuthenticateViewController: UIViewController {
     
+    let cd = CoreDataService.sharedInstance
     var pubkey = ""
     var tapQRGesture = UITapGestureRecognizer()
     var tapTextViewGesture = UITapGestureRecognizer()
@@ -34,9 +35,9 @@ class AuthenticateViewController: UIViewController {
     
     @IBAction func close(_ sender: Any) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.dismiss(animated: true, completion: nil)
+            vc.dismiss(animated: true, completion: nil)
             
         }
         
@@ -45,8 +46,7 @@ class AuthenticateViewController: UIViewController {
     
     func getpubkey() {
         
-        let cd = CoreDataService()
-        cd.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
+        cd.retrieveEntity(entityName: .auth) { [unowned vc = self] (authKeys, errorDescription) in
             
             // add new authkeys incase none exist
             func addAuthKeys() {
@@ -58,23 +58,22 @@ class AuthenticateViewController: UIViewController {
                         
                         let pubkeyData = pubkey!.dataUsingUTF8StringEncoding
                         let privkeyData = privkey!.dataUsingUTF8StringEncoding
-                        let enc = Encryption()
+                        let enc = Encryption.sharedInstance
                         enc.encryptData(dataToEncrypt: privkeyData) { (encryptedPrivkey, error) in
                             
                             if !error {
                                 
                                 let dict = ["privkey":encryptedPrivkey!, "pubkey":pubkeyData]
-                                let cd = CoreDataService()
-                                cd.saveEntity(dict: dict, entityName: .auth) {
+                                vc.cd.saveEntity(dict: dict, entityName: .auth) { (success, errorDescription) in
                                     
-                                    if !cd.errorBool {
+                                    if success {
                                         
-                                        self.pubkey = "descriptor:x25519:" + pubkey!
-                                        self.showDescriptor()
+                                        vc.pubkey = "descriptor:x25519:" + pubkey!
+                                        vc.showDescriptor()
                                         
                                     } else {
                                         
-                                        displayAlert(viewController: self, isError: true, message: "error saving auth keys")
+                                        displayAlert(viewController: vc, isError: true, message: "error saving auth keys")
                                         
                                     }
                                     
@@ -82,7 +81,7 @@ class AuthenticateViewController: UIViewController {
                                 
                             } else {
                                 
-                                displayAlert(viewController: self, isError: true, message: "error encrypting your privkey")
+                                displayAlert(viewController: vc, isError: true, message: "error encrypting your privkey")
                                 
                             }
                             
@@ -103,8 +102,8 @@ class AuthenticateViewController: UIViewController {
                         
                         let pubkey = authKeys![0]["pubkey"] as! Data
                         let str = String(bytes: pubkey, encoding: .utf8)!
-                        self.pubkey = "descriptor:x25519:" + str
-                        self.showDescriptor()
+                        vc.pubkey = "descriptor:x25519:" + str
+                        vc.showDescriptor()
                         
                     } else {
                         
@@ -120,7 +119,7 @@ class AuthenticateViewController: UIViewController {
                 
             } else {
                 
-                displayAlert(viewController: self, isError: true, message: "error getting authkeys")
+                displayAlert(viewController: vc, isError: true, message: "error getting authkeys")
                 
             }
             
@@ -148,10 +147,10 @@ class AuthenticateViewController: UIViewController {
     
     func showDescriptor() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.displayer.rawString = self.pubkey
-            self.displayer.addRawDisplay()
+            vc.displayer.rawString = vc.pubkey
+            vc.displayer.addRawDisplay()
             
         }
         
@@ -159,29 +158,29 @@ class AuthenticateViewController: UIViewController {
     
     @objc func shareRawText(_ sender: UITapGestureRecognizer) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
             UIView.animate(withDuration: 0.2, animations: {
                 
-                self.displayer.textView.alpha = 0
+                vc.displayer.textView.alpha = 0
                 
             }) { _ in
                 
                 UIView.animate(withDuration: 0.2, animations: {
                     
-                    self.displayer.textView.alpha = 1
+                    vc.displayer.textView.alpha = 1
                     
                 })
                 
             }
                             
-            let textToShare = [self.pubkey]
+            let textToShare = [vc.pubkey]
             
             let activityViewController = UIActivityViewController(activityItems: textToShare,
                                                                   applicationActivities: nil)
             
-            activityViewController.popoverPresentationController?.sourceView = self.view
-            self.present(activityViewController, animated: true) {}
+            activityViewController.popoverPresentationController?.sourceView = vc.view
+            vc.present(activityViewController, animated: true) {}
             
         }
         
@@ -189,31 +188,30 @@ class AuthenticateViewController: UIViewController {
     
     @objc func shareQRCode(_ sender: UITapGestureRecognizer) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
             UIView.animate(withDuration: 0.2, animations: {
                 
-                self.displayer.qrView.alpha = 0
+                vc.displayer.qrView.alpha = 0
                 
             }) { _ in
                 
                 UIView.animate(withDuration: 0.2, animations: {
                     
-                    self.displayer.qrView.alpha = 1
+                    vc.displayer.qrView.alpha = 1
                     
                 })
                 
             }
             
-            self.qrGenerator.textInput = self.displayer.rawString
-            let qrImage = self.qrGenerator.getQRCode()
+            let qrImage = vc.qrGenerator.getQRCode(textInput: vc.displayer.rawString)
             let objectsToShare = [qrImage]
             
             let activityController = UIActivityViewController(activityItems: objectsToShare,
                                                               applicationActivities: nil)
             
-            activityController.popoverPresentationController?.sourceView = self.view
-            self.present(activityController, animated: true) {}
+            activityController.popoverPresentationController?.sourceView = vc.view
+            vc.present(activityController, animated: true) {}
             
         }
         

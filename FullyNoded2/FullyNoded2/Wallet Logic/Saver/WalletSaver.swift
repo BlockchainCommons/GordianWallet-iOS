@@ -12,27 +12,33 @@ import KeychainSwift
 class WalletSaver {
     
     let keychain = KeychainSwift()
+    let cd = CoreDataService.sharedInstance
     
     func save(walletToSave: [String:Any], completion: @escaping ((Bool)) -> Void) {
         
-        let cd = CoreDataService()
-        cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+        self.cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
             
             if errorDescription == nil {
                 
-                cd.saveEntity(dict: walletToSave, entityName: .wallets) {
+                self.cd.saveEntity(dict: walletToSave, entityName: .wallets) { (success, errorDescription) in
                     
-                    if !cd.errorBool {
-                        
-                        print("saved wallet")
+                    if success {
                         
                         if wallets!.count == 0 {
                             
                             let w = WalletStruct(dictionary: walletToSave)
                             
-                            cd.updateEntity(id: w.id, keyToUpdate: "isActive", newValue: true, entityName: .wallets) {
+                            self.cd.updateEntity(id: w.id, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { (success1, errorDescription1) in
                                 
-                                completion((true))
+                                if success1 {
+                                    
+                                  completion((true))
+                                    
+                                } else {
+                                    
+                                    completion((false))
+                                    
+                                }
                                 
                             }
                             

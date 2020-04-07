@@ -11,7 +11,8 @@ import UIKit
 
 class QuickConnect {
     
-    let enc = Encryption()
+    let cd = CoreDataService.sharedInstance
+    let enc = Encryption.sharedInstance
     var errorBool = Bool()
     var errorDescription = ""
     var nodeToUpdate:UUID!
@@ -153,8 +154,7 @@ class QuickConnect {
         
         func deactivate(newNodeID: UUID) {
             
-            let cd = CoreDataService()
-            cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+            self.cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
                 
                 if errorDescription == nil {
                     
@@ -164,7 +164,7 @@ class QuickConnect {
                             
                             if node ["id"] as! UUID != newNodeID {
                                 
-                                cd.updateEntity(id: (node["id"] as! UUID), keyToUpdate: "isActive", newValue: false, entityName: .nodes) {}
+                                self.cd.updateEntity(id: (node["id"] as! UUID), keyToUpdate: "isActive", newValue: false, entityName: .nodes) {_ in }
                                 
                             }
                             

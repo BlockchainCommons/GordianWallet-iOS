@@ -61,15 +61,15 @@ class QRViewController: UIViewController, UINavigationControllerDelegate {
         
         DispatchQueue.main.async {
             
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                 
-                self.displayer.textView.alpha = 0
+                vc.displayer.textView.alpha = 0
                 
             }) { _ in
                 
-                UIView.animate(withDuration: 0.2, animations: {
+                UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                     
-                    self.displayer.textView.alpha = 1
+                    vc.displayer.textView.alpha = 1
                     
                 })
                 
@@ -90,31 +90,30 @@ class QRViewController: UIViewController, UINavigationControllerDelegate {
     @objc func shareQRCode(_ sender: UITapGestureRecognizer) {
         print("shareQRCode")
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                 
-                self.displayer.qrView.alpha = 0
+                vc.displayer.qrView.alpha = 0
                 
             }) { _ in
                 
-                UIView.animate(withDuration: 0.2, animations: {
+                UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                     
-                    self.displayer.qrView.alpha = 1
+                    vc.displayer.qrView.alpha = 1
                     
                 })
                 
             }
             
-            self.qrGenerator.textInput = self.displayer.rawString
-            let qrImage = self.qrGenerator.getQRCode()
+            let qrImage = vc.qrGenerator.getQRCode(textInput: vc.displayer.rawString)
             let objectsToShare = [qrImage]
             
             let activityController = UIActivityViewController(activityItems: objectsToShare,
                                                               applicationActivities: nil)
             
-            activityController.popoverPresentationController?.sourceView = self.view
-            self.present(activityController, animated: true) {}
+            activityController.popoverPresentationController?.sourceView = vc.view
+            vc.present(activityController, animated: true) {}
             
         }
         

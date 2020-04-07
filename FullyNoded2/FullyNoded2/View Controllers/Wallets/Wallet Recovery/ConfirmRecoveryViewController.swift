@@ -12,9 +12,11 @@ import CryptoKit
 
 class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    weak var nodeLogic = NodeLogic.sharedInstance
     let connectingView = ConnectingView()
     var words = ""
     var walletDict = [String:Any]()
+    var derivation = ""
     var confirmedDoneBlock: ((Bool) -> Void)?
     var addresses = [String]()
     var descriptorStruct:DescriptorStruct!
@@ -98,44 +100,43 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         walletNetwork.text = "no data available"
         walletBalance.text = "no data available"
         walletType.text = "Single-sig"
-        let stringPath = self.walletDict["derivation"] as! String
-        walletDerivation.text = "\(stringPath)/0"
+        walletDerivation.text = "\(derivation)/0"
         
         let mnemonicCreator = MnemonicCreator()
-        mnemonicCreator.convert(words: words) { (mnemonic, error) in
+        mnemonicCreator.convert(words: words) { [unowned vc = self] (mnemonic, error) in
             
             if !error && mnemonic != nil {
                 
-                let mk = HDKey(mnemonic!.seedHex(), network(path: stringPath))!
+                let mk = HDKey(mnemonic!.seedHex(), network(path: vc.derivation))!
                 let fingerprint = mk.fingerprint.hexString
                 
                 for i in 0...4 {
                     
                     do {
                         
-                        let key = try mk.derive(BIP32Path("\(stringPath)/0/\(i)")!)
+                        let key = try mk.derive(BIP32Path("\(vc.derivation)/0/\(i)")!)
                         var addressType:AddressType!
                         
-                        if stringPath.contains("84") {
+                        if vc.derivation.contains("84") {
                             
                             addressType = .payToWitnessPubKeyHash
                             
-                        } else if stringPath.contains("44") {
+                        } else if vc.derivation.contains("44") {
                             
                             addressType = .payToPubKeyHash
                             
-                        } else if stringPath.contains("49") {
+                        } else if vc.derivation.contains("49") {
                             
                             addressType = .payToScriptHashPayToWitnessPubKeyHash
                             
                         }
                         
                         let address = key.address(addressType).description
-                        self.addresses.append(address)
+                        vc.addresses.append(address)
                         
                     } catch {
                         
-                        displayAlert(viewController: self, isError: false, message: "error deriving addresses from those words")
+                        displayAlert(viewController: vc, isError: false, message: "error deriving addresses from those words")
                         
                     }
                     
@@ -145,9 +146,9 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 
                 do {
                     
-                    let xpub = try mk.derive(BIP32Path(stringPath)!).xpub
+                    let xpub = try mk.derive(BIP32Path(vc.derivation)!).xpub
                     
-                    switch stringPath {
+                    switch vc.derivation {
                         
                     case "m/84'/1'/0'":
                         param = "\"wpkh([\(fingerprint)/84'/1'/0']\(xpub)/0/*)\""
@@ -186,20 +187,20 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                                 
                                 DispatchQueue.main.async {
                                     
-                                    self.walletName.text = self.reducedName(name: walletName)
-                                    self.addressTable.reloadData()
+                                    vc.walletName.text = vc.reducedName(name: walletName)
+                                    vc.addressTable.reloadData()
                                     
                                 }
                                 
                             } else {
                                 
-                                displayAlert(viewController: self, isError: true, message: "unknown error")
+                                displayAlert(viewController: vc, isError: true, message: "unknown error")
                                 
                             }
                             
                         } else {
                             
-                            displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
+                            displayAlert(viewController: vc, isError: true, message: reducer.errorDescription)
                             
                         }
                         
@@ -207,13 +208,13 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                                         
                 } catch {
                     
-                    displayAlert(viewController: self, isError: true, message: "error constructing descriptor")
+                    displayAlert(viewController: vc, isError: true, message: "error constructing descriptor")
                     
                 }
                 
             } else {
                 
-                displayAlert(viewController: self, isError: true, message: "error deriving addresses from those words")
+                displayAlert(viewController: vc, isError: true, message: "error deriving addresses from those words")
                 
             }
             
@@ -238,14 +239,14 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         }
         
         let reducer = Reducer()
-        reducer.makeCommand(walletName: walletName, command: .getdescriptorinfo, param: "\"\(desc)\"") {
+        reducer.makeCommand(walletName: walletName, command: .getdescriptorinfo, param: "\"\(desc)\"") { [unowned vc = self] in
             
             if !reducer.errorBool {
                 
                 if let result = reducer.dictToReturn {
                     
                     let descriptor = result["descriptor"] as! String
-                    reducer.makeCommand(walletName: walletName, command: .deriveaddresses, param: "\"\(descriptor)\", [0,4]") {
+                    reducer.makeCommand(walletName: walletName, command: .deriveaddresses, param: "\"\(descriptor)\", [0,4]") { [unowned vc = self] in
                         
                         if !reducer.errorBool {
                             
@@ -253,38 +254,37 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                                 
                                 for address in result {
                                     
-                                    self.addresses.append(address as! String)
+                                    vc.addresses.append(address as! String)
                                     
                                 }
                                 
-                                self.connectingView.removeConnectingView()
+                                vc.connectingView.removeConnectingView()
                                 
                             } else {
                                 
-                                self.connectingView.removeConnectingView()
-                                displayAlert(viewController: self, isError: true, message: "Error fetching addresses for that wallet")
+                                vc.connectingView.removeConnectingView()
+                                displayAlert(viewController: vc, isError: true, message: "Error fetching addresses for that wallet")
                                 
                             }
                                             
                             DispatchQueue.main.async {
                                 
-                                self.addressTable.reloadData()
+                                vc.addressTable.reloadData()
                                 
                             }
                             
-                            let nodeLogic = NodeLogic()
-                            self.walletDict["name"] = walletName
-                            nodeLogic.wallet = WalletStruct(dictionary: self.walletDict)
-                            nodeLogic.loadWalletData {
+                            vc.walletDict["name"] = walletName
+                            let wallet = WalletStruct(dictionary: vc.walletDict)
+                            vc.nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
                                 
-                                if !nodeLogic.errorBool {
+                                if success && dictToReturn != nil {
                                 
-                                    let s = HomeStruct(dictionary: nodeLogic.dictToReturn)
+                                    let s = HomeStruct(dictionary: dictToReturn!)
                                     let doub = (s.coldBalance).doubleValue
                                     
                                     DispatchQueue.main.async {
                                         
-                                        self.walletBalance.text = "\(doub)"
+                                        vc.walletBalance.text = "\(doub)"
                                         
                                     }
                                     
@@ -292,7 +292,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                                     
                                     DispatchQueue.main.async {
                                         
-                                        self.walletBalance.text = "error fetching balance"
+                                        vc.walletBalance.text = "error fetching balance"
                                         
                                     }
                                     
@@ -302,8 +302,8 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                             
                         } else {
                             
-                            self.connectingView.removeConnectingView()
-                            displayAlert(viewController: self, isError: true, message: "Error fetching addresses for that wallet")
+                            vc.connectingView.removeConnectingView()
+                            displayAlert(viewController: vc, isError: true, message: "Error fetching addresses for that wallet")
                             
                         }
                         
@@ -312,16 +312,16 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                     
                 } else {
                     
-                    self.connectingView.removeConnectingView()
-                    displayAlert(viewController: self, isError: true, message: "getdesriptorinfo error")
+                    vc.connectingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: "getdesriptorinfo error")
                     
                 }
                 
                 
             } else {
                 
-                self.connectingView.removeConnectingView()
-                displayAlert(viewController: self, isError: true, message: "getdesriptorinfo error: \(reducer.errorDescription)")
+                vc.connectingView.removeConnectingView()
+                displayAlert(viewController: vc, isError: true, message: "getdesriptorinfo error: \(reducer.errorDescription)")
                 
             }
             
@@ -348,7 +348,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         }
         
         let reducer = Reducer()
-        reducer.makeCommand(walletName: walletName, command: .deriveaddresses, param: "\"\(desc)\", [0,4]") {
+        reducer.makeCommand(walletName: walletName, command: .deriveaddresses, param: "\"\(desc)\", [0,4]") { [unowned vc = self] in
             
             if !reducer.errorBool {
                 
@@ -356,38 +356,37 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                     
                     for address in result {
                         
-                        self.addresses.append(address as! String)
+                        vc.addresses.append(address as! String)
                         
                     }
                     
-                    self.connectingView.removeConnectingView()
+                    vc.connectingView.removeConnectingView()
                     
                 } else {
                     
-                    self.connectingView.removeConnectingView()
-                    displayAlert(viewController: self, isError: true, message: "Error fetching addresses for that wallet")
+                    vc.connectingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: "Error fetching addresses for that wallet")
                     
                 }
                                 
                 DispatchQueue.main.async {
                     
-                    self.addressTable.reloadData()
+                    vc.addressTable.reloadData()
                     
                 }
                 
-                let nodeLogic = NodeLogic()
-                self.walletDict["name"] = walletName
-                nodeLogic.wallet = WalletStruct(dictionary: self.walletDict)
-                nodeLogic.loadWalletData {
+                vc.walletDict["name"] = walletName
+                let wallet = WalletStruct(dictionary: vc.walletDict)
+                vc.nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
                     
-                    if !nodeLogic.errorBool {
+                    if success && dictToReturn != nil {
                     
-                        let s = HomeStruct(dictionary: nodeLogic.dictToReturn)
+                        let s = HomeStruct(dictionary: dictToReturn!)
                         let doub = (s.coldBalance).doubleValue
                         
                         DispatchQueue.main.async {
                             
-                            self.walletBalance.text = "\(doub)"
+                            vc.walletBalance.text = "\(doub)"
                             
                         }
                         
@@ -395,7 +394,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                         
                         DispatchQueue.main.async {
                             
-                            self.walletBalance.text = "error fetching balance"
+                            vc.walletBalance.text = "error fetching balance"
                             
                         }
                         
@@ -405,8 +404,8 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 
             } else {
                 
-                self.connectingView.removeConnectingView()
-                displayAlert(viewController: self, isError: true, message: "Error fetching addresses for that wallet")
+                vc.connectingView.removeConnectingView()
+                displayAlert(viewController: vc, isError: true, message: "Error fetching addresses for that wallet")
                 
             }
             
@@ -443,9 +442,9 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         print("cancel")
         DispatchQueue.main.async {
             
-            self.dismiss(animated: true) {
+            self.dismiss(animated: true) { [unowned vc = self] in
                 
-                self.confirmedDoneBlock!(false)
+                vc.confirmedDoneBlock!(false)
                 
             }
             
@@ -458,9 +457,9 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         print("confirm")
         DispatchQueue.main.async {
             
-            self.dismiss(animated: true) {
+            self.dismiss(animated: true) { [unowned vc = self] in
                 
-                self.confirmedDoneBlock!(true)
+                vc.confirmedDoneBlock!(true)
                 
             }
             

@@ -58,12 +58,12 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                             
                 let alert = UIAlertController(title: "Broadcast transaction?", message: "Once you broadcast there is no going back", preferredStyle: .actionSheet)
 
-                alert.addAction(UIAlertAction(title: "Yes, broadcast now", style: .default, handler: { action in
+                alert.addAction(UIAlertAction(title: "Yes, broadcast now", style: .default, handler: { [unowned vc = self] action in
                     
                     #if !targetEnvironment(simulator)
-                    self.showAuth()
+                    vc.showAuth()
                     #else
-                    self.broadcast()
+                    vc.broadcast()
                     #endif
                                         
                 }))
@@ -89,35 +89,35 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                         
             let alert = UIAlertController(title: "Sign with:", message: "Choose your offline signer", preferredStyle: .actionSheet)
 
-            alert.addAction(UIAlertAction(title: "Hermit", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "Hermit", style: .default, handler: { [unowned vc = self] action in
                 
-                displayAlert(viewController: self, isError: false, message: "under construction")
-                
-            }))
-            
-            alert.addAction(UIAlertAction(title: "CryptoWallet", style: .default, handler: { action in
-                
-                displayAlert(viewController: self, isError: false, message: "under construction")
+                displayAlert(viewController: vc, isError: false, message: "under construction")
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Coldcard", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "CryptoWallet", style: .default, handler: { [unowned vc = self] action in
                 
-                self.convertPSBTtoData(string: self.unsignedPsbt)
+                displayAlert(viewController: vc, isError: false, message: "under construction")
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Export", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "Coldcard", style: .default, handler: { [unowned vc = self] action in
+                
+                vc.convertPSBTtoData(string: vc.unsignedPsbt)
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Export", style: .default, handler: { [unowned vc = self] action in
                 
                 DispatchQueue.main.async {
                     
-                    let textToShare = [self.unsignedPsbt]
+                    let textToShare = [vc.unsignedPsbt]
                     
                     let activityViewController = UIActivityViewController(activityItems: textToShare,
                                                                           applicationActivities: nil)
                     
-                    activityViewController.popoverPresentationController?.sourceView = self.view
-                    self.present(activityViewController, animated: true) {}
+                    activityViewController.popoverPresentationController?.sourceView = vc.view
+                    vc.present(activityViewController, animated: true) {}
                     
                 }
                 
@@ -151,88 +151,89 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
 
     func executeNodeCommand(method: BTC_CLI_COMMAND, param: String) {
         
-        let reducer = Reducer()
-        
-        func getResult() {
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
-            if !reducer.errorBool {
+            let reducer = Reducer()
+            
+            func getResult() {
                 
-                switch method {
+                if !reducer.errorBool {
                     
-                case .sendrawtransaction:
-                    
-                    let result = reducer.stringToReturn
-                    
-                    DispatchQueue.main.async {
+                    switch method {
                         
-                        UIPasteboard.general.string = result
-                        self.creatingView.removeConnectingView()
-                        self.navigationItem.title = "Sent ✓"
-                        self.broadcastButton.alpha = 0
+                    case .sendrawtransaction:
                         
-                        displayAlert(viewController: self,
-                                     isError: false,
-                                     message: "Transaction sent ✓")
+                        let result = reducer.stringToReturn
                         
-                        if !self.sweeping {
+                        DispatchQueue.main.async {
                             
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                                
-                                self.navigationController?.popToRootViewController(animated: true)
-                                
-                            }
+                            UIPasteboard.general.string = result
+                            vc.creatingView.removeConnectingView()
+                            vc.navigationItem.title = "Sent ✓"
+                            vc.broadcastButton.alpha = 0
                             
-                        } else {
+                            displayAlert(viewController: vc,
+                                         isError: false,
+                                         message: "Transaction sent ✓")
                             
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                            if !vc.sweeping {
                                 
-                                self.dismiss(animated: true) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                                     
-                                    self.doneBlock!(true)
+                                    vc.navigationController?.popToRootViewController(animated: true)
+                                    
+                                }
+                                
+                            } else {
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                    
+                                    vc.dismiss(animated: true) {
+                                        
+                                        vc.doneBlock!(true)
+                                        
+                                    }
                                     
                                 }
                                 
                             }
                             
                         }
+                    case .decodepsbt:
+                        
+                        if let dict = reducer.dictToReturn?["tx"] as? NSDictionary {
+                            
+                            vc.parseTransaction(tx: dict)
+                            
+                        }
+                        
+                    case .decoderawtransaction:
+                        
+                        if let dict = reducer.dictToReturn {
+                            
+                            // parse the inputs and outputs and display to user
+                            vc.parseTransaction(tx: dict)
+                            
+                        }
+                        
+                    default:
+                        
+                        break
                         
                     }
-                case .decodepsbt:
                     
-                    if let dict = reducer.dictToReturn?["tx"] as? NSDictionary {
-                        
-                        parseTransaction(tx: dict)
-                        
-                    }
+                } else {
                     
-                case .decoderawtransaction:
-                    
-                    if let dict = reducer.dictToReturn {
-                        
-                        // parse the inputs and outputs and display to user
-                        parseTransaction(tx: dict)
-                        
-                    }
-                    
-                default:
-                    
-                    break
+                    vc.creatingView.removeConnectingView()
+                                    
+                    displayAlert(viewController: vc,
+                                 isError: true,
+                                 message: reducer.errorDescription)
                     
                 }
                 
-            } else {
-                
-                creatingView.removeConnectingView()
-                                
-                displayAlert(viewController: self,
-                             isError: true,
-                             message: reducer.errorDescription)
-                
             }
-            
-        }
-        
-        getActiveWalletNow { (wallet, error) in
+
             
             if wallet != nil && !error {
                 
@@ -428,52 +429,52 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     
     func parsePrevTx(method: BTC_CLI_COMMAND, param: String, vout: Int) {
         
-        let reducer = Reducer()
-        
-        func getResult() {
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
-            if !reducer.errorBool {
+            let reducer = Reducer()
+            
+            func getResult() {
                 
-                switch method {
+                if !reducer.errorBool {
                     
-                case .decoderawtransaction:
-                    
-                    if let txDict = reducer.dictToReturn {
+                    switch method {
                         
-                        if let outputs = txDict["vout"] as? NSArray {
+                    case .decoderawtransaction:
+                        
+                        if let txDict = reducer.dictToReturn {
                             
-                            parsePrevTxOutput(outputs: outputs, vout: vout)
+                            if let outputs = txDict["vout"] as? NSArray {
+                                
+                                vc.parsePrevTxOutput(outputs: outputs, vout: vout)
+                                
+                            }
                             
                         }
                         
+                    case .getrawtransaction:
+                        
+                        if let rawTransaction = reducer.stringToReturn {
+                            
+                            vc.parsePrevTx(method: .decoderawtransaction,
+                                        param: "\"\(rawTransaction)\"",
+                                        vout: vout)
+                            
+                        }
+                        
+                    default:
+                        
+                        break
+                        
                     }
                     
-                case .getrawtransaction:
+                } else {
                     
-                    if let rawTransaction = reducer.stringToReturn {
-                        
-                        parsePrevTx(method: .decoderawtransaction,
-                                    param: "\"\(rawTransaction)\"",
-                                    vout: vout)
-                        
-                    }
-                    
-                default:
-                    
-                    break
+                    vc.creatingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: "Error parsing inputs")
                     
                 }
                 
-            } else {
-                
-                creatingView.removeConnectingView()
-                displayAlert(viewController: self, isError: true, message: "Error parsing inputs")
-                
             }
-            
-        }
-        
-        getActiveWalletNow { (wallet, error) in
             
             if wallet != nil && !error {
                 
@@ -679,14 +680,11 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         if indexPath.section == 0 || indexPath.section == 1 {
             
             let cell = tableView.cellForRow(at: indexPath)!
-            let impact = UIImpactFeedbackGenerator()
             let addressLabel = cell.viewWithTag(3) as! UILabel
             self.addressToVerify = addressLabel.text!
             
             DispatchQueue.main.async {
-                
-                impact.impactOccurred()
-                
+                                
                 UIView.animate(withDuration: 0.2, animations: {
                     
                     cell.alpha = 0
@@ -697,11 +695,11 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                         
                         cell.alpha = 1
                         
-                    }) { _ in
+                    }) { [unowned vc = self] _ in
                         
                         DispatchQueue.main.async {
                             
-                            self.performSegue(withIdentifier: "verify", sender: self)
+                            vc.performSegue(withIdentifier: "verify", sender: vc)
                             
                         }
                         
@@ -748,12 +746,12 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
             let keychain = KeychainSwift()
             let authorizationProvider = ASAuthorizationAppleIDProvider()
-            authorizationProvider.getCredentialState(forUserID: keychain.get("userIdentifier")!) { (state, error) in
+            authorizationProvider.getCredentialState(forUserID: keychain.get("userIdentifier")!) { [unowned vc = self] (state, error) in
                 
                 switch (state) {
                 case .authorized:
                     print("Account Found - Signed In")
-                    self.broadcast()
+                    vc.broadcast()
                 case .revoked:
                     print("No Account Found")
                     fallthrough

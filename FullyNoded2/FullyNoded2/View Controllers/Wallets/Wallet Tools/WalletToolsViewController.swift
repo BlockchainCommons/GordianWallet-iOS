@@ -43,16 +43,16 @@ class WalletToolsViewController: UIViewController {
         self.creatingView.addConnectingView(vc: self, description: "Refilling the keypool")
         
         let singleSig = RefillSingleSig()
-        singleSig.refill(wallet: self.wallet) { (success, error) in
+        singleSig.refill(wallet: self.wallet) { [unowned vc = self] (success, error) in
             
             if success {
                 
-                self.creatingView.removeConnectingView()
+                vc.creatingView.removeConnectingView()
                 DispatchQueue.main.async {
                     
-                    self.dismiss(animated: true) {
+                    vc.dismiss(animated: true) {
                         
-                        self.refillDoneBlock!(true)
+                        vc.refillDoneBlock!(true)
                         
                     }
                     
@@ -60,8 +60,8 @@ class WalletToolsViewController: UIViewController {
                 
             } else {
                 
-                self.creatingView.removeConnectingView()
-                showAlert(vc: self, title: "Error!", message: "There was an error refilling the keypool: \(String(describing: error))")
+                vc.creatingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error!", message: "There was an error refilling the keypool: \(String(describing: error))")
                 
             }
             
@@ -75,25 +75,25 @@ class WalletToolsViewController: UIViewController {
                         
             let alert = UIAlertController(title: "Refill Keypool", message: "", preferredStyle: .actionSheet)
 
-            alert.addAction(UIAlertAction(title: "Refill Now", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "Refill Now", style: .default, handler: { [unowned vc = self] action in
                 
-                if self.wallet.type == "MULTI" {
+                if vc.wallet.type == "MULTI" {
                     
-                    self.refillMultisig()
+                    vc.refillMultisig()
                     
                 } else {
                     
-                    self.refillSingleSig()
+                    vc.refillSingleSig()
                     
                 }
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "What is this?", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "What is this?", style: .default, handler: { [unowned vc = self] action in
                
                 let message = "This tool allows you to manually refill the keypool associated with this wallet on your node at anytime. Due to the way the app works we have to choose a limited number of keys to import into your node during the wallet creation process (currently 0 to 2500). This can be an issue when you reach your last key as your node will not hold the keys necessary to build transactions or produce addresses. Therefore we offer you the ability to manually refill your nodes keypool. The app is smart eough to know how many keys are in your keypool and will import an additional 2500 keys. This will be reflected on your wallet just under the \"Updated:\" label and in the node pane on the wallet."
                 
-                showAlert(vc: self, title: "Keypool Refill Info", message: message)
+                showAlert(vc: vc, title: "Keypool Refill Info", message: message)
                 
             }))
             
@@ -122,27 +122,27 @@ class WalletToolsViewController: UIViewController {
             
             let alert = UIAlertController(title: "Rescan the blockchain?", message: "This button will start a blockchain rescan for your current wallet. This is useful if you imported the wallet and do not see balances yet. If you recovered a wallet then the app will automatically rescan the blockchain for you.", preferredStyle: .actionSheet)
             
-            alert.addAction(UIAlertAction(title: "Rescan from birthdate", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "Rescan from birthdate", style: .default, handler: { [unowned vc = self] action in
                 
-                self.rescanFromBirthdate()
-                
-            }))
-            
-            alert.addAction(UIAlertAction(title: "Full Rescan", style: .default, handler: { action in
-                
-                self.fullRescan()
+                vc.rescanFromBirthdate()
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Check Scan Status", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "Full Rescan", style: .default, handler: { [unowned vc = self] action in
                 
-                self.checkScanStatus()
+                vc.fullRescan()
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Abort Rescan", style: .default, handler: { action in
+            alert.addAction(UIAlertAction(title: "Check Scan Status", style: .default, handler: { [unowned vc = self] action in
                 
-                self.abortRescan()
+                vc.checkScanStatus()
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Abort Rescan", style: .default, handler: { [unowned vc = self] action in
+                
+                vc.abortRescan()
                 
             }))
             
@@ -170,18 +170,18 @@ class WalletToolsViewController: UIViewController {
         
         self.creatingView.addConnectingView(vc: self, description: "initiating rescan")
         let reducer = Reducer()
-        reducer.makeCommand(walletName: self.wallet.name, command: .rescanblockchain, param: "\(self.wallet.blockheight)") {
+        reducer.makeCommand(walletName: self.wallet.name, command: .rescanblockchain, param: "\(self.wallet.blockheight)") { [unowned vc = self] in
             
             DispatchQueue.main.async {
                 
-                self.creatingView.label.text = "confirming rescan status"
+                vc.creatingView.label.text = "confirming rescan status"
                 
             }
             
             reducer.errorBool = false
             reducer.errorDescription = ""
             
-            reducer.makeCommand(walletName: self.wallet.name, command: .getwalletinfo, param: "") {
+            reducer.makeCommand(walletName: vc.wallet.name, command: .getwalletinfo, param: "") {
                 
                 if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
                     
@@ -191,21 +191,21 @@ class WalletToolsViewController: UIViewController {
                             
                             if let _ = scanning["duration"] as? Int {
                                 
-                                self.creatingView.removeConnectingView()
+                                vc.creatingView.removeConnectingView()
                                 let progress = (scanning["progress"] as! Double)
-                                showAlert(vc: self, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                                showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
                                 
                             }
                             
                         } else if (result["scanning"] as? Int) == 0 {
                             
-                            self.creatingView.removeConnectingView()
-                            showAlert(vc: self, title: "Scan Complete", message: "The wallet is not currently scanning.")
+                            vc.creatingView.removeConnectingView()
+                            showAlert(vc: vc, title: "Scan Complete", message: "The wallet is not currently scanning.")
                             
                         } else {
                             
-                            self.creatingView.removeConnectingView()
-                            showAlert(vc: self, title: "Error", message: "Unable to determine if wallet is rescanning.")
+                            vc.creatingView.removeConnectingView()
+                            showAlert(vc: vc, title: "Error", message: "Unable to determine if wallet is rescanning.")
                             
                         }
                         
@@ -213,8 +213,8 @@ class WalletToolsViewController: UIViewController {
                     
                 } else {
                     
-                    self.creatingView.removeConnectingView()
-                    displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
+                    vc.creatingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: reducer.errorDescription)
                     
                 }
                 
@@ -229,18 +229,18 @@ class WalletToolsViewController: UIViewController {
         self.creatingView.addConnectingView(vc: self, description: "initiating rescan")
         
         let reducer = Reducer()
-        reducer.makeCommand(walletName: self.wallet.name, command: .rescanblockchain, param: "") {
+        reducer.makeCommand(walletName: self.wallet.name, command: .rescanblockchain, param: "") { [unowned vc = self] in
             
             DispatchQueue.main.async {
                 
-                self.creatingView.label.text = "confirming rescan status"
+                vc.creatingView.label.text = "confirming rescan status"
                 
             }
             
             reducer.errorBool = false
             reducer.errorDescription = ""
             
-            reducer.makeCommand(walletName: self.wallet.name, command: .getwalletinfo, param: "") {
+            reducer.makeCommand(walletName: vc.wallet.name, command: .getwalletinfo, param: "") {
                 
                 if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
                     
@@ -250,21 +250,21 @@ class WalletToolsViewController: UIViewController {
                             
                             if let _ = scanning["duration"] as? Int {
                                 
-                                self.creatingView.removeConnectingView()
+                                vc.creatingView.removeConnectingView()
                                 let progress = (scanning["progress"] as! Double)
-                                showAlert(vc: self, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                                showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
                                 
                             }
                             
                         } else if (result["scanning"] as? Int) == 0 {
                             
-                            self.creatingView.removeConnectingView()
-                            showAlert(vc: self, title: "Scan Complete", message: "The wallet is not currently scanning.")
+                            vc.creatingView.removeConnectingView()
+                            showAlert(vc: vc, title: "Scan Complete", message: "The wallet is not currently scanning.")
                             
                         } else {
                             
-                            self.creatingView.removeConnectingView()
-                            showAlert(vc: self, title: "Scan Complete", message: "Unable to determine if wallet is rescanning.")
+                            vc.creatingView.removeConnectingView()
+                            showAlert(vc: vc, title: "Scan Complete", message: "Unable to determine if wallet is rescanning.")
                             
                         }
                         
@@ -272,8 +272,8 @@ class WalletToolsViewController: UIViewController {
                     
                 } else {
                     
-                    self.creatingView.removeConnectingView()
-                    displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
+                    vc.creatingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: reducer.errorDescription)
                     
                 }
                 
@@ -288,7 +288,7 @@ class WalletToolsViewController: UIViewController {
         self.creatingView.addConnectingView(vc: self, description: "checking scan status")
         
         let reducer = Reducer()
-        reducer.makeCommand(walletName: self.wallet.name, command: .getwalletinfo, param: "") {
+        reducer.makeCommand(walletName: self.wallet.name, command: .getwalletinfo, param: "") { [unowned vc = self] in
             
             if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
                 
@@ -298,21 +298,21 @@ class WalletToolsViewController: UIViewController {
                         
                         if let _ = scanning["duration"] as? Int {
                             
-                            self.creatingView.removeConnectingView()
+                            vc.creatingView.removeConnectingView()
                             let progress = (scanning["progress"] as! Double)
-                            showAlert(vc: self, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                            showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
                             
                         }
                         
                     } else if (result["scanning"] as? Int) == 0 {
                         
-                        self.creatingView.removeConnectingView()
-                        showAlert(vc: self, title: "Scan Complete", message: "Wallet not rescanning.")
+                        vc.creatingView.removeConnectingView()
+                        showAlert(vc: vc, title: "Scan Complete", message: "Wallet not rescanning.")
                         
                     } else {
                         
-                        self.creatingView.removeConnectingView()
-                        showAlert(vc: self, title: "Error", message: "Unable to determine if wallet is rescanning.")
+                        vc.creatingView.removeConnectingView()
+                        showAlert(vc: vc, title: "Error", message: "Unable to determine if wallet is rescanning.")
                         
                     }
                     
@@ -320,8 +320,8 @@ class WalletToolsViewController: UIViewController {
                 
             } else {
                 
-                self.creatingView.removeConnectingView()
-                displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
+                vc.creatingView.removeConnectingView()
+                displayAlert(viewController: vc, isError: true, message: reducer.errorDescription)
                 
             }
             
@@ -334,17 +334,17 @@ class WalletToolsViewController: UIViewController {
         self.creatingView.addConnectingView(vc: self, description: "aborting rescan")
         
         let reducer = Reducer()
-        reducer.makeCommand(walletName: self.wallet.name, command: .abortrescan, param: "") {
+        reducer.makeCommand(walletName: self.wallet.name, command: .abortrescan, param: "") { [unowned vc = self] in
             
             if !reducer.errorBool {
                 
-                self.creatingView.removeConnectingView()
-                showAlert(vc: self, title: "Rescan aborted", message: "")
+                vc.creatingView.removeConnectingView()
+                showAlert(vc: vc, title: "Rescan aborted", message: "")
                 
             } else {
                 
-                self.creatingView.removeConnectingView()
-                showAlert(vc: self, title: "Error", message: reducer.errorDescription)
+                vc.creatingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error", message: reducer.errorDescription)
                 
             }
             
@@ -365,13 +365,13 @@ class WalletToolsViewController: UIViewController {
             
             if let vc = segue.destination as? SweepToViewController {
                 
-                vc.doneBlock = { result in
+                vc.doneBlock = { [unowned thisVc = self] result in
                     
                     DispatchQueue.main.async {
                         
-                        self.dismiss(animated: true) {
+                        thisVc.dismiss(animated: true) {
                             
-                            self.sweepDoneBlock!(true)
+                            thisVc.sweepDoneBlock!(true)
                             
                         }
                         
@@ -386,13 +386,13 @@ class WalletToolsViewController: UIViewController {
             if let vc = segue.destination as? RefillMultisigViewController {
                 
                 vc.wallet = wallet
-                vc.multiSigRefillDoneBlock = { result in
+                vc.multiSigRefillDoneBlock = { [unowned thisVc = self] result in
                     
                     DispatchQueue.main.async {
                         
-                        self.dismiss(animated: true) {
+                        thisVc.dismiss(animated: true) {
                             
-                            self.refillDoneBlock!(true)
+                            thisVc.refillDoneBlock!(true)
                             
                         }
                         
@@ -407,7 +407,7 @@ class WalletToolsViewController: UIViewController {
             break
             
         }
+        
     }
-    
 
 }
