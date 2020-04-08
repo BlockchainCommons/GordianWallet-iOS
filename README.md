@@ -380,7 +380,7 @@ git submodule init
 git submodule update
 carthage build --no-skip-current --platform iOS
 ```
-It is normal to see an error about XCFrameworks in the above process. It can be ignored.
+It is normal to see an error about xcconfigs in the above process. It can be ignored.
 
 Once the above process completes you can:
 ```
@@ -395,7 +395,6 @@ carthage update --platform iOS
 - `cd <into the project>` (FullyNoded 2)
 - run `pod install`
 - Upon first running FullyNoded 2 you will most likely need to make a few variables `public` in LibWally-Swift, this is because the way the app works requires us to get access to private keys to sign transactions with and psbt input paths in order to fetch private keys for signing. You will see a `X not accessible due to internal protection` error, simply go to that variable make it public then run the project again in XCode.
-
 
 ## Copyright & License
 
@@ -447,4 +446,3 @@ The following keys may be used to communicate sensitive information to developer
 | Christopher Allen | FDFE 14A5 4ECB 30FC 5D22  74EF F8D3 6C91 3574 05ED |
 
 You can import a key by running the following command with that individual’s fingerprint: `gpg --recv-keys "<fingerprint>"` Ensure that you put quotes around fingerprints that contain spaces.
-
