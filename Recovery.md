@@ -99,3 +99,4 @@ The label a user may add to a wallet to easily identify it. This feature will so
 
     - We are only including the primary descriptor in the RecoveryQR Code, FullyNoded 2 is smart enough to parse the descriptor then create and import the change descriptor into the node during the recovery process.
 
+
