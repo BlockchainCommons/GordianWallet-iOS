@@ -6,108 +6,97 @@
 //  Copyright © 2019 BlockchainCommons. All rights reserved.
 //
 
-import Foundation
+//import Foundation
 import CoreData
-import UIKit
 
 class CoreDataService {
     
-    var entities = [[String:Any]]()
-    var boolToReturn = Bool()
-    var errorBool = Bool()
-    var errorDescription = ""
+    static let sharedInstance = CoreDataService()
     
-//    func saveSeed(seed: Data, completion: @escaping () -> Void) {
-//        print("saveSeedToCoreData")
-//
-//        DispatchQueue.main.async {
-//
-//            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-//
-//                let context = appDelegate.persistentContainer.viewContext
-//                guard let entity = NSEntityDescription.entity(forEntityName: "Seed", in: context) else {
-//                    self.errorBool = true
-//                    self.errorDescription = "unable to access Seed"
-//                    completion()
-//                    return
-//                }
-//
-//                let credential = NSManagedObject(entity: entity, insertInto: context)
-//
-//                credential.setValue(seed, forKey: "seed")
-//
-//                do {
-//
-//                    try context.save()
-//                    self.boolToReturn = true
-//                    print("Saved seed")
-//
-//                } catch {
-//
-//                    self.errorBool = true
-//                    self.errorDescription = "Failed saving seed"
-//
-//                }
-//
-//                completion()
-//
-//            } else {
-//
-//                self.errorBool = true
-//                self.errorDescription = "Unable to access app delegate for core data"
-//                completion()
-//
-//            }
-//
-//        }
-//
-//    }
+    private init() {}
     
-    func saveEntity(dict: [String:Any], entityName: ENTITY, completion: @escaping () -> Void) {
+    // MARK: - Core Data stack
+    lazy var persistentContainer: NSPersistentCloudKitContainer = {
+        /*
+         The persistent container for the application. This implementation
+         creates and returns a container, having loaded the store for the
+         application to it. This property is optional since there are legitimate
+         error conditions that could cause the creation of the store to fail.
+         */
+        let container = NSPersistentCloudKitContainer(name: "FullyNoded2")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                
+                /*
+                 Typical reasons for an error here include:
+                 * The parent directory does not exist, cannot be created, or disallows writing.
+                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+                 * The device is out of space.
+                 * The store could not be migrated to the current model version.
+                 Check the error message to determine what the actual problem was.
+                 */
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        })
+        return container
+    }()
+        
+    // MARK: - Core Data Saving support
+    func saveContext () {
+        
+        let context = persistentContainer.viewContext
+        
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
+    }
+    
+    func saveEntity(dict: [String:Any], entityName: ENTITY, completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         print("saveEntityToCoreData")
         
-        DispatchQueue.main.async {
+        let context = persistentContainer.viewContext
+                
+        guard let entity = NSEntityDescription.entity(forEntityName: entityName.rawValue, in: context) else {
+            completion((false, "unable to access \(entityName.rawValue)"))
+            return
+        }
+                
+        let credential = NSManagedObject(entity: entity, insertInto: context)
+        var succ = Bool()
+        
+        for (key, value) in dict {
             
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            credential.setValue(value, forKey: key)
+            
+            do {
                 
-                let context = appDelegate.persistentContainer.viewContext
-                guard let entity = NSEntityDescription.entity(forEntityName: entityName.rawValue, in: context) else {
-                    self.errorBool = true
-                    self.errorDescription = "unable to access \(entityName.rawValue)"
-                    completion()
-                    return
-                }
+                try context.save()
+                succ = true
                 
-                let credential = NSManagedObject(entity: entity, insertInto: context)
+            } catch {
                 
-                for (key, value) in dict {
-                    
-                    credential.setValue(value, forKey: key)
-                    
-                    do {
-                        
-                        try context.save()
-                        self.boolToReturn = true
-                        print("Saved credential \(key) = \(value)")
-                        
-                    } catch {
-                        
-                        self.errorBool = true
-                        self.errorDescription = "Failed saving credential \(key) = \(value)"
-                        
-                    }
-                    
-                }
-                
-                completion()
-                
-            } else {
-                
-                self.errorBool = true
-                self.errorDescription = "Unable to access app delegate for core data"
-                completion()
+                succ = false
                 
             }
+            
+        }
+        
+        if succ {
+            
+            completion((true, nil))
+            
+        } else {
+            
+            completion((false, "error saving entity"))
             
         }
         
@@ -116,220 +105,236 @@ class CoreDataService {
     func retrieveEntity(entityName: ENTITY, completion: @escaping ((entity: [[String:Any]]?, errorDescription: String?)) -> Void) {
         print("retrieveEntity")
         
-        DispatchQueue.main.async {
+        let context = persistentContainer.viewContext
+        
+        var fetchRequest:NSFetchRequest<NSFetchRequestResult>? = NSFetchRequest<NSFetchRequestResult>(entityName: entityName.rawValue)
+        fetchRequest?.returnsObjectsAsFaults = false
+        fetchRequest?.resultType = .dictionaryResultType
+        
+        do {
+            
+            if fetchRequest != nil {
+                             
+                if let results = try context.fetch(fetchRequest!) as? [[String:Any]] {
+                    
+                    fetchRequest = nil
+                    completion((results, nil))
 
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                print("got app delegate")
-
-                let context = appDelegate.persistentContainer.viewContext
-                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName.rawValue)
-                fetchRequest.returnsObjectsAsFaults = false
-                fetchRequest.resultType = .dictionaryResultType
-                
-                do {
+                } else {
                     
-                    if let results = try context.fetch(fetchRequest) as? [[String:Any]] {
-                            
-                        completion((results, nil))
-                                                
-                    }
-                    
-                } catch {
-                    
-                    completion((nil, "Error fetching \(entityName)"))
+                    fetchRequest = nil
+                    completion((nil, "error fetching entity"))
                     
                 }
-
-            } else {
-
-                completion((nil, "error can't access app delegate"))
                 
             }
+
+        } catch {
+
+            fetchRequest = nil
+            completion((nil, "Error fetching \(entityName)"))
 
         }
         
     }
     
-    func updateEntity(id: UUID, keyToUpdate: String, newValue: Any, entityName: ENTITY, completion: @escaping () -> Void) {
+    func updateNode(nodeToUpdate: UUID, newCredentials: [String:Any], completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         print("updateEntity")
         
-       DispatchQueue.main.async {
+        let context = persistentContainer.viewContext
+        
+        var fetchRequest:NSFetchRequest<NSManagedObject>? = NSFetchRequest<NSManagedObject>(entityName: ENTITY.nodes.rawValue)
+        fetchRequest?.returnsObjectsAsFaults = false
+        
+        do {
+            
+            if fetchRequest != nil {
                 
-                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                var results:[NSManagedObject]? = try context.fetch(fetchRequest!)
+                
+                if results != nil {
                     
-                    let context = appDelegate.persistentContainer.viewContext
-                    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName.rawValue)
-                    fetchRequest.returnsObjectsAsFaults = false
-                    
-                    do {
+                    if results!.count > 0 {
                         
-                        let results = try context.fetch(fetchRequest) as [NSManagedObject]
+                        var success = false
                         
-                        if results.count > 0 {
+                        for data in results! {
                             
-                            for data in results {
-                                
-                                if id == data.value(forKey: "id") as? UUID {
+                            if nodeToUpdate == data.value(forKey: "id") as? UUID {
+                                                            
+                                for (keyToUpdate, newValue) in newCredentials {
                                     
-                                    print("set \(newValue) for key \(keyToUpdate)")
                                     data.setValue(newValue, forKey: keyToUpdate)
                                     
                                     do {
                                         
                                         try context.save()
-                                        self.errorBool = false
-                                        self.boolToReturn = true
-                                        print("updated successfully")
-                                        completion()
+                                        success = true
                                         
                                     } catch {
                                         
-                                        print("error editing")
-                                        self.errorBool = true
-                                        self.errorDescription = "error editing"
-                                        completion()
+                                        success = false
                                         
                                     }
                                     
                                 }
-                                
+                                                            
                             }
-                                                       
-                        } else {
                             
-                            print("no results")
-                            self.errorBool = true
-                            self.errorDescription = "no results"
-                            completion()
                         }
                         
-                    } catch {
+                        results = nil
+                        fetchRequest = nil
                         
-                        print("Failed")
-                        self.errorBool = true
-                        self.errorDescription = "failed"
-                        completion()
+                        if success {
+                            
+                            print("updated")
+                            completion((true, nil))
+                            
+                        } else {
+                            
+                            print("update failed")
+                            completion((false, "error editing"))
+                            
+                        }
+                        
+                    } else {
+                        
+                        completion((false, "no results"))
+                        
                     }
                     
                 } else {
                     
-                    self.errorBool = true
-                    self.errorDescription = "Something strange has happened and we do not have access to app delegate, please try again."
-                    completion()
+                    completion((false, "no results"))
                     
                 }
-                
-            }
-            
-        //}
-        
-    }
-    
-    func deleteSeed(completion: @escaping () -> Void) {
-        
-        DispatchQueue.main.async {
-            
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                
-                let context = appDelegate.persistentContainer.viewContext
-                let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Seed")
-                fetchRequest.returnsObjectsAsFaults = false
-                
-                do {
                     
-                    let results = try context.fetch(fetchRequest) as [NSManagedObject]
-                    
-                    if results.count > 0 {
-                        
-                        for result in results {
-                            
-                            context.delete(result as NSManagedObject)
-                            
-                            do {
-                                
-                                try context.save()
-                                print("deleted succesfully")
-                                self.boolToReturn = true
-                                self.errorBool = false
-                                
-                            } catch {
-                                
-                                print("error deleting")
-                                self.boolToReturn = false
-                                self.errorBool = true
-                                self.errorDescription = "error deleting"
-                                
-                            }
-                            
-                        }
-                        
-                        completion()
-                        
-                    } else {
-                        
-                        print("no results")
-                        self.errorBool = true
-                        self.errorDescription = "no results for that entity to delete"
-                        completion()
-                        
-                    }
-                    
-                } catch {
-                    
-                    print("Failed")
-                    self.errorBool = true
-                    self.errorDescription = "failed trying to delete that entity"
-                    completion()
-                    
-                }
-                
             } else {
                 
-                self.errorBool = true
-                self.errorDescription = "failed getting the app delegate"
-                completion()
+                completion((false, "failed"))
                 
             }
+                            
+        } catch {
+            
+           completion((false, "failed"))
             
         }
-                
+        
     }
     
-    func deleteEntity(id: UUID, entityName: ENTITY, completion: @escaping () -> Void) {
+    func updateEntity(id: UUID, keyToUpdate: String, newValue: Any, entityName: ENTITY, completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
+        print("updateEntity")
         
-        DispatchQueue.main.async {
+        let context = persistentContainer.viewContext
+        
+        var fetchRequest:NSFetchRequest<NSManagedObject>? = NSFetchRequest<NSManagedObject>(entityName: entityName.rawValue)
+        fetchRequest?.returnsObjectsAsFaults = false
+        
+        do {
             
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            if fetchRequest != nil {
                 
-                let context = appDelegate.persistentContainer.viewContext
-                let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName.rawValue)
-                fetchRequest.returnsObjectsAsFaults = false
+                var results:[NSManagedObject]? = try context.fetch(fetchRequest!)
                 
-                do {
+                if results != nil {
                     
-                    let results = try context.fetch(fetchRequest) as [NSManagedObject]
-                    
-                    if results.count > 0 {
+                    if results!.count > 0 {
                         
-                        for (index, data) in results.enumerated() {
+                        var success = false
+                        
+                        for (i, data) in results!.enumerated() {
                             
                             if id == data.value(forKey: "id") as? UUID {
                                 
-                                context.delete(results[index] as NSManagedObject)
+                                data.setValue(newValue, forKey: keyToUpdate)
                                 
                                 do {
                                     
                                     try context.save()
-                                    print("deleted succesfully")
-                                    self.boolToReturn = true
-                                    self.errorBool = false
+                                    success = true
                                     
                                 } catch {
                                     
-                                    print("error deleting")
-                                    self.boolToReturn = false
-                                    self.errorBool = true
-                                    self.errorDescription = "error deleting"
+                                    success = false
+                                    
+                                }
+                                
+                            }
+                            
+                            if i + 1 == results!.count {
+                                
+                                fetchRequest = nil
+                                results = nil
+                                
+                                if success {
+                                    
+                                    #if DEBUG
+                                    print("updated successfully")
+                                    #endif
+                                    completion((true, nil))
+                                    
+                                } else {
+                                    
+                                    completion((false, "error editing"))
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                                                
+                    } else {
+                        
+                        completion((false, "no results"))
+                        
+                    }
+                    
+                }
+                
+            }
+                            
+        } catch {
+            
+            completion((false, "failed"))
+            
+        }
+        
+    }
+    
+    func deleteEntity(id: UUID, entityName: ENTITY, completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
+        
+        let context = persistentContainer.viewContext
+        
+        var fetchRequest:NSFetchRequest<NSManagedObject>? = NSFetchRequest<NSManagedObject>(entityName: entityName.rawValue)
+        fetchRequest?.returnsObjectsAsFaults = false
+        
+        do {
+            
+            if fetchRequest != nil {
+                
+                var results:[NSManagedObject]? = try context.fetch(fetchRequest!)
+                var succ = Bool()
+                
+                if results != nil {
+                    
+                    if results!.count > 0 {
+                        
+                        for (index, data) in results!.enumerated() {
+                            
+                            if id == data.value(forKey: "id") as? UUID {
+                                
+                                context.delete(results![index] as NSManagedObject)
+                                
+                                do {
+                                    
+                                    try context.save()
+                                    succ = true
+                                    
+                                } catch {
+                                    
+                                    succ = false
                                     
                                 }
                                 
@@ -337,36 +342,43 @@ class CoreDataService {
                             
                         }
                         
-                        completion()
+                        results = nil
+                        fetchRequest = nil
+                        
+                        if succ {
+                            
+                            completion((true, nil))
+                            
+                        } else {
+                            
+                            completion((false, "error deleting"))
+                            
+                        }
                         
                     } else {
                         
-                        print("no results")
-                        self.errorBool = true
-                        self.errorDescription = "no results for that entity to delete"
-                        completion()
+                        completion((false, "no results for that entity to delete"))
                         
                     }
                     
-                } catch {
+                } else {
                     
-                    print("Failed")
-                    self.errorBool = true
-                    self.errorDescription = "failed trying to delete that entity"
-                    completion()
+                    completion((false, "no results for that entity to delete"))
                     
                 }
                 
             } else {
                 
-                self.errorBool = true
-                self.errorDescription = "failed getting the app delegate"
-                completion()
+                completion((false, "failed trying to delete that entity"))
                 
             }
             
+        } catch {
+            
+            completion((false, "failed trying to delete that entity"))
+            
         }
-                
+        
     }
     
 }

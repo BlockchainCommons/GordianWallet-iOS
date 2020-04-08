@@ -11,22 +11,34 @@ import Foundation
 import Tor
 import UIKit
 
+protocol OnionManagerDelegate: class {
+
+    func torConnProgress(_ progress: Int)
+
+    func torConnFinished()
+
+    func torConnDifficulties()
+}
+
 class TorClient {
     
+    enum TorState {
+        case none
+        case started
+        case connected
+        case stopped
+        case refreshing
+    }
+    
     static let sharedInstance = TorClient()
+    let cd = CoreDataService.sharedInstance
+    public var state = TorState.none
     private var config: TorConfiguration = TorConfiguration()
-    private var thread: TorThread!
-    private var controller: TorController!
+    private var thread: TorThread?
+    private var controller: TorController?
     private var authDirPath = ""
     private var torDirPath = ""
-    var isRefreshing = false
     var progress = Int()
-    
-    // Client status?
-    private(set) var isOperational: Bool = false
-    public var isConnected: Bool {
-        return self.controller.isConnected
-    }
     
     // The tor url session configuration.
     // Start with default config as fallback.
@@ -36,250 +48,182 @@ class TorClient {
     lazy var session = URLSession(configuration: sessionConfiguration)
 
     // Start the tor client.
-    func start(completion: @escaping () -> Void) {
+    func start(delegate: OnionManagerDelegate?) {
         print("start")
         
-        NotificationCenter.default.post(name: .didStartBootstrappingTor, object: nil, userInfo: nil)
+        weak var weakDelegate = delegate
+        state = .started
         
-        let queue = DispatchQueue(label: "com.FullyNoded.torQueue")
+        //add V3 auth keys to ClientOnionAuthDir if any exist
+        let torDir = self.createTorDirectory()
+        self.authDirPath = self.createAuthDirectory()
         
-        queue.async {
+        // For some reason tor.framework is not incredibly reliable at setting the session config, so we do it manually for stability.
+        self.sessionConfiguration.connectionProxyDictionary = [kCFProxyTypeKey: kCFProxyTypeSOCKS, kCFStreamPropertySOCKSProxyHost: "localhost", kCFStreamPropertySOCKSProxyPort: 29050]
+        self.session = URLSession(configuration:self.sessionConfiguration)
+        self.session.configuration.urlCache = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
+        
+        self.clearAuthKeys { [unowned vc = self] in
             
-            // If already operational don't start a new client.
-            if self.isOperational || self.turnedOff() {
-                print("return completion")
-                return completion()
-            }
-            
-            //add V3 auth keys to ClientOnionAuthDir if any exist
-            let torDir = self.createTorDirectory()
-            self.authDirPath = self.createAuthDirectory()
-            
-            self.clearAuthKeys {
+            vc.addAuthKeysToAuthDirectory { [unowned vc = self] in
                 
-                self.addAuthKeysToAuthDirectory {
+                vc.thread = nil
+                
+                vc.config.options = [
                     
-                    // Make sure we don't have a thread already.
-                    if self.thread == nil {
-                        print("thread is nil")
+                    "DNSPort": "12346",
+                    "AutomapHostsOnResolve": "1",
+                    "SocksPort": "29050 OnionTrafficOnly",
+                    "AvoidDiskWrites": "1",
+                    "ClientOnionAuthDir": "\(vc.authDirPath)",
+                    "LearnCircuitBuildTimeout": "1",
+                    "NumEntryGuards": "8",
+                    "SafeSocks": "1",
+                    "LongLivedPorts": "80,443",
+                    "NumCPUs": "2",
+                    "DisableDebuggerAttachment": "1",
+                    "SafeLogging": "1",
+                    "ExcludeExitNodes": "1",
+                    "StrictNodes": "1"
+                    
+                ]
+                
+                vc.config.cookieAuthentication = true
+                vc.config.dataDirectory = URL(fileURLWithPath: torDir)
+                vc.config.controlSocket = vc.config.dataDirectory?.appendingPathComponent("cp")
+                vc.config.arguments = ["--ignore-missing-torrc"]
+                
+                // Initiate the controller.
+                if vc.controller == nil {
+                    vc.controller = TorController(socketURL: vc.config.controlSocket!)
+                }
+                
+                vc.thread = TorThread(configuration: vc.config)
+                
+                // Start a tor thread.
+                vc.thread?.start()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    // Connect Tor controller.
+                    
+                    do {
                         
-                        self.isOperational = true
-                        
-                        self.config.options = [
+                        if !(vc.controller?.isConnected ?? false) {
                             
-                            "DNSPort": "12346",
-                            "AutomapHostsOnResolve": "1",
-                            "SocksPort": "29050 OnionTrafficOnly",
-                            "AvoidDiskWrites": "1",
-                            "ClientOnionAuthDir": "\(self.authDirPath)",
-                            "LearnCircuitBuildTimeout": "1",
-                            "NumEntryGuards": "8",
-                            "SafeSocks": "1",
-                            "LongLivedPorts": "80,443",
-                            "NumCPUs": "2",
-                            "DisableDebuggerAttachment": "1",
-                            "SafeLogging": "1",
-                            "ExcludeExitNodes": "1",
-                            "StrictNodes": "1"
+                            do {
+                                
+                                try vc.controller?.connect()
+                                
+                            } catch {
+                                
+                                print("error=\(error)")
+                                
+                            }
                             
-                        ]
-                                            
-                        self.config.cookieAuthentication = true
-                        self.config.dataDirectory = URL(fileURLWithPath: torDir)
-                        self.config.controlSocket = self.config.dataDirectory?.appendingPathComponent("cp")
-                        self.config.arguments = ["--ignore-missing-torrc"]
-                        self.thread = TorThread(configuration: self.config)
+                        }
                         
-                    } else {
+                        let cookie = try Data(
+                            
+                            contentsOf: vc.config.dataDirectory!.appendingPathComponent("control_auth_cookie"),
+                            options: NSData.ReadingOptions(rawValue: 0)
+                            
+                        )
+                                                
+                        self.controller?.authenticate(with: cookie) { [unowned vc = self] (success, error) in
+                            
+                            if let error = error {
+                                
+                                print("error = \(error.localizedDescription)")
+                                return
+                                
+                            }
+                            
+                            var progressObs: Any?
+                            progressObs = vc.controller?.addObserver(forStatusEvents: {
+                                (type: String, severity: String, action: String, arguments: [String : String]?) -> Bool in
+                                
+                                #if DEBUG
+                                print("args = \(String(describing: arguments))")
+                                #endif
+
+                                if type == "STATUS_CLIENT" && action == "BOOTSTRAP" {
+                                    let progress = Int(arguments!["PROGRESS"]!)!
+
+                                    weakDelegate?.torConnProgress(progress)
+
+                                    if progress >= 100 {
+                                        vc.controller?.removeObserver(progressObs)
+                                    }
+
+                                    return true
+                                }
+
+                                return false
+                            })
+                            
+                            var obvs:Any!
+                            obvs = vc.controller?.addObserver(forCircuitEstablished: { established in
+                                
+                                func connected() {
+                                    
+                                    vc.state = .connected
+                                    weakDelegate?.torConnFinished()
+                                    vc.controller?.removeObserver(obvs)
+                                    
+                                }
+                                
+                                // For some reason when reconnecting the Tor thread on the 3rd time we lose the observers and the code does not fire off
+                                // even though Tor connects successfully, the only way I can reliably reconnect without issue is with the below. To test
+                                // put the app into background, then foreground more then twice, executing an operation each time to ensure the connection
+                                // is functional.
+                                if established {
+                                    
+                                    connected()
+                                    
+                                } else if vc.state == .refreshing {
+                                    
+                                    connected()
+                                    
+                                }
+                                
+                            })
+                            
+                        }
                         
-                        print("thread is not nil")
+                    } catch {
                         
-                    }
-                    
-                    // Initiate the controller.
-                    self.controller = TorController(socketURL: self.config.controlSocket!)
-                    
-                    // Start a tor thread.
-                    if self.thread.isExecuting == false {
+                        print("failed connecting tor")
+                        weakDelegate?.torConnDifficulties()
+                        vc.state = .none
+                        //completion()
                         
-                        self.thread.start()
-                        print("tor thread started")
-                        
-                    } else {
-                        
-                        print("thread isExecuting true")
-                        
-                    }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        // Connect Tor controller.
-                        self.connectController(completion: completion)
                     }
                     
                 }
-            
+                
             }
             
         }
         
     }
     
-    // Resign the tor client.
-    func restart(completion: @escaping () -> Void) {
-        print("restart")
-        
-        resign()
-        
-        while controller.isConnected {
-            print("Disconnecting Tor...")
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.start(completion: completion)
-        }
-        
+    func closeCircuits(_ circuits: [TorCircuit], _ callback: @escaping ((_ success: Bool) -> Void)) {
+        controller?.close(circuits, completion: callback)
+    }
+    
+    func getCircuits(_ callback: @escaping ((_ circuits: [TorCircuit]) -> Void)) {
+        controller?.getCircuits(callback)
     }
     
     func resign() {
         print("resign")
         
-//        if self.controller != nil {
-//            
-//            clearAuthKeys {}
-//            //isRefreshing = true
-//            self.controller.disconnect()
-//            self.isOperational = false
-//            self.thread = nil
-//            self.progress = 0
-//            
-//        }
-        
-        clearAuthKeys {}
-        isOperational = false
-        //controller.disconnect()
-        //controller = nil
-
-        // More cleanup
-        thread.cancel()
-        thread = nil
-        
-    }
-    
-    private func connectController(completion: @escaping () -> Void) {
-        print("connectController")
-        do {
-            if !self.controller.isConnected {
-                try self.controller?.connect()
-                print("tor controller connected")
-            }
-            
-            try self.authenticateController {
-                print("authenticateController")
-                //TORInstallEventLogging()
-                //TORInstallTorLogging()
-                //NotificationCenter.default.post(name: .didEstablishTorConnection, object: self)
-                completion()
-            }
-            
-        } catch {
-            print("error connecting tor controller")
-            self.isOperational = false
-            completion()
-        }
-        
-    }
-    
-    private func authenticateController(completion: @escaping () -> Void) throws -> Void {
-        print("authenticateController")
-        
-        let cookie = try Data(
-            
-            contentsOf: config.dataDirectory!.appendingPathComponent("control_auth_cookie"),
-            options: NSData.ReadingOptions(rawValue: 0)
-            
-        )
-        
-        print("got cookie")
-        
-        self.controller?.authenticate(with: cookie) { success, error in
-            
-            if let error = error {
-                
-                print("error = \(error.localizedDescription)")
-                return
-                
-            }
-            
-            
-            
-//            var progressObs: Any?
-//            self.controller.removeObserver(progressObs)
-//            progressObs = self.controller.addObserver(forStatusEvents: {
-//                (type: String, severity: String, action: String, arguments: [String : String]?) -> Bool in
-//
-//                print("arguments = \(String(describing: arguments))")
-//
-//                if arguments != nil {
-//
-//                    if arguments!["PROGRESS"] != nil {
-//
-//                        self.progress = Int(arguments!["PROGRESS"]!)!
-//                        print("self.progress = \(self.progress)")
-//
-//                        if self.progress >= 100 {
-//                            //self.controller.removeObserver(progressObs)
-//                        }
-//
-//                    }
-//
-//                    return true
-//
-//                }
-//
-//                return false
-//
-//            })
-            
-            var observer: Any? = nil
-            observer = self.controller?.addObserver(forCircuitEstablished: { established in
-                
-                if established {
-                    
-                    print("observer added")
-                    self.controller?.getSessionConfiguration() { sessionConfig in
-                        
-                        self.sessionConfiguration.connectionProxyDictionary = [kCFProxyTypeKey: kCFProxyTypeSOCKS, kCFStreamPropertySOCKSProxyHost: "localhost", kCFStreamPropertySOCKSProxyPort: 29050]
-                        self.session = URLSession(configuration: self.sessionConfiguration)
-                        self.session.configuration.urlCache = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
-                        self.isOperational = true
-                        NotificationCenter.default.post(name: .torConnecting, object: nil, userInfo: nil)
-                        completion()
-                    }
-                    
-                    self.controller?.removeObserver(observer)
-                   
-                    // This is a hack to enable adding more then one observer which allows us to automate the tor circuit reconnection as Tor will not run in the background and cause bad UX. There is a probably a better way to do it, but it works reliably.
-                } else if self.isRefreshing {
-                    
-                    self.controller?.getSessionConfiguration() { sessionConfig in
-                        
-                        self.sessionConfiguration.connectionProxyDictionary = [kCFProxyTypeKey: kCFProxyTypeSOCKS, kCFStreamPropertySOCKSProxyHost: "localhost", kCFStreamPropertySOCKSProxyPort: 29050]
-                        self.session = URLSession(configuration: self.sessionConfiguration)
-                        self.session.configuration.urlCache = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
-                        self.isOperational = true
-                        NotificationCenter.default.post(name: .torConnecting, object: nil, userInfo: nil)
-                        completion()
-                    }
-                    
-                    self.controller?.removeObserver(observer)
-                    
-                }
-                
-                
-                
-            })
-            
-        }
+        self.controller?.disconnect()
+        self.controller = nil
+        self.thread?.cancel()
+        self.thread = nil
+        self.clearAuthKeys {}
+        state = .stopped
         
     }
     
@@ -352,9 +296,8 @@ class TorClient {
         print("addAuthKeysToAuthDirectory")
         
         let authPath = self.authDirPath
-        let cd = CoreDataService()
-        let enc = Encryption()
-        cd.retrieveEntity(entityName: .nodes) { (entity, errorDescription) in
+        let enc = Encryption.sharedInstance
+        cd.retrieveEntity(entityName: .nodes) { [unowned vc = self] (entity, errorDescription) in
             
             if entity != nil {
                 
@@ -364,7 +307,7 @@ class TorClient {
                     
                     for (i, n) in entity!.enumerated() {
                                                                         
-                        cd.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
+                        vc.cd.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
                             
                             if errorDescription == nil {
                                 
@@ -514,7 +457,4 @@ class TorClient {
         
     }
     
-    func turnedOff() -> Bool {
-        return false
-    }
 }

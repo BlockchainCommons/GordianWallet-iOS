@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LibWally
 
 class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     
@@ -29,87 +30,108 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        recoverNowOutlet.isEnabled = false
+        recoverNowOutlet.alpha = 0
         textField.delegate = self
         tap.addTarget(self, action: #selector(handleTap))
         view.addGestureRecognizer(tap)
         scanButton.layer.cornerRadius = 8
         recoverNowOutlet.layer.cornerRadius = 8
+        wordsView.layer.cornerRadius = 8
         let wordList = Bip39Words()
         bip39Words = wordList.validWords
         
        textField.attributedPlaceholder = NSAttributedString(string: "recovery words",
                                                             attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         
+        DispatchQueue.main.async {
+            
+            self.performSegue(withIdentifier: "showInfo", sender: self)
+            
+        }
+        
     }
     
     @IBAction func recoverNow(_ sender: Any) {
         
-        let enc = Encryption()
-        enc.getNode { (node, error) in
+        weak var enc = Encryption.sharedInstance
+        enc?.getNode { [unowned vc = self] (node, error) in
             
             if !error && node != nil {
                 
-                if self.qrValid {
+                if vc.qrValid {
                     
-                    self.recover(dict: self.recoveryDict)
+                    vc.confirm()
                     
                 } else {
                     
                     DispatchQueue.main.async {
                         
                         let network = node!.network
+                        var chain = ""
                         
                         let alert = UIAlertController(title: "Choose a derivation", message: "When only using words to recover you need to let us know which derivation scheme you want to utilize, if you are not sure you can recover the wallet three times, once for each derivation.", preferredStyle: .actionSheet)
                         
-                        alert.addAction(UIAlertAction(title: "BIP84", style: .default, handler: { action in
+                        switch network {
+                        case "testnet":
+                            chain = "1'"
+                        case "mainnet":
+                            chain = "0'"
+                        default:
+                            break
+                        }
+                                                
+                        alert.addAction(UIAlertAction(title: "Segwit - BIP84 - m/84'/\(chain)/0'/0", style: .default, handler: { action in
                             
                             switch network {
                             case "testnet":
-                                self.derivation = "m/84'/1'/0'"
+                                vc.derivation = "m/84'/1'/0'"
                             case "mainnet":
-                                self.derivation = "m/84'/0'/0'"
+                                vc.derivation = "m/84'/0'/0'"
                             default:
                                 break
                             }
                             
-                            self.recover(dict: self.recoveryDict)
+                            //vc.recoveryDict["derivation"] = vc.derivation
+                            vc.confirm()
                             
                         }))
                         
-                        alert.addAction(UIAlertAction(title: "BIP44", style: .default, handler: { action in
+                        alert.addAction(UIAlertAction(title: "Legacy - BIP44 - m/44'/\(chain)/0'/0", style: .default, handler: { action in
                             
                             switch network {
                             case "testnet":
-                                self.derivation = "m/44'/1'/0'"
+                                vc.derivation = "m/44'/1'/0'"
                             case "mainnet":
-                                self.derivation = "m/44'/0'/0'"
+                                vc.derivation = "m/44'/0'/0'"
                             default:
                                 break
                             }
                             
-                            self.recover(dict: self.recoveryDict)
+                            //vc.recoveryDict["derivation"] = vc.derivation
+                            vc.confirm()
                             
                         }))
                         
-                        alert.addAction(UIAlertAction(title: "BIP49", style: .default, handler: { action in
+                        alert.addAction(UIAlertAction(title: "Nested Segwit - BIP49 - m/49'/\(chain)/0'/0", style: .default, handler: { action in
                             
                             switch network {
                             case "testnet":
-                                self.derivation = "m/49'/1'/0'"
+                                vc.derivation = "m/49'/1'/0'"
                             case "mainnet":
-                                self.derivation = "m/49'/0'/0'"
+                                vc.derivation = "m/49'/0'/0'"
                             default:
                                 break
                             }
                             
-                            self.recover(dict: self.recoveryDict)
+                            //vc.recoveryDict["derivation"] = vc.derivation
+                            vc.confirm()
                             
                         }))
                         
                         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
                         
-                        self.present(alert, animated: true, completion: nil)
+                        alert.popoverPresentationController?.sourceView = vc.view
+                        vc.present(alert, animated: true, completion: nil)
                         
                     }
                     
@@ -117,7 +139,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                 
             } else {
                 
-                displayAlert(viewController: self, isError: true, message: "No active node, please connect to a node and activate it first")
+                displayAlert(viewController: vc, isError: true, message: "No active node, please connect to a node and activate it first")
                 
             }
             
@@ -155,26 +177,71 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    @IBAction func addWord(_ sender: Any) {
-        
-        let impact = UIImpactFeedbackGenerator()
-        
-        DispatchQueue.main.async {
-            
-            impact.impactOccurred()
-            
-        }
+    func processTextfieldInput() {
         
         if textField.text != "" {
             
-            let processedWord = textField.text!.replacingOccurrences(of: " ", with: "")
+            //check if user pasted more then one word
+            let processed = processedCharacters(textField.text!)
+            let userAddedWords = (processed).split(separator: " ")
             
-            for word in bip39Words {
+            if userAddedWords.count > 1 {
                 
-                if processedWord == word {
+                //user add multiple words
+                for (i, word) in userAddedWords.enumerated() {
                     
-                    addWord(word: processedWord)
-                    textField.text = ""
+                    var isValid = false
+                    
+                    for bip39Word in bip39Words {
+                        
+                        if word == bip39Word {
+                            
+                            isValid = true
+                            
+                        }
+                        
+                    }
+                    
+                    if i + 1 == userAddedWords.count {
+                        
+                        // we finished our checks
+                        if isValid {
+                            
+                            // they are valid bip39 words
+                            for word in userAddedWords {
+                                
+                                addWord(word: "\(word)")
+                                
+                            }
+                            
+                            textField.text = ""
+                            
+                        } else {
+                            
+                            //they are not all valid bip39 words
+                            textField.text = ""
+                            
+                            showAlert(vc: self, title: "Error", message: "At least one of those words is not a valid BIP39 word. We suggest inputting them one at a time so you can utilize our autosuggest feature which will prevent typos.")
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                //its one word
+                let processedWord = textField.text!.replacingOccurrences(of: " ", with: "")
+                
+                for word in bip39Words {
+                    
+                    if processedWord == word {
+                        
+                        addWord(word: processedWord)
+                        textField.text = ""
+                        
+                    }
                     
                 }
                 
@@ -185,6 +252,11 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
             shakeAlert(viewToShake: textField)
             
         }
+    }
+    
+    @IBAction func addWord(_ sender: Any) {
+        
+        processTextfieldInput()
         
     }
     
@@ -214,11 +286,12 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                 
                 if self.justWords.count == 12 || self.justWords.count == 24 {
                     
-                    self.recoverNowOutlet.isEnabled = true
+                    self.recoverNowOutlet.alpha = 1
+                    self.validWordsAdded()
                     
                 } else {
                     
-                    self.recoverNowOutlet.isEnabled = false
+                    self.recoverNowOutlet.alpha = 0
                     
                 }
                 
@@ -228,12 +301,12 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    
     func validRecoveryScanned() {
         
         DispatchQueue.main.async {
             
             self.qrValid = true
+            self.recoverNowOutlet.alpha = 1
             self.scanButton.setTitle("  RecoveryQR is Valid", for: .normal)
             self.scanButton.setTitleColor(.systemGreen, for: .normal)
             self.scanButton.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
@@ -277,14 +350,37 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
             
         } else {
             
-            timer = .scheduledTimer(withTimeInterval: 0.01, repeats: false, block: { (timer) in //7
+            timer = .scheduledTimer(withTimeInterval: 0.01, repeats: false, block: { [unowned vc = self] (timer) in //7
                 
-                self.textField.text = substring
-                self.textField.textColor = .systemRed
+                vc.textField.text = substring
+                
+                if let _ = BIP39Mnemonic(vc.processedCharacters(vc.textField.text!)) {
+                    
+                    vc.textField.textColor = .systemGreen
+                    vc.validWordsAdded()
+                    
+                } else {
+                    
+                    vc.textField.textColor = .systemRed
+                    
+                }
+                
                 
             })
             
             autoCompleteCharacterCount = 0
+            
+        }
+        
+    }
+    
+    private func validWordsAdded() {
+        
+        DispatchQueue.main.async {
+            
+            self.textField.resignFirstResponder()
+            
+            showAlert(vc: self, title: "Valid mnemonic", message: "Thats a valid recovery phrase, you can now tap \"Tap to recover\" to recover with just words.")
             
         }
         
@@ -311,22 +407,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
-        if textField.text != "" {
-            
-            let processedWord = textField.text!.replacingOccurrences(of: " ", with: "")
-            
-            for word in bip39Words {
-                
-                if processedWord == word {
-                    
-                    addWord(word: processedWord)
-                    textField.text = ""
-                    
-                }
-                
-            }
-            
-        }
+        processTextfieldInput()
         
         return true
         
@@ -411,11 +492,12 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
             
             if self.justWords.count == 12 || self.justWords.count == 24 {
                 
-                self.recoverNowOutlet.isEnabled = true
+                self.recoverNowOutlet.alpha = 1
+                self.validWordsAdded()
                 
             } else {
                 
-                self.recoverNowOutlet.isEnabled = false
+                self.recoverNowOutlet.alpha = 0
                 
             }
             
@@ -433,6 +515,16 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    private func confirm() {
+        
+        DispatchQueue.main.async {
+            
+            self.performSegue(withIdentifier: "goConfirm", sender: self)
+            
+        }
+        
+    }
+    
     private func recover(dict: [String:Any]) {
         
         DispatchQueue.main.async {
@@ -445,30 +537,33 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         connectingView.addConnectingView(vc: self, description: "recovering your wallet")
         let recovery = RecoverWallet()
         
-        let enc = Encryption()
-        enc.getNode { (node, error) in
+        let enc = Encryption.sharedInstance
+        enc.getNode { [unowned vc = self] (node, error) in
             
             if !error && node != nil {
                 
-                recovery.node = node!
-                
-                if self.justWords.count == 12 || self.justWords.count == 24 {
+                var words:String?
+                var derivation:String?
+                var json:[String:Any]?
+                                
+                if vc.justWords.count == 12 || vc.justWords.count == 24 {
                     
-                    recovery.words = self.justWords.joined(separator: " ")
+                    words = vc.justWords.joined(separator: " ")
                     
                 }
                 
-                if dict["descriptor"] != nil {
+                if dict["descriptor"] == nil {
                     
-                    recovery.json = dict
+                    derivation = vc.derivation
+                    json = nil
                     
                 } else {
                     
-                    recovery.derivation = self.derivation
+                    json = dict
                     
                 }
                 
-                recovery.recover { (success, error) in
+                recovery.recover(node: node!, json: json, words: words, derivation: derivation) { (success, error) in
                     
                     if success {
                         
@@ -476,9 +571,9 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                         
                         DispatchQueue.main.async {
                             
-                            self.dismiss(animated: true) {
+                            vc.dismiss(animated: true) {
                                 
-                                self.onDoneBlock!(true)
+                                vc.onDoneBlock!(true)
                                 
                             }
                             
@@ -490,7 +585,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                         
                         if error != nil {
                             
-                            showAlert(vc: self, title: "Error!", message: "Wallet recovery error: \(error!)")
+                            showAlert(vc: vc, title: "Error!", message: "Wallet recovery error: \(error!)")
                             
                         }
                         
@@ -502,11 +597,19 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                 
                 connectingView.removeConnectingView()
                 
-                showAlert(vc: self, title: "Error!", message: "Recovering wallets requires an active node!")
+                showAlert(vc: vc, title: "Error!", message: "Recovering wallets requires an active node!")
                 
             }
             
         }
+        
+    }
+    
+    private func processedCharacters(_ string: String) -> String {
+        
+        var result = string.filter("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ".contains)
+        result = result.condenseWhitespace()
+        return result
         
     }
     // MARK: - Navigation
@@ -516,20 +619,53 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
         switch segue.identifier {
+            
+        case "goConfirm":
+            
+            if let vc = segue.destination as? ConfirmRecoveryViewController {
+                
+                if self.justWords.count == 12 || self.justWords.count == 24 {
+                    
+                    vc.words = self.justWords.joined(separator: " ")
+                    
+                }
+                
+                vc.walletDict = self.recoveryDict
+                vc.derivation = self.derivation
+                vc.confirmedDoneBlock = { [unowned thisVc = self] result in
+                    
+                    if result {
+                        
+                        thisVc.recover(dict: thisVc.recoveryDict)
+                        
+                    } else {
+                        
+                        DispatchQueue.main.async {
+                            
+                            thisVc.dismiss(animated: true, completion: nil)
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
         case "scanRecovery":
             
             if let vc = segue.destination as? ScannerViewController {
                 
                 vc.isRecovering = true
-                vc.onDoneRecoveringBlock = { dict in
+                vc.onDoneRecoveringBlock = { [unowned thisVc = self] dict in
                     
-                    self.recoveryDict = dict
-                    self.validRecoveryScanned()
+                    thisVc.recoveryDict = dict
+                    thisVc.validRecoveryScanned()
                     
                     DispatchQueue.main.async {
                         
-                        self.recoverNowOutlet.isEnabled = true
-                        displayAlert(viewController: self, isError: false, message: "Valid RecoveryQR scanned, you can now tap \"Recover Now\"")
+                        thisVc.recoverNowOutlet.isEnabled = true
+                        showAlert(vc: thisVc, title: "Valid Recovery QR", message: "You can now tap \"Tap to recover\"")
 
                     }
                     
@@ -544,6 +680,12 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         }
         
     }
-    
 
+}
+
+extension String {
+    func condenseWhitespace() -> String {
+        let components = self.components(separatedBy: .whitespacesAndNewlines)
+        return components.filter { !$0.isEmpty }.joined(separator: " ")
+    }
 }

@@ -30,6 +30,7 @@ public struct HomeStruct: CustomStringConvertible {
     let feeRate:String
     let p2pOnionAddress:String
     let unconfirmed:Bool
+    let noUtxos:Bool
     
     init(dictionary: [String: Any]) {
         
@@ -52,6 +53,7 @@ public struct HomeStruct: CustomStringConvertible {
         self.transactions = dictionary["transactions"] as? [[String: Any]] ?? []
         self.p2pOnionAddress = dictionary["p2pOnionAddress"] as? String ?? "none"
         self.unconfirmed = dictionary["unconfirmed"] as? Bool ?? false
+        self.noUtxos = dictionary["noUtxos"] as? Bool ?? true
         
     }
     

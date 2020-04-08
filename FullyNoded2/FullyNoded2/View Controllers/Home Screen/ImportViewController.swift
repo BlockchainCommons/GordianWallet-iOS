@@ -96,14 +96,14 @@ class ImportViewController: UIViewController, UINavigationControllerDelegate {
     
     func scanNow() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.qrScanner.scanQRCode()
-            self.addScannerButtons()
+            vc.qrScanner.scanQRCode()
+            vc.addScannerButtons()
             
-            UIView.animate(withDuration: 0.3, animations: {
+            UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
                 
-                self.imageView.alpha = 1
+                vc.imageView.alpha = 1
                 
             })
             
@@ -139,17 +139,17 @@ class ImportViewController: UIViewController, UINavigationControllerDelegate {
         connectingView.addConnectingView(vc: self, description: "creating custom wallet")
         
         let importWallet = ImportCustomDescriptor()
-        importWallet.create(descriptor: url) { (success, error, errorDescription) in
+        importWallet.create(descriptor: url) { [unowned vc = self] (success, error, errorDescription) in
             
             if !error && success {
                 
-                self.connectingView.removeConnectingView()
-                self.importComplete!(true)
-                self.dismiss(animated: true, completion: nil)
+                vc.connectingView.removeConnectingView()
+                vc.importComplete!(true)
+                vc.dismiss(animated: true, completion: nil)
                 
             } else {
                 
-                displayAlert(viewController: self, isError: true, message: errorDescription!)
+                displayAlert(viewController: vc, isError: true, message: errorDescription!)
                 
             }
             

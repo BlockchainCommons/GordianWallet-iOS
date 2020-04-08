@@ -12,12 +12,14 @@ import KeychainSwift
 
 class Encryption {
     
-    let keychain = KeychainSwift()
-    let ud = UserDefaults.standard
+    static let sharedInstance = Encryption()
+    
+    private init() {}
     
     func encryptData(dataToEncrypt: Data, completion: @escaping ((encryptedData: Data?, error: Bool)) -> Void) {
         
-        if let key = self.keychain.getData("privateKey") {
+        let keychain = KeychainSwift()
+        if let key = keychain.getData("privateKey") {
             
             let k = SymmetricKey(data: key)
             
@@ -40,7 +42,8 @@ class Encryption {
         
         if #available(iOS 13.0, *) {
             
-            if let key = self.keychain.getData("privateKey") {
+            let keychain = KeychainSwift()
+            if let key = keychain.getData("privateKey") {
                 
                 do {
                     
@@ -66,11 +69,14 @@ class Encryption {
         
         if #available(iOS 13.0, *) {
             
+            let keychain = KeychainSwift()
             if let key = keychain.getData("privateKey") {
                 
                 let pk = SymmetricKey(data: key)
-                let cd = CoreDataService()
-                cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+                weak var cd = CoreDataService.sharedInstance
+                cd?.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+                    
+                    cd = nil
                     
                     if errorDescription == nil {
                         
@@ -162,9 +168,10 @@ class Encryption {
         
         if #available(iOS 13.0, *) {
             
-            if let key = self.keychain.getData("privateKey") {
+            weak var cd = CoreDataService.sharedInstance
+            let keychain = KeychainSwift()
+            if let key = keychain.getData("privateKey") {
                 
-                let cd = CoreDataService()
                 let pk = SymmetricKey(data: key)
                 var encryptedNode = newNode
                 
@@ -185,12 +192,14 @@ class Encryption {
                                     
                                 } else {
                                     
+                                    cd = nil
                                     completion((false, "node encryption failed"))
                                     
                                 }
                                 
                             } else {
                                 
+                                cd = nil
                                 completion((false, "node encryption failed"))
                                 
                             }
@@ -199,15 +208,17 @@ class Encryption {
                         
                     }
                     
-                    cd.saveEntity(dict: encryptedNode, entityName: .nodes) {
-                        
-                        if !cd.errorBool {
+                    cd?.saveEntity(dict: encryptedNode, entityName: .nodes) { (success, errorDesc) in
+                                                
+                        if success {
                             
+                            cd = nil
                             completion((true, nil))
                             
                         } else {
                             
-                            completion((false, nil))
+                            cd = nil
+                            completion((false, errorDesc ?? "error saving node"))
                             
                         }
                         
@@ -215,7 +226,7 @@ class Encryption {
                     
                 }
                 
-                cd.retrieveEntity(entityName: .nodes) { (existingNodes, errorDescription) in
+                cd?.retrieveEntity(entityName: .nodes) { (existingNodes, errorDescription) in
                     
                     if errorDescription == nil && existingNodes != nil {
                         
@@ -244,6 +255,7 @@ class Encryption {
                                                 
                                             } else {
                                                 
+                                                cd = nil
                                                 completion((false, "node already added"))
                                                 
                                             }
@@ -268,6 +280,80 @@ class Encryption {
                 
             } else {
                 
+                cd = nil
+                completion((false, nil))
+                
+            }
+            
+        } else {
+            
+            completion((false, nil))
+            
+        }
+        
+    }
+    
+    func updateNode(newCredentials: [String:Any], nodeToUpdate: UUID, completion: @escaping ((success: Bool, error: String?)) -> Void) {
+        
+        if #available(iOS 13.0, *) {
+            
+            weak var cd = CoreDataService.sharedInstance
+            let keychain = KeychainSwift()
+            if let key = keychain.getData("privateKey") {
+                
+                let pk = SymmetricKey(data: key)
+                var encryptedNode = newCredentials
+                
+                for (k, value) in newCredentials {
+                    
+                    if k != "id" && k != "isActive" && k != "network" {
+                        
+                        let stringToEncrypt = value as! String
+                        
+                        if let dataToEncrypt = stringToEncrypt.data(using: .utf8) {
+                            
+                            if let sealedBox = try? ChaChaPoly.seal(dataToEncrypt, using: pk) {
+                                
+                                let encryptedData = sealedBox.combined
+                                encryptedNode[k] = encryptedData
+                                
+                            } else {
+                                
+                                cd = nil
+                                completion((false, "node encryption failed"))
+                                
+                            }
+                            
+                        } else {
+                            
+                            cd = nil
+                            completion((false, "node encryption failed"))
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+                cd?.updateNode(nodeToUpdate: nodeToUpdate, newCredentials: encryptedNode) { (success, errorDesc) in
+                    
+                    if success {
+                        
+                        cd = nil
+                        completion((true, nil))
+                        
+                    } else {
+                        
+                        cd = nil
+                        completion((false, nil))
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                cd = nil
                 completion((false, nil))
                 
             }

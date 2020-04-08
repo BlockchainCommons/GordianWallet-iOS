@@ -11,6 +11,9 @@ import UIKit
 class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate {
     
     @IBOutlet var loadingRefresher: UIActivityIndicatorView!
+    weak var nodeLogic = NodeLogic.sharedInstance
+    weak var cd = CoreDataService.sharedInstance
+    var isLoading = Bool()
     var refresher: UIRefreshControl!
     var index = Int()
     var name = ""
@@ -22,7 +25,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     let creatingView = ConnectingView()
     var editButton = UIBarButtonItem()
     var addButton = UIBarButtonItem()
-    let cd = CoreDataService()
     var nodes = [[String:Any]]()
     var recoveryPhrase = ""
     var descriptor = ""
@@ -38,15 +40,15 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createWallet))
         navigationItem.setRightBarButton(addButton, animated: true)
         navigationItem.setLeftBarButton(editButton, animated: true)
+        setTitleView()
         configureRefresher()
+        loadingRefresher.alpha = 0
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
-        loadingRefresher.startAnimating()
-        loadingRefresher.alpha = 1
-        
+        isLoading = true
         refresh()
         
         DispatchQueue.main.async {
@@ -54,6 +56,19 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.walletTable.setContentOffset(.zero, animated: true)
             
         }
+        
+    }
+    
+    private func setTitleView() {
+        
+        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.frame = titleView.bounds
+        titleView.addSubview(imageView)
+        self.navigationItem.titleView = titleView
         
     }
     
@@ -69,19 +84,27 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func editWallets() {
         
-        walletTable.setEditing(!walletTable.isEditing, animated: true)
-        
-        if walletTable.isEditing {
+        if !isLoading {
             
-            editButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(editWallets))
+            walletTable.setEditing(!walletTable.isEditing, animated: true)
+            
+            if walletTable.isEditing {
+                
+                editButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(editWallets))
+                
+            } else {
+                
+                editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editWallets))
+                
+            }
+            
+            self.navigationItem.setLeftBarButton(editButton, animated: true)
             
         } else {
             
-            editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editWallets))
+            showAlert(vc: self, title: "Fetching wallet data from your node...", message: "Please wait until the spinner disappears as the app is currently fetching wallet data from your node.")
             
         }
-        
-        self.navigationItem.setLeftBarButton(editButton, animated: true)
         
     }
     
@@ -101,27 +124,39 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if editingStyle == .delete {
             
-            let id = sortedWallets[indexPath.section]["id"] as! UUID
-            cd.updateEntity(id: id, keyToUpdate: "isArchived", newValue: true, entityName: .wallets) {
+            if !isLoading {
                 
-                if !self.cd.errorBool {
-                    
-                    if self.sortedWallets.count == 1 {
+                if sortedWallets.count > 0 {
+                 
+                    let id = sortedWallets[indexPath.section]["id"] as! UUID
+                    cd?.updateEntity(id: id, keyToUpdate: "isArchived", newValue: true, entityName: .wallets) { (success, errorDescription) in
                         
-                        DispatchQueue.main.async {
+                        if success {
                             
-                            self.sortedWallets.removeAll()
-                            self.editWallets()
-                            self.walletTable.reloadData()
+                            if self.sortedWallets.count == 1 {
+                                
+                                DispatchQueue.main.async {
+                                    
+                                    self.sortedWallets.removeAll()
+                                    self.editWallets()
+                                    self.walletTable.reloadData()
+                                    
+                                }
+                                
+                            } else {
+                                
+                                DispatchQueue.main.async {
+                                    
+                                    self.sortedWallets.remove(at: indexPath.section)
+                                    tableView.deleteSections(IndexSet(arrayLiteral: indexPath.section), with: .fade)
+                                    
+                                }
+                                
+                            }
                             
-                        }
-                        
-                    } else {
-                        
-                        DispatchQueue.main.async {
+                        } else {
                             
-                            self.sortedWallets.remove(at: indexPath.section)
-                            tableView.deleteSections(IndexSet(arrayLiteral: indexPath.section), with: .fade)
+                            displayAlert(viewController: self, isError: true, message: "error deleting node")
                             
                         }
                         
@@ -129,7 +164,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                 } else {
                     
-                    displayAlert(viewController: self, isError: true, message: "error deleting node")
+                    self.editWallets()
+                    displayAlert(viewController: self, isError: true, message: "not allowed")
                     
                 }
                 
@@ -173,8 +209,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func pullToRefresh() {
         
-        self.refresher.beginRefreshing()
-        refresh()
+        if !isLoading {
+            
+            self.isLoading = true
+            self.refresher.beginRefreshing()
+            refresh()
+            
+        } else {
+            
+            showAlert(vc: self, title: "Please be patient", message: "We are already refreshing your wallets data, wait for the spinner to dissapear then try again.")
+            
+        }
         
     }
     
@@ -184,14 +229,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         sortedWallets.removeAll()
         
         func loadWallets() {
-            
-            self.cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
-                
+                        
+            self.cd?.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
+                                
                 if errorDescription == nil {
                     
                     if wallets!.count == 0 {
                         
-                        self.createWallet()
+                        vc.isLoading = false
                         
                     } else {
                         
@@ -199,37 +244,39 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             
                             let s = WalletStruct(dictionary: w)
                             
-                            if !s.isArchived {
+                            if !s.isArchived && w["id"] != nil {
                                 
-                                self.sortedWallets.append(w)
+                                vc.sortedWallets.append(w)
                                 
                             }
                             
                             if i + 1 == wallets!.count {
                                 
-                                self.sortedWallets = self.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
+                                vc.sortedWallets = self.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
                                 
-                                if self.sortedWallets.count == 0 {
+                                if vc.sortedWallets.count == 0 {
                                     
-                                    self.createWallet()
+                                    vc.isLoading = false
+                                    vc.createWallet()
                                     
                                 } else {
                                     
-                                    if self.nodes.count == 0 {
+                                    if vc.nodes.count == 0 {
                                         
-                                        self.walletTable.isUserInteractionEnabled = false
+                                        vc.isLoading = false
+                                        vc.walletTable.isUserInteractionEnabled = false
                                         
                                         for (i, wallet) in self.sortedWallets.enumerated() {
                                             
                                             let w = WalletStruct(dictionary: wallet)
-                                            self.cd.updateEntity(id: w.id, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {}
+                                            vc.cd?.updateEntity(id: w.id, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
                                             
-                                            if i + 1 == self.sortedWallets.count {
+                                            if i + 1 == vc.sortedWallets.count {
                                                 
                                                 DispatchQueue.main.async {
                                                     
-                                                    self.walletTable.reloadData()
-                                                    self.refresher.endRefreshing()
+                                                    vc.walletTable.reloadData()
+                                                    vc.refresher.endRefreshing()
                                                     
                                                 }
                                                 
@@ -241,9 +288,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                         
                                         DispatchQueue.main.async {
                                             
-                                            self.walletTable.reloadData()
-                                            self.index = 0
-                                            self.getBalances()
+                                            vc.loadingRefresher.startAnimating()
+                                            vc.loadingRefresher.alpha = 1
+                                            vc.walletTable.reloadData()
+                                            vc.index = 0
+                                            vc.getBalances()
                                             
                                         }
                                         
@@ -259,7 +308,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                 } else {
                     
-                    displayAlert(viewController: self, isError: true, message: errorDescription!)
+                    displayAlert(viewController: vc, isError: true, message: errorDescription!)
                     
                 }
                 
@@ -267,14 +316,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        let enc = Encryption()
-        cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+        let enc = Encryption.sharedInstance
+        cd?.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodes, errorDescription) in
             
             if errorDescription == nil && nodes != nil {
                 
                 if nodes!.count > 0 {
                     
-                    self.nodes = nodes!
+                    vc.nodes = nodes!
                     
                     for (i, n) in nodes!.enumerated() {
                         
@@ -282,7 +331,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             
                             if decryptedOnionAddress != nil {
                                 
-                                self.nodes[i]["onionAddress"] = String(bytes: decryptedOnionAddress!, encoding: .utf8)
+                                vc.nodes[i]["onionAddress"] = String(bytes: decryptedOnionAddress!, encoding: .utf8)
                                 
                             }
                             
@@ -290,7 +339,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             
                                 if decryptedLabel != nil {
                                     
-                                    self.nodes[i]["label"] = String(bytes: decryptedLabel!, encoding: .utf8)
+                                    vc.nodes[i]["label"] = String(bytes: decryptedLabel!, encoding: .utf8)
                                     
                                 }
                                 
@@ -310,7 +359,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     loadWallets()
                     
-                    displayAlert(viewController: self, isError: true, message: "no nodes! Something is very wrong, you will not be able to use these wallets without a node")
+                    displayAlert(viewController: vc, isError: true, message: "no nodes! Something is very wrong, you will not be able to use these wallets without a node")
                     
                 }
                 
@@ -352,13 +401,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let isActive = cell.viewWithTag(2) as! UISwitch
         let exportKeysButton = cell.viewWithTag(3) as! UIButton
         let verifyAddresses = cell.viewWithTag(4) as! UIButton
-        //let refreshData = cell.viewWithTag(5) as! UIButton
-        //let showInvoice = cell.viewWithTag(6) as! UIButton
-        //let makeItCold = cell.viewWithTag(7) as! UIButton
         let networkLabel = cell.viewWithTag(8) as! UILabel
         let utxosButton = cell.viewWithTag(9) as! UIButton
         let derivationLabel = cell.viewWithTag(11) as! UILabel
-        //let getWalletInfoButton = cell.viewWithTag(12) as! UIButton
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
         let shareSeedButton = cell.viewWithTag(16) as! UIButton
@@ -373,6 +418,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let bannerView = cell.viewWithTag(32)!
         let nodeKeysLabel = cell.viewWithTag(33) as! UILabel
         let rescanLabel = cell.viewWithTag(34) as! UILabel
+        let nodeChangeKeys = cell.viewWithTag(36) as! UILabel
         
         rescanLabel.alpha = 0
         rescanLabel.adjustsFontSizeToFitWidth = true
@@ -428,33 +474,22 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if isActive.isOn {
             
             utxosButton.addTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
-            //makeItCold.addTarget(self, action: #selector(makeCold(_:)), for: .touchUpInside)
-            //showInvoice.addTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
             shareSeedButton.addTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             exportKeysButton.addTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
-            //getWalletInfoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             verifyAddresses.addTarget(self, action: #selector(verifyAddresses(_:)), for: .touchUpInside)
-            //refreshData.addTarget(self, action: #selector(refreshData(_:)), for: .touchUpInside)
             
         } else {
             
             utxosButton.removeTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
-            //makeItCold.removeTarget(self, action: #selector(makeCold(_:)), for: .touchUpInside)
-            //showInvoice.removeTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
             shareSeedButton.removeTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             exportKeysButton.removeTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
-            //getWalletInfoButton.removeTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             verifyAddresses.removeTarget(self, action: #selector(verifyAddresses(_:)), for: .touchUpInside)
-            //refreshData.removeTarget(self, action: #selector(refreshData(_:)), for: .touchUpInside)
             
         }
         
-        //makeItCold.restorationIdentifier = "\(indexPath.section)"
         shareSeedButton.restorationIdentifier = "\(indexPath.section)"
         exportKeysButton.restorationIdentifier = "\(indexPath.section)"
-        //getWalletInfoButton.restorationIdentifier = "\(indexPath.section)"
         verifyAddresses.restorationIdentifier = "\(indexPath.section)"
-        //refreshData.restorationIdentifier = "\(indexPath.section)"
         
         rescanLabel.layer.cornerRadius = 8
         nodeView.layer.cornerRadius = 8
@@ -495,11 +530,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        nodeKeysLabel.text = "holds public keys \(wallet.derivation)/0 to /999"
+        nodeKeysLabel.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
+        nodeChangeKeys.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
         deviceXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
-        walletFileLabel.text = wallet.name + ".dat"
+        walletFileLabel.text = reducedName(name: wallet.name)
         
         for n in nodes {
             
@@ -533,19 +569,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let isActive = cell.viewWithTag(2) as! UISwitch
         let exportKeysButton = cell.viewWithTag(3) as! UIButton
         let verifyAddresses = cell.viewWithTag(4) as! UIButton
-        //let refreshData = cell.viewWithTag(5) as! UIButton
-        //let showInvoice = cell.viewWithTag(6) as! UIButton
-        //let makeItCold = cell.viewWithTag(7) as! UIButton
         let networkLabel = cell.viewWithTag(8) as! UILabel
         let utxosButton = cell.viewWithTag(9) as! UIButton
         let derivationLabel = cell.viewWithTag(11) as! UILabel
-        //let getWalletInfoButton = cell.viewWithTag(12) as! UIButton
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
-        let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
         let shareSeedButton = cell.viewWithTag(16) as! UIButton
-        //let getNodeSeedInfoButton = cell.viewWithTag(17) as! UIButton
-        //let getOfflineSeedInfoButton = cell.viewWithTag(18) as! UIButton
         let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
         let walletFileLabel = cell.viewWithTag(20) as! UILabel
         let seedOnDeviceView = cell.viewWithTag(21)!
@@ -560,7 +589,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let offlineXprv = cell.viewWithTag(31) as! UILabel
         let bannerView = cell.viewWithTag(33)!
         let rescanLabel = cell.viewWithTag(34) as! UILabel
-        
+        let nodeChangeKeysLabel = cell.viewWithTag(35) as! UILabel
+                
         rescanLabel.alpha = 0
         rescanLabel.adjustsFontSizeToFitWidth = true
         
@@ -615,37 +645,22 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if isActive.isOn {
             
             utxosButton.addTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
-            //makeItCold.addTarget(self, action: #selector(makeCold(_:)), for: .touchUpInside)
-            //showInvoice.addTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
             shareSeedButton.addTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             exportKeysButton.addTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
-            //getWalletInfoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             verifyAddresses.addTarget(self, action: #selector(verifyAddresses(_:)), for: .touchUpInside)
-            //refreshData.addTarget(self, action: #selector(refreshData(_:)), for: .touchUpInside)
-            //getNodeSeedInfoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
-            //getOfflineSeedInfoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             
         } else {
             
             utxosButton.removeTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
-            //makeItCold.removeTarget(self, action: #selector(makeCold(_:)), for: .touchUpInside)
-            //showInvoice.removeTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
             shareSeedButton.removeTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             exportKeysButton.removeTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
-            //getWalletInfoButton.removeTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             verifyAddresses.removeTarget(self, action: #selector(verifyAddresses(_:)), for: .touchUpInside)
-            //refreshData.removeTarget(self, action: #selector(refreshData(_:)), for: .touchUpInside)
-            //getNodeSeedInfoButton.removeTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
-            //getOfflineSeedInfoButton.removeTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
             
         }
         
-        //makeItCold.restorationIdentifier = "\(indexPath.section)"
         shareSeedButton.restorationIdentifier = "\(indexPath.section)"
         exportKeysButton.restorationIdentifier = "\(indexPath.section)"
-        //getWalletInfoButton.restorationIdentifier = "\(indexPath.section)"
         verifyAddresses.restorationIdentifier = "\(indexPath.section)"
-        //refreshData.restorationIdentifier = "\(indexPath.section)"
         
         rescanLabel.layer.cornerRadius = 8
         nodeView.layer.cornerRadius = 8
@@ -689,11 +704,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         deviceXprv.text = "xprv \(wallet.derivation)"
-        nodeKeys.text = "keys \(wallet.derivation)/0 and 1/0 to /999"
+        nodeKeys.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
+        nodeChangeKeysLabel.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
         offlineXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
-        walletFileLabel.text = wallet.name + ".dat"
+        walletFileLabel.text = reducedName(name: wallet.name)
         
         for n in nodes {
             
@@ -706,7 +722,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let last15 = String(rpcOnion.suffix(15))
                 rpcOnionLabel.text = "\(first10)*****\(last15)"
                 nodeLabel.text = s.label
-                nodeSeedLabel.text = "1 Seedless \(s.label)"
                 
             }
             
@@ -716,191 +731,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-    private func customWalletCell(_ indexPath: IndexPath) -> UITableViewCell {
-        
-        let d = sortedWallets[indexPath.section]
-        let wallet = WalletStruct.init(dictionary: d)
-        let cell = walletTable.dequeueReusableCell(withIdentifier: "coldWalletCell", for: indexPath)
-        cell.selectionStyle = .none
-        let parser = DescriptorParser()
-        let descStr = parser.descriptor(wallet.descriptor)
-        
-        let balanceLabel = cell.viewWithTag(1) as! UILabel
-        let isActive = cell.viewWithTag(2) as! UISwitch
-        let exportKeysButton = cell.viewWithTag(3) as! UIButton
-        let verifyAddresses = cell.viewWithTag(4) as! UIButton
-        //let refreshData = cell.viewWithTag(5) as! UIButton
-        //let showInvoice = cell.viewWithTag(6) as! UIButton
-        //let rescanButton = cell.viewWithTag(7) as! UIButton
-        let networkLabel = cell.viewWithTag(8) as! UILabel
-        let utxosButton = cell.viewWithTag(9) as! UIButton
-        let derivationLabel = cell.viewWithTag(11) as! UILabel
-        //let getWalletInfoButton = cell.viewWithTag(12) as! UIButton
-        let updatedLabel = cell.viewWithTag(13) as! UILabel
-        let createdLabel = cell.viewWithTag(14) as! UILabel
-        //let nodeSeedLabel = cell.viewWithTag(15) as! UILabel
-        let exportSeedButton = cell.viewWithTag(17) as! UIButton
-        let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
-        let walletFileLabel = cell.viewWithTag(20) as! UILabel
-        //let seedOnNodeView = cell.viewWithTag(22)!
-        let isActiveLabel = cell.viewWithTag(24) as! UILabel
-        let stackView = cell.viewWithTag(25)!
-        let nodeView = cell.viewWithTag(26)!
-        let nodeLabel = cell.viewWithTag(27) as! UILabel
-        let keysOnNodeLabel = cell.viewWithTag(28) as! UILabel
-        let typeLabel = cell.viewWithTag(29) as! UILabel
-        let bannerView = cell.viewWithTag(32)!
-        let rescanLabel = cell.viewWithTag(34) as! UILabel
-        
-        rescanLabel.alpha = 0
-        rescanLabel.adjustsFontSizeToFitWidth = true
-        
-        if let isRescanning = sortedWallets[indexPath.section]["isRescanning"] as? Bool {
-            
-            if isRescanning {
-                
-                print("wallet is rescanning")
-                
-                if let progress = sortedWallets[indexPath.section]["progress"] as? String {
-                    
-                    rescanLabel.text = "Rescanning" + " " + progress + "%"
-                    
-                } else {
-                    
-                    rescanLabel.text = "Rescanning"
-                    
-                }
-                
-                rescanLabel.alpha = 1
-                
-            } else {
-                
-                print("wallet not rescanning")
-                rescanLabel.alpha = 0
-                
-            }
-            
-        }
-        
-        if wallet.isActive {
-            
-            isActive.isOn = true
-            isActiveLabel.text = "Active"
-            isActiveLabel.textColor = .lightGray
-            cell.contentView.alpha = 1
-            bannerView.backgroundColor = #colorLiteral(red: 0, green: 0.1631944358, blue: 0.3383367703, alpha: 1)
-            
-        } else if !wallet.isActive {
-            
-            isActive.isOn = false
-            isActiveLabel.text = "Inactive"
-            isActiveLabel.textColor = .darkGray
-            cell.contentView.alpha = 0.6
-            bannerView.backgroundColor = #colorLiteral(red: 0.1051254794, green: 0.1292803288, blue: 0.1418488324, alpha: 1)
-            
-        }
-        
-        isActive.addTarget(self, action: #selector(makeActive(_:)), for: .valueChanged)
-        isActive.restorationIdentifier = "\(indexPath.section)"
-        
-        if isActive.isOn {
-            
-            utxosButton.addTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
-            exportSeedButton.addTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
-            //rescanButton.addTarget(self, action: #selector(rescan(_:)), for: .touchUpInside)
-            //showInvoice.addTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
-            exportKeysButton.addTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
-            //getWalletInfoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
-            verifyAddresses.addTarget(self, action: #selector(verifyAddresses(_:)), for: .touchUpInside)
-            //refreshData.addTarget(self, action: #selector(refreshData(_:)), for: .touchUpInside)
-            
-        } else {
-            
-            utxosButton.removeTarget(self, action: #selector(goUtxos(_:)), for: .touchUpInside)
-            exportSeedButton.removeTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
-            //rescanButton.removeTarget(self, action: #selector(rescan(_:)), for: .touchUpInside)
-            //showInvoice.removeTarget(self, action: #selector(invoice(_:)), for: .touchUpInside)
-            exportKeysButton.removeTarget(self, action: #selector(exportKeys(_:)), for: .touchUpInside)
-            //getWalletInfoButton.removeTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
-            verifyAddresses.removeTarget(self, action: #selector(verifyAddresses(_:)), for: .touchUpInside)
-            //refreshData.removeTarget(self, action: #selector(refreshData(_:)), for: .touchUpInside)
-            
-        }
-        
-        //rescanButton.restorationIdentifier = "\(indexPath.section)"
-        exportSeedButton.restorationIdentifier = "\(indexPath.section)"
-        exportKeysButton.restorationIdentifier = "\(indexPath.section)"
-        //getWalletInfoButton.restorationIdentifier = "\(indexPath.section)"
-        verifyAddresses.restorationIdentifier = "\(indexPath.section)"
-        //refreshData.restorationIdentifier = "\(indexPath.section)"
-        
-        nodeView.layer.cornerRadius = 8
-        stackView.layer.cornerRadius = 8
-        networkLabel.layer.cornerRadius = 8
-        utxosButton.layer.cornerRadius = 8
-        
-        balanceLabel.adjustsFontSizeToFitWidth = true
-        balanceLabel.text = "\(wallet.lastBalance.avoidNotation) BTC"
-        
-        if descStr.chain == "Testnet" {
-            
-            networkLabel.text = "Testnet"
-            networkLabel.textColor = .systemOrange
-            balanceLabel.textColor = .systemOrange
-            
-        } else if descStr.chain == "Mainnet" {
-            
-            networkLabel.text = "Mainnet"
-            networkLabel.textColor = .systemGreen
-            balanceLabel.textColor = .systemGreen
-            
-        }
-        
-        derivationLabel.text = descStr.format
-        
-        if descStr.isMulti {
-            
-            typeLabel.text = descStr.mOfNType
-            
-        } else {
-            
-            typeLabel.text = "Single-Sig"
-            
-        }
-        
-        updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
-        createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
-        walletFileLabel.text = wallet.name + ".dat"
-        
-        for n in nodes {
-            
-            let s = NodeStruct(dictionary: n)
-            
-            if s.id == wallet.nodeId {
-                
-                let rpcOnion = s.onionAddress
-                let first10 = String(rpcOnion.prefix(5))
-                let last15 = String(rpcOnion.suffix(15))
-                rpcOnionLabel.text = "\(first10)*****\(last15)"
-                nodeLabel.text = s.label
-                
-                if descStr.isHot {
-                    
-                    keysOnNodeLabel.text = "1,000 private keys on \(s.label)"
-                    
-                } else {
-                    
-                    keysOnNodeLabel.text = "1,000 public keys on \(s.label)"
-                    
-                }
-                
-            }
-            
-        }
-        
-        return cell
-        
-    }
+
     
     private func noWalletCell() -> UITableViewCell {
         
@@ -930,10 +761,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 return multiSigWalletCell(indexPath)
                 
-            case "CUSTOM":
-                
-                return customWalletCell(indexPath)
-                
             default:
                 
                 return UITableViewCell()
@@ -956,8 +783,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func goUtxos(_ sender: UIButton) {
         
-        impact()
-        
         DispatchQueue.main.async {
             
             self.performSegue(withIdentifier: "seeUtxos", sender: self)
@@ -966,135 +791,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-//    @objc func makeCold(_ sender: UIButton) {
-//
-//        showAlert(vc: self, title: "🛠 Not yet ready", message: "This feature and other seed related tools are under active development and not quite ready for testing yet.")
-//
-//        let index = Int(sender.restorationIdentifier!)!
-//
-//        if sortedWallets.count > 0 {
-//
-//            let wallet = WalletStruct(dictionary: self.sortedWallets[index])
-//
-//            impact()
-//
-//            DispatchQueue.main.async {
-//
-//                let alert = UIAlertController(title: "⚠︎ WARNING!", message: "This button WILL DELETE the devices seed FOREVER, and make this wallet a watch-only wallet, there is no going back after this! Make sure you have securely recorded your words, descriptors and recovery command before deleting the seed otherwise you will NOT be able to spend from this wallet.", preferredStyle: .actionSheet)
-//
-//                alert.addAction(UIAlertAction(title: "⚠︎ DELETE SEED", style: .destructive, handler: { action in
-//
-//                    self.cd.updateEntity(id: wallet.id, keyToUpdate: "seed", newValue: "no seed".dataUsingUTF8StringEncoding, entityName: .wallets) {
-//
-//                        if !self.cd.errorBool {
-//
-//                            self.cd.updateEntity(id: wallet.id, keyToUpdate: "type", newValue: "CUSTOM", entityName: .wallets) {}
-//
-//                            showAlert(vc: self, title: "Seed deleted", message: "")
-//
-//                            DispatchQueue.main.async {
-//
-//                                self.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
-//
-//                            }
-//
-//                        } else {
-//
-//                            showAlert(vc: self, title: "Error", message: "\(self.cd.errorDescription)")
-//
-//                        }
-//
-//                    }
-//
-//                }))
-//
-//                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-//
-//                self.present(alert, animated: true, completion: nil)
-//
-//            }
-//
-//        }
-//
-//    }
-    
-    private func impact() {
-        
-        let impact = UIImpactFeedbackGenerator()
-        
-        DispatchQueue.main.async {
-            
-            impact.impactOccurred()
-            
-        }
-        
-    }
-    
-//    @objc func invoice(_ sender: UIButton) {
-//
-//        impact()
-//
-//        DispatchQueue.main.async {
-//
-//            self.performSegue(withIdentifier: "invoice", sender: self)
-//
-//        }
-//
-//    }
-    
-//    @objc func refreshData(_ sender: UIButton) {
-//
-//        impact()
-//
-//        DispatchQueue.main.async {
-//
-//            sender.tintColor = .clear
-//            sender.loadingIndicator(show: true)
-//
-//        }
-//
-//        let index = Int(sender.restorationIdentifier!)!
-//
-//        if self.sortedWallets.count > 0 {
-//
-//            let wallet = WalletStruct(dictionary: self.sortedWallets[index])
-//            let nodeLogic = NodeLogic()
-//            nodeLogic.wallet = wallet
-//            nodeLogic.loadWalletData {
-//
-//                if !nodeLogic.errorBool {
-//
-//                    let s = HomeStruct(dictionary: nodeLogic.dictToReturn)
-//                    let doub = (s.coldBalance).doubleValue
-//
-//                    self.cd.updateEntity(id: wallet.id, keyToUpdate: "lastBalance", newValue: doub, entityName: .wallets) {
-//
-//                        self.sortedWallets[index]["lastBalance"] = doub
-//                        self.sortedWallets[index]["lastUsed"]  = Date()
-//
-//                        DispatchQueue.main.async {
-//
-//                            sender.loadingIndicator(show: false)
-//                            sender.tintColor = .systemTeal
-//                            self.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
-//
-//                        }
-//
-//                        self.cd.updateEntity(id: wallet.id, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) {}
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//        }
-//
-//    }
-    
     @objc func verifyAddresses(_ sender: UIButton) {
-        
-        impact()
         
         DispatchQueue.main.async {
             
@@ -1106,8 +803,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func exportKeys(_ sender: UIButton) {
         
-        impact()
-        
         DispatchQueue.main.async {
             
             self.performSegue(withIdentifier: "exportKeys", sender: self)
@@ -1118,15 +813,13 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func exportSeed(_ sender: UIButton) {
         
-        impact()
-        
         let isCaptured = UIScreen.main.isCaptured
         
         if !isCaptured {
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [unowned vc = self] in
                 
-                self.performSegue(withIdentifier: "exportSeed", sender: self)
+                vc.performSegue(withIdentifier: "exportSeed", sender: vc)
                 
             }
             
@@ -1137,147 +830,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }        
                 
     }
-    
-//    @objc func getWalletInfo(_ sender: UIButton) {
-//        print("getWalletInfo")
-//
-//        impact()
-//
-//        DispatchQueue.main.async {
-//
-//            DispatchQueue.main.async {
-//
-//                self.performSegue(withIdentifier: "getWalletInfo", sender: self)
-//
-//            }
-//
-//        }
-//        displayAlert(viewController: self, isError: false, message: "Under construction")
-//
-//    }
-    
-//    @objc func rescan(_ sender: UIButton) {
-//
-//        let index = Int(sender.restorationIdentifier!)!
-//        let walletName = WalletStruct(dictionary: self.sortedWallets[index]).name
-//        impact()
-//
-//        DispatchQueue.main.async {
-//
-//            let alert = UIAlertController(title: "Rescan the blockchain?", message: "This button will start a blockchain rescan for your current wallet. This is useful if you imported the wallet and do not see balances yet. If you want to check the status of your rescan this button will also let you know the % completion.", preferredStyle: .actionSheet)
-//
-//            alert.addAction(UIAlertAction(title: "Rescan", style: .default, handler: { action in
-//
-//                self.creatingView.addConnectingView(vc: self, description: "initiating rescan")
-//
-//                let reducer = Reducer()
-//                reducer.makeCommand(walletName: walletName, command: .rescanblockchain, param: "") {
-//
-//                    DispatchQueue.main.async {
-//
-//                        self.creatingView.label.text = "confirming rescan status"
-//
-//                    }
-//
-//                    reducer.errorBool = false
-//                    reducer.errorDescription = ""
-//
-//                    reducer.makeCommand(walletName: walletName, command: .getwalletinfo, param: "") {
-//
-//                        if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
-//
-//                            if let result = reducer.dictToReturn {
-//
-//                                if let scanning = result["scanning"] as? NSDictionary {
-//
-//                                    if let _ = scanning["duration"] as? Int {
-//
-//                                        self.creatingView.removeConnectingView()
-//                                        let progress = (scanning["progress"] as! Double)
-//                                        showAlert(vc: self, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
-//
-//                                    }
-//
-//                                } else if (result["scanning"] as? Int) == 0 {
-//
-//                                    self.creatingView.removeConnectingView()
-//                                    displayAlert(viewController: self, isError: true, message: "wallet not rescanning")
-//
-//                                } else {
-//
-//                                    self.creatingView.removeConnectingView()
-//                                    displayAlert(viewController: self, isError: true, message: "unable to determine if wallet is rescanning")
-//
-//                                }
-//
-//                            }
-//
-//                        } else {
-//
-//                            self.creatingView.removeConnectingView()
-//                            displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
-//
-//                        }
-//
-//                    }
-//
-//                }
-//
-//            }))
-//
-//            alert.addAction(UIAlertAction(title: "Check Scan Status", style: .default, handler: { action in
-//
-//                self.creatingView.addConnectingView(vc: self, description: "checking scan status")
-//
-//                let reducer = Reducer()
-//                reducer.makeCommand(walletName: walletName, command: .getwalletinfo, param: "") {
-//
-//                    if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
-//
-//                        if let result = reducer.dictToReturn {
-//
-//                            if let scanning = result["scanning"] as? NSDictionary {
-//
-//                                if let _ = scanning["duration"] as? Int {
-//
-//                                    self.creatingView.removeConnectingView()
-//                                    let progress = (scanning["progress"] as! Double)
-//                                    showAlert(vc: self, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
-//
-//                                }
-//
-//                            } else if (result["scanning"] as? Int) == 0 {
-//
-//                                self.creatingView.removeConnectingView()
-//                                displayAlert(viewController: self, isError: true, message: "wallet not rescanning")
-//
-//                            } else {
-//
-//                                self.creatingView.removeConnectingView()
-//                                displayAlert(viewController: self, isError: true, message: "unable to determine if wallet is rescanning")
-//
-//                            }
-//
-//                        }
-//
-//                    } else {
-//
-//                        self.creatingView.removeConnectingView()
-//                        displayAlert(viewController: self, isError: true, message: reducer.errorDescription)
-//
-//                    }
-//
-//                }
-//
-//            }))
-//
-//            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-//
-//            self.present(alert, animated: true, completion: nil)
-//
-//        }
-//
-//    }
     
     @objc func makeActive(_ sender: UIButton) {
         
@@ -1349,19 +901,24 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let textLabel = UILabel()
             textLabel.textAlignment = .left
             textLabel.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
-            if wallet.isActive {
-                textLabel.textColor = .white
+            
+            if wallet.label.count > 20 {
+                
+                textLabel.text = reduceLabel(label: wallet.label)
+                
             } else {
-                textLabel.textColor = .systemGray
+                
+                textLabel.text = wallet.label
+                
             }
-            textLabel.text = wallet.label
-            textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
-            textLabel.sizeToFit()
+            
+            
+            textLabel.frame = CGRect(x: 0, y: 0, width: self.walletTable.frame.width / 2.2, height: 30)
+            textLabel.adjustsFontSizeToFitWidth = true
             
             let refreshButton = UIButton()
             let image = UIImage(systemName: "arrow.clockwise")
             refreshButton.setImage(image, for: .normal)
-            refreshButton.tintColor = .white
             refreshButton.tag = section
             refreshButton.addTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
             refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
@@ -1370,7 +927,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let toolsButton = UIButton()
             let toolImage = UIImage(systemName: "hammer")
             toolsButton.setImage(toolImage, for: .normal)
-            toolsButton.tintColor = .white
             toolsButton.tag = section
             toolsButton.addTarget(self, action: #selector(walletTools(_:)), for: .touchUpInside)
             toolsButton.frame = CGRect(x: refreshButton.frame.minX - 40, y: 0, width: 20, height: 20)
@@ -1379,11 +935,34 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let editButton = UIButton()
             let editImage = UIImage(systemName: "pencil")
             editButton.setImage(editImage, for: .normal)
-            editButton.tintColor = .white
             editButton.tag = section
             editButton.addTarget(self, action: #selector(editLabel(_:)), for: .touchUpInside)
             editButton.frame = CGRect(x: toolsButton.frame.minX - 40, y: 0, width: 20, height: 20)
             editButton.center.y = textLabel.center.y
+            
+            if wallet.isActive {
+                
+                textLabel.textColor = .white
+                editButton.tintColor = .white
+                toolsButton.tintColor = .white
+                refreshButton.tintColor = .white
+                
+                editButton.isEnabled = true
+                toolsButton.isEnabled = true
+                refreshButton.isEnabled = true
+                
+            } else {
+                
+                editButton.tintColor = .systemGray
+                toolsButton.tintColor = .systemGray
+                refreshButton.tintColor = .systemGray
+                textLabel.textColor = .systemGray
+                
+                editButton.isEnabled = false
+                toolsButton.isEnabled = false
+                refreshButton.isEnabled = false
+                
+            }
             
             header.addSubview(textLabel)
             header.addSubview(refreshButton)
@@ -1402,41 +981,49 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func editLabel(_ sender: UIButton) {
         
-        impact()
+        var wallet:WalletStruct? = WalletStruct(dictionary: sortedWallets[sender.tag])
+        let title = "Give your wallet a label"
+        let message = "Add a label so you can easily identify your wallets"
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        let wallet = WalletStruct(dictionary: sortedWallets[sender.tag])
+        alert.addTextField { (textField) in
+            textField.placeholder = "Add a label"
+            textField.keyboardAppearance = .dark
+        }
         
-        DispatchQueue.main.async {
+        alert.addAction(UIAlertAction(title: "Save", style: .default) { [unowned vc = self] (alertAction) in
             
-            let title = "Give your wallet a label"
-            let message = "Add a label so you can easily identify your wallets"
-            let style = UIAlertController.Style.alert
+            var textFields = alert.textFields
+            weak var textField:UITextField?
             
-            let alert = UIAlertController(title: title,
-                                          message: message,
-                                          preferredStyle: style)
-            
-            let save = UIAlertAction(title: "Save", style: .default) { (alertAction) in
+            if textFields != nil {
                 
-                let textField = (alert.textFields![0] as UITextField).text
-                
-                if textField != "" {
+                if textFields!.count > 0 {
                     
-                    let cd = CoreDataService()
-                    cd.updateEntity(id: wallet.id, keyToUpdate: "label", newValue: textField!, entityName: .wallets) {
+                    textField = textFields![0]
+                    
+                    if textField!.text! != "" {
                         
-                        if !cd.errorBool {
+                        vc.cd?.updateEntity(id: wallet!.id, keyToUpdate: "label", newValue: textField!.text!, entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
                             
-                            DispatchQueue.main.async {
+                            textField = nil
+                            textFields = nil
+                            wallet = nil
+                            
+                            if success {
                                 
-                                showAlert(vc: self, title: "Success", message: "Wallet label updated")
-                                self.refresh()
+                                DispatchQueue.main.async {
+                                    
+                                    showAlert(vc: vc, title: "Success", message: "Wallet label updated")
+                                    vc.refresh()
+                                    
+                                }
+                                
+                            } else {
+                                
+                                showAlert(vc: vc, title: "Error!", message: "There was a problem saving your wallets label")
                                 
                             }
-                            
-                        } else {
-                            
-                            showAlert(vc: self, title: "Error!", message: "There was a problem saving your wallets label")
                             
                         }
                         
@@ -1446,29 +1033,33 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             }
             
-            alert.addTextField { (textField) in
-                textField.placeholder = "Add a label"
-                textField.keyboardAppearance = .dark
-            }
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default) { _ in
             
-            alert.addAction(save)
-            let cancel = UIAlertAction(title: "Cancel", style: .default) { (alertAction) in }
-            alert.addAction(cancel)
-            self.present(alert, animated:true, completion: nil)
+            wallet = nil
             
-        }
+        })
+        
+        self.present(alert, animated:true, completion: nil)
         
     }
     
     @objc func walletTools(_ sender: UIButton) {
         
-        impact()
-        
-        DispatchQueue.main.async {
+        if !isLoading {
             
-            let w = WalletStruct(dictionary: self.sortedWallets[sender.tag])
-            self.wallet = w
-            self.performSegue(withIdentifier: "goToTools", sender: self)
+            DispatchQueue.main.async {
+                
+                let w = WalletStruct(dictionary: self.sortedWallets[sender.tag])
+                self.wallet = w
+                self.performSegue(withIdentifier: "goToTools", sender: self)
+                
+            }
+            
+        } else {
+            
+            showAlert(vc: self, title: "Please be patient", message: "We are fetching data from your node, wait until the spinner disappears then try again.")
             
         }
         
@@ -1476,50 +1067,61 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func reloadSection(_ sender: UIButton) {
         
-        impact()
-        let index = sender.tag
-        
-        DispatchQueue.main.async {
+        if !isLoading {
             
-            sender.tintColor = .clear
-            sender.loadingIndicator(show: true)
+            isLoading = true
+            let index = sender.tag
             
-        }
-        
-        let wallet = WalletStruct(dictionary: self.sortedWallets[index])
-        let nodeLogic = NodeLogic()
-        nodeLogic.wallet = wallet
-        nodeLogic.loadWalletData {
-            
-            if !nodeLogic.errorBool {
+            DispatchQueue.main.async {
                 
-                let s = HomeStruct(dictionary: nodeLogic.dictToReturn)
-                let doub = (s.coldBalance).doubleValue
+                sender.tintColor = .clear
+                sender.loadingIndicator(show: true)
                 
-                self.cd.updateEntity(id: wallet.id, keyToUpdate: "lastBalance", newValue: doub, entityName: .wallets) {
+            }
+            
+            let wallet = WalletStruct(dictionary: self.sortedWallets[index])
+            nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
+                
+                if success && dictToReturn != nil {
                     
-                    self.sortedWallets[index]["lastBalance"] = doub
-                    self.sortedWallets[index]["lastUsed"]  = Date()
-                    self.sortedWallets[index]["lastUpdated"] = Date()
+                    let s = HomeStruct(dictionary: dictToReturn!)
+                    let doub = (s.coldBalance).doubleValue
                     
-                    self.getRescanStatus(i: index, walletName: wallet.name) {
+                    vc.sortedWallets[index]["lastBalance"] = doub
+                    vc.sortedWallets[index]["lastUsed"]  = Date()
+                    vc.sortedWallets[index]["lastUpdated"] = Date()
+                    
+                    vc.getRescanStatus(i: index, walletName: wallet.name) { [unowned vc = self] in
                         
                         DispatchQueue.main.async {
                             
                             sender.loadingIndicator(show: false)
-                            sender.tintColor = .systemTeal
-                            self.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
+                            vc.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
+                            vc.isLoading = false
                             
                         }
                         
-                        self.cd.updateEntity(id: wallet.id, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) {}
-                        self.cd.updateEntity(id: wallet.id, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) {}
+                        
+                    }
+                    
+                } else {
+                    
+                    DispatchQueue.main.async {
+                        
+                        sender.loadingIndicator(show: false)
+                        vc.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
+                        vc.isLoading = false
+                        showAlert(vc: self, title: "Error", message: errorDesc ?? "error updating balance")
                         
                     }
                     
                 }
                 
             }
+            
+        } else {
+            
+            showAlert(vc: self, title: "Please be patient", message: "We are fetching data from your node, wait until the spinner disappears then try again.")
             
         }
         
@@ -1546,19 +1148,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if !wallet.isActive {
                         
-            impact()
+            let enc = Encryption.sharedInstance
             
-            let cd = CoreDataService()
-            let enc = Encryption()
-            
-            enc.getNode { (n, error) in
+            enc.getNode { [unowned vc = self] (n, error) in
                 
                 if n != nil {
                     
                     if wallet.nodeId != n!.id {
                         
-                        cd.updateEntity(id: wallet.nodeId, keyToUpdate: "isActive", newValue: true, entityName: .nodes) {}
-                        cd.updateEntity(id: n!.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) {}
+                        vc.cd?.updateEntity(id: wallet.nodeId, keyToUpdate: "isActive", newValue: true, entityName: .nodes) {_ in }
+                        vc.cd?.updateEntity(id: n!.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) {_ in }
                         
                     }
                     
@@ -1590,9 +1189,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                     
                     // update the actual data
-                    cd.updateEntity(id: wallet.id, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) {
+                    cd?.updateEntity(id: wallet.id, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { [unowned vc = self] _ in
                         
-                        self.activate(walletToActivate: wallet.id, index: index)
+                        vc.activate(walletToActivate: wallet.id, index: index)
                         
                     }
                     
@@ -1608,8 +1207,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if wallet.isActive {
             
-            impact()
-            
             // update the views
             for (i, _) in sortedWallets.enumerated() {
                 
@@ -1624,8 +1221,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                             
                     }
                     
-                    let cd = CoreDataService()
-                    cd.updateEntity(id: wallet.id, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {}
+                    cd?.updateEntity(id: wallet.id, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
                     
                 }
                 
@@ -1639,7 +1235,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let date = Date(timeIntervalSince1970: TimeInterval(unixTime))
         dateFormatter.timeZone = .current
-        dateFormatter.dateFormat = "yyyy-MMM-dd hh:mm" //Specify your format that you want
+        dateFormatter.dateFormat = "yyyy-MMM-dd hh:mm"
         let strDate = dateFormatter.string(from: date)
         return strDate
         
@@ -1648,7 +1244,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     func formatDate(date: Date) -> String {
         
         dateFormatter.timeZone = .current
-        dateFormatter.dateFormat = "yyyy-MMM-dd hh:mm" //Specify your format that you want
+        dateFormatter.dateFormat = "yyyy-MMM-dd hh:mm"
         let strDate = dateFormatter.string(from: date)
         return strDate
         
@@ -1656,15 +1252,15 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func activate(walletToActivate: UUID, index: Int) {
         
-        cd.updateEntity(id: walletToActivate, keyToUpdate: "isActive", newValue: true, entityName: .wallets) {
+        cd?.updateEntity(id: walletToActivate, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
             
-            if !self.cd.errorBool {
+            if success {
                                         
-                self.deactivate(walletToActivate: walletToActivate, index: index)
+                vc.deactivate(walletToActivate: walletToActivate, index: index)
                 
             } else {
                 
-                displayAlert(viewController: self, isError: true, message: "error deactivating wallet")
+                displayAlert(viewController: vc, isError: true, message: "error deactivating wallet")
                 
             }
             
@@ -1680,17 +1276,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             if str.id != walletToActivate {
                 
-                cd.updateEntity(id: str.id, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {
+                cd?.updateEntity(id: str.id, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
                     
-                    if !self.cd.errorBool {
+                    if success {
                         
-                        self.sortedWallets[i]["isActive"] = false
+                        vc.sortedWallets[i]["isActive"] = false
                         
                         if i != index {
                             
                             DispatchQueue.main.async {
                                 
-                                self.walletTable.reloadSections(IndexSet(arrayLiteral: i), with: .none)
+                                vc.walletTable.reloadSections(IndexSet(arrayLiteral: i), with: .none)
                                 
                             }
                             
@@ -1698,7 +1294,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                     } else {
                         
-                        displayAlert(viewController: self, isError: true, message: "error deactivating wallet")
+                        displayAlert(viewController: vc, isError: true, message: "error deactivating wallet")
                         
                     }
                     
@@ -1712,32 +1308,38 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func createWallet() {
         
-        impact()
-        
-        let enc = Encryption()
-        enc.getNode { (node, error) in
+        if !isLoading {
             
-            if !error && node != nil {
+            let enc = Encryption.sharedInstance
+            enc.getNode { [unowned vc = self] (node, error) in
                 
-                if node!.network != "mainnet" {
+                if !error && node != nil {
                     
-                    DispatchQueue.main.async {
-                        
-                        self.performSegue(withIdentifier: "addWallet", sender: self)
-                        
+                    if node!.network != "mainnet" {
+
+                        DispatchQueue.main.async {
+
+                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
+
+                        }
+
+                    } else {
+
+                        displayAlert(viewController: vc, isError: true, message: "Mainnet wallets not yet allowed! Sorry.")
+
                     }
                     
                 } else {
                     
-                    displayAlert(viewController: self, isError: true, message: "Mainnet wallets not yet allowed! Sorry.")
+                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
                     
                 }
                 
-            } else {
-                
-                displayAlert(viewController: self, isError: true, message: "No active nodes")
-                
             }
+            
+        } else {
+            
+            showAlert(vc: self, title: "Fetching wallet data from your node...", message: "Please wait until the spinner disappears as the app is currently fetching wallet data from your node.")
             
         }
         
@@ -1745,31 +1347,23 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func getWalletBalance(wallet: WalletStruct, i: Int, completion: @escaping () -> Void) {
         
-        let nodeLogic = NodeLogic()
-        nodeLogic.wallet = wallet
-        nodeLogic.loadWalletData {
+        nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
             
-            if !nodeLogic.errorBool {
+            if success && dictToReturn != nil {
                 
-                let s = HomeStruct(dictionary: nodeLogic.dictToReturn)
+                let s = HomeStruct(dictionary: dictToReturn!)
                 let doub = (s.coldBalance).doubleValue
                 
-                self.cd.updateEntity(id: wallet.id, keyToUpdate: "lastBalance", newValue: doub, entityName: .wallets) {
+                vc.sortedWallets[i]["lastBalance"] = doub
+                vc.getRescanStatus(i: vc.index, walletName: wallet.name) { [unowned vc = self] in
                     
-                    self.sortedWallets[i]["lastBalance"] = doub
-                    self.cd.updateEntity(id: wallet.id, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) {}
-                    
-                    self.getRescanStatus(i: self.index, walletName: wallet.name) {
+                    DispatchQueue.main.async {
                         
-                        DispatchQueue.main.async {
-                            
-                            self.walletTable.reloadSections(IndexSet(arrayLiteral: i), with: .fade)
-                            completion()
-                            
-                        }
-                                                
+                        vc.walletTable.reloadSections(IndexSet(arrayLiteral: i), with: .fade)
+                        completion()
+                        
                     }
-                    
+                                            
                 }
                 
             } else {
@@ -1788,24 +1382,24 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if self.index < sortedWallets.count {
             
             let wallet = WalletStruct(dictionary: sortedWallets[self.index])
-            let enc = Encryption()
-            enc.getNode { (node, error) in
+            let enc = Encryption.sharedInstance
+            enc.getNode { [unowned vc = self] (node, error) in
                 
                 if !error && node != nil {
                     
                     if node!.id == wallet.nodeId {
                         
-                        self.getWalletBalance(wallet: wallet, i: self.index) {
+                        vc.getWalletBalance(wallet: wallet, i: vc.index) {
                             
-                            self.index += 1
-                            self.getBalances()
+                            vc.index += 1
+                            vc.getBalances()
                             
                         }
                         
                     } else {
                         
-                        self.index += 1
-                        self.getBalances()
+                        vc.index += 1
+                        vc.getBalances()
                         
                     }
                     
@@ -1815,9 +1409,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         } else {
             
-            self.loadingRefresher.alpha = 0
-            self.loadingRefresher.stopAnimating()
-            self.refresher.endRefreshing()
+            DispatchQueue.main.async {
+                
+                self.isLoading = false
+                self.loadingRefresher.alpha = 0
+                self.loadingRefresher.stopAnimating()
+                self.refresher.endRefreshing()
+                
+            }
             
         }
         
@@ -1825,42 +1424,71 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func getRescanStatus(i: Int, walletName: String, completion: @escaping () -> Void) {
         
-        print("get rescan status")
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: walletName, command: .getwalletinfo, param: "") {
+        if i < self.sortedWallets.count {
+            
+            let reducer = Reducer()
+            reducer.makeCommand(walletName: walletName, command: .getwalletinfo, param: "") { [unowned vc = self] in
 
-            if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
+                if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
 
-                if let result = reducer.dictToReturn {
+                    if let result = reducer.dictToReturn {
 
-                    if let scanning = result["scanning"] as? NSDictionary {
+                        if let scanning = result["scanning"] as? NSDictionary {
 
-                        if let _ = scanning["duration"] as? Int {
+                            if let _ = scanning["duration"] as? Int {
 
-                            let progress = (scanning["progress"] as! Double) * 100
-                            self.sortedWallets[i]["progress"] = "\(Int(progress))"
-                            self.sortedWallets[i]["isRescanning"] = true
+                                let progress = (scanning["progress"] as! Double) * 100
+                                vc.sortedWallets[i]["progress"] = "\(Int(progress))"
+                                vc.sortedWallets[i]["isRescanning"] = true
+                                completion()
+
+                            }
+
+                        } else {
+
+                            vc.sortedWallets[i]["isRescanning"] = false
                             completion()
 
                         }
 
-                    } else {
-
-                        self.sortedWallets[i]["isRescanning"] = false
-                        completion()
-
                     }
+
+                } else {
+
+                    vc.sortedWallets[i]["isRescanning"] = false
+                    completion()
 
                 }
 
-            } else {
-
-                self.sortedWallets[i]["isRescanning"] = false
-                completion()
-
             }
-
+            
+        } else {
+            
+            completion()
+            
         }
+        
+    }
+    
+    private func reducedName(name: String) -> String {
+        
+        let first = String(name.prefix(5))
+        let last = String(name.suffix(5))
+        return "\(first)*****\(last).dat"
+        
+    }
+    
+    private func reduceLabel(label: String) -> String {
+        
+        let first = String(label.prefix(5))
+        let last = String(label.suffix(5))
+        return "\(first)...\(last)"
+        
+    }
+    
+    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
+        
+        walletTable.reloadData()
         
     }
     
@@ -1879,13 +1507,19 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 vc.wallet = self.wallet
                 
-            }
-            
-        case "walletInfo":
-            
-            if let vc = segue.destination as? WalletInfoViewController {
+                vc.sweepDoneBlock = { [unowned thisVc = self] result in
+                    
+                    thisVc.refresh()
+                    showAlert(vc: thisVc, title: "Wallet Sweeped! 🤩", message: "We are refreshing your balances now.")
+                    
+                }
                 
-                vc.walletname = name
+                vc.refillDoneBlock = { [unowned thisVc = self] result in
+                    
+                    thisVc.refresh()
+                    showAlert(vc: thisVc, title: "Success!", message: "Keypool refilled 🤩")
+                    
+                }
                 
             }
             
@@ -1897,93 +1531,28 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             }
             
-        case "invoice":
-            
-            if let vc = segue.destination as? InvoiceViewController {
-                
-                vc.presentingModally = true
-            }
-            
         case "addWallet":
             
             if let vc = segue.destination as? ChooseWalletFormatViewController {
                 
-                vc.singleSigDoneBlock = { result in
+                vc.walletDoneBlock = { [unowned thisVc = self] result in
+                    
+                    showAlert(vc: thisVc, title: "Success!", message: "Wallet created successfully!")
+                    thisVc.isLoading = true
+                    thisVc.refresh()
+                    
+                }
+                
+                vc.recoverDoneBlock = { [unowned thisVc = self] result in
                     
                     DispatchQueue.main.async {
                         
-                        showAlert(vc: self, title: "Success!", message: "Single signature wallet created successfully!")
-                        self.refresh()
+                        thisVc.isLoading = true
+                        thisVc.refresh()
+                        
+                        showAlert(vc: thisVc, title: "Success!", message: "Wallet recovered 🤩!\n\nYour node is now rescanning the blockchain, balances may not show until the rescan completes.")
                         
                     }
-                    
-                }
-                
-                vc.multiSigDoneBlock = { (arg0) in
-                    
-                    let (_, recoverphrase, desc) = arg0
-                    
-                    DispatchQueue.main.async {
-                        
-                        DispatchQueue.main.async {
-                            
-                            self.recoveryPhrase = recoverphrase
-                            self.descriptor = desc
-                            self.performSegue(withIdentifier: "showRecoveryKit", sender: self)
-                            
-                        }
-                        
-                    }
-                    
-                }
-                
-                vc.importDoneBlock = { result in
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.performSegue(withIdentifier: "importCustom", sender: self)
-                        
-                    }
-                    
-                }
-                
-                vc.recoverDoneBlock = { result in
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.refresh()
-                        
-                        showAlert(vc: self, title: "Success!", message: "Wallet recovered 🤩!\n\nTap it to activate it, the wallet will automatically rescan the blockchain which can take some time, just pull the table to refresh to see rescan status and updated balances.")
-                        
-                    }
-                    
-                }
-                
-            }
-            
-        case "showRecoveryKit":
-            
-            if let vc = segue.destination as? RecoveryViewController {
-                
-                vc.recoveryPhrase = self.recoveryPhrase
-                vc.descriptor = self.descriptor
-                
-                vc.onDoneBlock2 = { result in
-                    
-                    self.refresh()
-                    
-                }
-                
-            }
-            
-        case "importCustom":
-            
-            if let vc = segue.destination as? ImportViewController {
-                
-                vc.importComplete = { result in
-                    
-                    showAlert(vc: self, title: "Success!", message: "Wallet imported! Tap it to active it.")
-                    self.refresh()
                     
                 }
                 

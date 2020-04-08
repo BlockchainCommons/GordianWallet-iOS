@@ -40,12 +40,11 @@ class QRDisplayerViewController: UIViewController {
     
     func showQR() {
         
-        qrGenerator.textInput = address
-        let qr = qrGenerator.getQRCode()
+        let qr = qrGenerator.getQRCode(textInput: address)
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.imageView.image = qr
+            vc.imageView.image = qr
             
         }
         

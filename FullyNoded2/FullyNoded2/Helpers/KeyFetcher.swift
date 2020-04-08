@@ -11,7 +11,8 @@ import LibWally
 
 class KeyFetcher {
     
-    let enc = Encryption()
+    let cd = CoreDataService.sharedInstance
+    let enc = Encryption.sharedInstance
     
     func fingerprint(wallet: WalletStruct, completion: @escaping ((fingerprint: String?, error: Bool)) -> Void) {
         
@@ -215,7 +216,7 @@ class KeyFetcher {
                 
                 let derivationPath = wallet!.derivation
                 
-                let enc = Encryption()
+                let enc = Encryption.sharedInstance
                 enc.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
                     
                     if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
@@ -394,7 +395,7 @@ class KeyFetcher {
     func xpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
         
         let derivationPath = wallet.derivation
-        let enc = Encryption()
+        let enc = Encryption.sharedInstance
         enc.decryptData(dataToDecrypt: wallet.seed) { (seed) in
             
             if seed != nil {
@@ -488,7 +489,7 @@ class KeyFetcher {
             if wallet != nil && !error {
                 
                 let derivationPath = wallet!.derivation
-                let enc = Encryption()
+                let enc = Encryption.sharedInstance
                 enc.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
                     
                     if seed != nil {
@@ -598,7 +599,7 @@ class KeyFetcher {
         
     }
     
-    func musigChangeAddress(completion: @escaping ((address: String?, error: Bool)) -> Void) {
+    func musigChangeAddress(completion: @escaping ((address: String?, error: Bool, errorDescription: String?)) -> Void) {
         
         getActiveWalletNow { (wallet, error) in
             
@@ -607,7 +608,7 @@ class KeyFetcher {
                 let reducer = Reducer()
                 let index = wallet!.index
                 
-                if wallet!.index < 1000 {
+                if wallet!.index < wallet!.maxRange {
                     
                     let param = "\"\(wallet!.changeDescriptor)\", [\(index),\(index)]"
                     
@@ -617,18 +618,17 @@ class KeyFetcher {
                             
                             if let address = reducer.arrayToReturn?[0] as? String {
                                 
-                                completion((address,false))
+                                completion((address,false,nil))
                                 
                             } else {
                                 
-                                completion((nil,true))
+                                completion((nil,true,"error fecthing change address"))
                                 
                             }
                             
                         } else {
                             
-                            print("error deriving addresses: \(reducer.errorDescription)")
-                            completion((nil,true))
+                            completion((nil,true,"error deriving addresses: \(reducer.errorDescription)"))
                             
                         }
                         
@@ -636,7 +636,7 @@ class KeyFetcher {
                     
                 } else {
                     
-                    print("error, need to import more keys")
+                    completion((nil,true,"You need to refill the keypool in order to create more transactions"))
                     
                 }
                 
@@ -648,12 +648,11 @@ class KeyFetcher {
     
     private func updateIndex(wallet: WalletStruct) {
         
-        let cd = CoreDataService()
-        cd.updateEntity(id: wallet.id, keyToUpdate: "index", newValue: wallet.index + 1, entityName: .wallets) {
+        self.cd.updateEntity(id: wallet.id, keyToUpdate: "index", newValue: wallet.index + 1, entityName: .wallets) { (success, errorDescription) in
             
-            if cd.errorBool {
+            if !success {
                 
-                print("error updating index: \(cd.errorDescription)")
+                print("error updating index: \(errorDescription ?? "unknown error")")
                 
             }
             

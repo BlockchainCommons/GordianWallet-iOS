@@ -12,10 +12,10 @@ import CryptoKit
 
 class FirstTime {
     
-    let cd = CoreDataService()
+    let cd = CoreDataService.sharedInstance
     let ud = UserDefaults.standard
     let keychain = KeychainSwift()
-    let enc = Encryption()
+    let enc = Encryption.sharedInstance
     
     func firstTimeHere(completion: @escaping ((Bool)) -> Void) {
         print("firstTimeHere")
@@ -40,9 +40,9 @@ class FirstTime {
                                 
                                 let dict = ["privkey":encryptedPrivkey!, "pubkey":pubkeyData]
                                 
-                                self.cd.saveEntity(dict: dict, entityName: .auth) {
+                                self.cd.saveEntity(dict: dict, entityName: .auth) { (success, errorDescription) in
                                     
-                                    if !self.cd.errorBool {
+                                    if success {
                                         
                                         self.ud.set(false, forKey: "firstTime")
                                         completion(true)

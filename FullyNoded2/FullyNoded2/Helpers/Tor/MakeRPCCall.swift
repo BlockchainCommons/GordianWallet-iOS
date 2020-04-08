@@ -11,20 +11,17 @@ import Foundation
 class MakeRPCCall {
     
     static let sharedInstance = MakeRPCCall()
-    let torClient = TorClient.sharedInstance
-    let ud = UserDefaults.standard
-    var errorBool = Bool()
-    var errorDescription = String()
-    var objectToReturn:Any!
-    var attempts = 0
+    lazy var torClient = TorClient.sharedInstance
+    lazy var ud = UserDefaults.standard
+    lazy var attempts = 0
     
-    func executeRPCCommand(walletName: String, method: BTC_CLI_COMMAND, param: Any, completion: @escaping () -> Void) {
-        print("executeTorRPCCommand")
+    private init() {}
+    
+    func executeRPCCommand(walletName: String, method: BTC_CLI_COMMAND, param: Any, completion: @escaping ((success: Bool, objectToReturn: Any?, errorDesc: String?)) -> Void) {
         
         attempts += 1
-        
-        let enc = Encryption()
-        enc.getNode { (node, error) in
+        let enc = Encryption.sharedInstance
+        enc.getNode { [unowned vc = self] (node, error) in
             
             if !error {
                 
@@ -45,82 +42,77 @@ class MakeRPCCall {
                 formattedParam = formattedParam.replacingOccurrences(of: "'\"'\"'", with: "'")
                 
                 guard let url = URL(string: walletUrl) else {
-                    self.errorBool = true
-                    self.errorDescription = "url error"
-                    completion()
+                    completion((false, nil, "url error"))
                     return
                 }
                 
+                #if DEBUG
+                print("url = \(url)")
+                #endif
+                
                 var request = URLRequest(url: url)
-                request.timeoutInterval = 10
+                var timeout = 10.0
+                if method == .importmulti {
+                    timeout = 100.0
+                }
+                request.timeoutInterval = timeout
                 request.httpMethod = "POST"
                 request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
                 request.httpBody = "{\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}".data(using: .utf8)
+                #if DEBUG
                 print("request = {\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}")
+                #endif
                 let queue = DispatchQueue(label: "com.FullyNoded.torQueue")
                 queue.async {
                     
-                    let task = self.torClient.session.dataTask(with: request as URLRequest) { (data, response, error) in
+                    let task = vc.torClient.session.dataTask(with: request as URLRequest) { (data, response, error) in
                         
                         do {
                             
                             if error != nil {
                                 
                                 // attempt a node command 20 times to avoid user having to tap refresh button
-                                if self.attempts < 20 {
+                                if vc.attempts < 20 {
                                         
-                                    self.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
+                                    vc.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
                                                                             
                                 } else {
                                     
-                                    self.attempts = 0
-                                    self.errorBool = true
+                                    vc.attempts = 0
+                                    #if DEBUG
                                     print("error description = \(error!.localizedDescription)")
-                                    self.errorDescription = error!.localizedDescription
-                                    completion()
+                                    #endif
+                                    completion((false, nil, error!.localizedDescription))
                                     
                                 }
                                 
                             } else {
                                 
-                                self.attempts = 0
+                                vc.attempts = 0
                                 
                                 if let urlContent = data {
                                     
                                     do {
                                         
-                                        let jsonAddressResult = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
+                                        let json = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
+                                        
+                                        #if DEBUG
+                                        print("response = \(json)")
+                                        #endif
                                                                                 
-                                        if let errorCheck = jsonAddressResult["error"] as? NSDictionary {
+                                        if let errorCheck = json["error"] as? NSDictionary {
                                             
-                                            if let errorMessage = errorCheck["message"] as? String {
-                                                
-                                                self.errorDescription = errorMessage
-                                                
-                                            } else {
-                                                
-                                                self.errorDescription = "Uknown error"
-                                                
-                                            }
-                                            
-                                            self.errorBool = true
-                                            completion()
-                                            
+                                            completion((false, nil, errorCheck["message"] as? String ?? "unknown error"))
                                             
                                         } else {
                                             
-                                            self.errorBool = false
-                                            self.errorDescription = ""
-                                            self.objectToReturn = jsonAddressResult["result"]
-                                            completion()
+                                            completion((true, json["result"], nil))
                                             
                                         }
                                         
                                     } catch {
                                         
-                                        self.errorBool = true
-                                        self.errorDescription = "Uknown Error"
-                                        completion()
+                                        completion((false, nil, "unknown error"))
                                         
                                     }
                                     
@@ -138,16 +130,12 @@ class MakeRPCCall {
                 
             } else {
                 
-                self.errorBool = true
-                self.errorDescription = "error fetching node credentials"
-                completion()
+                completion((false, nil, "error fetching node credentials"))
                 
             }
             
         }
         
     }
-    
-    private init() {}
     
 }

@@ -137,7 +137,6 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         safe.text = "Not Safe"
                         safe.textColor = .systemOrange
-                        //cell.backgroundColor = .systemRed
                         
                     }
                     
@@ -145,12 +144,12 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     if (value as! Int) == 1 {
                         
-                        spendable.text = "Spendable"
+                        spendable.text = "Node can spend"
                         spendable.textColor = .systemGreen
                         
                     } else if (value as! Int) == 0 {
                         
-                        spendable.text = "COLD"
+                        spendable.text = "Node can not spend"
                         spendable.textColor = .systemBlue
                         
                     }
@@ -187,45 +186,6 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-//    func lockUTXO(txid: String, vout: Int) {
-//        
-//        let param = "false, ''[{\"txid\":\"\(txid)\",\"vout\":\(vout)}]''"
-//        
-//        executeNodeCommand(method: .lockunspent,
-//                           param: param)
-//        
-//    }
-    
-//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//
-//        let utxos = utxoArray as NSArray
-//        let utxo = utxos[indexPath.section] as! NSDictionary
-//        let txid = utxo["txid"] as! String
-//        let vout = utxo["vout"] as! Int
-//
-//        let contextItem = UIContextualAction(style: .destructive, title: "Lock") {  (contextualAction, view, boolValue) in
-//
-//            self.lockUTXO(txid: txid, vout: vout)
-//
-//        }
-//
-//        let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])
-//        contextItem.backgroundColor = .systemRed
-//
-//        return swipeActions
-//    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        //let cell = utxoTable.cellForRow(at: indexPath)
-        
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        
-        
-    }
-    
     func parseUnspent(utxos: NSArray) {
         
         if utxos.count > 0 {
@@ -253,51 +213,48 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func executeNodeCommand(method: BTC_CLI_COMMAND, param: String) {
         
-        let reducer = Reducer()
-        
-        func getResult() {
-            
-            if !reducer.errorBool {
-                
-                switch method {
-                    
-                case .listunspent:
-                    
-                    if let resultArray = reducer.arrayToReturn {
-                        
-                        parseUnspent(utxos: resultArray)
-                        
-                    }
-                    
-                default:
-                    
-                    break
-                    
-                }
-                
-            } else {
-                
-                DispatchQueue.main.async {
-                    
-                    self.removeSpinner()
-                    
-                    displayAlert(viewController: self,
-                                 isError: true,
-                                 message: reducer.errorDescription)
-                                        
-                }
-                
-            }
-            
-        }
-        
         getActiveWalletNow { (wallet, error) in
             
             if wallet != nil && !error {
                 
-                reducer.makeCommand(walletName: wallet!.name, command: method,
-                                    param: param,
-                                    completion: getResult)
+                let reducer = Reducer()
+                reducer.makeCommand(walletName: wallet!.name, command: method, param: param) { [unowned vc = self] in
+                    
+                    if !reducer.errorBool {
+                        
+                        if let resultArray = reducer.arrayToReturn {
+                            
+                            vc.parseUnspent(utxos: resultArray)
+                            
+                        } else {
+                            
+                            DispatchQueue.main.async {
+                                
+                                vc.removeSpinner()
+                                
+                                displayAlert(viewController: vc,
+                                             isError: true,
+                                             message: "error fetching utxos")
+                                                    
+                            }
+                            
+                        }
+                        
+                    } else {
+                        
+                        DispatchQueue.main.async {
+                            
+                            vc.removeSpinner()
+                            
+                            displayAlert(viewController: vc,
+                                         isError: true,
+                                         message: reducer.errorDescription)
+                                                
+                        }
+                        
+                    }
+                    
+                }
                 
             }
             
@@ -340,14 +297,6 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier {
-            
-//        case "goToLocked":
-//
-//            if let vc = segue.destination as? LockedViewController {
-//
-//                vc.lockedArray = self.lockedArray
-//
-//            }
             
         case "utxoInfo":
             

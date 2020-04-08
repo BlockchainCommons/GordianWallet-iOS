@@ -11,9 +11,11 @@ import UIKit
 
 class QuickConnect {
     
-    let enc = Encryption()
+    let cd = CoreDataService.sharedInstance
+    let enc = Encryption.sharedInstance
     var errorBool = Bool()
     var errorDescription = ""
+    var nodeToUpdate:UUID!
     
     // MARK: QuickConnect uri examples
     // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233bygtrdertgfd.onion:1309/?label=Node%20Name
@@ -89,7 +91,6 @@ class QuickConnect {
                     if isValidCharacters(removeAllowedChars) {
                         
                         label = labelCheck
-                        print("label = \(label)")
                         
                     }
                     
@@ -144,13 +145,16 @@ class QuickConnect {
         node["label"] = label
         node["rpcuser"] = rpcUser
         node["rpcpassword"] = rpcPassword
-        node["id"] = UUID()
+        if nodeToUpdate == nil {
+            node["id"] = UUID()
+        } else {
+            node["id"] = nodeToUpdate
+        }
         node["isActive"] = true
         
         func deactivate(newNodeID: UUID) {
             
-            let cd = CoreDataService()
-            cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+            self.cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
                 
                 if errorDescription == nil {
                     
@@ -160,7 +164,7 @@ class QuickConnect {
                             
                             if node ["id"] as! UUID != newNodeID {
                                 
-                                cd.updateEntity(id: (node["id"] as! UUID), keyToUpdate: "isActive", newValue: false, entityName: .nodes) {}
+                                self.cd.updateEntity(id: (node["id"] as! UUID), keyToUpdate: "isActive", newValue: false, entityName: .nodes) {_ in }
                                 
                             }
                             
@@ -173,30 +177,67 @@ class QuickConnect {
             }
             
         }
-                    
-        self.enc.saveNode(newNode: node) { (success, error) in
+        
+        // adding a new node
+        if nodeToUpdate == nil {
             
-            if error == nil && success {
+            self.enc.saveNode(newNode: node) { (success, error) in
                 
-                print("standup node added")
-                self.errorBool = false
-                deactivate(newNodeID: node["id"] as! UUID)
-                node.removeAll()
-                completion()
-                
-            } else {
-                
-                self.errorBool = true
-                
-                if error != nil {
+                if error == nil && success {
                     
-                    self.errorDescription = "Error adding QuickConnect node: \(error!)"
+                    print("standup node added")
+                    self.errorBool = false
+                    deactivate(newNodeID: node["id"] as! UUID)
+                    node.removeAll()
                     completion()
                     
                 } else {
                     
-                    self.errorDescription = "Error adding QuickConnect node"
+                    self.errorBool = true
+                    
+                    if error != nil {
+                        
+                        self.errorDescription = "Error adding QuickConnect node: \(error!)"
+                        completion()
+                        
+                    } else {
+                        
+                        self.errorDescription = "Error adding QuickConnect node"
+                        completion()
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        // updating an exisiting node
+        } else {
+            print("update a node")
+            self.enc.updateNode(newCredentials: node, nodeToUpdate: nodeToUpdate) { (success, error) in
+                
+                if error == nil && success {
+                    
+                    print("node updated")
+                    self.errorBool = false
+                    node.removeAll()
                     completion()
+                    
+                } else {
+                    
+                    self.errorBool = true
+                    
+                    if error != nil {
+                        
+                        self.errorDescription = "Error updating QuickConnect node: \(error!)"
+                        completion()
+                        
+                    } else {
+                        
+                        self.errorDescription = "Error updating QuickConnect node"
+                        completion()
+                        
+                    }
                     
                 }
                 

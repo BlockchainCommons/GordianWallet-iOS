@@ -11,6 +11,7 @@ import CoreData
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    let cd = CoreDataService.sharedInstance
     var doneBlock : ((Bool) -> Void)?
     let ud = UserDefaults.standard
     var miningFeeText = ""
@@ -106,7 +107,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func setFee(_ sender: UISlider) {
         
-        let cell = settingsTable.cellForRow(at: IndexPath.init(row: 0, section: 4))
+        let cell = settingsTable.cellForRow(at: IndexPath.init(row: 0, section: 3))
         let label = cell?.viewWithTag(1) as! UILabel
         let numberOfBlocks = Int(sender.value) * -1
         updateFeeLabel(label: label, numberOfBlocks: numberOfBlocks)
@@ -270,9 +271,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                         
             let alert = UIAlertController(title: "Are you sure!?", message: "This will delete ALL your wallets from your device, nodes, auth keys, encryption keys and will completely reset the app!\n\nAfter using this button you should force quit the app and reopen it to prevent weird behavior and possible crashes.", preferredStyle: .actionSheet)
 
-            alert.addAction(UIAlertAction(title: "Yes, reset now!", style: .destructive, handler: { action in
+            alert.addAction(UIAlertAction(title: "Yes, reset now!", style: .destructive, handler: { [unowned vc = self] action in
                 
-                let cd = CoreDataService()
                 let ud = UserDefaults.standard
                 var didDelete = true
                 
@@ -282,8 +282,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 func deleteAllData(entity: ENTITY){
 
-                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-                    let managedContext = appDelegate.persistentContainer.viewContext
+                    let managedContext = CoreDataService.sharedInstance.persistentContainer.viewContext
                     let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity.rawValue)
                     fetchRequest.returnsObjectsAsFaults = false
                     
@@ -322,17 +321,17 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     if didDelete {
                         
-                        displayAlert(viewController: self, isError: false, message: "app has been reset, please force quit and reopen the app")
+                        displayAlert(viewController: vc, isError: false, message: "app has been reset, please force quit and reopen the app")
                         
                     } else {
                         
-                        displayAlert(viewController: self, isError: true, message: "app reset partially failed")
+                        displayAlert(viewController: vc, isError: true, message: "app reset partially failed")
                         
                     }
                     
                 } else {
                     
-                    displayAlert(viewController: self, isError: true, message: "app reset partially failed")
+                    displayAlert(viewController: vc, isError: true, message: "app reset partially failed")
                     
                 }
                 
@@ -348,9 +347,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func nodeManager() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
         
-            self.performSegue(withIdentifier: "nodeManager", sender: self)
+            vc.performSegue(withIdentifier: "nodeManager", sender: vc)
             
         }
         
@@ -358,9 +357,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func goToAuth() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.performSegue(withIdentifier: "goToAuth", sender: self)
+            vc.performSegue(withIdentifier: "goToAuth", sender: vc)
             
         }
         

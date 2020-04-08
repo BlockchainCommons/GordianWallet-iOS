@@ -10,7 +10,6 @@ import Foundation
 
 class Reducer {
     
-    let torRPC = MakeRPCCall.sharedInstance
     var dictToReturn:NSDictionary?
     var doubleToReturn:Double?
     var arrayToReturn:NSArray?
@@ -25,132 +24,203 @@ class Reducer {
         
         method = command.rawValue
         
-        func parseResponse(response: Any) {
-            
-            if let str = response as? String {
-                
-                self.stringToReturn = str
-                completion()
-                
-            } else if let doub = response as? Double {
-                
-                self.doubleToReturn = doub
-                completion()
-                
-            } else if let arr = response as? NSArray {
-                
-                self.arrayToReturn = arr
-                completion()
-                
-            } else if let dic = response as? NSDictionary {
-                
-                self.dictToReturn = dic
-                completion()
-                
-            } else {
-                
-                if command == .walletpassphrase {
-                    
-                    self.stringToReturn = "Wallet decrypted"
-                    completion()
-                    
-                } else if command == .walletpassphrasechange {
-                    
-                    self.stringToReturn = "Passphrase updated"
-                    completion()
-                    
-                } else if command == .encryptwallet || command == .walletlock {
-                    
-                    self.stringToReturn = "Wallet encrypted"
-                    completion()
-                    
-                }
-                
-            }
-            
-        }
-        
         func torCommand() {
             
             print("tor")
-            
-            func getResult() {
+            let torRPC = MakeRPCCall.sharedInstance
+            torRPC.executeRPCCommand(walletName: walletName, method: command, param: param) { [unowned vc = self] (success, objectToReturn, errorDesc) in
                 
-                if !torRPC.errorBool {
+                if success && objectToReturn != nil {
                     
-                    let response = torRPC.objectToReturn
-                    parseResponse(response: response as Any)
-                    
-                } else {
-                    
-                    print("torRPC.errorDescription = \(torRPC.errorDescription)")
-                    
-                    if torRPC.errorDescription.contains("Requested wallet does not exist or is not loaded") {
+                    if let str = objectToReturn as? String {
                         
-                        errorDescription = ""
-                        errorBool = false
+                        vc.stringToReturn = str
+                        completion()
                         
-                        torRPC.executeRPCCommand(walletName: walletName, method: .loadwallet, param: "\"\(walletName)\"") {
-                            
-                            if !self.torRPC.errorBool {
-                                
-                                self.torRPC.executeRPCCommand(walletName: walletName, method: command,
-                                                              param: param,
-                                                              completion: getResult)
-                                
-                            } else {
-                                
-                                self.errorBool = true
-                                self.errorDescription = "Wallet does not exist, maybe your node changed networks?"
-                                completion()
-                                
-                            }
-                            
-                        }
+                    } else if let doub = objectToReturn as? Double {
                         
-                    } else if torRPC.errorDescription.contains("Could not connect to server") {
+                        vc.doubleToReturn = doub
+                        completion()
                         
-                        print("restarting tor")
+                    } else if let arr = objectToReturn as? NSArray {
                         
-                        TorClient.sharedInstance.start {
-                            
-                            self.torRPC.executeRPCCommand(walletName: walletName, method: command,
-                                                          param: param,
-                                                          completion: getResult)
-                            
-                        }
-                                                
-                    } else {
+                        vc.arrayToReturn = arr
+                        completion()
                         
-                        errorBool = true
-                        errorDescription = torRPC.errorDescription
+                    } else if let dic = objectToReturn as? NSDictionary {
+                        
+                        vc.dictToReturn = dic
                         completion()
                         
                     }
-                
+                    
+                } else {
+                    
+                    if errorDesc != nil {
+                        
+                        if errorDesc!.contains("Requested wallet does not exist or is not loaded") {
+                            
+                            torRPC.executeRPCCommand(walletName: walletName, method: .loadwallet, param: "\"\(walletName)\"") { [unowned vc = self] (success, objectToReturn, errorDesc) in
+                                
+                                if success && objectToReturn != nil  {
+                                    
+                                    torRPC.executeRPCCommand(walletName: walletName, method: command, param: param) { [unowned vc = self] (success, objectToReturn, errorDesc) in
+                                        
+                                        if success && objectToReturn != nil  {
+                                            
+                                            if let str = objectToReturn as? String {
+                                                
+                                                vc.stringToReturn = str
+                                                completion()
+                                                
+                                            } else if let doub = objectToReturn as? Double {
+                                                
+                                                vc.doubleToReturn = doub
+                                                completion()
+                                                
+                                            } else if let arr = objectToReturn as? NSArray {
+                                                
+                                                vc.arrayToReturn = arr
+                                                completion()
+                                                
+                                            } else if let dic = objectToReturn as? NSDictionary {
+                                                
+                                                vc.dictToReturn = dic
+                                                completion()
+                                                
+                                            }
+                                            
+                                        } else {
+                                            
+                                            vc.errorBool = true
+                                            vc.errorDescription = errorDesc ?? "Requested wallet does not exist or is not loaded"
+                                            completion()
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                } else {
+                                    
+                                    vc.errorBool = true
+                                    vc.errorDescription = errorDesc ?? "Requested wallet does not exist or is not loaded"
+                                    completion()
+                                    
+                                }
+                                
+                            }
+                            
+                        } else {
+                            
+                            vc.errorBool = true
+                            vc.errorDescription = errorDesc!
+                            completion()
+                            
+                        }
+                        
+                    } else {
+                        
+                        vc.errorBool = true
+                        vc.errorDescription = errorDesc!
+                        completion()
+                        
+                    }
                     
                 }
                 
             }
             
-            if TorClient.sharedInstance.isOperational {
-                
-                torRPC.executeRPCCommand(walletName: walletName, method: command,
-                                         param: param,
-                                         completion: getResult)
-                
-            } else {
-                
-                errorBool = true
-                errorDescription = "tor not connected"
-                
-            }
-            
         }
         
-        torRPC.errorBool = false
-        torRPC.errorDescription = ""
         torCommand()
+        
+        // This is for dev environment only, uncomment it to use it.
+        
+//        func localCommand() {
+//
+//            print("local")
+//
+//            let localRPC = LocalNode.sharedInstance
+//            localRPC.command(walletName: walletName, method: command, param: param) { (success, errorDescription, result) in
+//
+//                if success {
+//
+//                    if result != nil {
+//
+//                        parseResponse(response: result as Any)
+//
+//                    }
+//
+//                } else {
+//
+//                    if errorDescription != nil {
+//
+//                        if errorDescription!.contains("Requested wallet does not exist or is not loaded") {
+//
+//                            localRPC.command(walletName: walletName, method: .loadwallet, param: "\"\(walletName)\"") { (success, errorDescription, result) in
+//
+//                                if success {
+//
+//                                    localRPC.command(walletName: walletName, method: command, param: param) { (success, errorDescription, result) in
+//
+//                                        if success {
+//
+//                                            if result != nil {
+//
+//                                                parseResponse(response: result as Any)
+//
+//                                            }
+//
+//                                        } else {
+//
+//                                            if errorDescription != nil {
+//
+//                                                self.errorBool = true
+//                                                self.errorDescription = errorDescription!
+//                                                completion()
+//
+//                                            }
+//
+//                                        }
+//
+//                                    }
+//
+//                                } else {
+//
+//                                    self.errorBool = true
+//                                    self.errorDescription = "Wallet does not exist, maybe your node changed networks?"
+//                                    completion()
+//
+//                                }
+//
+//                            }
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//        }
+        
+        // For now we hardcode tor, for a dev environment we can uncomment the below code and the app will try and connect to
+        // a local node.
+        
+        
+//        let mgr = TorClient.sharedInstance
+//
+//        if mgr.state == .connected || mgr.state == .refreshing {
+//
+//            torCommand()
+//
+//        } else {
+//
+//            // this is for dev environment only... can be the begginings of mac app
+//            localCommand()
+//
+//        }
         
     }
     
