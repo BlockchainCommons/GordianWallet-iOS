@@ -6,7 +6,6 @@
 //  Copyright © 2019 BlockchainCommons. All rights reserved.
 //
 
-//import Foundation
 import CoreData
 
 class CoreDataService {

@@ -38,7 +38,6 @@ class TorClient {
     private var controller: TorController?
     private var authDirPath = ""
     private var torDirPath = ""
-    var progress = Int()
     
     // The tor url session configuration.
     // Start with default config as fallback.
@@ -195,7 +194,6 @@ class TorClient {
                         print("failed connecting tor")
                         weakDelegate?.torConnDifficulties()
                         vc.state = .none
-                        //completion()
                         
                     }
                     
@@ -218,11 +216,11 @@ class TorClient {
     func resign() {
         print("resign")
         
-        self.controller?.disconnect()
-        self.controller = nil
-        self.thread?.cancel()
-        self.thread = nil
-        self.clearAuthKeys {}
+        controller?.disconnect()
+        controller = nil
+        thread?.cancel()
+        thread = nil
+        clearAuthKeys {}
         state = .stopped
         
     }

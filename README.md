@@ -10,23 +10,28 @@ FullyNoded 2 allows for multiple wallet templates including legacy, segwit compa
 
 *FullyNoded 2* is currently under active development and in late alpha testing phase. It should only be used on Bitcoin testnet for now.
 
-*FullyNoded 2* is designed to work with the [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) or one of a number of [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts), but will work with any properly configured Bitcoin Core 0.19.0.1 node with a hidden service controlling `rpcport` via localhost. Supporting nodes are [Nodl](https://www.nodl.it/), [RaspiBlitz](https://github.com/rootzoll/raspiblitz), or full nodes installed by other services such as [BTCPayServer](https://btcpayserver.org). These full nodes can be connected by clicking a link or scanning a QR code. Please refer to their telegram groups for simple instructions:
+## Testflight
+
+We have a public link available for beta testing [here](https://testflight.apple.com/join/OQHyL0a8), please only use the app on testnet. Please do share crash reports and give feedback. Want a feature added? Tell us about it.
+
+## Full Node Requirement
+
+*FullyNoded 2* is designed to work in combination with a personal bitcoin-core full node. For testing during this alpha you can also use a bitcoin test-node full node hosted by Blockchain Commons, but we recommend you install a personal bitcoin-core node under your own control.
+
+*FullyNoded 2*  has been tested with Blockchain Commons' [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) or one of a number of [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts) to install your own personal bitcoin-core and Tor services. *FullyNoded2* should work with any properly configured Bitcoin Core 0.19.0.1 node with a hidden service controlling `rpcport` via localhost. Supported full node devices like [Nodl](https://www.nodl.it/), [RaspiBlitz](https://github.com/rootzoll/raspiblitz), or full nodes installed by other services such as [BTCPayServer](https://btcpayserver.org). These full nodes can be connected by clicking a link or scanning a QR code. Please refer to their telegram groups for simple instructions:
 
 - [Nodl Telegram](https://t.me/nodl_support)
 - [RaspiBlitz Telegram](https://t.me/raspiblitz)
 - [BTCPayServer](https://t.me/btcpayserver)
 
-## Testflight
-
-We have a public link available for beta testing [here](https://testflight.apple.com/join/OQHyL0a8), please only use the app on testnet. Please do share crash reports and give feedback. Want a feature added? Tell us about it.
-
 ## Financial Support
 
+*FullyNoded 2* is a project by [Blockchain Commons](https://www.blockchaincommons.com/). We are proudly a social benefit "not-for-profit" committed to open source & open development. Our work is funded entirely by donations and collaborative partnerships with people like you. Every contribution will be spent on building open tools, technologies & techniques for blockchain and internet security infrastructure.
 Please consider becoming a sponsor by supporting the project via GitHub's sponsorship program where they will match up to $5,000 USD in donations, more info [here](https://github.com/sponsors/BlockchainCommons). See our [Sponsors](./Sponsors.md) page for more info.
 
-*FullyNoded 2* is a project of [Blockchain Commons, LLC](https://www.blockchaincommons.com/) a “not-for-profit” benefit corporation founded with the goal of supporting blockchain infrastructure and the broader security industry through cryptographic research, cryptographic & privacy protocol implementations, architecture & code reviews, industry standards, and documentation.
+To financially support further development of `$projectname` and other projects, please consider becoming a Patron of Blockchain Commons through ongoing monthly patronage by becoming a [Sponsor](https://github.com/sponsors/BlockchainCommons) through GitHub; currently they are matching the first $5k so please do consider this option. You can also offer support with Bitcoin via our [BTCPay Server](https://btcpay.blockchaincommons.com/).
 
-To financially support further development of *FullyNoded 2*, please consider becoming Patron of Blockchain Commons by contributing Bitcoin at our [BTCPay Server](https://btcpay.blockchaincommons.com/) or through ongoing fiat patronage by becoming a [Github Sponsor](https://github.com/sponsors/BlockchainCommons), currently GitHub will match sponsorships so please do consider this option.
+## Features & General Use
 
 ### General Use
 
@@ -58,18 +63,17 @@ It is extremely important for multi-sig wallets that the recovery words are save
 
 After creating a wallet you will see it on the "Wallets" page. Tap it to activate it. Tap the info button to display and export your device's seed info and the Recovery QR at anytime, you will always be prompted for 2FA whenever you export a seed or a private key. Tap the eyeball to export all the keys associated with the wallet, these keys will be derived from the device if possible. For now LibWally will not derive BIP44/49 multi-sig addresses. These addresses must be fetched from your node. BIP84 multi-sig addresses will be derived locally using LibWally. Tap the verify button to fetch the addresses purely from your node so you may "verify" that the addresses your device derives are the same as the one your node derives. Tap the list button to see the wallet's utxo's. This fetches your wallet's utxo's from your node. From your node's perspective the utxo's are always watch-only as your node is never holding enough private keys to fully spend one of them. You may tap each utxo to see all the info in json format that your node holds for that utxo.
 
-##### Receiving
+#### Receiving
 
 <img src="./Images/create_invoice.PNG" alt="" width="250"/>
 
 Just activate the wallet you want to spend from and then tap the "In" tab, it will fetch a receiving address from your node for your active wallet, to fetch another one tap the refresh button in the top right corner. The "amount" and "label" field conform to BIP21, you can add amounts and a label so the spender can simply scan the QR and it will automatically populate the amount field on their end if their software is BIP21 compatible.
 
-##### Spending
+#### Spending
 
 <img src="./Images/pay_invoice.PNG" alt="" width="250"/> <img src="./Images/confirm_transaction.PNG" alt="" width="250"/>
 
 To send just tap the "Out" tab. From here you can tap the scanner button to scan a BIP21 compatible QR code or an address. You can also tap the + button to add multiple outputs to your transaction (batching), whenever you are ready to build the transaction just tap "next".
-
 
 #### Home screen
 
@@ -337,7 +341,7 @@ It is worth noting the app is fully capable of creating unsigned transactions an
 - iOS 13
 - A Bitcoin Core full node v0.19.0.1 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service. Your node does not need to be an archive node, thus you can save space by being setup as a pruned full node.
 
-### Build From Source
+## Build From Source
 
 ##### Install Brew
 
@@ -380,31 +384,61 @@ It is normal to see an error about XCFrameworks in the above process. It can be 
 
 Once the above process completes you can:
 ```
-cd <into FullyNoded 2>
+cd <into FullyNoded2>
 carthage update --platform iOS
 ```
 
 ##### Install LibWally-Swift with Cocoapods
 
+- First run `brew install gnu-sed` as it is required to build LibWally-Swift
 - If you don't have Cocoapods install it with `sudo gem install cocoapods`
 - `cd <into the project>` (FullyNoded 2)
 - run `pod install`
-- If you run into an error you may need to follow the instructions from [LibWally-Swift](https://github.com/blockchain/libwally-swift) in order for it to build.
 - Upon first running FullyNoded 2 you will most likely need to make a few variables `public` in LibWally-Swift, this is because the way the app works requires us to get access to private keys to sign transactions with and psbt input paths in order to fetch private keys for signing. You will see a `X not accessible due to internal protection` error, simply go to that variable make it public then run the project again in XCode.
 
-### Principal Architect
-- Christopher Allen [@ChristopherA](https://github.com/@ChristopherA) \<ChristopherA@LifeWithAlacrity.com\>
 
-### Project Lead
-- Peter Denton [@Fonta1n3](https://github.com/Fonta1n3) \<fonta1n3@protonmail.com\>
-- GPG Fingerprint: 3B37 97FA 0AE8 4BE5 B440  6591 8564 01D7 121C 32FC
+## Copyright & License
 
-### Authors
-- Add your name here by getting involved, first step is to check out our [contributing section](https://github.com/BlockchainCommons/FullyNoded-2#contributing).
+Unless otherwise noted (either in this [/README.md](./README.md) or in the file's header comments) the contents of this repository are Copyright © 2020 by Blockchain Commons, LLC, and are [licensed](./LICENSE) under the [spdx:BSD-2-Clause Plus Patent License](https://spdx.org/licenses/BSD-2-Clause-Patent.html).
+
+In most cases, the authors, copyright, and license for each file reside in header comments in the source code. When it does not we have attempted to attribute it accurately in the table below.
+
+This table below also establishes provenance (repository of origin, permalink, and commit id) for files included from repositories that are outside of this repository. Contributors to these files are listed in the commit history for each repository, first with changes found in the commit history of this repo, then in changes in the commit history of their repo of their origin.
+
+| File                                        | From                                                         | Commit                                                       | Authors & Copyright (c) | License                              |
+| ------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ----------------------- | ------------------------------------ |
+| TBW                                         | TBW                                                          | TBW                                                          | TBW                     | TBW                                  |
+| exception-to-the-rule.c or exception-folder | [https://github.com/community/repo-name/PERMALINK](https://github.com/community/repo-name/PERMALINK) | [https://github.com/community/repo-name/commit/COMMITHASH]() | 2020 Exception Author   | [MIT](https://spdx.org/licenses/MIT) |
+
+### Dependencies
+
+- [Tor.framework](https://github.com/iCepa/Tor.framework) by the [iCepa project](https://github.com/iCepa) - for communicating with your nodes hidden service
+- [LibWally-Swift](https://github.com/blockchain/libwally-swift) built by [@Sjors](https://github.com/Sjors) - for BIP39 mnemonic creation and HD key derivation
+- [Base32](https://github.com/norio-nomura/Base32/blob/master/Sources/Base32) built by [@norio-nomura](https://github.com/norio-nomura) - for Tor V3 authentication key encoding
+- [Keychain-Swift](https://github.com/evgenyneu/keychain-swift) built by [@evgenyneu](https://github.com/evgenyneu) for securely storing sensitive data on your devices keychain
+
+## Contributing
+
+We encourage public contributions through issues and pull-requests! Please review [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our development process. All contributions to this repository require a GPG signed [Contributor License Agreement](./CLA.md).
+
+### Credits
+
+The following people directly contributed to this repository. You can add your name here by getting involved — the first step is to learn how to contribute from our [CONTRIBUTING.md](./CONTRIBUTING.md) documentation.
+
+| Name              | Role                | Github                                            | Email                                 | GPG Fingerprint                                    |
+| ----------------- | ------------------- | ------------------------------------------------- | ------------------------------------- | -------------------------------------------------- |
+| Christopher Allen | Principal Architect | [@ChristopherA](https://github.com/@ChristopherA) | \<ChristopherA@LifeWithAlacrity.com\> | FDFE 14A5 4ECB 30FC 5D22  74EF F8D3 6C91 3574 05ED |
+| Peter Denton      | Project Lead        | @Fonta1n3                                         | \<fontainedenton@googlemail.com\>     | 3B37 97FA 0AE8 4BE5 B440  6591 8564 01D7 121C 32FC |
+
+## Responsible Disclosure
+
+We want to keep all our software safe for everyone. If you have discovered a security vulnerability, we appreciate your help in disclosing it to us in a responsible manner. We are unfortunately not able to offer bug bounties at this time.
+
+We do ask that you offer us good faith and use best efforts not to leak information or harm any user, their data, or our developer community. Please give us a reasonable amount of time to fix the issue before you publish it. Do not defraud our users or us in the process of discovery. We promise not to bring legal action against researchers who point out a problem provided they do their best to follow the these guidelines.
 
 ### Reporting a Vulnerability
 
-To report security issues send an email to ChristopherA@LifeWithAlacrity.com (not for support).
+Please report suspected security vulnerabilities in private via email to ChristopherA@LifeWithAlacrity.com (do not use this email for support). Please do NOT create publicly viewable issues for suspected security vulnerabilities.
 
 The following keys may be used to communicate sensitive information to developers:
 
@@ -414,16 +448,3 @@ The following keys may be used to communicate sensitive information to developer
 
 You can import a key by running the following command with that individual’s fingerprint: `gpg --recv-keys "<fingerprint>"` Ensure that you put quotes around fingerprints that contain spaces.
 
-### Built with
-- [Tor.framework](https://github.com/iCepa/Tor.framework) by the [iCepa project](https://github.com/iCepa) - for communicating with your nodes hidden service
-- [LibWally-Swift](https://github.com/blockchain/libwally-swift) built by [@Sjors](https://github.com/Sjors) - for BIP39 mnemonic creation and HD key derivation
-- [Base32](https://github.com/norio-nomura/Base32/blob/master/Sources/Base32) built by [@norio-nomura](https://github.com/norio-nomura) - for Tor V3 authentication key encoding
-- [Keychain-Swift](https://github.com/evgenyneu/keychain-swift) built by [@evgenyneu](https://github.com/evgenyneu) for securely storing sensitive data on your devices keychain
-
-### Copyright & License
-
-This code in this repository is Copyright © 2019 by Blockchain Commons, LLC, and is [licensed](./LICENSE) under the [spdx:BSD-2-Clause Plus Patent License](https://spdx.org/licenses/BSD-2-Clause-Patent.html).
-
-### Contributing
-
-We encourage public contributions through issues and pull-requests! Please review [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our development process. All contributions to this repository require a GPG signed [Contributor License Agreement](./CLA.md).
