@@ -71,9 +71,9 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
     
     @objc func handleTap() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.textField.resignFirstResponder()
+            vc.textField.resignFirstResponder()
             
         }
         

@@ -248,7 +248,6 @@ class NodeLogic {
                     if reducer.arrayToReturn != nil {
                         
                         let peerInfo = reducer.arrayToReturn!
-                        //parsePeerInfo(peerInfo: peerInfo)
                         var incomingCount = 0
                         var outgoingCount = 0
                         
@@ -380,9 +379,8 @@ class NodeLogic {
             
             if !reducer.errorBool {
                 
-                if reducer.arrayToReturn != nil {
+                if let transactions = reducer.arrayToReturn {
                     
-                    let transactions = reducer.arrayToReturn!
                     vc.parseTransactions(transactions: transactions, completion: completion)
                     
                 } else {
