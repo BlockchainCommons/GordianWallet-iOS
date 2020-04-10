@@ -186,7 +186,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
                 vc.node = node!
                 vc.creatingView.addConnectingView(vc: self.navigationController!, description: "creating your wallet")
-                vc.newWallet["blockheight"] = UserDefaults.standard.object(forKey: "blockheight") as? Int ?? 1
+                vc.newWallet["blockheight"] = UserDefaults.standard.object(forKey: "blockheight") as? Int32 ?? 1
                 vc.newWallet["maxRange"] = 2500
                 
                 if vc.node.network == "testnet" {

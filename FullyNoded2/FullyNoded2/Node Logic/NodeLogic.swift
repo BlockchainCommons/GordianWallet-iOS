@@ -92,7 +92,7 @@ class NodeLogic {
                         dictToReturn["blocks"] = currentblockheight
                         
                         let ud = UserDefaults.standard
-                        ud.set(currentblockheight, forKey: "blockheight")
+                        ud.set(Int32(currentblockheight), forKey: "blockheight")
                         
                     }
                     if let difficultyCheck = blockchainInfo["difficulty"] as? Double {
@@ -325,14 +325,18 @@ class NodeLogic {
             
         }
         
-        CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastBalance", newValue: amount, entityName: .wallets) { _ in
-            CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { _ in
-                CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) { _ in
-                    completion((true, dictToReturn, nil))
-                    
+        // We fetch balances when we check for wallet recovery confirmation, therefore it does not have an ID yet if it has not been recovered
+        if wallet.id != nil {
+            CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastBalance", newValue: amount, entityName: .wallets) { _ in
+                CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { _ in
+                    CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) { _ in
+                        completion((true, dictToReturn, nil))
+                        
+                    }
                 }
             }
         }
+        
     }
     
     func parseTransactions(transactions: NSArray, completion: @escaping ((success: Bool, array: [[String:Any]]?, errorDescription: String?)) -> Void) {

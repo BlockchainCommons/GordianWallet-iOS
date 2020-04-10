@@ -30,7 +30,7 @@ public struct WalletStruct: CustomStringConvertible {
     let mOfNtype:String
     let changeDescriptor:String
     let xprv:Data?
-    let blockheight:Int
+    let blockheight:Int32
     let label:String
     let lastUpdated:Date
     var maxRange:Int
@@ -57,7 +57,7 @@ public struct WalletStruct: CustomStringConvertible {
         self.mOfNtype = dictionary["mOfNtype"] as? String ?? ""
         self.changeDescriptor = dictionary["changeDescriptor"] as? String ?? ""
         self.xprv = dictionary["xprv"] as? Data ?? nil
-        self.blockheight = dictionary["blockheight"] as? Int ?? 1
+        self.blockheight = dictionary["blockheight"] as? Int32 ?? 1
         self.label = dictionary["label"] as? String ?? "Add a wallet label"
         self.lastUpdated = dictionary["lastUpdated"] as? Date ?? Date()
         self.maxRange = dictionary["maxRange"] as? Int ?? 999

@@ -18,7 +18,7 @@ class CreateMultiSigWallet {
             var descriptor = "\(array[0])"
             descriptor = descriptor.replacingOccurrences(of: nodeXpub, with: nodeXprv)
             
-            Reducer.makeCommand(walletName: wallet.name!, command: .getdescriptorinfo, param: "\"\(descriptor)\"") { (object, errorDesc) in
+            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(descriptor)\"") { (object, errorDesc) in
                 
                 if let dict = object as? NSDictionary {
                     
@@ -118,7 +118,7 @@ class CreateMultiSigWallet {
                         var descriptor = "\(array[0])"
                         descriptor = descriptor.replacingOccurrences(of: nodeXpub, with: nodeXprv)
                         
-                        Reducer.makeCommand(walletName: wallet.name!, command: .getdescriptorinfo, param: "\"\(descriptor)\"") { (object, errorDesc) in
+                        Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(descriptor)\"") { (object, errorDesc) in
                             
                             if let dict = object as? NSDictionary {
                                 

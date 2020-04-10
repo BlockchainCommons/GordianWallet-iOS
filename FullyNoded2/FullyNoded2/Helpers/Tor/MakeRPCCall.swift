@@ -147,7 +147,7 @@ class MakeRPCCall {
                                     }
                                 }
                                 
-                            } else if method == .fetchexternalbalances || method == .getexternalwalletinfo {
+                            } else if method == .fetchexternalbalances || method == .getexternalwalletinfo || method == .importmulti {
                                 // These commands are only ever used to fetch balances of inactive wallets on the wallets view table, it is safe to just fetch them
                                 makeCommand()
                                 
@@ -163,8 +163,14 @@ class MakeRPCCall {
                             }
                             
                         } else {
-                            completion((false, nil, "we could not get the active wallet, something unexpected went wrong"))
-                            
+                            // if it is the first wallet being created then we allow that
+                            if method == .importmulti {
+                                makeCommand()
+                                
+                            } else {
+                                completion((false, nil, "we could not get the active wallet, something unexpected went wrong"))
+                                
+                            }                            
                         }
                     }
                 } else {

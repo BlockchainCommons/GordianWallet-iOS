@@ -856,6 +856,8 @@ class RecoverWallet {
         let walletSaver = WalletSaver()
         walletSaver.save(walletToSave: wallet) { (success) in
             
+            print("wallet: \(wallet)")
+            
             if success {
                 
                 completion((true, nil))
