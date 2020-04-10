@@ -86,10 +86,9 @@ class MultiSigTxBuilder {
                             let bip32derivs = dict["bip32_derivs"] as! NSArray
                             let bip32deriv = bip32derivs[0] as! NSDictionary
                             let path = bip32deriv["path"] as! String
-                            let keyFetcher = KeyFetcher()
                             if let bip32path = BIP32Path(path) {
                                 
-                                keyFetcher.privKey(path: bip32path) { (privKey, error) in
+                                KeyFetcher.privKey(path: bip32path) { (privKey, error) in
                                     
                                     if !error {
                                         
@@ -127,22 +126,16 @@ class MultiSigTxBuilder {
                 
                 func decodePsbt(psbt: String) {
                     
-                    let reducer = Reducer()
                     let param = "\"\(psbt)\""
-                    reducer.makeCommand(walletName: wallet!.name, command: .decodepsbt, param: param) {
+                    Reducer.makeCommand(walletName: wallet!.name!, command: .decodepsbt, param: param) { (object, errorDesc) in
                         
-                        if !reducer.errorBool {
+                        if let dict = object as? NSDictionary {
                             
-                            if let dict = reducer.dictToReturn {
-                                
-                                parsePsbt(decodePsbt: dict, psbt: psbt)
-                                
-                            }
-                            
+                            parsePsbt(decodePsbt: dict, psbt: psbt)
                             
                         } else {
                             
-                            completion((nil, nil, "Error decoding transaction: \(reducer.errorDescription)"))
+                            completion((nil, nil, "Error decoding transaction: \(errorDesc ?? "")"))
                             
                         }
                         
@@ -152,36 +145,35 @@ class MultiSigTxBuilder {
                 
                 func processPsbt(psbt: String) {
                     
-                    let reducer = Reducer()
                     let param = "\"\(psbt)\", true, \"ALL\", true"
-                    reducer.makeCommand(walletName: wallet!.name, command: .walletprocesspsbt, param: param) {
+                    Reducer.makeCommand(walletName: wallet!.name!, command: .walletprocesspsbt, param: param) { (object, errorDesc) in
                         
-                        if !reducer.errorBool {
+                        if let dict = object as? NSDictionary {
                             
-                            if let dict = reducer.dictToReturn {
+                            if let procccessedPsbt = dict["psbt"] as? String {
                                 
-                                if let procccessedPsbt = dict["psbt"] as? String {
+                                let descParser = DescriptorParser()
+                                let descStr = descParser.descriptor(wallet!.descriptor)
+                                
+                                if descStr.isHot || String(data: wallet!.seed, encoding: .utf8) != "no seed" || wallet?.xprv != nil {
                                     
-                                    let descParser = DescriptorParser()
-                                    let descStr = descParser.descriptor(wallet!.descriptor)
+                                    decodePsbt(psbt: procccessedPsbt)
                                     
-                                    if descStr.isHot || String(data: wallet!.seed, encoding: .utf8) != "no seed" || wallet?.xprv != nil {
-                                        
-                                        decodePsbt(psbt: procccessedPsbt)
-                                        
-                                    } else {
-                                        
-                                        completion((nil, procccessedPsbt, nil))
-                                        
-                                    }
+                                } else {
+                                    
+                                    completion((nil, procccessedPsbt, nil))
                                     
                                 }
+                                
+                            } else {
+                                
+                                completion((nil, nil, "Error decoding transaction"))
                                 
                             }
                             
                         } else {
                             
-                            completion((nil, nil, "Error decoding transaction: \(reducer.errorDescription)"))
+                            completion((nil, nil, "Error decoding transaction: \(errorDesc ?? "")"))
                             
                         }
                         
@@ -191,7 +183,6 @@ class MultiSigTxBuilder {
                 
                 func createPsbt(changeAddress: String) {
                     
-                    let reducer = Reducer()
                     let feeTarget = UserDefaults.standard.object(forKey: "feeTarget") as? Int ?? 432
                     var outputsString = outputs.description
                     outputsString = outputsString.replacingOccurrences(of: "[", with: "")
@@ -199,21 +190,13 @@ class MultiSigTxBuilder {
                     
                     let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"changeAddress\": \"\(changeAddress)\"}'', true"
                     
-                    reducer.makeCommand(walletName: wallet!.name, command: .walletcreatefundedpsbt, param: param) {
+                    Reducer.makeCommand(walletName: wallet!.name!, command: .walletcreatefundedpsbt, param: param) { (object, errorDesc) in
                         
-                        if !reducer.errorBool {
+                        if let psbtDict = object as? NSDictionary {
                             
-                            if let psbtDict = reducer.dictToReturn {
+                            if let psbt = psbtDict["psbt"] as? String {
                                 
-                                if let psbt = psbtDict["psbt"] as? String {
-                                    
-                                    processPsbt(psbt: psbt)
-                                    
-                                } else {
-                                    
-                                    completion((nil, nil, "error creating psbt"))
-                                    
-                                }
+                                processPsbt(psbt: psbt)
                                 
                             } else {
                                 
@@ -223,7 +206,7 @@ class MultiSigTxBuilder {
                             
                         } else {
                             
-                            completion((nil, nil, "error creating psbt: \(reducer.errorDescription)"))
+                            completion((nil, nil, "error creating psbt"))
                             
                         }
                         
@@ -233,9 +216,7 @@ class MultiSigTxBuilder {
                 
                 func getChangeAddress() {
                     
-                    let keyFetcher = KeyFetcher()
-                    
-                    keyFetcher.musigChangeAddress { (address, error, errorDescription) in
+                    KeyFetcher.musigChangeAddress { (address, error, errorDescription) in
                         
                         if !error {
                             

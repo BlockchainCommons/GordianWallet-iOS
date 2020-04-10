@@ -6,7 +6,6 @@
 //  Copyright © 2019 BlockchainCommons. All rights reserved.
 //
 
-import KeychainSwift
 import UIKit
 import AuthenticationServices
 import LibWally
@@ -219,7 +218,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func loadData() {
         
-        let enc = Encryption.sharedInstance
         let p = DescriptorParser()
         let s = p.descriptor(self.wallet.descriptor)
         self.publicKeyDescriptor = "\(self.wallet.descriptor)\n\n\(self.wallet.changeDescriptor)"
@@ -229,7 +227,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             if xprv != "" {
                 
                 let encryptedWords = vc.wallet.seed
-                enc.decryptData(dataToDecrypt: encryptedWords) { (decryptedWords) in
+                Encryption.decryptData(dataToDecrypt: encryptedWords) { (decryptedWords) in
                     
                     if decryptedWords != nil {
                         
@@ -296,7 +294,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                                                                         
                                             vc.privateKeyDescriptor = "\(primaryDesc)\n\n\(changeDesc)"
                                             
-                                            vc.recoveryText = "bitcoin-cli -rpcwallet=\(vc.wallet.name) importmulti { \"desc\": \"\(primaryDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name) importmulti { \"desc\": \"\(changeDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
+                                            vc.recoveryText = "bitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(primaryDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(changeDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
                                             
                                         }
                                         
@@ -332,11 +330,11 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 if s.isMulti {
                                         
-                    vc.recoveryText = "bitcoin-cli -rpcwallet=\(vc.wallet.name) importmulti { \"desc\": \"\(vc.wallet.descriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name) importmulti { \"desc\": \"\(vc.wallet.changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
+                    vc.recoveryText = "bitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.descriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
                     
                 } else {
                     
-                    vc.recoveryText = "bitcoin-cli importmulti { \"desc\": \"\(vc.wallet.descriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name) importmulti { \"desc\": \"\(vc.wallet.changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": true, \"internal\": true }"
+                    vc.recoveryText = "bitcoin-cli importmulti { \"desc\": \"\(vc.wallet.descriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": true, \"internal\": true }"
                     
                 }
                 
@@ -410,8 +408,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             let encryptedSeed = wallet!.seed
             
-            let enc = Encryption.sharedInstance
-            enc.decryptData(dataToDecrypt: encryptedSeed) { [unowned vc = self] (decryptedData) in
+            Encryption.decryptData(dataToDecrypt: encryptedSeed) { [unowned vc = self] (decryptedData) in
                 
                 if decryptedData != nil {
                     
@@ -782,8 +779,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func xpub(descriptorStruct: DescriptorStruct, completion: @escaping ((String)) -> Void) {
         
-        let keyFetcher = KeyFetcher()
-        keyFetcher.accountXpub(descriptorStruct: descriptorStruct) { (xpub, error) in
+        KeyFetcher.accountXpub(descriptorStruct: descriptorStruct) { (xpub, error) in
             
             if !error {
                 
@@ -801,8 +797,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func xprv(completion: @escaping ((String)) -> Void) {
         
-        let keyFetcher = KeyFetcher()
-        keyFetcher.accountXprv { [unowned vc = self] (xprv, error) in
+        KeyFetcher.accountXprv { [unowned vc = self] (xprv, error) in
             
             if !error {
                 
@@ -813,8 +808,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 if vc.wallet.xprv != nil {
                     
                     let encryptedXprv = vc.wallet.xprv!
-                    let enc = Encryption.sharedInstance
-                    enc.decryptData(dataToDecrypt: encryptedXprv) { (xprv) in
+                    Encryption.decryptData(dataToDecrypt: encryptedXprv) { (xprv) in
                         
                         if xprv != nil {
                             
@@ -883,56 +877,60 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         
-        switch authorization.credential {
+        if let data = KeyChain.getData("userIdentifier") {
+            if let username = String(data: data, encoding: .utf8) {
+                switch authorization.credential {
 
-        case _ as ASAuthorizationAppleIDCredential:
-            
-            let keychain = KeychainSwift()
-            let authorizationProvider = ASAuthorizationAppleIDProvider()
-            authorizationProvider.getCredentialState(forUserID: keychain.get("userIdentifier")!) { [unowned vc = self] (state, error) in
-                
-                switch (state) {
-                    
-                case .authorized:
-                    print("Account Found - Signed In")
-                    getActiveWalletNow { (wallet, error) in
+                case _ as ASAuthorizationAppleIDCredential:
+                    let authorizationProvider = ASAuthorizationAppleIDProvider()
+                    authorizationProvider.getCredentialState(forUserID: username) { [unowned vc = self] (state, error) in
                         
-                        if wallet != nil && !error {
+                        switch (state) {
                             
-                            DispatchQueue.main.async { [unowned vc = self] in
+                        case .authorized:
+                            print("Account Found - Signed In")
+                            getActiveWalletNow { (wallet, error) in
                                 
-                                vc.tableView.alpha = 1
-                                vc.wallet = wallet!
-                                vc.loadData()
+                                if wallet != nil && !error {
+                                    
+                                    DispatchQueue.main.async { [unowned vc = self] in
+                                        
+                                        vc.tableView.alpha = 1
+                                        vc.wallet = wallet!
+                                        vc.loadData()
+                                        
+                                    }
+                                    
+                                } else {
+                                    
+                                    displayAlert(viewController: vc, isError: true, message: "no active wallet")
+                                    
+                                }
                                 
                             }
                             
-                        } else {
+                        case .revoked:
+                            print("No Account Found")
+                            fallthrough
                             
-                            displayAlert(viewController: vc, isError: true, message: "no active wallet")
+                        case .notFound:
+                            print("No Account Found")
+                            
+                        default:
+                            break
                             
                         }
                         
                     }
                     
-                case .revoked:
-                    print("No Account Found")
-                    fallthrough
-                    
-                case .notFound:
-                    print("No Account Found")
-                    
                 default:
+
                     break
-                    
+
                 }
-                
+
             }
-            
-        default:
-
-            break
-
+                
         }
 
     }

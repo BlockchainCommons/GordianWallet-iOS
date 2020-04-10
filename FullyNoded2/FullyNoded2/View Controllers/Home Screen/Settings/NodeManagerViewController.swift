@@ -16,7 +16,6 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     var editButton = UIBarButtonItem()
     var id:UUID!
     var url = ""
-    weak var cd = CoreDataService.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,7 +89,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
             
             let id = nodes[indexPath.section]["id"] as! UUID
             
-            cd?.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
+            CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
                 
                 if errorDescription == nil && wallets != nil {
                     
@@ -110,7 +109,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                     
                     if !walletsExist {
                         
-                        vc.cd?.deleteEntity(id: id, entityName: .nodes) { [unowned vc = self] (success, errorDescription) in
+                        CoreDataService.deleteEntity(id: id, entityName: .nodes) { [unowned vc = self] (success, errorDescription) in
                             
                             if success {
                                                     
@@ -204,12 +203,10 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         
         self.nodes.removeAll()
         
-        cd?.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodes, errorDescription) in
+        CoreDataService.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodes, errorDescription) in
             
             if errorDescription == nil {
-                
-                weak var enc = Encryption.sharedInstance
-                
+                                
                 for (i, node) in nodes!.enumerated() {
                     
                     vc.nodes.append(node)
@@ -219,7 +216,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                         if key != "isActive" && key != "id" && key != "network" {
                             
                             let encryptedData = value as! Data
-                            enc?.decryptData(dataToDecrypt: encryptedData) { (decryptedData) in
+                            Encryption.decryptData(dataToDecrypt: encryptedData) { (decryptedData) in
                                 
                                 if decryptedData != nil {
                                     
@@ -321,7 +318,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     
     func makeActive(nodeToActivate: UUID) {
         
-        cd?.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodess, errorDescription) in
+        CoreDataService.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodess, errorDescription) in
             
             if errorDescription == nil {
                 
@@ -333,7 +330,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                         
                         if str.id == nodeToActivate {
                             
-                            vc.cd?.updateEntity(id: nodeToActivate, keyToUpdate: "isActive", newValue: true, entityName: .nodes) { (success, errorDescription) in
+                            CoreDataService.updateEntity(id: nodeToActivate, keyToUpdate: "isActive", newValue: true, entityName: .nodes) { (success, errorDescription) in
                                 
                                 if success {
                                     
@@ -366,7 +363,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     func deactivateOtherNodes(nodeToActivate: UUID) {
         print("deactivateOtherNodes")
         
-        cd?.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodess, errorDescription) in
+        CoreDataService.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodess, errorDescription) in
             
             if errorDescription == nil {
                 
@@ -378,7 +375,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                         
                         if str.id != nodeToActivate {
                             
-                            vc.cd?.updateEntity(id: str.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) { (success1, errorDescription1) in
+                            CoreDataService.updateEntity(id: str.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) { (success1, errorDescription1) in
                                 
                                 if success1 {
                                     

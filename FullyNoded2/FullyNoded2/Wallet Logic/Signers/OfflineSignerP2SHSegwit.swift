@@ -19,24 +19,15 @@ class OfflineSignerP2SHSegwit {
         var destinationAddresses = [Address]()
         var privKeys = [HDKey]()
         
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: "", command: .decodepsbt, param: "\"\(unsignedTx)\"") {
+        Reducer.makeCommand(walletName: "", command: .decodepsbt, param: "\"\(unsignedTx)\"") { (object, errorDesc) in
             
-            if !reducer.errorBool {
+            if let decodedPSBT = object as? NSDictionary {
                 
-                if let decodedPSBT = reducer.dictToReturn {
-                    
-                    parseDecodedPSBT(psbt: decodedPSBT)
-                    
-                } else {
-                    
-                    completion(nil)
-                    
-                }
+                parseDecodedPSBT(psbt: decodedPSBT)
                 
             } else {
                 
-                print("error decoding psbt: \(reducer.errorDescription)")
+                print("error decoding psbt: \(errorDesc ?? "")")
                 completion(nil)
                 
             }
@@ -96,9 +87,8 @@ class OfflineSignerP2SHSegwit {
                 let bip32derivsDict = bip32derivs[0] as! NSDictionary
                 let path = bip32derivsDict["path"] as! String
                 
-                let keyfetcher = KeyFetcher()
                 if let bip32Path = BIP32Path(path) {
-                    keyfetcher.key(path: bip32Path) { (key, error) in
+                    KeyFetcher.key(path: bip32Path) { (key, error) in
                         
                         if !error {
                             

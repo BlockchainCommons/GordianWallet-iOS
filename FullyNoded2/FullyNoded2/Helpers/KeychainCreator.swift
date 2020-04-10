@@ -11,7 +11,7 @@ import LibWally
 
 class KeychainCreator {
     
-    func createKeyChain(completion: @escaping ((mnemonic: String?, error: Bool)) -> Void) {
+    class func createKeyChain(completion: @escaping ((mnemonic: String?, error: Bool)) -> Void) {
         
         let bytesCount = 16
         var randomBytes = [UInt8](repeating: 0, count: bytesCount)

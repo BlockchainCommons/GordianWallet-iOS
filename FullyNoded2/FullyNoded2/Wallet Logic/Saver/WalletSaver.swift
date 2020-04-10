@@ -7,20 +7,16 @@
 //
 
 import Foundation
-import KeychainSwift
 
 class WalletSaver {
-    
-    let keychain = KeychainSwift()
-    let cd = CoreDataService.sharedInstance
-    
+        
     func save(walletToSave: [String:Any], completion: @escaping ((Bool)) -> Void) {
         
-        self.cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+        CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
             
             if errorDescription == nil {
                 
-                self.cd.saveEntity(dict: walletToSave, entityName: .wallets) { (success, errorDescription) in
+                CoreDataService.saveEntity(dict: walletToSave, entityName: .wallets) { (success, errorDescription) in
                     
                     if success {
                         
@@ -28,7 +24,7 @@ class WalletSaver {
                             
                             let w = WalletStruct(dictionary: walletToSave)
                             
-                            self.cd.updateEntity(id: w.id, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { (success1, errorDescription1) in
+                            CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { (success1, errorDescription1) in
                                 
                                 if success1 {
                                     

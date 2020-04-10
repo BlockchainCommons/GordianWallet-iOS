@@ -211,7 +211,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
 //                                let encryptedSeed = wallet.seed
 //                                if String(bytes: encryptedSeed, encoding: .utf8) != "no seed" {
 //                                    let enc = Encryption()
-//                                    enc.decryptData(dataToDecrypt: encryptedSeed) { (seed) in
+//                                    Encryption.decryptData(dataToDecrypt: encryptedSeed) { (seed) in
 //                                        if seed != nil {
 //                                            if let words = String(data: seed!, encoding: .utf8) {
 //                                                let mnenomicCreator = MnemonicCreator()
@@ -289,44 +289,52 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
     func addBtcRpcQr(url: String) {
         
-        let qc = QuickConnect()
-    
-        func nodeAdded() {
+        func addnode() {
             
-            if !qc.errorBool {
+            let qc = QuickConnect()
+            qc.addNode(vc: self, url: url) { (success, errorDesc) in
                 
-                DispatchQueue.main.async {
+                if success {
                     
-                    self.onDoneBlock!(true)
-                    self.dismiss(animated: true, completion: nil)
+                    DispatchQueue.main.async {
+                        
+                        self.onDoneBlock!(true)
+                        self.dismiss(animated: true, completion: nil)
+                        
+                    }
+                    
+                } else {
+                    
+                    showAlert(vc: self, title: "Error", message: "Error adding node: \(errorDesc ?? "unknown error")")
                     
                 }
-                
-            } else {
-                
-                displayAlert(viewController: self,
-                             isError: true,
-                             message: qc.errorDescription)
                 
             }
             
         }
         
-        func addnode() {
-            
-            qc.addNode(vc: self,
-                       url: url,
-                       completion: nodeAdded)
-            
-        }
-        
         func updateNode() {
             
+            let qc = QuickConnect()
             qc.nodeToUpdate = self.nodeId
-            
-            qc.addNode(vc: self,
-                       url: url,
-                       completion: nodeAdded)
+            qc.addNode(vc: self, url: url) { (success, errorDesc) in
+                
+                if success {
+                    
+                    DispatchQueue.main.async {
+                        
+                        self.onDoneBlock!(true)
+                        self.dismiss(animated: true, completion: nil)
+                        
+                    }
+                    
+                } else {
+                    
+                    showAlert(vc: self, title: "Error", message: "Error adding node: \(errorDesc ?? "unknown error")")
+                    
+                }
+                
+            }
             
         }
         
@@ -354,8 +362,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                 
             }
             
-            let enc = Encryption.sharedInstance
-            enc.getNode { (node, error) in
+            Encryption.getNode { (node, error) in
                 
                 if !error && node != nil {
                     

@@ -29,7 +29,7 @@ class HowToSupportFN2ViewController: UIViewController, UITextViewDelegate, UINav
         titleLabel.adjustsFontSizeToFitWidth = true
         textView.delegate = self
         
-        textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["BTCPayServer": donationLinkUrl, "Blockchain Commons": homePageUrl, "GitHub repo": repoLink, "GitHub Sponsor": sponsorLink])
+        textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["BTCPayServer": donationLinkUrl, "Blockchain Commons": homePageUrl, "GitHub repo": repoLink, "Blockchain Commons patron": sponsorLink])
     }
     
     private func setTitleView() {

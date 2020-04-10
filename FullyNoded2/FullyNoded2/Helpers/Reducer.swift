@@ -6,53 +6,27 @@
 //  Copyright © 2019 BlockchainCommons. All rights reserved.
 //
 
+// MARK: What is the purpose of this class?
+
+// The purpose of this file is to give a central place where all node commands go, that way we can check every single command for specific errors, such as a wallet
+// not being loaded. This allows us to automatically load the wallet if at anytime it gets unloaded, this saves us from having to make this check every single time
+// we make a node command. Wallets unload when your node reboots. The other important purpose is that we can incorporate different connection types to the node and
+// use this class to "filter" the command to its appropriate class without having to make any changes to the exisiting code. For now the only two means of connecting to the node are locally (this is all commented out and for dev use only) and via tor.
+
 import Foundation
 
 class Reducer {
     
-    var dictToReturn:NSDictionary?
-    var doubleToReturn:Double?
-    var arrayToReturn:NSArray?
-    var stringToReturn:String?
-    var boolToReturn:Bool?
-    var errorBool = Bool()
-    var errorDescription = ""
-    
-    var method = ""
-    
-    func makeCommand(walletName: String, command: BTC_CLI_COMMAND, param: Any, completion: @escaping () -> Void) {
-        
-        method = command.rawValue
+    class func makeCommand(walletName: String, command: BTC_CLI_COMMAND, param: Any, completion: @escaping ((object: Any?, errorDescription: String?)) -> Void) {
         
         func torCommand() {
             
-            print("tor")
             let torRPC = MakeRPCCall.sharedInstance
-            torRPC.executeRPCCommand(walletName: walletName, method: command, param: param) { [unowned vc = self] (success, objectToReturn, errorDesc) in
+            torRPC.executeRPCCommand(walletName: walletName, method: command, param: param) { (success, objectToReturn, errorDesc) in
                 
                 if success && objectToReturn != nil {
                     
-                    if let str = objectToReturn as? String {
-                        
-                        vc.stringToReturn = str
-                        completion()
-                        
-                    } else if let doub = objectToReturn as? Double {
-                        
-                        vc.doubleToReturn = doub
-                        completion()
-                        
-                    } else if let arr = objectToReturn as? NSArray {
-                        
-                        vc.arrayToReturn = arr
-                        completion()
-                        
-                    } else if let dic = objectToReturn as? NSDictionary {
-                        
-                        vc.dictToReturn = dic
-                        completion()
-                        
-                    }
+                    completion((objectToReturn, nil))
                     
                 } else {
                     
@@ -60,41 +34,19 @@ class Reducer {
                         
                         if errorDesc!.contains("Requested wallet does not exist or is not loaded") {
                             
-                            torRPC.executeRPCCommand(walletName: walletName, method: .loadwallet, param: "\"\(walletName)\"") { [unowned vc = self] (success, objectToReturn, errorDesc) in
+                            torRPC.executeRPCCommand(walletName: walletName, method: .loadwallet, param: "\"\(walletName)\"") { (success, objectToReturn, errorDesc) in
                                 
                                 if success && objectToReturn != nil  {
                                     
-                                    torRPC.executeRPCCommand(walletName: walletName, method: command, param: param) { [unowned vc = self] (success, objectToReturn, errorDesc) in
+                                    torRPC.executeRPCCommand(walletName: walletName, method: command, param: param) { (success, objectToReturn, errorDesc) in
                                         
                                         if success && objectToReturn != nil  {
                                             
-                                            if let str = objectToReturn as? String {
-                                                
-                                                vc.stringToReturn = str
-                                                completion()
-                                                
-                                            } else if let doub = objectToReturn as? Double {
-                                                
-                                                vc.doubleToReturn = doub
-                                                completion()
-                                                
-                                            } else if let arr = objectToReturn as? NSArray {
-                                                
-                                                vc.arrayToReturn = arr
-                                                completion()
-                                                
-                                            } else if let dic = objectToReturn as? NSDictionary {
-                                                
-                                                vc.dictToReturn = dic
-                                                completion()
-                                                
-                                            }
+                                            completion((objectToReturn, nil))
                                             
                                         } else {
                                             
-                                            vc.errorBool = true
-                                            vc.errorDescription = errorDesc ?? "Requested wallet does not exist or is not loaded"
-                                            completion()
+                                            completion((nil, errorDesc ?? "Requested wallet does not exist or is not loaded"))
                                             
                                         }
                                         
@@ -102,9 +54,7 @@ class Reducer {
                                     
                                 } else {
                                     
-                                    vc.errorBool = true
-                                    vc.errorDescription = errorDesc ?? "Requested wallet does not exist or is not loaded"
-                                    completion()
+                                    completion((nil, errorDesc ?? "Requested wallet does not exist or is not loaded"))
                                     
                                 }
                                 
@@ -112,17 +62,13 @@ class Reducer {
                             
                         } else {
                             
-                            vc.errorBool = true
-                            vc.errorDescription = errorDesc!
-                            completion()
+                            completion((nil, errorDesc!))
                             
                         }
                         
                     } else {
                         
-                        vc.errorBool = true
-                        vc.errorDescription = errorDesc!
-                        completion()
+                        completion((nil, errorDesc!))
                         
                     }
                     
@@ -131,7 +77,7 @@ class Reducer {
             }
             
         }
-        
+                
         torCommand()
         
         // This is for dev environment only, uncomment it to use it.

@@ -217,38 +217,18 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             if wallet != nil && !error {
                 
-                let reducer = Reducer()
-                reducer.makeCommand(walletName: wallet!.name, command: method, param: param) { [unowned vc = self] in
+                Reducer.makeCommand(walletName: wallet!.name!, command: method, param: param) { [unowned vc = self] (object, errorDesc) in
                     
-                    if !reducer.errorBool {
+                    if let resultArray = object as? NSArray {
                         
-                        if let resultArray = reducer.arrayToReturn {
-                            
-                            vc.parseUnspent(utxos: resultArray)
-                            
-                        } else {
-                            
-                            DispatchQueue.main.async {
-                                
-                                vc.removeSpinner()
-                                
-                                displayAlert(viewController: vc,
-                                             isError: true,
-                                             message: "error fetching utxos")
-                                                    
-                            }
-                            
-                        }
+                        vc.parseUnspent(utxos: resultArray)
                         
                     } else {
                         
                         DispatchQueue.main.async {
                             
                             vc.removeSpinner()
-                            
-                            displayAlert(viewController: vc,
-                                         isError: true,
-                                         message: reducer.errorDescription)
+                            displayAlert(viewController: vc, isError: true, message: "error fetching utxos")
                                                 
                         }
                         

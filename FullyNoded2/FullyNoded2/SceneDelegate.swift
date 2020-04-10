@@ -99,7 +99,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Save changes in the application's managed object context when the application transitions to the background.
         //(UIApplication.shared.delegate as? AppDelegate)?.saveContext()
-        CoreDataService.sharedInstance.saveContext()
+        CoreDataService.saveContext()
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
@@ -118,14 +118,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Add an alert letting user know whether the node was added successfully or not.
         
         if let myTabBar = self.window?.rootViewController as? UITabBarController {
-            
+                        
             let qc = QuickConnect()
-            
-            func getResult() {
+            qc.addNode(vc: myTabBar, url: url) { (success, errorDesc) in
                 
-                if !qc.errorBool {
-                    
-                    print("success adding quick connect")
+                if success {
                     
                     DispatchQueue.main.async {
                         
@@ -135,15 +132,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     
                 } else {
                     
-                    print("error adding quick connect = \(qc.errorDescription)")
+                    print("error adding quick connect = \(errorDesc ?? "unknown error")")
                     
                 }
                 
             }
-            
-            qc.addNode(vc: myTabBar,
-                       url: url,
-                       completion: getResult)
             
         } else {
             

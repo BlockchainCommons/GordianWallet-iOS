@@ -12,7 +12,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBOutlet var loadingRefresher: UIActivityIndicatorView!
     weak var nodeLogic = NodeLogic.sharedInstance
-    weak var cd = CoreDataService.sharedInstance
     var isLoading = Bool()
     var refresher: UIRefreshControl!
     var index = Int()
@@ -129,7 +128,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 if sortedWallets.count > 0 {
                  
                     let id = sortedWallets[indexPath.section]["id"] as! UUID
-                    cd?.updateEntity(id: id, keyToUpdate: "isArchived", newValue: true, entityName: .wallets) { (success, errorDescription) in
+                    CoreDataService.updateEntity(id: id, keyToUpdate: "isArchived", newValue: true, entityName: .wallets) { (success, errorDescription) in
                         
                         if success {
                             
@@ -230,7 +229,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         func loadWallets() {
                         
-            self.cd?.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
+            CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
                                 
                 if errorDescription == nil {
                     
@@ -269,7 +268,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                         for (i, wallet) in self.sortedWallets.enumerated() {
                                             
                                             let w = WalletStruct(dictionary: wallet)
-                                            vc.cd?.updateEntity(id: w.id, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
+                                            CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
                                             
                                             if i + 1 == vc.sortedWallets.count {
                                                 
@@ -316,8 +315,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        let enc = Encryption.sharedInstance
-        cd?.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodes, errorDescription) in
+        CoreDataService.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodes, errorDescription) in
             
             if errorDescription == nil && nodes != nil {
                 
@@ -327,7 +325,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     for (i, n) in nodes!.enumerated() {
                         
-                        enc.decryptData(dataToDecrypt: (n["onionAddress"] as! Data)) { (decryptedOnionAddress) in
+                        Encryption.decryptData(dataToDecrypt: (n["onionAddress"] as! Data)) { (decryptedOnionAddress) in
                             
                             if decryptedOnionAddress != nil {
                                 
@@ -335,7 +333,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 
                             }
                             
-                            enc.decryptData(dataToDecrypt: (n["label"] as! Data)) { (decryptedLabel) in
+                            Encryption.decryptData(dataToDecrypt: (n["label"] as! Data)) { (decryptedLabel) in
                             
                                 if decryptedLabel != nil {
                                     
@@ -535,7 +533,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         deviceXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
-        walletFileLabel.text = reducedName(name: wallet.name)
+        walletFileLabel.text = reducedName(name: wallet.name!)
         
         for n in nodes {
             
@@ -709,7 +707,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         offlineXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
-        walletFileLabel.text = reducedName(name: wallet.name)
+        walletFileLabel.text = reducedName(name: wallet.name!)
         
         for n in nodes {
             
@@ -991,7 +989,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             textField.keyboardAppearance = .dark
         }
         
-        alert.addAction(UIAlertAction(title: "Save", style: .default) { [unowned vc = self] (alertAction) in
+        alert.addAction(UIAlertAction(title: "Save", style: .default) { (alertAction) in
             
             var textFields = alert.textFields
             weak var textField:UITextField?
@@ -1004,7 +1002,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     if textField!.text! != "" {
                         
-                        vc.cd?.updateEntity(id: wallet!.id, keyToUpdate: "label", newValue: textField!.text!, entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
+                        CoreDataService.updateEntity(id: wallet!.id!, keyToUpdate: "label", newValue: textField!.text!, entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
                             
                             textField = nil
                             textFields = nil
@@ -1091,7 +1089,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     vc.sortedWallets[index]["lastUsed"]  = Date()
                     vc.sortedWallets[index]["lastUpdated"] = Date()
                     
-                    vc.getRescanStatus(i: index, walletName: wallet.name) { [unowned vc = self] in
+                    vc.getRescanStatus(i: index, walletName: wallet.name!) { [unowned vc = self] in
                         
                         DispatchQueue.main.async {
                             
@@ -1148,16 +1146,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if !wallet.isActive {
                         
-            let enc = Encryption.sharedInstance
-            
-            enc.getNode { [unowned vc = self] (n, error) in
+            Encryption.getNode { (n, error) in
                 
                 if n != nil {
                     
                     if wallet.nodeId != n!.id {
                         
-                        vc.cd?.updateEntity(id: wallet.nodeId, keyToUpdate: "isActive", newValue: true, entityName: .nodes) {_ in }
-                        vc.cd?.updateEntity(id: n!.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) {_ in }
+                        CoreDataService.updateEntity(id: wallet.nodeId, keyToUpdate: "isActive", newValue: true, entityName: .nodes) {_ in }
+                        CoreDataService.updateEntity(id: n!.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) {_ in }
                         
                     }
                     
@@ -1189,9 +1185,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                     
                     // update the actual data
-                    cd?.updateEntity(id: wallet.id, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { [unowned vc = self] _ in
+                    CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { [unowned vc = self] _ in
                         
-                        vc.activate(walletToActivate: wallet.id, index: index)
+                        vc.activate(walletToActivate: wallet.id!, index: index)
                         
                     }
                     
@@ -1221,7 +1217,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                             
                     }
                     
-                    cd?.updateEntity(id: wallet.id, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
+                    CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
                     
                 }
                 
@@ -1252,7 +1248,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func activate(walletToActivate: UUID, index: Int) {
         
-        cd?.updateEntity(id: walletToActivate, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
+        CoreDataService.updateEntity(id: walletToActivate, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
             
             if success {
                                         
@@ -1276,7 +1272,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             if str.id != walletToActivate {
                 
-                cd?.updateEntity(id: str.id, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
+                CoreDataService.updateEntity(id: str.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
                     
                     if success {
                         
@@ -1310,8 +1306,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if !isLoading {
             
-            let enc = Encryption.sharedInstance
-            enc.getNode { [unowned vc = self] (node, error) in
+            Encryption.getNode { [unowned vc = self] (node, error) in
                 
                 if !error && node != nil {
                     
@@ -1347,7 +1342,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func getWalletBalance(wallet: WalletStruct, i: Int, completion: @escaping () -> Void) {
         
-        nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
+        nodeLogic?.loadExternalWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
             
             if success && dictToReturn != nil {
                 
@@ -1355,7 +1350,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let doub = (s.coldBalance).doubleValue
                 
                 vc.sortedWallets[i]["lastBalance"] = doub
-                vc.getRescanStatus(i: vc.index, walletName: wallet.name) { [unowned vc = self] in
+                vc.getRescanStatus(i: vc.index, walletName: wallet.name!) { [unowned vc = self] in
                     
                     DispatchQueue.main.async {
                         
@@ -1382,8 +1377,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if self.index < sortedWallets.count {
             
             let wallet = WalletStruct(dictionary: sortedWallets[self.index])
-            let enc = Encryption.sharedInstance
-            enc.getNode { [unowned vc = self] (node, error) in
+            Encryption.getNode { [unowned vc = self] (node, error) in
                 
                 if !error && node != nil {
                     
@@ -1426,30 +1420,25 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if i < self.sortedWallets.count {
             
-            let reducer = Reducer()
-            reducer.makeCommand(walletName: walletName, command: .getwalletinfo, param: "") { [unowned vc = self] in
+            Reducer.makeCommand(walletName: walletName, command: .getexternalwalletinfo, param: "") { [unowned vc = self] (object, errorDesc) in
 
-                if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
+                if let result = object as? NSDictionary {
 
-                    if let result = reducer.dictToReturn {
+                    if let scanning = result["scanning"] as? NSDictionary {
 
-                        if let scanning = result["scanning"] as? NSDictionary {
+                        if let _ = scanning["duration"] as? Int {
 
-                            if let _ = scanning["duration"] as? Int {
-
-                                let progress = (scanning["progress"] as! Double) * 100
-                                vc.sortedWallets[i]["progress"] = "\(Int(progress))"
-                                vc.sortedWallets[i]["isRescanning"] = true
-                                completion()
-
-                            }
-
-                        } else {
-
-                            vc.sortedWallets[i]["isRescanning"] = false
+                            let progress = (scanning["progress"] as! Double) * 100
+                            vc.sortedWallets[i]["progress"] = "\(Int(progress))"
+                            vc.sortedWallets[i]["isRescanning"] = true
                             completion()
 
                         }
+
+                    } else {
+
+                        vc.sortedWallets[i]["isRescanning"] = false
+                        completion()
 
                     }
 

@@ -5,13 +5,11 @@
 //  Created by Peter on 12/01/19.
 //  Copyright © 2019 BlockchainCommons. All rights reserved.
 //
-import KeychainSwift
 import UIKit
 import CoreData
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let cd = CoreDataService.sharedInstance
     var doneBlock : ((Bool) -> Void)?
     let ud = UserDefaults.standard
     var miningFeeText = ""
@@ -124,26 +122,25 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         
         switch indexPath.section {
             
-        case 0:
+//        case 0:
+//            thumbnail.image = UIImage(systemName: <#T##String#>)
             
+        case 0:
             thumbnail.image = UIImage(systemName: "lock.shield")
             label.text = "Export Tor V3 Authentication Public Key"
             return settingsCell
             
         case 1:
-            
             thumbnail.image = UIImage(systemName: "desktopcomputer")
             label.text = "Node Manager"
             return settingsCell
             
         case 2:
-            
             thumbnail.image = UIImage(systemName: "exclamationmark.triangle")
             label.text = "Reset app"
             return settingsCell
             
         case 3:
-            
             let cell = tableView.dequeueReusableCell(withIdentifier: "miningFeeCell", for: indexPath)
             let label = cell.viewWithTag(1) as! UILabel
             let slider = cell.viewWithTag(2) as! UISlider
@@ -172,7 +169,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             return cell
             
         default:
-            
             let cell = UITableViewCell()
             cell.backgroundColor = UIColor.clear
             return cell
@@ -183,7 +179,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func numberOfSections(in tableView: UITableView) -> Int {
         
-        return 4
+        return 5
         
     }
     
@@ -282,7 +278,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 func deleteAllData(entity: ENTITY){
 
-                    let managedContext = CoreDataService.sharedInstance.persistentContainer.viewContext
+                    let managedContext = CoreDataService.persistentContainer.viewContext
                     let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity.rawValue)
                     fetchRequest.returnsObjectsAsFaults = false
                     
@@ -315,19 +311,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 }
                 
-                let keychain = KeychainSwift()
-                
-                if keychain.clear() {
+                if KeyChain.remove(key: "privateKey"), KeyChain.remove(key: "userIdentifier") {
                     
-                    if didDelete {
-                        
-                        displayAlert(viewController: vc, isError: false, message: "app has been reset, please force quit and reopen the app")
-                        
-                    } else {
-                        
-                        displayAlert(viewController: vc, isError: true, message: "app reset partially failed")
-                        
-                    }
+                    displayAlert(viewController: vc, isError: false, message: "app has been reset, please force quit and reopen the app")
                     
                 } else {
                     

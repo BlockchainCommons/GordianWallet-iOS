@@ -109,9 +109,7 @@ public func isValidCharacters(_ string: String) -> Bool {
 
 public func getActiveWalletNow(completion: @escaping ((wallet: WalletStruct?, error: Bool)) -> Void) {
     
-    let enc = Encryption.sharedInstance
-    let cd = CoreDataService.sharedInstance
-    cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+    CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
         
         if errorDescription == nil {
             
@@ -119,7 +117,7 @@ public func getActiveWalletNow(completion: @escaping ((wallet: WalletStruct?, er
                 
                 var walletToReturn:WalletStruct!
                 
-                enc.getNode { (node, error) in
+                Encryption.getNode { (node, error) in
                     
                     if !error && node != nil {
                         
@@ -127,7 +125,7 @@ public func getActiveWalletNow(completion: @escaping ((wallet: WalletStruct?, er
                             
                             let w = WalletStruct(dictionary: wallet)
                             
-                            if w.isActive && !w.isArchived && node!.id == w.nodeId {
+                            if w.isActive && !w.isArchived && node!.id == w.nodeId && w.name != nil && w.id != nil {
                                 
                                 walletToReturn = w
                                 
@@ -272,7 +270,10 @@ public func isWalletRPC(command: BTC_CLI_COMMAND) -> Bool {
          .walletpassphrase,
          .walletpassphrasechange,
          .walletlock,
-         .abortrescan:
+         .abortrescan,
+         .fetchexternalbalances,
+         .getsweeptoaddress,
+         .getexternalwalletinfo:
         
         boolToReturn = true
         

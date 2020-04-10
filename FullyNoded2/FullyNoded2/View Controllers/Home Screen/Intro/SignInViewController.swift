@@ -8,7 +8,6 @@
 
 import UIKit
 import AuthenticationServices
-import KeychainSwift
 
 class SignInViewController: UIViewController, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding, UITextViewDelegate, UINavigationControllerDelegate {
     
@@ -71,10 +70,9 @@ class SignInViewController: UIViewController, ASAuthorizationControllerDelegate,
             DispatchQueue.main.async {
                 
                 let userIdentifier = appleIDCredential.user
-                let keychain = KeychainSwift()
-                keychain.set(userIdentifier, forKey: "userIdentifier")
-                self.navigationController?.popToRootViewController(animated: true)
-                
+                if KeyChain.set(userIdentifier.dataUsingUTF8StringEncoding, forKey: "userIdentifier") {
+                    self.navigationController?.popToRootViewController(animated: true)
+                }                
             }
             
         default:

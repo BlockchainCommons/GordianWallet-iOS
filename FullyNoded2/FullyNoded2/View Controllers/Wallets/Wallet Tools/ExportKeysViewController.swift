@@ -455,31 +455,22 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func getKeysFromBitcoinCore() {
        
-       let reducer = Reducer()
        let param = "\"\(wallet.descriptor)\", ''[0,999]''"
-       reducer.makeCommand(walletName: "", command: .deriveaddresses, param: param) { [unowned vc = self] in
+       Reducer.makeCommand(walletName: "", command: .deriveaddresses, param: param) { [unowned vc = self] (object, errorDesc) in
         
-            if !reducer.errorBool {
+            if let result = object as? NSArray {
                 
-                if let result = reducer.arrayToReturn {
-                    
-                    for (i, address) in result.enumerated() {
-                        if vc.keys.count > 0 {
-                            vc.keys[i]["address"] = (address as! String)
-                        }
-                        if i + 1 == result.count {
-                            DispatchQueue.main.async {
-                                vc.table.reloadData()
-                            }
+                for (i, address) in result.enumerated() {
+                    if vc.keys.count > 0 {
+                        vc.keys[i]["address"] = (address as! String)
+                    }
+                    if i + 1 == result.count {
+                        DispatchQueue.main.async {
+                            vc.table.reloadData()
                         }
                     }
-                    
-                } else {
-                    
-                    displayAlert(viewController: vc, isError: true, message: "error getting addresses from your node")
-                    
                 }
-               
+                
             } else {
                 
                 displayAlert(viewController: vc, isError: true, message: "error getting addresses from your node")
@@ -495,14 +486,13 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             
             if wallet != nil && !error {
                 
-                let enc = Encryption.sharedInstance
                 vc.wallet = wallet!
                 let parser = DescriptorParser()
                 let s = parser.descriptor(wallet!.descriptor)
                 
                 if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
                  
-                    enc.decryptData(dataToDecrypt: wallet!.seed) { (decryptedSeed) in
+                    Encryption.decryptData(dataToDecrypt: wallet!.seed) { (decryptedSeed) in
                         
                         if decryptedSeed != nil {
                             
@@ -526,7 +516,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                     
                 } else if wallet?.xprv != nil {
                     
-                    enc.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
+                    Encryption.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
                     
                         if decryptedXprv != nil {
                             

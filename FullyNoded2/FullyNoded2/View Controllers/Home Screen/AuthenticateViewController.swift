@@ -10,7 +10,6 @@ import UIKit
 
 class AuthenticateViewController: UIViewController {
     
-    let cd = CoreDataService.sharedInstance
     var pubkey = ""
     var tapQRGesture = UITapGestureRecognizer()
     var tapTextViewGesture = UITapGestureRecognizer()
@@ -46,47 +45,37 @@ class AuthenticateViewController: UIViewController {
     
     func getpubkey() {
         
-        cd.retrieveEntity(entityName: .auth) { [unowned vc = self] (authKeys, errorDescription) in
+        CoreDataService.retrieveEntity(entityName: .auth) { [unowned vc = self] (authKeys, errorDescription) in
             
             // add new authkeys incase none exist
             func addAuthKeys() {
                 
-                let keygen = KeyGen()
-                keygen.generate { (pubkey, privkey) in
+                let keypair = KeyGen.generate()
+                let pubkeyData = keypair.pubKey.dataUsingUTF8StringEncoding
+                let privkeyData = keypair.privKey.dataUsingUTF8StringEncoding
+                Encryption.encryptData(dataToEncrypt: privkeyData) { (encryptedPrivkey, error) in
                     
-                    if pubkey != nil && privkey != nil {
+                    if !error {
                         
-                        let pubkeyData = pubkey!.dataUsingUTF8StringEncoding
-                        let privkeyData = privkey!.dataUsingUTF8StringEncoding
-                        let enc = Encryption.sharedInstance
-                        enc.encryptData(dataToEncrypt: privkeyData) { (encryptedPrivkey, error) in
+                        let dict = ["privkey":encryptedPrivkey!, "pubkey":pubkeyData]
+                        CoreDataService.saveEntity(dict: dict, entityName: .auth) { [unowned vc = self] (success, errorDescription) in
                             
-                            if !error {
+                            if success {
                                 
-                                let dict = ["privkey":encryptedPrivkey!, "pubkey":pubkeyData]
-                                vc.cd.saveEntity(dict: dict, entityName: .auth) { (success, errorDescription) in
-                                    
-                                    if success {
-                                        
-                                        vc.pubkey = "descriptor:x25519:" + pubkey!
-                                        vc.showDescriptor()
-                                        
-                                    } else {
-                                        
-                                        displayAlert(viewController: vc, isError: true, message: "error saving auth keys")
-                                        
-                                    }
-                                    
-                                }
+                                vc.pubkey = "descriptor:x25519:" + vc.pubkey
+                                vc.showDescriptor()
                                 
                             } else {
                                 
-                                displayAlert(viewController: vc, isError: true, message: "error encrypting your privkey")
+                                displayAlert(viewController: vc, isError: true, message: "error saving auth keys")
                                 
                             }
                             
                         }
                         
+                    } else {
+                        
+                        displayAlert(viewController: vc, isError: true, message: "error encrypting your privkey")
                         
                     }
                     

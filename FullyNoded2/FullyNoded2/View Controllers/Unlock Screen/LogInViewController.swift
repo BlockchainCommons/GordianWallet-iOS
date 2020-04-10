@@ -9,7 +9,6 @@
 //need to copy account creation to create account view controller
 
 import UIKit
-import KeychainSwift
 import AuthenticationServices
 
 class LogInViewController: UIViewController, UITextFieldDelegate, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
@@ -54,10 +53,10 @@ class LogInViewController: UIViewController, UITextFieldDelegate, ASAuthorizatio
         switch authorization.credential {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
             let userIdentifier = appleIDCredential.user
-            let keychain = KeychainSwift()
-            keychain.set(userIdentifier, forKey: "userIdentifier")
-            DispatchQueue.main.async {
-                self.dismiss(animated: true, completion: nil)
+            if KeyChain.set(userIdentifier.dataUsingUTF8StringEncoding, forKey: "userIdentifier") {
+                DispatchQueue.main.async {
+                    self.dismiss(animated: true, completion: nil)
+                }
             }
         default:
             break

@@ -7,13 +7,10 @@
 //
 
 import UIKit
-import KeychainSwift
-import CryptoKit
 
 class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, OnionManagerDelegate {
     
     weak var nodeLogic = NodeLogic.sharedInstance
-    weak var enc = Encryption.sharedInstance
     weak var mgr = TorClient.sharedInstance
     weak var ud = UserDefaults.standard
     
@@ -89,7 +86,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        enc?.getNode { [unowned vc = self] (node, error) in
+        Encryption.getNode { [unowned vc = self] (node, error) in
             
             if !error && node != nil {
                 
@@ -101,7 +98,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     if !error && wallet != nil {
                         
                         vc.wallet = wallet
-                        vc.existingWalletName = wallet!.name
+                        vc.existingWalletName = wallet!.name!
                                                 
                     }
                     
@@ -188,10 +185,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
         }
-        
-        let keychain = KeychainSwift()
-                
-        if ud?.object(forKey: "acceptedDisclaimer1") == nil || keychain.get("userIdentifier") == nil {
+                        
+        if ud?.object(forKey: "acceptedDisclaimer1") == nil || KeyChain.getData("userIdentifier") == nil {
             
             ud?.set(false, forKey: "acceptedDisclaimer1")
             showIntro()
@@ -226,9 +221,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
 
         }
                 
-        DispatchQueue.main.async { [unowned vc = self] in
+        DispatchQueue.main.async {
             
-            vc.enc?.getNode { [unowned vc = self] (node, error) in
+            Encryption.getNode { [unowned vc = self] (node, error) in
                 
                 if !error && node != nil {
                                         
@@ -362,7 +357,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 }))
                 
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                        
+                alert.popoverPresentationController?.sourceView = self.view
                 vc.present(alert, animated: true, completion: nil)
                 
             }
@@ -555,7 +550,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         keysOnNodeDescription.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
         changeKeysOnNodeDescription.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
         deviceXprv.text = "xprv \(wallet.derivation)"
-        walletNameLabel.text = reducedName(name: wallet.name)
+        walletNameLabel.text = reducedName(name: wallet.name!)
         
         return cell
         
@@ -677,7 +672,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         deviceXprv.text = "xprv \(wallet.derivation)"
         offlineXprvLabel.text = "xprv \(wallet.derivation)"
         
-        walletNameLabel.text = reducedName(name: wallet.name)
+        walletNameLabel.text = reducedName(name: wallet.name!)
         
         return cell
         
@@ -1595,7 +1590,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         isRefreshingWalletData = true
         reloadSections([walletCellIndex])
         updateLabel(text: "     Getting wallet info...")
-        existingWalletName = wallet.name
+        existingWalletName = wallet.name!
         nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
             
             if success && dictToReturn != nil {
@@ -2035,7 +2030,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func nodeJustAdded() {
         
-        self.enc?.getNode { [unowned vc = self] (node, error) in
+        Encryption.getNode { [unowned vc = self] (node, error) in
             
             if !error && node != nil {
                 
@@ -2060,7 +2055,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 vc.doneBlock = { [unowned thisVc = self] result in
                     
                     // checks if a different node was activated when user went to settings and refreshes the table if they did
-                    thisVc.enc?.getNode { (node, error) in
+                    Encryption.getNode { (node, error) in
                         
                         if !error && node != nil {
                             

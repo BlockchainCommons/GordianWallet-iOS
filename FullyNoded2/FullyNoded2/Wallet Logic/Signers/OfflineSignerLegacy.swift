@@ -22,21 +22,11 @@ class OfflineSignerLegacy {
             
             if !error && wallet != nil {
                 
-                let reducer = Reducer()
-                
-                reducer.makeCommand(walletName: wallet!.name, command: .decodepsbt, param: "\"\(unsignedTx)\"") {
+                Reducer.makeCommand(walletName: wallet!.name!, command: .decodepsbt, param: "\"\(unsignedTx)\"") { (object, errorDesc) in
                     
-                    if !reducer.errorBool {
+                    if let decodedPSBT = object as? NSDictionary {
                         
-                        if let decodedPSBT = reducer.dictToReturn {
-                            
-                            parseDecodedPSBT(psbt: decodedPSBT)
-                            
-                        } else {
-                            
-                            completion(nil)
-                            
-                        }
+                        parseDecodedPSBT(psbt: decodedPSBT)
                         
                     } else {
                         
@@ -107,9 +97,8 @@ class OfflineSignerLegacy {
                             let scriptPubKey = dict["scriptPubKey"] as! NSDictionary
                             let scriptPubKeyHex = scriptPubKey["hex"] as! String
                             let scriptPubKeyToSign = ScriptPubKey.init(scriptPubKeyHex)!
-                            let keyfetcher = KeyFetcher()
                             if let bip32path = BIP32Path(path) {
-                                keyfetcher.key(path: bip32path) { (key, error) in
+                                KeyFetcher.key(path: bip32path) { (key, error) in
                                     if !error {
                                         let input = TxInput(Transaction(txid)!, voutInt, value, scriptsig, nil, scriptPubKeyToSign)!
                                         inputsToSign.append(input)

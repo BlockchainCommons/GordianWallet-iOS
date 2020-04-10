@@ -4,7 +4,7 @@
 //
 //  Created by Peter on 12/01/19.
 //  Copyright © 2019 BlockchainCommons. All rights reserved.
-//  Copyright © 2018 Verge Currency. All rights reserved.
+//
 //
 
 import Foundation
@@ -31,7 +31,6 @@ class TorClient {
     }
     
     static let sharedInstance = TorClient()
-    let cd = CoreDataService.sharedInstance
     public var state = TorState.none
     private var config: TorConfiguration = TorConfiguration()
     private var thread: TorThread?
@@ -291,11 +290,9 @@ class TorClient {
     }
     
     private func addAuthKeysToAuthDirectory(completion: @escaping () -> Void) {
-        print("addAuthKeysToAuthDirectory")
         
         let authPath = self.authDirPath
-        let enc = Encryption.sharedInstance
-        cd.retrieveEntity(entityName: .nodes) { [unowned vc = self] (entity, errorDescription) in
+        CoreDataService.retrieveEntity(entityName: .nodes) { (entity, errorDescription) in
             
             if entity != nil {
                 
@@ -305,7 +302,7 @@ class TorClient {
                     
                     for (i, n) in entity!.enumerated() {
                                                                         
-                        vc.cd.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
+                        CoreDataService.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
                             
                             if errorDescription == nil {
                                 
@@ -315,14 +312,14 @@ class TorClient {
                                         
                                         if let encryptedPrivkey = authKeys![0]["privkey"] as? Data {
                                             
-                                            enc.decryptData(dataToDecrypt: encryptedPrivkey) { (decryptedPrivkey) in
+                                            Encryption.decryptData(dataToDecrypt: encryptedPrivkey) { (decryptedPrivkey) in
                                                 
                                                 if decryptedPrivkey != nil {
                                                     
                                                     let authorizedKey = String(bytes: decryptedPrivkey!, encoding: .utf8)!
                                                     let encryptedOnionAddress = n["onionAddress"] as! Data
                                                     
-                                                    enc.decryptData(dataToDecrypt: encryptedOnionAddress) { (decryptedOnion) in
+                                                    Encryption.decryptData(dataToDecrypt: encryptedOnionAddress) { (decryptedOnion) in
                                                         
                                                         if decryptedOnion != nil {
                                                             

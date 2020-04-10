@@ -150,10 +150,9 @@ class SingleSigBuilder {
                 let bip32derivs = dict["bip32_derivs"] as! NSArray
                 let bip32deriv = bip32derivs[0] as! NSDictionary
                 let path = bip32deriv["path"] as! String
-                let keyFetcher = KeyFetcher()
                 if let bip32path = BIP32Path(path) {
                     
-                    keyFetcher.privKey(path: bip32path) { (privKey, error) in
+                    KeyFetcher.privKey(path: bip32path) { (privKey, error) in
                         
                         if !error {
                             
@@ -181,25 +180,16 @@ class SingleSigBuilder {
         
         func decodePsbt(psbt: String) {
             
-            let reducer = Reducer()
             let param = "\"\(psbt)\""
-            reducer.makeCommand(walletName: wallet.name, command: .decodepsbt, param: param) {
+            Reducer.makeCommand(walletName: wallet.name!, command: .decodepsbt, param: param) { (object, errorDesc) in
                 
-                if !reducer.errorBool {
+                if let dict = object as? NSDictionary {
                     
-                    if let dict = reducer.dictToReturn {
-                        
-                        parsePsbt(decodePsbt: dict, psbt: psbt)
-                        
-                    } else {
-                        
-                        completion((nil, nil, "Error decoding transaction"))
-                        
-                    }
+                    parsePsbt(decodePsbt: dict, psbt: psbt)
                     
                 } else {
                     
-                    completion((nil, nil, "Error decoding transaction: \(reducer.errorDescription)"))
+                    completion((nil, nil, errorDesc))
                     
                 }
                 
@@ -209,25 +199,24 @@ class SingleSigBuilder {
         
         func processPsbt(psbt: String) {
             
-            let reducer = Reducer()
             let param = "\"\(psbt)\", true, \"ALL\", true"
-            reducer.makeCommand(walletName: wallet.name, command: .walletprocesspsbt, param: param) {
+            Reducer.makeCommand(walletName: wallet.name!, command: .walletprocesspsbt, param: param) { (object, errorDesc) in
                 
-                if !reducer.errorBool {
+                if let dict = object as? NSDictionary {
                     
-                    if let dict = reducer.dictToReturn {
+                    if let processedPsbt = dict["psbt"] as? String {
                         
-                        if let processedPsbt = dict["psbt"] as? String {
-                            
-                            decodePsbt(psbt: processedPsbt)
-                            
-                        }
+                        decodePsbt(psbt: processedPsbt)
+                        
+                    } else {
+                        
+                        completion((nil, nil, "Error decoding transaction: \(errorDesc ?? "")"))
                         
                     }
                     
                 } else {
                     
-                    completion((nil, nil, "Error decoding transaction: \(reducer.errorDescription)"))
+                    completion((nil, nil, "Error decoding transaction: \(errorDesc ?? "")"))
                     
                 }
                 
@@ -237,7 +226,6 @@ class SingleSigBuilder {
         
         func createPsbt() {
 
-            let reducer = Reducer()
             let feeTarget = UserDefaults.standard.object(forKey: "feeTarget") as? Int ?? 432
             var outputsString = outputs.description
             outputsString = outputsString.replacingOccurrences(of: "[", with: "")
@@ -262,48 +250,40 @@ class SingleSigBuilder {
 
             let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"change_type\": \"\(changeType)\"}'', true"
 
-            reducer.makeCommand(walletName: wallet.name, command: .walletcreatefundedpsbt, param: param) {
-
-                if !reducer.errorBool {
-
-                    if let psbtDict = reducer.dictToReturn {
+            Reducer.makeCommand(walletName: wallet.name!, command: .walletcreatefundedpsbt, param: param) { (object, errorDesc) in
+                
+                if let psbtDict = object as? NSDictionary {
+                    
+                    if let psbt = psbtDict["psbt"] as? String {
                         
-                        if let psbt = psbtDict["psbt"] as? String {
+                        if self.wallet.type == "DEFAULT" || self.wallet.type == "CUSTOM" {
                             
-                            if self.wallet.type == "DEFAULT" || self.wallet.type == "CUSTOM" {
+                            if str.isHot || String(data: self.wallet.seed, encoding: .utf8) != "no seed" || self.wallet.xprv != nil {
                                 
-                                if str.isHot || String(data: self.wallet.seed, encoding: .utf8) != "no seed" || self.wallet.xprv != nil {
+                                if str.isP2WPKH || str.isBIP84 {
                                     
-                                    if str.isP2WPKH || str.isBIP84 {
-                                        
-                                        signSegwit(psbt: psbt)
-                                        
-                                    } else if str.isP2SHP2WPKH || str.isBIP49 {
-                                        
-                                        signSegwitWrapped(psbt: psbt)
-                                        
-                                    } else if str.isP2PKH || str.isBIP44 {
-                                        
-                                        signLegacy(psbt: psbt)
-                                        
-                                    }
+                                    signSegwit(psbt: psbt)
                                     
-                                } else {
-                                   
-                                    completion((nil, psbt, nil))
+                                } else if str.isP2SHP2WPKH || str.isBIP49 {
+                                    
+                                    signSegwitWrapped(psbt: psbt)
+                                    
+                                } else if str.isP2PKH || str.isBIP44 {
+                                    
+                                    signLegacy(psbt: psbt)
                                     
                                 }
                                 
+                            } else {
                                 
-                            } else if self.wallet.type == "MULTI" {
-                             
-                                processPsbt(psbt: psbt)
+                                completion((nil, psbt, nil))
                                 
                             }
                             
-                        } else {
                             
-                            completion((nil, nil, "Error creating psbt"))
+                        } else if self.wallet.type == "MULTI" {
+                            
+                            processPsbt(psbt: psbt)
                             
                         }
                         
@@ -312,13 +292,13 @@ class SingleSigBuilder {
                         completion((nil, nil, "Error creating psbt"))
                         
                     }
-
+                    
                 } else {
-
-                    completion((nil, nil, "Error creating psbt: \(reducer.errorDescription)"))
-
+                    
+                    completion((nil, nil, "Error creating psbt: \(errorDesc ?? "")"))
+                    
                 }
-
+                
             }
 
         }

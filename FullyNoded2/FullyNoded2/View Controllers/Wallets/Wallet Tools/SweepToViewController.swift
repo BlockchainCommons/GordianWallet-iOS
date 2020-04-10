@@ -11,7 +11,6 @@ import LibWally
 
 class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    weak var cd = CoreDataService.sharedInstance
     var doneBlock: ((Bool) -> Void)?
     let connectingView = ConnectingView()
     var signedTx = ""
@@ -63,7 +62,7 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let wallet = WalletStruct(dictionary: wallets[indexPath.section])
         walletLabel.text = wallet.label
-        walletName.text = reducedName(name: wallet.name)
+        walletName.text = reducedName(name: wallet.name!)
         walletBalance.text = "\(wallet.lastBalance)"
         walletDerivation.text = wallet.derivation + "/0"
         walletBirthdate.text = getDate(unixTime: wallet.birthdate)
@@ -157,7 +156,7 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func loadWallets() {
         
         wallets.removeAll()
-        cd?.retrieveEntity(entityName: .wallets) { [unowned vc = self] (entity, errorDescription) in
+        CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (entity, errorDescription) in
             
             if errorDescription == nil {
                 
@@ -272,17 +271,15 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     private func getMsigAddress(wallet: WalletStruct) {
         
-        let reducer = Reducer()
         let index = wallet.index + 1
         let param = "\"\(wallet.descriptor)\", [\(index),\(index)]"
-        
-        reducer.makeCommand(walletName: wallet.name, command: .deriveaddresses, param: param) { [unowned vc = self] in
+        Reducer.makeCommand(walletName: "", command: .deriveaddresses, param: param) { [unowned vc = self] (object, errorDesc) in
             
-            if !reducer.errorBool {
+            if let result = object as? NSArray {
                 
                 vc.updateIndex(wallet: wallet)
                 
-                if let address = reducer.arrayToReturn?[0] as? String {
+                if let address = result[0] as? String {
                     
                     vc.receivingAddress = address
                     vc.getInputs()
@@ -295,7 +292,7 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             } else {
                 
-                vc.showError(title: "Error Fetching address", message: "\(reducer.errorDescription)")
+                vc.showError(title: "Error Fetching address", message: "\(errorDesc ?? "")")
                 
             }
             
@@ -304,19 +301,15 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     private func filterDerivation(str: DescriptorStruct, wallet: WalletStruct) {
-        
         var param = ""
         
         if str.isP2PKH || str.isBIP44 || wallet.derivation.contains("44") {
-            
             param = "\"\", \"legacy\""
             
         } else if str.isP2WPKH || str.isBIP84 || wallet.derivation.contains("84")  {
-            
             param = "\"\", \"bech32\""
             
         } else if str.isP2SHP2WPKH || str.isBIP49 || wallet.derivation.contains("49")  {
-            
             param = "\"\", \"p2sh-segwit\""
             
         }
@@ -326,26 +319,13 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     private func getAddress(param: String, wallet: WalletStruct) {
-        
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: wallet.name, command: .getnewaddress, param: param) { [unowned vc = self] in
-            
-            if !reducer.errorBool {
-                
-                if let address = reducer.stringToReturn {
-                    
-                    vc.receivingAddress = address
-                    vc.getInputs()
-                    
-                } else {
-                    
-                    vc.showError(title: "Error Fetching address", message: "")
-                    
-                }
+        Reducer.makeCommand(walletName: wallet.name!, command: .getsweeptoaddress, param: param) { [unowned vc = self] (object, errorDesc) in
+            if let address = object as? String {
+                vc.receivingAddress = address
+                vc.getInputs()
                 
             } else {
-                
-                vc.showError(title: "Error Fetching address", message: reducer.errorDescription)
+                vc.showError(title: "Error Fetching address", message: "")
                 
             }
             
@@ -361,24 +341,15 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             if !error && wallet != nil {
              
-                let reducer = Reducer()
-                reducer.makeCommand(walletName: wallet!.name, command: .listunspent, param: "0") {
+                Reducer.makeCommand(walletName: wallet!.name!, command: .listunspent, param: "0") { (object, errorDesc) in
                     
-                    if !reducer.errorBool {
+                    if let resultArray = object as? NSArray {
                         
-                        if let resultArray = reducer.arrayToReturn {
-                            
-                            vc.parseUnspent(utxos: resultArray, wallet: wallet!)
-                            
-                        } else {
-                            
-                            vc.showError(title: "Error Fetching address", message: "")
-                            
-                        }
+                        vc.parseUnspent(utxos: resultArray, wallet: wallet!)
                         
                     } else {
                         
-                        vc.showError(title: "Error Fetching address", message: reducer.errorDescription)
+                        vc.showError(title: "Error Fetching address", message: "")
                         
                     }
                     
@@ -418,23 +389,14 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         updateStatusLabel(text: "building psbt")
         
-        let reducer = Reducer()
         let param = "''\(processedInputs())'', ''{\"\(receivingAddress)\":\(rounded(number: self.totalAmount))}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget()), \"subtractFeeFromOutputs\": [0], \"changeAddress\": \"\(receivingAddress)\"}'', true"
-        reducer.makeCommand(walletName: wallet.name, command: .walletcreatefundedpsbt, param: param) { [unowned vc = self] in
+        Reducer.makeCommand(walletName: wallet.name!, command: .walletcreatefundedpsbt, param: param) { [unowned vc = self] (object, errorDesc) in
             
-            if !reducer.errorBool {
+            if let psbtDict = object as? NSDictionary {
                 
-                if let psbtDict = reducer.dictToReturn {
+                if let psbt = psbtDict["psbt"] as? String {
                     
-                    if let psbt = psbtDict["psbt"] as? String {
-                        
-                        vc.filterSigning(wallet: wallet, psbt: psbt)
-                        
-                    } else {
-                        
-                        vc.showError(title: "Error building psbt", message: "")
-                        
-                    }
+                    vc.filterSigning(wallet: wallet, psbt: psbt)
                     
                 } else {
                     
@@ -444,7 +406,7 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             } else {
                 
-                vc.showError(title: "Error", message: reducer.errorDescription)
+                vc.showError(title: "Error building psbt", message: "")
                 
             }
             
@@ -464,15 +426,12 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
             if str.isHot || String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil {
                 
                 if str.isP2WPKH || str.isBIP84 {
-                    
                     signSegwit(psbt: psbt)
                     
                 } else if str.isP2SHP2WPKH || str.isBIP49 {
-                    
                     signSegwitWrapped(psbt: psbt)
                     
                 } else if str.isP2PKH || str.isBIP44 {
-                    
                     signLegacy(psbt: psbt)
                     
                 }
@@ -496,29 +455,20 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         updateStatusLabel(text: "node signing psbt")
         
-        let reducer = Reducer()
         let param = "\"\(psbt)\", true, \"ALL\", true"
-        reducer.makeCommand(walletName: wallet.name, command: .walletprocesspsbt, param: param) { [unowned vc = self] in
+        Reducer.makeCommand(walletName: wallet.name!, command: .walletprocesspsbt, param: param) { [unowned vc = self] (object, errorDesc) in
             
-            if !reducer.errorBool {
+            if let dict = object as? NSDictionary {
                 
-                if let dict = reducer.dictToReturn {
+                if let processedPsbt = dict["psbt"] as? String {
                     
-                    if let processedPsbt = dict["psbt"] as? String {
-                        
-                        vc.decodePsbt(psbt: processedPsbt, wallet: wallet)
-                        
-                    } else {
-                     
-                        vc.showError(title: "Error", message: "Error decoding transaction: \(reducer.errorDescription)")
-                        
-                    }
+                    vc.decodePsbt(psbt: processedPsbt, wallet: wallet)
+                    
+                } else {
+                 
+                    vc.showError(title: "Error", message: "Error decoding transaction: \(errorDesc ?? "")")
                     
                 }
-                
-            } else {
-                
-                vc.showError(title: "Error", message: "Error decoding transaction: \(reducer.errorDescription)")
                 
             }
             
@@ -530,25 +480,16 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         updateStatusLabel(text: "decoding psbt")
         
-        let reducer = Reducer()
         let param = "\"\(psbt)\""
-        reducer.makeCommand(walletName: wallet.name, command: .decodepsbt, param: param) { [unowned vc = self] in
+        Reducer.makeCommand(walletName: wallet.name!, command: .decodepsbt, param: param) { [unowned vc = self] (object, errorDesc) in
             
-            if !reducer.errorBool {
+            if let dict = object as? NSDictionary {
                 
-                if let dict = reducer.dictToReturn {
-                    
-                    vc.parsePsbt(decodePsbt: dict, psbt: psbt, wallet: wallet)
-                    
-                } else {
-                    
-                    vc.showError(title: "Error", message: "Error decoding transaction")
-                    
-                }
+                vc.parsePsbt(decodePsbt: dict, psbt: psbt, wallet: wallet)
                 
             } else {
                 
-                vc.showError(title: "Error", message: "Error decoding transaction: \(reducer.errorDescription)")
+                vc.showError(title: "Error", message: "Error decoding transaction")
                 
             }
             
@@ -568,10 +509,9 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
             let bip32derivs = dict["bip32_derivs"] as! NSArray
             let bip32deriv = bip32derivs[0] as! NSDictionary
             let path = bip32deriv["path"] as! String
-            let keyFetcher = KeyFetcher()
             if let bip32path = BIP32Path(path) {
                 
-                keyFetcher.privKey(path: bip32path) { [unowned vc = self] (privKey, error) in
+                KeyFetcher.privKey(path: bip32path) { [unowned vc = self] (privKey, error) in
                     
                     if !error {
                         
@@ -731,7 +671,7 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     private func updateIndex(wallet: WalletStruct) {
         
-        cd?.updateEntity(id: wallet.id, keyToUpdate: "index", newValue: wallet.index + 1, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
+        CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "index", newValue: wallet.index + 1, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
             
             if !success {
                 

@@ -11,16 +11,13 @@ import LibWally
 
 class KeyFetcher {
     
-    let cd = CoreDataService.sharedInstance
-    let enc = Encryption.sharedInstance
-    
-    func fingerprint(wallet: WalletStruct, completion: @escaping ((fingerprint: String?, error: Bool)) -> Void) {
+    class func fingerprint(wallet: WalletStruct, completion: @escaping ((fingerprint: String?, error: Bool)) -> Void) {
         
         let derivationPath = wallet.derivation
         
         if String(data: wallet.seed, encoding: .utf8) != "no seed" {
             
-            self.enc.decryptData(dataToDecrypt: wallet.seed) { (seed) in
+            Encryption.decryptData(dataToDecrypt: wallet.seed) { (seed) in
                 
                 if seed != nil {
                     
@@ -57,7 +54,7 @@ class KeyFetcher {
         
     }
     
-    func privKey(path: BIP32Path, completion: @escaping ((privKey: String?, error: Bool)) -> Void) {
+    class func privKey(path: BIP32Path, completion: @escaping ((privKey: String?, error: Bool)) -> Void) {
         
         getActiveWalletNow() { (wallet, error) in
             
@@ -67,7 +64,7 @@ class KeyFetcher {
                 
                 if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
                     
-                    self.enc.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
+                    Encryption.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
                         
                         if seed != nil {
                             
@@ -139,7 +136,7 @@ class KeyFetcher {
                                 
                                 if let accountLessPath = BIP32Path(processedDerivation) {
                                     
-                                    self.enc.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
+                                    Encryption.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
                                         
                                         if decryptedXprv != nil {
                                             
@@ -208,7 +205,7 @@ class KeyFetcher {
         
     }
     
-    func key(path: BIP32Path, completion: @escaping ((key: HDKey?, error: Bool)) -> Void) {
+    class func key(path: BIP32Path, completion: @escaping ((key: HDKey?, error: Bool)) -> Void) {
         
         getActiveWalletNow() { (wallet, error) in
             
@@ -216,8 +213,7 @@ class KeyFetcher {
                 
                 let derivationPath = wallet!.derivation
                 
-                let enc = Encryption.sharedInstance
-                enc.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
+                Encryption.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
                     
                     if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
                         
@@ -277,7 +273,7 @@ class KeyFetcher {
                                     
                                     if let accountLessPath = BIP32Path(processedDerivation) {
                                         
-                                        self.enc.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
+                                        Encryption.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
                                             
                                             if decryptedXprv != nil {
                                                 
@@ -332,71 +328,10 @@ class KeyFetcher {
         
     }
     
-//    func bip32Xpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
-//
-//        let derivationPath = wallet.derivation
-//
-//        let enc = Encryption()
-//        enc.decryptData(dataToDecrypt: wallet.seed) { (seed) in
-//
-//            if seed != nil {
-//
-//                let words = String(data: seed!, encoding: .utf8)!
-//                let mnenomicCreator = MnemonicCreator()
-//                mnenomicCreator.convert(words: words) { (mnemonic, error) in
-//
-//                    if !error {
-//
-//                        if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
-//
-//                            if let path = BIP32Path(derivationPath) {
-//
-//                                do {
-//
-//                                    let account = try masterKey.derive(path)
-//                                    completion((account.xpub,false))
-//
-//                                } catch {
-//
-//                                    completion((nil,true))
-//
-//                                }
-//
-//                            } else {
-//
-//                                completion((nil,true))
-//
-//                            }
-//
-//                        } else {
-//
-//                            completion((nil,true))
-//
-//                        }
-//
-//                    } else {
-//
-//                        completion((nil,true))
-//
-//                    }
-//
-//                }
-//
-//            } else {
-//
-//                completion((nil,true))
-//
-//            }
-//
-//        }
-//
-//    }
-    
-    func xpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
+    class func xpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
         
         let derivationPath = wallet.derivation
-        let enc = Encryption.sharedInstance
-        enc.decryptData(dataToDecrypt: wallet.seed) { (seed) in
+        Encryption.decryptData(dataToDecrypt: wallet.seed) { (seed) in
             
             if seed != nil {
                 
@@ -451,7 +386,7 @@ class KeyFetcher {
         
     }
     
-    func accountXpub(descriptorStruct: DescriptorStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
+    class func accountXpub(descriptorStruct: DescriptorStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
         
         if descriptorStruct.isMulti {
             
@@ -482,15 +417,14 @@ class KeyFetcher {
         
     }
     
-    func accountXprv(completion: @escaping ((xprv: String?, error: Bool)) -> Void) {
+    class func accountXprv(completion: @escaping ((xprv: String?, error: Bool)) -> Void) {
         
         getActiveWalletNow() { (wallet, error) in
             
             if wallet != nil && !error {
                 
                 let derivationPath = wallet!.derivation
-                let enc = Encryption.sharedInstance
-                enc.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
+                Encryption.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
                     
                     if seed != nil {
                         
@@ -558,23 +492,22 @@ class KeyFetcher {
         
     }
     
-    func musigAddress(completion: @escaping ((address: String?, error: Bool)) -> Void) {
+    class func musigAddress(completion: @escaping ((address: String?, error: Bool)) -> Void) {
         
         getActiveWalletNow { (wallet, error) in
             
             if wallet != nil && !error {
                 
-                let reducer = Reducer()
                 let index = wallet!.index + 1
                 let param = "\"\(wallet!.descriptor)\", [\(index),\(index)]"
                 
-                reducer.makeCommand(walletName: wallet!.name, command: .deriveaddresses, param: param) {
+                Reducer.makeCommand(walletName: wallet!.name!, command: .deriveaddresses, param: param) { (object, errorDesc) in
                     
-                    if !reducer.errorBool {
+                    if let addresses = object as? NSArray {
                         
-                        self.updateIndex(wallet: wallet!)
+                        updateIndex(wallet: wallet!)
                         
-                        if let address = reducer.arrayToReturn?[0] as? String {
+                        if let address = addresses[0] as? String {
                             
                             completion((address,false))
                             
@@ -586,7 +519,6 @@ class KeyFetcher {
                         
                     } else {
                         
-                        print("error deriving addresses: \(reducer.errorDescription)")
                         completion((nil,true))
                         
                     }
@@ -599,24 +531,23 @@ class KeyFetcher {
         
     }
     
-    func musigChangeAddress(completion: @escaping ((address: String?, error: Bool, errorDescription: String?)) -> Void) {
+    class func musigChangeAddress(completion: @escaping ((address: String?, error: Bool, errorDescription: String?)) -> Void) {
         
         getActiveWalletNow { (wallet, error) in
             
             if wallet != nil && !error {
                 
-                let reducer = Reducer()
                 let index = wallet!.index
                 
                 if wallet!.index < wallet!.maxRange {
                     
                     let param = "\"\(wallet!.changeDescriptor)\", [\(index),\(index)]"
                     
-                    reducer.makeCommand(walletName: wallet!.name, command: .deriveaddresses, param: param) {
+                    Reducer.makeCommand(walletName: wallet!.name!, command: .deriveaddresses, param: param) { (object, errorDesc) in
                         
-                        if !reducer.errorBool {
+                        if let addresses = object as? NSArray {
                             
-                            if let address = reducer.arrayToReturn?[0] as? String {
+                            if let address = addresses[0] as? String {
                                 
                                 completion((address,false,nil))
                                 
@@ -628,7 +559,7 @@ class KeyFetcher {
                             
                         } else {
                             
-                            completion((nil,true,"error deriving addresses: \(reducer.errorDescription)"))
+                            completion((nil,true,"error deriving addresses: \(errorDesc ?? "")"))
                             
                         }
                         
@@ -646,9 +577,9 @@ class KeyFetcher {
         
     }
     
-    private func updateIndex(wallet: WalletStruct) {
+    class func updateIndex(wallet: WalletStruct) {
         
-        self.cd.updateEntity(id: wallet.id, keyToUpdate: "index", newValue: wallet.index + 1, entityName: .wallets) { (success, errorDescription) in
+        CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "index", newValue: wallet.index + 1, entityName: .wallets) { (success, errorDescription) in
             
             if !success {
                 

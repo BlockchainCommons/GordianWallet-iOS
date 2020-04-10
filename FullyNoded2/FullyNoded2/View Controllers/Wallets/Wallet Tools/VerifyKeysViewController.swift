@@ -166,12 +166,10 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         connectingView.addConnectingView(vc: self, description: "getting the addresses from your node")
         
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: wallet.name, command: .deriveaddresses, param: "\"\(wallet.descriptor)\", ''[0,999]''") { [unowned vc = self] in
+        Reducer.makeCommand(walletName: wallet.name!, command: .deriveaddresses, param: "\"\(wallet.descriptor)\", ''[0,999]''") { [unowned vc = self] (object, errorDesc)  in
             
-            if !reducer.errorBool {
+            if let result = object as? NSArray {
                 
-                let result = reducer.arrayToReturn
                 vc.keys = result as! [String]
                 
                 DispatchQueue.main.async {

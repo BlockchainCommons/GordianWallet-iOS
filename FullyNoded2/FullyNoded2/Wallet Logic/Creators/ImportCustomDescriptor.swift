@@ -12,138 +12,128 @@ import Foundation
 
 class ImportCustomDescriptor {
     
-    func create(descriptor: String, completion: @escaping ((success: Bool, error:Bool, errorDescription: String?)) -> Void) {
-        
-        func importPrimary(str: WalletStruct, params: String, reducer: Reducer, newWallet: [String:Any], descriptor: String) {
-            print("importprimary")
-            
-            reducer.makeCommand(walletName: str.name, command: .importmulti, param: params) {
-                
-                if !reducer.errorBool {
-                    
-                    let walletSaver = WalletSaver()
-                    walletSaver.save(walletToSave: newWallet) { (success) in
-                        
-                        if success {
-                            
-                            completion((true, false, nil))
-                            
-                        } else {
-                            
-                            completion((false, true, "failed saving wallet locally"))
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                    completion((false, true, reducer.errorDescription))
-                    
-                }
-                
-            }
-            
-        }
-        
-        let enc = Encryption.sharedInstance
-        enc.getNode { (node, error) in
-            
-            if node != nil && !error {
-                
-                let reducer = Reducer()
-                var newWallet = [String:Any]()
-                newWallet["birthdate"] = keyBirthday()
-                newWallet["id"] = UUID()
-                newWallet["isActive"] = false
-                newWallet["name"] = "\(randomString(length: 10))_StandUp"
-                newWallet["lastUsed"] = Date()
-                newWallet["lastBalance"] = 0.0
-                newWallet["type"] = "CUSTOM"
-                newWallet["nodeId"] = node!.id
-                newWallet["isArchived"] = false
-                let str = WalletStruct(dictionary: newWallet)
-                let param = "\"\(str.name)\", true, true, \"\", true"
-                reducer.makeCommand(walletName: str.name, command: .createwallet, param: param) {
-                    
-                    if !reducer.errorBool {
-                        
-                        reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(descriptor)\"") {
-                            
-                            if !reducer.errorBool {
-                                
-                                if let result = reducer.dictToReturn {
-                                    
-                                    if let processedDescriptor = result["descriptor"] as? String {
-                                        
-                                        newWallet["descriptor"] = processedDescriptor
-                                        var params = ""
-                                        let descParser = DescriptorParser()
-                                        let descStruct = descParser.descriptor(processedDescriptor)
-                                        if descStruct.isHot {
-                                            
-                                            if !descStruct.isMulti {
-                                                
-                                                params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
-                                                
-                                            } else {
-                                                
-                                                params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
-                                                
-                                            }
-                                            
-                                        } else {
-                                            
-                                            if !descStruct.isMulti {
-                                                
-                                                params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
-                                                
-                                            } else {
-                                                
-                                                params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
-                                                
-                                            }
-                                            
-                                        }
-                                        
-                                        importPrimary(str: str, params: params, reducer: reducer, newWallet: newWallet, descriptor: processedDescriptor)
-                                        
-                                    } else {
-                                        
-                                        completion((false, true, "invalid response from bitcoind"))
-                                        
-                                    }
-                                    
-                                } else {
-                                    
-                                    completion((false, true, "invalid response from bitcoind"))
-                                    
-                                }
-                                                                
-                            } else {
-                                
-                                completion((false, true, reducer.errorDescription))
-                                
-                            }
-                            
-                        }
-                        
-                    } else {
-                        
-                        completion((false, true, reducer.errorDescription))
-                        
-                    }
-                    
-                }
-                
-            } else {
-                
-                completion((false, true, "error getting active node"))
-                
-            }
-            
-        }
-        
-    }
+//    func create(descriptor: String, completion: @escaping ((success: Bool, error:Bool, errorDescription: String?)) -> Void) {
+//        
+//        func importPrimary(str: WalletStruct, params: String, newWallet: [String:Any], descriptor: String) {
+//            print("importprimary")
+//            
+//            Reducer.makeCommand(walletName: str.name, command: .importmulti, param: params) { (object, errorDesc) in
+//                
+//                if !reducer.errorBool {
+//                    
+//                    let walletSaver = WalletSaver()
+//                    walletSaver.save(walletToSave: newWallet) { (success) in
+//                        
+//                        if success {
+//                            
+//                            completion((true, false, nil))
+//                            
+//                        } else {
+//                            
+//                            completion((false, true, "failed saving wallet locally"))
+//                            
+//                        }
+//                        
+//                    }
+//                    
+//                } else {
+//                    
+//                    completion((false, true, reducer.errorDescription))
+//                    
+//                }
+//                
+//            }
+//            
+//        }
+//        
+//        Encryption.getNode { (node, error) in
+//            
+//            if node != nil && !error {
+//                
+//                var newWallet = [String:Any]()
+//                newWallet["birthdate"] = keyBirthday()
+//                newWallet["id"] = UUID()
+//                newWallet["isActive"] = false
+//                newWallet["name"] = "\(randomString(length: 10))_StandUp"
+//                newWallet["lastUsed"] = Date()
+//                newWallet["lastBalance"] = 0.0
+//                newWallet["type"] = "CUSTOM"
+//                newWallet["nodeId"] = node!.id
+//                newWallet["isArchived"] = false
+//                let str = WalletStruct(dictionary: newWallet)
+//                let param = "\"\(str.name)\", true, true, \"\", true"
+//                Reducer.makeCommand(walletName: str.name, command: .createwallet, param: param) { (object, errorDesc) in
+//                    
+//                    if object != nil {
+//                        
+//                        Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(descriptor)\"") { (object, errorDesc) in
+//                            
+//                            if let result = object as? NSDictionary {
+//                                
+//                                if let processedDescriptor = result["descriptor"] as? String {
+//                                    
+//                                    newWallet["descriptor"] = processedDescriptor
+//                                    var params = ""
+//                                    let descParser = DescriptorParser()
+//                                    let descStruct = descParser.descriptor(processedDescriptor)
+//                                    if descStruct.isHot {
+//                                        
+//                                        if !descStruct.isMulti {
+//                                            
+//                                            params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
+//                                            
+//                                        } else {
+//                                            
+//                                            params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": false, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
+//                                            
+//                                        }
+//                                        
+//                                    } else {
+//                                        
+//                                        if !descStruct.isMulti {
+//                                            
+//                                            params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": true, \"internal\": false }]"
+//                                            
+//                                        } else {
+//                                            
+//                                            params = "[{ \"desc\": \"\(processedDescriptor)\", \"timestamp\": \"now\", \"range\": [0,999], \"watchonly\": true, \"label\": \"FullyNoded2\", \"keypool\": false, \"internal\": false }]"
+//                                            
+//                                        }
+//                                        
+//                                    }
+//                                    
+//                                    importPrimary(str: str, params: params, newWallet: newWallet, descriptor: processedDescriptor)
+//                                    
+//                                } else {
+//                                    
+//                                    completion((false, true, "invalid response from bitcoind"))
+//                                    
+//                                }
+//                                
+//                            } else {
+//                                
+//                                completion((false, true, errorDesc))
+//                                
+//                            }
+//                            
+//                        }
+//                        
+//                    } else {
+//                        
+//                        completion((false, true, errorDesc))
+//                        
+//                    }
+//                    
+//                }
+//                
+//            } else {
+//                
+//                completion((false, true, "error getting active node"))
+//                
+//            }
+//            
+//        }
+//        
+//    }
         
 }

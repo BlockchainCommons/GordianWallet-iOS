@@ -35,8 +35,7 @@ class TransactionViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         
-        executeNodeCommand(method: BTC_CLI_COMMAND.gettransaction,
-                              param: "\"\(txid)\", true")
+        executeNodeCommand(method: .gettransaction, param: "\"\(txid)\", true")
         
     }
 
@@ -44,64 +43,28 @@ class TransactionViewController: UIViewController {
         
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
-            let reducer = Reducer()
-            
-            func getResult() {
+            Reducer.makeCommand(walletName: wallet!.name!, command: .gettransaction, param: param) { (object, errorDescription) in
                 
-                if !reducer.errorBool {
+                if let dict = object as? NSDictionary {
                     
-                    switch method {
+                    DispatchQueue.main.async {
                         
-                    case BTC_CLI_COMMAND.gettransaction:
-                        
-                        if let dict = reducer.dictToReturn {
-                            
-                            DispatchQueue.main.async {
-                                
-                                vc.textView.text = "\(dict)"
-                                vc.creatingView.removeConnectingView()
-                                
-                            }
-                            
-                        } else {
-                            
-                            vc.creatingView.removeConnectingView()
-                            
-                            displayAlert(viewController: vc,
-                                         isError: true,
-                                         message: "error")
-                            
-                        }
-                        
-                    default:
-                        
-                        break
+                        vc.textView.text = "\(dict)"
+                        vc.creatingView.removeConnectingView()
                         
                     }
                     
                 } else {
                     
                     vc.creatingView.removeConnectingView()
-                    
-                    displayAlert(viewController: vc,
-                                 isError: true,
-                                 message: reducer.errorDescription)
+                    displayAlert(viewController: vc, isError: true, message: "error")
                     
                 }
                 
             }
-
-            
-            if wallet != nil && !error {
                 
-                reducer.makeCommand(walletName: wallet!.name, command: method,
-                                    param: param,
-                                    completion: getResult)
-                
-            }
-            
         }
-        
+                
     }
 
 }

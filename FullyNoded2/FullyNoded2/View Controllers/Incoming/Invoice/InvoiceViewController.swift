@@ -24,7 +24,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     let connectingView = ConnectingView()
     let qrGenerator = QRGenerator()
     let copiedLabel = UILabel()
-    weak var cd = CoreDataService.sharedInstance
     var refreshButton = UIBarButtonItem()
     var dataRefresher = UIBarButtonItem()
     var initialLoad = Bool()
@@ -60,7 +59,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         
         view.addGestureRecognizer(tap)
         addDoneButtonOnKeyboard()
-        load()
         
         if presentingModally {
             
@@ -71,6 +69,12 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             closeButtonOutlet.alpha = 0
             
         }
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        load()
         
     }
     
@@ -216,8 +220,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     func getMsigAddress() {
         print("getMsigAddress")
         
-        let keyFetcher = KeyFetcher()
-        keyFetcher.musigAddress { [unowned vc = self] (address, error) in
+        KeyFetcher.musigAddress { [unowned vc = self] (address, error) in
             
             if !error {
                 
@@ -394,25 +397,18 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     
     func executeNodeCommand(method: BTC_CLI_COMMAND, param: String) {
         
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: wallet.name, command: method, param: param) { [unowned vc = self] in
+        Reducer.makeCommand(walletName: wallet.name!, command: method, param: param) { [unowned vc = self] (object, errorDesc) in
                            
-            if !reducer.errorBool {
+            if let address = object as? String {
                 
                 DispatchQueue.main.async {
                     
                     vc.connectingView.removeConnectingView()
                     vc.initialLoad = false
-                    let address = reducer.stringToReturn
                     vc.removeLoader()
-                    
-                    if address != nil {
-                        
-                        vc.addressString = address!
-                        vc.addressOutlet.text = address!
-                        vc.showAddress(address: address!)
-                        
-                    }
+                    vc.addressString = address
+                    vc.addressOutlet.text = address
+                    vc.showAddress(address: address)
                     
                 }
                 
@@ -420,10 +416,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
                 
                 vc.connectingView.removeConnectingView()
                 vc.removeLoader()
-                
-                displayAlert(viewController: vc,
-                             isError: true,
-                             message: reducer.errorDescription)
+                displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                 
             }
                                 

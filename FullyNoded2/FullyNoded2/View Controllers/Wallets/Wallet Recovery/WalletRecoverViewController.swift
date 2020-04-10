@@ -53,8 +53,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func recoverNow(_ sender: Any) {
         
-        weak var enc = Encryption.sharedInstance
-        enc?.getNode { [unowned vc = self] (node, error) in
+        Encryption.getNode { [unowned vc = self] (node, error) in
             
             if !error && node != nil {
                 
@@ -537,8 +536,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         connectingView.addConnectingView(vc: self, description: "recovering your wallet")
         let recovery = RecoverWallet()
         
-        let enc = Encryption.sharedInstance
-        enc.getNode { [unowned vc = self] (node, error) in
+        Encryption.getNode { [unowned vc = self] (node, error) in
             
             if !error && node != nil {
                 

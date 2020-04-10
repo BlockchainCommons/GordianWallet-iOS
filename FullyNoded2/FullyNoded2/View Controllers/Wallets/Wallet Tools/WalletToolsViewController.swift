@@ -169,8 +169,7 @@ class WalletToolsViewController: UIViewController {
     private func rescanFromBirthdate() {
         
         self.creatingView.addConnectingView(vc: self, description: "initiating rescan")
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: self.wallet.name, command: .rescanblockchain, param: "\(self.wallet.blockheight)") { [unowned vc = self] in
+        Reducer.makeCommand(walletName: self.wallet.name!, command: .rescanblockchain, param: "\(self.wallet.blockheight)") { [unowned vc = self] _ in
             
             DispatchQueue.main.async {
                 
@@ -178,121 +177,9 @@ class WalletToolsViewController: UIViewController {
                 
             }
             
-            reducer.errorBool = false
-            reducer.errorDescription = ""
-            
-            reducer.makeCommand(walletName: vc.wallet.name, command: .getwalletinfo, param: "") {
+            Reducer.makeCommand(walletName: vc.wallet.name!, command: .getwalletinfo, param: "") { (object, errorDesc) in
                 
-                if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
-                    
-                    if let result = reducer.dictToReturn {
-                        
-                        if let scanning = result["scanning"] as? NSDictionary {
-                            
-                            if let _ = scanning["duration"] as? Int {
-                                
-                                vc.creatingView.removeConnectingView()
-                                let progress = (scanning["progress"] as! Double)
-                                showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
-                                
-                            }
-                            
-                        } else if (result["scanning"] as? Int) == 0 {
-                            
-                            vc.creatingView.removeConnectingView()
-                            showAlert(vc: vc, title: "Scan Complete", message: "The wallet is not currently scanning.")
-                            
-                        } else {
-                            
-                            vc.creatingView.removeConnectingView()
-                            showAlert(vc: vc, title: "Error", message: "Unable to determine if wallet is rescanning.")
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                    vc.creatingView.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: reducer.errorDescription)
-                    
-                }
-                
-            }
-            
-        }
-        
-    }
-    
-    private func fullRescan() {
-        
-        self.creatingView.addConnectingView(vc: self, description: "initiating rescan")
-        
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: self.wallet.name, command: .rescanblockchain, param: "") { [unowned vc = self] in
-            
-            DispatchQueue.main.async {
-                
-                vc.creatingView.label.text = "confirming rescan status"
-                
-            }
-            
-            reducer.errorBool = false
-            reducer.errorDescription = ""
-            
-            reducer.makeCommand(walletName: vc.wallet.name, command: .getwalletinfo, param: "") {
-                
-                if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
-                    
-                    if let result = reducer.dictToReturn {
-                        
-                        if let scanning = result["scanning"] as? NSDictionary {
-                            
-                            if let _ = scanning["duration"] as? Int {
-                                
-                                vc.creatingView.removeConnectingView()
-                                let progress = (scanning["progress"] as! Double)
-                                showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
-                                
-                            }
-                            
-                        } else if (result["scanning"] as? Int) == 0 {
-                            
-                            vc.creatingView.removeConnectingView()
-                            showAlert(vc: vc, title: "Scan Complete", message: "The wallet is not currently scanning.")
-                            
-                        } else {
-                            
-                            vc.creatingView.removeConnectingView()
-                            showAlert(vc: vc, title: "Scan Complete", message: "Unable to determine if wallet is rescanning.")
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                    vc.creatingView.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: reducer.errorDescription)
-                    
-                }
-                
-            }
-            
-        }
-        
-    }
-    
-    private func checkScanStatus() {
-        
-        self.creatingView.addConnectingView(vc: self, description: "checking scan status")
-        
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: self.wallet.name, command: .getwalletinfo, param: "") { [unowned vc = self] in
-            
-            if !reducer.errorBool || reducer.errorDescription.description.contains("abort") {
-                
-                if let result = reducer.dictToReturn {
+                if let result = object as? NSDictionary {
                     
                     if let scanning = result["scanning"] as? NSDictionary {
                         
@@ -307,7 +194,7 @@ class WalletToolsViewController: UIViewController {
                     } else if (result["scanning"] as? Int) == 0 {
                         
                         vc.creatingView.removeConnectingView()
-                        showAlert(vc: vc, title: "Scan Complete", message: "Wallet not rescanning.")
+                        showAlert(vc: vc, title: "Scan Complete", message: "The wallet is not currently scanning.")
                         
                     } else {
                         
@@ -316,12 +203,104 @@ class WalletToolsViewController: UIViewController {
                         
                     }
                     
+                } else {
+                    
+                    vc.creatingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Scan Complete", message: errorDesc ?? "unknown error")
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    private func fullRescan() {
+        
+        self.creatingView.addConnectingView(vc: self, description: "initiating rescan")
+        
+        Reducer.makeCommand(walletName: self.wallet.name!, command: .rescanblockchain, param: "") { [unowned vc = self] _ in
+            
+            DispatchQueue.main.async {
+                
+                vc.creatingView.label.text = "confirming rescan status"
+                
+            }
+            
+            Reducer.makeCommand(walletName: vc.wallet.name!, command: .getwalletinfo, param: "") { (object, errorDesc) in
+                
+                if let result = object as? NSDictionary {
+                    
+                    if let scanning = result["scanning"] as? NSDictionary {
+                        
+                        if let _ = scanning["duration"] as? Int {
+                            
+                            vc.creatingView.removeConnectingView()
+                            let progress = (scanning["progress"] as! Double)
+                            showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                            
+                        }
+                        
+                    } else if (result["scanning"] as? Int) == 0 {
+                        
+                        vc.creatingView.removeConnectingView()
+                        showAlert(vc: vc, title: "Scan Complete", message: "The wallet is not currently scanning.")
+                        
+                    } else {
+                        
+                        vc.creatingView.removeConnectingView()
+                        showAlert(vc: vc, title: "Scan Complete", message: "Unable to determine if wallet is rescanning.")
+                        
+                    }
+                    
+                } else {
+                    
+                    vc.creatingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: errorDesc ?? "unknown error")
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    private func checkScanStatus() {
+        
+        self.creatingView.addConnectingView(vc: self, description: "checking scan status")
+        
+        Reducer.makeCommand(walletName: self.wallet.name!, command: .getwalletinfo, param: "") { [unowned vc = self] (object, errorDesc) in
+            
+            if let result = object as? NSDictionary {
+                
+                if let scanning = result["scanning"] as? NSDictionary {
+                    
+                    if let _ = scanning["duration"] as? Int {
+                        
+                        vc.creatingView.removeConnectingView()
+                        let progress = (scanning["progress"] as! Double)
+                        showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                        
+                    }
+                    
+                } else if (result["scanning"] as? Int) == 0 {
+                    
+                    vc.creatingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Scan Complete", message: "Wallet not rescanning.")
+                    
+                } else {
+                    
+                    vc.creatingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "Unable to determine if wallet is rescanning.")
+                    
                 }
                 
             } else {
                 
                 vc.creatingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: reducer.errorDescription)
+                showAlert(vc: vc, title: "Error", message: errorDesc ?? "unknown error")
                 
             }
             
@@ -333,10 +312,9 @@ class WalletToolsViewController: UIViewController {
         
         self.creatingView.addConnectingView(vc: self, description: "aborting rescan")
         
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: self.wallet.name, command: .abortrescan, param: "") { [unowned vc = self] in
+        Reducer.makeCommand(walletName: self.wallet.name!, command: .abortrescan, param: "") { [unowned vc = self] (object, errorDesc) in
             
-            if !reducer.errorBool {
+            if object != nil {
                 
                 vc.creatingView.removeConnectingView()
                 showAlert(vc: vc, title: "Rescan aborted", message: "")
@@ -344,7 +322,7 @@ class WalletToolsViewController: UIViewController {
             } else {
                 
                 vc.creatingView.removeConnectingView()
-                showAlert(vc: vc, title: "Error", message: reducer.errorDescription)
+                showAlert(vc: vc, title: "Error", message: errorDesc ?? "unknown error")
                 
             }
             

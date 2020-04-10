@@ -174,33 +174,24 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                         
                     }
                     
-                    let reducer = Reducer()
-                    reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) {
+                    Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { (object, errorDesc) in
                         
-                        if !reducer.errorBool {
+                        if let dict = object as? NSDictionary {
                             
-                            if let dict = reducer.dictToReturn {
+                            let desc = dict["descriptor"] as! String
+                            let digest = SHA256.hash(data: desc.dataUsingUTF8StringEncoding)
+                            let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
+                            
+                            DispatchQueue.main.async {
                                 
-                                let desc = dict["descriptor"] as! String
-                                let digest = SHA256.hash(data: desc.dataUsingUTF8StringEncoding)
-                                let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
-                                
-                                DispatchQueue.main.async {
-                                    
-                                    vc.walletName.text = vc.reducedName(name: walletName)
-                                    vc.addressTable.reloadData()
-                                    
-                                }
-                                
-                            } else {
-                                
-                                displayAlert(viewController: vc, isError: true, message: "unknown error")
+                                vc.walletName.text = vc.reducedName(name: walletName)
+                                vc.addressTable.reloadData()
                                 
                             }
                             
                         } else {
                             
-                            displayAlert(viewController: vc, isError: true, message: reducer.errorDescription)
+                            displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                             
                         }
                         
@@ -238,90 +229,69 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             
         }
         
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: walletName, command: .getdescriptorinfo, param: "\"\(desc)\"") { [unowned vc = self] in
+        Reducer.makeCommand(walletName: walletName, command: .getdescriptorinfo, param: "\"\(desc)\"") { [unowned vc = self] (object, errorDesc) in
             
-            if !reducer.errorBool {
+            if let result = object as? NSDictionary {
                 
-                if let result = reducer.dictToReturn {
+                let descriptor = result["descriptor"] as! String
+                Reducer.makeCommand(walletName: walletName, command: .deriveaddresses, param: "\"\(descriptor)\", [0,4]") { [unowned vc = self] (object, errorDesc) in
                     
-                    let descriptor = result["descriptor"] as! String
-                    reducer.makeCommand(walletName: walletName, command: .deriveaddresses, param: "\"\(descriptor)\", [0,4]") { [unowned vc = self] in
+                    if let result = object as? NSArray {
                         
-                        if !reducer.errorBool {
+                        for address in result {
                             
-                            if let result = reducer.arrayToReturn {
-                                
-                                for address in result {
-                                    
-                                    vc.addresses.append(address as! String)
-                                    
-                                }
-                                
-                                vc.connectingView.removeConnectingView()
-                                
-                            } else {
-                                
-                                vc.connectingView.removeConnectingView()
-                                displayAlert(viewController: vc, isError: true, message: "Error fetching addresses for that wallet")
-                                
-                            }
-                                            
-                            DispatchQueue.main.async {
-                                
-                                vc.addressTable.reloadData()
-                                
-                            }
-                            
-                            vc.walletDict["name"] = walletName
-                            let wallet = WalletStruct(dictionary: vc.walletDict)
-                            vc.nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
-                                
-                                if success && dictToReturn != nil {
-                                
-                                    let s = HomeStruct(dictionary: dictToReturn!)
-                                    let doub = (s.coldBalance).doubleValue
-                                    
-                                    DispatchQueue.main.async {
-                                        
-                                        vc.walletBalance.text = "\(doub)"
-                                        
-                                    }
-                                    
-                                } else {
-                                    
-                                    DispatchQueue.main.async {
-                                        
-                                        vc.walletBalance.text = "error fetching balance"
-                                        
-                                    }
-                                    
-                                }
-                                
-                            }
-                            
-                        } else {
-                            
-                            vc.connectingView.removeConnectingView()
-                            displayAlert(viewController: vc, isError: true, message: "Error fetching addresses for that wallet")
+                            vc.addresses.append(address as! String)
                             
                         }
                         
+                        vc.connectingView.removeConnectingView()
+                        
+                        DispatchQueue.main.async {
+                            
+                            vc.addressTable.reloadData()
+                            
+                        }
+                        
+                        vc.walletDict["name"] = walletName
+                        let wallet = WalletStruct(dictionary: vc.walletDict)
+                        vc.nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
+                            
+                            if success && dictToReturn != nil {
+                                
+                                let s = HomeStruct(dictionary: dictToReturn!)
+                                let doub = (s.coldBalance).doubleValue
+                                
+                                DispatchQueue.main.async {
+                                    
+                                    vc.walletBalance.text = "\(doub)"
+                                    
+                                }
+                                
+                            } else {
+                                
+                                DispatchQueue.main.async {
+                                    
+                                    vc.walletBalance.text = "error fetching balance"
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    } else {
+                        
+                        vc.connectingView.removeConnectingView()
+                        displayAlert(viewController: vc, isError: true, message: "Error fetching addresses for that wallet")
+                        
                     }
                     
-                    
-                } else {
-                    
-                    vc.connectingView.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: "getdesriptorinfo error")
-                    
                 }
-                
                 
             } else {
                 
                 vc.connectingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "getdesriptorinfo error: \(reducer.errorDescription)")
+                displayAlert(viewController: vc, isError: true, message: "getdesriptorinfo error: \(errorDesc ?? "")")
                 
             }
             
@@ -347,27 +317,17 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             
         }
         
-        let reducer = Reducer()
-        reducer.makeCommand(walletName: walletName, command: .deriveaddresses, param: "\"\(desc)\", [0,4]") { [unowned vc = self] in
+        Reducer.makeCommand(walletName: walletName, command: .deriveaddresses, param: "\"\(desc)\", [0,4]") { [unowned vc = self] (object, errorDesc) in
             
-            if !reducer.errorBool {
+            if let result = object as? NSArray {
                 
-                if let result = reducer.arrayToReturn {
+                for address in result {
                     
-                    for address in result {
-                        
-                        vc.addresses.append(address as! String)
-                        
-                    }
-                    
-                    vc.connectingView.removeConnectingView()
-                    
-                } else {
-                    
-                    vc.connectingView.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: "Error fetching addresses for that wallet")
+                    vc.addresses.append(address as! String)
                     
                 }
+                
+                vc.connectingView.removeConnectingView()
                                 
                 DispatchQueue.main.async {
                     

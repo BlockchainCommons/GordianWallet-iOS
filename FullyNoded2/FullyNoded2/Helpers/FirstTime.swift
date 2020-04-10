@@ -7,76 +7,54 @@
 //
 
 import Foundation
-import KeychainSwift
-import CryptoKit
 
 class FirstTime {
     
-    let cd = CoreDataService.sharedInstance
     let ud = UserDefaults.standard
-    let keychain = KeychainSwift()
-    let enc = Encryption.sharedInstance
     
     func firstTimeHere(completion: @escaping ((Bool)) -> Void) {
-        print("firstTimeHere")
         
-        if #available(iOS 13.0, *) {
+        let privateKey = Encryption.privateKey()
+        if KeyChain.set(privateKey, forKey: "privateKey") {
             
-            let privateKey = P256.Signing.PrivateKey().rawRepresentation
-            
-            if keychain.set(privateKey, forKey: "privateKey") {
+            let keypair = KeyGen.generate()
+            let pubkeyData = keypair.pubKey.dataUsingUTF8StringEncoding
+            let privkeyData = keypair.privKey.dataUsingUTF8StringEncoding
+            Encryption.encryptData(dataToEncrypt: privkeyData) { (encryptedPrivkey, error) in
                 
-                let keygen = KeyGen()
-                keygen.generate { (pubkey, privkey) in
+                if !error {
                     
-                    if pubkey != nil && privkey != nil {
+                    let dict = ["privkey":encryptedPrivkey!, "pubkey":pubkeyData]
+                    
+                    CoreDataService.saveEntity(dict: dict, entityName: .auth) { (success, errorDescription) in
                         
-                        let pubkeyData = pubkey!.dataUsingUTF8StringEncoding
-                        let privkeyData = privkey!.dataUsingUTF8StringEncoding
-                        
-                        self.enc.encryptData(dataToEncrypt: privkeyData) { (encryptedPrivkey, error) in
+                        if success {
                             
-                            if !error {
-                                
-                                let dict = ["privkey":encryptedPrivkey!, "pubkey":pubkeyData]
-                                
-                                self.cd.saveEntity(dict: dict, entityName: .auth) { (success, errorDescription) in
-                                    
-                                    if success {
-                                        
-                                        self.ud.set(false, forKey: "firstTime")
-                                        completion(true)
-                                        
-                                    } else {
-                                        
-                                        print("error saving auth keys")
-                                        completion(false)
-                                        
-                                    }
-                                    
-                                }
-                                
-                            } else {
-                                
-                                print("error encrypting pubkey")
-                                completion(false)
-                                
-                            }
+                            self.ud.set(false, forKey: "firstTime")
+                            completion(true)
+                            
+                        } else {
+                            
+                            print("error saving auth keys")
+                            completion(false)
                             
                         }
                         
-                        
                     }
+                    
+                } else {
+                    
+                    print("error encrypting pubkey")
+                    completion(false)
                     
                 }
                 
-                
-            } else {
-                
-                print("keychain did not set privkey")
-                completion(false)
-                
             }
+            
+        } else {
+            
+            print("keychain did not set privkey")
+            completion(false)
             
         }
         

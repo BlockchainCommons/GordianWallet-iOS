@@ -407,8 +407,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             
         }
         
-        let enc = Encryption.sharedInstance
-        enc.getNode { [unowned vc = self] (node, error) in
+        Encryption.getNode { [unowned vc = self] (node, error) in
             
             if !error && node != nil {
                 

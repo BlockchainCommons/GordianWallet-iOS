@@ -136,24 +136,24 @@ class ImportViewController: UIViewController, UINavigationControllerDelegate {
     
     func processDescriptor(url: String) {
         
-        connectingView.addConnectingView(vc: self, description: "creating custom wallet")
-        
-        let importWallet = ImportCustomDescriptor()
-        importWallet.create(descriptor: url) { [unowned vc = self] (success, error, errorDescription) in
-            
-            if !error && success {
-                
-                vc.connectingView.removeConnectingView()
-                vc.importComplete!(true)
-                vc.dismiss(animated: true, completion: nil)
-                
-            } else {
-                
-                displayAlert(viewController: vc, isError: true, message: errorDescription!)
-                
-            }
-            
-        }
+//        connectingView.addConnectingView(vc: self, description: "creating custom wallet")
+//        
+//        let importWallet = ImportCustomDescriptor()
+//        importWallet.create(descriptor: url) { [unowned vc = self] (success, error, errorDescription) in
+//            
+//            if !error && success {
+//                
+//                vc.connectingView.removeConnectingView()
+//                vc.importComplete!(true)
+//                vc.dismiss(animated: true, completion: nil)
+//                
+//            } else {
+//                
+//                displayAlert(viewController: vc, isError: true, message: errorDescription!)
+//                
+//            }
+//            
+//        }
                 
     }
     /*

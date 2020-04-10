@@ -9,13 +9,8 @@
 import Foundation
 
 class CreateMultiSigWallet {
-    
-    let cd = CoreDataService.sharedInstance
-    let enc = Encryption.sharedInstance
-    
-    func create(wallet: WalletStruct, nodeXprv: String, nodeXpub: String, completion: @escaping ((success: Bool, error: String?)) -> Void) {
         
-        let reducer = Reducer()
+    func create(wallet: WalletStruct, nodeXprv: String, nodeXpub: String, completion: @escaping ((success: Bool, error: String?)) -> Void) {
         
         func importChange() {
             
@@ -23,13 +18,13 @@ class CreateMultiSigWallet {
             var descriptor = "\(array[0])"
             descriptor = descriptor.replacingOccurrences(of: nodeXpub, with: nodeXprv)
             
-            reducer.makeCommand(walletName: wallet.name, command: .getdescriptorinfo, param: "\"\(descriptor)\"") {
+            Reducer.makeCommand(walletName: wallet.name!, command: .getdescriptorinfo, param: "\"\(descriptor)\"") { (object, errorDesc) in
                 
-                if !reducer.errorBool {
+                if let dict = object as? NSDictionary {
                     
-                    if let updatedDescriptor = reducer.dictToReturn?["descriptor"] as? String {
+                    if let updatedDescriptor = dict["descriptor"] as? String {
                         
-                        if let checksum = reducer.dictToReturn?["checksum"] as? String {
+                        if let checksum = dict["checksum"] as? String {
                             
                             let array = updatedDescriptor.split(separator: "#")
                             
@@ -39,15 +34,15 @@ class CreateMultiSigWallet {
                                 
                                 var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
                                 params = params.replacingOccurrences(of: nodeXpub, with: nodeXprv)
-                                reducer.makeCommand(walletName: wallet.name, command: .importmulti, param: params) {
+                                Reducer.makeCommand(walletName: wallet.name!, command: .importmulti, param: params) { (object, errorDesc) in
                                     
-                                    if !reducer.errorBool {
+                                    if object != nil {
                                         
                                         completion((true, nil))
                                         
                                     } else {
                                         
-                                        completion((false, reducer.errorDescription))
+                                        completion((false, errorDesc))
                                         
                                     }
                                     
@@ -67,32 +62,28 @@ class CreateMultiSigWallet {
         
         func importMulti(param: Any) {
         
-            reducer.makeCommand(walletName: wallet.name, command: .importmulti, param: param) {
+            Reducer.makeCommand(walletName: wallet.name!, command: .importmulti, param: param) { (object, errorDesc) in
                 
-                if !reducer.errorBool {
+                if let result = object as? NSArray {
                     
-                    if let result = reducer.arrayToReturn {
+                    if result.count > 0 {
                         
-                        if result.count > 0 {
+                        if let dict = result[0] as? NSDictionary {
                             
-                            if let dict = result[0] as? NSDictionary {
+                            if let success = dict["success"] as? Bool {
                                 
-                                if let success = dict["success"] as? Bool {
+                                if success {
                                     
-                                    if success {
+                                    print("success")
+                                    importChange()
+                                    
+                                } else {
+                                    
+                                    if let errorDict = dict["error"] as? NSDictionary {
                                         
-                                        print("success")
-                                        importChange()
-                                        
-                                    } else {
-                                        
-                                        if let errorDict = dict["error"] as? NSDictionary {
+                                        if let error = errorDict["message"] as? String {
                                             
-                                            if let error = errorDict["message"] as? String {
-                                                
-                                                completion((false, "error importing multi: \(error)"))
-                                                
-                                            }
+                                            completion((false, "error importing multi: \(error)"))
                                             
                                         }
                                         
@@ -108,7 +99,7 @@ class CreateMultiSigWallet {
                     
                 } else {
                     
-                    completion((false, reducer.errorDescription))
+                    completion((false, errorDesc))
                     
                 }
                 
@@ -118,23 +109,22 @@ class CreateMultiSigWallet {
         
         func createWallet() {
                 
-                let reducer = Reducer()
-                let param = "\"\(wallet.name)\", false, true, \"\", true"
-                reducer.makeCommand(walletName: wallet.name, command: .createwallet, param: param) {
+                let param = "\"\(wallet.name!)\", false, true, \"\", true"
+                Reducer.makeCommand(walletName: wallet.name!, command: .createwallet, param: param) { (object, errorDesc) in
                     
-                    if !reducer.errorBool {
+                    if object != nil {
                         
                         let array = (wallet.descriptor).split(separator: "#")
                         var descriptor = "\(array[0])"
                         descriptor = descriptor.replacingOccurrences(of: nodeXpub, with: nodeXprv)
                         
-                        reducer.makeCommand(walletName: wallet.name, command: .getdescriptorinfo, param: "\"\(descriptor)\"") {
+                        Reducer.makeCommand(walletName: wallet.name!, command: .getdescriptorinfo, param: "\"\(descriptor)\"") { (object, errorDesc) in
                             
-                            if !reducer.errorBool {
+                            if let dict = object as? NSDictionary {
                                 
-                                if let updatedDescriptor = reducer.dictToReturn?["descriptor"] as? String {
+                                if let updatedDescriptor = dict["descriptor"] as? String {
                                     
-                                    if let checksum = reducer.dictToReturn?["checksum"] as? String {
+                                    if let checksum = dict["checksum"] as? String {
                                         
                                         let array = updatedDescriptor.split(separator: "#")
                                         let hotDescriptor = "\(array[0])" + "#" + checksum
@@ -153,7 +143,7 @@ class CreateMultiSigWallet {
                         
                     } else {
                         
-                        completion((false, reducer.errorDescription))
+                        completion((false, errorDesc))
                         
                     }
                     

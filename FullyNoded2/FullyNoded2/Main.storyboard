@@ -1837,13 +1837,11 @@ For more information regarding wallet recovery please see our Recovery.md file.<
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="m5T-sk-K3t">
                                 <rect key="frame" x="16" y="83" width="343" height="384"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">FullyNoded 2 is made possible by Blockchain Commons, A "not-for-profit" benefit corporation. Founded to support blockchain infrastructure &amp; the broader security industry through cryptographic &amp; privacy protocol implementations, research, and standards.
+                                <mutableString key="text">FullyNoded 2 is a project of Blockchain Commons. We are proudly a "not-for-profit" social benefit corporation committed to open source &amp; open development. Our work is focused on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web. It's funded entirely by donations and collaborative partnerships with people like you.
 
-Please consider sponsoring this specific project by becoming a GitHub Sponsor.
+For the FullyNoded 2 source code and detailed information about how the app works, please visit the GitHub repo.
 
-Please consider supporting us via donations at our BTCPayServer.
-
-Checkout the GitHub repo which includes the source code and detailed information about how the app works.</string>
+If you find this project useful, and would like to learn more about Blockchain Commons, click the Blockchain Commons logo within the app. You can become a Blockchain Commons patron and support projects like this!</mutableString>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -2284,11 +2282,11 @@ Blockchain Commons and Fully Noded 2 never share any data with any third party e
                                 <constraints>
                                     <constraint firstAttribute="height" constant="392" id="hCD-Ju-9qf"/>
                                 </constraints>
-                                <string key="text">FullyNoded 2 is open sourced, free software being built to make it easier for beginners and experts alike to use Bitcoin in a more secure, self sovereign way. We need your help! You can do your part by sponsoring the app or sending a donation. Each contribution will go a long way towards making this app and other important projects sustainable.
+                                <mutableString key="text">FullyNoded 2 is free, open-source software that is a project of Blockchain Commons. Our goal is to make it easier for beginners and experts alike to use Bitcoin in a secure, self-sovereign way, where you truly control your own digital assets.
 
-Blockchain Commons is a “not-for-profit” benefit corporation, with a strong commitment to open source and a defensive patent strategy. With support from you we can continue building a self sovereign future!
+Creating this sort of tool is one of the primary mandates of Blockchain Commons, a "not-for-profit" social benefit corporation committed to open source &amp; open development. And, we need your help! Our work is funded entirely by donations and collaborative partnerships with people like you. Every contribution will be spent on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web. Your support can help to make this app and other important projects sustainable, as we continue building a self-sovereign future.
 
-You can either support us by becoming a GitHub sponsor in which case GitHub is generously offering to match any contribution up to $5,000. If you want to support us with Bitcoin please use our BTCPayServer option below.</string>
+You can either support us by becoming a GitHub sponsor, where GitHub is matching the first $5,000, or by contributing bitcoins through our BTCPay server.</mutableString>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -2937,7 +2935,7 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
             </objects>
             <point key="canvasLocation" x="4194" y="-498"/>
         </scene>
-        <!--v0.0.84-->
+        <!--v0.0.85-->
         <scene sceneID="Ajv-p7-tUm">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" id="AS8-ke-Yxh" customClass="SettingsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -3057,7 +3055,7 @@ You can either support us by becoming a GitHub sponsor in which case GitHub is g
                         <viewLayoutGuide key="safeArea" id="Cze-jj-bFe"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Settings" id="n34-O3-Fyo"/>
-                    <navigationItem key="navigationItem" title="v0.0.84" id="YNb-Gd-Hqq"/>
+                    <navigationItem key="navigationItem" title="v0.0.85" id="YNb-Gd-Hqq"/>
                     <connections>
                         <outlet property="settingsTable" destination="hcp-eG-lok" id="xPg-8r-KBs"/>
                         <segue destination="bKH-sI-MiM" kind="show" identifier="goLogIn" id="qed-hl-jG5"/>

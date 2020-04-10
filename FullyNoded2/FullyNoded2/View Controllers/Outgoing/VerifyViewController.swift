@@ -28,13 +28,11 @@ class VerifyViewController: UIViewController {
         
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
-            let reducer = Reducer()
-            
-            func getResult() {
+            if wallet != nil && !error {
                 
-                if !reducer.errorBool {
+                Reducer.makeCommand(walletName: wallet!.name!, command: .getaddressinfo, param: param) { (object, errorDesc) in
                     
-                    if let dict = reducer.dictToReturn {
+                    if let dict = object as? NSDictionary {
                         
                         DispatchQueue.main.async {
                             
@@ -43,22 +41,14 @@ class VerifyViewController: UIViewController {
                             
                         }
                         
+                    } else {
+                        
+                        vc.connectingView.removeConnectingView()
+                        displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
+                        
                     }
                     
-                } else {
-                    
-                    vc.connectingView.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: reducer.errorDescription)
-                    
                 }
-                
-            }
-            
-            if wallet != nil && !error {
-                
-                reducer.makeCommand(walletName: wallet!.name, command: .getaddressinfo,
-                                    param: param,
-                                    completion: getResult)
                 
             }
             

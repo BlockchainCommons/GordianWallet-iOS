@@ -10,11 +10,7 @@ import Foundation
 import UIKit
 
 class QuickConnect {
-    
-    let cd = CoreDataService.sharedInstance
-    let enc = Encryption.sharedInstance
-    var errorBool = Bool()
-    var errorDescription = ""
+
     var nodeToUpdate:UUID!
     
     // MARK: QuickConnect uri examples
@@ -22,7 +18,7 @@ class QuickConnect {
     // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233b.onion:1309/?
     // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233b.onion:1309?
     
-    func addNode(vc: UIViewController, url: String, completion: @escaping () -> Void) {
+    func addNode(vc: UIViewController, url: String, completion: @escaping ((success: Bool, errorDesc: String?)) -> Void) {
         
         var host = ""
         var rpcPassword = ""
@@ -128,15 +124,12 @@ class QuickConnect {
             
         } else {
             
-            self.errorBool = true
-            completion()
+            completion((false, "url error"))
             
         }
         
         guard host != "", rpcUser != "", rpcPassword != "" else {
-            self.errorBool = true
-            self.errorDescription = "That is not a valid QuickConnect URI"
-            completion()
+            completion((false, "That is not a valid QuickConnect URI"))
             return
         }
         
@@ -154,7 +147,7 @@ class QuickConnect {
         
         func deactivate(newNodeID: UUID) {
             
-            self.cd.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+            CoreDataService.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
                 
                 if errorDescription == nil {
                     
@@ -164,7 +157,7 @@ class QuickConnect {
                             
                             if node ["id"] as! UUID != newNodeID {
                                 
-                                self.cd.updateEntity(id: (node["id"] as! UUID), keyToUpdate: "isActive", newValue: false, entityName: .nodes) {_ in }
+                                CoreDataService.updateEntity(id: (node["id"] as! UUID), keyToUpdate: "isActive", newValue: false, entityName: .nodes) {_ in }
                                 
                             }
                             
@@ -181,31 +174,18 @@ class QuickConnect {
         // adding a new node
         if nodeToUpdate == nil {
             
-            self.enc.saveNode(newNode: node) { (success, error) in
+            Encryption.saveNode(newNode: node) { (success, error) in
                 
                 if error == nil && success {
                     
                     print("standup node added")
-                    self.errorBool = false
                     deactivate(newNodeID: node["id"] as! UUID)
                     node.removeAll()
-                    completion()
+                    completion((true, nil))
                     
                 } else {
                     
-                    self.errorBool = true
-                    
-                    if error != nil {
-                        
-                        self.errorDescription = "Error adding QuickConnect node: \(error!)"
-                        completion()
-                        
-                    } else {
-                        
-                        self.errorDescription = "Error adding QuickConnect node"
-                        completion()
-                        
-                    }
+                    completion((false, "Error adding QuickConnect node: \(error ?? "Error adding QuickConnect node")"))
                     
                 }
                 
@@ -214,30 +194,17 @@ class QuickConnect {
         // updating an exisiting node
         } else {
             print("update a node")
-            self.enc.updateNode(newCredentials: node, nodeToUpdate: nodeToUpdate) { (success, error) in
+            Encryption.updateNode(newCredentials: node, nodeToUpdate: nodeToUpdate) { (success, error) in
                 
                 if error == nil && success {
                     
                     print("node updated")
-                    self.errorBool = false
                     node.removeAll()
-                    completion()
+                    completion((true, nil))
                     
                 } else {
                     
-                    self.errorBool = true
-                    
-                    if error != nil {
-                        
-                        self.errorDescription = "Error updating QuickConnect node: \(error!)"
-                        completion()
-                        
-                    } else {
-                        
-                        self.errorDescription = "Error updating QuickConnect node"
-                        completion()
-                        
-                    }
+                    completion((false, "Error updating QuickConnect node: \(error ?? "unknown error")"))
                     
                 }
                 

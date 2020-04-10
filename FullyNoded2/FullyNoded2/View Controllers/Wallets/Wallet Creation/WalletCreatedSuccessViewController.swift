@@ -14,7 +14,6 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
     @IBOutlet var textField: UITextField!
     @IBOutlet var nextOutlet: UIButton!
     
-    weak var cd = CoreDataService.sharedInstance
     let tap = UITapGestureRecognizer()
     var wallet = [String:Any]()
     var recoveryPhrase = ""
@@ -83,7 +82,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         
         if textField.text != "" {
             
-            cd?.updateEntity(id: w.id, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
+            CoreDataService.updateEntity(id: w.id!, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
                 
                 if success {
                     
@@ -127,7 +126,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         
         if textField.text != "" {
             
-            self.cd?.updateEntity(id: w.id, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
+            CoreDataService.updateEntity(id: w.id!, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
                 
                 if success {
                     
