@@ -28,6 +28,7 @@
 		D047DE0B242C651F004BC26D /* WalletCreatedWordsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DE0A242C651F004BC26D /* WalletCreatedWordsViewController.swift */; };
 		D047DE0D242D984E004BC26D /* RefillSingleSig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DE0C242D984E004BC26D /* RefillSingleSig.swift */; };
 		D047DE0F242DDEB3004BC26D /* LocalNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DE0E242DDEB3004BC26D /* LocalNode.swift */; };
+		D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650072441A78E00754ACF /* VerifyKeysViewController.swift */; };
 		D080F49523F120B200CC8D6E /* ImportCustomDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */; };
 		D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724023F0EDBB00847DC8 /* AppDelegate.swift */; };
 		D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724223F0EDBB00847DC8 /* SceneDelegate.swift */; };
@@ -43,7 +44,6 @@
 		D09D731023F0F3C000847DC8 /* NodeLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D728923F0F3BF00847DC8 /* NodeLogic.swift */; };
 		D09D731123F0F3C000847DC8 /* ExportKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D728D23F0F3BF00847DC8 /* ExportKeysViewController.swift */; };
 		D09D731223F0F3C000847DC8 /* SeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D728F23F0F3BF00847DC8 /* SeedViewController.swift */; };
-		D09D731723F0F3C000847DC8 /* VerifyKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729423F0F3BF00847DC8 /* VerifyKeysViewController.swift */; };
 		D09D731823F0F3C000847DC8 /* NodeManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */; };
 		D09D731923F0F3C000847DC8 /* VerifyAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */; };
 		D09D731A23F0F3C000847DC8 /* QRDisplayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */; };
@@ -177,6 +177,7 @@
 		D047DE0A242C651F004BC26D /* WalletCreatedWordsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedWordsViewController.swift; sourceTree = "<group>"; };
 		D047DE0C242D984E004BC26D /* RefillSingleSig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillSingleSig.swift; sourceTree = "<group>"; };
 		D047DE0E242DDEB3004BC26D /* LocalNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNode.swift; sourceTree = "<group>"; };
+		D05650072441A78E00754ACF /* VerifyKeysViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyKeysViewController.swift; sourceTree = "<group>"; };
 		D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCustomDescriptor.swift; sourceTree = "<group>"; };
 		D09D723D23F0EDBB00847DC8 /* FullyNoded 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FullyNoded 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D09D724023F0EDBB00847DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -199,7 +200,6 @@
 		D09D728923F0F3BF00847DC8 /* NodeLogic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeLogic.swift; sourceTree = "<group>"; };
 		D09D728D23F0F3BF00847DC8 /* ExportKeysViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExportKeysViewController.swift; sourceTree = "<group>"; };
 		D09D728F23F0F3BF00847DC8 /* SeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeedViewController.swift; sourceTree = "<group>"; };
-		D09D729423F0F3BF00847DC8 /* VerifyKeysViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyKeysViewController.swift; sourceTree = "<group>"; };
 		D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeManagerViewController.swift; sourceTree = "<group>"; };
 		D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyAddressViewController.swift; sourceTree = "<group>"; };
 		D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRDisplayerViewController.swift; sourceTree = "<group>"; };
@@ -363,11 +363,18 @@
 			isa = PBXGroup;
 			children = (
 				D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */,
-				D0CA5414240750AA0096EE26 /* RecoverWallet.swift */,
 				D0D0F5652410E3F0007E0763 /* RecoveryInfoViewController.swift */,
 				D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */,
 			);
 			path = "Wallet Recovery";
+			sourceTree = "<group>";
+		};
+		D05650062441A45800754ACF /* Recovery */ = {
+			isa = PBXGroup;
+			children = (
+				D0CA5414240750AA0096EE26 /* RecoverWallet.swift */,
+			);
+			path = Recovery;
 			sourceTree = "<group>";
 		};
 		D09D723423F0EDBB00847DC8 = {
@@ -595,6 +602,7 @@
 		D09D72BB23F0F3C000847DC8 /* Miscellaneous */ = {
 			isa = PBXGroup;
 			children = (
+				D09D729923F0F3BF00847DC8 /* QRViewController.swift */,
 				D09D72BC23F0F3C000847DC8 /* Utilities.swift */,
 				D09D72BD23F0F3C000847DC8 /* StandUp-Remote-Bridging-Header.h */,
 				D09D72BF23F0F3C000847DC8 /* Base32 Key Gen */,
@@ -740,6 +748,7 @@
 		D09D72FB23F0F3C000847DC8 /* Wallet Logic */ = {
 			isa = PBXGroup;
 			children = (
+				D05650062441A45800754ACF /* Recovery */,
 				D0CD026F23FA380B009F2E7F /* Transaction Builders */,
 				D0CD026E23FA37E8009F2E7F /* Saver */,
 				D0CD026D23FA37C8009F2E7F /* Creators */,
@@ -752,11 +761,10 @@
 		D0CD026923FA3631009F2E7F /* Wallet Tools */ = {
 			isa = PBXGroup;
 			children = (
+				D05650072441A78E00754ACF /* VerifyKeysViewController.swift */,
 				D09D728D23F0F3BF00847DC8 /* ExportKeysViewController.swift */,
-				D09D729423F0F3BF00847DC8 /* VerifyKeysViewController.swift */,
 				D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */,
 				D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */,
-				D09D729923F0F3BF00847DC8 /* QRViewController.swift */,
 				D0C4E63024173F1B00E49DA5 /* WalletToolsViewController.swift */,
 				D047DDF62423464A004BC26D /* SweepToViewController.swift */,
 				D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */,
@@ -1143,7 +1151,6 @@
 				D09D733E23F0F3C000847DC8 /* MnemonicCreator.swift in Sources */,
 				D09D734223F0F3C000847DC8 /* QuickConnect.swift in Sources */,
 				D09D735D23F0F3C000847DC8 /* CustomButton.swift in Sources */,
-				D09D731723F0F3C000847DC8 /* VerifyKeysViewController.swift in Sources */,
 				D047DE0D242D984E004BC26D /* RefillSingleSig.swift in Sources */,
 				D09D736523F0F3C000847DC8 /* QRScanner.swift in Sources */,
 				D047DE05242B34BA004BC26D /* SignInViewController.swift in Sources */,
@@ -1189,6 +1196,7 @@
 				D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */,
 				D047DDFB242B324A004BC26D /* WhatIsFN2ViewController.swift in Sources */,
 				D09D736F23F0F3C000847DC8 /* OfflineSigner.swift in Sources */,
+				D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */,
 				D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */,
 				D09D735E23F0F3C000847DC8 /* QRGenerator.swift in Sources */,
 				D09D732E23F0F3C000847DC8 /* MainMenuViewController.swift in Sources */,
@@ -1350,7 +1358,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.85;
+				CURRENT_PROJECT_VERSION = 0.0.87;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1363,7 +1371,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.85;
+				MARKETING_VERSION = 0.0.87;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1379,7 +1387,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.85;
+				CURRENT_PROJECT_VERSION = 0.0.87;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1392,7 +1400,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.85;
+				MARKETING_VERSION = 0.0.87;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

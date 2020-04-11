@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import LibWally
 
 class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -15,38 +14,17 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     var words = ""
     var derivation = ""
     var keys = [String]()
-    var comingFromSettings = Bool()
     let connectingView = ConnectingView()
     var wallet:WalletStruct!
     @IBOutlet var table: UITableView!
-    @IBOutlet var saveButtonOutlet: UIButton!
     @IBOutlet var derivationLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
                 
-        if comingFromSettings {
-            
-            saveButtonOutlet.alpha = 0
-            
-        }
-        
-        saveButtonOutlet.clipsToBounds = true
-        saveButtonOutlet.layer.cornerRadius = 8
         derivationLabel.adjustsFontSizeToFitWidth = true
         derivationLabel.text = ""
         loadActiveWallet()
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
-        if comingFromSettings {
-            
-            table.translatesAutoresizingMaskIntoConstraints = true
-            table.frame = CGRect(x: table.frame.origin.x, y: table.frame.origin.y, width: table.frame.width, height: view.frame.height)
-            
-        }
         
     }
     
@@ -91,7 +69,6 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func loadActiveWallet() {
-        print("loadActiveWallet")
         
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             

@@ -32,23 +32,17 @@ import Foundation
 class DescriptorParser {
     
     func descriptor(_ descriptor: String) -> DescriptorStruct {
-        
         var dict = [String:Any]()
-        
         if descriptor.contains("multi") {
-            
             dict["isMulti"] = true
             
             if descriptor.contains("sortedmulti") {
-                
                 dict["isBIP67"] = true
                 
             }
             
             let arr = descriptor.split(separator: "(")
-            
             for (i, item) in arr.enumerated() {
-                
                 if i == 0 {
                     
                     switch item {
@@ -61,17 +55,14 @@ class DescriptorParser {
                         
                     case "sh":
                         if arr[1] == "wsh" {
-                            
                             dict["format"] = "P2SH-P2WSH"
                             
                         } else {
-                            
                             dict["format"] = "P2SH"
                             
                         }
                         
                     default:
-                        
                         break
                         
                     }
@@ -185,7 +176,7 @@ class DescriptorParser {
                         
         } else {
             
-            dict["isMulti"] = false
+            dict["isMulti"] = false            //"wpkh([a2ef0b6b/84'/1'/0'/0/39]03eae3e576a0689d47b47315b31b6013f43c2d0ba979df4e0ac6630a3d9a3bebe2)#vymryghq"
             
             if descriptor.contains("[") && descriptor.contains("]") {
                 
@@ -202,51 +193,53 @@ class DescriptorParser {
                 }
                 
                 let arr3 = derivation.split(separator: "/")
+                print("arr3 = \(arr3)")
                 var path = "m"
                 
                 for (i, item) in arr3.enumerated() {
-                    
                     switch i {
                         
                     case 1:
-                        let type = item
-                        path += "/" + type
+                        path += "/" + item
                         
                     default:
-                        
                         if i != 0 {
-                            
                             path += "/" + item
                             
-                        } else {
+                            print("path = \(path)")
                             
+                            if i + 1 == arr3.count {
+                                
+                                dict["derivation"] = path
+                                
+                                switch path {
+                                                        
+                                case "m/44'/0'/0'":
+                                    dict["isBIP44"] = true
+                                    dict["isP2PKH"] = true
+                                    
+                                case "m/84'/0'/0'":
+                                    dict["isBIP84"] = true
+                                    dict["isP2WPKH"] = true
+                                    
+                                case "m/49'/0'/0'":
+                                    dict["isBIP49"] = true
+                                    dict["isP2SHP2WPKH"] = true
+                                    
+                                default:
+                                    
+                                    break
+                                    
+                                }
+                                
+                            }
+                            
+                        } else {
                             break
                             
                         }
                         
                     }
-                    
-                }
-                
-                dict["derivation"] = path
-                
-                switch path {
-                                        
-                case "m/44'/0'/0'":
-                    dict["isBIP44"] = true
-                    dict["isP2PKH"] = true
-                    
-                case "m/84'/0'/0'":
-                    dict["isBIP84"] = true
-                    dict["isP2WPKH"] = true
-                    
-                case "m/49'/0'/0'":
-                    dict["isBIP49"] = true
-                    dict["isP2SHP2WPKH"] = true
-                    
-                default:
-                    
-                    break
                     
                 }
                 
@@ -318,6 +311,8 @@ class DescriptorParser {
             dict["isHot"] = true
             
         }
+        
+        print("descriptorDict = \(dict)")
         
         return DescriptorStruct(dictionary: dict)
         

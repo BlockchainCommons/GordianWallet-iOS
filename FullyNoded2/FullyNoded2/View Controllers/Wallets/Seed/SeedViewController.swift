@@ -94,9 +94,9 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             textToCopy = "Private Key Descriptors: \(privateKeyDescriptor)"
             message = "your private key descriptor was copied to your clipboard and will be erased in one minute"
             
-        case 4:
-            textToCopy = "Bitcoin Core recovery commands: \(recoveryText)"
-            message = "your recovery command was copied to your clipboard and will be erased in one minute"
+//        case 4:
+//            textToCopy = "Bitcoin Core recovery commands: \(recoveryText)"
+//            message = "your recovery command was copied to your clipboard and will be erased in one minute"
             
         default:
             break
@@ -169,12 +169,12 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             barTitle = "Private Key Descriptor"
             goToQRDisplayer()
             
-        case 4:
-            
-            itemToDisplay = recoveryText
-            infoText = "This command can be pasted into a terminal to add all your devices private keys to your node, this would be useful if you lost your device as you can use your node to recover your wallet."
-            barTitle = "Recovery Command"
-            goToQRDisplayer()
+//        case 4:
+//
+//            itemToDisplay = recoveryText
+//            infoText = "This command can be pasted into a terminal to add all your devices private keys to your node, this would be useful if you lost your device as you can use your node to recover your wallet."
+//            barTitle = "Recovery Command"
+//            goToQRDisplayer()
             
         default:
             
@@ -265,7 +265,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                             
                                             vc.privateKeyDescriptor = "\(privKeyDesc)\n\n\(changeDescriptor)"
                                             
-                                            vc.recoveryText = "bitcoin-cli importmulti { \"desc\": \"\(privKeyDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }\n\nbitcoin-cli importmulti { \"desc\": \"\(changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": true, \"internal\": true }"
+//                                            vc.recoveryText = "bitcoin-cli importmulti { \"desc\": \"\(privKeyDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }\n\nbitcoin-cli importmulti { \"desc\": \"\(changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": true, \"internal\": true }"
                                             
                                         } else {
                                          
@@ -294,7 +294,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                                                                         
                                             vc.privateKeyDescriptor = "\(primaryDesc)\n\n\(changeDesc)"
                                             
-                                            vc.recoveryText = "bitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(primaryDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(changeDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
+//                                            vc.recoveryText = "bitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(primaryDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(changeDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
                                             
                                         }
                                         
@@ -328,15 +328,15 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     
                 }
                 
-                if s.isMulti {
-                                        
-                    vc.recoveryText = "bitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.descriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
-                    
-                } else {
-                    
-                    vc.recoveryText = "bitcoin-cli importmulti { \"desc\": \"\(vc.wallet.descriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": true, \"internal\": true }"
-                    
-                }
+//                if s.isMulti {
+//
+//                    vc.recoveryText = "bitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.descriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
+//
+//                } else {
+//
+//                    vc.recoveryText = "bitcoin-cli importmulti { \"desc\": \"\(vc.wallet.descriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": true, \"internal\": true }"
+//
+//                }
                 
                 DispatchQueue.main.async {
                     
@@ -370,7 +370,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func numberOfSections(in tableView: UITableView) -> Int {
                 
-        return 5
+        return 4//5
         
     }
     
@@ -506,10 +506,10 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             return cell
             
-        case 4:
-            
-            cell.textLabel?.text = self.recoveryText
-            return cell
+//        case 4:
+//
+//            cell.textLabel?.text = self.recoveryText
+//            return cell
             
         default:
             
@@ -625,7 +625,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     
                 case 3: return 150
                     
-                case 4: return 120
+                //case 4: return 120
                     
                 default:
                     
@@ -705,11 +705,11 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 150)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 150)
                     
-                case 4:
-                    
-                    label.text = "You may paste this command directly into a terminal where Bitcoin Core is running and it will automatically import all the private keys from the seed which is held on this device for the current wallet. In order to fully recover your wallet you will also need either your node that you created the wallet on or your recovery seed which should have been saved by you when you created this wallet."
-                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 120)
-                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 120)
+//                case 4:
+//
+//                    label.text = "You may paste this command directly into a terminal where Bitcoin Core is running and it will automatically import all the private keys from the seed which is held on this device for the current wallet. In order to fully recover your wallet you will also need either your node that you created the wallet on or your recovery seed which should have been saved by you when you created this wallet."
+//                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 120)
+//                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 120)
                     
                 default:
                     
@@ -739,9 +739,9 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
                     
-                case 4: label.text = "You may paste these two commands directly into a terminal where Bitcoin Core is running and your node will automatically import all the private keys from the current wallet."
-                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
-                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
+//                case 4: label.text = "You may paste these two commands directly into a terminal where Bitcoin Core is running and your node will automatically import all the private keys from the current wallet."
+//                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
+//                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
                     
                 default:
                     
@@ -843,19 +843,19 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
-    func shareRecoveryCommand() {
-        
-        DispatchQueue.main.async {
-            
-            let activityViewController = UIActivityViewController(activityItems: [self.recoveryText],
-                                                                  applicationActivities: nil)
-            
-            activityViewController.popoverPresentationController?.sourceView = self.view
-            self.present(activityViewController, animated: true) {}
-            
-        }
-        
-    }
+//    func shareRecoveryCommand() {
+//        
+//        DispatchQueue.main.async {
+//            
+//            let activityViewController = UIActivityViewController(activityItems: [self.recoveryText],
+//                                                                  applicationActivities: nil)
+//            
+//            activityViewController.popoverPresentationController?.sourceView = self.view
+//            self.present(activityViewController, animated: true) {}
+//            
+//        }
+//        
+//    }
     
     func showAuth() {
         
@@ -963,21 +963,3 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
 
 }
-
-//extension String {
-//    typealias Byte = UInt8
-//    var hexaToBytes: [Byte] {
-//        var start = startIndex
-//        return stride(from: 0, to: count, by: 2).compactMap { _ in   // use flatMap for older Swift versions
-//            let end = index(after: start)
-//            defer { start = index(after: end) }
-//            return Byte(self[start...end], radix: 16)
-//        }
-//    }
-//    var hexaToBinary: String {
-//        return hexaToBytes.map {
-//            let binary = String($0, radix: 2)
-//            return repeatElement("0", count: 8-binary.count) + binary
-//        }.joined()
-//    }
-//}

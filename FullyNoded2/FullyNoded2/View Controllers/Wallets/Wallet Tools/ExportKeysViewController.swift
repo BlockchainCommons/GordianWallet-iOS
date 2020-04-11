@@ -21,6 +21,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     var keys = [[String:String]]()
     var wallet:WalletStruct!
     var connectingView = ConnectingView()
+    var s:DescriptorStruct!
     @IBOutlet var table: UITableView!
     
     override func viewDidLoad() {
@@ -175,10 +176,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let p = DescriptorParser()
-        let s = p.descriptor(wallet.descriptor)
-        
+                
         if !s.isMulti {
             
             return singleSigCell(indexPath)
@@ -192,9 +190,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        let p = DescriptorParser()
-        let s = p.descriptor(wallet.descriptor)
         
         if !s.isMulti {
             
@@ -488,17 +483,17 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                 
                 vc.wallet = wallet!
                 let parser = DescriptorParser()
-                let s = parser.descriptor(wallet!.descriptor)
+                vc.s = parser.descriptor(wallet!.descriptor)
                 
                 if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
                  
-                    Encryption.decryptData(dataToDecrypt: wallet!.seed) { (decryptedSeed) in
+                    Encryption.decryptData(dataToDecrypt: wallet!.seed) { [unowned vc = self] (decryptedSeed) in
                         
                         if decryptedSeed != nil {
                             
                             if let words = String(bytes: decryptedSeed!, encoding: .utf8) {
                                 
-                                if s.isMulti {
+                                if vc.s.isMulti {
                                     
                                     vc.getMultiSigKeys(words: words)
                                     
@@ -516,7 +511,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                     
                 } else if wallet?.xprv != nil {
                     
-                    Encryption.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
+                    Encryption.decryptData(dataToDecrypt: wallet!.xprv!) { [unowned vc = self] (decryptedXprv) in
                     
                         if decryptedXprv != nil {
                             
@@ -524,7 +519,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                                 
                                 if let xprv = HDKey(xprvString) {
                                     
-                                    if s.isMulti {
+                                    if vc.s.isMulti {
                                         
                                         vc.fetchMultiSigKeysFromXprv(xprv: xprv)
                                         

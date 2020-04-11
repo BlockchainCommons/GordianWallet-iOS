@@ -77,8 +77,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         torInfoHidden = true
         showNodeInfo = false
         
-        mainMenu.translatesAutoresizingMaskIntoConstraints = true
-        mainMenu.frame = CGRect(x: 8, y: 30, width: mainMenu.frame.width, height: view.frame.height - 30)
+        //mainMenu.translatesAutoresizingMaskIntoConstraints = true
+        //mainMenu.frame = CGRect(x: 8, y: 30, width: mainMenu.frame.width, height: view.frame.height - 30)
         
         if ud?.object(forKey: "firstTime") == nil {
             
@@ -111,7 +111,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         bootStrapping = true
         addStatusLabel(description: "     Bootstrapping Tor...")
         reloadSections([torCellIndex])
-                    
+        
     }
     
     @IBAction func goToSettings(_ sender: Any) {
@@ -460,7 +460,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let keysOnNodeDescription = cell.viewWithTag(25) as! UILabel
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
         let changeKeysOnNodeDescription = cell.viewWithTag(27) as! UILabel
-
+        
         nodeView.layer.cornerRadius = 8
         deviceView.layer.cornerRadius = 8
         
@@ -479,7 +479,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         var coldBalance = walletInfo.coldBalance
-                        
+        
         if coldBalance == "" {
             
             coldBalance = "0"
@@ -503,7 +503,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             coldBalanceLabel.textColor = .systemGray
         }
-                            
+        
         coldBalanceLabel.text = coldBalance
         
         if walletInfo.unconfirmed {
@@ -568,7 +568,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let backUpSeedLabel = cell.viewWithTag(6) as! UILabel
         let seedOnNodeLabel = cell.viewWithTag(7) as! UILabel
         let seedOnDeviceLabel = cell.viewWithTag(8) as! UILabel
-        //let dirtyFiatLabel = cell.viewWithTag(11) as! UILabel
         let infoButton = cell.viewWithTag(12) as! UIButton
         let deviceXprv = cell.viewWithTag(15) as! UILabel
         let deviceView = cell.viewWithTag(16)!
@@ -1080,10 +1079,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 case "MULTI":
                     return multiWalletCell(indexPath)
                     
-                // Custom wallet (can be antyhing the user imports), to parse it we use the DescriptorParser.swift
-//                case "CUSTOM":
-//                    return customWalletCell(indexPath)
-                    
                 default:
                     return blankCell()
                 }
@@ -1229,7 +1224,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         default:
             
             return transactionsCell(indexPath)
-                        
+                                    
         }
         
     }
@@ -1595,12 +1590,22 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if success && dictToReturn != nil {
                 
-                vc.walletExists = true
-                vc.walletInfo = HomeStruct(dictionary: dictToReturn!)
-                vc.walletSectionLoaded = true
-                vc.isRefreshingWalletData = false
-                vc.reloadSections([vc.walletCellIndex])
-                vc.loadTransactionData()
+                // we update the wallets database in NodeLogic, so we need to refresh the wallet struct here
+                getActiveWalletNow { (w, error) in
+                    
+                    if w != nil {
+                        
+                        vc.wallet = w!
+                        vc.walletExists = true
+                        vc.walletInfo = HomeStruct(dictionary: dictToReturn!)
+                        vc.walletSectionLoaded = true
+                        vc.isRefreshingWalletData = false
+                        vc.reloadSections([vc.walletCellIndex, 3])
+                        vc.loadTransactionData()
+                        
+                    }
+                    
+                }
                 
             } else {
                 
@@ -1624,11 +1629,21 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
             
             if success && dictToReturn != nil {
-                
-                vc.walletInfo = HomeStruct(dictionary: dictToReturn!)
-                vc.walletSectionLoaded = true
-                vc.isRefreshingWalletData = false
-                vc.reloadSections([vc.walletCellIndex])
+                            
+                // we update the wallets database in NodeLogic, so we need to refresh the wallet struct here
+                getActiveWalletNow { (w, error) in
+                    
+                    if w != nil {
+                        
+                        vc.wallet = w!
+                        vc.walletInfo = HomeStruct(dictionary: dictToReturn!)
+                        vc.walletSectionLoaded = true
+                        vc.isRefreshingWalletData = false
+                        vc.reloadSections([vc.walletCellIndex])
+                        
+                    }
+                    
+                }
                 
             } else {
                 
@@ -1882,7 +1897,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         DispatchQueue.main.async { [unowned vc = self] in
             
-            vc.mainMenu.translatesAutoresizingMaskIntoConstraints = true
             vc.statusLabel.removeFromSuperview()
             vc.statusLabel.frame = CGRect(x: 0, y: -50, width: vc.view.frame.width, height: 50)
             vc.statusLabel.backgroundColor = .black
@@ -1896,11 +1910,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 vc.statusLabel.frame = CGRect(x: 16, y: vc.navigationController!.navigationBar.frame.maxY + 5, width: vc.view.frame.width - 32, height: 13)
                 
-            }) { [unowned vc = self] (_) in
-                
-                vc.mainMenu.translatesAutoresizingMaskIntoConstraints = false
-                
-            }
+            })
             
         }
         

@@ -1837,11 +1837,11 @@ For more information regarding wallet recovery please see our Recovery.md file.<
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="m5T-sk-K3t">
                                 <rect key="frame" x="16" y="83" width="343" height="384"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <mutableString key="text">FullyNoded 2 is a project of Blockchain Commons. We are proudly a "not-for-profit" social benefit corporation committed to open source &amp; open development. Our work is focused on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web. It's funded entirely by donations and collaborative partnerships with people like you.
+                                <string key="text">FullyNoded 2 is a project of Blockchain Commons. We are proudly a "not-for-profit" social benefit corporation committed to open source &amp; open development. Our work is focused on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web. It's funded entirely by donations and collaborative partnerships with people like you.
 
 For the FullyNoded 2 source code and detailed information about how the app works, please visit the GitHub repo.
 
-If you find this project useful, and would like to learn more about Blockchain Commons, click the Blockchain Commons logo within the app. You can become a Blockchain Commons patron and support projects like this!</mutableString>
+If you find this project useful, and would like to learn more about Blockchain Commons, click the Blockchain Commons logo within the app. You can become a Blockchain Commons patron and support projects like this!</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -2282,11 +2282,11 @@ Blockchain Commons and Fully Noded 2 never share any data with any third party e
                                 <constraints>
                                     <constraint firstAttribute="height" constant="392" id="hCD-Ju-9qf"/>
                                 </constraints>
-                                <mutableString key="text">FullyNoded 2 is free, open-source software that is a project of Blockchain Commons. Our goal is to make it easier for beginners and experts alike to use Bitcoin in a secure, self-sovereign way, where you truly control your own digital assets.
+                                <string key="text">FullyNoded 2 is free, open-source software that is a project of Blockchain Commons. Our goal is to make it easier for beginners and experts alike to use Bitcoin in a secure, self-sovereign way, where you truly control your own digital assets.
 
 Creating this sort of tool is one of the primary mandates of Blockchain Commons, a "not-for-profit" social benefit corporation committed to open source &amp; open development. And, we need your help! Our work is funded entirely by donations and collaborative partnerships with people like you. Every contribution will be spent on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web. Your support can help to make this app and other important projects sustainable, as we continue building a self-sovereign future.
 
-You can either support us by becoming a GitHub sponsor, where GitHub is matching the first $5,000, or by contributing bitcoins through our BTCPay server.</mutableString>
+You can either support us by becoming a GitHub sponsor, where GitHub is matching the first $5,000, or by contributing bitcoins through our BTCPay server.</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -2935,7 +2935,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             </objects>
             <point key="canvasLocation" x="4194" y="-498"/>
         </scene>
-        <!--v0.0.85-->
+        <!--v0.0.87-->
         <scene sceneID="Ajv-p7-tUm">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" id="AS8-ke-Yxh" customClass="SettingsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -3055,7 +3055,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <viewLayoutGuide key="safeArea" id="Cze-jj-bFe"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Settings" id="n34-O3-Fyo"/>
-                    <navigationItem key="navigationItem" title="v0.0.85" id="YNb-Gd-Hqq"/>
+                    <navigationItem key="navigationItem" title="v0.0.87" id="YNb-Gd-Hqq"/>
                     <connections>
                         <outlet property="settingsTable" destination="hcp-eG-lok" id="xPg-8r-KBs"/>
                         <segue destination="bKH-sI-MiM" kind="show" identifier="goLogIn" id="qed-hl-jG5"/>
@@ -4354,7 +4354,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="9Ci-Q1-xaX">
-                                <rect key="frame" x="0.0" y="97" width="375" height="474"/>
+                                <rect key="frame" x="0.0" y="97" width="375" height="550"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="keyCell" rowHeight="77" id="gWe-qy-5Fg">
@@ -4417,20 +4417,6 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="msz-P9-F44">
-                                <rect key="frame" x="100.5" y="579" width="174" height="48"/>
-                                <color key="backgroundColor" red="0.094112603116834379" green="0.10956529792374101" blue="0.1174226826075635" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="174" id="MGj-ac-uLR"/>
-                                    <constraint firstAttribute="height" constant="48" id="Ogb-FP-vzV"/>
-                                </constraints>
-                                <state key="normal" title="Save Wallet">
-                                    <color key="titleColor" red="0.037975538519999998" green="0.3805198669" blue="0.8801537156" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="saveButtonAction:" destination="jXY-2O-cMK" eventType="touchUpInside" id="Pfx-Te-YFl"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Native Segwit Account 0 (BIP84 m/84'/1'/0'/0)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="942-yg-3Hx">
                                 <rect key="frame" x="16" y="72" width="343" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -4453,14 +4439,12 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="9Ci-Q1-xaX" firstAttribute="leading" secondItem="0pA-Db-npl" secondAttribute="leading" id="0ZJ-vq-feO"/>
-                            <constraint firstItem="msz-P9-F44" firstAttribute="top" secondItem="9Ci-Q1-xaX" secondAttribute="bottom" constant="8" id="2ZO-cq-pHT"/>
+                            <constraint firstItem="9Ci-Q1-xaX" firstAttribute="bottom" secondItem="0pA-Db-npl" secondAttribute="bottom" id="1ED-Gc-LjA"/>
                             <constraint firstItem="0pA-Db-npl" firstAttribute="trailing" secondItem="942-yg-3Hx" secondAttribute="trailing" constant="16" id="A9a-Sp-kSX"/>
                             <constraint firstItem="0pA-Db-npl" firstAttribute="trailing" secondItem="9Ci-Q1-xaX" secondAttribute="trailing" id="Bst-Ip-peP"/>
-                            <constraint firstItem="msz-P9-F44" firstAttribute="centerX" secondItem="xcj-wG-gKa" secondAttribute="centerX" id="JJl-6E-y1J"/>
                             <constraint firstItem="942-yg-3Hx" firstAttribute="top" secondItem="MLo-F6-7lT" secondAttribute="bottom" constant="8" id="Lp3-TC-7FG"/>
                             <constraint firstItem="B5s-bA-2wB" firstAttribute="centerY" secondItem="MLo-F6-7lT" secondAttribute="centerY" id="NLT-t3-t08"/>
                             <constraint firstItem="0pA-Db-npl" firstAttribute="trailing" secondItem="B5s-bA-2wB" secondAttribute="trailing" constant="16" id="Owf-yf-5dN"/>
-                            <constraint firstItem="0pA-Db-npl" firstAttribute="bottom" secondItem="msz-P9-F44" secondAttribute="bottom" constant="20" id="aD0-4h-lw1"/>
                             <constraint firstItem="MLo-F6-7lT" firstAttribute="leading" secondItem="0pA-Db-npl" secondAttribute="leading" constant="16" id="dhO-2H-FhE"/>
                             <constraint firstItem="9Ci-Q1-xaX" firstAttribute="top" secondItem="942-yg-3Hx" secondAttribute="bottom" constant="8" id="m4a-Na-Gt1"/>
                             <constraint firstItem="942-yg-3Hx" firstAttribute="leading" secondItem="0pA-Db-npl" secondAttribute="leading" constant="16" id="nSe-CN-g9H"/>
@@ -4471,14 +4455,13 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                     <navigationItem key="navigationItem" id="fAY-Cx-aYg"/>
                     <connections>
                         <outlet property="derivationLabel" destination="942-yg-3Hx" id="wcB-ob-wdm"/>
-                        <outlet property="saveButtonOutlet" destination="msz-P9-F44" id="rXD-Bg-Eh6"/>
                         <outlet property="table" destination="9Ci-Q1-xaX" id="qKY-3o-JNm"/>
                         <segue destination="Kpo-ul-w9U" kind="presentation" identifier="verifyAddress" id="hup-rP-3ke"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QVj-L3-a2O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-94" y="376"/>
+            <point key="canvasLocation" x="-95.200000000000003" y="375.56221889055473"/>
         </scene>
         <!--Wallet Tools View Controller-->
         <scene sceneID="s4f-Br-O6C">
@@ -5484,12 +5467,12 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="oWp-iO-M9B">
                                                             <rect key="frame" x="142" y="11" width="61.5" height="22"/>
                                                             <subviews>
-                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
+                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
                                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="22"/>
                                                                     <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                                 </button>
-                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
                                                                     <rect key="frame" x="27" y="0.0" width="34.5" height="22"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

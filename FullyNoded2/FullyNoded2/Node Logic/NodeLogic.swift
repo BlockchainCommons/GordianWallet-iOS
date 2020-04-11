@@ -90,7 +90,6 @@ class NodeLogic {
                 if let blockchainInfo = object as? NSDictionary {
                     if let currentblockheight = blockchainInfo["blocks"] as? Int {
                         dictToReturn["blocks"] = currentblockheight
-                        
                         let ud = UserDefaults.standard
                         ud.set(Int32(currentblockheight), forKey: "blockheight")
                         
@@ -248,13 +247,14 @@ class NodeLogic {
         var dictToReturn = [String:Any]()
         if utxos.count == 0 {
             dictToReturn["noUtxos"] = true
+            completion((true, dictToReturn, nil))
             
         } else {
             dictToReturn["noUtxos"] = false
             
         }
         
-        for utxo in utxos {
+        for (x, utxo) in utxos.enumerated() {
             if let utxoDict = utxo as? NSDictionary {
                 
                 // Here we check the utxos descriptor to see what the path is for each pubkey.
@@ -268,30 +268,32 @@ class NodeLogic {
                 if let desc = utxoDict["desc"] as? String {
                     let p = DescriptorParser()
                     let str = p.descriptor(desc)
-                    let paths = str.derivationArray
-                    var index = 0
+                    var paths:[String]!
+                    if str.isMulti {
+                        paths = str.derivationArray
+                        
+                    } else {
+                        paths = [str.derivation]
+                        
+                    }
+                    
                     for path in paths {
                         let arr = path.split(separator: "/")
                         for (i, comp) in arr.enumerated() {
                             if i + 1 == arr.count {
                                 if let int = Int(comp) {
-                                    if int > index {
-                                        index = int
-                                        
+                                    if wallet.index <= int {
+                                        CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "index", newValue: int + 1, entityName: .wallets) { (success, errorDescription) in
+                                            if success {
+                                                print("updated index from utxo")
+                                                
+                                            } else {
+                                                print("failed to update index from utxo")
+                                                
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                        }
-                    }
-                    
-                    if wallet.index <= index {
-                        CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "index", newValue: index + 1, entityName: .wallets) { (success, errorDescription) in
-                            if success {
-                                print("updated index from utxo")
-
-                            } else {
-                                print("failed to update index from utxo")
-
                             }
                         }
                     }
@@ -315,28 +317,32 @@ class NodeLogic {
                     }
                 }
             }
-        }
-        
-        if amount == 0.0 {
-            dictToReturn["coldBalance"] = "0.0"
             
-        } else {
-            dictToReturn["coldBalance"] = "\((round(100000000*amount)/100000000).avoidNotation)"
-            
-        }
-        
-        // We fetch balances when we check for wallet recovery confirmation, therefore it does not have an ID yet if it has not been recovered
-        if wallet.id != nil {
-            CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastBalance", newValue: amount, entityName: .wallets) { _ in
-                CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { _ in
-                    CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) { _ in
-                        completion((true, dictToReturn, nil))
-                        
+            if x + 1 == utxos.count {
+                if amount == 0.0 {
+                    dictToReturn["coldBalance"] = "0.0"
+                    
+                } else {
+                    dictToReturn["coldBalance"] = "\((round(100000000*amount)/100000000).avoidNotation)"
+                    
+                }
+                
+                // We fetch balances when we check for wallet recovery confirmation, therefore it does not have an ID yet if it has not been recovered
+                if wallet.id != nil {
+                    CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastBalance", newValue: amount, entityName: .wallets) { _ in
+                        CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { _ in
+                            CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) { _ in
+                                completion((true, dictToReturn, nil))
+                                
+                            }
+                        }
                     }
+                } else {
+                    completion((true, dictToReturn, nil))
+                    
                 }
             }
         }
-        
     }
     
     func parseTransactions(transactions: NSArray, completion: @escaping ((success: Bool, array: [[String:Any]]?, errorDescription: String?)) -> Void) {
@@ -421,7 +427,6 @@ class NodeLogic {
                     }
                 }
             }
-                                
             for (i, tx) in transactionArray.enumerated() {
                 if let remove = tx["remove"] as? Bool {
                     if !remove {

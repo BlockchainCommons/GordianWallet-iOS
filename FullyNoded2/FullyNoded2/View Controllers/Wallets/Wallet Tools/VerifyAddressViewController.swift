@@ -73,7 +73,7 @@ class VerifyAddressViewController: UIViewController {
                 
             }) { [unowned vc = self] (_) in
                 
-                showAlert(vc: vc, title: "Don't trust, verify.", message: "The purpose of this tool is to allow you to verify that the app derives the exact addresses and keys that you expect it to.\n\nYou can use a third party offline tool to import your BIP39 recovery phrase and derive your addresses.\n\nCreate a QR code with one of the derived addresses, scan it with this tool to ensure they match.\n\nJust swipe the scanner down to close it.")
+                showAlert(vc: vc, title: "Don't trust, verify.", message: "The purpose of this tool is to allow you to verify that your node derives the addresses you expect it to.\n\nYou can use a third party offline tool to import your BIP39 recovery phrase and derive your addresses.\n\nCreate a QR code with one of the derived addresses, scan it with this tool to ensure they match.\n\nJust swipe the scanner down to close it.")
                 
             }
             

@@ -533,7 +533,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         deviceXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
-        walletFileLabel.text = reducedName(name: wallet.name!)
+        walletFileLabel.text = reducedWalletName(name: wallet.name!)
         
         for n in nodes {
             
@@ -707,7 +707,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         offlineXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
-        walletFileLabel.text = reducedName(name: wallet.name!)
+        walletFileLabel.text = reducedWalletName(name: wallet.name!)
         
         for n in nodes {
             
@@ -1459,7 +1459,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-    private func reducedName(name: String) -> String {
+    private func reducedWalletName(name: String) -> String {
         
         let first = String(name.prefix(5))
         let last = String(name.suffix(5))
@@ -1509,14 +1509,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     showAlert(vc: thisVc, title: "Success!", message: "Keypool refilled 🤩")
                     
                 }
-                
-            }
-            
-        case "verifyAddresses":
-            
-            if let vc = segue.destination as? VerifyKeysViewController {
-                
-                vc.comingFromSettings = true
                 
             }
             
