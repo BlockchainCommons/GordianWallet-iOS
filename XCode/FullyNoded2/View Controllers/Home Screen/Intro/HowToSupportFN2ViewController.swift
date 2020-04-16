@@ -29,12 +29,20 @@ class HowToSupportFN2ViewController: UIViewController, UITextViewDelegate, UINav
         titleLabel.adjustsFontSizeToFitWidth = true
         textView.delegate = self
         
+        textView.text = """
+        FullyNoded 2 is a project of Blockchain Commons. We are proudly a "not-for-profit" social benefit corporation committed to open source & open development. Our work is focused on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web. It's funded entirely by donations and collaborative partnerships with people like you.
+
+        For the FullyNoded 2 source code and detailed information about how the app works, please visit the GitHub repo.
+
+        If you find this project useful, and would like to learn more about Blockchain Commons, click the Blockchain Commons logo within the app. You can become a Blockchain Commons patron and support projects like this!
+        """
+        
         textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["BTCPayServer": donationLinkUrl, "Blockchain Commons": homePageUrl, "GitHub repo": repoLink, "Blockchain Commons patron": sponsorLink])
     }
     
     private func setTitleView() {
         
-        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        let imageView = UIImageView(image: UIImage(named: "1024.jpg"))
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 15

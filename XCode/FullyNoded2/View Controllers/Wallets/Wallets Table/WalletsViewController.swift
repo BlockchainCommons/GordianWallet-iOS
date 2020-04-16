@@ -1362,17 +1362,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if !error && node != nil {
                     
-                    if node!.network != "mainnet" {
+                    DispatchQueue.main.async {
 
-                        DispatchQueue.main.async {
-
-                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
-
-                        }
-
-                    } else {
-
-                        displayAlert(viewController: vc, isError: true, message: "Mainnet wallets not yet allowed! Sorry.")
+                        vc.performSegue(withIdentifier: "addWallet", sender: vc)
 
                     }
                     
@@ -1468,7 +1460,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func getRescanStatus(i: Int, walletName: String, completion: @escaping () -> Void) {
         
-        if i < self.sortedWallets.count {
+        if i <= self.sortedWallets.count {
             
             Reducer.makeCommand(walletName: walletName, command: .getexternalwalletinfo, param: "") { [unowned vc = self] (object, errorDesc) in
 
@@ -1479,22 +1471,29 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         if let _ = scanning["duration"] as? Int {
 
                             let progress = (scanning["progress"] as! Double) * 100
-                            vc.sortedWallets[i]["progress"] = "\(Int(progress))"
-                            vc.sortedWallets[i]["isRescanning"] = true
+                            if i <= self.sortedWallets.count {
+                                vc.sortedWallets[i]["progress"] = "\(Int(progress))"
+                                vc.sortedWallets[i]["isRescanning"] = true
+                            }
+                            
                             completion()
 
                         }
 
                     } else {
-
-                        vc.sortedWallets[i]["isRescanning"] = false
+                        
+                        if i <= self.sortedWallets.count {
+                            vc.sortedWallets[i]["isRescanning"] = false
+                        }
                         completion()
 
                     }
 
                 } else {
-
-                    vc.sortedWallets[i]["isRescanning"] = false
+                    
+                    if i <= self.sortedWallets.count {
+                        vc.sortedWallets[i]["isRescanning"] = false
+                    }
                     completion()
 
                 }

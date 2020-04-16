@@ -28,13 +28,19 @@ class LicenseDisclaimerViewController: UIViewController, UITextViewDelegate, UIN
         titleLabel.adjustsFontSizeToFitWidth = true
         textView.delegate = self
         
+        textView.text = """
+        Please read and accept the terms of our disclaimer:
+
+        The use of FullyNoded 2 is under the "BSD 2-Clause Plus Patent License" (https://spdx.org/licenses/BSD-2-Clause-Patent.html). Copyright © 2019 BlockchainCommons. All rights reserved. With the disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+        """
+        
         textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["https://spdx.org/licenses/BSD-2-Clause-Patent.html": licenseLink])
         
     }
     
     private func setTitleView() {
         
-        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        let imageView = UIImageView(image: UIImage(named: "1024.jpg"))
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 15

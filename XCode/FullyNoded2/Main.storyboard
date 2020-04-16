@@ -538,7 +538,7 @@
                                 <color key="sectionIndexBackgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MainMenuCell" rowHeight="66" id="EVM-FH-EQj">
-                                        <rect key="frame" x="0.0" y="55.5" width="345" height="66"/>
+                                        <rect key="frame" x="15" y="55.5" width="345" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="EVM-FH-EQj" id="6Y2-Fh-R1z">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="66"/>
@@ -595,7 +595,7 @@
                                         <color key="backgroundColor" red="0.090666323016946812" green="0.10264321163773631" blue="0.12232880449385808" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NodeInfo" rowHeight="207" id="LJt-F3-a27">
-                                        <rect key="frame" x="0.0" y="121.5" width="345" height="207"/>
+                                        <rect key="frame" x="15" y="121.5" width="345" height="207"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LJt-F3-a27" id="bIn-ES-gWa">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="207"/>
@@ -790,7 +790,7 @@
                                         <color key="backgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="torCell" rowHeight="165" id="Ypb-Cj-jX8">
-                                        <rect key="frame" x="0.0" y="328.5" width="345" height="165"/>
+                                        <rect key="frame" x="15" y="328.5" width="345" height="165"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ypb-Cj-jX8" id="glf-PS-WeE">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="165"/>
@@ -1293,7 +1293,7 @@
                                         <color key="backgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="singleSigCell" rowHeight="263" id="nLp-7u-fn2">
-                                        <rect key="frame" x="15" y="803.5" width="345" height="263"/>
+                                        <rect key="frame" x="0.0" y="803.5" width="345" height="263"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nLp-7u-fn2" id="Vqk-up-C8V">
                                             <rect key="frame" x="0.0" y="0.0" width="345" height="263"/>
@@ -5582,7 +5582,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP49" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yUQ-II-4AS">
-                                <rect key="frame" x="170" y="101" width="34" height="15"/>
+                                <rect key="frame" x="170.5" y="101" width="34" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>

@@ -6,9 +6,9 @@ FullyNoded 2 allows for multiple wallet templates including legacy, segwit compa
 
 <img src="./Images/home_screen_collapsed.PNG" alt="FullyNoded 2 app Home Screen" width="250"/> <img src="./Images/home_screen_expanded.PNG" alt="FullyNoded 2 app Home Screen" width="250"/>
 
-## Status — Late Alpha
+## Status — Early Beta
 
-*FullyNoded 2* is currently under active development and in late alpha testing phase. It should only be used on Bitcoin testnet for now.
+*FullyNoded 2* is currently under active development and in early beta testing phase. It should be used on Bitcoin testnet to gain familiarity with how the wallet works, and most importantly to practice deleting and recovering wallet. For a detailed checklist to test critical functionality please see our [Checklist.md](./Docs/Checklist.md)
 
 ## Testflight
 
@@ -27,7 +27,7 @@ We have a public link available for beta testing [here](https://testflight.apple
 ## Financial Support
 
 *FullyNoded 2* is a project by [Blockchain Commons](https://www.blockchaincommons.com/). We are proudly a social benefit "not-for-profit" committed to open source & open development. Our work is funded entirely by donations and collaborative partnerships with people like you. Every contribution will be spent on building open tools, technologies & techniques for blockchain and internet security infrastructure.
-Please consider becoming a sponsor by supporting the project via GitHub's sponsorship program where they will match up to $5,000 USD in donations, more info [here](https://github.com/sponsors/BlockchainCommons). See our [Sponsors](./Sponsors.md) page for more info.
+Please consider becoming a sponsor by supporting the project via GitHub's sponsorship program where they will match up to $5,000 USD in donations, more info [here](https://github.com/sponsors/BlockchainCommons). See our [Sponsors](./Docs/Sponsors.md) page for more info.
 
 To financially support further development of `$projectname` and other projects, please consider becoming a Patron of Blockchain Commons through ongoing monthly patronage by becoming a [Sponsor](https://github.com/sponsors/BlockchainCommons) through GitHub; currently they are matching the first $5k so please do consider this option. You can also offer support with Bitcoin via our [BTCPay Server](https://btcpay.blockchaincommons.com/).
 
@@ -87,7 +87,7 @@ It is worth noting that the three panes in a multi-sig wallet are communicating 
 
 #### Wallet recovery
 
-Please see [Recovery.md](./Recovery.md) for full details of how it works.
+Please see [Recovery.md](./Docs/Recovery.md) for full details of how it works.
 
 You may either input the offline recovery words and/or the Recovery QR code to recover wallets.
 
@@ -415,15 +415,14 @@ This table below also establishes provenance (repository of origin, permalink, a
 - [Tor.framework](https://github.com/iCepa/Tor.framework) by the [iCepa project](https://github.com/iCepa) - for communicating with your nodes hidden service
 - [LibWally-Swift](https://github.com/blockchain/libwally-swift) built by [@Sjors](https://github.com/Sjors) - for BIP39 mnemonic creation and HD key derivation
 - [Base32](https://github.com/norio-nomura/Base32/blob/master/Sources/Base32) built by [@norio-nomura](https://github.com/norio-nomura) - for Tor V3 authentication key encoding
-- [Keychain-Swift](https://github.com/evgenyneu/keychain-swift) built by [@evgenyneu](https://github.com/evgenyneu) for securely storing sensitive data on your devices keychain
 
 ## Contributing
 
-We encourage public contributions through issues and pull-requests! Please review [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our development process. All contributions to this repository require a GPG signed [Contributor License Agreement](./CLA.md).
+We encourage public contributions through issues and pull-requests! Please review [CONTRIBUTING.md](./Docs/CONTRIBUTING.md) for details on our development process. All contributions to this repository require a GPG signed [Contributor License Agreement](./Docs/CLA.md).
 
 ### Credits
 
-The following people directly contributed to this repository. You can add your name here by getting involved — the first step is to learn how to contribute from our [CONTRIBUTING.md](./CONTRIBUTING.md) documentation.
+The following people directly contributed to this repository. You can add your name here by getting involved — the first step is to learn how to contribute from our [CONTRIBUTING.md](./Docs/CONTRIBUTING.md) documentation.
 
 | Name              | Role                | Github                                            | Email                                 | GPG Fingerprint                                    |
 | ----------------- | ------------------- | ------------------------------------------------- | ------------------------------------- | -------------------------------------------------- |
