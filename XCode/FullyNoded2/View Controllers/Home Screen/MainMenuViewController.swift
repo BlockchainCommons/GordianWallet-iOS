@@ -49,12 +49,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBOutlet var mainMenu: UITableView!
     @IBOutlet var sponsorView: UIView!
+    @IBOutlet weak var halvingCountdownLabel: UILabel!
     
     var refresher: UIRefreshControl!
     var connectingView = ConnectingView()
     
     var nodes = [[String:Any]]()
     var transactionArray = [[String:Any]]()
+    
+    var timer: Timer?
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +80,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         infoHidden = true
         torInfoHidden = true
         showNodeInfo = false
+        halvingCountdownLabel.adjustsFontSizeToFitWidth = true
         
         if ud?.object(forKey: "firstTime") == nil {
             
@@ -1418,7 +1422,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     if torSectionLoaded {
                         
-                        return 85
+                        return 38
                         
                     } else {
                         
@@ -1428,7 +1432,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 } else {
                     
-                    return 165
+                    return 178
                     
                 }
                 
@@ -1652,7 +1656,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if node != nil {
             
             reloadSections([torCellIndex])
-            updateLabel(text: "     Getting Tor network data from your node...")
+            updateLabel(text: "     Getting network info from your node...")
             nodeLogic?.loadTorData { [unowned vc = self] (success, dictToReturn, errorDesc) in
                 
                 if success && dictToReturn != nil {
@@ -1758,8 +1762,17 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                     vc.removeStatusLabel()
                     vc.sponsorThisApp()
+                                        
+                }
+                
+                if vc.timer != nil {
+                    
+                    vc.timer?.invalidate()
+                    vc.timer = nil
                     
                 }
+                
+                vc.runHalvingCountdown()
                 
             } else {
                 
@@ -1770,6 +1783,36 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 displayAlert(viewController: vc, isError: true, message: errorDesc ?? "error fetching node stats")
                 
             }
+            
+        }
+        
+    }
+    
+    private var countdown: DateComponents {
+        
+        return Calendar.current.dateComponents([.day, .hour, .minute, .second], from: Date(), to: nodeInfo.halvingDate)
+        
+    }
+
+    @objc func updateTime() {
+        
+        let countdown = self.countdown
+        let days = countdown.day!
+        let hours = countdown.hour!
+        let minutes = countdown.minute!
+        let seconds = countdown.second!
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.halvingCountdownLabel.text = "Next block reward halving in:\n~\(days) days: \(hours) hours: \(minutes) mins: \(seconds) secs"
+        }
+        
+    }
+
+    private func runHalvingCountdown() {
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            vc.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(vc.updateTime), userInfo: nil, repeats: true)
             
         }
         

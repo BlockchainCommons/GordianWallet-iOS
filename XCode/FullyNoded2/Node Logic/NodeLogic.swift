@@ -89,9 +89,14 @@ class NodeLogic {
             Reducer.makeCommand(walletName: "", command: .getblockchaininfo, param: "") { (object, errorDescription) in
                 if let blockchainInfo = object as? NSDictionary {
                     if let currentblockheight = blockchainInfo["blocks"] as? Int {
+                        let halvingBlockTarget = 210000
+                        let halvingsThatHaveOccured = Int(currentblockheight / halvingBlockTarget)
+                        let nextHalvingTarget = (halvingsThatHaveOccured + 1) * halvingBlockTarget
+                        let blocksTillNextHalving = Double(nextHalvingTarget - currentblockheight)
+                        let secondsTillNextHalving = Double(blocksTillNextHalving * (600.0))
+                        let halvingDate = Date(timeIntervalSinceNow: secondsTillNextHalving)
+                        dictToReturn["halvingDate"] = halvingDate
                         dictToReturn["blocks"] = currentblockheight
-                        let ud = UserDefaults.standard
-                        ud.set(Int32(currentblockheight), forKey: "blockheight")
                         
                     }
                     if let difficultyCheck = blockchainInfo["difficulty"] as? Double {

@@ -26,6 +26,134 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        
+        if UIPasteboard.general.hasImages {
+            
+            if let image = UIPasteboard.general.image {
+                
+                let detector:CIDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh])!
+                let ciImage:CIImage = CIImage(image: image)!
+                var qrCodeLink = ""
+                let features = detector.features(in: ciImage)
+                for feature in features as! [CIQRCodeFeature] {
+                    qrCodeLink += feature.messageString!
+                }
+                
+                if let data = qrCodeLink.data(using: .utf8) {
+                    
+                    Encryption.getNode { (node, error) in
+                        
+                        if !error && node != nil {
+                            
+                            do {
+                                
+                                let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
+                                
+                                if let _ = dict["descriptor"] as? String {
+                                    
+                                    if let _ = dict["birthdate"] as? Int32 {
+                                        
+                                        if let _ = dict["entropy"] as? String {
+                                            
+                                            if let _ = dict["blockheight"] as? Int {
+                                                
+                                                DispatchQueue.main.async { [unowned vc = self] in
+                                                    
+                                                    let alert = UIAlertController(title: "There is a valid Recovery QR image on your clipboard", message: "Would you like to upload this image as a Recovery QR?", preferredStyle: .actionSheet)
+                                                    
+                                                    alert.addAction(UIAlertAction(title: "Upload Recovery QR", style: .default, handler: { action in
+                                                        
+                                                        vc.recoveryDict = dict
+                                                        vc.validRecoveryScanned()
+                                                        
+                                                    }))
+                                                    
+                                                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                                                    alert.popoverPresentationController?.sourceView = self.view
+                                                    vc.present(alert, animated: true, completion: nil)
+                                                    
+                                                    
+                                                }
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            } catch  {}
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        } else if UIPasteboard.general.hasStrings {
+            
+            if let value = UIPasteboard.general.string {
+                
+                if let data = value.data(using: .utf8) {
+                    
+                    Encryption.getNode { (node, error) in
+                        
+                        if !error && node != nil {
+                            
+                            do {
+                                
+                                let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
+                                
+                                if let _ = dict["descriptor"] as? String {
+                                    
+                                    if let _ = dict["birthdate"] as? Int32 {
+                                        
+                                        if let _ = dict["entropy"] as? String {
+                                            
+                                            if let _ = dict["blockheight"] as? Int {
+                                                
+                                                DispatchQueue.main.async { [unowned vc = self] in
+                                                                
+                                                    let alert = UIAlertController(title: "There is a valid Recovery QR text on your clipboard", message: "Would you like to upload this text as a Recovery QR?", preferredStyle: .actionSheet)
+
+                                                    alert.addAction(UIAlertAction(title: "Upload Recovery QR text", style: .default, handler: { action in
+                                                        
+                                                        vc.recoveryDict = dict
+                                                        vc.validRecoveryScanned()
+                                                        
+                                                    }))
+                                                    
+                                                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                                                    alert.popoverPresentationController?.sourceView = self.view
+                                                    vc.present(alert, animated: true, completion: nil)
+                                                    
+                                                }
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            } catch {}
+                            
+                        }
+                        
+                    }
+                                
+                }
+                
+            }
+            
+        }
+        
+    }
+    
     @IBAction func getWordsAction(_ sender: Any) {
         
         getWords()

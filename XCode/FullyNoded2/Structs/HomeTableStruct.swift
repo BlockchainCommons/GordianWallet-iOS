@@ -31,6 +31,7 @@ public struct HomeStruct: CustomStringConvertible {
     let p2pOnionAddress:String
     let unconfirmed:Bool
     let noUtxos:Bool
+    let halvingDate:Date
     
     init(dictionary: [String: Any]) {
         
@@ -54,6 +55,7 @@ public struct HomeStruct: CustomStringConvertible {
         self.p2pOnionAddress = dictionary["p2pOnionAddress"] as? String ?? "none"
         self.unconfirmed = dictionary["unconfirmed"] as? Bool ?? false
         self.noUtxos = dictionary["noUtxos"] as? Bool ?? true
+        self.halvingDate = dictionary["halvingDate"] as? Date ?? Date()
         
     }
     

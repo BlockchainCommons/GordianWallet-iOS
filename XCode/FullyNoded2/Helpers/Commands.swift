@@ -8,6 +8,7 @@
 
 public enum BTC_CLI_COMMAND: String {
     
+    case getblockcount
     case getexternalwalletinfo
     case fetchexternalbalances
     case getsweeptoaddress
@@ -51,6 +52,9 @@ public enum BTC_CLI_COMMAND: String {
     
     var description: String {
         switch self {
+            
+        case .getblockcount:
+            return "getblockcount"
             
         case .getexternalwalletinfo:
             return "getwalletinfo"

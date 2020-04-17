@@ -171,67 +171,81 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
                 vc.node = node!
                 vc.creatingView.addConnectingView(vc: self.navigationController!, description: "creating your wallet")
-                vc.newWallet["blockheight"] = UserDefaults.standard.object(forKey: "blockheight") as? Int32 ?? 1
-                vc.newWallet["maxRange"] = 2500
                 
-                if vc.node.network == "testnet" {
+                Reducer.makeCommand(walletName: "", command: .getblockcount, param: "") { (object, errorDescription) in
                     
-                    if vc.isBIP84 {
+                    if let blockheight = object as? Int {
                         
-                        vc.newWallet["derivation"] = "m/84'/1'/0'"
-                        vc.derivation = "BIP84 m/84'/1'/0'"
+                        vc.newWallet["blockheight"] = Int32(blockheight)
+                        vc.newWallet["maxRange"] = 2500
                         
-                    } else if vc.isBIP49 {
-                        
-                        vc.newWallet["derivation"] = "m/49'/1'/0'"
-                        vc.derivation = "BIP49 m/49'/1'/0'"
-                        
-                    } else if vc.isBIP44 {
-                        
-                        vc.newWallet["derivation"] = "m/44'/1'/0'"
-                        vc.derivation = "BIP44 m/44'/1'/0'"
-                        
-                    }
-                    
-                } else if vc.node.network == "mainnet" {
-                    
-                    if vc.isBIP84 {
-                        
-                        vc.newWallet["derivation"] = "m/84'/0'/0'"
-                        vc.derivation = "BIP84 m/84'/0'/0'"
-                        
-                    } else if vc.isBIP49 {
-                        
-                        vc.newWallet["derivation"] = "m/49'/0'/0'"
-                        vc.derivation = "BIP49 m/44'/0'/0'"
-                        
-                    } else if vc.isBIP44 {
-                        
-                        vc.newWallet["derivation"] = "m/44'/0'/0'"
-                        vc.derivation = "BIP44 m/44'/0'/0'"
-                        
-                    }
-                    
-                }
-                
-                vc.newWallet["birthdate"] = keyBirthday()
-                vc.id = UUID()
-                vc.newWallet["id"] = vc.id
-                vc.newWallet["isActive"] = false
-                vc.newWallet["lastUsed"] = Date()
-                vc.newWallet["lastBalance"] = 0.0
-                vc.newWallet["isArchived"] = false
-                vc.newWallet["nodeId"] = vc.node.id
+                        if vc.node.network == "testnet" {
+                            
+                            if vc.isBIP84 {
                                 
-                if vc.isMultiSig {
-                    
-                    vc.newWallet["type"] = "MULTI"
-                    vc.createMultiSig()
-                    
-                } else if vc.isSingleSig {
-                    
-                    vc.newWallet["type"] = "DEFAULT"
-                    vc.createSingleSig()
+                                vc.newWallet["derivation"] = "m/84'/1'/0'"
+                                vc.derivation = "BIP84 m/84'/1'/0'"
+                                
+                            } else if vc.isBIP49 {
+                                
+                                vc.newWallet["derivation"] = "m/49'/1'/0'"
+                                vc.derivation = "BIP49 m/49'/1'/0'"
+                                
+                            } else if vc.isBIP44 {
+                                
+                                vc.newWallet["derivation"] = "m/44'/1'/0'"
+                                vc.derivation = "BIP44 m/44'/1'/0'"
+                                
+                            }
+                            
+                        } else if vc.node.network == "mainnet" {
+                            
+                            if vc.isBIP84 {
+                                
+                                vc.newWallet["derivation"] = "m/84'/0'/0'"
+                                vc.derivation = "BIP84 m/84'/0'/0'"
+                                
+                            } else if vc.isBIP49 {
+                                
+                                vc.newWallet["derivation"] = "m/49'/0'/0'"
+                                vc.derivation = "BIP49 m/44'/0'/0'"
+                                
+                            } else if vc.isBIP44 {
+                                
+                                vc.newWallet["derivation"] = "m/44'/0'/0'"
+                                vc.derivation = "BIP44 m/44'/0'/0'"
+                                
+                            }
+                            
+                        }
+                        
+                        vc.newWallet["birthdate"] = keyBirthday()
+                        vc.id = UUID()
+                        vc.newWallet["id"] = vc.id
+                        vc.newWallet["isActive"] = false
+                        vc.newWallet["lastUsed"] = Date()
+                        vc.newWallet["lastBalance"] = 0.0
+                        vc.newWallet["isArchived"] = false
+                        vc.newWallet["nodeId"] = vc.node.id
+                                        
+                        if vc.isMultiSig {
+                            
+                            vc.newWallet["type"] = "MULTI"
+                            vc.createMultiSig()
+                            
+                        } else if vc.isSingleSig {
+                            
+                            vc.newWallet["type"] = "DEFAULT"
+                            vc.createSingleSig()
+                            
+                        }
+                        
+                    } else {
+                        
+                        vc.creatingView.removeConnectingView()
+                        displayAlert(viewController: vc, isError: true, message: "error fetching blockheight")
+                        
+                    }
                     
                 }
                 
@@ -466,9 +480,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                         
                                                         let p = DescriptorParser()
                                                         let str = p.descriptor(w.descriptor)
-                                                        
                                                         let hotDesc = (w.descriptor).replacingOccurrences(of: str.accountXpub, with: xprv)
-                                                        
                                                         let recoveryQr = ["entropy": bip39mnemonic.entropy.description, "descriptor":"\(hotDesc)", "birthdate":w.birthdate, "blockheight":w.blockheight,"label":""] as [String : Any]
                                                         
                                                         if let json = recoveryQr.json() {

@@ -34,6 +34,72 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        
+        if UIPasteboard.general.hasImages {
+            
+            if let image = UIPasteboard.general.image {
+                
+                let detector:CIDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh])!
+                let ciImage:CIImage = CIImage(image: image)!
+                var qrCodeLink = ""
+                let features = detector.features(in: ciImage)
+                for feature in features as! [CIQRCodeFeature] {
+                    qrCodeLink += feature.messageString!
+                }
+                
+                if qrCodeLink.hasPrefix("btcrpc://") || qrCodeLink.hasPrefix("btcstandup://") {
+                
+                DispatchQueue.main.async { [unowned vc = self] in
+                                
+                    let alert = UIAlertController(title: "There is a QuickConnect uri on your clipboard", message: "Would you like to add this node?", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Add Node", style: .default, handler: { action in
+                        
+                        vc.addBtcRpcQr(url: qrCodeLink)
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    vc.present(alert, animated: true, completion: nil)
+                    
+                    }
+                    
+                }
+                
+            }
+            
+        } else if UIPasteboard.general.hasStrings {
+            
+            if let value = UIPasteboard.general.string {
+                
+                if value.hasPrefix("btcrpc://") || value.hasPrefix("btcstandup://") {
+                    
+                    DispatchQueue.main.async { [unowned vc = self] in
+                                    
+                        let alert = UIAlertController(title: "There is a QuickConnect uri on your clipboard", message: "Would you like to add this node?", preferredStyle: .actionSheet)
+
+                        alert.addAction(UIAlertAction(title: "Add Node", style: .default, handler: { action in
+                            
+                            vc.addBtcRpcQr(url: value)
+                            
+                        }))
+                        
+                        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                        alert.popoverPresentationController?.sourceView = self.view
+                        vc.present(alert, animated: true, completion: nil)
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
     @objc func addTester() {
         
         if scanningNode {
