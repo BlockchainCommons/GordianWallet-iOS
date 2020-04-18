@@ -243,7 +243,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     } else {
                         
                         vc.creatingView.removeConnectingView()
-                        displayAlert(viewController: vc, isError: true, message: "error fetching blockheight")
+                        displayAlert(viewController: vc, isError: true, message: "error fetching blockheight: \(errorDescription ?? "unknown error")")
                         
                     }
                     

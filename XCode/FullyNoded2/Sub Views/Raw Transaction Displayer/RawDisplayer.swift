@@ -15,24 +15,23 @@ class RawDisplayer {
     let textView = UITextView()
     var qrView = UIImageView()
     let qrGenerator = QRGenerator()
-    //let backgroundView = UIView()
     let copiedLabel = UILabel()
-    //var navigationBar = UINavigationBar()
-    //var tabbar = UITabBar()
     var vc = UIViewController()
     var rawString = ""
     let impact = UIImpactFeedbackGenerator()
     
     func addRawDisplay() {
         
-        //tabbar = vc.tabBarController!.tabBar
-        //navigationBar = vc.navigationController!.navigationBar
-        //configureBackground()
         configureQrView()
         configureTextView()
         configureCopiedLabel()
         
-        qrView.image = generateQrCode(key: rawString)
+        let (qr, error) = qrGenerator.getQRCode(textInput: rawString)
+        qrView.image = qr
+        if error {
+            showAlert(vc: vc, title: "QR Error", message: "That is too much data to fit into that sized image")
+        }
+        
         textView.text = rawString
         UIPasteboard.general.string = rawString
         
@@ -166,21 +165,6 @@ class RawDisplayer {
                                 y: vc.view.frame.maxY + 170,
                                 width: vc.view.frame.width - 20,
                                 height: totalViewHeight - qrHeight)
-        
-    }
-    
-//    func configureBackground() {
-//
-//        backgroundView.alpha = 0
-//        backgroundView.backgroundColor = UIColor.clear
-//        backgroundView.frame = vc.view.frame
-//
-//    }
-    
-    func generateQrCode(key: String) -> UIImage {
-        
-        let imageToReturn = self.qrGenerator.getQRCode(textInput: key)
-        return imageToReturn
         
     }
     

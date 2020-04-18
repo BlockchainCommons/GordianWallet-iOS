@@ -40,7 +40,13 @@ class QRDisplayerViewController: UIViewController {
     
     func showQR() {
         
-        let qr = qrGenerator.getQRCode(textInput: address)
+        let (qr, error) = qrGenerator.getQRCode(textInput: address)
+        
+        if error {
+            
+            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+            
+        }
         
         DispatchQueue.main.async { [unowned vc = self] in
             

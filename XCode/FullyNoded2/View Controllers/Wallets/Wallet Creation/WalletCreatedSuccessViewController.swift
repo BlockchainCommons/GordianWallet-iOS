@@ -42,7 +42,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
             
         } else {
             
-            textView.text = "In order to ensure you can recover your wallets there is some information you ought to record securely.\n\nYou will be presented with a RecoveryQR code and a 12 word recovery phrase.\n\nYou should make mutliple backups of each and store them in seperate locations."
+            textView.text = "In order to ensure you can recover your wallets there is some information you ought to record securely.\n\nYou will be presented with a RecoveryQR code and a 12 word recovery phrase.\n\nYou should make multiple backups of each and store them in seperate locations."
             
         }
         
@@ -68,19 +68,27 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         
         if textField.text != "" {
             
-            CoreDataService.updateEntity(id: w.id!, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
+            if textField.text!.count > 50 {
                 
-                if success {
+                showAlert(vc: self, title: "That label is too long", message: "Please keep it short and memorable, less than 50 characters")
+                
+            } else {
+                
+                CoreDataService.updateEntity(id: w.id!, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
                     
-                    DispatchQueue.main.async {
+                    if success {
                         
-                        vc.performSegue(withIdentifier: "toRecoveryQr", sender: vc)
+                        DispatchQueue.main.async {
+                            
+                            vc.performSegue(withIdentifier: "toRecoveryQr", sender: vc)
+                            
+                        }
+                        
+                    } else {
+                        
+                        showAlert(vc: vc, title: "Error", message: errorDesc ?? "error saving label")
                         
                     }
-                    
-                } else {
-                    
-                    showAlert(vc: vc, title: "Error", message: errorDesc ?? "error saving label")
                     
                 }
                 
@@ -112,15 +120,23 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         
         if textField.text != "" {
             
-            CoreDataService.updateEntity(id: w.id!, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
+            if textField.text!.count > 50 {
                 
-                if success {
+                showAlert(vc: self, title: "That label is too long", message: "Please keep it short and memorable, less then 50 characters")
+                
+            } else {
+                
+                CoreDataService.updateEntity(id: w.id!, keyToUpdate: "label", newValue: textField.text!, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
                     
-                    displayAlert(viewController: vc, isError: false, message: "Label saved")
-                    
-                } else {
-                    
-                    displayAlert(viewController: vc, isError: true, message: "Label not saved")
+                    if success {
+                        
+                        displayAlert(viewController: vc, isError: false, message: "Label saved")
+                        
+                    } else {
+                        
+                        displayAlert(viewController: vc, isError: true, message: "Label not saved")
+                        
+                    }
                     
                 }
                 

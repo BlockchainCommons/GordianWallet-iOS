@@ -417,7 +417,13 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     
     func generateQrCode(key: String) -> UIImage {
         
-        return qrGenerator.getQRCode(textInput: key)
+        let (qr, error) = qrGenerator.getQRCode(textInput: key)
+        
+        if error {
+            showAlert(vc: self, title: "QR Error", message: "That is too much data to fit into that sized image")
+        }
+        
+        return qr
         
     }
     

@@ -25,7 +25,14 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
 
         // Do any additional setup after loading the view.
         navigationController?.delegate = self
-        qrView.image = qrGenerator.getQRCode(textInput: recoveryQr)
+        let (qr, error) = qrGenerator.getQRCode(textInput: recoveryQr)
+        qrView.image = qr
+        
+        if error {
+            
+            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+            
+        }
         nextOutlet.layer.cornerRadius = 8
         qrView.isUserInteractionEnabled = true
         tapQRGesture = UITapGestureRecognizer(target: self, action: #selector(self.shareQRCode(_:)))

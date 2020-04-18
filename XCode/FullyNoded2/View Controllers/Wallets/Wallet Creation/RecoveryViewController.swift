@@ -78,7 +78,14 @@ class RecoveryViewController: UIViewController {
         
         textView.text = wordsToDisplay
         let qrGen = QRGenerator()
-        imageView.image = qrGen.getQRCode(textInput: descriptor)
+        let (qr, error) = qrGen.getQRCode(textInput: descriptor)
+        imageView.image = qr
+        
+        if error {
+            
+            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+            
+        }
         
         tapQRGesture = UITapGestureRecognizer(target: self,
                                               action: #selector(shareQRCode(_:)))

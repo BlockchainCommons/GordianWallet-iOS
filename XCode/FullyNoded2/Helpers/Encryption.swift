@@ -45,23 +45,21 @@ class Encryption {
     
     class func decryptData(dataToDecrypt: Data, completion: @escaping ((Data?)) -> Void) {
         
-        if #available(iOS 13.0, *) {
+        print("decryptData = \(dataToDecrypt)")
+        
+        if let key = KeyChain.getData("privateKey") {
             
-            if let key = KeyChain.getData("privateKey") {
+            do {
                 
-                do {
-                    
-                    let box = try ChaChaPoly.SealedBox.init(combined: dataToDecrypt)
-                    let k = SymmetricKey(data: key)
-                    let decryptedData = try ChaChaPoly.open(box, using: k)
-                    completion((decryptedData))
-                    
-                } catch {
-                    
-                    print("failed decrypting")
-                    completion((nil))
-                    
-                }
+                let box = try ChaChaPoly.SealedBox.init(combined: dataToDecrypt)
+                let k = SymmetricKey(data: key)
+                let decryptedData = try ChaChaPoly.open(box, using: k)
+                completion((decryptedData))
+                
+            } catch {
+                
+                print("failed decrypting")
+                completion((nil))
                 
             }
             

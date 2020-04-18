@@ -259,13 +259,18 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                             
                                             if let json = recoveryQr.json() {
                                                 
-                                                vc.recoveryImage = vc.qrGenerator.getQRCode(textInput: json)
+                                                let (qr, error) = vc.qrGenerator.getQRCode(textInput: json)
+                                                vc.recoveryImage = qr
+                                                
+                                                if error {
+                                                    
+                                                    showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+                                                    
+                                                }
                                                 
                                             }
                                             
                                             vc.privateKeyDescriptor = "\(privKeyDesc)\n\n\(changeDescriptor)"
-                                            
-//                                            vc.recoveryText = "bitcoin-cli importmulti { \"desc\": \"\(privKeyDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }\n\nbitcoin-cli importmulti { \"desc\": \"\(changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": true, \"internal\": true }"
                                             
                                         } else {
                                          
@@ -288,7 +293,14 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                             
                                             if let json = recoveryQr.json() {
                                                 
-                                                vc.recoveryImage = vc.qrGenerator.getQRCode(textInput: json)
+                                                let (qr, error) = vc.qrGenerator.getQRCode(textInput: json)
+                                                vc.recoveryImage = qr
+                                                
+                                                if error {
+                                                    
+                                                    showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+                                                    
+                                                }
                                                 
                                             }
                                                                                         
@@ -324,19 +336,16 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 if let json = recoveryQr.json() {
                     
-                    vc.recoveryImage = vc.qrGenerator.getQRCode(textInput: json)
+                    let (qr, error) = vc.qrGenerator.getQRCode(textInput: json)
+                    vc.recoveryImage = qr
+                    
+                    if error {
+                        
+                        showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+                        
+                    }
                     
                 }
-                
-//                if s.isMulti {
-//
-//                    vc.recoveryText = "bitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.descriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
-//
-//                } else {
-//
-//                    vc.recoveryText = "bitcoin-cli importmulti { \"desc\": \"\(vc.wallet.descriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": true, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(vc.wallet.changeDescriptor)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": true, \"internal\": true }"
-//
-//                }
                 
                 DispatchQueue.main.async {
                     

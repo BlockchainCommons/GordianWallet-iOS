@@ -116,7 +116,7 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let wallet = WalletStruct(dictionary: wallets[indexPath.section])
-        
+                
         DispatchQueue.main.async {
                         
             let cell = tableView.cellForRow(at: indexPath)!
@@ -167,12 +167,18 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
                         getActiveWalletNow { (wallet, error) in
                             
                             if !error && wallet != nil {
+                                
+                                let p = DescriptorParser()
+                                let descStruct = p.descriptor(wallet!.descriptor)
+                                let activeNetwork = descStruct.network
                              
                                 for w in entity! {
                                     
                                     if w["id"] != nil && w["name"] != nil {
                                         
-                                        if !(w["isArchived"] as! Bool) && (w["id"] as! UUID) != wallet!.id && wallet!.nodeId == (w["nodeId"] as! UUID) {
+                                        let walletToSweepToNetwork = p.descriptor(w["descriptor"] as! String).network
+                                        
+                                        if !(w["isArchived"] as! Bool) && (w["id"] as! UUID) != wallet!.id && activeNetwork == walletToSweepToNetwork {
                                             
                                             vc.wallets.append(w)
                                             
@@ -231,7 +237,7 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     private func confirm(wallet: WalletStruct) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
             let alert = UIAlertController(title: "Sweep funds to the selected wallet?", message: "Tapping yes means the current active wallet will be emptied and all funds sent to the selected wallet.", preferredStyle: .actionSheet)
 
@@ -242,9 +248,8 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
             }))
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-            
-            alert.popoverPresentationController?.sourceView = self.view
-            self.present(alert, animated: true, completion: nil)
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
             
         }
         
@@ -258,17 +263,16 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
         let str = parser.descriptor(receivingWallet.descriptor)
         
         if str.isMulti {
-            
-            self.getMsigAddress(wallet: receivingWallet)
+            getMsigAddress(wallet: receivingWallet)
             
         } else {
-            
-            self.filterDerivation(str: str, wallet: receivingWallet)
+            filterDerivation(str: str, wallet: receivingWallet)
             
         }
         
     }
     
+    /// It does not matter if the wallet is on an external node as we derive the address manually for multisig
     private func getMsigAddress(wallet: WalletStruct) {
         
         let index = wallet.index + 1
@@ -319,13 +323,68 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     private func getAddress(param: String, wallet: WalletStruct) {
-        Reducer.makeCommand(walletName: wallet.name!, command: .getsweeptoaddress, param: param) { [unowned vc = self] (object, errorDesc) in
-            if let address = object as? String {
-                vc.receivingAddress = address
-                vc.getInputs()
+        
+        getActiveWalletNow { [unowned vc = self] (w, error) in
+            
+            if w != nil {
+             
+                let activeNodeId = w!.nodeId
+                
+                /// The wallet we are sweeping to exists on the active node
+                if activeNodeId == wallet.nodeId {
+                 
+                    Reducer.makeCommand(walletName: wallet.name!, command: .getsweeptoaddress, param: param) { [unowned vc = self] (object, errorDesc) in
+                        if let address = object as? String {
+                            vc.receivingAddress = address
+                            vc.getInputs()
+                            
+                        } else {
+                            vc.showError(title: "Error Fetching address", message: "")
+                            
+                        }
+                        
+                    }
+                    
+                /// The wallet we are sweeping to is on a different node
+                } else {
+                 
+                    CoreDataService.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+                        
+                        if nodes != nil {
+                            
+                            for node in nodes! {
+                                let nStr = NodeStruct(dictionary: node)
+                                
+                                if nStr.id == wallet.nodeId {
+                                    
+                                    let makeRpcCommand = MakeRPCCall.sharedInstance
+                                    makeRpcCommand.externalNodeCommand(node: node, walletName: wallet.name!, method: .getsweeptoaddress, param: param) { (success, object, errorDesc) in
+                                        
+                                        if let address = object as? String {
+                                            vc.receivingAddress = address
+                                            vc.getInputs()
+                                            
+                                        } else {
+                                            vc.showError(title: "Error Fetching address", message: errorDesc ?? "unknown error")
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                                                
+                    }
+                    
+                }
+                
                 
             } else {
-                vc.showError(title: "Error Fetching address", message: "")
+             
+                vc.showError(title: "No active wallet", message: "We could not retreive your active wallet")
                 
             }
             
