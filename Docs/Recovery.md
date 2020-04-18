@@ -29,7 +29,7 @@ For all wallet types the user may at anytime go to the "Seed Info" view controll
 - 1. User loses their node or device or both.
 
     - The user will connect a new node and then scan or upload a *Recovery QR* at which point the node will automatically rescan for balances, the user may also input their recovery words if they lost the QR, the only difference will be that the user will need to choose a derivation scheme.
-            
+
 
 ## *Recovery QR*
 
@@ -46,7 +46,7 @@ A *Recovery QR* is a simple json dictionary which consists of four mandatory val
     birthdate:1582800776,
     blockheight:61904
     label:"FullyNoded2 - SingleSig"
-    
+
 }
 ```
 
@@ -54,12 +54,12 @@ A *Recovery QR* is a simple json dictionary which consists of four mandatory val
 
 ```
 {
-   
+
    entropy:"ed3032b2f69ad7037d0a1ab388d91065", descriptor:"wsh(multi(2,[cc2b88d9/84'/1'/0']tpubDDhKDzr8EeYqLP27xchAptrpUEqWecPGEXnjq3d1pKjzbHd6r7DKRPtBMxtQtjoCCqckVBoX6cfiGkBiJffGJYV3dMtabCp9bro29riQtKL/0/*,[ff7a130e/84'/1'/0']tprv8gEZHzJzKfefuNEzWstVsdzmE86SiMK8i8cZUMNDNVTcEWGZJknhKGYNJvRBoXG3R83BGPnrEWrCH2ogKEFUyUZXP8BgL1taExx2P884qUT/0/*,[8f7dba7b/84'/1'/0']tpubDDauNnbmWAmFaxbUDeYsHfsqgF5EK33eLpbw7W5eJz4V3sJ53tnTD2BjYEzJAX7DDscbZMg877vi9o5dyunG52FNDCqjnu126wKHxujMmzp/0/*))#ifjf8",
    birthdate:1582800776,
    blockheight:61904,
    label:"FullyNoded2 - MultiSig"
-   
+
 }
 ```
 
@@ -84,4 +84,3 @@ Represents the blockheight when the wallet was first created, this is used to re
 - `label` (string - optional)
 
 The label a user may add to a wallet to easily identify it. This feature will soon be added to FullyNoded 2 and is therefore included here for forward compatibility.
-
