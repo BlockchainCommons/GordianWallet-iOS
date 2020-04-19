@@ -253,7 +253,29 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     // MARK: WIP
     func signPSBT(psbt: String) {
         
-        displayAlert(viewController: self, isError: false, message: "under construction")
+        PSBTSigner.sign(psbt: psbt) { [unowned vc = self] (success, psbt, rawTx) in
+            
+            if success {
+                
+                if psbt != nil {
+                    
+                    vc.connectingView.removeConnectingView()
+                    print("psbt = \(psbt!)")
+                    
+                } else if rawTx != nil {
+                    
+                    vc.connectingView.removeConnectingView()
+                    print("rawTx = \(rawTx!)")
+                    
+                }
+                
+            } else {
+                
+                vc.connectingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error", message: "PSBT signing failed")
+            }
+            
+        }
         
 //        let cd = CoreDataService()
 //        cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
