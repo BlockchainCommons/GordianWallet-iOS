@@ -28,8 +28,10 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     var dataRefresher = UIBarButtonItem()
     var initialLoad = Bool()
     var wallet:WalletStruct!
+    var presentingModally = Bool()
     var addressOutlet = UILabel()
     
+    @IBOutlet var closeButtonOutlet: UIButton!
     @IBOutlet var amountField: UITextField!
     @IBOutlet var labelField: UITextField!
     
@@ -58,6 +60,16 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         view.addGestureRecognizer(tap)
         addDoneButtonOnKeyboard()
         
+        if presentingModally {
+            
+            closeButtonOutlet.alpha = 1
+            
+        } else {
+            
+            closeButtonOutlet.alpha = 0
+            
+        }
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -85,27 +97,30 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     
     func addNavBarSpinner() {
         
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.spinner.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-            vc.dataRefresher = UIBarButtonItem(customView: vc.spinner)
-            vc.navigationItem.setRightBarButton(vc.dataRefresher, animated: true)
-            vc.spinner.startAnimating()
-            vc.spinner.alpha = 1
-            
-        }
+        spinner.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+        dataRefresher = UIBarButtonItem(customView: spinner)
+        navigationItem.setRightBarButton(dataRefresher, animated: true)
+        spinner.startAnimating()
+        spinner.alpha = 1
         
     }
     
     func removeLoader() {
         
-        DispatchQueue.main.async { [unowned vc = self] in
+        DispatchQueue.main.async {
             
-            vc.spinner.stopAnimating()
-            vc.spinner.alpha = 0
-            vc.refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: vc, action: #selector(vc.load))
-            vc.refreshButton.tintColor = UIColor.white.withAlphaComponent(1)
-            vc.navigationItem.setRightBarButton(vc.refreshButton, animated: true)
+            self.spinner.stopAnimating()
+            self.spinner.alpha = 0
+            
+            self.refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh,
+                                                 target: self,
+                                                 action: #selector(self.load))
+            
+            self.refreshButton.tintColor = UIColor.white.withAlphaComponent(1)
+            
+            self.navigationItem.setRightBarButton(self.refreshButton,
+                                                  animated: true)
+            
                         
         }
         

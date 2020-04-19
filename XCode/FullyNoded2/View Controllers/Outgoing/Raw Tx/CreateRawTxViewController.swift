@@ -142,7 +142,9 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                         vc.scannerView.alpha = 1
                         
                     })
-                                                            
+                    
+                    displayAlert(viewController: self, isError: false, message: "swipe the scanner image down to close it")
+                                        
                 }
                 
             } else {
@@ -289,10 +291,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         scannerView.alpha = 0
         scannerView.backgroundColor = UIColor.black
         updateLeftBarButton(isShowing: false)
-        addressInput.layer.borderWidth = 1.0
-        addressInput.layer.borderColor = UIColor.darkGray.cgColor
-        addressInput.clipsToBounds = true
-        addressInput.layer.cornerRadius = 4
         
     }
     
@@ -327,6 +325,24 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     // MARK: User Actions
+    
+    @IBAction func goToUTXOs(_ sender: Any) {
+        
+        utxos()
+        
+    }
+    
+    @objc func utxos() {
+        
+//        DispatchQueue.main.async {
+//
+//            self.performSegue(withIdentifier: "goToUTXOs", sender: self)
+//
+//        }
+        
+        displayAlert(viewController: self, isError: true, message: "under construction")
+        
+    }
     
     func confirm(raw: String) {
         
@@ -763,14 +779,8 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 
             } else {
                 
-                DispatchQueue.main.async { [unowned vc = self] in
+                DispatchQueue.main.async {
                     
-                    vc.amount = ""
-                    vc.addressInput.text = ""
-                    vc.outputArray.removeAll()
-                    vc.outputsTable.reloadData()
-                    vc.rawTxSigned = ""
-                    vc.outputsTable.alpha = 0
                     vc.outputsString = ""
                     vc.outputs.removeAll()
                     vc.creatingView.removeConnectingView()
@@ -803,14 +813,8 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 
             } else {
                 
-                DispatchQueue.main.async { [unowned vc = self] in
+                DispatchQueue.main.async {
                     
-                    vc.amount = ""
-                    vc.addressInput.text = ""
-                    vc.outputArray.removeAll()
-                    vc.outputsTable.reloadData()
-                    vc.rawTxSigned = ""
-                    vc.outputsTable.alpha = 0
                     vc.outputsString = ""
                     vc.outputs.removeAll()
                     vc.creatingView.removeConnectingView()

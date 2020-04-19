@@ -12,6 +12,7 @@
 		A151B8FD6A96BB6F17C9A12B /* Pods_FullyNoded2Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D002CA2C3751C4A29EE7C952 /* Pods_FullyNoded2Tests.framework */; };
 		D006E34B243ED2FE007B1A5B /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = D006E34A243ED2FE007B1A5B /* Keychain.swift */; };
 		D006E34D244054B8007B1A5B /* _launch.png in Resources */ = {isa = PBXBuildFile; fileRef = D006E34C244054B8007B1A5B /* _launch.png */; };
+		D006E34F24405816007B1A5B /* 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = D006E34E24405816007B1A5B /* 1024.png */; };
 		D010946A242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0109469242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift */; };
 		D0139F5724208A7A00EF956E /* ConfirmRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */; };
 		D047DDF72423464A004BC26D /* SweepToViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF62423464A004BC26D /* SweepToViewController.swift */; };
@@ -28,8 +29,6 @@
 		D047DE0D242D984E004BC26D /* RefillSingleSig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DE0C242D984E004BC26D /* RefillSingleSig.swift */; };
 		D047DE0F242DDEB3004BC26D /* LocalNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DE0E242DDEB3004BC26D /* LocalNode.swift */; };
 		D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650072441A78E00754ACF /* VerifyKeysViewController.swift */; };
-		D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650092442C58200754ACF /* WordRecoveryViewController.swift */; };
-		D056500C2446BF6E00754ACF /* 1024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D056500B2446BF6D00754ACF /* 1024.jpg */; };
 		D080F49523F120B200CC8D6E /* ImportCustomDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */; };
 		D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724023F0EDBB00847DC8 /* AppDelegate.swift */; };
 		D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724223F0EDBB00847DC8 /* SceneDelegate.swift */; };
@@ -109,6 +108,7 @@
 		D09D736523F0F3C000847DC8 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FA23F0F3C000847DC8 /* QRScanner.swift */; };
 		D09D736823F0F3C000847DC8 /* MultiSigTxBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */; };
 		D09D736923F0F3C000847DC8 /* SingleSigBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */; };
+		D09D736A23F0F3C000847DC8 /* WalletSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730023F0F3C000847DC8 /* WalletSaver.swift */; };
 		D09D736B23F0F3C000847DC8 /* CreateMultisigWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */; };
 		D09D736F23F0F3C000847DC8 /* OfflineSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730523F0F3C000847DC8 /* OfflineSigner.swift */; };
 		D09D737023F0F3C000847DC8 /* WalletCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730623F0F3C000847DC8 /* WalletCreator.swift */; };
@@ -161,6 +161,7 @@
 		D002CA2C3751C4A29EE7C952 /* Pods_FullyNoded2Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FullyNoded2Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D006E34A243ED2FE007B1A5B /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		D006E34C244054B8007B1A5B /* _launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _launch.png; sourceTree = "<group>"; };
+		D006E34E24405816007B1A5B /* 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1024.png; sourceTree = "<group>"; };
 		D0109469242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedSaveWordsViewController.swift; sourceTree = "<group>"; };
 		D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmRecoveryViewController.swift; sourceTree = "<group>"; };
 		D047DDF62423464A004BC26D /* SweepToViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SweepToViewController.swift; sourceTree = "<group>"; };
@@ -177,8 +178,6 @@
 		D047DE0C242D984E004BC26D /* RefillSingleSig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillSingleSig.swift; sourceTree = "<group>"; };
 		D047DE0E242DDEB3004BC26D /* LocalNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNode.swift; sourceTree = "<group>"; };
 		D05650072441A78E00754ACF /* VerifyKeysViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyKeysViewController.swift; sourceTree = "<group>"; };
-		D05650092442C58200754ACF /* WordRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordRecoveryViewController.swift; sourceTree = "<group>"; };
-		D056500B2446BF6D00754ACF /* 1024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1024.jpg; sourceTree = "<group>"; };
 		D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCustomDescriptor.swift; sourceTree = "<group>"; };
 		D09D723D23F0EDBB00847DC8 /* FullyNoded 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FullyNoded 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D09D724023F0EDBB00847DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -266,6 +265,7 @@
 		D09D72FA23F0F3C000847DC8 /* QRScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
 		D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSigTxBuilder.swift; sourceTree = "<group>"; };
 		D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleSigBuilder.swift; sourceTree = "<group>"; };
+		D09D730023F0F3C000847DC8 /* WalletSaver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletSaver.swift; sourceTree = "<group>"; };
 		D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateMultisigWallet.swift; sourceTree = "<group>"; };
 		D09D730523F0F3C000847DC8 /* OfflineSigner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSigner.swift; sourceTree = "<group>"; };
 		D09D730623F0F3C000847DC8 /* WalletCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletCreator.swift; sourceTree = "<group>"; };
@@ -365,7 +365,6 @@
 				D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */,
 				D0D0F5652410E3F0007E0763 /* RecoveryInfoViewController.swift */,
 				D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */,
-				D05650092442C58200754ACF /* WordRecoveryViewController.swift */,
 			);
 			path = "Wallet Recovery";
 			sourceTree = "<group>";
@@ -662,7 +661,7 @@
 				D09D72D923F0F3C000847DC8 /* whiteLock.png */,
 				D09D72DA23F0F3C000847DC8 /* blockchain-commons-logo.png */,
 				D09D72DB23F0F3C000847DC8 /* key.png */,
-				D056500B2446BF6D00754ACF /* 1024.jpg */,
+				D006E34E24405816007B1A5B /* 1024.png */,
 				D09D72DC23F0F3C000847DC8 /* addNode.PNG */,
 				D09D72DD23F0F3C000847DC8 /* settings90.png */,
 				D09D72DE23F0F3C000847DC8 /* greenCircle.png */,
@@ -751,6 +750,7 @@
 			children = (
 				D05650062441A45800754ACF /* Recovery */,
 				D0CD026F23FA380B009F2E7F /* Transaction Builders */,
+				D0CD026E23FA37E8009F2E7F /* Saver */,
 				D0CD026D23FA37C8009F2E7F /* Creators */,
 				D0CD026C23FA376D009F2E7F /* Signers */,
 				D0109468242EFF52000B3A40 /* Refillers */,
@@ -811,6 +811,14 @@
 				D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */,
 			);
 			path = Creators;
+			sourceTree = "<group>";
+		};
+		D0CD026E23FA37E8009F2E7F /* Saver */ = {
+			isa = PBXGroup;
+			children = (
+				D09D730023F0F3C000847DC8 /* WalletSaver.swift */,
+			);
+			path = Saver;
 			sourceTree = "<group>";
 		};
 		D0CD026F23FA380B009F2E7F /* Transaction Builders */ = {
@@ -943,10 +951,10 @@
 				D09D735B23F0F3C000847DC8 /* back.png in Resources */,
 				D09D735023F0F3C000847DC8 /* greenCircle.png in Resources */,
 				D09D734C23F0F3C000847DC8 /* blockchain-commons-logo.png in Resources */,
+				D006E34F24405816007B1A5B /* 1024.png in Resources */,
 				D09D735123F0F3C000847DC8 /* whitePlus.png in Resources */,
 				D006E34D244054B8007B1A5B /* _launch.png in Resources */,
 				D09D735723F0F3C000847DC8 /* Search - tripkey.png in Resources */,
-				D056500C2446BF6E00754ACF /* 1024.jpg in Resources */,
 				D09D735623F0F3C000847DC8 /* strobe.png in Resources */,
 				D09D734D23F0F3C000847DC8 /* key.png in Resources */,
 				D09D734923F0F3C000847DC8 /* whiteBroom.png in Resources */,
@@ -1111,7 +1119,6 @@
 				D09D724B23F0EDBB00847DC8 /* FullyNoded2.xcdatamodeld in Sources */,
 				D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */,
 				D09D731223F0F3C000847DC8 /* SeedViewController.swift in Sources */,
-				D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */,
 				D09D732723F0F3C000847DC8 /* ConfirmViewController.swift in Sources */,
 				D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */,
 				D09D732823F0F3C000847DC8 /* VerifyViewController.swift in Sources */,
@@ -1132,6 +1139,7 @@
 				D0A0EAF023F7C06E004F9E15 /* DescriptorParser.swift in Sources */,
 				D09D733D23F0F3C000847DC8 /* FirstTime.swift in Sources */,
 				D09D732D23F0F3C000847DC8 /* AuthenticateViewController.swift in Sources */,
+				D09D736A23F0F3C000847DC8 /* WalletSaver.swift in Sources */,
 				D09D733F23F0F3C000847DC8 /* KeyFetcher.swift in Sources */,
 				D09D734623F0F3C000847DC8 /* AddressParser.swift in Sources */,
 				D09D731C23F0F3C000847DC8 /* QRViewController.swift in Sources */,
@@ -1350,7 +1358,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+<<<<<<< HEAD:XCode/FullyNoded2.xcodeproj/project.pbxproj
 				CURRENT_PROJECT_VERSION = 0.0.91;
+=======
+				CURRENT_PROJECT_VERSION = 0.0.87;
+>>>>>>> parent of 2848fdb... - feat: new UI and flow for recovering wallets where we deduce what is needed by what the user supplies us with and what we find to be present or missing on the node and device - fix: fix coredata crashes where saving a wallet may have caused a crash which resulted in a possible zombie wallet, - fix: we now completely reset the app instead of just deleting all the apps data when utilizing the kill switch - fix: we now only refresh wallet data when needed in the wallets tab (e.g. when a wallet is activated, sweeped, recovered or refreshed) - docs: add a docs folder for all doc related stuff, remove Doffing's cla, rename FullyNoded2 folder to XCode to avoid confusion when building from source - fix: fix any possibility of a zombie wallet being created or displayed to the user - fix: check the hash of the wallet name manually and ensure it matches the expected hash of the public key descriptor for each wallet rpc call to ensure beyond a reasonable doubt that the intended wallet rpc call is to the wallet we expect - fix: fix a bug where the input amount for transactions which had a sub satoshi amount was being rounded and resulted in an error when broadcasting single sig native segwit transactions, this was fixed by converting the amount to a float and then a UInt64 before signing the input - fix: made the UI more consistent - fix: use common terms for the wallet types when creating wallets - fix: add more verbose status when creating wallets - fix: convert simple classes to static classes - fix: remove import button:FullyNoded2/FullyNoded2.xcodeproj/project.pbxproj
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1363,7 +1375,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+<<<<<<< HEAD:XCode/FullyNoded2.xcodeproj/project.pbxproj
 				MARKETING_VERSION = 0.0.91;
+=======
+				MARKETING_VERSION = 0.0.87;
+>>>>>>> parent of 2848fdb... - feat: new UI and flow for recovering wallets where we deduce what is needed by what the user supplies us with and what we find to be present or missing on the node and device - fix: fix coredata crashes where saving a wallet may have caused a crash which resulted in a possible zombie wallet, - fix: we now completely reset the app instead of just deleting all the apps data when utilizing the kill switch - fix: we now only refresh wallet data when needed in the wallets tab (e.g. when a wallet is activated, sweeped, recovered or refreshed) - docs: add a docs folder for all doc related stuff, remove Doffing's cla, rename FullyNoded2 folder to XCode to avoid confusion when building from source - fix: fix any possibility of a zombie wallet being created or displayed to the user - fix: check the hash of the wallet name manually and ensure it matches the expected hash of the public key descriptor for each wallet rpc call to ensure beyond a reasonable doubt that the intended wallet rpc call is to the wallet we expect - fix: fix a bug where the input amount for transactions which had a sub satoshi amount was being rounded and resulted in an error when broadcasting single sig native segwit transactions, this was fixed by converting the amount to a float and then a UInt64 before signing the input - fix: made the UI more consistent - fix: use common terms for the wallet types when creating wallets - fix: add more verbose status when creating wallets - fix: convert simple classes to static classes - fix: remove import button:FullyNoded2/FullyNoded2.xcodeproj/project.pbxproj
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1379,7 +1395,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+<<<<<<< HEAD:XCode/FullyNoded2.xcodeproj/project.pbxproj
 				CURRENT_PROJECT_VERSION = 0.0.91;
+=======
+				CURRENT_PROJECT_VERSION = 0.0.87;
+>>>>>>> parent of 2848fdb... - feat: new UI and flow for recovering wallets where we deduce what is needed by what the user supplies us with and what we find to be present or missing on the node and device - fix: fix coredata crashes where saving a wallet may have caused a crash which resulted in a possible zombie wallet, - fix: we now completely reset the app instead of just deleting all the apps data when utilizing the kill switch - fix: we now only refresh wallet data when needed in the wallets tab (e.g. when a wallet is activated, sweeped, recovered or refreshed) - docs: add a docs folder for all doc related stuff, remove Doffing's cla, rename FullyNoded2 folder to XCode to avoid confusion when building from source - fix: fix any possibility of a zombie wallet being created or displayed to the user - fix: check the hash of the wallet name manually and ensure it matches the expected hash of the public key descriptor for each wallet rpc call to ensure beyond a reasonable doubt that the intended wallet rpc call is to the wallet we expect - fix: fix a bug where the input amount for transactions which had a sub satoshi amount was being rounded and resulted in an error when broadcasting single sig native segwit transactions, this was fixed by converting the amount to a float and then a UInt64 before signing the input - fix: made the UI more consistent - fix: use common terms for the wallet types when creating wallets - fix: add more verbose status when creating wallets - fix: convert simple classes to static classes - fix: remove import button:FullyNoded2/FullyNoded2.xcodeproj/project.pbxproj
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1392,7 +1412,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+<<<<<<< HEAD:XCode/FullyNoded2.xcodeproj/project.pbxproj
 				MARKETING_VERSION = 0.0.91;
+=======
+				MARKETING_VERSION = 0.0.87;
+>>>>>>> parent of 2848fdb... - feat: new UI and flow for recovering wallets where we deduce what is needed by what the user supplies us with and what we find to be present or missing on the node and device - fix: fix coredata crashes where saving a wallet may have caused a crash which resulted in a possible zombie wallet, - fix: we now completely reset the app instead of just deleting all the apps data when utilizing the kill switch - fix: we now only refresh wallet data when needed in the wallets tab (e.g. when a wallet is activated, sweeped, recovered or refreshed) - docs: add a docs folder for all doc related stuff, remove Doffing's cla, rename FullyNoded2 folder to XCode to avoid confusion when building from source - fix: fix any possibility of a zombie wallet being created or displayed to the user - fix: check the hash of the wallet name manually and ensure it matches the expected hash of the public key descriptor for each wallet rpc call to ensure beyond a reasonable doubt that the intended wallet rpc call is to the wallet we expect - fix: fix a bug where the input amount for transactions which had a sub satoshi amount was being rounded and resulted in an error when broadcasting single sig native segwit transactions, this was fixed by converting the amount to a float and then a UInt64 before signing the input - fix: made the UI more consistent - fix: use common terms for the wallet types when creating wallets - fix: add more verbose status when creating wallets - fix: convert simple classes to static classes - fix: remove import button:FullyNoded2/FullyNoded2.xcodeproj/project.pbxproj
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

@@ -10,6 +10,7 @@ import UIKit
 
 class WalletCreatedSaveWordsViewController: UIViewController, UINavigationControllerDelegate {
     
+    @IBOutlet var titleLabel: UILabel!
     @IBOutlet var textView: UITextView!
     @IBOutlet var saveOutlet: UIButton!
     @IBOutlet var derivationLabel: UILabel!
@@ -25,6 +26,8 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
 
         // Do any additional setup after loading the view.
         navigationController?.delegate = self
+        titleLabel.adjustsFontSizeToFitWidth = true
+        setTitleView()
         saveOutlet.layer.cornerRadius = 8
         textView.layer.cornerRadius = 8
         w = WalletStruct(dictionary: wallet)
@@ -41,6 +44,19 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
         mnemonic += "Birthdate unix: \(w.birthdate)"
         birthdateLabel.text = "\(w.birthdate)"
         derivationLabel.text = w.derivation + "/0"
+        
+    }
+    
+    private func setTitleView() {
+        
+        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.frame = titleView.bounds
+        titleView.addSubview(imageView)
+        self.navigationItem.titleView = titleView
         
     }
     

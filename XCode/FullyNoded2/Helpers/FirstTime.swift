@@ -14,8 +14,6 @@ class FirstTime {
     
     func firstTimeHere(completion: @escaping ((Bool)) -> Void) {
         
-        ud.set(432, forKey: "feeTarget")
-        
         let privateKey = Encryption.privateKey()
         if KeyChain.set(privateKey, forKey: "privateKey") {
             

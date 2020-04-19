@@ -25,6 +25,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
 
         // Do any additional setup after loading the view.
         navigationController?.delegate = self
+        setTitleView()
         hideBackButton()
         textView.delegate = self
         textField.delegate = self
@@ -45,6 +46,19 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
             textView.text = "In order to ensure you can recover your wallets there is some information you ought to record securely.\n\nYou will be presented with a RecoveryQR code and a 12 word recovery phrase.\n\nYou should make multiple backups of each and store them in seperate locations."
             
         }
+        
+    }
+    
+    private func setTitleView() {
+        
+        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.frame = titleView.bounds
+        titleView.addSubview(imageView)
+        self.navigationItem.titleView = titleView
         
     }
     

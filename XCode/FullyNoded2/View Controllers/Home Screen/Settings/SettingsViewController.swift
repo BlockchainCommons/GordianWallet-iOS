@@ -313,20 +313,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 if KeyChain.remove(key: "privateKey"), KeyChain.remove(key: "userIdentifier") {
                     
-                    let ft = FirstTime()
-                    ft.firstTimeHere { (success) in
-                        
-                        if success {
-                            
-                            displayAlert(viewController: vc, isError: false, message: "app has been reset")
-                            
-                        } else {
-                            
-                            displayAlert(viewController: vc, isError: true, message: "app reset partially failed, please force quit before using the app")
-                            
-                        }
-                        
-                    }
+                    displayAlert(viewController: vc, isError: false, message: "app has been reset, please force quit and reopen the app")
                     
                 } else {
                     

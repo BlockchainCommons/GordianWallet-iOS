@@ -86,7 +86,7 @@ class OfflineSignerLegacy {
                         let dict = vout as! NSDictionary
                         let n = UInt32(dict["n"] as! Int)
                         if n == voutInt {
-                            let value = UInt64(Float((dict["value"] as! Double) * 100000000.0))
+                            let value = UInt64((dict["value"] as! Double) * 100000000)
                             let bip32derivs = inputMetaDataArray[i]["bip32_derivs"] as! NSArray
                             let bip32derivsDict = bip32derivs[0] as! NSDictionary
                             let path = bip32derivsDict["path"] as! String

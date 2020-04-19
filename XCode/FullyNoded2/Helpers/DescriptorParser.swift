@@ -193,6 +193,7 @@ class DescriptorParser {
                 }
                 
                 let arr3 = derivation.split(separator: "/")
+                print("arr3 = \(arr3)")
                 var path = "m"
                 
                 for (i, item) in arr3.enumerated() {
@@ -204,6 +205,8 @@ class DescriptorParser {
                     default:
                         if i != 0 {
                             path += "/" + item
+                            
+                            print("path = \(path)")
                             
                             if i + 1 == arr3.count {
                                 
@@ -308,6 +311,8 @@ class DescriptorParser {
             dict["isHot"] = true
             
         }
+        
+        print("descriptorDict = \(dict)")
         
         return DescriptorStruct(dictionary: dict)
         

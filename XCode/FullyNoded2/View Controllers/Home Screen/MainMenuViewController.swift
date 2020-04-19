@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import LibWally
 
 class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, OnionManagerDelegate {
     
@@ -81,6 +80,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         torInfoHidden = true
         showNodeInfo = false
         halvingCountdownLabel.adjustsFontSizeToFitWidth = true
+        
+        //mainMenu.translatesAutoresizingMaskIntoConstraints = true
+        //mainMenu.frame = CGRect(x: 8, y: 30, width: mainMenu.frame.width, height: view.frame.height - 30)
         
         if ud?.object(forKey: "firstTime") == nil {
             
@@ -162,7 +164,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func setTitleView() {
         
-        let imageView = UIImageView(image: UIImage(named: "1024.jpg"))
+        let imageView = UIImageView(image: UIImage(named: "1024.png"))
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 15
@@ -368,6 +370,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    private func setFeeTarget() {
+        
+        if ud?.object(forKey: "feeTarget") == nil {
+            
+            ud?.set(432, forKey: "feeTarget")
+            
+        }
+        
+    }
+    
     //MARK: Tableview Methods
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -429,7 +441,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         addWalletButton.addTarget(self, action: #selector(addWallet), for: .touchUpInside)
         let image = UIImage(systemName: "plus")
         addWalletButton.setImage(image, for: .normal)
-        addWalletButton.tintColor = .systemTeal
+        addWalletButton.tintColor = .systemBlue
         cell.addSubview(addWalletButton)
         return cell
         
@@ -2169,6 +2181,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     //MARK: Helpers
     
     private func firstTimeHere() {
+        
+        setFeeTarget()
         
         let firstTime = FirstTime()
         firstTime.firstTimeHere { [unowned vc = self] (success) in

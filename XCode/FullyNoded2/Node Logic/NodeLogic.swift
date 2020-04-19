@@ -60,7 +60,7 @@ class NodeLogic {
     }
     
     func loadExternalWalletData(wallet: WalletStruct, completion: @escaping ((success: Bool, dict: [String:Any]?, errorDescription: String?)) -> Void) {
-        Reducer.makeCommand(walletName: wallet.name ?? "", command: .fetchexternalbalances, param: "0") { [unowned vc = self] (object, errorDesc) in
+        Reducer.makeCommand(walletName: wallet.name!, command: .fetchexternalbalances, param: "0") { [unowned vc = self] (object, errorDesc) in
             if let utxos = object as? NSArray {
                 vc.parseUtxos(wallet: wallet, utxos: utxos, completion: completion)
                 
@@ -246,25 +246,13 @@ class NodeLogic {
     }
     
     // MARK: Parsers
+    
     func parseUtxos(wallet: WalletStruct, utxos: NSArray, completion: @escaping ((success: Bool, dict: [String:Any]?, errorDescription: String?)) -> Void) {
         var amount = 0.0
         var dictToReturn = [String:Any]()
         if utxos.count == 0 {
-            dictToReturn["coldBalance"] = "0.0"
             dictToReturn["noUtxos"] = true
-            if wallet.id != nil {
-                CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastBalance", newValue: amount, entityName: .wallets) { _ in
-                    CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { _ in
-                        CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) { _ in
-                            completion((true, dictToReturn, nil))
-                            
-                        }
-                    }
-                }
-            } else {
-                completion((true, dictToReturn, nil))
-                
-            }
+            completion((true, dictToReturn, nil))
             
         } else {
             dictToReturn["noUtxos"] = false
@@ -299,16 +287,14 @@ class NodeLogic {
                         for (i, comp) in arr.enumerated() {
                             if i + 1 == arr.count {
                                 if let int = Int(comp) {
-                                    if wallet.id != nil {
-                                        if wallet.index <= int {
-                                            CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "index", newValue: int + 1, entityName: .wallets) { (success, errorDescription) in
-                                                if success {
-                                                    print("updated index from utxo")
-                                                    
-                                                } else {
-                                                    print("failed to update index from utxo")
-                                                    
-                                                }
+                                    if wallet.index <= int {
+                                        CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "index", newValue: int + 1, entityName: .wallets) { (success, errorDescription) in
+                                            if success {
+                                                print("updated index from utxo")
+                                                
+                                            } else {
+                                                print("failed to update index from utxo")
+                                                
                                             }
                                         }
                                     }

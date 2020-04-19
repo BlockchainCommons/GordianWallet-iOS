@@ -10,6 +10,7 @@ import UIKit
 
 class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate {
     
+    @IBOutlet var loadingRefresher: UIActivityIndicatorView!
     weak var nodeLogic = NodeLogic.sharedInstance
     var isLoading = Bool()
     var refresher: UIRefreshControl!
@@ -26,7 +27,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var nodes = [[String:Any]]()
     var recoveryPhrase = ""
     var descriptor = ""
-    var fullRefresh = Bool()
     @IBOutlet var walletTable: UITableView!
     
     override func viewDidLoad() {
@@ -39,24 +39,35 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createWallet))
         navigationItem.setRightBarButton(addButton, animated: true)
         navigationItem.setLeftBarButton(editButton, animated: true)
+        setTitleView()
         configureRefresher()
-        walletTable.setContentOffset(.zero, animated: true)
-        NotificationCenter.default.addObserver(self, selector: #selector(didSweep(_:)), name: .didSweep, object: nil)
+        loadingRefresher.alpha = 0
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
-        fullRefresh = false
+        isLoading = true
         refresh()
+        
+        DispatchQueue.main.async {
+            
+            self.walletTable.setContentOffset(.zero, animated: true)
+            
+        }
         
     }
     
-    @objc func didSweep(_ notification: Notification) {
+    private func setTitleView() {
         
-        creatingView.addConnectingView(vc: self, description: "refreshing your wallets data")
-        fullRefresh = true
-        refresh()
+        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.frame = titleView.bounds
+        titleView.addSubview(imageView)
+        self.navigationItem.titleView = titleView
         
     }
     
@@ -199,10 +210,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if !isLoading {
             
-            creatingView.addConnectingView(vc: self, description: "refreshing your wallets data")
-            isLoading = true
-            fullRefresh = true
-            refresher.endRefreshing()
+            self.isLoading = true
+            self.refresher.beginRefreshing()
             refresh()
             
         } else {
@@ -234,7 +243,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             
                             let s = WalletStruct(dictionary: w)
                             
-                            if !s.isArchived && w["id"] != nil && w["name"] != nil {
+                            if !s.isArchived && w["id"] != nil {
                                 
                                 vc.sortedWallets.append(w)
                                 
@@ -266,6 +275,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                                 DispatchQueue.main.async {
                                                     
                                                     vc.walletTable.reloadData()
+                                                    vc.refresher.endRefreshing()
                                                     
                                                 }
                                                 
@@ -277,15 +287,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                         
                                         DispatchQueue.main.async {
                                             
-                                            if vc.fullRefresh {
-                                                
-                                                vc.isLoading = true
-                                                vc.index = 0
-                                                vc.getBalances()
-                                                
-                                            }
-                                            
+                                            vc.loadingRefresher.startAnimating()
+                                            vc.loadingRefresher.alpha = 1
                                             vc.walletTable.reloadData()
+                                            vc.index = 0
+                                            vc.getBalances()
                                             
                                         }
                                         
@@ -892,7 +898,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             let textLabel = UILabel()
             textLabel.textAlignment = .left
-            textLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+            textLabel.font = UIFont.systemFont(ofSize: 17, weight: .heavy)
             
             if wallet.label.count > 20 {
                 
@@ -908,10 +914,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             textLabel.frame = CGRect(x: 0, y: 0, width: self.walletTable.frame.width / 2.2, height: 30)
             textLabel.adjustsFontSizeToFitWidth = true
             
-            let image = UIImage(systemName: "arrow.clockwise")
             let refreshButton = UIButton()
+            let image = UIImage(systemName: "arrow.clockwise")
             refreshButton.setImage(image, for: .normal)
-            refreshButton.restorationIdentifier = "refresher"
             refreshButton.tag = section
             refreshButton.addTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
             refreshButton.frame = CGRect(x: header.frame.maxX - 70, y: 0, width: 20, height: 20)
@@ -936,9 +941,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if wallet.isActive {
                 
                 textLabel.textColor = .white
-                editButton.tintColor = .systemTeal
-                toolsButton.tintColor = .systemTeal
-                refreshButton.tintColor = .systemTeal
+                editButton.tintColor = .white
+                toolsButton.tintColor = .white
+                refreshButton.tintColor = .white
                 
                 editButton.isEnabled = true
                 toolsButton.isEnabled = true
@@ -1120,62 +1125,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-    private func reloadIndividualSection(index: Int) {
-        
-        if !isLoading {
-            
-            isLoading = true
-            DispatchQueue.main.async { [unowned vc = self] in
-                vc.creatingView.addConnectingView(vc: vc, description: "refreshing wallet data...")
-            }
-            let wallet = WalletStruct(dictionary: self.sortedWallets[index])
-            nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
-                
-                if success && dictToReturn != nil {
-                    
-                    let s = HomeStruct(dictionary: dictToReturn!)
-                    let doub = (s.coldBalance).doubleValue
-                    
-                    vc.sortedWallets[index]["lastBalance"] = doub
-                    vc.sortedWallets[index]["lastUsed"]  = Date()
-                    vc.sortedWallets[index]["lastUpdated"] = Date()
-                    
-                    vc.getRescanStatus(i: index, walletName: wallet.name!) { [unowned vc = self] in
-                        
-                        DispatchQueue.main.async {
-                            
-                            vc.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
-                            vc.isLoading = false
-                            vc.creatingView.removeConnectingView()
-                            
-                        }
-                        
-                        
-                    }
-                    
-                } else {
-                    
-                    DispatchQueue.main.async {
-                        
-                        vc.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
-                        vc.isLoading = false
-                        vc.creatingView.removeConnectingView()
-                        showAlert(vc: self, title: "Error", message: errorDesc ?? "error updating balance")
-                        
-                    }
-                    
-                }
-                
-            }
-            
-        } else {
-            
-            showAlert(vc: self, title: "Please be patient", message: "We are fetching data from your node, wait until the spinner disappears then try again.")
-            
-        }
-        
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if sortedWallets.count > 0 {
@@ -1239,7 +1188,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { [unowned vc = self] _ in
                         
                         vc.activate(walletToActivate: wallet.id!, index: index)
-                        vc.reloadIndividualSection(index: index)
                         
                     }
                     
@@ -1447,10 +1395,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         } else {
             
-            DispatchQueue.main.async { [unowned vc = self] in
+            DispatchQueue.main.async {
                 
-                vc.isLoading = false
-                vc.creatingView.removeConnectingView()
+                self.isLoading = false
+                self.loadingRefresher.alpha = 0
+                self.loadingRefresher.stopAnimating()
+                self.refresher.endRefreshing()
                 
             }
             
@@ -1547,7 +1497,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 vc.sweepDoneBlock = { [unowned thisVc = self] result in
                     
-                    thisVc.fullRefresh = true
                     thisVc.refresh()
                     showAlert(vc: thisVc, title: "Wallet Sweeped! 🤩", message: "We are refreshing your balances now.")
                     
@@ -1555,7 +1504,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 vc.refillDoneBlock = { [unowned thisVc = self] result in
                     
-                    thisVc.fullRefresh = false
                     thisVc.refresh()
                     showAlert(vc: thisVc, title: "Success!", message: "Keypool refilled 🤩")
                     
@@ -1571,7 +1519,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     showAlert(vc: thisVc, title: "Success!", message: "Wallet created successfully!")
                     thisVc.isLoading = true
-                    thisVc.fullRefresh = false
                     thisVc.refresh()
                     
                 }
@@ -1581,7 +1528,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     DispatchQueue.main.async {
                         
                         thisVc.isLoading = true
-                        thisVc.fullRefresh = true
                         thisVc.refresh()
                         
                         showAlert(vc: thisVc, title: "Success!", message: "Wallet recovered 🤩!\n\nYour node is now rescanning the blockchain, balances may not show until the rescan completes.")

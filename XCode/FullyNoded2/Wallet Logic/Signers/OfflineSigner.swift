@@ -69,13 +69,13 @@ class NativeSegwitOfflineSigner {
                     let scriptPubKeyDict = witness_utxo["scriptPubKey"] as! NSDictionary
                     let hex = scriptPubKeyDict["hex"] as! String
                     let scriptPubKey = ScriptPubKey.init(hex)!
-                    let amount = UInt64(Float((witness_utxo["amount"] as! Double) * 100000000.0))
+                    let amount = UInt64((witness_utxo["amount"] as! Double) * 100000000)
                     let bip32derivs = inputMetaDataArray[i]["bip32_derivs"] as! NSArray
                     let path = (bip32derivs[0] as! NSDictionary)["path"] as! String
                     if let bip32path = BIP32Path(path) {
                         
                         KeyFetcher.key(path: bip32path) { (key, error) in
-                                                        
+                            
                             if !error {
                                 
                                 let witness = Witness(.payToWitnessPubKeyHash(key!.pubKey))
@@ -117,6 +117,8 @@ class NativeSegwitOfflineSigner {
             }
             
             func parseVouts(vouts: NSArray, vins: NSArray) {
+                
+                print("vouts = \(vouts)")
                 
                 for (i, vout) in vouts.enumerated() {
                     

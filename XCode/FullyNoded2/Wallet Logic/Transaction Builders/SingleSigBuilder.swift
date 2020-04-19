@@ -262,7 +262,6 @@ class SingleSigBuilder {
                                 
                                 if str.isP2WPKH || str.isBIP84 {
                                     
-                                    print("sign segwit")
                                     signSegwit(psbt: psbt)
                                     
                                 } else if str.isP2SHP2WPKH || str.isBIP49 {

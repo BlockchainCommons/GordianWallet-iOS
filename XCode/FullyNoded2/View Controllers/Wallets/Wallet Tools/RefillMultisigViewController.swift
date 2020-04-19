@@ -11,6 +11,7 @@ import UIKit
 
 class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     
+    @IBOutlet var titleLabel: UILabel!
     @IBOutlet var descriptionLabel: UILabel!
     @IBOutlet var wordsView: UIView!
     @IBOutlet var textField: UITextField!
@@ -30,22 +31,13 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
 
         // Do any additional setup after loading the view.
         textField.delegate = self
+        titleLabel.adjustsFontSizeToFitWidth = true
         descriptionLabel.adjustsFontSizeToFitWidth = true
         wordsView.layer.cornerRadius = 8
         tap.addTarget(self, action: #selector(handleTap))
         view.addGestureRecognizer(tap)
-        bip39Words = Bip39Words.validWords
-        updatePlaceHolder(wordNumber: 1)
-    }
-    
-    private func updatePlaceHolder(wordNumber: Int) {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.textField.attributedPlaceholder = NSAttributedString(string: "add word #\(wordNumber)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
-            
-        }
-        
+        let wordList = Bip39Words()
+        bip39Words = wordList.validWords
     }
     
     @objc func handleTap() {
@@ -140,34 +132,29 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         
         if self.justWords.count > 0 {
             
-            DispatchQueue.main.async { [unowned vc = self] in
+            DispatchQueue.main.async {
                 
-                vc.label.removeFromSuperview()
-                vc.label.text = ""
-                vc.addedWords.removeAll()
-                vc.justWords.remove(at: vc.justWords.count - 1)
+                self.label.removeFromSuperview()
+                self.label.text = ""
+                self.addedWords.removeAll()
+                self.justWords.remove(at: self.justWords.count - 1)
                 
-                for (i, word) in vc.justWords.enumerated() {
+                for (i, word) in self.justWords.enumerated() {
                     
-                    vc.addedWords.append("\(i + 1). \(word)\n")
-                    if i == 0 {
-                        vc.updatePlaceHolder(wordNumber: i + 1)
-                    } else {
-                        vc.updatePlaceHolder(wordNumber: i + 2)
-                    }
+                    self.addedWords.append("\(i + 1). \(word) ")
                     
                 }
                 
-                vc.label.textColor = .systemGreen
-                vc.label.text = vc.addedWords.joined(separator: "")
-                vc.label.frame = CGRect(x: 16, y: 0, width: vc.wordsView.frame.width - 32, height: vc.wordsView.frame.height - 10)
-                vc.label.numberOfLines = 0
-                vc.label.sizeToFit()
-                vc.wordsView.addSubview(vc.label)
+                self.label.textColor = .systemGreen
+                self.label.text = self.addedWords.joined(separator: " ")
+                self.label.frame = CGRect(x: 16, y: 0, width: self.wordsView.frame.width - 32, height: self.wordsView.frame.height - 10)
+                self.label.numberOfLines = 0
+                self.label.sizeToFit()
+                self.wordsView.addSubview(self.label)
                 
-                if vc.justWords.count == 12 {
+                if self.justWords.count == 12 {
                     
-                    vc.validWordsAdded()
+                    self.validWordsAdded()
                     
                 }
                 
@@ -318,38 +305,29 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     
     private func addWord(word: String) {
         
-        DispatchQueue.main.async { [unowned vc = self] in
+        DispatchQueue.main.async {
             
-            vc.label.removeFromSuperview()
-            vc.label.text = ""
-            vc.addedWords.removeAll()
-            vc.justWords.append(word)
+            self.label.removeFromSuperview()
+            self.label.text = ""
+            self.addedWords.removeAll()
+            self.justWords.append(word)
             
-            for (i, word) in vc.justWords.enumerated() {
+            for (i, word) in self.justWords.enumerated() {
                 
-                vc.addedWords.append("\(i + 1). \(word)\n")
-                vc.updatePlaceHolder(wordNumber: i + 2)
+                self.addedWords.append("\(i + 1). \(word) ")
                 
             }
             
-            vc.label.textColor = .systemGreen
-            vc.label.text = vc.addedWords.joined(separator: "")
-            vc.label.frame = CGRect(x: 16, y: 0, width: vc.wordsView.frame.width - 32, height: vc.wordsView.frame.height - 10)
-            vc.label.numberOfLines = 0
-            vc.label.sizeToFit()
-            vc.wordsView.addSubview(vc.label)
+            self.label.textColor = .systemGreen
+            self.label.text = self.addedWords.joined(separator: " ")
+            self.label.frame = CGRect(x: 16, y: 0, width: self.wordsView.frame.width - 32, height: self.wordsView.frame.height - 10)
+            self.label.numberOfLines = 0
+            self.label.sizeToFit()
+            self.wordsView.addSubview(self.label)
             
-            if vc.justWords.count == 12 {
+            if self.justWords.count == 12 {
                 
-                if let _ = BIP39Mnemonic(vc.justWords.joined(separator: " ")) {
-                    
-                    vc.validWordsAdded()
-                    
-                } else {
-                    
-                    showAlert(vc: vc, title: "Invalid", message: "Just so you know that is not a valid recovery phrase, if you are inputting a 24 word phrase ignore this message and keep adding your words.")
-                    
-                }
+                self.validWordsAdded()
                 
             }
             

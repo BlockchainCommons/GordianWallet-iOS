@@ -8,15 +8,15 @@
 
 import UIKit
 import LibWally
+import CryptoKit
 
-class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate {
+class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     weak var nodeLogic = NodeLogic.sharedInstance
     let connectingView = ConnectingView()
-    var words:String?
-    var walletNameHash = ""
+    var words = ""
     var walletDict = [String:Any]()
-    var derivation:String?
+    var derivation = ""
     var confirmedDoneBlock: ((Bool) -> Void)?
     var addresses = [String]()
     var descriptorStruct:DescriptorStruct!
@@ -34,8 +34,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        navigationController?.delegate = self
+
         addressTable.delegate = self
         addressTable.dataSource = self
         addressTable.clipsToBounds = true
@@ -44,7 +43,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         confirmOutlet.layer.cornerRadius = 8
         
         // QR only
-        if words == nil && walletDict["birthdate"] != nil {
+        if words == "" && walletDict["descriptor"] != nil {
             
             let parser = DescriptorParser()
             descriptorStruct = parser.descriptor(walletDict["descriptor"] as! String)
@@ -59,6 +58,8 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 walletDerivation.text = descriptorStruct.derivationArray[1] + "/\(descriptorStruct.multiSigPaths[1])"
                 loadMultiSigAddressesFromQR()
                 
+                showAlert(vc: self, title: "Attention!", message: "You are recovering a multi-sig wallet. Please ensure you still have your backup words, otherwise you may not be able to fully recover this wallet if you lose your device and node in the future! If you are in doubt then it is recommended you use the \"sweep to\" tool to sweep all funds to a brand new 2 of 3 wallet.\n\nIf you are positive you still have the recovery words then you can ignore this message.")
+                
             } else {
                 
                 walletType.text = "Single-sig"
@@ -68,12 +69,12 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             }
             
         // Words only
-        } else if words != nil && walletDict["birthdate"] == nil {
+        } else if words != "" && walletDict["descriptor"] == nil {
             
             loadAddressesFromLibWally()
             
         // Full multisig recovery
-        } else if words != nil && walletDict["birthdate"] != nil {
+        } else if words != "" && walletDict["descriptor"] != nil {
             
             let parser = DescriptorParser()
             descriptorStruct = parser.descriptor(walletDict["descriptor"] as! String)
@@ -85,99 +86,126 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             walletDerivation.text = descriptorStruct.derivationArray[1] + "/\(descriptorStruct.multiSigPaths[1])"
             loadMultiSigAddressesFromQR()
             
+            showAlert(vc: self, title: "Attention!", message: "You are attempting to fully recover a multi-sig wallet.\n\nThis means your back up recovery words have been consumed to restore your lost wallet, if you lose the recovery words you will have no way of fully recovering this wallet again! This means your wallet has essentially become a 2 of 2. We urge you to sweep this wallet to a new multi-sig setup so that you get a new fresh backup phrase along with a new 2 of 3 setup, that can be achieved by using the \"sweep to\" tool once this recovery completes.")
+            
         }
         
     }
     
     private func loadAddressesFromLibWally() {
         
-        if derivation != nil && words != nil {
-         
-            walletLabel.text = "unknown"
-            walletName.text = reducedName(name: walletNameHash)
-            if derivation!.contains("1") {
-                walletNetwork.text = "Testnet"
-            } else {
-                walletNetwork.text = "Mainnet"
-            }
-            walletBirthdate.text = "unknown"
-            walletBalance.text = "...fetching balance"
-            walletType.text = "Single-sig"
-            walletDerivation.text = "\(derivation!)/0"
+        walletLabel.text = "no data available"
+        walletName.text = "loading..."
+        walletBirthdate.text = "no data available"
+        walletNetwork.text = "no data available"
+        walletBalance.text = "no data available"
+        walletType.text = "Single-sig"
+        walletDerivation.text = "\(derivation)/0"
+        
+        let mnemonicCreator = MnemonicCreator()
+        mnemonicCreator.convert(words: words) { [unowned vc = self] (mnemonic, error) in
             
-            let mnemonicCreator = MnemonicCreator()
-            mnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
+            if !error && mnemonic != nil {
                 
-                if !error && mnemonic != nil {
+                let mk = HDKey(mnemonic!.seedHex(), network(path: vc.derivation))!
+                let fingerprint = mk.fingerprint.hexString
+                
+                for i in 0...4 {
                     
-                    let mk = HDKey(mnemonic!.seedHex(), network(path: vc.derivation!))!
-                    
-                    for i in 0...4 {
+                    do {
                         
-                        do {
+                        let key = try mk.derive(BIP32Path("\(vc.derivation)/0/\(i)")!)
+                        var addressType:AddressType!
+                        
+                        if vc.derivation.contains("84") {
                             
-                            let key = try mk.derive(BIP32Path("\(vc.derivation!)/0/\(i)")!)
-                            var addressType:AddressType!
+                            addressType = .payToWitnessPubKeyHash
                             
-                            if vc.derivation!.contains("84") {
-                                
-                                addressType = .payToWitnessPubKeyHash
-                                
-                            } else if vc.derivation!.contains("44") {
-                                
-                                addressType = .payToPubKeyHash
-                                
-                            } else if vc.derivation!.contains("49") {
-                                
-                                addressType = .payToScriptHashPayToWitnessPubKeyHash
-                                
-                            }
+                        } else if vc.derivation.contains("44") {
                             
-                            let address = key.address(addressType).description
-                            vc.addresses.append(address)
+                            addressType = .payToPubKeyHash
                             
-                        } catch {
+                        } else if vc.derivation.contains("49") {
                             
-                            displayAlert(viewController: vc, isError: false, message: "error deriving addresses from those words")
+                            addressType = .payToScriptHashPayToWitnessPubKeyHash
                             
                         }
                         
+                        let address = key.address(addressType).description
+                        vc.addresses.append(address)
+                        
+                    } catch {
+                        
+                        displayAlert(viewController: vc, isError: false, message: "error deriving addresses from those words")
+                        
                     }
                     
-                    var zombieDict = [String:Any]()
-                    zombieDict["name"] = vc.walletNameHash
-                    let wallet = WalletStruct(dictionary: zombieDict)
-                    vc.nodeLogic?.loadExternalWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
+                }
+                
+                var param = ""
+                
+                do {
+                    
+                    let xpub = try mk.derive(BIP32Path(vc.derivation)!).xpub
+                    
+                    switch vc.derivation {
                         
-                        if success && dictToReturn != nil {
+                    case "m/84'/1'/0'":
+                        param = "\"wpkh([\(fingerprint)/84'/1'/0']\(xpub)/0/*)\""
+                        
+                    case "m/84'/0'/0'":
+                        param = "\"wpkh([\(fingerprint)/84'/0'/0']\(xpub)/0/*)\""
+                        
+                    case "m/44'/1'/0'":
+                        param = "\"pkh([\(fingerprint)/44'/1'/0']\(xpub)/0/*)\""
+                         
+                    case "m/44'/0'/0'":
+                        param = "\"pkh([\(fingerprint)/44'/0'/0']\(xpub)/0/*)\""
+                        
+                    case "m/49'/1'/0'":
+                        param = "\"sh(wpkh([\(fingerprint)/49'/1'/0']\(xpub)/0/*))\""
+                        
+                    case "m/49'/0'/0'":
+                        param = "\"sh(wpkh([\(fingerprint)/49'/0'/0']\(xpub)/0/*))\""
+                        
+                    default:
+                        
+                        break
+                        
+                    }
+                    
+                    Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { (object, errorDesc) in
+                        
+                        if let dict = object as? NSDictionary {
                             
-                            let s = HomeStruct(dictionary: dictToReturn!)
-                            let doub = (s.coldBalance).doubleValue
-                            vc.walletDict["lastBalance"] = doub
+                            let desc = dict["descriptor"] as! String
+                            let digest = SHA256.hash(data: desc.dataUsingUTF8StringEncoding)
+                            let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
                             
                             DispatchQueue.main.async {
                                 
-                                vc.walletBalance.text = "\(doub)"
+                                vc.walletName.text = vc.reducedName(name: walletName)
+                                vc.addressTable.reloadData()
                                 
                             }
                             
                         } else {
                             
-                            DispatchQueue.main.async {
-                                
-                                vc.walletBalance.text = "unknown"
-                                
-                            }
+                            displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                             
                         }
                         
                     }
+                                        
+                } catch {
                     
-                } else {
-                    
-                    displayAlert(viewController: vc, isError: true, message: "error deriving addresses from those words")
+                    displayAlert(viewController: vc, isError: true, message: "error constructing descriptor")
                     
                 }
+                
+            } else {
+                
+                displayAlert(viewController: vc, isError: true, message: "error deriving addresses from those words")
                 
             }
             
@@ -192,7 +220,8 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         let xprv = descriptorStruct.accountXprv
         let xpub = HDKey(xprv)!.xpub
         let desc = (walletDict["descriptor"] as! String).replacingOccurrences(of: xprv, with: xpub)
-        let walletName = walletNameHash
+        let digest = SHA256.hash(data: desc.dataUsingUTF8StringEncoding)
+        let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
         
         DispatchQueue.main.async {
             
@@ -225,13 +254,12 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                         
                         vc.walletDict["name"] = walletName
                         let wallet = WalletStruct(dictionary: vc.walletDict)
-                        vc.nodeLogic?.loadExternalWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
+                        vc.nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
                             
                             if success && dictToReturn != nil {
                                 
                                 let s = HomeStruct(dictionary: dictToReturn!)
                                 let doub = (s.coldBalance).doubleValue
-                                vc.walletDict["lastBalance"] = doub
                                 
                                 DispatchQueue.main.async {
                                     
@@ -280,7 +308,8 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         let xprv = descriptorStruct.multiSigKeys[1]
         let xpub = HDKey(xprv)!.xpub
         let desc = (walletDict["descriptor"] as! String).replacingOccurrences(of: xprv, with: xpub)
-        let walletName = walletNameHash
+        let digest = SHA256.hash(data: desc.dataUsingUTF8StringEncoding)
+        let walletName = digest.map { String(format: "%02hhx", $0) }.joined()
         
         DispatchQueue.main.async {
             
@@ -308,13 +337,12 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 
                 vc.walletDict["name"] = walletName
                 let wallet = WalletStruct(dictionary: vc.walletDict)
-                vc.nodeLogic?.loadExternalWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
+                vc.nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
                     
                     if success && dictToReturn != nil {
                     
                         let s = HomeStruct(dictionary: dictToReturn!)
                         let doub = (s.coldBalance).doubleValue
-                        vc.walletDict["lastBalance"] = doub
                         
                         DispatchQueue.main.async {
                             
@@ -356,7 +384,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "addressCell", for: indexPath)
         cell.textLabel?.text = "\(indexPath.row).  \(addresses[indexPath.row])"
-        cell.textLabel?.textColor = .white
+        cell.textLabel?.textColor = .systemTeal
         cell.textLabel?.adjustsFontSizeToFitWidth = true
         cell.selectionStyle = .none
         return cell
@@ -384,74 +412,18 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         
     }
     
-    private func recover(dict: [String:Any]) {
+    @IBAction func confirmAction(_ sender: Any) {
         
-        let connectingView = ConnectingView()
-        connectingView.addConnectingView(vc: self, description: "recovering your wallet")
-        let recovery = RecoverWallet.sharedInstance
-        
-        Encryption.getNode { [unowned vc = self] (node, error) in
+        print("confirm")
+        DispatchQueue.main.async {
             
-            if !error && node != nil {
+            self.dismiss(animated: true) { [unowned vc = self] in
                 
-                recovery.recover(node: node!, json: dict, words: vc.words, derivation: vc.derivation) { [unowned vc = self] (success, error) in
-                    
-                    if success {
-                        
-                        /// Use this notifaction to refresh all wallet data on the wallets page, this will ensure rescan labels show up and balances
-                        ///  - only really necessary for wallets that have been recovered on the node.
-                        NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
-                        
-                        connectingView.removeConnectingView()
-                        
-                        DispatchQueue.main.async { [unowned vc = self] in
-                                        
-                            let alert = UIAlertController(title: "Wallet recovered!", message: "Your recovered wallet will now show up in \"Wallets\"", preferredStyle: .actionSheet)
-
-                            alert.addAction(UIAlertAction(title: "Done", style: .cancel, handler: { action in
-                                
-                                DispatchQueue.main.async { [unowned vc = self] in
-                                    
-                                    vc.navigationController?.popToRootViewController(animated: true)
-                                    
-                                }
-                                
-                            }))
-                            alert.popoverPresentationController?.sourceView = self.view
-                            vc.present(alert, animated: true, completion: nil)
-                            
-                        }
-                        
-                    } else {
-                        
-                        connectingView.removeConnectingView()
-                        
-                        if error != nil {
-                            
-                            showAlert(vc: vc, title: "Error!", message: "Wallet recovery error: \(error!)")
-                            
-                        }
-                        
-                    }
-                    
-                }
-                
-            } else {
-                
-                connectingView.removeConnectingView()
-                
-                showAlert(vc: vc, title: "Error!", message: "Recovering wallets requires an active node!")
+                vc.confirmedDoneBlock!(true)
                 
             }
             
         }
-        
-    }
-    
-    @IBAction func confirmAction(_ sender: Any) {
-        
-        print("confirm")
-        recover(dict: walletDict)
         
     }
     

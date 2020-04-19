@@ -9,10 +9,6 @@
 import Foundation
 
 class CreateMultiSigWallet {
-    
-    static let sharedInstance = CreateMultiSigWallet()
-    
-    private init() {}
         
     func create(wallet: WalletStruct, nodeXprv: String, nodeXpub: String, completion: @escaping ((success: Bool, error: String?)) -> Void) {
         

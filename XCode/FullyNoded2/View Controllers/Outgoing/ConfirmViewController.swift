@@ -168,7 +168,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                             
                             if !vc.sweeping {
                                 
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                                     
                                     vc.navigationController?.popToRootViewController(animated: true)
                                     
@@ -176,11 +176,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                                 
                             } else {
                                 
-                                NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                                     
-                                    vc.navigationController?.popToRootViewController(animated: true)
+                                    vc.dismiss(animated: true) {
+                                        
+                                        vc.doneBlock!(true)
+                                        
+                                    }
                                     
                                 }
                                 

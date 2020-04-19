@@ -459,7 +459,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                                             
                                             // we can recover the wallet now
                                             self.connectingView.addConnectingView(vc: self, description: "recovering your wallet")
-                                            let recovery = RecoverWallet.sharedInstance
+                                            let recovery = RecoverWallet()
                                             recovery.recover(node: node!, json: dict, words: self.words, derivation: nil) { (success, error) in
                                                 
                                                 if success {

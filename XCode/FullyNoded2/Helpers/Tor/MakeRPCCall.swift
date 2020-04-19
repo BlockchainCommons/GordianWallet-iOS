@@ -159,8 +159,13 @@ class MakeRPCCall {
                                     }
                                 }
                                 
+<<<<<<< HEAD:XCode/FullyNoded2/Helpers/Tor/MakeRPCCall.swift
                                 /// These commands are only ever used to fetch balances of inactive wallets on the wallets view table, it is safe to just fetch them
                             } else if method == .fetchexternalbalances || method == .getexternalwalletinfo || method == .importmulti || method == .rescanblockchain {
+=======
+                            } else if method == .fetchexternalbalances || method == .getexternalwalletinfo || method == .importmulti {
+                                // These commands are only ever used to fetch balances of inactive wallets on the wallets view table, it is safe to just fetch them
+>>>>>>> parent of 2848fdb... - feat: new UI and flow for recovering wallets where we deduce what is needed by what the user supplies us with and what we find to be present or missing on the node and device - fix: fix coredata crashes where saving a wallet may have caused a crash which resulted in a possible zombie wallet, - fix: we now completely reset the app instead of just deleting all the apps data when utilizing the kill switch - fix: we now only refresh wallet data when needed in the wallets tab (e.g. when a wallet is activated, sweeped, recovered or refreshed) - docs: add a docs folder for all doc related stuff, remove Doffing's cla, rename FullyNoded2 folder to XCode to avoid confusion when building from source - fix: fix any possibility of a zombie wallet being created or displayed to the user - fix: check the hash of the wallet name manually and ensure it matches the expected hash of the public key descriptor for each wallet rpc call to ensure beyond a reasonable doubt that the intended wallet rpc call is to the wallet we expect - fix: fix a bug where the input amount for transactions which had a sub satoshi amount was being rounded and resulted in an error when broadcasting single sig native segwit transactions, this was fixed by converting the amount to a float and then a UInt64 before signing the input - fix: made the UI more consistent - fix: use common terms for the wallet types when creating wallets - fix: add more verbose status when creating wallets - fix: convert simple classes to static classes - fix: remove import button:FullyNoded2/FullyNoded2/Helpers/Tor/MakeRPCCall.swift
                                 makeCommand()
                                 
                             } else {
@@ -179,9 +184,14 @@ class MakeRPCCall {
                             }
                             
                         } else {
+<<<<<<< HEAD:XCode/FullyNoded2/Helpers/Tor/MakeRPCCall.swift
                             
                             /// These are the possible wallet commands with no active wallet (e.g. recovery and wallet creation)
                             if method == .fetchexternalbalances || method == .getexternalwalletinfo || method == .importmulti || method == .rescanblockchain  {
+=======
+                            // if it is the first wallet being created then we allow that
+                            if method == .importmulti {
+>>>>>>> parent of 2848fdb... - feat: new UI and flow for recovering wallets where we deduce what is needed by what the user supplies us with and what we find to be present or missing on the node and device - fix: fix coredata crashes where saving a wallet may have caused a crash which resulted in a possible zombie wallet, - fix: we now completely reset the app instead of just deleting all the apps data when utilizing the kill switch - fix: we now only refresh wallet data when needed in the wallets tab (e.g. when a wallet is activated, sweeped, recovered or refreshed) - docs: add a docs folder for all doc related stuff, remove Doffing's cla, rename FullyNoded2 folder to XCode to avoid confusion when building from source - fix: fix any possibility of a zombie wallet being created or displayed to the user - fix: check the hash of the wallet name manually and ensure it matches the expected hash of the public key descriptor for each wallet rpc call to ensure beyond a reasonable doubt that the intended wallet rpc call is to the wallet we expect - fix: fix a bug where the input amount for transactions which had a sub satoshi amount was being rounded and resulted in an error when broadcasting single sig native segwit transactions, this was fixed by converting the amount to a float and then a UInt64 before signing the input - fix: made the UI more consistent - fix: use common terms for the wallet types when creating wallets - fix: add more verbose status when creating wallets - fix: convert simple classes to static classes - fix: remove import button:FullyNoded2/FullyNoded2/Helpers/Tor/MakeRPCCall.swift
                                 makeCommand()
                                 
                             } else {

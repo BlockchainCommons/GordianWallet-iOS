@@ -10,10 +10,6 @@ import Foundation
 
 class WalletCreator {
     
-    static let sharedInstance = WalletCreator()
-    
-    private init() {}
-    
     func createStandUpWallet(walletDict: [String:Any], completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         
         let wallet = WalletStruct.init(dictionary: walletDict)

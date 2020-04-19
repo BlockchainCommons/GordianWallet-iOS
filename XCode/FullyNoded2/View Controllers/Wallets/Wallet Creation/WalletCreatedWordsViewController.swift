@@ -11,6 +11,7 @@ import UIKit
 class WalletCreatedWordsViewController: UIViewController, UINavigationControllerDelegate {
     
     @IBOutlet var textView: UITextView!
+    @IBOutlet var titleLabel: UILabel!
     @IBOutlet var savedOutlet: UIButton!
     var recoverPhrase = ""
     var wallet = [String:Any]()
@@ -20,6 +21,8 @@ class WalletCreatedWordsViewController: UIViewController, UINavigationController
 
         // Do any additional setup after loading the view.
         navigationController?.delegate = self
+        titleLabel.adjustsFontSizeToFitWidth = true
+        setTitleView()
         savedOutlet.layer.cornerRadius = 8
         
         let w = WalletStruct(dictionary: wallet)
@@ -51,6 +54,19 @@ class WalletCreatedWordsViewController: UIViewController, UINavigationController
             """
             
         }
+        
+    }
+    
+    private func setTitleView() {
+        
+        let imageView = UIImageView(image: UIImage(named: "1024.png"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.frame = titleView.bounds
+        titleView.addSubview(imageView)
+        self.navigationItem.titleView = titleView
         
     }
     

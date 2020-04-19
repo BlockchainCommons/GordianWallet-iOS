@@ -174,7 +174,7 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
                              
                                 for w in entity! {
                                     
-                                    if w["id"] != nil && w["name"] != nil {
+                                    if w["id"] != nil {
                                         
                                         let walletToSweepToNetwork = p.descriptor(w["descriptor"] as! String).network
                                         
@@ -803,6 +803,19 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 vc.sweeping = true
                 vc.signedRawTx = self.signedTx
+                vc.doneBlock = { [unowned thisVc = self] result in
+                 
+                    DispatchQueue.main.async {
+                        
+                        thisVc.dismiss(animated: true) {
+                            
+                            thisVc.doneBlock!(true)
+                            
+                        }
+                        
+                    }
+                    
+                }
                 
             }
             

@@ -82,7 +82,7 @@ class OfflineSignerP2SHSegwit {
                 let scriptPubKeyDict = witness_utxo["scriptPubKey"] as! NSDictionary
                 let hex = scriptPubKeyDict["hex"] as! String
                 let scriptPubKey = ScriptPubKey(hex)!
-                let amount = UInt64(Float((witness_utxo["amount"] as! Double) * 100000000.0))
+                let amount = UInt64((witness_utxo["amount"] as! Double) * 100000000)
                 let bip32derivs = inputMetaDataArray[i]["bip32_derivs"] as! NSArray
                 let bip32derivsDict = bip32derivs[0] as! NSDictionary
                 let path = bip32derivsDict["path"] as! String

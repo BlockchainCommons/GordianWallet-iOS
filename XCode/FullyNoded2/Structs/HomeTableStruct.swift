@@ -40,7 +40,7 @@ public struct HomeStruct: CustomStringConvertible {
         self.network = dictionary["chain"] as? String ?? ""
         self.hashrate = dictionary["networkhashps"] as? String ?? ""
         self.amount = dictionary["amount"] as? Double ?? 0.0
-        self.coldBalance = dictionary["coldBalance"] as? String ?? "0.0"
+        self.coldBalance = dictionary["coldBalance"] as? String ?? "0.00000000"
         self.version = dictionary["subversion"] as? String ?? ""
         self.torReachable = dictionary["reachable"] as? Bool ?? false
         self.incomingCount = dictionary["incomingCount"] as? Int ?? 0

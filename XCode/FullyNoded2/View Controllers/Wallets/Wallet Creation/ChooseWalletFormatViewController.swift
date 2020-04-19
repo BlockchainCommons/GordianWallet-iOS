@@ -33,6 +33,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     var backUpRecoveryPhrase = ""
     var walletDoneBlock : ((Bool) -> Void)?
     var multiSigDoneBlock : (((success: Bool, recoveryPhrase: String, descriptor: String)) -> Void)?
+    var importDoneBlock : ((Bool) -> Void)?
     let creatingView = ConnectingView()
     var recoverDoneBlock : ((Bool) -> Void)?
     
@@ -40,6 +41,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     @IBOutlet var templateSwitch: UISegmentedControl!
     @IBOutlet var buttonOutlet: UIButton!
     @IBOutlet var seedDescription: UILabel!
+    @IBOutlet var importButtonOutlet: UIButton!
     @IBOutlet var recoverWalletOutlet: UIButton!
 
     override func viewDidLoad() {
@@ -48,14 +50,27 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         navigationController?.delegate = self
         buttonOutlet.clipsToBounds = true
         buttonOutlet.layer.cornerRadius = 10
+        importButtonOutlet.layer.cornerRadius = 10
         recoverWalletOutlet.layer.cornerRadius = 10
         formatSwitch.selectedSegmentIndex = 0
         templateSwitch.selectedSegmentIndex = 0
         isBIP84 = true
-        isMultiSig = false
-        isSingleSig = true
-        seedDescription.text = "Your device will hold one seed and your node will hold 5,000 public keys derived from the same seed.\n\nYour node will build unsigned PSBT's acting as a watch-only wallet and pass them to your device for offline signing."
+        isMultiSig = true
+        seedDescription.text = "Your device will hold one seed, your node will hold 2,000 private keys derived from a second seed, and you will securely store one seed offline for recovery purposes.\n\nYour node will create PSBT's and sign them with one key, passing the partially signed PSBT's to your device which will sign the PSBT's with the second key."
         seedDescription.sizeToFit()
+        
+    }
+    
+    @IBAction func importAction(_ sender: Any) {
+        
+        showAlert(vc: self, title: "🛠 Not yet ready", message: "This feature is under active development and not quite ready for testing yet.")
+        
+//        DispatchQueue.main.async {
+//
+//            self.importDoneBlock!(true)
+//            self.dismiss(animated: true, completion: nil)
+//
+//        }
         
     }
     
@@ -127,31 +142,31 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
         case 0:
             
-            isSingleSig = true
-            isMultiSig = false
-            
-            DispatchQueue.main.async {
-                
-                self.formatSwitch.setTitle("Bech32", forSegmentAt: 0)
-                self.formatSwitch.setTitle("Segwit Wrapped", forSegmentAt: 1)
-                self.formatSwitch.setTitle("Legacy", forSegmentAt: 2)
-                
-                self.seedDescription.text = "Your device will hold one seed and your node will hold 5,000 public keys derived from the same seed.\n\nYour node will build unsigned PSBT's acting as a watch-only wallet and pass them to your device for offline signing."
-                
-            }
-            
-        case 1:
-            
             isMultiSig = true
             isSingleSig = false
             
             DispatchQueue.main.async {
                 
-                self.formatSwitch.setTitle("Bech32", forSegmentAt: 0)
-                self.formatSwitch.setTitle("Segwit Wrapped", forSegmentAt: 1)
-                self.formatSwitch.setTitle("Legacy", forSegmentAt: 2)
+                self.formatSwitch.setTitle("P2WSH", forSegmentAt: 0)
+                self.formatSwitch.setTitle("P2SH-P2WSH", forSegmentAt: 1)
+                self.formatSwitch.setTitle("P2SH", forSegmentAt: 2)
                 
-                self.seedDescription.text = "Your device will hold one seed, your node will hold 5,000 private keys derived from a second seed, and you will securely store one seed offline for recovery purposes.\n\nYour node will create PSBT's and sign them with one key, passing the partially signed PSBT's to your device which will sign the PSBT's with the second key."
+                self.seedDescription.text = "Your device will hold one seed, your node will hold 2,000 private keys derived from a second seed, and you will securely store one seed offline for recovery purposes.\n\nYour node will create PSBT's and sign them with one key, passing the partially signed PSBT's to your device which will sign the PSBT's with the second key."
+                
+            }
+            
+        case 1:
+            
+            isSingleSig = true
+            isMultiSig = false
+            
+            DispatchQueue.main.async {
+                
+                self.formatSwitch.setTitle("P2WPKH", forSegmentAt: 0)
+                self.formatSwitch.setTitle("P2SH-P2WPKH", forSegmentAt: 1)
+                self.formatSwitch.setTitle("P2PKH", forSegmentAt: 2)
+                
+                self.seedDescription.text = "Your device will hold one seed and your node will hold 2,000 public keys derived from the same seed.\n\nYour node will build unsigned PSBT's acting as a watch-only wallet and pass them to your device for offline signing."
                 
             }
             
@@ -260,31 +275,18 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
     }
     
-    private func updateStatus(text: String) {
-        DispatchQueue.main.async { [unowned vc = self] in
-            vc.creatingView.label.text = text
-            
-        }
-        
-    }
-    
     func createSingleSig() {
         print("create single sig")
-        
-        updateStatus(text: "creating device's seed")
         
         KeychainCreator.createKeyChain() { [unowned vc = self] (mnemonic, error) in
             
             if !error {
-                
-                vc.updateStatus(text: "encrypting device's seed")
                 
                 let dataToEncrypt = mnemonic!.dataUsingUTF8StringEncoding
                 Encryption.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
                     
                     if !error {
                         
-                        vc.updateStatus(text: "creating primary descriptor")
                         vc.newWallet["seed"] = encryptedData!
                         vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
                         
@@ -347,7 +349,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 let primaryDescriptor = dict["descriptor"] as! String
                                 vc.newWallet["descriptor"] = primaryDescriptor
                                 vc.newWallet["name"] = Encryption.sha256hash(primaryDescriptor)
-                                vc.updateStatus(text: "creating change descriptor")
                                 vc.constructSingleSigChangeDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
                                 
                             } else {
@@ -418,7 +419,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 
                                 let changeDescriptor = dict["descriptor"] as! String
                                 vc.newWallet["changeDescriptor"] = changeDescriptor
-                                vc.updateStatus(text: "creating the wallet on your node")
                                 vc.createSingleSigWallet()
                                 
                             } else {
@@ -447,18 +447,19 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     
     func createSingleSigWallet() {
         
-        let walletCreator = WalletCreator.sharedInstance
+        let walletCreator = WalletCreator()
         walletCreator.createStandUpWallet(walletDict: newWallet) { [unowned vc = self] (success, errorDescription) in
             
             if success {
                 
-                vc.updateStatus(text: "saving the wallet to your device")
-                
-                CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
+                let walletSaver = WalletSaver()
+                walletSaver.save(walletToSave: vc.newWallet) { (success) in
                     
                     if success {
                         
+                        vc.creatingView.removeConnectingView()
                         let w = WalletStruct(dictionary: vc.newWallet)
+                        
                         let encryptedMnemonic = w.seed
                         Encryption.decryptData(dataToDecrypt: encryptedMnemonic) { (mnemonic) in
                             
@@ -486,7 +487,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                         if let json = recoveryQr.json() {
                                                             
                                                             DispatchQueue.main.async {
-                                                                vc.creatingView.removeConnectingView()
+                                                                
                                                                 vc.backUpRecoveryPhrase = words
                                                                 vc.recoveryQr = json
                                                                 vc.performSegue(withIdentifier: "walletCreated", sender: vc)
@@ -549,12 +550,11 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     } else {
                         
                         vc.creatingView.removeConnectingView()
-                        displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving wallet")
+                        displayAlert(viewController: vc, isError: true, message: "There was an error saving your wallet")
                         
                     }
                     
                 }
-                
                 
             } else {
                 
@@ -568,8 +568,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     func createMultiSig() {
-        
-        updateStatus(text: "creating offline seed")
         
         KeychainCreator.createKeyChain { [unowned vc = self] (mnemonic, error) in
             
@@ -639,8 +637,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     
     func createLocalKey() {
         print("createLocalKey")
-        
-        updateStatus(text: "creating device's seed")
         
         KeychainCreator.createKeyChain { [unowned vc = self] (words, error) in
             
@@ -738,8 +734,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     func createNodesKey() {
         print("createNodesKey")
         
-        updateStatus(text: "creating node's seed")
-        
         KeychainCreator.createKeyChain { [unowned vc = self] (words, error) in
             
             if !error {
@@ -819,8 +813,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     
     func constructDescriptor(derivation: String) {
         
-        updateStatus(text: "creating primary descriptor")
-        
         let recoveryKey = publickeys[0]
         let localKey = publickeys[1]
         let nodeKey = publickeys[2]
@@ -898,8 +890,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
                 if let primaryDescriptor = result["descriptor"] as? String {
                     
-                    vc.updateStatus(text: "creating change descriptor")
-                    
                     Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDescriptor)\"") { (object, errorDesc) in
                         
                         DispatchQueue.main.async {
@@ -921,7 +911,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                         vc.newWallet["seed"] = self.localSeed
                                         vc.newWallet["name"] = Encryption.sha256hash(primaryDescriptor)
                                         
-                                        let multiSigCreator = CreateMultiSigWallet.sharedInstance
+                                        let multiSigCreator = CreateMultiSigWallet()
                                         let wallet = WalletStruct(dictionary: vc.newWallet)
                                         multiSigCreator.create(wallet: wallet, nodeXprv: vc.nodesSeed, nodeXpub: vc.publickeys[2]) { (success, error) in
                                             
@@ -933,7 +923,8 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                     
                                                 }
                                                 
-                                                CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
+                                                let walletSaver = WalletSaver()
+                                                walletSaver.save(walletToSave: vc.newWallet) { (success) in
                                                     
                                                     if success {
                                                         
@@ -959,12 +950,11 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                             }
                                                             
                                                         }
-
                                                         
                                                     } else {
                                                         
                                                         vc.creatingView.removeConnectingView()
-                                                        displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving wallet")
+                                                        displayAlert(viewController: vc, isError: true, message: "error saving wallet")
                                                         
                                                     }
                                                     
@@ -1028,7 +1018,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
             if let vc = segue.destination as? WalletRecoverViewController {
                 
-                vc.onQrDoneBlock = { [unowned thisVc = self] result in
+                vc.onDoneBlock = { [unowned thisVc = self] result in
                     
                     DispatchQueue.main.async {
                         
