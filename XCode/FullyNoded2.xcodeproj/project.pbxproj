@@ -58,7 +58,6 @@
 		D09D732823F0F3C000847DC8 /* VerifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72AA23F0F3C000847DC8 /* VerifyViewController.swift */; };
 		D09D732923F0F3C000847DC8 /* InvoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72AD23F0F3C000847DC8 /* InvoiceViewController.swift */; };
 		D09D732A23F0F3C000847DC8 /* TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B023F0F3C000847DC8 /* TransactionViewController.swift */; };
-		D09D732B23F0F3C000847DC8 /* ImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B123F0F3C000847DC8 /* ImportViewController.swift */; };
 		D09D732D23F0F3C000847DC8 /* AuthenticateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B323F0F3C000847DC8 /* AuthenticateViewController.swift */; };
 		D09D732E23F0F3C000847DC8 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */; };
 		D09D732F23F0F3C000847DC8 /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */; };
@@ -214,7 +213,6 @@
 		D09D72AA23F0F3C000847DC8 /* VerifyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyViewController.swift; sourceTree = "<group>"; };
 		D09D72AD23F0F3C000847DC8 /* InvoiceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvoiceViewController.swift; sourceTree = "<group>"; };
 		D09D72B023F0F3C000847DC8 /* TransactionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionViewController.swift; sourceTree = "<group>"; };
-		D09D72B123F0F3C000847DC8 /* ImportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportViewController.swift; sourceTree = "<group>"; };
 		D09D72B323F0F3C000847DC8 /* AuthenticateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateViewController.swift; sourceTree = "<group>"; };
 		D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
@@ -561,7 +559,6 @@
 				D09D72B623F0F3C000847DC8 /* Intro */,
 				D09D728C23F0F3BF00847DC8 /* Settings */,
 				D09D72AF23F0F3C000847DC8 /* Transaction Viewer */,
-				D09D72B123F0F3C000847DC8 /* ImportViewController.swift */,
 				D09D72B323F0F3C000847DC8 /* AuthenticateViewController.swift */,
 				D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */,
 				D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */,
@@ -1168,7 +1165,6 @@
 				D09D736423F0F3C000847DC8 /* RawDisplayer.swift in Sources */,
 				D0D0F5662410E3F0007E0763 /* RecoveryInfoViewController.swift in Sources */,
 				D047DE0F242DDEB3004BC26D /* LocalNode.swift in Sources */,
-				D09D732B23F0F3C000847DC8 /* ImportViewController.swift in Sources */,
 				D09D734423F0F3C000847DC8 /* TorClient.swift in Sources */,
 				D047DDF9242B2F3F004BC26D /* IntroductionViewController.swift in Sources */,
 				D047DDFD242B32C3004BC26D /* HowToSupportFN2ViewController.swift in Sources */,

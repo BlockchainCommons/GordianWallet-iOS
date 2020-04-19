@@ -1621,11 +1621,9 @@
                         <outlet property="mainMenu" destination="WFU-Fl-Gfe" id="lGR-uB-jyD"/>
                         <outlet property="sponsorView" destination="AbS-c9-gmz" id="ZTm-oj-hzR"/>
                         <segue destination="MkV-nj-qUL" kind="show" identifier="getTransaction" id="La4-nW-6qo"/>
-                        <segue destination="bKH-sI-MiM" kind="presentation" identifier="lockScreen" id="UBf-qr-XYG"/>
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="scanNow" id="LzA-tD-DJD"/>
                         <segue destination="I2N-Ql-8qz" kind="show" identifier="showIntro" id="a8G-G5-GSa"/>
                         <segue destination="3uQ-0D-YgM" kind="show" identifier="goToWallets" id="fBg-S5-BEW"/>
-                        <segue destination="rWu-wq-Agv" kind="presentation" identifier="import" id="0zN-S6-Zr1"/>
                         <segue destination="AS8-ke-Yxh" kind="show" identifier="settings" id="hdq-o6-Ing"/>
                         <segue destination="NHv-UH-1lX" kind="presentation" identifier="goDonate" id="C3T-yU-SMU"/>
                         <segue destination="reL-7P-R3q" kind="presentation" identifier="refillMsigFromHome" id="pun-AW-DGw"/>
@@ -2242,35 +2240,6 @@ Blockchain Commons and Fully Noded 2 never share any data with any third party e
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nvo-2v-clY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-9711" y="-1263"/>
-        </scene>
-        <!--Import View Controller-->
-        <scene sceneID="Hz8-4L-tK7">
-            <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" id="rWu-wq-Agv" customClass="ImportViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Zk1-Bq-uyJ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Cjf-5H-6QF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="Cjf-5H-6QF" firstAttribute="top" secondItem="UFk-vp-rHh" secondAttribute="top" id="8Of-cV-rcJ"/>
-                            <constraint firstItem="Cjf-5H-6QF" firstAttribute="trailing" secondItem="UFk-vp-rHh" secondAttribute="trailing" id="Yne-CR-wK5"/>
-                            <constraint firstItem="Cjf-5H-6QF" firstAttribute="bottom" secondItem="UFk-vp-rHh" secondAttribute="bottom" id="bu5-kz-Yg6"/>
-                            <constraint firstItem="Cjf-5H-6QF" firstAttribute="leading" secondItem="UFk-vp-rHh" secondAttribute="leading" id="rMe-P5-Pz2"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="UFk-vp-rHh"/>
-                    </view>
-                    <connections>
-                        <outlet property="imageView" destination="Cjf-5H-6QF" id="kuP-ad-U1j"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="aX8-lc-fq0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-11081" y="392"/>
         </scene>
         <!--Donate View Controller-->
         <scene sceneID="7jc-m3-rrH">
@@ -2984,8 +2953,6 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                     <navigationItem key="navigationItem" title="Settings" id="YNb-Gd-Hqq"/>
                     <connections>
                         <outlet property="settingsTable" destination="hcp-eG-lok" id="xPg-8r-KBs"/>
-                        <segue destination="bKH-sI-MiM" kind="show" identifier="goLogIn" id="qed-hl-jG5"/>
-                        <segue destination="bKH-sI-MiM" kind="show" identifier="reenterCredentials" id="ckQ-WD-ole"/>
                         <segue destination="FI5-Kv-Y72" kind="show" identifier="goToAuth" id="FYa-hr-w4j"/>
                         <segue destination="DOn-IQ-sOy" kind="show" identifier="nodeManager" id="SNM-Ay-Yq0"/>
                     </connections>
@@ -5114,12 +5081,12 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="oWp-iO-M9B">
                                                             <rect key="frame" x="142" y="11" width="61.5" height="22"/>
                                                             <subviews>
-                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
+                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
                                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="22"/>
                                                                     <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                                 </button>
-                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
                                                                     <rect key="frame" x="27" y="0.0" width="34.5" height="22"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -5531,7 +5498,6 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                     <navigationItem key="navigationItem" title="Wallets" id="E9A-mq-8W3"/>
                     <connections>
                         <outlet property="walletTable" destination="JXW-QX-3AG" id="FsL-zD-yAJ"/>
-                        <segue destination="rWu-wq-Agv" kind="presentation" identifier="importCustom" id="r5v-RV-hIL"/>
                         <segue destination="lq5-Pd-gqW" kind="presentation" identifier="exportSeed" id="Pnz-5F-hdP"/>
                         <segue destination="jX1-Is-hS7" kind="presentation" identifier="exportKeys" id="r3C-3T-Ati"/>
                         <segue destination="jXY-2O-cMK" kind="presentation" identifier="verifyAddresses" id="rrW-6B-Fka"/>
@@ -5936,22 +5902,6 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
             </objects>
             <point key="canvasLocation" x="-1926" y="376"/>
         </scene>
-        <!--Log In View Controller-->
-        <scene sceneID="Ieg-P5-lGV">
-            <objects>
-                <viewController storyboardIdentifier="LogIn" extendedLayoutIncludesOpaqueBars="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bKH-sI-MiM" customClass="LogInViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Wt8-Mt-3Mi">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="EbK-Bw-j4E"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="DEo-bV-cnU"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KMl-va-ciu" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-4199" y="-2918"/>
-        </scene>
     </scenes>
     <resources>
         <image name="Settings" width="30" height="30"/>
@@ -6000,14 +5950,12 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
         <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="UBf-qr-XYG"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="pun-AW-DGw"/>
         <segue reference="Kzq-6W-yKR"/>
         <segue reference="9aM-UA-Kws"/>
         <segue reference="OVL-GL-HPC"/>
         <segue reference="LzA-tD-DJD"/>
-        <segue reference="0zN-S6-Zr1"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

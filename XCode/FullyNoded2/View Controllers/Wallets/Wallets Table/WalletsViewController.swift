@@ -1362,10 +1362,28 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if !error && node != nil {
                     
-                    DispatchQueue.main.async {
+                    if node!.network == "mainnet" {
+                        
+                        DispatchQueue.main.async {
+                                        
+                            let alert = UIAlertController(title: "Warning!", message: "The app is still in late alpha so please test with small amounts when using mainnet", preferredStyle: .actionSheet)
 
-                        vc.performSegue(withIdentifier: "addWallet", sender: vc)
+                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { [unowned vc = self] action in
+                                
+                                DispatchQueue.main.async {
 
+                                    vc.performSegue(withIdentifier: "addWallet", sender: vc)
+
+                                }
+                                
+                            }))
+                            
+                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                                    
+                            self.present(alert, animated: true, completion: nil)
+                            
+                        }
+                        
                     }
                     
                 } else {
