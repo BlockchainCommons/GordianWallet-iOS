@@ -42,7 +42,10 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
         } else {
             
-            creatingView.addConnectingView(vc: self, description: "verifying unsigned psbt")
+            let exportImage = UIImage(systemName: "arrowshape.turn.up.right")!
+            broadcastButton.setImage(exportImage, for: .normal)
+            broadcastButton.setTitle("  Export PSBT", for: .normal)
+            creatingView.addConnectingView(vc: self, description: "verifying psbt")
             executeNodeCommand(method: .decodepsbt, param: "\"\(unsignedPsbt)\"")
             
         }
@@ -93,7 +96,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "CryptoWallet", style: .default, handler: { [unowned vc = self] action in
+            alert.addAction(UIAlertAction(title: "Caravan", style: .default, handler: { [unowned vc = self] action in
                 
                 displayAlert(viewController: vc, isError: false, message: "under construction")
                 

@@ -11,6 +11,8 @@ import LibWally
 
 class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
+    var unsignedPsbt = ""
+    var signedRawTx = ""
     var updatingNode = Bool()
     var nodeId:UUID!
     var words = ""
@@ -250,7 +252,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         
     }
     
-    // MARK: WIP
     func signPSBT(psbt: String) {
         
         PSBTSigner.sign(psbt: psbt) { [unowned vc = self] (success, psbt, rawTx) in
@@ -258,15 +259,17 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             if success {
                 
                 if psbt != nil {
-                    
                     vc.connectingView.removeConnectingView()
-                    print("psbt = \(psbt!)")
+                    vc.unsignedPsbt = psbt!
                     
                 } else if rawTx != nil {
-                    
                     vc.connectingView.removeConnectingView()
-                    print("rawTx = \(rawTx!)")
+                    vc.signedRawTx = rawTx!
                     
+                }
+                
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.performSegue(withIdentifier: "goConfirmPsbt", sender: vc)
                 }
                 
             } else {
@@ -276,102 +279,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             }
             
         }
-        
-//        let cd = CoreDataService()
-//        cd.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
-//            if errorDescription == nil && wallets != nil {
-//                for w in wallets! {
-//                    let wallet = WalletStruct(dictionary: w)
-//                    let chain = network(path: wallet.derivation)
-//                    print("chain = \(chain)")
-//                    do {
-//                        var localPSBT = try PSBT(psbt, chain)
-//                        let inputs = localPSBT.inputs
-//                        print("inputs.count = \(inputs.count)")
-//                        for input in inputs {
-//                            let origins = input.origins
-//                            for origin in origins! {
-//                                var path = origin.value.path
-//                                print("path = \(path)")
-//                                let s = (path.description).replacingOccurrences(of: "m/", with: "")
-//                                path = BIP32Path(s)!
-//                                print("path2 = \(path)")
-//                                let encryptedSeed = wallet.seed
-//                                if String(bytes: encryptedSeed, encoding: .utf8) != "no seed" {
-//                                    let enc = Encryption()
-//                                    Encryption.decryptData(dataToDecrypt: encryptedSeed) { (seed) in
-//                                        if seed != nil {
-//                                            if let words = String(data: seed!, encoding: .utf8) {
-//                                                let mnenomicCreator = MnemonicCreator()
-//                                                mnenomicCreator.convert(words: words) { (mnemonic, error) in
-//                                                    if !error {
-//                                                        if let masterKey = HDKey(mnemonic!.seedHex(""), network(path: wallet.derivation)) {
-//                                                            if let walletPath = BIP32Path(wallet.derivation) {
-//                                                                do {
-//                                                                    let account = try masterKey.derive(walletPath)
-//                                                                    print("account xpub = \(account.xpub)")
-//
-//                                                                    do {
-//                                                                        let key = try account.derive(path)
-//                                                                        //if input.canSign(account) {
-//                                                                            if let privkey = key.privKey {
-//                                                                                print("privkey = \(privkey.wif)")
-//                                                                                let mk = masterKey.xpriv!
-//                                                                                let hdkey = HDKey(mk)
-//                                                                                localPSBT.sign(hdkey!)
-//                                                                                print("psbt signed")
-//                                                                                let final = localPSBT.finalize()
-//                                                                                let complete = localPSBT.complete
-//
-//                                                                                if final {
-//
-//                                                                                    if complete {
-//
-//                                                                                        if let hex = localPSBT.transactionFinal?.description {
-//
-//                                                                                            print("complete: \(hex)")
-//
-//                                                                                        } else {
-//
-//                                                                                            print("incomplete")
-//
-//                                                                                        }
-//
-//                                                                                    }
-//
-//                                                                                }
-//
-//                                                                            }
-////                                                                        } else {
-////                                                                            print("can't sign with that key")
-////                                                                        }
-//                                                                    } catch {
-//                                                                        print("error deriving key")
-//                                                                    }
-//                                                                } catch {
-//                                                                    print("error deriving account")
-//                                                                }
-//                                                            }
-//
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    } catch {
-//
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//        }
         
     }
     
@@ -466,7 +373,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                                     
                                     if let _ = dict["blockheight"] as? Int {
                                         
-                                        // we know we are coming from wallet recovery view controller
+                                        /// we know we are coming from wallet recovery view controller
                                         if self.isRecovering {
                                             
                                             DispatchQueue.main.async {
@@ -554,11 +461,12 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         
         let id = segue.identifier
         
-        if id == "showPubkey" {
+        if id == "goConfirmPsbt" {
             
-            if let vc = segue.destination as? AuthenticateViewController {
+            if let vc = segue.destination as? ConfirmViewController {
                 
-                vc.isadding = true
+                vc.unsignedPsbt = self.unsignedPsbt
+                vc.signedRawTx = self.signedRawTx
             }
             
         }

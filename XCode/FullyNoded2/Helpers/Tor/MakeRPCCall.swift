@@ -138,22 +138,34 @@ class MakeRPCCall {
                                     
                                     if wallets != nil {
                                         
-                                        for w in wallets! {
+                                        var hash = ""
+                                        
+                                        for (i, w) in wallets!.enumerated() {
+                                            
                                             let str = WalletStruct(dictionary: w)
                                             
-                                            if str.name != nil {
+                                            if w["name"] != nil && w["id"] != nil && w["isArchived"] != nil {
+                                                
+                                                print("str.name! = \(str.name!)")
+                                                print("walletName = \(walletName)")
                                                 
                                                 if str.name! == walletName {
-                                                    let expectedSha = Encryption.sha256hash(str.descriptor)
                                                     
-                                                    guard expectedSha == walletName else {
-                                                        completion((false, nil, "the hash of your descriptor does not match the wallet name!"))
-                                                        return
-                                                        
-                                                    }
+                                                    hash = Encryption.sha256hash(str.descriptor)
                                                     
-                                                    makeCommand()
                                                 }
+                                            }
+                                            
+                                            if i + 1 == wallets!.count {
+                                                
+                                                guard hash == walletName else {
+                                                    completion((false, nil, "the hash of your descriptor does not match the wallet name!"))
+                                                    return
+                                                    
+                                                }
+                                                
+                                                makeCommand()
+                                                
                                             }
                                         }
                                     }
@@ -207,6 +219,7 @@ class MakeRPCCall {
     
     /// this command exists for the exlicit purpose of sweeping a wallet to a wallet that does not extist on the current active node
     func externalNodeCommand(node: [String:Any], walletName: String, method: BTC_CLI_COMMAND, param: Any, completion: @escaping ((success: Bool, objectToReturn: Any?, errorDesc: String?)) -> Void) {
+        print("externalNodeCommand")
         
         attempts += 1
                             

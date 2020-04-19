@@ -171,7 +171,6 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 let p = DescriptorParser()
                                 let descStruct = p.descriptor(wallet!.descriptor)
                                 let activeNetwork = descStruct.chain
-                                print("activeNetwork = \(activeNetwork)")
                              
                                 for w in entity! {
                                     
@@ -354,13 +353,22 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                         if nodes != nil {
                             
-                            for node in nodes! {
+                            var nodeToSweepTo = [String:Any]()
+                            
+                            for (i, node) in nodes!.enumerated() {
+                                
                                 let nStr = NodeStruct(dictionary: node)
                                 
                                 if nStr.id == wallet.nodeId {
                                     
+                                    nodeToSweepTo = node
+                                    
+                                }
+                                
+                                if i + 1 == nodes!.count {
+                                 
                                     let makeRpcCommand = MakeRPCCall.sharedInstance
-                                    makeRpcCommand.externalNodeCommand(node: node, walletName: wallet.name!, method: .getsweeptoaddress, param: param) { (success, object, errorDesc) in
+                                    makeRpcCommand.externalNodeCommand(node: nodeToSweepTo, walletName: wallet.name!, method: .getsweeptoaddress, param: param) { (success, object, errorDesc) in
                                         
                                         if let address = object as? String {
                                             vc.receivingAddress = address
