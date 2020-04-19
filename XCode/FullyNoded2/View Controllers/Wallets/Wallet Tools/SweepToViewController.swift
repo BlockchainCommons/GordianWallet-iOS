@@ -170,13 +170,15 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 
                                 let p = DescriptorParser()
                                 let descStruct = p.descriptor(wallet!.descriptor)
-                                let activeNetwork = descStruct.network
+                                let activeNetwork = descStruct.chain
+                                print("activeNetwork = \(activeNetwork)")
                              
                                 for w in entity! {
                                     
                                     if w["id"] != nil && w["name"] != nil {
                                         
-                                        let walletToSweepToNetwork = p.descriptor(w["descriptor"] as! String).network
+                                        let walletToSweepToNetwork = p.descriptor(w["descriptor"] as! String).chain
+                                        print("walletToSweepToNetwork = \(walletToSweepToNetwork)")
                                         
                                         if !(w["isArchived"] as! Bool) && (w["id"] as! UUID) != wallet!.id && activeNetwork == walletToSweepToNetwork {
                                             

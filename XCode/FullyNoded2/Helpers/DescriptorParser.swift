@@ -176,7 +176,7 @@ class DescriptorParser {
                         
         } else {
             
-            dict["isMulti"] = false            //"wpkh([a2ef0b6b/84'/1'/0'/0/39]03eae3e576a0689d47b47315b31b6013f43c2d0ba979df4e0ac6630a3d9a3bebe2)#vymryghq"
+            dict["isMulti"] = false
             
             if descriptor.contains("[") && descriptor.contains("]") {
                 
