@@ -146,9 +146,6 @@ class MakeRPCCall {
                                             
                                             if w["name"] != nil && w["id"] != nil && w["isArchived"] != nil {
                                                 
-                                                print("str.name! = \(str.name!)")
-                                                print("walletName = \(walletName)")
-                                                
                                                 if str.name! == walletName {
                                                     
                                                     hash = Encryption.sha256hash(str.descriptor)
@@ -240,8 +237,6 @@ class MakeRPCCall {
                         var walletUrl = "http://\(rpcuser):\(rpcpass)@\(onion)"
                         
                         func makeCommand() {
-                            
-                            print("url = \(walletUrl)")
                             
                             guard let url = URL(string: walletUrl) else {
                                 completion((false, nil, "url error"))
@@ -343,22 +338,30 @@ class MakeRPCCall {
                                             
                                             if wallets != nil {
                                                 
-                                                for w in wallets! {
+                                                for (i, w) in wallets!.enumerated() {
+                                                    
+                                                    var hash = ""
                                                     let str = WalletStruct(dictionary: w)
                                                     
                                                     if str.name != nil {
                                                         
                                                         if str.name! == walletName {
-                                                            let expectedSha = Encryption.sha256hash(str.descriptor)
                                                             
-                                                            guard expectedSha == walletName else {
-                                                                completion((false, nil, "the hash of your descriptor does not match the wallet name!"))
-                                                                return
-                                                                
-                                                            }
+                                                            hash = Encryption.sha256hash(str.descriptor)
                                                             
-                                                            makeCommand()
                                                         }
+                                                    }
+                                                    
+                                                    if i + 1 == wallets!.count {
+                                                        
+                                                        guard hash == walletName else {
+                                                            completion((false, nil, "the hash of your descriptor does not match the wallet name!"))
+                                                            return
+                                                            
+                                                        }
+                                                        
+                                                        makeCommand()
+                                                        
                                                     }
                                                 }
                                             }
