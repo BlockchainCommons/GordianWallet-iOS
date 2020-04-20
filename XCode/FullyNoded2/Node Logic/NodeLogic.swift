@@ -274,13 +274,13 @@ class NodeLogic {
         for (x, utxo) in utxos.enumerated() {
             if let utxoDict = utxo as? NSDictionary {
                 
-                // Here we check the utxos descriptor to see what the path is for each pubkey.
-                // We take the highest index for each pubkey and compare it to the wallets index.
-                // If the wallets index is less than or equal to the highest utxo index we increase
-                // the wallets index to be greater then the highest utxo index. This way we avoid
-                // reusing an address in the scenario where a user may use external software to
-                // receive to the app or for example they export their keys within the app and use
-                // random addresses as invoices.
+                /// Here we check the utxos descriptor to see what the path is for each pubkey.
+                /// We take the highest index for each pubkey and compare it to the wallets index.
+                /// If the wallets index is less than or equal to the highest utxo index we increase
+                /// the wallets index to be greater then the highest utxo index. This way we avoid
+                /// reusing an address in the scenario where a user may use external software to
+                /// receive to the app or for example they export their keys within the app and use
+                /// random addresses as invoices.
                 
                 if let desc = utxoDict["desc"] as? String {
                     let p = DescriptorParser()
@@ -337,16 +337,8 @@ class NodeLogic {
                 }
             }
             
-            if x + 1 == utxos.count {
-                if amount == 0.0 {
-                    dictToReturn["coldBalance"] = "0.0"
-                    
-                } else {
-                    dictToReturn["coldBalance"] = "\((round(100000000*amount)/100000000).avoidNotation)"
-                    
-                }
-                
-                // We fetch balances when we check for wallet recovery confirmation, therefore it does not have an ID yet if it has not been recovered
+            /// We fetch balances when we check for wallet recovery confirmation, therefore it does not have an ID yet if it has not been recovered
+            func complete() {
                 if wallet.id != nil {
                     CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastBalance", newValue: amount, entityName: .wallets) { _ in
                         CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { _ in
@@ -359,6 +351,23 @@ class NodeLogic {
                 } else {
                     completion((true, dictToReturn, nil))
                     
+                }
+            }
+            
+            if x + 1 == utxos.count {
+                if amount == 0.0 {
+                    dictToReturn["coldBalance"] = "0.0"
+                    complete()
+                    
+                } else {
+                    dictToReturn["coldBalance"] = "\((round(100000000*amount)/100000000).avoidNotation)"
+                    let fx = FiatConverter.sharedInstance
+                    fx.getFxRate() { (fxRate) in
+                        if fxRate != nil {
+                            dictToReturn["fiatBalance"] = "$\(Int(amount * fxRate!).withCommas())"
+                        }
+                        complete()
+                    }
                 }
             }
         }

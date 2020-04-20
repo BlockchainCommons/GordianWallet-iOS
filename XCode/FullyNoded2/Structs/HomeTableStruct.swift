@@ -11,6 +11,7 @@ import Foundation
 
 public struct HomeStruct: CustomStringConvertible {
     
+    let fiatBalance:String
     let network:String
     let hashrate:String
     let amount:Double
@@ -56,6 +57,7 @@ public struct HomeStruct: CustomStringConvertible {
         self.unconfirmed = dictionary["unconfirmed"] as? Bool ?? false
         self.noUtxos = dictionary["noUtxos"] as? Bool ?? true
         self.halvingDate = dictionary["halvingDate"] as? Date ?? Date()
+        self.fiatBalance = dictionary["fiatBalance"] as? String ?? "$0"
         
     }
     

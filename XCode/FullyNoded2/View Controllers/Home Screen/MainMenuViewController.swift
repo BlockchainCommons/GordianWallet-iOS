@@ -21,6 +21,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var nodeInfo:HomeStruct!
     var torInfo:HomeStruct!
     
+    var showFiat = Bool()
     var walletExists = Bool()
     var bootStrapping = Bool()
     var showNodeInfo = Bool()
@@ -62,6 +63,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        showFiat = false
         torConnected = false
         mainMenu.delegate = self
         tabBarController?.delegate = self
@@ -452,6 +454,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let keysOnNodeDescription = cell.viewWithTag(25) as! UILabel
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
         let changeKeysOnNodeDescription = cell.viewWithTag(27) as! UILabel
+        let fiatBalance = cell.viewWithTag(28) as! UILabel
         
         nodeView.layer.cornerRadius = 8
         deviceView.layer.cornerRadius = 8
@@ -496,7 +499,17 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             coldBalanceLabel.textColor = .systemGray
         }
         
-        coldBalanceLabel.text = coldBalance
+        if !showFiat {
+            
+            fiatBalance.text = walletInfo.fiatBalance
+            coldBalanceLabel.text = coldBalance
+            
+        } else {
+            
+            fiatBalance.text = coldBalance
+            coldBalanceLabel.text = walletInfo.fiatBalance
+            
+        }
         
         if walletInfo.unconfirmed {
             
@@ -569,6 +582,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let offlineXprvLabel = cell.viewWithTag(22) as! UILabel
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
         let keysOnNodeDescription = cell.viewWithTag(27) as! UILabel
+        let fiatBalance = cell.viewWithTag(28) as! UILabel
         
         nodeView.layer.cornerRadius = 8
         offlineView.layer.cornerRadius = 8
@@ -596,7 +610,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        //dirtyFiatLabel.text = "\(self.fiatBalance)"
         
         let parser = DescriptorParser()
         let str = parser.descriptor(wallet.descriptor)
@@ -611,7 +624,17 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        coldBalanceLabel.text = coldBalance
+        if !showFiat {
+            
+            fiatBalance.text = walletInfo.fiatBalance
+            coldBalanceLabel.text = coldBalance
+            
+        } else {
+            
+            fiatBalance.text = coldBalance
+            coldBalanceLabel.text = walletInfo.fiatBalance
+            
+        }
         
         if walletInfo.unconfirmed {
             
@@ -1378,11 +1401,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 if infoHidden {
                     
-                    return 108
+                    return 115
                     
                 } else {
                    
-                    return 310
+                    return 317
                     
                 }
                 
@@ -1390,11 +1413,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 if infoHidden {
                 
-                    return 108
+                    return 115
                     
                 } else {
                     
-                    return 263
+                    return 272
                     
                 }
                 
@@ -1514,6 +1537,24 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if indexPath.section == walletCellIndex {
+            
+            if showFiat {
+                showFiat = false
+                
+            } else {
+                showFiat = true
+                
+            }
+            
+            reloadSections([walletCellIndex])
+            
+        }
+        
+    }
+    
     @objc func getWalletInfo(_ sender: UIButton) {
         
         if infoHidden {
@@ -1582,7 +1623,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if success && dictToReturn != nil {
                 
-                // we update the wallets database in NodeLogic, so we need to refresh the wallet struct here
+                /// we update the wallets database in NodeLogic, so we need to refresh the wallet struct here
                 getActiveWalletNow { (w, error) in
                     
                     if w != nil {
