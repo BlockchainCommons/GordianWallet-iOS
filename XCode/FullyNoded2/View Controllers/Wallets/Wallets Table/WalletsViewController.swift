@@ -1384,6 +1384,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             
                         }
                         
+                    } else {
+                        
+                        DispatchQueue.main.async {
+                            
+                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
+                            
+                        }
+                        
                     }
                     
                 } else {

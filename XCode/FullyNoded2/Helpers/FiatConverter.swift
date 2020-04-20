@@ -36,7 +36,9 @@ class FiatConverter {
                             
                             if let json = try JSONSerialization.jsonObject(with: urlContent, options: [.mutableContainers]) as? [String : Any] {
                                 
+                                #if DEBUG
                                 print("json = \(json)")
+                                #endif
                              
                                 if let data = json["USD"] as? NSDictionary {
                                     
