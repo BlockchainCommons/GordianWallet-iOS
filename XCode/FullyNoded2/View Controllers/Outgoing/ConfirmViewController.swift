@@ -89,6 +89,12 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         DispatchQueue.main.async {
                         
             let alert = UIAlertController(title: "Sign with:", message: "Choose your offline signer", preferredStyle: .actionSheet)
+            
+            alert.addAction(UIAlertAction(title: "Specter", style: .default, handler: { [unowned vc = self] action in
+                
+                displayAlert(viewController: vc, isError: false, message: "under construction")
+                
+            }))
 
             alert.addAction(UIAlertAction(title: "Hermit", style: .default, handler: { [unowned vc = self] action in
                 

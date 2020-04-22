@@ -663,7 +663,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         walletTypeLabel.text = "\(str.mOfNType) multisig"
         backUpSeedLabel.text = "1 Seed Offline"
         seedOnNodeLabel.text = "1 Seedless \(node.label)"
-        seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
+        
+        if String(data: wallet.seed, encoding: .utf8) != "no seed" {
+            
+            seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
+            deviceXprv.text = "xprv \(wallet.derivation)"
+            
+        } else {
+            
+            seedOnDeviceLabel.text = "\(UIDevice.current.name) is cold"
+            deviceXprv.text = "xpub \(wallet.derivation)"
+            
+        }
+        
         nodeView.alpha = 1
         offlineView.alpha = 1
         
@@ -679,11 +691,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             derivationPathLabel.text = "P2SH Nested Segwit Account 0 (BIP49 \(wallet.derivation))"
             
+        } else if wallet.derivation.contains("48") {
+            
+            derivationPathLabel.text = "Bech32 HD Multisig WIP48 \(wallet.derivation)"
+            
         }
         
         nodeXprv.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
         keysOnNodeDescription.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
-        deviceXprv.text = "xprv \(wallet.derivation)"
+        
         offlineXprvLabel.text = "xprv \(wallet.derivation)"
         
         walletNameLabel.text = reducedName(name: wallet.name!)
@@ -2175,7 +2191,17 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if let vc = segue.destination as? ScannerViewController {
                 
-                vc.scanningNode = true
+                CoreDataService.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
+                    
+                    if nodes != nil {
+                        
+                        if nodes?.count == 0 {
+                            
+                            vc.scanningNode = true
+                            
+                        }
+                    }
+                }
                 
                 vc.onDoneBlock = { [unowned thisVc = self] result in
                     

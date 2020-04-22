@@ -355,7 +355,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
-    func getMultiSigKeys(words: String) {
+    func getMultiSigKeys(words: String?) {
         
         let parser = DescriptorParser()
         let s = parser.descriptor(wallet.descriptor)
@@ -367,13 +367,13 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         func getPrivKeys() {
             let mnemonicCreator = MnemonicCreator()
-            mnemonicCreator.convert(words: words) { [unowned vc = self] (mnemonic, error) in
+            mnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
                 if !error {
                     let derivation = vc.wallet.derivation
                     for i in 0 ... 999 {
                         let path = derivation + "/" + "\(i)"
                         if let bip32path = BIP32Path(path) {
-                            if let key = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
+                            if let key = HDKey((mnemonic!.seedHex("")), network(descriptor: vc.wallet.descriptor)) {
                                 do {
                                     let childKey = try key.derive(bip32path)
                                     if let privKey = childKey.privKey {
@@ -410,12 +410,12 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                             pubkeys.append(key!.pubKey)
                             pubkeyStrings.append("#\(k + 1): \(key!.pubKey.data.hexString)")
                             if k + 1 == keys.count {
-                                let scriptPubKey = ScriptPubKey(multisig: pubkeys, threshold: sigsRequired, bip67: false)
+                                let scriptPubKey = ScriptPubKey(multisig: pubkeys, threshold: sigsRequired, bip67: s.isBIP67)
                                 var multiSigAddress:Address!
                                 let processedPubkeys = processedKeys(pubkeys: pubkeyStrings)
                                 // LibWally only produces bech32 multisig addresses, so need to fetch other formats from the node
-                                if wallet.derivation.contains("84") || s.isBIP84 || s.isP2WPKH {
-                                    multiSigAddress = Address(scriptPubKey, network(path: wallet.derivation))
+                                if wallet.derivation.contains("84") || wallet.derivation.contains("48") || s.isBIP84 || s.isP2WPKH {
+                                    multiSigAddress = Address(scriptPubKey, network(descriptor: wallet.descriptor))
                                     self.keys.append(["address":"\(String(describing: multiSigAddress!))", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
                                 } else {
                                     self.keys.append(["address":"fetching addresses from your node...", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
@@ -434,7 +434,14 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             
             if i == 999 {
                 if !failed {
-                    getPrivKeys()
+                    if words != nil {
+                        getPrivKeys()
+                    } else {
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.table.reloadData()
+                            vc.connectingView.removeConnectingView()
+                        }
+                    }
                 } else {
                     self.connectingView.removeConnectingView()
                     displayAlert(viewController: self, isError: true, message: "key derivation failed")
@@ -537,6 +544,19 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                         
                     }
                     
+                } else {
+                    
+                    /// Its watch-only
+                    if vc.s.isMulti {
+                        
+                        vc.getMultiSigKeys(words: nil)
+                        
+                    } else {
+                        
+                        //vc.getSingleSigKeys(words: nil)
+                        
+                    }
+                    
                 }
                 
             }
@@ -620,7 +640,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                                 let processedPubkeys = processedKeys(pubkeys: pubkeyStrings)
                                 // LibWally only produces bech32 multisig addresses, so need to fetch other formats from the node
                                 if wallet.derivation.contains("84") || s.isBIP84 || s.isP2WPKH {
-                                    multiSigAddress = Address(scriptPubKey, network(path: wallet.derivation))
+                                    multiSigAddress = Address(scriptPubKey, network(descriptor: wallet.descriptor))
                                     self.keys.append(["address":"\(String(describing: multiSigAddress!))", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
                                 } else {
                                     self.keys.append(["address":"fetching addresses from your node...", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
@@ -715,7 +735,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         let derivation = wallet.derivation
         let path = BIP32Path(derivation)!
-        let masterKey = HDKey((mnemonic.seedHex("")), network(path: derivation))!
+        let masterKey = HDKey((mnemonic.seedHex("")), network(descriptor: wallet.descriptor))!
         let account = try! masterKey.derive(path)
         
         for i in 0 ... 999 {

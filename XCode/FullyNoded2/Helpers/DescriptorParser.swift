@@ -82,10 +82,12 @@ class DescriptorParser {
                             keysWithPath.append("\(item)")
                         }
                     }
+                    
                     var keyArray = [String]()
                     var paths = [String]()
                     var derivationArray = [String]()
-                    // extracting the xpubs and their paths so we can derive the individual multisig addresses locally
+                    
+                    /// extracting the xpubs and their paths so we can derive the individual multisig addresses locally
                     for key in keysWithPath {
                         var path = String()
                         if key.contains("/") {
@@ -126,6 +128,8 @@ class DescriptorParser {
                                     }
                                 }
                             }
+                        } else {
+                            /// The keys are child keys so we do not need to extract the path from them we can just use the prefix
                         }
                     }
                     

@@ -33,7 +33,8 @@ public struct WalletStruct: CustomStringConvertible {
     let blockheight:Int32
     let label:String
     let lastUpdated:Date
-    var maxRange:Int
+    let maxRange:Int
+    let hasRange:Bool
     
     init(dictionary: [String: Any]) {
         
@@ -60,13 +61,8 @@ public struct WalletStruct: CustomStringConvertible {
         self.blockheight = dictionary["blockheight"] as? Int32 ?? 1
         self.label = dictionary["label"] as? String ?? "Add a wallet label"
         self.lastUpdated = dictionary["lastUpdated"] as? Date ?? Date()
-        self.maxRange = dictionary["maxRange"] as? Int ?? 999
-        
-        if self.maxRange == 0 {
-            
-            self.maxRange = 999
-            
-        }
+        self.maxRange = dictionary["maxRange"] as? Int ?? 0
+        self.hasRange = dictionary["hasRange"] as? Bool ?? true
         
     }
     

@@ -20,6 +20,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     var confirmedDoneBlock: ((Bool) -> Void)?
     var addresses = [String]()
     var descriptorStruct:DescriptorStruct!
+    var isImporting = Bool()
     
     @IBOutlet var walletLabel: UILabel!
     @IBOutlet var walletName: UILabel!
@@ -43,8 +44,43 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         cancelOutlet.layer.cornerRadius = 8
         confirmOutlet.layer.cornerRadius = 8
         
-        // QR only
-        if words == nil && walletDict["birthdate"] != nil {
+        ///Importing
+        /*if isImporting {
+            
+            let parser = DescriptorParser()
+            descriptorStruct = parser.descriptor(walletDict["descriptor"] as! String)
+            walletLabel.text = walletDict["label"] as? String ?? "no wallet label"
+            walletBirthdate.text = getDate(unixTime: walletDict["birthdate"] as! Int32)
+            walletNetwork.text = descriptorStruct.chain
+            walletBalance.text = "unable to fetch balance until rescan completes"
+            
+            if descriptorStruct.isMulti {
+                
+                walletType.text = "\(descriptorStruct.mOfNType) multi-sig"
+                walletDict["type"] = "MULTI"
+                
+                if descriptorStruct.multiSigPaths.count > 0 {
+                    
+                    walletDerivation.text = descriptorStruct.derivationArray[0] + "/\(descriptorStruct.multiSigPaths[0])"
+                    walletDict["derivation"] = descriptorStruct.derivationArray[0] + "/\(descriptorStruct.multiSigPaths[0])"
+                    
+                } else {
+                    
+                    walletDerivation.text = "\(descriptorStruct.derivationArray[0])"
+                    walletDict["derivation"] = "\(descriptorStruct.derivationArray[0])"
+                    
+                }
+                                
+                loadMultiSigAddressesFromImport()
+                
+            } else {
+                
+                showAlert(vc: self, title: "Under construction", message: "We only support multisig descriptor imports for now.")
+                
+            }
+        
+        /// Recovery QR only
+        } else */if words == nil && walletDict["birthdate"] != nil {
             
             let parser = DescriptorParser()
             descriptorStruct = parser.descriptor(walletDict["descriptor"] as! String)
@@ -57,6 +93,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 
                 walletType.text = "\(descriptorStruct.mOfNType) multi-sig"
                 walletDerivation.text = descriptorStruct.derivationArray[1] + "/\(descriptorStruct.multiSigPaths[1])"
+                walletDict["derivation"] = descriptorStruct.derivationArray[1]
                 loadMultiSigAddressesFromQR()
                 
             } else {
@@ -95,10 +132,13 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
          
             walletLabel.text = "unknown"
             walletName.text = reducedName(name: walletNameHash)
+            var network:Network!
             if derivation!.contains("1") {
                 walletNetwork.text = "Testnet"
+                network = .testnet
             } else {
                 walletNetwork.text = "Mainnet"
+                network = .mainnet
             }
             walletBirthdate.text = "unknown"
             walletBalance.text = "...fetching balance"
@@ -110,7 +150,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 
                 if !error && mnemonic != nil {
                     
-                    let mk = HDKey(mnemonic!.seedHex(), network(path: vc.derivation!))!
+                    let mk = HDKey(mnemonic!.seedHex(), network)!
                     
                     for i in 0...4 {
                         
@@ -276,19 +316,23 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         
         connectingView.addConnectingView(vc: self, description: "deriving addresses")
         
-        // need to replace xprv with xpub so the checksum is valid
-        let xprv = descriptorStruct.multiSigKeys[1]
-        let xpub = HDKey(xprv)!.xpub
-        let desc = (walletDict["descriptor"] as! String).replacingOccurrences(of: xprv, with: xpub)
-        let walletName = walletNameHash
+        /// Need to replace xprv with xpub so the checksum is valid for FN2 wallets, we also check if it is watch-only e.g. and imported descriptor
         
-        DispatchQueue.main.async {
+        var descriptor = walletDict["descriptor"] as! String
+        
+        if descriptor.contains("xprv") || descriptor.contains("tprv") {
+            let xprv = descriptorStruct.multiSigKeys[1]
+            let xpub = HDKey(xprv)!.xpub
+            descriptor = descriptor.replacingOccurrences(of: xprv, with: xpub)
+        }
+        
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.walletName.text = self.reducedName(name: walletName)
+            self.walletName.text = self.reducedName(name: vc.walletNameHash)
             
         }
         
-        Reducer.makeCommand(walletName: walletName, command: .deriveaddresses, param: "\"\(desc)\", [0,4]") { [unowned vc = self] (object, errorDesc) in
+        Reducer.makeCommand(walletName: walletNameHash, command: .deriveaddresses, param: "\"\(descriptor)\", [0,4]") { [unowned vc = self] (object, errorDesc) in
             
             if let result = object as? NSArray {
                 
@@ -306,7 +350,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                     
                 }
                 
-                vc.walletDict["name"] = walletName
+                vc.walletDict["name"] = vc.walletNameHash
                 let wallet = WalletStruct(dictionary: vc.walletDict)
                 vc.nodeLogic?.loadExternalWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
                     
@@ -345,7 +389,6 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         
     }
     
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         addresses.count
@@ -372,13 +415,9 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     @IBAction func cancelAction(_ sender: Any) {
         
         print("cancel")
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.dismiss(animated: true) { [unowned vc = self] in
-                
-                vc.confirmedDoneBlock!(false)
-                
-            }
+            vc.dismiss(animated: true) {}
             
         }
         
@@ -439,7 +478,6 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             } else {
                 
                 connectingView.removeConnectingView()
-                
                 showAlert(vc: vc, title: "Error!", message: "Recovering wallets requires an active node!")
                 
             }
@@ -448,10 +486,316 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         
     }
     
+    private func importWallet() {
+        
+        connectingView.addConnectingView(vc: self, description: "creating wallet on your node")
+        let wallet = WalletStruct(dictionary: walletDict)
+        
+        func walletCreated() {
+            
+            NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
+            
+            DispatchQueue.main.async { [unowned vc = self] in
+                
+                vc.connectingView.removeConnectingView()
+                
+                let alert = UIAlertController(title: "Wallet imported!", message: "Your imported wallet will now show up in \"Wallets\"", preferredStyle: .actionSheet)
+
+                alert.addAction(UIAlertAction(title: "Done", style: .cancel, handler: { action in
+                    
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        
+                        vc.navigationController?.popToRootViewController(animated: true)
+                        
+                    }
+                    
+                }))
+                alert.popoverPresentationController?.sourceView = vc.view
+                vc.present(alert, animated: true, completion: nil)
+                
+            }
+            
+        }
+        
+        func saveWallet() {
+            
+            CoreDataService.saveEntity(dict: walletDict, entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
+                
+                print("walletDict = \(vc.walletDict)")
+                
+                if success {
+                    
+                    walletCreated()
+                    
+                } else {
+                    
+                    vc.connectingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "Import error, unable to save that wallet: \(errorDescription ?? "unknown error")")
+                    
+                }
+                
+            }
+            
+        }
+        
+        func importChangeDesc() {
+            
+            DispatchQueue.main.async { [unowned vc = self] in
+                vc.connectingView.label.text = "importing change descriptor"
+            }
+            
+            let params = "[{ \"desc\": \"\(wallet.changeDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
+            
+            Reducer.makeCommand(walletName: wallet.name!, command: .importmulti, param: params) { [unowned vc = self] (object, errorDescription) in
+                
+                if let result = object as? NSArray {
+                    
+                    if result.count > 0 {
+                        
+                        if let dict = result[0] as? NSDictionary {
+                            
+                            if let success = dict["success"] as? Bool {
+                                
+                                if success {
+                                    
+                                    saveWallet()
+                                    
+                                } else {
+                                    
+                                    vc.connectingView.removeConnectingView()
+                                    showAlert(vc: vc, title: "Error", message: "Import error, error importing change descriptor: \(errorDescription ?? "unknown error")")
+                                    
+                                }
+                                
+                            } else {
+                                
+                                vc.connectingView.removeConnectingView()
+                                showAlert(vc: vc, title: "Error", message: "Import error, error importing change descriptor: \(errorDescription ?? "unknown error")")
+                                
+                            }
+                            
+                        } else {
+                            
+                            vc.connectingView.removeConnectingView()
+                            showAlert(vc: vc, title: "Error", message: "Import error, error importing change descriptor: \(errorDescription ?? "unknown error")")
+                            
+                        }
+                        
+                    } else {
+                        
+                        vc.connectingView.removeConnectingView()
+                        showAlert(vc: vc, title: "Error", message: "Import error, error importing change descriptor: \(errorDescription ?? "unknown error")")
+                        
+                    }
+                    
+                } else {
+                    
+                    vc.connectingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "Import error, error importing change descriptor: \(errorDescription ?? "unknown error")")
+                    
+                }
+                
+            }
+            
+        }
+        
+        func importPrimaryDesc() {
+            
+            DispatchQueue.main.async { [unowned vc = self] in
+                vc.connectingView.label.text = "importing primary descriptor"
+            }
+            
+            let params = "[{ \"desc\": \"\(wallet.descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
+            
+            Reducer.makeCommand(walletName: wallet.name!, command: .importmulti, param: params) { [unowned vc = self] (object, errorDescription) in
+                
+                if let result = object as? NSArray {
+                    
+                    if result.count > 0 {
+                        
+                        if let dict = result[0] as? NSDictionary {
+                            
+                            if let success = dict["success"] as? Bool {
+                                
+                                if success {
+                                    
+                                    importChangeDesc()
+                                    
+                                } else {
+                                    
+                                    vc.connectingView.removeConnectingView()
+                                    showAlert(vc: vc, title: "Error", message: "Import error, error importing primary descriptor: \(errorDescription ?? "unknown error")")
+                                    
+                                }
+                                
+                            } else {
+                                
+                                vc.connectingView.removeConnectingView()
+                                showAlert(vc: vc, title: "Error", message: "Import error, error importing primary descriptor: \(errorDescription ?? "unknown error")")
+                                
+                            }
+                            
+                        } else {
+                            
+                            vc.connectingView.removeConnectingView()
+                            showAlert(vc: vc, title: "Error", message: "Import error, error importing primary descriptor: \(errorDescription ?? "unknown error")")
+                            
+                        }
+                        
+                    } else {
+                        
+                        vc.connectingView.removeConnectingView()
+                        showAlert(vc: vc, title: "Error", message: "Import error, error importing primary descriptor: \(errorDescription ?? "unknown error")")
+                        
+                    }
+                    
+                } else {
+                    
+                    vc.connectingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "Import error, error importing primary descriptor: \(errorDescription ?? "unknown error")")
+                    
+                }
+                
+            }
+            
+        }
+        
+        func createWallet() {
+            
+            let param = "\"\(wallet.name!)\", true, true, \"\", true"
+            Reducer.makeCommand(walletName: "", command: .createwallet, param: param) { [unowned vc = self] (object, errorDescription) in
+                
+                if let _ = object as? NSDictionary {
+                    
+                    importPrimaryDesc()
+                    
+                } else {
+                    
+                    vc.connectingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "Import error, error creating wallet: \(errorDescription ?? "unknown error")")
+                    
+                }
+                
+            }
+            
+        }
+        
+        createWallet()
+        
+//        let param = "\"\(wallet.name!)\", true, true, \"\", true"
+//        Reducer.makeCommand(walletName: "", command: .createwallet, param: param) { [unowned vc = self] (object, errorDescription) in
+//
+//            if let _ = object as? NSDictionary {
+//
+//                let params = "[{ \"desc\": \"\(wallet.descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
+//
+//                Reducer.makeCommand(walletName: wallet.name!, command: .importmulti, param: params) { [unowned vc = self] (object, errorDescription) in
+//
+//                    if let result = object as? NSArray {
+//
+//                        if result.count > 0 {
+//
+//                            if let dict = result[0] as? NSDictionary {
+//
+//                                if let success = dict["success"] as? Bool {
+//
+//                                    if success {
+//
+//                                        CoreDataService.saveEntity(dict: vc.walletDict, entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
+//
+//                                            if success {
+//
+//                                                NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
+//
+//                                                DispatchQueue.main.async { [unowned vc = self] in
+//
+//                                                    vc.connectingView.removeConnectingView()
+//
+//                                                    let alert = UIAlertController(title: "Wallet imported!", message: "Your imported wallet will now show up in \"Wallets\"", preferredStyle: .actionSheet)
+//
+//                                                    alert.addAction(UIAlertAction(title: "Done", style: .cancel, handler: { action in
+//
+//                                                        DispatchQueue.main.async { [unowned vc = self] in
+//
+//                                                            vc.navigationController?.popToRootViewController(animated: true)
+//
+//                                                        }
+//
+//                                                    }))
+//                                                    alert.popoverPresentationController?.sourceView = vc.view
+//                                                    vc.present(alert, animated: true, completion: nil)
+//
+//                                                }
+//
+//                                            } else {
+//
+//                                                vc.connectingView.removeConnectingView()
+//                                                showAlert(vc: vc, title: "Error", message: "Import error, unable to save that wallet: \(errorDescription ?? "unknown error")")
+//
+//                                            }
+//
+//                                        }
+//
+//                                    } else {
+//
+//                                        vc.connectingView.removeConnectingView()
+//                                        showAlert(vc: vc, title: "Error", message: "Import error, unable to save that wallet: \(errorDescription ?? "unknown error")")
+//
+//                                    }
+//
+//                                } else {
+//
+//                                    vc.connectingView.removeConnectingView()
+//                                    showAlert(vc: vc, title: "Error", message: "Import error, unable to save that wallet: \(errorDescription ?? "unknown error")")
+//
+//                                }
+//
+//                            } else {
+//
+//                                vc.connectingView.removeConnectingView()
+//                                showAlert(vc: vc, title: "Error", message: "Import error, unable to save that wallet: \(errorDescription ?? "unknown error")")
+//
+//                            }
+//
+//                        } else {
+//
+//                            vc.connectingView.removeConnectingView()
+//                            showAlert(vc: vc, title: "Error", message: "Import error, unable to save that wallet: \(errorDescription ?? "unknown error")")
+//
+//                        }
+//
+//                    } else {
+//
+//                        vc.connectingView.removeConnectingView()
+//                        showAlert(vc: vc, title: "Error", message: "Import error, unable to save that wallet: \(errorDescription ?? "unknown error")")
+//
+//                    }
+//
+//                }
+//
+//
+//            } else {
+//
+//                vc.connectingView.removeConnectingView()
+//                showAlert(vc: vc, title: "Error", message: "Import error, unable to create that wallet: \(errorDescription ?? "unknown error")")
+//
+//            }
+//
+//        }
+        
+    }
+    
     @IBAction func confirmAction(_ sender: Any) {
         
-        print("confirm")
-        recover(dict: walletDict)
+        if !isImporting {
+            
+            recover(dict: walletDict)
+            
+        } else {
+            
+            importWallet()
+            
+        }
         
     }
     

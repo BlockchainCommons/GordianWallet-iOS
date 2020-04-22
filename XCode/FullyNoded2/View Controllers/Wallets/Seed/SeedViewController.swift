@@ -133,9 +133,9 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 3:
             itemToDisplay = privateKeyDescriptor
             shareText()
-        case 4:
-            itemToDisplay = recoveryText
-            shareText()
+//        case 4:
+//            itemToDisplay = recoveryText
+//            shareText()
         default:
             break
         }
@@ -332,20 +332,20 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 // wallet is cold
                 
-                let recoveryQr = ["descriptor":"\(vc.wallet.descriptor)","birthdate":vc.wallet.birthdate, "blockheight":vc.wallet.blockheight] as [String : Any]
-                
-                if let json = recoveryQr.json() {
-                    
-                    let (qr, error) = vc.qrGenerator.getQRCode(textInput: json)
-                    vc.recoveryImage = qr
-                    
-                    if error {
-                        
-                        showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
-                        
-                    }
-                    
-                }
+//                let recoveryQr = ["descriptor":"\(vc.wallet.descriptor)","birthdate":vc.wallet.birthdate, "blockheight":vc.wallet.blockheight] as [String : Any]
+//                
+//                if let json = recoveryQr.json() {
+//                    
+//                    let (qr, error) = vc.qrGenerator.getQRCode(textInput: json)
+//                    vc.recoveryImage = qr
+//                    
+//                    if error {
+//                        
+//                        showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+//                        
+//                    }
+//                    
+//                }
                 
                 DispatchQueue.main.async {
                     

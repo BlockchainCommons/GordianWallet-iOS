@@ -378,7 +378,7 @@ class RecoverWallet {
         // in this scenario we need to use the recovery kit words as the nodes signer
         if let bip39RecoveryKitWords = BIP39Mnemonic(unencryptedRecoveryKitWords) {
             
-            if let nodesMasterKey = HDKey((bip39RecoveryKitWords.seedHex("")), network(path: nodeDerivation)) {
+            if let nodesMasterKey = HDKey((bip39RecoveryKitWords.seedHex("")), network(descriptor: hotDescriptor)) {
                 
                 if let path = BIP32Path(nodeDerivation) {
                     

@@ -563,6 +563,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let verifyAddresses = cell.viewWithTag(4) as! UIButton
         let networkLabel = cell.viewWithTag(8) as! UILabel
         let utxosButton = cell.viewWithTag(9) as! UIButton
+        let bipImage = cell.viewWithTag(10) as! UIButton
         let derivationLabel = cell.viewWithTag(11) as! UILabel
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
@@ -582,6 +583,15 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let bannerView = cell.viewWithTag(33)!
         let rescanLabel = cell.viewWithTag(34) as! UILabel
         let nodeChangeKeysLabel = cell.viewWithTag(35) as! UILabel
+        let seedOnDeviceLabel = cell.viewWithTag(36) as! UILabel
+        let offlineSeedLabel = cell.viewWithTag(37) as! UILabel
+        let mOfnTypeLabel = cell.viewWithTag(38) as! UILabel
+        let walletType = cell.viewWithTag(39) as! UILabel
+        let walletTypeImage = cell.viewWithTag(40) as! UIImageView
+        
+        let p = DescriptorParser()
+        let str = p.descriptor(wallet.descriptor)
+        mOfnTypeLabel.text = "\(str.mOfNType) multisig"
                 
         rescanLabel.alpha = 0
         rescanLabel.adjustsFontSizeToFitWidth = true
@@ -684,21 +694,53 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if derivation.contains("84") {
             
             derivationLabel.text = "BIP84"
+            derivationLabel.alpha = 1
+            bipImage.alpha = 1
             
         } else if derivation.contains("44") {
             
             derivationLabel.text = "BIP44"
+            derivationLabel.alpha = 1
+            bipImage.alpha = 1
             
         } else if derivation.contains("49") {
             
             derivationLabel.text = "BIP49"
+            derivationLabel.alpha = 1
+            bipImage.alpha = 1
+            
+        } else if derivation.contains("48") {
+            
+            derivationLabel.text = "WIP48"
+            derivationLabel.alpha = 1
+            bipImage.alpha = 1
             
         }
         
-        deviceXprv.text = "xprv \(wallet.derivation)"
+        if String(data: wallet.seed, encoding: .utf8) != "no seed" {
+            
+            seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
+            deviceXprv.text = "xprv \(wallet.derivation)"
+            offlineXprv.text = "xprv \(wallet.derivation)"
+            walletType.text = "Warm Wallet"
+            walletTypeImage.image = UIImage(systemName: "sun.min")
+            walletTypeImage.tintColor = .systemYellow
+            
+        } else {
+            
+            deviceXprv.text = "xpub \(wallet.derivation)"
+            seedOnDeviceLabel.text = "Device is cold"
+            offlineXprv.text = ""
+            offlineSeedLabel.text = "Unknown..."
+            walletType.text = "Cold Wallet"
+            walletTypeImage.image = UIImage(systemName: "snow")
+            walletTypeImage.tintColor = .systemTeal
+            
+        }
+        
         nodeKeys.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
         nodeChangeKeysLabel.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
-        offlineXprv.text = "xprv \(wallet.derivation)"
+        
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
         walletFileLabel.text = reducedWalletName(name: wallet.name!)
@@ -722,9 +764,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
         
     }
-    
-
-    
+        
     private func noWalletCell() -> UITableViewCell {
         
         let cell = UITableViewCell()

@@ -13,7 +13,7 @@ class KeyFetcher {
     
     class func fingerprint(wallet: WalletStruct, completion: @escaping ((fingerprint: String?, error: Bool)) -> Void) {
         
-        let derivationPath = wallet.derivation
+        //let derivationPath = wallet.derivation
         
         if String(data: wallet.seed, encoding: .utf8) != "no seed" {
             
@@ -26,7 +26,7 @@ class KeyFetcher {
                         let mnenomicCreator = MnemonicCreator()
                         mnenomicCreator.convert(words: words) { (mnemonic, error) in
                             
-                            if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
+                            if let masterKey = HDKey((mnemonic!.seedHex("")), network(descriptor: wallet.descriptor)) {
                                 
                                 completion((masterKey.fingerprint.hexString, false))
                                 
@@ -60,7 +60,7 @@ class KeyFetcher {
             
             if wallet != nil && !error {
                 
-                let derivationPath = wallet!.derivation
+                //let derivationPath = wallet!.derivation
                 
                 if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
                     
@@ -76,7 +76,7 @@ class KeyFetcher {
                                 
                                 if !error {
                                     
-                                    if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
+                                    if let masterKey = HDKey((mnemonic!.seedHex("")), network(descriptor: wallet!.descriptor)) {
                                         
                                         do {
                                             
@@ -211,7 +211,7 @@ class KeyFetcher {
             
             if wallet != nil && !error {
                 
-                let derivationPath = wallet!.derivation
+                //let derivationPath = wallet!.derivation
                 
                 Encryption.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
                     
@@ -225,7 +225,7 @@ class KeyFetcher {
                                 
                                 if !error {
                                     
-                                    if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
+                                    if let masterKey = HDKey((mnemonic!.seedHex("")), network(descriptor: wallet!.descriptor)) {
                                         
                                         do {
                                             
@@ -330,7 +330,7 @@ class KeyFetcher {
     
     class func xpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
         
-        let derivationPath = wallet.derivation
+        //let derivationPath = wallet.derivation
         Encryption.decryptData(dataToDecrypt: wallet.seed) { (seed) in
             
             if seed != nil {
@@ -341,7 +341,7 @@ class KeyFetcher {
                     
                     if !error {
                         
-                        if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
+                        if let masterKey = HDKey((mnemonic!.seedHex("")), network(descriptor: wallet.descriptor)) {
                             
                             if let path = BIP32Path(wallet.derivation) {
                                 
@@ -434,7 +434,7 @@ class KeyFetcher {
                             
                             if !error {
                                 
-                                if let masterKey = HDKey((mnemonic!.seedHex("")), network(path: derivationPath)) {
+                                if let masterKey = HDKey((mnemonic!.seedHex("")), network(descriptor: wallet!.descriptor)) {
                                     
                                     if let path = BIP32Path(derivationPath) {
                                         

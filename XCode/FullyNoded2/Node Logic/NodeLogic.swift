@@ -55,6 +55,8 @@ class NodeLogic {
                     completion((true, dictToReturn, nil))
                     
                 }
+            } else {
+                completion((false, nil, "error getting netowork info: \(errorDesc ?? "unknown error")"))
             }
         }
     }

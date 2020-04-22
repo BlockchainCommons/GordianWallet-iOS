@@ -494,7 +494,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 if !error && mnemonic != nil {
                     
                     let seed = mnemonic!.seedHex()
-                    if let mk = HDKey(seed, network(path: derivation)) {
+                    if let mk = HDKey(seed, network(descriptor: desc)) {
                         
                         if let path = BIP32Path(derivation) {
                             
@@ -591,7 +591,14 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             
             if !error && mnemonic != nil {
                 
-                let mk = HDKey(mnemonic!.seedHex(), network(path: vc.derivation!))!
+                var network:Network!
+                if vc.derivation!.contains("1") {
+                    network = .testnet
+                } else {
+                    network = .mainnet
+                }
+                
+                let mk = HDKey(mnemonic!.seedHex(), network)!
                 let fingerprint = mk.fingerprint.hexString
                 var param = ""
                 

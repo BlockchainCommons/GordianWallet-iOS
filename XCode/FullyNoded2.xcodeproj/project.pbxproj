@@ -29,6 +29,7 @@
 		D047DE0F242DDEB3004BC26D /* LocalNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DE0E242DDEB3004BC26D /* LocalNode.swift */; };
 		D0502FEC244C44EA00213870 /* PSBTSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0502FEB244C44EA00213870 /* PSBTSigner.swift */; };
 		D0502FEE244D2D4A00213870 /* FiatConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0502FED244D2D4A00213870 /* FiatConverter.swift */; };
+		D0502FF024500DE000213870 /* AddExtendedKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0502FEF24500DE000213870 /* AddExtendedKeyViewController.swift */; };
 		D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650072441A78E00754ACF /* VerifyKeysViewController.swift */; };
 		D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650092442C58200754ACF /* WordRecoveryViewController.swift */; };
 		D056500C2446BF6E00754ACF /* 1024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D056500B2446BF6D00754ACF /* 1024.jpg */; };
@@ -179,6 +180,7 @@
 		D047DE0E242DDEB3004BC26D /* LocalNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNode.swift; sourceTree = "<group>"; };
 		D0502FEB244C44EA00213870 /* PSBTSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSBTSigner.swift; sourceTree = "<group>"; };
 		D0502FED244D2D4A00213870 /* FiatConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatConverter.swift; sourceTree = "<group>"; };
+		D0502FEF24500DE000213870 /* AddExtendedKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExtendedKeyViewController.swift; sourceTree = "<group>"; };
 		D05650072441A78E00754ACF /* VerifyKeysViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyKeysViewController.swift; sourceTree = "<group>"; };
 		D05650092442C58200754ACF /* WordRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordRecoveryViewController.swift; sourceTree = "<group>"; };
 		D056500B2446BF6D00754ACF /* 1024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1024.jpg; sourceTree = "<group>"; };
@@ -791,6 +793,7 @@
 				D047DE08242C5906004BC26D /* WalletCreatedQRViewController.swift */,
 				D047DE0A242C651F004BC26D /* WalletCreatedWordsViewController.swift */,
 				D0109469242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift */,
+				D0502FEF24500DE000213870 /* AddExtendedKeyViewController.swift */,
 			);
 			path = "Wallet Creation";
 			sourceTree = "<group>";
@@ -1189,6 +1192,7 @@
 				D09D732A23F0F3C000847DC8 /* TransactionViewController.swift in Sources */,
 				D09D733223F0F3C000847DC8 /* LogInViewController.swift in Sources */,
 				D09DCF6623F10645008F5B9F /* Base32.swift in Sources */,
+				D0502FF024500DE000213870 /* AddExtendedKeyViewController.swift in Sources */,
 				D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */,
 				D047DDFB242B324A004BC26D /* WhatIsFN2ViewController.swift in Sources */,
 				D09D736F23F0F3C000847DC8 /* OfflineSigner.swift in Sources */,

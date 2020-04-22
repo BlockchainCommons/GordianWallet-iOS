@@ -19,6 +19,7 @@
         <attribute name="changeDescriptor" optional="YES" attributeType="String"/>
         <attribute name="derivation" optional="YES" attributeType="String"/>
         <attribute name="descriptor" optional="YES" attributeType="String"/>
+        <attribute name="hasRange" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="identity" optional="YES" attributeType="Binary"/>
         <attribute name="index" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -39,6 +40,6 @@
     <elements>
         <element name="Auth" positionX="-63" positionY="-18" width="128" height="73"/>
         <element name="Nodes" positionX="-54" positionY="-9" width="128" height="148"/>
-        <element name="Wallets" positionX="-36" positionY="9" width="128" height="358"/>
+        <element name="Wallets" positionX="-36" positionY="9" width="128" height="373"/>
     </elements>
 </model>

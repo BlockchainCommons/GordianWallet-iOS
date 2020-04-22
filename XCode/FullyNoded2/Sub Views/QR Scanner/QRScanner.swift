@@ -297,9 +297,7 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
             configureDetailLabel()
             configureDontHaveAnodeButton()
             
-        }
-        
-        if isImporting {
+        } else if isImporting {
             
             label.text = "Scan a Descriptor"
             labelDetail.text = "FullyNoded 2 allows you to import and export your descriptors, this is a great way to recover your private keys or create a watch-only wallet."
@@ -308,9 +306,7 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
             configureDetailLabel()
             configureDontHaveAnodeButton()
             
-        }
-        
-        if scanningRecovery {
+        } else if scanningRecovery {
             
             label.text = "Scan a RecoveryQR"
             labelDetail.text = "FullyNoded 2 allows you to backup/export a RecoveryQR Code for each wallet you create. You can scan one at anytime to recover lost funds and recreate the wallet on your device."
@@ -318,6 +314,13 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
             configureLabel()
             configureDetailLabel()
             configureDontHaveAnodeButton()
+            
+        } else {
+            
+            label.text = "Scan a QR Code"
+            labelDetail.text = "You can scan a QuickConnect QR to add a node, or a PSBT to sign"
+            configureLabel()
+            configureDetailLabel()
             
         }
         

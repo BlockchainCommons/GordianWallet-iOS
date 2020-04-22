@@ -7,13 +7,14 @@
 //
 
 import UIKit
-import LibWally
+//import LibWally
 
 class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var doneBlock: ((Bool) -> Void)?
     let connectingView = ConnectingView()
     var signedTx = ""
+    var unsignedPsbt = ""
     var inputs = [String]()
     var totalAmount = 0.0
     var receivingAddress = ""
@@ -458,14 +459,16 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         updateStatusLabel(text: "building psbt")
         
-        let param = "''\(processedInputs())'', ''{\"\(receivingAddress)\":\(rounded(number: self.totalAmount))}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget()), \"subtractFeeFromOutputs\": [0], \"changeAddress\": \"\(receivingAddress)\"}'', true"
+        let param = "''\(processedInputs())'', ''{\"\(receivingAddress)\":\(rounded(number: totalAmount))}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget()), \"subtractFeeFromOutputs\": [0], \"changeAddress\": \"\(receivingAddress)\"}'', true"
+        
         Reducer.makeCommand(walletName: wallet.name!, command: .walletcreatefundedpsbt, param: param) { [unowned vc = self] (object, errorDesc) in
             
             if let psbtDict = object as? NSDictionary {
                 
                 if let psbt = psbtDict["psbt"] as? String {
                     
-                    vc.filterSigning(wallet: wallet, psbt: psbt)
+                    vc.sign(psbt: psbt)
+                    //vc.processPsbt(psbt: psbt, wallet: wallet)
                     
                 } else {
                     
@@ -483,249 +486,275 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-    private func filterSigning(wallet: WalletStruct, psbt: String) {
-        
-        updateStatusLabel(text: "device signing psbt")
-        
-        let parser = DescriptorParser()
-        let str = parser.descriptor(wallet.descriptor)
-     
-        if wallet.type == "DEFAULT" || wallet.type == "CUSTOM" {
-            
-            if str.isHot || String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil {
-                
-                if str.isP2WPKH || str.isBIP84 {
-                    signSegwit(psbt: psbt)
-                    
-                } else if str.isP2SHP2WPKH || str.isBIP49 {
-                    signSegwitWrapped(psbt: psbt)
-                    
-                } else if str.isP2PKH || str.isBIP44 {
-                    signLegacy(psbt: psbt)
-                    
-                }
-                
-            } else {
-               
-                self.showError(title: "Error", message: "Unable to sign that as it is a cold wallet")
-                
-            }
-            
-            
-        } else if wallet.type == "MULTI" {
-         
-            processPsbt(psbt: psbt, wallet: wallet)
-            
-        }
-        
-    }
-    
-    private func processPsbt(psbt: String, wallet: WalletStruct) {
-        
-        updateStatusLabel(text: "node signing psbt")
-        
-        let param = "\"\(psbt)\", true, \"ALL\", true"
-        Reducer.makeCommand(walletName: wallet.name!, command: .walletprocesspsbt, param: param) { [unowned vc = self] (object, errorDesc) in
-            
-            if let dict = object as? NSDictionary {
-                
-                if let processedPsbt = dict["psbt"] as? String {
-                    
-                    vc.decodePsbt(psbt: processedPsbt, wallet: wallet)
-                    
-                } else {
-                 
-                    vc.showError(title: "Error", message: "Error decoding transaction: \(errorDesc ?? "")")
-                    
-                }
-                
-            }
-            
-        }
-        
-    }
-    
-    private func decodePsbt(psbt: String, wallet: WalletStruct) {
-        
-        updateStatusLabel(text: "decoding psbt")
-        
-        let param = "\"\(psbt)\""
-        Reducer.makeCommand(walletName: wallet.name!, command: .decodepsbt, param: param) { [unowned vc = self] (object, errorDesc) in
-            
-            if let dict = object as? NSDictionary {
-                
-                vc.parsePsbt(decodePsbt: dict, psbt: psbt, wallet: wallet)
-                
-            } else {
-                
-                vc.showError(title: "Error", message: "Error decoding transaction")
-                
-            }
-            
-        }
-        
-    }
-    
-    private func parsePsbt(decodePsbt: NSDictionary, psbt: String, wallet: WalletStruct) {
-        
-        updateStatusLabel(text: "parsing psbt")
-        
-        var privateKeys = [String]()
-        let inputs = decodePsbt["inputs"] as! NSArray
-        for (i, input) in inputs.enumerated() {
-            
-            let dict = input as! NSDictionary
-            let bip32derivs = dict["bip32_derivs"] as! NSArray
-            let bip32deriv = bip32derivs[0] as! NSDictionary
-            let path = bip32deriv["path"] as! String
-            if let bip32path = BIP32Path(path) {
-                
-                KeyFetcher.privKey(path: bip32path) { [unowned vc = self] (privKey, error) in
-                    
-                    if !error {
-                        
-                        privateKeys.append(privKey!)
-                        
-                        if i + 1 == inputs.count {
-                            
-                            vc.signPsbt(psbt: psbt, privateKeys: privateKeys, wallet: wallet)
-                            
-                        }
-                        
-                    } else {
-                        
-                        vc.showError(title: "Error", message: "Failed fetching private key at path \(bip32path)")
-                        
-                    }
-                    
-                }
-                
-            }
-            
-        }
-        
-    }
-    
-    private func signPsbt(psbt: String, privateKeys: [String], wallet: WalletStruct) {
+    private func sign(psbt: String) {
         
         updateStatusLabel(text: "signing psbt")
         
-        let chain = network(path: wallet.derivation)
-        
-        do {
+        PSBTSigner.sign(psbt: psbt) { [unowned vc = self] (success, psbt, rawTx) in
             
-            var localPSBT = try PSBT(psbt, chain)
-            
-            for (i, key) in privateKeys.enumerated() {
-                
-                let pk = Key(key, chain)
-                localPSBT.sign(pk!)
-                
-                if i + 1 == privateKeys.count {
+            if success {
+             
+                if psbt != nil {
+                 
+                    /// not fully signed
+                    vc.unsignedPsbt = psbt!
+                    vc.goConfirm()
                     
-                    let final = localPSBT.finalize()
-                    let complete = localPSBT.complete
-                    
-                    if final {
-                        
-                        if complete {
-                            
-                            if let hex = localPSBT.transactionFinal?.description {
-                                
-                                self.signedTx = hex
-                                self.goConfirm()
-                                
-                            } else {
-                                
-                                self.fallbackToNormalSigning(psbt: psbt, wallet: wallet)
-                                
-                            }
-                            
-                        } else {
-                            
-                            self.fallbackToNormalSigning(psbt: psbt, wallet: wallet)
-                            
-                        }
-                                                
-                    }
+                } else if rawTx != nil {
+                 
+                    vc.signedTx = rawTx!
+                    vc.goConfirm()
                     
                 }
                 
+            } else {
+             
+                vc.showError(title: "Error", message: "Error signing PSBT")
+                
             }
             
-        } catch {
-            
-            self.showError(title: "Error", message: "Local PSBT creation failed")
-            
         }
         
-    }
-    
-    private func fallbackToNormalSigning(psbt: String, wallet: WalletStruct) {
-        
-        if wallet.derivation.contains("84") {
-            
-            signSegwitWrapped(psbt: psbt)
-            
-        } else if wallet.derivation.contains("44") {
-            
-            signLegacy(psbt: psbt)
-            
-        } else if wallet.derivation.contains("49") {
-            
-            signSegwitWrapped(psbt: psbt)
-            
-        }
-        
-    }
-    
-    private func signSegwit(psbt: String) {
-        
-        let signer = NativeSegwitOfflineSigner()
-        signer.signTransactionOffline(unsignedTx: psbt) { [unowned vc = self] (signedTx) in
-
-            if signedTx != nil {
-
-                vc.signedTx = signedTx!
-                vc.goConfirm()
-
-            }
-
-        }
-        
-    }
-    
-    private func signLegacy(psbt: String) {
-        
-        let signer = OfflineSignerLegacy()
-        signer.signTransactionOffline(unsignedTx: psbt) { [unowned vc = self] (signedTx) in
-
-            if signedTx != nil {
-
-                vc.signedTx = signedTx!
-                vc.goConfirm()
-
-            }
-
-        }
-        
-    }
-    
-    func signSegwitWrapped(psbt: String) {
+        //let parser = DescriptorParser()
+        //let str = parser.descriptor(wallet.descriptor)
      
-        let signer = OfflineSignerP2SHSegwit()
-        signer.signTransactionOffline(unsignedTx: psbt) { [unowned vc = self] (signedTx) in
-
-            if signedTx != nil {
-
-                vc.signedTx = signedTx!
-                vc.goConfirm()
-
-            }
-
-        }
+//        if wallet.type == "DEFAULT" || wallet.type == "CUSTOM" {
+//
+//            if str.isHot || String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil {
+//
+//                if str.isP2WPKH || str.isBIP84 {
+//                    signSegwit(psbt: psbt)
+//
+//                } else if str.isP2SHP2WPKH || str.isBIP49 {
+//                    signSegwitWrapped(psbt: psbt)
+//
+//                } else if str.isP2PKH || str.isBIP44 {
+//                    signLegacy(psbt: psbt)
+//
+//                }
+//
+//            } else {
+//
+//                self.showError(title: "Error", message: "Unable to sign that as it is a cold wallet")
+//
+//            }
+//
+//
+//        } else if wallet.type == "MULTI" {
+//
+//            processPsbt(psbt: psbt, wallet: wallet)
+//
+//        }
         
     }
+    
+//    private func processPsbt(psbt: String, wallet: WalletStruct) {
+//
+//        updateStatusLabel(text: "node signing psbt")
+//
+//        let param = "\"\(psbt)\", true, \"ALL\", true"
+//        Reducer.makeCommand(walletName: wallet.name!, command: .walletprocesspsbt, param: param) { [unowned vc = self] (object, errorDesc) in
+//
+//            if let dict = object as? NSDictionary {
+//
+//                if let processedPsbt = dict["psbt"] as? String {
+//
+//                    vc.sign(psbt: processedPsbt)
+//                    //vc.decodePsbt(psbt: processedPsbt, wallet: wallet)
+//
+//                } else {
+//
+//                    vc.showError(title: "Error", message: "Error decoding transaction: \(errorDesc ?? "")")
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
+//
+//    private func decodePsbt(psbt: String, wallet: WalletStruct) {
+//
+//        updateStatusLabel(text: "decoding psbt")
+//
+//        let param = "\"\(psbt)\""
+//        Reducer.makeCommand(walletName: wallet.name!, command: .decodepsbt, param: param) { [unowned vc = self] (object, errorDesc) in
+//
+//            if let dict = object as? NSDictionary {
+//
+//                vc.parsePsbt(decodePsbt: dict, psbt: psbt, wallet: wallet)
+//
+//            } else {
+//
+//                vc.showError(title: "Error", message: "Error decoding transaction")
+//
+//            }
+//
+//        }
+//
+//    }
+//
+//    private func parsePsbt(decodePsbt: NSDictionary, psbt: String, wallet: WalletStruct) {
+//
+//        updateStatusLabel(text: "parsing psbt")
+//
+//        var privateKeys = [String]()
+//        let inputs = decodePsbt["inputs"] as! NSArray
+//        for (i, input) in inputs.enumerated() {
+//
+//            let dict = input as! NSDictionary
+//            let bip32derivs = dict["bip32_derivs"] as! NSArray
+//            let bip32deriv = bip32derivs[0] as! NSDictionary
+//            let path = bip32deriv["path"] as! String
+//            if let bip32path = BIP32Path(path) {
+//
+//                KeyFetcher.privKey(path: bip32path) { [unowned vc = self] (privKey, error) in
+//
+//                    if !error {
+//
+//                        privateKeys.append(privKey!)
+//
+//                        if i + 1 == inputs.count {
+//
+//                            vc.signPsbt(psbt: psbt, privateKeys: privateKeys, wallet: wallet)
+//
+//                        }
+//
+//                    } else {
+//
+//                        vc.showError(title: "Error", message: "Failed fetching private key at path \(bip32path)")
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
+//
+//    private func signPsbt(psbt: String, privateKeys: [String], wallet: WalletStruct) {
+//
+//        updateStatusLabel(text: "signing psbt")
+//
+//        let chain = network(path: wallet.derivation)
+//
+//        do {
+//
+//            var localPSBT = try PSBT(psbt, chain)
+//
+//            for (i, key) in privateKeys.enumerated() {
+//
+//                let pk = Key(key, chain)
+//                localPSBT.sign(pk!)
+//
+//                if i + 1 == privateKeys.count {
+//
+//                    let final = localPSBT.finalize()
+//                    let complete = localPSBT.complete
+//
+//                    if final {
+//
+//                        if complete {
+//
+//                            if let hex = localPSBT.transactionFinal?.description {
+//
+//                                self.signedTx = hex
+//                                self.goConfirm()
+//
+//                            } else {
+//
+//                                self.fallbackToNormalSigning(psbt: psbt, wallet: wallet)
+//
+//                            }
+//
+//                        } else {
+//
+//                            self.fallbackToNormalSigning(psbt: psbt, wallet: wallet)
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//        } catch {
+//
+//            self.showError(title: "Error", message: "Local PSBT creation failed")
+//
+//        }
+//
+//    }
+//
+//    private func fallbackToNormalSigning(psbt: String, wallet: WalletStruct) {
+//
+//        if wallet.derivation.contains("84") {
+//
+//            signSegwitWrapped(psbt: psbt)
+//
+//        } else if wallet.derivation.contains("44") {
+//
+//            signLegacy(psbt: psbt)
+//
+//        } else if wallet.derivation.contains("49") {
+//
+//            signSegwitWrapped(psbt: psbt)
+//
+//        }
+//
+//    }
+//
+//    private func signSegwit(psbt: String) {
+//
+//        let signer = NativeSegwitOfflineSigner()
+//        signer.signTransactionOffline(unsignedTx: psbt) { [unowned vc = self] (signedTx) in
+//
+//            if signedTx != nil {
+//
+//                vc.signedTx = signedTx!
+//                vc.goConfirm()
+//
+//            }
+//
+//        }
+//
+//    }
+//
+//    private func signLegacy(psbt: String) {
+//
+//        let signer = OfflineSignerLegacy()
+//        signer.signTransactionOffline(unsignedTx: psbt) { [unowned vc = self] (signedTx) in
+//
+//            if signedTx != nil {
+//
+//                vc.signedTx = signedTx!
+//                vc.goConfirm()
+//
+//            }
+//
+//        }
+//
+//    }
+//
+//    func signSegwitWrapped(psbt: String) {
+//
+//        let signer = OfflineSignerP2SHSegwit()
+//        signer.signTransactionOffline(unsignedTx: psbt) { [unowned vc = self] (signedTx) in
+//
+//            if signedTx != nil {
+//
+//                vc.signedTx = signedTx!
+//                vc.goConfirm()
+//
+//            }
+//
+//        }
+//
+//    }
     
     private func goConfirm() {
      
@@ -813,6 +842,7 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 vc.sweeping = true
                 vc.signedRawTx = self.signedTx
+                vc.unsignedPsbt = self.unsignedPsbt
                 
             }
             

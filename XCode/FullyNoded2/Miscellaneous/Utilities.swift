@@ -227,21 +227,18 @@ public func displayAlert(viewController: UIViewController, isError: Bool, messag
     
 }
 
-public func network(path: String) -> Network {
+public func network(descriptor: String) -> Network {
     
-    var network:Network!
+    let p = DescriptorParser()
+    let str = p.descriptor(descriptor)
     
-    if path.contains("/1'") {
-        
-        network = .testnet
+    if str.chain == "Testnet" {
+        return Network.testnet
         
     } else {
-        
-        network = .mainnet
+        return Network.mainnet
         
     }
-    
-    return network
     
 }
 
