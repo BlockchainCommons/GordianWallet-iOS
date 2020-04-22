@@ -27,11 +27,11 @@ To help us improve FullyNoded 2, *please*  share crash reports and give us feedb
 
 We have a public Testflight link available for beta testing [here](https://testflight.apple.com/join/OQHyL0a8). 
 
-Click through, and you'll be able to install the app immediately (and will be instructed to install Testflight if you need to do so first).
+Click through, and you'll be able to install the app immediately (and will be instructed how to install Testflight if you need to do so first).
 
 ### Installing FullyNoded 2 from Source
 
-Full instruction on installing from source are available [here](docs-install-source.md).
+Full instruction on installing from source are available [here](Docs/install-from-source.md).
 
 ### Linking to a Full Node
 
@@ -49,7 +49,7 @@ Please refer to their telegram groups for simple instructions on linking to thes
 
 ## Using FullyNoded 2
 
-Please see our [features](docs-features.md) document for full information on how to use FullyNoded 2 once it's installed.
+Please see our [features](Docs/Features.md) document for full information on how to use FullyNoded 2 once it's installed.
 
 ## The Philosophy Behind FullyNoded 2
 
