@@ -31,7 +31,7 @@ Click through, and you'll be able to install the app immediately (and will be in
 
 ### Installing FullyNoded 2 from Source
 
-Full instruction on installing from source are available [here](Docs/install-from-source.md).
+Full instruction on installing from source are available [here](Docs/Install-from-source.md).
 
 ### Linking to a Full Node
 
