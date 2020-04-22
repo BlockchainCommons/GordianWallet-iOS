@@ -16,7 +16,7 @@ Wait for brew to finish.
 
 Follow these [instructions](https://brewinstall.org/install-carthage-on-mac-with-brew/) to install to Cocoa dependency manager using brew.
 
-##### Install XCode
+## Install XCode
 
 Install Apple's XCode developer environment, and download the FullyNoded 2 source.
 
@@ -26,7 +26,7 @@ Install Apple's XCode developer environment, and download the FullyNoded 2 sourc
 - Go to the [repo](https://github.com/BlockchainCommons/FullyNoded-2) for FullyNoded 2 and click `Clone and Download` -> `Open in XCode`
 - Once it opens, go ahead and close it for now and quit XCode
 
-##### Install Tor.Framework Dependencies
+## Install Tor.Framework Dependencies
 
 These steps will ensure Tor.framework builds successfully, it will create a completely separate Tor.framework directory on your machine which should not be confused with *FN2* or its Tor.framework.
 
@@ -49,7 +49,7 @@ cd <into FullyNoded2>
 carthage update --platform iOS
 ```
 
-##### Install LibWally-Swift with Cocoapods
+## Install LibWally-Swift with Cocoapods
 
 Finally, install the Swift cryptocurrency primitives.
 
