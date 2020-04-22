@@ -4,7 +4,7 @@
 
 ### Adding a Node
 
-<img src="./Images/scanQuickConnect.PNG" alt="FullyNoded 2 app Home Screen" width="250"/>
+<img src="../Images/scanQuickConnect.PNG" alt="FullyNoded 2 app Home Screen" width="250"/>
 
 When initially starting up FullyNoded 2, a user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or link to a testnet node that we are currently utilizing for development purposes by tapping the "don't have a node?" button.
 
@@ -12,23 +12,23 @@ When initially starting up FullyNoded 2, a user may choose to connect to their o
 
 Once you are connected to a node, you may go to the "Wallets" tab and create either a single-sig or multi-sig wallet:
 
-<img src="./Images/choose_wallet_type_screen.PNG" alt="" width="250"/> <img src="./Images/wallet_label_screen.PNG" alt="" width="250"/> 
+<img src="../Images/choose_wallet_type_screen.PNG" alt="" width="250"/> <img src="../Images/wallet_label_screen.PNG" alt="" width="250"/> 
 
 Once the wallet is successfully created on your node you will be guided through a confirmation flow. You will first need to give your wallet a label, so that you can easily recognize it. Note that this label is included in the Recovery QR, so if you use the Recovery QR to recover the wallet the label will persist! 
 
 Please save the recovery items in order to be able to recover your wallet! If you do not do this you are at risk of permanently losing your funds. Simple tap the recovery QR to export it and save it. It should not be saved onto your device, as the whole point is that you will need it if you lose your device. We recommend printing it on waterproof paper and saving it in multiple secure locations.
 
-<img src="./Images/wallet_recovery_QR.PNG" alt="" width="250"/> <img src="./Images/wallet_recovery_QR_export.PNG" alt="" width="250"/>
+<img src="../Images/wallet_recovery_QR.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_QR_export.PNG" alt="" width="250"/>
 
-<img src="./Images/wallet_recovery_phrase_intro.PNG" alt="" width="250"/> <img src="./Images/wallet_offline_recovery_words.PNG" alt="" width="250"/>
+<img src="../Images/wallet_recovery_phrase_intro.PNG" alt="" width="250"/> <img src="../Images/wallet_offline_recovery_words.PNG" alt="" width="250"/>
 
 The final screen in the wallet created confirmation flow is the offline recovery words. From that screen, you can copy the words to clipboard, export them, or display them in QR code format. It is extremely important for multi-sig wallets that the recovery words are saved; for single-sig wallets, that is redundant to the Recovery QR. It is recommended you write these down on waterproof paper and save them securely in multiple locations. For multi-sig wallets they are required for wallet recovery and refilling the keypool. 
 
 ### Accessing a Wallet
 
-<img src="./Images/wallets_screen.PNG" alt="" width="250"/> <img src="./Images/seed_export.PNG" alt="" width="250"/> <img src="./Images/utxos.jpeg" alt="" width="250"/> 
+<img src="../Images/wallets_screen.PNG" alt="" width="250"/> <img src="../Images/seed_export.PNG" alt="" width="250"/> <img src="../Images/utxos.jpeg" alt="" width="250"/> 
 
-<img src="./Images/export_keys.PNG" alt="" width="250"/> <img src="./Images/verify_addresses.PNG" alt="" width="250"/>
+<img src="../Images/export_keys.PNG" alt="" width="250"/> <img src="../Images/verify_addresses.PNG" alt="" width="250"/>
 
 After creating a wallet, you will see it on the "Wallets" page. Tap it to activate it. 
 
@@ -39,19 +39,19 @@ After creating a wallet, you will see it on the "Wallets" page. Tap it to activa
 
 ### Receiving Funds
 
-<img src="./Images/create_invoice.PNG" alt="" width="250"/>
+<img src="../Images/create_invoice.PNG" alt="" width="250"/>
 
 To receive funds, activate the wallet you want to receive from and then tap the "In" tab. This will fetch a receiving address from your node for your active wallet. To fetch another one, tap the refresh button in the top right corner. The "amount" and "label" field conform to BIP21: you can add amounts and a label so the spender can simply scan the QR and it will automatically populate the amount field on their end if their software is BIP21 compatible.
 
 ### Spending Funds
 
-<img src="./Images/pay_invoice.PNG" alt="" width="250"/> <img src="./Images/confirm_transaction.PNG" alt="" width="250"/>
+<img src="../Images/pay_invoice.PNG" alt="" width="250"/> <img src="../Images/confirm_transaction.PNG" alt="" width="250"/>
 
 To send funds, just tap the "Out" tab. From here you can tap the scanner button to scan a BIP21 compatible QR code or an address. You can also tap the + button to add multiple outputs to your transaction (batching). Whenever you are ready to build the transaction just tap "next".
 
 ### Getting Info from the Home screen
 
-<img src="./Images/home_screen_expanded.PNG" alt="" width="250"/> <img src="./Images/home_screen_balance_transactions.PNG" alt="" width="250"/>
+<img src="../Images/home_screen_expanded.PNG" alt="" width="250"/> <img src="../Images/home_screen_balance_transactions.PNG" alt="" width="250"/>
 
 You may expand the cells to show more info about your Tor connection, node statistics, and your wallet by tapping the expand/collapse buttons.
 
@@ -73,7 +73,7 @@ The "scan Recovery QR" button will also display that the QR was valid after scan
 
 Depending on what you are recovering you may "Tap to Recover" once a valid QR and/or words are added.
 
-<img src="./Images/wallet_recovery_add_words.PNG" alt="" width="250"/> <img src="./Images/wallet_recovery_valid_mnmemonic.PNG" alt="" width="250"/> <img src="./Images/wallet_recovery_valid_QR.PNG" alt="" width="250"/> <img src="./Images/confirm_recovery.PNG" alt="" width="250"/>
+<img src="../Images/wallet_recovery_add_words.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_valid_mnmemonic.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_valid_QR.PNG" alt="" width="250"/> <img src="../Images/confirm_recovery.PNG" alt="" width="250"/>
 
 Upon tapping "Tap to recover" you will be presented with a "Recovery Confirmation" screen.
 
