@@ -31,8 +31,6 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
         textView.layer.cornerRadius = 4
         tap.addTarget(self, action: #selector(handleTap))
         view.addGestureRecognizer(tap)
-        textView.text = "tpubDFN5nxFeBN7v6yriSeMk1AkYBQvxxXHMw2nA7UTYhXiGECmzPC4KyigkVvgMf1g726SEZwGFs8hnKmwtNszQ915oT6bB2SvgZ8CaQoDHmTm"
-        textField.text = "490ff801"
         
     }
     

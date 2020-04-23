@@ -527,8 +527,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             let backupXpub = str.multiSigKeys[0]
             let derivation = str.derivationArray[0]
             
-            let mnemonicCreator = MnemonicCreator()
-            mnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
+            MnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
                 
                 if !error && mnemonic != nil {
                     
@@ -625,8 +624,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         
         cv.addConnectingView(vc: self, description: "building your wallets descriptor")
         
-        let mnemonicCreator = MnemonicCreator()
-        mnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
+        MnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
             
             if !error && mnemonic != nil {
                 

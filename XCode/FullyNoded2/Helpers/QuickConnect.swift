@@ -14,8 +14,7 @@ class QuickConnect {
     var nodeToUpdate:UUID!
     
     // MARK: QuickConnect uri examples
-    // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233bygtrdertgfd.onion:1309/?label=Node%20Name
-    // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233b.onion:1309/?
+    // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233bygtrdertgfd.onion:1309?label=Node%20Name
     // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233b.onion:1309?
     
     func addNode(vc: UIViewController, url: String, completion: @escaping ((success: Bool, errorDesc: String?)) -> Void) {

@@ -145,8 +145,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             walletType.text = "Single-sig"
             walletDerivation.text = "\(derivation!)/0"
             
-            let mnemonicCreator = MnemonicCreator()
-            mnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
+            MnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
                 
                 if !error && mnemonic != nil {
                     

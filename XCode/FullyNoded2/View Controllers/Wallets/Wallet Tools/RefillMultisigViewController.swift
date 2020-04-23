@@ -442,8 +442,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         let str = parser.descriptor(wallet.descriptor)
         let derivation = wallet.derivation
         
-        let mnemonicCreator = MnemonicCreator()
-        mnemonicCreator.convert(words: justWords.joined(separator: " ")) { [unowned vc = self] (mnemonic, error) in
+        MnemonicCreator.convert(words: justWords.joined(separator: " ")) { [unowned vc = self] (mnemonic, error) in
             
             if !error && mnemonic != nil {
                 

@@ -374,8 +374,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         var getKeysFromNode = false
         
         func getPrivKeys() {
-            let mnemonicCreator = MnemonicCreator()
-            mnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
+            MnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
                 
                 if !error {
                     let derivation = vc.wallet.derivation
@@ -604,8 +603,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     func getSingleSigKeys(words: String?) {
         
         if words != nil {
-            let mnemonicCreator = MnemonicCreator()
-            mnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
+            MnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
                 
                 if !error {
                     vc.getKeys(mnemonic: mnemonic!)

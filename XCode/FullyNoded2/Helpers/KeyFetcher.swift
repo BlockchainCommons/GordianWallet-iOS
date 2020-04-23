@@ -23,8 +23,7 @@ class KeyFetcher {
                     
                     if let words = String(data: seed!, encoding: .utf8) {
                                             
-                        let mnenomicCreator = MnemonicCreator()
-                        mnenomicCreator.convert(words: words) { (mnemonic, error) in
+                        MnemonicCreator.convert(words: words) { (mnemonic, error) in
                             
                             if let masterKey = HDKey((mnemonic!.seedHex("")), network(descriptor: wallet.descriptor)) {
                                 
@@ -69,10 +68,8 @@ class KeyFetcher {
                         if seed != nil {
                             
                             let words = String(data: seed!, encoding: .utf8)!
-                            
-                            let mnenomicCreator = MnemonicCreator()
-                            
-                            mnenomicCreator.convert(words: words) { (mnemonic, error) in
+                                                        
+                            MnemonicCreator.convert(words: words) { (mnemonic, error) in
                                 
                                 if !error {
                                     
@@ -220,8 +217,7 @@ class KeyFetcher {
                         if seed != nil {
                             
                             let words = String(data: seed!, encoding: .utf8)!
-                            let mnenomicCreator = MnemonicCreator()
-                            mnenomicCreator.convert(words: words) { (mnemonic, error) in
+                            MnemonicCreator.convert(words: words) { (mnemonic, error) in
                                 
                                 if !error {
                                     
@@ -336,8 +332,7 @@ class KeyFetcher {
             if seed != nil {
                 
                 let words = String(data: seed!, encoding: .utf8)!
-                let mnenomicCreator = MnemonicCreator()
-                mnenomicCreator.convert(words: words) { (mnemonic, error) in
+                MnemonicCreator.convert(words: words) { (mnemonic, error) in
                     
                     if !error {
                         
@@ -429,8 +424,7 @@ class KeyFetcher {
                     if seed != nil {
                         
                         let words = String(data: seed!, encoding: .utf8)!
-                        let mnenomicCreator = MnemonicCreator()
-                        mnenomicCreator.convert(words: words) { (mnemonic, error) in
+                        MnemonicCreator.convert(words: words) { (mnemonic, error) in
                             
                             if !error {
                                 

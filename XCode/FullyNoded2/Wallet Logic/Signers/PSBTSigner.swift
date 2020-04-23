@@ -98,8 +98,7 @@ class PSBTSigner {
                     Encryption.decryptData(dataToDecrypt: encryptedSeed) { (seed) in
                         if seed != nil {
                             if let words = String(data: seed!, encoding: .utf8) {
-                                let mnenomicCreator = MnemonicCreator()
-                                mnenomicCreator.convert(words: words) { (mnemonic, error) in
+                                MnemonicCreator.convert(words: words) { (mnemonic, error) in
                                     if !error {
                                         if let masterKey = HDKey(mnemonic!.seedHex(""), chain) {
                                             if let xprv = masterKey.xpriv {

@@ -681,8 +681,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
                 let derivation = vc.newWallet["derivation"] as! String
                 vc.backUpRecoveryPhrase = mnemonic!
-                let mnemonicCreator = MnemonicCreator()
-                mnemonicCreator.convert(words: vc.backUpRecoveryPhrase) { (mnemonic, error) in
+                MnemonicCreator.convert(words: vc.backUpRecoveryPhrase) { (mnemonic, error) in
                     
                     if !error {
                         
@@ -708,17 +707,12 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                     
                                     /// User supplied a custom xpub to create the multisig quorum with
                                     if vc.userSuppliedMultiSigXpub != "" {
-                                        
+                                        print("userSuppliedMultiSigXpub = \(vc.userSuppliedMultiSigXpub)")
                                         vc.fingerprints.append(vc.userSuppliedMultiSigFingerprint)
                                         vc.publickeys.append(vc.userSuppliedMultiSigXpub)
                                         vc.nodesSeed = vc.userSuppliedMultiSigXpub
                                         vc.createNodesKey()
                                         
-                                    /// This will be for user supplied words in the multisig qourum
-                                    } else if vc.userSuppliedWords != nil {
- 
-                                         
- 
                                     } else {
                                         
                                         vc.createLocalKey()
@@ -767,22 +761,117 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     func createLocalKey() {
-        print("createLocalKey")
         
-        updateStatus(text: "creating device's seed")
-        
-        KeychainCreator.createKeyChain { [unowned vc = self] (words, error) in
+        if userSuppliedWords == nil {
             
-            if !error {
+            updateStatus(text: "creating device's seed")
+            
+            KeychainCreator.createKeyChain { [unowned vc = self] (words, error) in
                 
-                let unencryptedSeed = words!.dataUsingUTF8StringEncoding
-                Encryption.encryptData(dataToEncrypt: unencryptedSeed) { (encryptedSeed, error) in
+                if !error {
                     
-                    if !error {
+                    let unencryptedSeed = words!.dataUsingUTF8StringEncoding
+                    Encryption.encryptData(dataToEncrypt: unencryptedSeed) { (encryptedSeed, error) in
                         
-                        vc.localSeed = encryptedSeed!
-                        let converter = MnemonicCreator()
-                        converter.convert(words: words!) { (mnemonic, error) in
+                        if !error {
+                            
+                            vc.localSeed = encryptedSeed!
+                            MnemonicCreator.convert(words: words!) { (mnemonic, error) in
+                                
+                                if !error {
+                                    
+                                    vc.entropy = mnemonic!.entropy.description
+                                    let derivation = vc.newWallet["derivation"] as! String
+                                    var network:Network!
+                                    if vc.node.network == "testnet" {
+                                        network = .testnet
+                                    } else {
+                                        network = .mainnet
+                                    }
+                                    
+                                    if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
+                                        
+                                        let localFingerPrint = masterKey.fingerprint.hexString
+                                        vc.fingerprints.append(localFingerPrint)
+                                        
+                                        if let path = BIP32Path(derivation) {
+                                            
+                                            do {
+                                                
+                                                let account = try masterKey.derive(path)
+                                                vc.publickeys.append(account.xpub)
+                                                
+                                                if account.xpriv != nil {
+                                                    
+                                                    vc.localXprv = account.xpriv!
+                                                    vc.createNodesKey()
+                                                    
+                                                } else {
+                                                    
+                                                    vc.creatingView.removeConnectingView()
+                                                    displayAlert(viewController: vc, isError: true, message: "failed deriving local xpriv")
+                                                    
+                                                }
+                                                
+                                            } catch {
+                                                
+                                                vc.creatingView.removeConnectingView()
+                                                displayAlert(viewController: vc, isError: true, message: "failed deriving xpub")
+                                                
+                                            }
+                                            
+                                        } else {
+                                            
+                                            vc.creatingView.removeConnectingView()
+                                            displayAlert(viewController: vc, isError: true, message: "failed initiating bip32 path")
+                                            
+                                        }
+                                        
+                                    } else {
+                                        
+                                        vc.creatingView.removeConnectingView()
+                                        displayAlert(viewController: vc, isError: true, message: "failed creating masterkey")
+                                        
+                                    }
+                                    
+                                } else {
+                                    
+                                    vc.creatingView.removeConnectingView()
+                                    displayAlert(viewController: vc, isError: true, message: "error converting your words to BIP39 mnmemonic")
+                                    
+                                }
+                                
+                            }
+                            
+                        } else {
+                            
+                            vc.creatingView.removeConnectingView()
+                            displayAlert(viewController: vc, isError: true, message: "error encrypting data")
+                            
+                        }
+                        
+                        
+                    }
+                    
+                } else {
+                    
+                    vc.creatingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: "error creating your recovery key")
+                    
+                }
+                
+            }
+            
+        } else {
+            print("creating with user supplied seed")
+            /// Use the user supplied mnemonic for the local seed.
+            let unencryptedSeed = userSuppliedWords!.dataUsingUTF8StringEncoding
+            Encryption.encryptData(dataToEncrypt: unencryptedSeed) { [unowned vc = self] (encryptedSeed, error) in
+                
+                if !error {
+                    
+                    vc.localSeed = encryptedSeed!
+                    MnemonicCreator.convert(words: vc.userSuppliedWords!) { [unowned vc = self] (mnemonic, error) in
                             
                             if !error {
                                 
@@ -799,7 +888,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                     
                                     let localFingerPrint = masterKey.fingerprint.hexString
                                     vc.fingerprints.append(localFingerPrint)
-                                                                        
+                                    
                                     if let path = BIP32Path(derivation) {
                                         
                                         do {
@@ -808,6 +897,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                             vc.publickeys.append(account.xpub)
                                             
                                             if account.xpriv != nil {
+                                                
                                                 
                                                 vc.localXprv = account.xpriv!
                                                 vc.createNodesKey()
@@ -849,24 +939,12 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             
                         }
                         
-                    } else {
-                        
-                        vc.creatingView.removeConnectingView()
-                        displayAlert(viewController: vc, isError: true, message: "error encrypting data")
-                        
                     }
-                    
                     
                 }
                 
-            } else {
-                
-                vc.creatingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "error creating your recovery key")
-                
             }
             
-        }
         
     }
     
@@ -879,8 +957,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
             if !error {
                 
-                let converter = MnemonicCreator()
-                converter.convert(words: words!) { (mnemonic, error) in
+                MnemonicCreator.convert(words: words!) { (mnemonic, error) in
                     
                     if !error {
                         
@@ -1308,7 +1385,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 vc.userSuppliedMultiSigFingerprint = dict!["fingerprint"]!
                                 
                             }
-                            
                             
                             vc.createMultiSig()
                             
