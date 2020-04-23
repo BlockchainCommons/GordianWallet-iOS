@@ -98,7 +98,6 @@ class PSBTSigner {
                     Encryption.decryptData(dataToDecrypt: encryptedSeed) { (seed) in
                         if seed != nil {
                             if let words = String(data: seed!, encoding: .utf8) {
-                                print("words = \(words)")
                                 let mnenomicCreator = MnemonicCreator()
                                 mnenomicCreator.convert(words: words) { (mnemonic, error) in
                                     if !error {
@@ -130,7 +129,9 @@ class PSBTSigner {
                             let wallet = WalletStruct(dictionary: w)
                             let walletNetwork = network(descriptor: wallet.descriptor)
                             if !wallet.isArchived && walletNetwork == psbtToSign.network {
-                                walletsToSignWith.append(w)
+                                if String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil {
+                                    walletsToSignWith.append(w)
+                                }
                             }
                         }
                         if i + 1 == wallets!.count {

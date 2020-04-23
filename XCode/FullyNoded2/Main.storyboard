@@ -5719,7 +5719,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
             </objects>
             <point key="canvasLocation" x="-4004" y="348.57571214392806"/>
         </scene>
-        <!--Add Seed-->
+        <!--Add xpub-->
         <scene sceneID="JBr-sN-uMP">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="QV1-we-EJN" customClass="AddExtendedKeyViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -5727,23 +5727,6 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="master key fingerprint" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="El3-dl-fGR">
-                                <rect key="frame" x="16" y="73" width="343" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Master key fingerprint:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="68K-lZ-hus">
-                                <rect key="frame" x="16" y="44" width="173" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Extended key:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L4I-Yd-soB">
-                                <rect key="frame" x="16" y="131" width="108" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rme-da-PT4">
                                 <rect key="frame" x="16" y="562" width="343" height="30"/>
                                 <constraints>
@@ -5757,8 +5740,20 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                     <action selector="addWordsAction:" destination="QV1-we-EJN" eventType="touchUpInside" id="reH-bc-XQw"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account Xpub:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L4I-Yd-soB">
+                                <rect key="frame" x="16" y="141" width="113.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Master Key Fingerprint:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nHV-qm-mlE">
+                                <rect key="frame" x="16" y="60" width="178" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GWy-WU-bhE">
-                                <rect key="frame" x="122" y="274" width="131" height="30"/>
+                                <rect key="frame" x="122" y="284" width="131" height="30"/>
                                 <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="131" id="8ri-tX-1Iy"/>
@@ -5773,7 +5768,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="XOU-39-25F">
-                                <rect key="frame" x="16" y="160" width="343" height="75"/>
+                                <rect key="frame" x="16" y="170" width="343" height="75"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="75" id="OgN-cm-fx5"/>
@@ -5782,30 +5777,35 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Uwi-UQ-UZ5">
+                                <rect key="frame" x="16" y="89" width="343" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="BID-Jh-ufb" firstAttribute="trailing" secondItem="El3-dl-fGR" secondAttribute="trailing" constant="16" id="2Di-eL-ue9"/>
-                            <constraint firstItem="El3-dl-fGR" firstAttribute="top" secondItem="68K-lZ-hus" secondAttribute="bottom" constant="8" id="Hsc-y9-kp6"/>
-                            <constraint firstItem="L4I-Yd-soB" firstAttribute="top" secondItem="El3-dl-fGR" secondAttribute="bottom" constant="24" id="YLE-fF-aFd"/>
+                            <constraint firstItem="Uwi-UQ-UZ5" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="5Aw-jh-dzZ"/>
+                            <constraint firstItem="Uwi-UQ-UZ5" firstAttribute="top" secondItem="nHV-qm-mlE" secondAttribute="bottom" constant="8" id="6sL-qr-cpc"/>
+                            <constraint firstItem="nHV-qm-mlE" firstAttribute="top" secondItem="BID-Jh-ufb" secondAttribute="top" constant="16" id="9eq-DK-re0"/>
                             <constraint firstItem="XOU-39-25F" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="cJA-Pc-37Y"/>
                             <constraint firstItem="XOU-39-25F" firstAttribute="top" secondItem="L4I-Yd-soB" secondAttribute="bottom" constant="8" id="d3K-y8-xw4"/>
-                            <constraint firstItem="68K-lZ-hus" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="fMQ-eh-NxT"/>
+                            <constraint firstItem="BID-Jh-ufb" firstAttribute="trailing" secondItem="Uwi-UQ-UZ5" secondAttribute="trailing" constant="16" id="eTd-ZE-X2T"/>
+                            <constraint firstItem="nHV-qm-mlE" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="f7x-Cj-6wq"/>
                             <constraint firstItem="GWy-WU-bhE" firstAttribute="top" secondItem="XOU-39-25F" secondAttribute="bottom" constant="39" id="gGW-hZ-Kx8"/>
                             <constraint firstItem="L4I-Yd-soB" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="gfp-1k-xcf"/>
+                            <constraint firstItem="L4I-Yd-soB" firstAttribute="top" secondItem="Uwi-UQ-UZ5" secondAttribute="bottom" constant="18" id="hl7-IM-3hq"/>
                             <constraint firstItem="BID-Jh-ufb" firstAttribute="trailing" secondItem="XOU-39-25F" secondAttribute="trailing" constant="16" id="hw5-nl-j0J"/>
                             <constraint firstItem="BID-Jh-ufb" firstAttribute="bottom" secondItem="Rme-da-PT4" secondAttribute="bottom" constant="26" id="lNK-Rb-G1B"/>
                             <constraint firstItem="GWy-WU-bhE" firstAttribute="centerX" secondItem="ULy-HG-wOq" secondAttribute="centerX" id="lxk-EJ-Nfw"/>
-                            <constraint firstItem="El3-dl-fGR" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="net-nT-d0a"/>
-                            <constraint firstItem="68K-lZ-hus" firstAttribute="top" secondItem="BID-Jh-ufb" secondAttribute="top" id="oLG-AC-PNd"/>
                             <constraint firstItem="Rme-da-PT4" firstAttribute="centerX" secondItem="ULy-HG-wOq" secondAttribute="centerX" id="wgO-1X-Pv8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="BID-Jh-ufb"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Add Seed" id="lb9-Xm-Xgr"/>
+                    <navigationItem key="navigationItem" title="Add xpub" id="lb9-Xm-Xgr"/>
                     <connections>
                         <outlet property="nextOutlet" destination="GWy-WU-bhE" id="Hdm-Ae-Pku"/>
-                        <outlet property="textField" destination="El3-dl-fGR" id="HJa-UB-N1x"/>
+                        <outlet property="textField" destination="Uwi-UQ-UZ5" id="ft0-bs-efQ"/>
                         <outlet property="textView" destination="XOU-39-25F" id="nV2-Zg-6vg"/>
                     </connections>
                 </viewController>

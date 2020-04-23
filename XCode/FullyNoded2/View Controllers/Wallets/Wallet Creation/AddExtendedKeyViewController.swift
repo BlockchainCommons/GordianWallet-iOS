@@ -11,8 +11,8 @@ import LibWally
 
 class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UINavigationControllerDelegate {
     
-    @IBOutlet weak var nextOutlet: UIButton!
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var nextOutlet: UIButton!
     @IBOutlet weak var textView: UITextView!
     let tap = UITapGestureRecognizer()
     var wallet:WalletStruct!
@@ -23,7 +23,6 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
         
         navigationController?.delegate = self
         textView.delegate = self
-        textField.delegate = self
         nextOutlet.layer.cornerRadius = 8
         textView.layer.borderWidth = 1.0
         textView.layer.borderColor = UIColor.darkGray.cgColor
@@ -31,8 +30,8 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
         textView.layer.cornerRadius = 4
         tap.addTarget(self, action: #selector(handleTap))
         view.addGestureRecognizer(tap)
+        textView.text = "tpubDFN5nxFeBN7v6yriSeMk1AkYBQvxxXHMw2nA7UTYhXiGECmzPC4KyigkVvgMf1g726SEZwGFs8hnKmwtNszQ915oT6bB2SvgZ8CaQoDHmTm"
         textField.text = "490ff801"
-        textView.text = "tprv8h7fJawtQDed3DnjysWi5SGEquVX6wdr3QPrn2aCaDzysKywaaqHJhZsbwxCAsYTBB5C1ZJCsg1SwhSPJoevkGmSddqSuaihtEAqkkrvWL9"
         
         //wpkh([490ff801/84'/1'/0']tprv8h7fJawtQDed3DnjysWi5SGEquVX6wdr3QPrn2aCaDzysKywaaqHJhZsbwxCAsYTBB5C1ZJCsg1SwhSPJoevkGmSddqSuaihtEAqkkrvWL9/0/*)
         
@@ -44,16 +43,17 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     }
     
     private func createDescriptors() {
-        if textField.text != "" && textView.text != "" {
-            if textField.text!.count == 8 {
-                let fingerprint = textField.text!
+        if textView.text != "" && textField.text != "" {
+            if textView.text.hasPrefix("xpub") || textView.text.hasPrefix("tpub") && textField.text!.count == 8 {
                 if let _ = HDKey(textView.text!) {
-                    let dict = ["key":textView.text!, "fingerprint":fingerprint]
+                    let dict = ["key":textView.text!, "fingerprint":textField.text!]
                     DispatchQueue.main.async { [unowned vc = self] in
                         vc.onDoneBlock!((dict))
                         vc.navigationController!.popViewController(animated: true)
                     }
                 }
+            } else {
+                showAlert(vc: self, title: "Only xpubs allowed here", message: "This option is only for creating watch-only wallets with user supplied xpub's. If you would like to supply a seed tap the \"add BIP39 words\" button below.")
             }
         }
     }
@@ -62,7 +62,6 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
         
         DispatchQueue.main.async { [unowned vc = self] in
             
-            vc.textField.resignFirstResponder()
             vc.textView.resignFirstResponder()
             
         }
