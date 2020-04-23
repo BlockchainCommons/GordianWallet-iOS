@@ -95,7 +95,15 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         addressLabel.text = keys[indexPath.section]["address"]
         publicKeyLabel.text = keys[indexPath.section]["publicKey"]
-        wifLabel.text = "*********************************************************"
+        if keys[indexPath.section]["wif"] != nil {
+            if keys[indexPath.section]["wif"] != "" {
+                wifLabel.text = "**********************************************************"
+            } else {
+                wifLabel.text = "No private keys on device"
+            }
+        } else {
+            wifLabel.text = "No private keys on device"
+        }
         
         return cell
         
@@ -368,29 +376,40 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         func getPrivKeys() {
             let mnemonicCreator = MnemonicCreator()
             mnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
+                
                 if !error {
                     let derivation = vc.wallet.derivation
+                    
                     for i in 0 ... 999 {
                         let path = derivation + "/" + "\(i)"
+                        
                         if let bip32path = BIP32Path(path) {
+                            
                             if let key = HDKey((mnemonic!.seedHex("")), network(descriptor: vc.wallet.descriptor)) {
+                                
                                 do {
                                     let childKey = try key.derive(bip32path)
+                                    
                                     if let privKey = childKey.privKey {
+                                        
                                         if vc.keys.count > 0 {
                                             vc.keys[i]["wif"] = privKey.wif
+                                            
                                         }
                                     }
                                 } catch {
                                     print("failed getting a key")
+                                    
                                 }
                             }
                         }
+                        
                         if i == 999 {
                             DispatchQueue.main.async {
                                 vc.table.reloadData()
                                 vc.connectingView.removeConnectingView()
                             }
+                            
                         }
                     }
                 }
@@ -400,59 +419,76 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         for i in 0 ... 999 {
             var pubkeys = [PubKey]()
             var pubkeyStrings = [String]()
+            
             for (k, key) in keys.enumerated() {
                 let hdKey = HDKey(key)
                 let path = paths[k] + "/" + "\(i)"
+                
                 do {
+                    
                     if let bip32path = BIP32Path(path) {
                         let key = try hdKey?.derive(bip32path)
+                        
                         if key != nil {
                             pubkeys.append(key!.pubKey)
                             pubkeyStrings.append("#\(k + 1): \(key!.pubKey.data.hexString)")
+                            
                             if k + 1 == keys.count {
                                 let scriptPubKey = ScriptPubKey(multisig: pubkeys, threshold: sigsRequired, bip67: s.isBIP67)
                                 var multiSigAddress:Address!
                                 let processedPubkeys = processedKeys(pubkeys: pubkeyStrings)
+                                
                                 // LibWally only produces bech32 multisig addresses, so need to fetch other formats from the node
                                 if wallet.derivation.contains("84") || wallet.derivation.contains("48") || s.isBIP84 || s.isP2WPKH {
                                     multiSigAddress = Address(scriptPubKey, network(descriptor: wallet.descriptor))
                                     self.keys.append(["address":"\(String(describing: multiSigAddress!))", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
+                                    
                                 } else {
                                     self.keys.append(["address":"fetching addresses from your node...", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
                                     getKeysFromNode = true
+                                    
                                 }
+                                
                                 pubkeys.removeAll()
                                 
                             }
                         }
                     }
+                    
                 } catch {
                     print("key derivation failed")
                     failed = true
+                    
                 }
             }
             
             if i == 999 {
+                
                 if !failed {
+                    
                     if words != nil {
                         getPrivKeys()
+                        
                     } else {
                         DispatchQueue.main.async { [unowned vc = self] in
                             vc.table.reloadData()
                             vc.connectingView.removeConnectingView()
                         }
+                        
                     }
+                    
                 } else {
                     self.connectingView.removeConnectingView()
                     displayAlert(viewController: self, isError: true, message: "key derivation failed")
+                    
                 }
+                
                 if getKeysFromNode {
                     self.getKeysFromBitcoinCore()
+                    
                 }
             }
-            
         }
-        
     }
     
     func getKeysFromBitcoinCore() {
@@ -553,7 +589,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                         
                     } else {
                         
-                        //vc.getSingleSigKeys(words: nil)
+                        vc.getSingleSigKeys(words: nil)
                         
                     }
                     
@@ -565,19 +601,29 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
     }
 
-    func getSingleSigKeys(words: String) {
+    func getSingleSigKeys(words: String?) {
         
-        let mnemonicCreator = MnemonicCreator()
-        mnemonicCreator.convert(words: words) { [unowned vc = self] (mnemonic, error) in
+        if words != nil {
+            let mnemonicCreator = MnemonicCreator()
+            mnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
+                
+                if !error {
+                    vc.getKeys(mnemonic: mnemonic!)
+                    
+                } else {
+                    vc.connectingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: "error converting those words into a seed")
+                    
+                }
+                
+            }
             
-            if !error {
-                
-                vc.getKeys(mnemonic: mnemonic!)
-                
-            } else {
-                
-                vc.connectingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "error converting those words into a seed")
+        } else {
+            let p = DescriptorParser()
+            let str = p.descriptor(wallet.descriptor)
+            
+            if let xpub = HDKey(str.accountXpub) {
+                fetchKeysFromXpub(xpub: xpub)
                 
             }
             
@@ -599,18 +645,25 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         func getPrivKeys() {
             let derivation = self.wallet.derivation
+            
             for i in 0 ... 999 {
                 let path = derivation + "/" + "\(i)"
+                
                 if let bip32path = BIP32Path(path) {
+                    
                     do {
                         let childKey = try xprv.derive(bip32path)
+                        
                         if let privKey = childKey.privKey {
+                            
                             if self.keys.count > 0 {
                                 self.keys[i]["wif"] = privKey.wif
+                                
                             }
                         }
                     } catch {
                         print("failed getting a key")
+                        
                     }
                 }
                 if i == 999 {
@@ -618,6 +671,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                         self.table.reloadData()
                         self.connectingView.removeConnectingView()
                     }
+                    
                 }
             }
         }
@@ -625,26 +679,34 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         for i in 0 ... 999 {
             var pubkeys = [PubKey]()
             var pubkeyStrings = [String]()
+            
             for (k, key) in keys.enumerated() {
                 let hdKey = HDKey(key)
                 let path = paths[k] + "/" + "\(i)"
+                
                 do {
+                    
                     if let bip32path = BIP32Path(path) {
                         let key = try hdKey?.derive(bip32path)
+                        
                         if key != nil {
                             pubkeys.append(key!.pubKey)
                             pubkeyStrings.append("#\(k + 1): \(key!.pubKey.data.hexString)")
+                            
                             if k + 1 == keys.count {
                                 let scriptPubKey = ScriptPubKey(multisig: pubkeys, threshold: sigsRequired, bip67: false)
                                 var multiSigAddress:Address!
                                 let processedPubkeys = processedKeys(pubkeys: pubkeyStrings)
+                                
                                 // LibWally only produces bech32 multisig addresses, so need to fetch other formats from the node
                                 if wallet.derivation.contains("84") || s.isBIP84 || s.isP2WPKH {
                                     multiSigAddress = Address(scriptPubKey, network(descriptor: wallet.descriptor))
                                     self.keys.append(["address":"\(String(describing: multiSigAddress!))", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
+                                    
                                 } else {
                                     self.keys.append(["address":"fetching addresses from your node...", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
                                     getKeysFromNode = true
+                                    
                                 }
                                 pubkeys.removeAll()
                                 
@@ -654,26 +716,82 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                 } catch {
                     print("key derivation failed")
                     failed = true
+                    
                 }
             }
             
             if i == 999 {
+                
                 if !failed {
                     getPrivKeys()
+                    
                 } else {
                     self.connectingView.removeConnectingView()
                     displayAlert(viewController: self, isError: true, message: "key derivation failed")
+                    
                 }
+                
                 if getKeysFromNode {
                     self.getKeysFromBitcoinCore()
+                    
                 }
+            }
+        }
+    }
+    
+    private func fetchKeysFromXprv(xprv: HDKey) {
+        let derivation = wallet.derivation
+        var addressType:AddressType!
+        if derivation.contains("84") {
+
+            addressType = .payToWitnessPubKeyHash
+
+        } else if derivation.contains("44") {
+
+            addressType = .payToPubKeyHash
+
+        } else if derivation.contains("49") {
+
+            addressType = .payToScriptHashPayToWitnessPubKeyHash
+
+        }
+        
+        for i in 0 ... 999 {
+            let path = BIP32Path("0/\(i)")!
+            
+            do {
+                let key = try xprv.derive(path)
+                let address = key.address(addressType)
+                
+                let dict = [
+                
+                    "address":"\(address)",
+                    "publicKey":"\((key.pubKey.data).hexString)",
+                    "wif":"\(key.privKey!.wif)"
+                
+                ]
+                                        
+                keys.append(dict)
+                
+                if i == 999 {
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        vc.table.reloadData()
+                        vc.connectingView.removeConnectingView()
+                        
+                    }
+                    
+                }
+                
+            } catch {
+                print("error deriving keys")
+                
             }
             
         }
         
     }
     
-    private func fetchKeysFromXprv(xprv: HDKey) {
+    private func fetchKeysFromXpub(xpub: HDKey) {
         
         let derivation = wallet.derivation
         var addressType:AddressType!
@@ -697,14 +815,13 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             
             do {
                 
-                let key = try xprv.derive(path)
+                let key = try xpub.derive(path)
                 let address = key.address(addressType)
                 
                 let dict = [
                 
                     "address":"\(address)",
-                    "publicKey":"\((key.pubKey.data).hexString)",
-                    "wif":"\(key.privKey!.wif)"
+                    "publicKey":"\((key.pubKey.data).hexString)"
                 
                 ]
                                         
