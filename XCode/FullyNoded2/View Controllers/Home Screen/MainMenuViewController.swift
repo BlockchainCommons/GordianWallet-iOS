@@ -538,7 +538,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         walletTypeLabel.text = "Single Signature"
         
-        if String(data: wallet.seed, encoding: .utf8) != "no seed" {
+        if String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil {
             
             seedOnDeviceLabel.text = "1 Signer on \(UIDevice.current.name)"
             deviceXprv.text = "xprv \(wallet.derivation)"
@@ -678,7 +678,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         backUpSeedLabel.text = "1 Seed Offline"
         seedOnNodeLabel.text = "1 Seedless \(node.label)"
         
-        if String(data: wallet.seed, encoding: .utf8) != "no seed" {
+        if String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil {
             
             seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
             deviceXprv.text = "xprv \(wallet.derivation)"

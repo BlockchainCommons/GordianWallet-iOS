@@ -526,7 +526,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        if String(data: wallet.seed, encoding: .utf8) != "no seed" {
+        if String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil  {
             
             deviceXprv.text = "xprv \(wallet.derivation)"
             seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
@@ -740,7 +740,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        if String(data: wallet.seed, encoding: .utf8) != "no seed" {
+        if String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil {
             
             seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
             deviceXprv.text = "xprv \(wallet.derivation)"

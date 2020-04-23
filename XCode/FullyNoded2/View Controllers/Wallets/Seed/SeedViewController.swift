@@ -243,7 +243,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                         
                                         if !s.isMulti {
                                          
-                                            // its single sig
+                                            /// its single sig
                                             var privKeyDesc = vc.wallet.descriptor
                                             privKeyDesc = privKeyDesc.replacingOccurrences(of: xpub, with: xprv)
                                             let recoveryDesc = privKeyDesc.replacingOccurrences(of: xpub, with: xprv)
@@ -274,7 +274,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                             
                                         } else {
                                          
-                                            // its multisig
+                                            /// its multisig
                                             var primaryDesc = vc.wallet.descriptor
                                             var changeDesc = vc.wallet.changeDescriptor
                                             
@@ -286,7 +286,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                             let arr1 = changeDesc.split(separator: "#")
                                             changeDesc = "\(arr1[0])"
                                             
-                                            // we need to preserve the public key descriptor checksum when creating the recovery qr as the descriptor is manipulated and converted back to a public key descriptor during the recovery process. It is more efficient to do it this way then making extra rpc calls to the node during recovery.
+                                            /// we need to preserve the public key descriptor checksum when creating the recovery qr as the descriptor is manipulated and converted back to a public key descriptor during the recovery process. It is more efficient to do it this way then making extra rpc calls to the node during recovery.
                                             let recoveryDesc = (vc.wallet.descriptor).replacingOccurrences(of: xpub, with: xprv)
                                             
                                             let recoveryQr = ["entropy": entropyString, "descriptor":"\(recoveryDesc)","birthdate":vc.wallet.birthdate, "blockheight":vc.wallet.blockheight, "label": vc.wallet.label] as [String : Any]
@@ -306,8 +306,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                                                                         
                                             vc.privateKeyDescriptor = "\(primaryDesc)\n\n\(changeDesc)"
                                             
-//                                            vc.recoveryText = "bitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(primaryDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(changeDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
-                                            
                                         }
                                         
                                         DispatchQueue.main.async {
@@ -324,28 +322,96 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                             
                         }
                         
+                    } else {
+                        /// There is no mnemonic on the device, just an xprv.
+                        vc.xpub(descriptorStruct: s) { (xpub) in
+                        
+                            if xpub != "" {
+                                
+                                if !s.isMulti {
+                                 
+                                    /// its single sig
+                                    var privKeyDesc = vc.wallet.descriptor
+                                    privKeyDesc = privKeyDesc.replacingOccurrences(of: xpub, with: xprv)
+                                    let recoveryDesc = privKeyDesc.replacingOccurrences(of: xpub, with: xprv)
+                                    let arr = privKeyDesc.split(separator: "#")
+                                    privKeyDesc = "\(arr[0])"
+                                    
+                                    var changeDescriptor = vc.wallet.changeDescriptor
+                                    changeDescriptor = changeDescriptor.replacingOccurrences(of: xpub, with: xprv)
+                                    let arr1 = changeDescriptor.split(separator: "#")
+                                    changeDescriptor = "\(arr1[0])"
+                                    
+                                    let recoveryQr = ["entropy": "", "descriptor":"\(recoveryDesc)","birthdate":vc.wallet.birthdate, "blockheight":vc.wallet.blockheight, "label": vc.wallet.label] as [String : Any]
+                                    
+                                    if let json = recoveryQr.json() {
+                                        
+                                        let (qr, error) = vc.qrGenerator.getQRCode(textInput: json)
+                                        vc.recoveryImage = qr
+                                        
+                                        if error {
+                                            
+                                            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                    vc.privateKeyDescriptor = "\(privKeyDesc)\n\n\(changeDescriptor)"
+                                    
+                                } else {
+                                 
+                                    /// its multisig
+                                    var primaryDesc = vc.wallet.descriptor
+                                    var changeDesc = vc.wallet.changeDescriptor
+                                    
+                                    primaryDesc = primaryDesc.replacingOccurrences(of: xpub, with: xprv)
+                                    let arr = primaryDesc.split(separator: "#")
+                                    primaryDesc = "\(arr[0])"
+                                    
+                                    changeDesc = changeDesc.replacingOccurrences(of: xpub, with: xprv)
+                                    let arr1 = changeDesc.split(separator: "#")
+                                    changeDesc = "\(arr1[0])"
+                                    
+                                    /// we need to preserve the public key descriptor checksum when creating the recovery qr as the descriptor is manipulated and converted back to a public key descriptor during the recovery process. It is more efficient to do it this way then making extra rpc calls to the node during recovery.
+                                    let recoveryDesc = (vc.wallet.descriptor).replacingOccurrences(of: xpub, with: xprv)
+                                    
+                                    let recoveryQr = ["entropy": "", "descriptor":"\(recoveryDesc)","birthdate":vc.wallet.birthdate, "blockheight":vc.wallet.blockheight, "label": vc.wallet.label] as [String : Any]
+                                    
+                                    if let json = recoveryQr.json() {
+                                        
+                                        let (qr, error) = vc.qrGenerator.getQRCode(textInput: json)
+                                        vc.recoveryImage = qr
+                                        
+                                        if error {
+                                            
+                                            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+                                            
+                                        }
+                                        
+                                    }
+                                                                                
+                                    vc.privateKeyDescriptor = "\(primaryDesc)\n\n\(changeDesc)"
+                                    
+                                }
+                                
+                                DispatchQueue.main.async {
+                                    
+                                    vc.tableView.reloadData()
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
                     }
                     
                 }
                 
             } else {
                 
-                // wallet is cold
-                
-//                let recoveryQr = ["descriptor":"\(vc.wallet.descriptor)","birthdate":vc.wallet.birthdate, "blockheight":vc.wallet.blockheight] as [String : Any]
-//                
-//                if let json = recoveryQr.json() {
-//                    
-//                    let (qr, error) = vc.qrGenerator.getQRCode(textInput: json)
-//                    vc.recoveryImage = qr
-//                    
-//                    if error {
-//                        
-//                        showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
-//                        
-//                    }
-//                    
-//                }
+                /// wallet is cold
                 
                 DispatchQueue.main.async {
                     
@@ -379,7 +445,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func numberOfSections(in tableView: UITableView) -> Int {
                 
-        return 4//5
+        return 4
         
     }
     
@@ -515,11 +581,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             return cell
             
-//        case 4:
-//
-//            cell.textLabel?.text = self.recoveryText
-//            return cell
-            
         default:
             
             return UITableViewCell()
@@ -601,13 +662,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             header.addSubview(qrButton)
             header.addSubview(copyButton)
             
-        case 4:
-            textLabel.text = "Bitcoin Core Recovery"
-            header.addSubview(textLabel)
-            header.addSubview(shareButton)
-            header.addSubview(qrButton)
-            header.addSubview(copyButton)
-            
         default:
             
             break
@@ -633,9 +687,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 case 2: return 80
                     
                 case 3: return 150
-                    
-                //case 4: return 120
-                    
+                                        
                 default:
                     
                     return 0
@@ -713,12 +765,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     label.text = "Your private key descriptor can be used to recover or spend from your wallet by importing it into your node. You may use it to derive the private keys associated with the seed which is held on this device for the current wallet. This private key descriptor will only allow you to sign for one of the two required signatures needed to spend from your StandUp multisig wallet. In order to fully recover your wallet you also need either your node that you created the wallet on or your recovery seed which should have been saved by you when you created this wallet."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 150)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 150)
-                    
-//                case 4:
-//
-//                    label.text = "You may paste this command directly into a terminal where Bitcoin Core is running and it will automatically import all the private keys from the seed which is held on this device for the current wallet. In order to fully recover your wallet you will also need either your node that you created the wallet on or your recovery seed which should have been saved by you when you created this wallet."
-//                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 120)
-//                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 120)
                     
                 default:
                     
@@ -822,7 +868,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                         if xprv != nil {
                             
                             if let xprvString = String(data: xprv!, encoding: .utf8) {
-                                
                                 completion((xprvString))
                                 
                             } else {
