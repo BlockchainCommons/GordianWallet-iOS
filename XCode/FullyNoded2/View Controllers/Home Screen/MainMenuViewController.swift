@@ -575,7 +575,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    private func multiWalletCell(_ indexPath: IndexPath) -> UITableViewCell {
+    private func multiSigCell(_ indexPath: IndexPath) -> UITableViewCell {
         
         let cell = mainMenu.dequeueReusableCell(withIdentifier: "walletCell", for: indexPath)
         cell.selectionStyle = .none
@@ -597,6 +597,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
         let keysOnNodeDescription = cell.viewWithTag(27) as! UILabel
         let fiatBalance = cell.viewWithTag(28) as! UILabel
+        let deviceSeedImage = cell.viewWithTag(29) as! UIImageView
         
         nodeView.layer.cornerRadius = 8
         offlineView.layer.cornerRadius = 8
@@ -675,18 +676,21 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         coldBalanceLabel.adjustsFontSizeToFitWidth = true
         
         walletTypeLabel.text = "\(str.mOfNType) multisig"
-        backUpSeedLabel.text = "1 Seed Offline"
         seedOnNodeLabel.text = "1 Seedless \(node.label)"
         
         if String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil {
             
             seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
             deviceXprv.text = "xprv \(wallet.derivation)"
+            deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
+            backUpSeedLabel.text = "1 Seed Offline"
             
         } else {
             
             seedOnDeviceLabel.text = "\(UIDevice.current.name) is cold"
             deviceXprv.text = "xpub \(wallet.derivation)"
+            deviceSeedImage.image = UIImage(systemName: "eye.fill")
+            backUpSeedLabel.text = "2 Offline Seed's"
             
         }
         
@@ -1122,7 +1126,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 /// Multi sig wallet
                 case "MULTI":
-                    return multiWalletCell(indexPath)
+                    return multiSigCell(indexPath)
                     
                 default:
                     return blankCell()

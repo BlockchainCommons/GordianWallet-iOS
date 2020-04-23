@@ -33,13 +33,6 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
         textView.text = "tpubDFN5nxFeBN7v6yriSeMk1AkYBQvxxXHMw2nA7UTYhXiGECmzPC4KyigkVvgMf1g726SEZwGFs8hnKmwtNszQ915oT6bB2SvgZ8CaQoDHmTm"
         textField.text = "490ff801"
         
-        //wpkh([490ff801/84'/1'/0']tprv8h7fJawtQDed3DnjysWi5SGEquVX6wdr3QPrn2aCaDzysKywaaqHJhZsbwxCAsYTBB5C1ZJCsg1SwhSPJoevkGmSddqSuaihtEAqkkrvWL9/0/*)
-        
-//        wsh(sortedmulti(2,[c5dd2547/48'/1'/0'/2']tpubDFN5nxFeBN7v6yriSeMk1AkYBQvxxXHMw2nA7UTYhXiGECmzPC4KyigkVvgMf1g726SEZwGFs8hnKmwtNszQ915oT6bB2SvgZ8CaQoDHmTm/0/*,[82c02cb3/48'/1'/0'/2']tpubDETxF1YqAjD3aTedjXWuXkT81khJwACZuBL8awvP6aySKp6ucGjxWrsZbkqjpCv5crSTkZUpa5vDMTeFsu5iiSuKSjnmmxRqwY9r3F9Ha9M/0/*,[f79a13c1/48'/1'/0'/2']tpubDFd47XkzbMAMuXJF47rcpXNoYWYdMLZNWohrzFaWg2mTsbgWDvCQ522hzQKphuLKR8dDpriKVShNvqYjwiWoQUgG83EJYmYHkekJuPw4LSf/0/*))#anyn49nd
-//
-//         wsh(sortedmulti(2,[c5dd2547/48'/1'/0'/2']tpubDFN5nxFeBN7v6yriSeMk1AkYBQvxxXHMw2nA7UTYhXiGECmzPC4KyigkVvgMf1g726SEZwGFs8hnKmwtNszQ915oT6bB2SvgZ8CaQoDHmTm/1/*,[82c02cb3/48'/1'/0'/2']tpubDETxF1YqAjD3aTedjXWuXkT81khJwACZuBL8awvP6aySKp6ucGjxWrsZbkqjpCv5crSTkZUpa5vDMTeFsu5iiSuKSjnmmxRqwY9r3F9Ha9M/1/*,[f79a13c1/48'/1'/0'/2']tpubDFd47XkzbMAMuXJF47rcpXNoYWYdMLZNWohrzFaWg2mTsbgWDvCQ522hzQKphuLKR8dDpriKVShNvqYjwiWoQUgG83EJYmYHkekJuPw4LSf/1/*))#cx0ftrr9
-         
-        
     }
     
     private func createDescriptors() {

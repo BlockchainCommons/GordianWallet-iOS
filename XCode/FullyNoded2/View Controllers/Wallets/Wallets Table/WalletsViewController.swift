@@ -611,6 +611,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let mOfnTypeLabel = cell.viewWithTag(38) as! UILabel
         let walletType = cell.viewWithTag(39) as! UILabel
         let walletTypeImage = cell.viewWithTag(40) as! UIImageView
+        let deviceSeedImage = cell.viewWithTag(41) as! UIImageView
         
         let p = DescriptorParser()
         let str = p.descriptor(wallet.descriptor)
@@ -748,16 +749,18 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             walletType.text = "Warm Wallet"
             walletTypeImage.image = UIImage(systemName: "sun.min")
             walletTypeImage.tintColor = .systemYellow
+            deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
             
         } else {
             
             deviceXprv.text = "xpub \(wallet.derivation)"
             seedOnDeviceLabel.text = "Device is cold"
-            offlineXprv.text = ""
-            offlineSeedLabel.text = "Unknown..."
+            offlineXprv.text = "xprv \(wallet.derivation)"
+            offlineSeedLabel.text = "2 Offline Seed's"
             walletType.text = "Cold Wallet"
             walletTypeImage.image = UIImage(systemName: "snow")
             walletTypeImage.tintColor = .systemTeal
+            deviceSeedImage.image = UIImage(systemName: "eye.fill")
             
         }
         

@@ -11,6 +11,9 @@ import LibWally
 
 class ChooseWalletFormatViewController: UIViewController, UINavigationControllerDelegate {
     
+    var userSuppliedWords:BIP39Mnemonic?
+    var userSuppliedMultiSigXpub = ""
+    var userSuppliedMultiSigFingerprint = ""
     var id:UUID!
     var derivation = ""
     var recoveryQr = ""
@@ -678,8 +681,26 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                     
                                     let account = try masterKey.derive(path)
                                     vc.recoveryPubkey = account.xpub
-                                    vc.publickeys.append(self.recoveryPubkey)
-                                    vc.createLocalKey()
+                                    vc.publickeys.append(vc.recoveryPubkey)
+                                    
+                                    /// User supplied a custom xpub to create the multisig quorum with
+                                    if vc.userSuppliedMultiSigXpub != "" {
+                                        
+                                        vc.fingerprints.append(vc.userSuppliedMultiSigFingerprint)
+                                        vc.publickeys.append(vc.userSuppliedMultiSigXpub)
+                                        vc.nodesSeed = vc.userSuppliedMultiSigXpub
+                                        vc.createNodesKey()
+                                        
+                                    /// This will be for user supplied words in the multisig qourum
+                                    } else if vc.userSuppliedWords != nil {
+ 
+                                         
+ 
+                                    } else {
+                                        
+                                        vc.createLocalKey()
+                                        
+                                    }
                                     
                                 } catch {
                                     
@@ -1010,13 +1031,15 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             
                             if let changeDesc = result["descriptor"] as? String {
                                 
-                                Encryption.getNode { (node, error) in
+                                Encryption.getNode { [unowned vc = self] (node, error) in
                                     
                                     if !error {
                                         
                                         vc.newWallet["descriptor"] = primaryDescriptor
                                         vc.newWallet["changeDescriptor"] = changeDesc
-                                        vc.newWallet["seed"] = self.localSeed
+                                        if vc.localSeed != nil {
+                                            vc.newWallet["seed"] = vc.localSeed
+                                        }
                                         vc.newWallet["name"] = Encryption.sha256hash(primaryDescriptor)
                                         
                                         let multiSigCreator = CreateMultiSigWallet.sharedInstance
@@ -1255,7 +1278,9 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 
                             }
                             
-                            //vc.createMultiSig()
+                            vc.userSuppliedMultiSigXpub = dict["key"]!
+                            vc.userSuppliedMultiSigFingerprint = dict["fingerprint"]!
+                            vc.createMultiSig()
                             
                         } else if vc.isSingleSig {
                             
