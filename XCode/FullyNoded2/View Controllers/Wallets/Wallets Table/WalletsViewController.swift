@@ -411,6 +411,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let nodeKeysLabel = cell.viewWithTag(33) as! UILabel
         let rescanLabel = cell.viewWithTag(34) as! UILabel
         let nodeChangeKeys = cell.viewWithTag(36) as! UILabel
+        let seedOnDeviceLabel = cell.viewWithTag(37) as! UILabel
+        let deviceSeedImage = cell.viewWithTag(38) as! UIImageView
+        let walletTypeLabel = cell.viewWithTag(39) as! UILabel
+        let walletTypeImage = cell.viewWithTag(40) as! UIImageView
         
         rescanLabel.alpha = 0
         rescanLabel.adjustsFontSizeToFitWidth = true
@@ -522,9 +526,28 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
+        if String(data: wallet.seed, encoding: .utf8) != "no seed" {
+            
+            deviceXprv.text = "xprv \(wallet.derivation)"
+            seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
+            deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
+            walletTypeLabel.text = "Hot Wallet"
+            walletTypeImage.image = UIImage(systemName: "flame")
+            walletTypeImage.tintColor = .systemRed
+            
+        } else {
+            
+            deviceXprv.text = "xpub \(wallet.derivation)"
+            seedOnDeviceLabel.text = "\(UIDevice.current.name) is cold"
+            deviceSeedImage.image = UIImage(systemName: "eye.fill")
+            walletTypeLabel.text = "Cold Wallet"
+            walletTypeImage.image = UIImage(systemName: "snow")
+            walletTypeImage.tintColor = .white
+            
+        }
+        
         nodeKeysLabel.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
         nodeChangeKeys.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
-        deviceXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
         walletFileLabel.text = reducedWalletName(name: wallet.name!)

@@ -455,6 +455,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
         let changeKeysOnNodeDescription = cell.viewWithTag(27) as! UILabel
         let fiatBalance = cell.viewWithTag(28) as! UILabel
+        let signerImage = cell.viewWithTag(29) as! UIImageView
         
         nodeView.layer.cornerRadius = 8
         deviceView.layer.cornerRadius = 8
@@ -536,7 +537,21 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         coldBalanceLabel.adjustsFontSizeToFitWidth = true
         
         walletTypeLabel.text = "Single Signature"
-        seedOnDeviceLabel.text = "1 Signer on \(UIDevice.current.name)"
+        
+        if String(data: wallet.seed, encoding: .utf8) != "no seed" {
+            
+            seedOnDeviceLabel.text = "1 Signer on \(UIDevice.current.name)"
+            deviceXprv.text = "xprv \(wallet.derivation)"
+            signerImage.image = UIImage(imageLiteralResourceName: "Signature")
+            
+        } else {
+            
+            seedOnDeviceLabel.text = "\(UIDevice.current.name) is cold"
+            deviceXprv.text = "xpub \(wallet.derivation)"
+            signerImage.image = UIImage(systemName: "eye.fill")
+            
+        }
+        
         
         if wallet.derivation.contains("84") {
             
@@ -554,7 +569,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         keysOnNodeDescription.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
         changeKeysOnNodeDescription.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
-        deviceXprv.text = "xprv \(wallet.derivation)"
         walletNameLabel.text = reducedName(name: wallet.name!)
         
         return cell
@@ -1102,11 +1116,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 switch type {
                     
-                // Single sig wallet
+                /// Single sig wallet
                 case "DEFAULT":
                     return defaultWalletCell(indexPath)
                     
-                // Multi sig wallet
+                /// Multi sig wallet
                 case "MULTI":
                     return multiWalletCell(indexPath)
                     
@@ -1679,7 +1693,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if success && dictToReturn != nil {
                             
-                // we update the wallets database in NodeLogic, so we need to refresh the wallet struct here
+                /// we update the wallets database in NodeLogic, so we need to refresh the wallet struct here
                 getActiveWalletNow { (w, error) in
                     
                     if w != nil {
