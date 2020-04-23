@@ -5807,6 +5807,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <outlet property="nextOutlet" destination="GWy-WU-bhE" id="Hdm-Ae-Pku"/>
                         <outlet property="textField" destination="Uwi-UQ-UZ5" id="ft0-bs-efQ"/>
                         <outlet property="textView" destination="XOU-39-25F" id="nV2-Zg-6vg"/>
+                        <segue destination="kR7-Mg-fhs" kind="show" identifier="segueToUserSuppliedWords" id="Kj4-mJ-Bc5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ePy-yX-YJl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -6132,6 +6133,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
         <segue reference="fBg-S5-BEW"/>
         <segue reference="pun-AW-DGw"/>
         <segue reference="Kzq-6W-yKR"/>
+        <segue reference="Kj4-mJ-Bc5"/>
         <segue reference="ugm-aB-vA9"/>
         <segue reference="Sh6-1X-4BR"/>
         <segue reference="LzA-tD-DJD"/>

@@ -17,6 +17,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     let tap = UITapGestureRecognizer()
     var wallet:WalletStruct!
     var onDoneBlock: (([String:String]) -> Void)?
+    var onSeedDoneBlock: ((String) -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,19 +70,50 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     
     @IBAction func addWordsAction(_ sender: Any) {
         
-        
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            vc.performSegue(withIdentifier: "segueToUserSuppliedWords", sender: vc)
+            
+        }
         
     }
     
     
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        switch segue.identifier {
+            
+        case "segueToUserSuppliedWords":
+            
+            if let vc = segue.destination as? WordRecoveryViewController {
+                
+                vc.addingSeed = true
+                vc.onAddSeedDoneBlock = { mnemonic in
+                    
+                    DispatchQueue.main.async { [unowned thisVc = self] in
+                        thisVc.onSeedDoneBlock!(mnemonic)
+                        thisVc.navigationController!.popViewController(animated: true)
+                        
+                    }
+                    
+                }
+                
+            }
+            
+            
+        default:
+            
+            break
+            
+        }
+    
+        
     }
-    */
+    
 
 }

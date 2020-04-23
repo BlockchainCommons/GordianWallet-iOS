@@ -11,7 +11,7 @@ import LibWally
 
 class ChooseWalletFormatViewController: UIViewController, UINavigationControllerDelegate {
     
-    var userSuppliedWords:BIP39Mnemonic?
+    var userSuppliedWords:String?
     var userSuppliedMultiSigXpub = ""
     var userSuppliedMultiSigFingerprint = ""
     var id:UUID!
@@ -207,7 +207,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
                 alert.popoverPresentationController?.sourceView = vc.view
                 vc.present(alert, animated: true, completion: nil)
-                    
                 
             }
             
@@ -352,173 +351,197 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     func createSingleSig() {
         print("create single sig")
         
-        updateStatus(text: "creating device's seed")
-        
-        KeychainCreator.createKeyChain() { [unowned vc = self] (mnemonic, error) in
+        if userSuppliedWords == nil {
             
-            if !error {
+            updateStatus(text: "creating device's seed")
+            
+            KeychainCreator.createKeyChain() { [unowned vc = self] (mnemonic, error) in
                 
-                vc.updateStatus(text: "encrypting device's seed")
-                
-                let dataToEncrypt = mnemonic!.dataUsingUTF8StringEncoding
-                Encryption.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
+                if !error {
                     
-                    if !error {
+                    vc.updateStatus(text: "encrypting device's seed")
+                    
+                    let dataToEncrypt = mnemonic!.dataUsingUTF8StringEncoding
+                    Encryption.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
                         
-                        vc.updateStatus(text: "creating primary descriptor")
-                        vc.newWallet["seed"] = encryptedData!
-                        vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
+                        if !error {
+                            
+                            vc.updateStatus(text: "creating primary descriptor")
+                            vc.newWallet["seed"] = encryptedData!
+                            vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
+                            
+                        } else {
+                            
+                            vc.creatingView.removeConnectingView()
+                            displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
+                        }
                         
-                    } else {
-                        
-                        vc.creatingView.removeConnectingView()
-                        displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
                     }
                     
                 }
                 
             }
             
+        } else {
+            
+            creatingView.addConnectingView(vc: self, description: "creating single sig wallet")
+            
+            let dataToEncrypt = userSuppliedWords!.dataUsingUTF8StringEncoding
+            Encryption.encryptData(dataToEncrypt: dataToEncrypt) { [unowned vc = self] (encryptedData, error) in
+                
+                if !error {
+                    
+                    vc.updateStatus(text: "creating primary descriptor")
+                    vc.newWallet["seed"] = encryptedData!
+                    vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
+                    
+                } else {
+                    
+                    vc.creatingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
+                }
+                
+            }
+            
+            
         }
+        
         
     }
     
     func constructSingleSigPrimaryDescriptor(wallet: WalletStruct) {
         
-        KeyFetcher.xpub(wallet: wallet) { [unowned vc = self] (xpub, error) in
+        /// Need to get the xpub
+        Encryption.decryptData(dataToDecrypt: wallet.seed) { [unowned vc = self] (unencryptedSeed) in
             
-            if !error {
+            if unencryptedSeed != nil {
                 
-                KeyFetcher.fingerprint(wallet: wallet) { (fingerprint, error) in
+                if let words = String(data: unencryptedSeed!, encoding: .utf8) {
                     
-                    if !error && fingerprint != nil {
+                    if let mnemonic = BIP39Mnemonic(words) {
                         
-                        var param = ""
-                        
-                        switch wallet.derivation {
+                        if let path = BIP32Path(wallet.derivation) {
                             
-                        case "m/84'/1'/0'":
-                            param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/0/*)\""
+                            let seed = mnemonic.seedHex()
+                            var network:Network!
                             
-                        case "m/84'/0'/0'":
-                            param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/0/*)\""
-                            
-                        case "m/44'/1'/0'":
-                            param = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/0/*)\""
-                             
-                        case "m/44'/0'/0'":
-                            param = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/0/*)\""
-                            
-                        case "m/49'/1'/0'":
-                            param = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/0/*))\""
-                            
-                        case "m/49'/0'/0'":
-                            param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/0/*))\""
-                            
-                        default:
-                            
-                            break
-                            
-                        }
-                        
-                        Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { (object, errorDesc) in
-                            
-                            if let dict = object as? NSDictionary {
+                            if wallet.derivation.contains("/1'/") {
+                                network = .testnet
                                 
-                                let primaryDescriptor = dict["descriptor"] as! String
-                                vc.newWallet["descriptor"] = primaryDescriptor
-                                vc.newWallet["name"] = Encryption.sha256hash(primaryDescriptor)
-                                vc.updateStatus(text: "creating change descriptor")
-                                vc.constructSingleSigChangeDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
-                                                                
                             } else {
-                                
-                                vc.creatingView.removeConnectingView()
-                                displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
+                                network = .mainnet
                                 
                             }
                             
+                            if let mk = HDKey(seed, network) {
+                                
+                                do {
+                                    
+                                    let key = try mk.derive(path)
+                                    let xpub = key.xpub
+                                    let fingerprint = mk.fingerprint.hexString
+                                    var param = ""
+                                    
+                                    switch wallet.derivation {
+                                        
+                                    case "m/84'/1'/0'":
+                                        param = "\"wpkh([\(fingerprint)/84'/1'/0']\(xpub)/0/*)\""
+                                        
+                                    case "m/84'/0'/0'":
+                                        param = "\"wpkh([\(fingerprint)/84'/0'/0']\(xpub)/0/*)\""
+                                        
+                                    case "m/44'/1'/0'":
+                                        param = "\"pkh([\(fingerprint)/44'/1'/0']\(xpub)/0/*)\""
+                                         
+                                    case "m/44'/0'/0'":
+                                        param = "\"pkh([\(fingerprint)/44'/0'/0']\(xpub)/0/*)\""
+                                        
+                                    case "m/49'/1'/0'":
+                                        param = "\"sh(wpkh([\(fingerprint)/49'/1'/0']\(xpub)/0/*))\""
+                                        
+                                    case "m/49'/0'/0'":
+                                        param = "\"sh(wpkh([\(fingerprint)/49'/0'/0']\(xpub)/0/*))\""
+                                        
+                                    default:
+                                        
+                                        break
+                                        
+                                    }
+                                    
+                                    Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
+                                        
+                                        if let dict = object as? NSDictionary {
+                                            
+                                            let primaryDescriptor = dict["descriptor"] as! String
+                                            vc.newWallet["descriptor"] = primaryDescriptor
+                                            vc.newWallet["name"] = Encryption.sha256hash(primaryDescriptor)
+                                            vc.updateStatus(text: "creating change descriptor")
+                                            let changeDescParam = param.replacingOccurrences(of: "/0/*", with: "/1/*")
+                                            vc.constructSingleSigChangeDescriptor(param: changeDescParam)
+                                                                            
+                                        } else {
+                                            
+                                            vc.creatingView.removeConnectingView()
+                                            displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                } catch {
+                                    
+                                    vc.creatingView.removeConnectingView()
+                                    displayAlert(viewController: vc, isError: true, message: "error creating your descriptor")
+                                    
+                                }
+                                
+                            } else {
+                                vc.creatingView.removeConnectingView()
+                                displayAlert(viewController: vc, isError: true, message: "error deriving master key")
+                                
+                            }
+                            
+                        } else {
+                            vc.creatingView.removeConnectingView()
+                            displayAlert(viewController: vc, isError: true, message: "error converting derivation to bip32 path")
+                            
                         }
                         
+                    } else {
+                        vc.creatingView.removeConnectingView()
+                        displayAlert(viewController: vc, isError: true, message: "error converting words to BIP39 mnemonic")
+                        
                     }
+                    
+                } else {
+                    vc.creatingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: "error converting seed to string")
                     
                 }
                 
             } else {
-                
-                self.creatingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "error fetching xpub")
+                vc.creatingView.removeConnectingView()
+                displayAlert(viewController: vc, isError: true, message: "error decrypting your seed")
                 
             }
-            
         }
-        
     }
     
-    func constructSingleSigChangeDescriptor(wallet: WalletStruct) {
+    func constructSingleSigChangeDescriptor(param: String) {
         
-        KeyFetcher.xpub(wallet: wallet) { [unowned vc = self] (xpub, error) in
+        Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
             
-            if !error {
+            if let dict = object as? NSDictionary {
                 
-                KeyFetcher.fingerprint(wallet: wallet) { (fingerprint, error) in
-                    
-                    if !error && fingerprint != nil {
-                        
-                        var param = ""
-                        
-                        switch wallet.derivation {
-                            
-                        case "m/84'/1'/0'":
-                            param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/1/*)\""
-                            
-                        case "m/84'/0'/0'":
-                            param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/1/*)\""
-                            
-                        case "m/44'/1'/0'":
-                            param = "\"pkh([\(fingerprint!)/44'/1'/0']\(xpub!)/1/*)\""
-                             
-                        case "m/44'/0'/0'":
-                            param = "\"pkh([\(fingerprint!)/44'/0'/0']\(xpub!)/1/*)\""
-                            
-                        case "m/49'/1'/0'":
-                            param = "\"sh(wpkh([\(fingerprint!)/49'/1'/0']\(xpub!)/1/*))\""
-                            
-                        case "m/49'/0'/0'":
-                            param = "\"sh(wpkh([\(fingerprint!)/49'/0'/0']\(xpub!)/1/*))\""
-                            
-                        default:
-                            
-                            break
-                            
-                        }
-                        
-                        Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { (object, errorDesc) in
-                            
-                            if let dict = object as? NSDictionary {
-                                
-                                let changeDescriptor = dict["descriptor"] as! String
-                                vc.newWallet["changeDescriptor"] = changeDescriptor
-                                vc.updateStatus(text: "creating the wallet on your node")
-                                vc.createSingleSigWallet()
-                                                                
-                            } else {
-                                
-                                vc.creatingView.removeConnectingView()
-                                displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                }
-                
+                let changeDescriptor = dict["descriptor"] as! String
+                vc.newWallet["changeDescriptor"] = changeDescriptor
+                vc.updateStatus(text: "creating the wallet on your node")
+                vc.createSingleSigWallet()
+                                                
             } else {
                 
-                self.creatingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "error fetching xpub")
+                vc.creatingView.removeConnectingView()
+                displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                 
             }
             
@@ -1237,7 +1260,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
     }
     
-    private func createWalletWithUserSuppliedSeed(dict: [String:String]) {
+    private func createWalletWithUserSuppliedSeed(dict: [String:String]?) {
         
         creatingView.addConnectingView(vc: self.navigationController!, description: "creating your wallet")
         
@@ -1278,8 +1301,15 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 
                             }
                             
-                            vc.userSuppliedMultiSigXpub = dict["key"]!
-                            vc.userSuppliedMultiSigFingerprint = dict["fingerprint"]!
+                            /// Checks if user added an xpub or words.
+                            if dict != nil {
+                                
+                                vc.userSuppliedMultiSigXpub = dict!["key"]!
+                                vc.userSuppliedMultiSigFingerprint = dict!["fingerprint"]!
+                                
+                            }
+                            
+                            
                             vc.createMultiSig()
                             
                         } else if vc.isSingleSig {
@@ -1326,7 +1356,16 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 
                             }
                             
-                            vc.createCustomSingleSig(dict: dict)
+                            /// Checks if user added an xpub or words.
+                            if dict != nil {
+                                
+                                vc.createCustomSingleSig(dict: dict!)
+                                
+                            } else if vc.userSuppliedWords != nil {
+                                
+                                vc.createSingleSig()
+                                
+                            }
                             
                         }
                         
@@ -1385,8 +1424,11 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
         if key.hasPrefix("xpub") || key.hasPrefix("tpub") {
             xpub = key
+            
         } else {
-            xpub = HDKey(dict["key"]!)!.xpub
+            /// This should never happen as we only allow user to add an xpub, however we may add this ability in the near future
+            //xpub = HDKey(dict["key"]!)!.xpub
+            
         }
         
         let fingerprint = dict["fingerprint"]!
@@ -1581,6 +1623,13 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 vc.onDoneBlock = { [unowned thisVc = self] dict in
                     
                     thisVc.createWalletWithUserSuppliedSeed(dict: dict)
+                    
+                }
+                
+                vc.onSeedDoneBlock = { [unowned thisVc = self] mnemonic in
+                    
+                    thisVc.userSuppliedWords = mnemonic
+                    thisVc.createWalletWithUserSuppliedSeed(dict: nil)
                     
                 }
                 

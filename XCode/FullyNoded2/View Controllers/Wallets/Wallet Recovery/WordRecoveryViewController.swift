@@ -25,6 +25,8 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     var autoCompleteCharacterCount = 0
     var timer = Timer()
     var onWordsDoneBlock: ((Bool) -> Void)?
+    var onAddSeedDoneBlock: ((String) -> Void)?
+    var addingSeed = Bool()
     
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var wordView: UIView!
@@ -39,6 +41,12 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         wordView.layer.cornerRadius = 8
         bip39Words = Bip39Words.validWords
         updatePlaceHolder(wordNumber: 1)
+        
+        if addingSeed {
+            
+            navigationItem.title = "Add BIP39 Phrase"
+            
+        }
     }
     
     private func updatePlaceHolder(wordNumber: Int) {
@@ -327,10 +335,41 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     
     private func validWordsAdded() {
         
-        DispatchQueue.main.async { [unowned vc = self] in
+        if !addingSeed {
             
-            vc.textField.resignFirstResponder()
-            vc.verify()
+            DispatchQueue.main.async { [unowned vc = self] in
+                
+                vc.textField.resignFirstResponder()
+                vc.verify()
+                
+            }
+            
+        } else {
+            
+            DispatchQueue.main.async { [unowned vc = self] in
+                
+                if vc.justWords.count == 12 {
+                    
+                    let alert = UIAlertController(title: "That is a valid BIP39 mnemonic", message: "You may now create your wallet", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Create wallet", style: .default, handler: { action in
+                        
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            
+                            vc.onAddSeedDoneBlock!(vc.justWords.joined(separator: " "))
+                            vc.navigationController!.popViewController(animated: true)
+                            
+                        }
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    vc.present(alert, animated: true, completion: nil)
+                    
+                }
+                
+            }
             
         }
         
