@@ -21,6 +21,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var nodeInfo:HomeStruct!
     var torInfo:HomeStruct!
     
+    var scanningNode = Bool()
     var showFiat = Bool()
     var walletExists = Bool()
     var bootStrapping = Bool()
@@ -289,6 +290,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 } else {
                     
+                    vc.scanningNode = true
                     vc.addNode()
                     
                 }
@@ -2209,20 +2211,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if let vc = segue.destination as? ScannerViewController {
                 
-                CoreDataService.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
-                    
-                    if nodes != nil {
-                        
-                        if nodes?.count == 0 {
-                            
-                            vc.scanningNode = true
-                            
-                        }
-                    }
-                }
+                vc.scanningNode = scanningNode
                 
                 vc.onDoneBlock = { [unowned thisVc = self] result in
-                    
                     thisVc.nodeJustAdded()
                     
                 }

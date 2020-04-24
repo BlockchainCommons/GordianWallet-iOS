@@ -163,6 +163,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         imageView.frame = view.frame
         imageView.isUserInteractionEnabled = true
         
+        print("scanningNode = \(scanningNode)")
         qrScanner.isScanningNode = scanningNode
         qrScanner.scanningRecovery = isRecovering
         qrScanner.isImporting = isImporting
