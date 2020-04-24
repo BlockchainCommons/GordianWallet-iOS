@@ -520,7 +520,6 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         
         let parser = DescriptorParser()
         words = justWords.joined(separator: " ")
-        
         if let desc = recoveryDict["descriptor"] as? String {
             
             let str = parser.descriptor(desc)
@@ -617,13 +616,11 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 
             }
         }
-        
     }
     
     private func buildDescriptor() {
         
         cv.addConnectingView(vc: self, description: "building your wallets descriptor")
-        
         MnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
             
             if !error && mnemonic != nil {
@@ -675,14 +672,15 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                             
                             let desc = dict["descriptor"] as! String
                             vc.walletNameHash = Encryption.sha256hash(desc)
+                            
                             /// Now check if the wallet exists on the node or not
                             DispatchQueue.main.async { [unowned vc = self] in
                                 vc.cv.label.text = "searching your node for the wallet"
                             }
+                            
                             vc.checkIfWalletExists(name: vc.walletNameHash)
                             
                         } else {
-                            
                             vc.cv.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                             
@@ -691,21 +689,17 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                     }
                                         
                 } catch {
-                    
                     vc.cv.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "error constructing descriptor")
                     
                 }
                 
             } else {
-                
                 vc.cv.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: "error deriving mnemonic")
                 
             }
-            
         }
-        
     }
     
     private func checkIfWalletExists(name: String) {

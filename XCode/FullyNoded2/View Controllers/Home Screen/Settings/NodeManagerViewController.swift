@@ -432,6 +432,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
             
             if let vc = segue.destination as? ScannerViewController {
                 
+                vc.scanningNode = true
                 vc.onDoneBlock = { [unowned thisVc = self] result in
                     
                     thisVc.load()

@@ -1432,15 +1432,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                         DispatchQueue.main.async {
                                         
-                            let alert = UIAlertController(title: "Warning!", message: "The app is still in late alpha so please test with small amounts when using mainnet", preferredStyle: .actionSheet)
+                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
 
                             alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { [unowned vc = self] action in
                                 
-                                DispatchQueue.main.async {
-
-                                    vc.performSegue(withIdentifier: "addWallet", sender: vc)
-
-                                }
+                                //MARK: To enable mainnet wallets just uncomment the following lines of code:
+                                
+//                                DispatchQueue.main.async {
+//
+//                                    vc.performSegue(withIdentifier: "addWallet", sender: vc)
+//
+//                                }
                                 
                             }))
                             

@@ -694,6 +694,9 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         
                         if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
                             
+                            let offlineMasterXpub = masterKey.xpub
+                            print("offlineMasterXpub = \(offlineMasterXpub)")
+                            
                             let recoveryFingerPrint = masterKey.fingerprint.hexString
                             vc.fingerprints.append(recoveryFingerPrint)
                             
@@ -886,6 +889,9 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 
                                 if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
                                     
+                                    let devicesMasterXpub = masterKey.xpub
+                                    print("devicesMasterXpub = \(devicesMasterXpub)")
+                                    
                                     let localFingerPrint = masterKey.fingerprint.hexString
                                     vc.fingerprints.append(localFingerPrint)
                                     
@@ -971,6 +977,9 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         }
                         
                         if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
+                            
+                            let nodeMasterXpub = masterKey.xpub
+                            print("nodeMasterXpub = \(nodeMasterXpub)")
                             
                             let nodesFingerPrint = masterKey.fingerprint.hexString
                             vc.fingerprints.append(nodesFingerPrint)
