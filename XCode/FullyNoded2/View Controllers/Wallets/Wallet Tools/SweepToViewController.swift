@@ -580,25 +580,27 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
             let path = bip32deriv["path"] as! String
             if let bip32path = BIP32Path(path) {
                 
-                KeyFetcher.privKey(path: bip32path) { [unowned vc = self] (privKey, error) in
-                    
-                    if !error {
-                        
-                        privateKeys.append(privKey!)
-                        
-                        if i + 1 == inputs.count {
-                            
-                            vc.signPsbt(psbt: psbt, privateKeys: privateKeys, wallet: wallet)
-                            
-                        }
-                        
-                    } else {
-                        
-                        vc.showError(title: "Error", message: "Failed fetching private key at path \(bip32path)")
-                        
-                    }
-                    
-                }
+                /// We can no longer fetch private keys and do not need to.
+                
+//                KeyFetcher.privKey(path: bip32path) { [unowned vc = self] (privKey, error) in
+//
+//                    if !error {
+//
+//                        privateKeys.append(privKey!)
+//
+//                        if i + 1 == inputs.count {
+//
+//                            vc.signPsbt(psbt: psbt, privateKeys: privateKeys, wallet: wallet)
+//
+//                        }
+//
+//                    } else {
+//
+//                        vc.showError(title: "Error", message: "Failed fetching private key at path \(bip32path)")
+//
+//                    }
+//
+//                }
                 
             }
             

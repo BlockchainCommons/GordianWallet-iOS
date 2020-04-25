@@ -365,37 +365,37 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         var failed = false
         var getKeysFromNode = false
         
-        func getPrivKeys() {
-            let mnemonicCreator = MnemonicCreator()
-            mnemonicCreator.convert(words: words) { [unowned vc = self] (mnemonic, error) in
-                if !error {
-                    let derivation = vc.wallet.derivation
-                    for i in 0 ... 999 {
-                        let path = derivation + "/" + "\(i)"
-                        if let bip32path = BIP32Path(path) {
-                            if let key = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
-                                do {
-                                    let childKey = try key.derive(bip32path)
-                                    if let privKey = childKey.privKey {
-                                        if vc.keys.count > 0 {
-                                            vc.keys[i]["wif"] = privKey.wif
-                                        }
-                                    }
-                                } catch {
-                                    print("failed getting a key")
-                                }
-                            }
-                        }
-                        if i == 999 {
-                            DispatchQueue.main.async {
-                                vc.table.reloadData()
-                                vc.connectingView.removeConnectingView()
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        func getPrivKeys() {
+//            let mnemonicCreator = MnemonicCreator()
+//            mnemonicCreator.convert(words: words) { [unowned vc = self] (mnemonic, error) in
+//                if !error {
+//                    let derivation = vc.wallet.derivation
+//                    for i in 0 ... 999 {
+//                        let path = derivation + "/" + "\(i)"
+//                        if let bip32path = BIP32Path(path) {
+//                            if let key = HDKey((mnemonic!.seedHex("")), network(path: derivation)) {
+//                                do {
+//                                    let childKey = try key.derive(bip32path)
+//                                    if let privKey = childKey.privKey {
+//                                        if vc.keys.count > 0 {
+//                                            vc.keys[i]["wif"] = privKey.wif
+//                                        }
+//                                    }
+//                                } catch {
+//                                    print("failed getting a key")
+//                                }
+//                            }
+//                        }
+//                        if i == 999 {
+//                            DispatchQueue.main.async {
+//                                vc.table.reloadData()
+//                                vc.connectingView.removeConnectingView()
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
         
         for i in 0 ... 999 {
             var pubkeys = [PubKey]()
@@ -433,15 +433,18 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             }
             
             if i == 999 {
-                if !failed {
-                    getPrivKeys()
-                } else {
-                    self.connectingView.removeConnectingView()
-                    displayAlert(viewController: self, isError: true, message: "key derivation failed")
+                //if !failed {
+                    //getPrivKeys()
+                //} else {
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.table.reloadData()
+                    vc.connectingView.removeConnectingView()
                 }
-                if getKeysFromNode {
-                    self.getKeysFromBitcoinCore()
-                }
+                    //displayAlert(viewController: self, isError: true, message: "key derivation failed")
+                //}
+//                if getKeysFromNode {
+//                    self.getKeysFromBitcoinCore()
+//                }
             }
             
         }
@@ -577,30 +580,30 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         var failed = false
         var getKeysFromNode = false
         
-        func getPrivKeys() {
-            let derivation = self.wallet.derivation
-            for i in 0 ... 999 {
-                let path = derivation + "/" + "\(i)"
-                if let bip32path = BIP32Path(path) {
-                    do {
-                        let childKey = try xprv.derive(bip32path)
-                        if let privKey = childKey.privKey {
-                            if self.keys.count > 0 {
-                                self.keys[i]["wif"] = privKey.wif
-                            }
-                        }
-                    } catch {
-                        print("failed getting a key")
-                    }
-                }
-                if i == 999 {
-                    DispatchQueue.main.async {
-                        self.table.reloadData()
-                        self.connectingView.removeConnectingView()
-                    }
-                }
-            }
-        }
+//        func getPrivKeys() {
+//            let derivation = self.wallet.derivation
+//            for i in 0 ... 999 {
+//                let path = derivation + "/" + "\(i)"
+//                if let bip32path = BIP32Path(path) {
+//                    do {
+//                        let childKey = try xprv.derive(bip32path)
+//                        if let privKey = childKey.privKey {
+//                            if self.keys.count > 0 {
+//                                self.keys[i]["wif"] = privKey.wif
+//                            }
+//                        }
+//                    } catch {
+//                        print("failed getting a key")
+//                    }
+//                }
+//                if i == 999 {
+//                    DispatchQueue.main.async {
+//                        self.table.reloadData()
+//                        self.connectingView.removeConnectingView()
+//                    }
+//                }
+//            }
+//        }
         
         for i in 0 ... 999 {
             var pubkeys = [PubKey]()
@@ -638,15 +641,18 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             }
             
             if i == 999 {
-                if !failed {
-                    getPrivKeys()
-                } else {
-                    self.connectingView.removeConnectingView()
-                    displayAlert(viewController: self, isError: true, message: "key derivation failed")
+                //if !failed {
+                    //getPrivKeys()
+                //} else {
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.table.reloadData()
+                    vc.connectingView.removeConnectingView()
                 }
-                if getKeysFromNode {
-                    self.getKeysFromBitcoinCore()
-                }
+                    //displayAlert(viewController: self, isError: true, message: "key derivation failed")
+                //}
+//                if getKeysFromNode {
+//                    self.getKeysFromBitcoinCore()
+//                }
             }
             
         }
@@ -683,8 +689,8 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
                 let dict = [
                 
                     "address":"\(address)",
-                    "publicKey":"\((key.pubKey.data).hexString)",
-                    "wif":"\(key.privKey!.wif)"
+                    "publicKey":"\((key.pubKey.data).hexString)"/*,
+                    "wif":"\(key.privKey!.wif)"*/
                 
                 ]
                                         
@@ -742,8 +748,8 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             let dict = [
             
                 "address":"\(address)",
-                "publicKey":"\((key1.pubKey.data).hexString)",
-                "wif":"\(key1.privKey!.wif)"
+                "publicKey":"\((key1.pubKey.data).hexString)"/*,
+                "wif":"\(key1.privKey!.wif)"*/
             
             ]
                                     

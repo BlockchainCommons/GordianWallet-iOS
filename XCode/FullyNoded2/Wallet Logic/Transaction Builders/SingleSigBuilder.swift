@@ -152,25 +152,25 @@ class SingleSigBuilder {
                 let path = bip32deriv["path"] as! String
                 if let bip32path = BIP32Path(path) {
                     
-                    KeyFetcher.privKey(path: bip32path) { (privKey, error) in
-                        
-                        if !error {
-                            
-                            privateKeys.append(privKey!)
-                            
-                            if i + 1 == inputs.count {
-                                
-                                signPsbt(psbt: psbt, privateKeys: privateKeys)
-                                
-                            }
-                            
-                        } else {
-                            
-                            completion((nil, nil, "Error: Failed fetching private key at path \(bip32path)"))
-                            
-                        }
-                        
-                    }
+//                    KeyFetcher.privKey(path: bip32path) { (privKey, error) in
+//                        
+//                        if !error {
+//                            
+//                            privateKeys.append(privKey!)
+//                            
+//                            if i + 1 == inputs.count {
+//                                
+//                                signPsbt(psbt: psbt, privateKeys: privateKeys)
+//                                
+//                            }
+//                            
+//                        } else {
+//                            
+//                            completion((nil, nil, "Error: Failed fetching private key at path \(bip32path)"))
+//                            
+//                        }
+//                        
+//                    }
                     
                 }
                 
