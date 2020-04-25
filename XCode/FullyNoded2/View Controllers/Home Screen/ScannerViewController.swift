@@ -9,8 +9,9 @@
 import UIKit
 import LibWally
 
-class ScannerViewController: UIViewController, UINavigationControllerDelegate {
+class ScannerViewController: UIViewController, UINavigationControllerDelegate, UIDocumentPickerDelegate/*, DocumentDelegate*/ {
     
+    //var documentPicker: DocumentPicker!
     var isImporting = Bool()
     var unsignedPsbt = ""
     var signedRawTx = ""
@@ -36,7 +37,33 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         configureScanner()
         scanNow()
         
+        //documentPicker = DocumentPicker(presentationController:self, delegate: self)
+        
     }
+    
+//    func didPickDocuments(documents: [Document]?) {
+//        // handle selected documents
+//        print("doc = \(documents)")
+//
+//        if documents != nil {
+//
+//            if documents!.count > 0 {
+//
+//                let doc = documents![0].o
+//
+//                if let contents = doc.data {
+//
+//                    let base64 = contents.base64EncodedString()
+//                    print("base64 = \(base64)")
+//
+//                }
+//
+//
+//            }
+//
+//        }
+//
+//    }
     
     override func viewDidAppear(_ animated: Bool) {
         
@@ -102,6 +129,50 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             
         }
         
+        openImportDocumentPicker()
+        
+    }
+    
+    func openImportDocumentPicker() {
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.item"], in: .import)
+        documentPicker.delegate = self
+        documentPicker.modalPresentationStyle = .formSheet
+        self.present(documentPicker, animated: true, completion: nil)
+    }
+
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        if controller.documentPickerMode == .import {
+            do {
+                let data = try Data(contentsOf: url.absoluteURL)
+                let psbt = data.base64EncodedString()
+                
+                DispatchQueue.main.async { [unowned vc = self] in
+                    
+                    let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sing it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
+                        
+                        vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
+                        vc.signPSBT(psbt: psbt)
+
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                            
+                    alert.popoverPresentationController?.sourceView = vc.view
+                    vc.present(alert, animated: true, completion: nil)
+                    
+                }
+                
+            } catch {
+                connectingView.removeConnectingView()
+                showAlert(vc: self, title: "Error", message: "That is not a valid psbt")
+            }
+        }
+    }
+
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        print("Cancelled")
     }
     
     @objc func addTester() {

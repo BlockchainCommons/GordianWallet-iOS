@@ -152,6 +152,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D050300524541DAE00213870 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		31FCCC70E229114C6ADAB0B8 /* Pods-FullyNoded2-FullyNoded2UITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FullyNoded2-FullyNoded2UITests.release.xcconfig"; path = "Target Support Files/Pods-FullyNoded2-FullyNoded2UITests/Pods-FullyNoded2-FullyNoded2UITests.release.xcconfig"; sourceTree = "<group>"; };
 		36B043AFA841AB7E48E8A484 /* Pods-FullyNoded2Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FullyNoded2Tests.release.xcconfig"; path = "Target Support Files/Pods-FullyNoded2Tests/Pods-FullyNoded2Tests.release.xcconfig"; sourceTree = "<group>"; };
@@ -841,6 +854,7 @@
 				D09D723B23F0EDBB00847DC8 /* Resources */,
 				5158BAFA140D8E22D843E862 /* [CP] Embed Pods Frameworks */,
 				D09D727323F0F1F800847DC8 /* ShellScript */,
+				D050300524541DAE00213870 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
@@ -1355,10 +1369,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DDDEC206181E8985B8D9E919 /* Pods-FullyNoded2.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.96;
+				CURRENT_PROJECT_VERSION = 0.0.97;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1371,7 +1386,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.96;
+				MARKETING_VERSION = 0.0.97;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1384,10 +1399,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7EC4AB5FBF706289676AC319 /* Pods-FullyNoded2.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.96;
+				CURRENT_PROJECT_VERSION = 0.0.97;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1400,7 +1416,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.96;
+				MARKETING_VERSION = 0.0.97;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
