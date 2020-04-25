@@ -53,154 +53,154 @@ class KeyFetcher {
         
     }
     
-    class func privKey(path: BIP32Path, completion: @escaping ((privKey: String?, error: Bool)) -> Void) {
-        
-        getActiveWalletNow() { (wallet, error) in
-            
-            if wallet != nil && !error {
-                
-                //let derivationPath = wallet!.derivation
-                
-                if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
-                    
-                    Encryption.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
-                        
-                        if seed != nil {
-                            
-                            let words = String(data: seed!, encoding: .utf8)!
-                                                        
-                            MnemonicCreator.convert(words: words) { (mnemonic, error) in
-                                
-                                if !error {
-                                    
-                                    if let masterKey = HDKey((mnemonic!.seedHex("")), network(descriptor: wallet!.descriptor)) {
-                                        
-                                        do {
-                                            
-                                            let key = try masterKey.derive(path)
-                                            
-                                            if let keyToReturn = key.privKey {
-                                                
-                                                let wif = keyToReturn.wif
-                                                completion((wif,false))
-                                                
-                                            } else {
-                                                
-                                                completion((nil,true))
-                                                
-                                            }
-                                            
-                                        } catch {
-                                            
-                                            completion((nil,true))
-                                            
-                                        }
-                                        
-                                    } else {
-                                        
-                                        completion((nil,true))
-                                        
-                                    }
-                                    
-                                } else {
-                                    
-                                    completion((nil,true))
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                    if wallet!.xprv != nil {
-                        
-                        // its a recovered wallet without a mnemonic, need to remove the account derivation as we know the psbt will return the full path
-                        var processedDerivation = ""
-                        let arr = "\(path)".split(separator: "/")
-                        for (i, pathComponent) in arr.enumerated() {
-                            
-                            if i > 3 {
-                                
-                                processedDerivation += "/" + "\(pathComponent)"
-                                
-                            }
-                            
-                            if i + 1 == arr.count {
-                                
-                                if let accountLessPath = BIP32Path(processedDerivation) {
-                                    
-                                    Encryption.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
-                                        
-                                        if decryptedXprv != nil {
-                                            
-                                            if let xprvString = String(data: decryptedXprv!, encoding: .utf8) {
-                                                
-                                                if let hdKey = HDKey(xprvString) {
-                                                    
-                                                    do {
-                                                        
-                                                        let key = try hdKey.derive(accountLessPath)
-                                                        
-                                                        if let keyToReturn = key.privKey {
-                                                            
-                                                            let wif = keyToReturn.wif
-                                                            completion((wif,false))
-                                                            
-                                                        } else {
-                                                            
-                                                            completion((nil,true))
-                                                            
-                                                        }
-                                                        
-                                                    } catch {
-                                                        
-                                                        completion((nil,true))
-                                                        print("failed deriving child key")
-                                                        
-                                                    }
-                                                    
-                                                }
-                                                
-                                            }
-                                            
-                                        } else {
-                                            
-                                            completion((nil,true))
-                                            print("failed decrypting xprv")
-                                            
-                                        }
-                                        
-                                    }
-                                    
-                                } else {
-                                    
-                                    print("failed deriving processed path")
-                                    completion((nil,true))
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                    } else {
-                        
-                        // its a watch-only wallet
-                        completion((nil,true))
-                        
-                    }
-                    
-                }
-                
-            }
-            
-        }
-        
-    }
+//    class func privKey(path: BIP32Path, completion: @escaping ((privKey: String?, error: Bool)) -> Void) {
+//        
+//        getActiveWalletNow() { (wallet, error) in
+//            
+//            if wallet != nil && !error {
+//                
+//                //let derivationPath = wallet!.derivation
+//                
+//                if String(data: wallet!.seed, encoding: .utf8) != "no seed" {
+//                    
+//                    Encryption.decryptData(dataToDecrypt: wallet!.seed) { (seed) in
+//                        
+//                        if seed != nil {
+//                            
+//                            let words = String(data: seed!, encoding: .utf8)!
+//                                                        
+//                            MnemonicCreator.convert(words: words) { (mnemonic, error) in
+//                                
+//                                if !error {
+//                                    
+//                                    if let masterKey = HDKey((mnemonic!.seedHex("")), network(descriptor: wallet!.descriptor)) {
+//                                        
+//                                        do {
+//                                            
+//                                            let key = try masterKey.derive(path)
+//                                            
+//                                            if let keyToReturn = key.privKey {
+//                                                
+//                                                let wif = keyToReturn.wif
+//                                                completion((wif,false))
+//                                                
+//                                            } else {
+//                                                
+//                                                completion((nil,true))
+//                                                
+//                                            }
+//                                            
+//                                        } catch {
+//                                            
+//                                            completion((nil,true))
+//                                            
+//                                        }
+//                                        
+//                                    } else {
+//                                        
+//                                        completion((nil,true))
+//                                        
+//                                    }
+//                                    
+//                                } else {
+//                                    
+//                                    completion((nil,true))
+//                                    
+//                                }
+//                                
+//                            }
+//                            
+//                        }
+//                        
+//                    }
+//                    
+//                } else {
+//                    
+//                    if wallet!.xprv != nil {
+//                        
+//                        // its a recovered wallet without a mnemonic, need to remove the account derivation as we know the psbt will return the full path
+//                        var processedDerivation = ""
+//                        let arr = "\(path)".split(separator: "/")
+//                        for (i, pathComponent) in arr.enumerated() {
+//                            
+//                            if i > 3 {
+//                                
+//                                processedDerivation += "/" + "\(pathComponent)"
+//                                
+//                            }
+//                            
+//                            if i + 1 == arr.count {
+//                                
+//                                if let accountLessPath = BIP32Path(processedDerivation) {
+//                                    
+//                                    Encryption.decryptData(dataToDecrypt: wallet!.xprv!) { (decryptedXprv) in
+//                                        
+//                                        if decryptedXprv != nil {
+//                                            
+//                                            if let xprvString = String(data: decryptedXprv!, encoding: .utf8) {
+//                                                
+//                                                if let hdKey = HDKey(xprvString) {
+//                                                    
+//                                                    do {
+//                                                        
+//                                                        let key = try hdKey.derive(accountLessPath)
+//                                                        
+//                                                        if let keyToReturn = key.privKey {
+//                                                            
+//                                                            let wif = keyToReturn.wif
+//                                                            completion((wif,false))
+//                                                            
+//                                                        } else {
+//                                                            
+//                                                            completion((nil,true))
+//                                                            
+//                                                        }
+//                                                        
+//                                                    } catch {
+//                                                        
+//                                                        completion((nil,true))
+//                                                        print("failed deriving child key")
+//                                                        
+//                                                    }
+//                                                    
+//                                                }
+//                                                
+//                                            }
+//                                            
+//                                        } else {
+//                                            
+//                                            completion((nil,true))
+//                                            print("failed decrypting xprv")
+//                                            
+//                                        }
+//                                        
+//                                    }
+//                                    
+//                                } else {
+//                                    
+//                                    print("failed deriving processed path")
+//                                    completion((nil,true))
+//                                    
+//                                }
+//                                
+//                            }
+//                            
+//                        }
+//                        
+//                    } else {
+//                        
+//                        // its a watch-only wallet
+//                        completion((nil,true))
+//                        
+//                    }
+//                    
+//                }
+//                
+//            }
+//            
+//        }
+//        
+//    }
     
     class func key(path: BIP32Path, completion: @escaping ((key: HDKey?, error: Bool)) -> Void) {
         
