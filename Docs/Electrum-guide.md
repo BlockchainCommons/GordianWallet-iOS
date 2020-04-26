@@ -1,6 +1,6 @@
 # Electrum guide
 
-## This is a guide for creating a 2 of 3 multisig wallet with FullyNoded 2 and Electrum
+## This is a guide for creating a 2 of 3 multisig wallet with FullyNoded 2 and Electrum, building and signing the psbt with Electrum, then exporting the psbt to FullyNoded 2 for signing and broadcasting
 
 ### 1. Create a multisig wallet in FN2 by selecting "multisig" -> "create wallet"
 
