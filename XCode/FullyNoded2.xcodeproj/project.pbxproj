@@ -130,6 +130,7 @@
 		D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */; };
 		D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FC24306B060085E3CC /* RefillMultiSig.swift */; };
 		D0D8DC162400D85000110A78 /* LibWallyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D8DC152400D85000110A78 /* LibWallyTests.swift */; };
+		D0F661BB24551EC600AFBC7F /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0F661BA24551EC600AFBC7F /* Tor.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -294,6 +295,7 @@
 		D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillMultisigViewController.swift; sourceTree = "<group>"; };
 		D0D561FC24306B060085E3CC /* RefillMultiSig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillMultiSig.swift; sourceTree = "<group>"; };
 		D0D8DC152400D85000110A78 /* LibWallyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibWallyTests.swift; sourceTree = "<group>"; };
+		D0F661BA24551EC600AFBC7F /* Tor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Tor.framework; path = ../../../../Tor.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -301,6 +303,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0F661BB24551EC600AFBC7F /* Tor.framework in Frameworks */,
 				D024A7C9245475CA00115615 /* Tor.framework in Frameworks */,
 				D024A7C52454755B00115615 /* LibWally.framework in Frameworks */,
 			);
@@ -326,6 +329,7 @@
 		81676B434392851969DDF649 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D0F661BA24551EC600AFBC7F /* Tor.framework */,
 				D024A7C42454755B00115615 /* LibWally.framework */,
 				D024A7C8245475CA00115615 /* Tor.framework */,
 			);

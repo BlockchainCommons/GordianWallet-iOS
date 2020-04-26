@@ -24,7 +24,7 @@ Wait for brew to finish.
 
 ## 3. Install carthage
 
-Follow these [instructions](https://brewinstall.org/install-carthage-on-mac-with-brew/) to install to Cocoa dependency manager using brew.
+`brew install carthage`
 
 ## 4. Install dependencies via carthage
 
@@ -35,4 +35,4 @@ carthage update --platform iOS
 
 ## 5. Run it!
 
-You are now ready to compile FullyNoded 2 in Xcode!
+Open and run `FullyNoded-2/XCode/FullyNoded2.xcodeproj`
