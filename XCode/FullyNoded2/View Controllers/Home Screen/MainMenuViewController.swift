@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import LibWally
 
-class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, OnionManagerDelegate {
+class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, OnionManagerDelegate, UIDocumentPickerDelegate {
     
     weak var nodeLogic = NodeLogic.sharedInstance
     weak var mgr = TorClient.sharedInstance
@@ -60,6 +59,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var transactionArray = [[String:Any]]()
     
     var timer: Timer?
+    
+    var unsignedPsbt = ""
+    var signedRawTx = ""
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -118,6 +120,82 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         reloadSections([torCellIndex])
         
     }
+    
+    @IBAction func uploadFile(_ sender: Any) {
+        
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.item"], in: .import)
+        documentPicker.delegate = self
+        documentPicker.modalPresentationStyle = .formSheet
+        self.present(documentPicker, animated: true, completion: nil)
+        
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        if controller.documentPickerMode == .import {
+            do {
+                let data = try Data(contentsOf: url.absoluteURL)
+                let psbt = data.base64EncodedString()
+                
+                DispatchQueue.main.async { [unowned vc = self] in
+                    
+                    let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sing it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
+                        
+                        print("psbt = \(psbt)")
+                        vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
+                        vc.signPSBT(psbt: psbt)
+
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                            
+                    alert.popoverPresentationController?.sourceView = vc.view
+                    vc.present(alert, animated: true, completion: nil)
+                    
+                }
+                
+            } catch {
+                connectingView.removeConnectingView()
+                showAlert(vc: self, title: "Error", message: "That is not a valid psbt")
+            }
+        }
+    }
+    
+    private func signPSBT(psbt: String) {
+        
+        PSBTSigner.sign(psbt: psbt) { [unowned vc = self] (success, psbt, rawTx) in
+            
+            if success {
+                
+                if psbt != nil {
+                    vc.connectingView.removeConnectingView()
+                    vc.unsignedPsbt = psbt!
+                    
+                } else if rawTx != nil {
+                    vc.connectingView.removeConnectingView()
+                    vc.signedRawTx = rawTx!
+                    
+                }
+                
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.performSegue(withIdentifier: "goConfirmPsbtSegue", sender: vc)
+                }
+                
+            } else {
+                
+                vc.connectingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error", message: "PSBT signing failed")
+            }
+            
+        }
+        
+    }
+
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        print("Cancelled")
+    }
+    
     
     @IBAction func goToSettings(_ sender: Any) {
         
@@ -2231,6 +2309,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     thisVc.didAppear()
                     
                 }
+                
+            }
+            
+        case "goConfirmPsbtSegue":
+            
+            if let vc = segue.destination as? ConfirmViewController {
+                
+                vc.unsignedPsbt = unsignedPsbt
+                vc.signedRawTx = signedRawTx
                 
             }
             

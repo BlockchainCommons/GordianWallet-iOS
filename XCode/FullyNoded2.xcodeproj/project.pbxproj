@@ -61,7 +61,6 @@
 		D09D732D23F0F3C000847DC8 /* AuthenticateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B323F0F3C000847DC8 /* AuthenticateViewController.swift */; };
 		D09D732E23F0F3C000847DC8 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */; };
 		D09D732F23F0F3C000847DC8 /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */; };
-		D09D733223F0F3C000847DC8 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72BA23F0F3C000847DC8 /* LogInViewController.swift */; };
 		D09D733323F0F3C000847DC8 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72BC23F0F3C000847DC8 /* Utilities.swift */; };
 		D09D733723F0F3C000847DC8 /* shim.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72C223F0F3C000847DC8 /* shim.swift */; };
 		D09D733823F0F3C000847DC8 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72C323F0F3C000847DC8 /* StringExtension.swift */; };
@@ -223,7 +222,6 @@
 		D09D72B323F0F3C000847DC8 /* AuthenticateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateViewController.swift; sourceTree = "<group>"; };
 		D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
-		D09D72BA23F0F3C000847DC8 /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		D09D72BC23F0F3C000847DC8 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		D09D72BD23F0F3C000847DC8 /* StandUp-Remote-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StandUp-Remote-Bridging-Header.h"; sourceTree = "<group>"; };
 		D09D72C223F0F3C000847DC8 /* shim.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = shim.swift; sourceTree = "<group>"; };
@@ -462,7 +460,6 @@
 				D09D72A323F0F3C000847DC8 /* Outgoing */,
 				D09D72AB23F0F3C000847DC8 /* Incoming */,
 				D09D72AE23F0F3C000847DC8 /* Home Screen */,
-				D09D72B923F0F3C000847DC8 /* Unlock Screen */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -574,14 +571,6 @@
 				D047DE04242B34BA004BC26D /* SignInViewController.swift */,
 			);
 			path = Intro;
-			sourceTree = "<group>";
-		};
-		D09D72B923F0F3C000847DC8 /* Unlock Screen */ = {
-			isa = PBXGroup;
-			children = (
-				D09D72BA23F0F3C000847DC8 /* LogInViewController.swift */,
-			);
-			path = "Unlock Screen";
 			sourceTree = "<group>";
 		};
 		D09D72BB23F0F3C000847DC8 /* Miscellaneous */ = {
@@ -1068,7 +1057,6 @@
 				D09D730D23F0F3C000847DC8 /* NodeStruct.swift in Sources */,
 				D09D736923F0F3C000847DC8 /* SingleSigBuilder.swift in Sources */,
 				D09D732A23F0F3C000847DC8 /* TransactionViewController.swift in Sources */,
-				D09D733223F0F3C000847DC8 /* LogInViewController.swift in Sources */,
 				D09DCF6623F10645008F5B9F /* Base32.swift in Sources */,
 				D0502FF024500DE000213870 /* AddExtendedKeyViewController.swift in Sources */,
 				D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */,
