@@ -2,15 +2,13 @@
 
 ## This is a guide for creating a 2 of 3 multisig wallet with FullyNoded 2 and Electrum
 
-### 1. Create a multisig wallet in FN2
+### 1. Create a multisig wallet in FN2 by selecting "multisig" -> "create wallet"
 
-![](../Images/Electrum/1_fn2_create_wallet.PNG)
-
-![](../Images/Electrum/2_fn2_walletcreated.PNG)
+<img src="../Images/Electrum/1_fn2_create_wallet.PNG" alt="" width="250"/> <img src="../Images/Electrum/2_fn2_walletcreated.PNG" alt="" width="250"/>
 
 ### 2. Save your recovery words, you will need them
 
-![](../Images/Electrum/3_fn2_backupwords.PNG)
+<img src="../Images/Electrum/3_fn2_backupwords.PNG" alt="" width="250"/>
 
 ### 3. Open Electrum and create a new mutlisig wallet
 
@@ -46,7 +44,7 @@
 
 ### 11. Come back to FN2 and export your 1st public key descriptor which holds all the xpubs you need. You can get this by going to the wallets tab, enabling the Electrum wallet, and tapping the "info" button to export the devices seed and public key descriptors.
 
-![](../Images/Electrum/12_fn2_getxpubs.PNG)
+<img src="../Images/Electrum/12_fn2_getxpubs.PNG" alt="" width="250"/>
 
 When you export a public key descriptor from FN2 you will get two descriptors, the first one represents your primary addresses and the second descriptor represents your change addresses. The first one is what we need and will look like this:
 
@@ -99,7 +97,7 @@ Here's what it means (you do not *need* to know this but it is useful to underst
 
 Here we can see the addresses match what Electrum exported 🤩
 
-![](../Images/Electrum/19_fn2exportkeys.PNG)
+<img src="../Images/Electrum/19_fn2exportkeys.PNG" alt="" width="250"/>
 
 ### 18. Now the good part, use Electrum to receive some testnet bitcoins.
 
@@ -123,27 +121,27 @@ Here we can see the addresses match what Electrum exported 🤩
 
 ### 22. Open FN2
 
-![](../Images/Electrum/26_openfn2.PNG)
+<img src="../Images/Electrum/26_openfn2.PNG" alt="" width="250"/>
 
 ### 23. Tap the folder icon in top left and tap the .psbt file you exported
 
-![](../Images/Electrum/27_tapfolderandtappsbtfile.PNG)
+<img src="../Images/Electrum/27_tapfolderandtappsbtfile.PNG" alt="" width="250"/>
 
 ### 24. Tap sign
 
-![](../Images/Electrum/28_tapsign.PNG)
+<img src="../Images/Electrum/28_tapsign.PNG" alt="" width="250"/>
 
 ### 25. FN2 will first pass it to your node for processing and signing, then FN2 will sign it locally with the seed that is on the device. It actually loops through all the seeds on your device and signs it if it can. Your current active node in FN2 must be on the same network as the transaction your trying to sign or it will fail.
 
-![](../Images/Electrum/29_signing.PNG)
+<img src="../Images/Electrum/29_signing.PNG" alt="" width="250"/>
 
 ### 26. At this point the psbt may still need more signatures or may be fully signed. If it is complete FN2 finalizes the psbt, converts it to a signed raw transaction and parses each input and output and displays the fee for you to confirm before broadcasting. If it is incomplete it will allow you to export the updated psbt as raw data file like the one we imported or as base64 so that you can pass the psbt to another signer.
 
-![](../Images/Electrum/30_verifyingsignedtx.PNG)
+<img src="../Images/Electrum/30_verifyingsignedtx.PNG" alt="" width="250"/>
 
 ### 27. Broadcast it
 
-![](../Images/Electrum/31_broadcast.PNG)
+<img src="../Images/Electrum/31_broadcast.PNG" alt="" width="250"/>
 
 ### 28. Open Electrum and you will see the transaction in your history and of course also in FN2 🤯
 
