@@ -24,11 +24,11 @@
 
 ![](../Images/Electrum/6_seed.png)
 
-### 6. Its a bip39 seed
+### 6. Its a BIP39 seed so you need to tap "options" and select "BIP39"
 
 ![](../Images/Electrum/7_bip39seed.png)
 
-### 7. Add it
+### 7. Add the recovery phrase from FN2
 
 ![](../Images/Electrum/8_addseed.png)
 
@@ -44,7 +44,7 @@
 
 ![](../Images/Electrum/11_enter_cosigner2.png)
 
-### 11. Come back to FN2 and export your 1st public key descriptor which holds all the xpubs you need
+### 11. Come back to FN2 and export your 1st public key descriptor which holds all the xpubs you need. You can get this by going to the wallets tab, enabling the Electrum wallet, and tapping the "info" button to export the devices seed and public key descriptors.
 
 ![](../Images/Electrum/12_fn2_getxpubs.PNG)
 
@@ -58,25 +58,24 @@ It gives you 3 xpubs (tpubs for testnet):
 
 **FullyNoded 2 works with Bitcoin Core and Bitcoin Core only works with xpubs/tpubs. Therefore you will need to use [this tool](https://jlopp.github.io/xpub-converter/) to convert your xpubs to the format Electrum accepts.**
 
-#### xpub #1 always represents your offline recovery keys - this is the one we already imported into Electrum via the offline recovery words. `tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR`
+xpub #1 always represents your offline recovery keys - this is the one we already imported into Electrum via the offline recovery words. `tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR`
 
-#### xpub #2 always represents your devices keys and will be the one we add into Electrum next. `tpubDDxd7u6V76WHV6CRy3KSsJoXiioVwubYDubysMkvkYuCTFPwWfUwcnC7yh1mNkMd13Ssh8Fu7UiSJRoELuKW58zrVBd1YRGfHkcF2s9DHz3`
+xpub #2 always represents your devices keys and will be the one we add into Electrum next. `tpubDDxd7u6V76WHV6CRy3KSsJoXiioVwubYDubysMkvkYuCTFPwWfUwcnC7yh1mNkMd13Ssh8Fu7UiSJRoELuKW58zrVBd1YRGfHkcF2s9DHz3`
 
-#### xpub #3  always represents your nodes keys and will be the final key we add as a cosigner into Electrum. `tpubDFW7MhUGfWLHXafXcca9ow5jUkLukcxawpG7V6BzXgtsxHdkUKuSy5eXwrDZ7zr5jLHRmYnJoHv4GGAYY4HGK53x9BL2tDeePw4QNdkk6Gw`
+xpub #3  always represents your nodes keys and will be the final key we add as a cosigner into Electrum. `tpubDFW7MhUGfWLHXafXcca9ow5jUkLukcxawpG7V6BzXgtsxHdkUKuSy5eXwrDZ7zr5jLHRmYnJoHv4GGAYY4HGK53x9BL2tDeePw4QNdkk6Gw`
 
-Here's what it means (you do not need to know but it is useful to understand):
+Here's what it means (you do not *need* to know this but it is useful to understand):
 
-- `wsh`: witness script hash. multisig sig bech32 address type, aka p2wsh (pay to witness script hash). It tells our node that this is a bech32 multisig address type.
-- `sortedmulti`: this means the descriptor is describing a BIP67 multisig wallet which means the order of the public keys does not matter as they will always be derived lexicographically.
-- `2`: represents the number of signatures required, it is folllowed by the xpubs, the number of xpubs denote the number of possible cosigners, in this case its a 2 of 3.
-- `[48214714/48'/1'/0'/2']`: You can think of the xpub as representing this derivation path.
-- `/0/*` represents the addresses that the descriptor would import, in this case its the primary addesses. The `*` just means it can import any range of keys making it HD.
-- `#9650s8vz`: this is the descriptors checksum
+- `wsh`: witness script hash. multisig sig bech32 address type, aka p2wsh (pay to witness script hash). It tells your node that this is a bech32 multisig address type.
+- `sortedmulti`: This means the descriptor is describing a BIP67 multisig wallet which means the order of the public keys does not matter as they will always be derived lexicographically. Electrum, Coldcard and Specter all support BIP67.
+- `2`: Represents the number of signatures required, it is folllowed by the xpubs, the number of xpubs denote the number of possible cosigners, in this case its a 2 of 3.
+- `[48214714/48'/1'/0'/2']`: The xpubs derivation. You can think of the xpub as representing this derivation path.
+- `/0/*` represents the addresses that the descriptor would import, in this case its the primary addesses. The `0` means the addresses will be primary receiving addresses, if this was a change descriptor it would be a `1`. The `*` just means it can import any range of keys making it HD and actually represents the index of the address to be derived.
+- `#9650s8vz`: The descriptors checksum.
 
 ### 13. Take your #2 tpub from the primary descriptor and convert it to a Vpub (for testnet)
 
 ![](../Images/Electrum/13_converttpub2.png)
-
 
 ### 14. Paste it in to Electrum, tap next, repeat the process for the third and final xpup/tpub
 
@@ -100,7 +99,7 @@ Here's what it means (you do not need to know but it is useful to understand):
 
 Here we can see the addresses match what Electrum exported 🤩
 
-![](../Images/Electrum/19_fn2exportkeys.png)
+![](../Images/Electrum/19_fn2exportkeys.PNG)
 
 ### 18. Now the good part, use Electrum to receive some testnet bitcoins.
 
@@ -116,37 +115,37 @@ Here we can see the addresses match what Electrum exported 🤩
 
 ![](../Images/Electrum/23_confirmsend.png)
 
-**The following functionality is only available on Electrum if you build the master branch from source. Hopefully it will be avilable for download soon. You can still create the multisig wallets on Electrum but you won't be able to easily pass PSBT's from Electrum to any third party app.** 
+⚠️ **The following functionality is only available on Electrum if you build the master branch from source. Hopefully it will be avilable for download soon. You can still create the multisig wallets on Electrum but you won't be able to easily pass PSBT's from Electrum to any third party app.** ⚠️
 
-### Export the PSBT by clicking "export" in the bottom left -> "export to file". Take that file and send it to your iPhone, saving it in the "Files" app on your iPhone.
+### 21. Export the PSBT by clicking "export" in the bottom left -> "export to file". Take that file and send it to your iPhone, saving it in the "Files" app on your iPhone.
 
 ![](../Images/Electrum/25_export2.png)
 
-### 21. Open FN2
+### 22. Open FN2
 
-![](../Images/Electrum/26_openfn2.png)
+![](../Images/Electrum/26_openfn2.PNG)
 
-### 22. Tap the folder icon in top left and tap the .psbt file you exported
+### 23. Tap the folder icon in top left and tap the .psbt file you exported
 
-![](../Images/Electrum/27_tapfolderandtappsbtfile.png)
+![](../Images/Electrum/27_tapfolderandtappsbtfile.PNG)
 
-### 23. Tap sign
+### 24. Tap sign
 
-![](../Images/Electrum/28_tapsign.png)
+![](../Images/Electrum/28_tapsign.PNG)
 
-### 24. FN2 will first pass it to your node for processing and signing, then FN2 will sign it locally with the seed that is on the device. It actually loops through all the seeds on your device and signs it if it can. Your current active node in FN2 must be on the same network as the transaction your trying to sign or it will fail.
+### 25. FN2 will first pass it to your node for processing and signing, then FN2 will sign it locally with the seed that is on the device. It actually loops through all the seeds on your device and signs it if it can. Your current active node in FN2 must be on the same network as the transaction your trying to sign or it will fail.
 
-![](../Images/Electrum/29_signing.png)
+![](../Images/Electrum/29_signing.PNG)
 
-### 25. At this point the psbt may still need more signatures or may be fully signed. If it is complete it finalizes it, converts it to a signed raw transaction and parses each input and output and displays the fee for you to confirm before broadcasting. If it is incomplete it will allow you to export the updated psbt as raw data file like the one we imported or as base64 hex so that you can pass the psbt to another signer.
+### 26. At this point the psbt may still need more signatures or may be fully signed. If it is complete FN2 finalizes the psbt, converts it to a signed raw transaction and parses each input and output and displays the fee for you to confirm before broadcasting. If it is incomplete it will allow you to export the updated psbt as raw data file like the one we imported or as base64 so that you can pass the psbt to another signer.
 
-![](../Images/Electrum/30_verifyingsignedtx.png)
+![](../Images/Electrum/30_verifyingsignedtx.PNG)
 
-### 26. Broadcast it
+### 27. Broadcast it
 
-![](../Images/Electrum/31_broadcast.png)
+![](../Images/Electrum/31_broadcast.PNG)
 
-### 27. Open Electrum and you will see the transaction in your history and of course also in FN2 🤯
+### 28. Open Electrum and you will see the transaction in your history and of course also in FN2 🤯
 
 ![](../Images/Electrum/32_seetxinelectrum.png)
 
