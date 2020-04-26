@@ -146,7 +146,7 @@ Here we can see the addresses match what Electrum exported 🤩
 
 ![](../Images/Electrum/31_broadcast.png)
 
-### Open Electrum and you will see the transaction in your history and of course also in FN2.
+### Open Electrum and you will see the transaction in your history and of course also in FN2 🤯
 
 ![](../Images/Electrum/32_seetxinelectrum.png)
 
