@@ -1,0 +1,2 @@
+binary "https://icepa.github.io/Tor.framework/Tor.json" == 400.6.1
+github "blockchain/libwally-swift" == 0.0.1
