@@ -54,7 +54,7 @@ When you create the multisig in FullyNoded 2 the xpubs represent three "devices"
 
 `[81202613/48'/1'/0'/2']tpubDEcrpYzpqTJyhy5bzsojvL8VMrcFf4DVU7q43fuq6JhhNyxCqLzhppiUsMHAXUJv4XTnmAiezNAzdfTdg2FFefbzNh8YzN6Wv2zEYwcCC22`
 
-### 4. Now that we have our three xpubs formatted correctly for Specter we can add each one as an independent "device" into Specter. Just paste the xpub descriptor as they are lisetd above.
+### 4. Now that we have our three xpubs formatted correctly for Specter we can add each one as an independent "device" into Specter. Just paste the xpub descriptor as they are listed above.
 
 ![](../Images/Specter/2_pastexpub.png)
 
@@ -70,7 +70,7 @@ When you create the multisig in FullyNoded 2 the xpubs represent three "devices"
 
 ![](../Images/Specter/6_makeit2of3.png)
 
-### 7. Now you can select the keys you want each device to use, since each device only holds one key its a simlple decision.
+### 7. Now you can select the keys you want each device to use, since each device only holds one key its a simple decision.
 
 ![](../Images/Specter/7_selectkeys.png)
 
