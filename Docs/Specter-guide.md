@@ -16,13 +16,15 @@
 
 <img src="../Images/Specter/2_exportkeysfn2.PNG" alt="" width="250"/> 
 
-### 3. Take the first xpub from the first descriptor (the primary one) and strip remove the following sections:
+### 3. Take the first descriptor (the primary one)
 
 The original descriptor:
 
 ```
 wsh(sortedmulti(2,[82be8e74/48'/1'/0'/2']tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR/0/*,[5222e39c/48'/1'/0'/2']tpubDEQznV4Xs6BP1A1HXzogRsUiFxDsyaqLzphZmjmwrrERz9aHszb2juQzYBx9xuXymba5kkQvR76m218JiXM1DsLcgPryGCDs5P1geHoxVrx/0/*,[81202613/48'/1'/0'/2']tpubDEcrpYzpqTJyhy5bzsojvL8VMrcFf4DVU7q43fuq6JhhNyxCqLzhppiUsMHAXUJv4XTnmAiezNAzdfTdg2FFefbzNh8YzN6Wv2zEYwcCC22/0/*))#czsstq8d
 ```
+
+Remove the following sections:
 
 - `wsh(sortedmulti(2,`
 - `/0/*`
@@ -60,7 +62,7 @@ When you create the multisig in FullyNoded 2 the xpubs represent three "devices"
 
 ![](../Images/Specter/4_addthird.png)
 
-### 5. Now that we have our devices add to Specter we can create a watch-only multisig wallet.
+### 5. Now that we have our devices added to Specter we can create a watch-only multisig wallet.
 
 ![](../Images/Specter/5_createwallet.png)
 
@@ -80,7 +82,7 @@ When you create the multisig in FullyNoded 2 the xpubs represent three "devices"
 
 They do! 🤩
 
-<img src="../Images/Specter/./Images/Specter/9_fn2open.PNG" alt="" width="250"/> <img src="../Images/Specter/./Images/Specter/10_exportkeys.PNG" alt="" width="250"/>
+<img src="../Images/Specter/9_fn2open.PNG" alt="" width="250"/> <img src="../Images/Specter/10_exportkeys.PNG" alt="" width="250"/>
 
 **If for some reason they do not match go back and start over! You most likely entered the incorrect xpub. Since Specter and FullyNoded 2 support BIP67 the order of the xpubs does not matter.**
 
@@ -96,9 +98,9 @@ They do! 🤩
 
 ![](../Images/Specter/14_createpsbt.png)
 
-### 12. Scan the PSBT QR code with FullyNoded 2 to sign it and broadcast it, if FullyNoded 2 can not sign for all of the required signatures to spend the PSBT then it will simply sign what it can and export the PSBT in a few different formats for you to pass on to other signers. If it can sign for all the required signatures it will do that, finalize the PSBT which converts it into a signed raw transaction, it will verify each input and out put for your confirmation and then allow you to broadcast it using your node over Tor.
+### 12. Scan the PSBT QR code with FullyNoded 2 to sign it and broadcast it, if FullyNoded 2 can not sign for all of the required signatures to spend the PSBT then it will simply sign what it can and export the PSBT in a few different formats for you to pass on to other signers. If it can sign for all the required signatures it will finalize the PSBT which converts it into a signed raw transaction, verifying each input and output for your confirmation, allowing you to broadcast it with your node over Tor.
 
-<img src="../Images/Specter/./Images/Specter/15_scanpsbtwithFN2.PNG" alt="" width="250"/> <img src="../Images/Specter/./Images/Specter/16_broadcast.PNG" alt="" width="250"/>
+<img src="../Images/Specter/15_scanpsbtwithFN2.PNG" alt="" width="250"/> <img src="../Images/Specter/16_broadcast.PNG" alt="" width="250"/>
 
 ### 13. Check the transaction history in Specter to see that it matches FullyNoded 2
 
