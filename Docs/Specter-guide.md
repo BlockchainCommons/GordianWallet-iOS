@@ -4,7 +4,7 @@
 
 ## It also shows you how to import a 2 of 3 multisig wallet from Specter simply by scanning the wallet import QR code Specter exports. 
 
-## This guide is meant as a general usage example to show what it possible. Considering you can use Trezor, Coldcard, Electrum and Specter DIY as signers too you can see that this set up makes collaborative multisig easier then ever.
+## This guide is meant as a general usage example to show what is possible. Considering you can use Trezor, Coldcard, Electrum and Specter DIY as signers too you can see that this set up makes collaborative multisig easier then ever.
 
 ## This guide was made using the same 2 of 3 setup that was used in the Electrum guide to illustrate how it can be used across platforms.
 
