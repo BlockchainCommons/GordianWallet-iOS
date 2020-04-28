@@ -51,7 +51,7 @@ Please refer to their telegram groups for simple instructions on linking to thes
 
 Please see our [features](Docs/Features.md) document for full information on how to use FullyNoded 2 once it's installed.
 
-Afterward, you may also want to read about [how it all works](How-it-works.md).
+Afterward, you may also want to read about [how it all works](Docs/How-it-works.md).
 
 ## The Philosophy Behind FullyNoded 2
 
