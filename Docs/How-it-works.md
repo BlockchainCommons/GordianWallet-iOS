@@ -131,13 +131,13 @@ Notice this is still a BIP84 derivation but because it is single-sig we use `wpk
 
 To generate addresses to receieve funds in *FN2* we take two approaches, one for each wallet type.
 
-#### Single-sig Wallets
+### Single-sig Wallets
 
 For single-sig wallets, receiving funds is straightforward: we completely rely on the node to handle it, as *FN2* created the wallet with `avoid_reuse` set to true and the node's wallet holds the derived keys in its keypool.
 
 It is simply a matter of running `bitcoin-cli getnewaddress` with an argument of either `legacy`, `bech32` or `p2sh-segwit` depending on your wallet's derivation scheme. It is worth noting that the node is capable of producing any address type for the public keys you imported into it. However from *FN2's* point of view, we specifiy a specific wallet derivation scheme so the user knows exactly what they are dealing with.
 
-#### Mutli-sig Wallets
+### Mutli-sig Wallets
 
 Again, since Bitcoin Core is not designed to work especially well with multi-sigs, *FN2* has to handle some more wallet logic to generate receive addresses. *FN2* makes sure to keep careful track of the last used index: every time you use your wallet or go to the wallet's tab *FN2* fetches each wallet's UTXOs and checks the UTXO addresses path to ensure the wallet's index property is not set lower then the highest UTXO index. This way, you may use the wallet outside of *FN2* and *FN2* will still never reuse a multi-sig address.
 
@@ -149,7 +149,7 @@ bitcoin-cli deriveaddresses ["wsh(multi(2,[77b83f20/84'/1'/0']tpubDDM9BgS5v4tKDL
 
 Notice the `[2520,2520]`. This is the range from which *FN2* tells the node to derive all of these addresses. Since we only want one address to receive to at a time, we specify the same index. Every time you generate an address in this way, *FN2* updates your wallet's index. It also always updates your wallet's index every time you create a transaction. Again, we do this to avoid any possibility of reusing the same multi-sig address.
 
-### Spending Funds
+## Spending Funds
 
 For both wallet types, *FN2* will prepare to spend funds using the `bitcoin-cli walletcreatefundedpsbt` command.
 
