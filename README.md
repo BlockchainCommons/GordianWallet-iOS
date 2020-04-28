@@ -51,6 +51,8 @@ Please refer to their telegram groups for simple instructions on linking to thes
 
 Please see our [features](Docs/Features.md) document for full information on how to use FullyNoded 2 once it's installed.
 
+Afterward, you may also want to read about [how it all works](How-it-works.md).
+
 ## The Philosophy Behind FullyNoded 2
 
 FullyNoded 2 is a professional mobile wallet built using the most up-to-date technologies for Bitcoin. It's focused on three goals that together demonstrate some of the best practices for modern mobile-wallet design:
