@@ -103,7 +103,18 @@ class PSBTSigner {
                                         if let masterKey = HDKey(mnemonic!.seedHex(""), chain) {
                                             if let xprv = masterKey.xpriv {
                                                 if let hdkey = HDKey(xprv) {
-                                                    xprvsToSignWith.append(hdkey)
+                                                    var alreadyAdded = false
+                                                    if xprvsToSignWith.count > 0 {
+                                                        for xprv in xprvsToSignWith {
+                                                            if xprv.description == hdkey.description {
+                                                                print("already added")
+                                                                alreadyAdded = true
+                                                            }
+                                                        }
+                                                    }
+                                                    if !alreadyAdded {
+                                                        xprvsToSignWith.append(hdkey)
+                                                    }
                                                 }
                                             }
                                         }
