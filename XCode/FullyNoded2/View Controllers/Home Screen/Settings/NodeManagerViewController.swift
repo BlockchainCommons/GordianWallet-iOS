@@ -45,7 +45,6 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
-    
     @objc func addNode() {
         
         let impact = UIImpactFeedbackGenerator()
@@ -388,6 +387,49 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                                 } else {
                                     
                                     displayAlert(viewController: vc, isError: true, message: errorDescription1 ?? "error updating")
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+        deactiveateWallets()
+        
+    }
+    
+    private func deactiveateWallets() {
+        
+        CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+            
+            if wallets != nil {
+                
+                for wallet in wallets! {
+                    
+                    if wallet["id"] != nil && wallet["isArchived"] != nil {
+                        let w = WalletStruct(dictionary: wallet)
+                        
+                        if !w.isArchived && w.isActive {
+                            
+                            CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { (success, errorDescription) in
+                                
+                                if success {
+                                    #if DEBUG
+                                    print("wallet deactived after switching nodes")
+                                    #endif
+                                    
+                                } else {
+                                    #if DEBUG
+                                    print("wallet deactivation failed after switching nodes!")
+                                    #endif
                                     
                                 }
                                 

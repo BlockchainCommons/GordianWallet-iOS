@@ -17,7 +17,6 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     let tap = UITapGestureRecognizer()
     var wallet:WalletStruct!
     var onDoneBlock: (([String:String]) -> Void)?
-    var onSeedDoneBlock: ((String) -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,86 +31,44 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
         tap.addTarget(self, action: #selector(handleTap))
         view.addGestureRecognizer(tap)
         
+        textField.text = "82be8e74"
+        textView.text = "tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR"
+        
     }
     
     private func createDescriptors() {
         if textView.text != "" && textField.text != "" {
+            
             if textView.text.hasPrefix("xpub") || textView.text.hasPrefix("tpub") && textField.text!.count == 8 {
+                
                 if let _ = HDKey(textView.text!) {
                     let dict = ["key":textView.text!, "fingerprint":textField.text!]
                     DispatchQueue.main.async { [unowned vc = self] in
                         vc.onDoneBlock!((dict))
                         vc.navigationController!.popViewController(animated: true)
+                        
                     }
+                } else {
+                    showAlert(vc: self, title: "Invalid xpub!", message: "That is not a valid xpub or tpub. FullyNoded 2 is powered by Bitcoin Core which is only compatible with xpub's and tpub's. You will need to use this tool to convert other types of extended keys to xpubs/tpubs: https://jlopp.github.io/xpub-converter/")
                 }
+                
             } else {
                 showAlert(vc: self, title: "Only xpubs allowed here", message: "This option is only for creating watch-only wallets with user supplied xpub's. If you would like to supply a seed tap the \"add BIP39 words\" button below.")
+                
             }
         }
     }
     
     @objc func handleTap() {
-        
         DispatchQueue.main.async { [unowned vc = self] in
-            
             vc.textView.resignFirstResponder()
             
         }
-        
     }
     
     @IBAction func nextAction(_ sender: Any) {
-        
         createDescriptors()
         
     }
-    
-    @IBAction func addWordsAction(_ sender: Any) {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.performSegue(withIdentifier: "segueToUserSuppliedWords", sender: vc)
-            
-        }
-        
-    }
-    
-    
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-        switch segue.identifier {
-            
-        case "segueToUserSuppliedWords":
-            
-            if let vc = segue.destination as? WordRecoveryViewController {
-                
-                vc.addingSeed = true
-                vc.onAddSeedDoneBlock = { mnemonic in
-                    
-                    DispatchQueue.main.async { [unowned thisVc = self] in
-                        thisVc.onSeedDoneBlock!(mnemonic)
-                        thisVc.navigationController!.popViewController(animated: true)
-                        
-                    }
-                    
-                }
-                
-            }
-            
-            
-        default:
-            
-            break
-            
-        }
-    
-        
-    }
-    
 
 }

@@ -1627,14 +1627,14 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="83A-pa-ZRF">
                         <leftBarButtonItems>
-                            <barButtonItem title="Item" image="qrcode.viewfinder" catalog="system" id="vMr-w1-gwX">
-                                <connections>
-                                    <action selector="goToWallets:" destination="XmP-lK-cua" id="IvZ-Hu-VN6"/>
-                                </connections>
-                            </barButtonItem>
                             <barButtonItem image="folder" catalog="system" id="oRT-tJ-Cub">
                                 <connections>
                                     <action selector="uploadFile:" destination="XmP-lK-cua" id="0h9-KN-Z4g"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Item" image="qrcode.viewfinder" catalog="system" id="vMr-w1-gwX">
+                                <connections>
+                                    <action selector="goToWallets:" destination="XmP-lK-cua" id="IvZ-Hu-VN6"/>
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
@@ -3274,7 +3274,164 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
             </objects>
             <point key="canvasLocation" x="-4436" y="1828.3358320839582"/>
         </scene>
-        <!--Recovery Phrase-->
+        <!--Node's Seed-->
+        <scene sceneID="2Mt-d4-dcm">
+            <objects>
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Ko8-An-eKd" customClass="WalletCreatedNodesSeedViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="PGI-D8-S3B">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rfs-Ll-yPj">
+                                <rect key="frame" x="16" y="98" width="343" height="218"/>
+                                <color key="backgroundColor" red="0.082797211470000007" green="0.096391990459999993" blue="0.1033046623" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="218" id="MTf-PH-6rK"/>
+                                </constraints>
+                                <string key="text">1. ant
+2. ant
+3. ant
+4. ant
+5. ant
+6. ant
+7. ant
+8. ant
+9. ant
+10. ant
+11. ant
+12. ant</string>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="mYj-2o-5v3">
+                                <rect key="frame" x="277" y="66" width="82" height="23.5"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="woV-Bg-Ihl">
+                                        <rect key="frame" x="0.0" y="0.0" width="21.5" height="23.5"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="doc.on.doc" catalog="system"/>
+                                        <connections>
+                                            <action selector="copyText:" destination="pka-dK-9G9" eventType="touchUpInside" id="T2H-vz-P3p"/>
+                                            <action selector="copyText:" destination="Ko8-An-eKd" eventType="touchUpInside" id="WH4-gS-fN1"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kM6-Ch-d6X">
+                                        <rect key="frame" x="31.5" y="0.0" width="19.5" height="23.5"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="qrcode" catalog="system"/>
+                                        <connections>
+                                            <action selector="exportQr:" destination="pka-dK-9G9" eventType="touchUpInside" id="ArF-W0-xVE"/>
+                                            <action selector="exportQr:" destination="Ko8-An-eKd" eventType="touchUpInside" id="f5J-8k-8BF"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dy5-od-5CQ">
+                                        <rect key="frame" x="61" y="0.0" width="21" height="23.5"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="arrowshape.turn.up.right" catalog="system"/>
+                                        <connections>
+                                            <action selector="shareAction:" destination="Ko8-An-eKd" eventType="touchUpInside" id="K9B-OP-DOK"/>
+                                            <action selector="shareAction:" destination="pka-dK-9G9" eventType="touchUpInside" id="Ssm-0q-yTe"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="QXJ-Mg-pxJ">
+                                <rect key="frame" x="73" y="320" width="116.5" height="14.5"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </stackView>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zeg-gD-nXd">
+                                <rect key="frame" x="133.5" y="569" width="108" height="30"/>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="108" id="AyX-sh-90j"/>
+                                    <constraint firstAttribute="height" constant="30" id="QNy-GC-AiR"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="I saved them"/>
+                                <connections>
+                                    <action selector="saveAction:" destination="Ko8-An-eKd" eventType="touchUpInside" id="Dkt-GR-osm"/>
+                                </connections>
+                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="W6A-iH-eYW">
+                                <rect key="frame" x="16" y="324" width="343" height="29"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g4b-5C-xuv">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="14.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Derivation:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iE7-Uu-GVh">
+                                                <rect key="frame" x="0.0" y="0.0" width="100" height="14.5"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="kBb-SL-uzk"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="m'/84'/0'/0'/0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JNU-QS-Gqg">
+                                                <rect key="frame" x="100" y="0.0" width="243" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fAV-qO-JSo">
+                                        <rect key="frame" x="0.0" y="14.5" width="343" height="14.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unix Birthdate:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gqB-5w-w4n">
+                                                <rect key="frame" x="0.0" y="0.0" width="100" height="14.5"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="L0p-jW-MRL"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="19384747" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4JC-cM-wby">
+                                                <rect key="frame" x="100" y="0.0" width="243" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="29" id="8TR-9Z-vmo"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Rfs-Ll-yPj" firstAttribute="top" secondItem="mYj-2o-5v3" secondAttribute="bottom" constant="8.5" id="6ep-8s-e9X"/>
+                            <constraint firstItem="YRZ-F0-nWT" firstAttribute="trailing" secondItem="mYj-2o-5v3" secondAttribute="trailing" constant="16" id="Dcj-hg-213"/>
+                            <constraint firstItem="YRZ-F0-nWT" firstAttribute="trailing" secondItem="Rfs-Ll-yPj" secondAttribute="trailing" constant="16" id="NPe-lb-GK8"/>
+                            <constraint firstItem="zeg-gD-nXd" firstAttribute="centerX" secondItem="PGI-D8-S3B" secondAttribute="centerX" id="Qbn-9m-cBF"/>
+                            <constraint firstItem="W6A-iH-eYW" firstAttribute="top" secondItem="Rfs-Ll-yPj" secondAttribute="bottom" constant="8" id="T2j-nZ-ZbW"/>
+                            <constraint firstItem="W6A-iH-eYW" firstAttribute="leading" secondItem="YRZ-F0-nWT" secondAttribute="leading" constant="16" id="bUI-m6-XME"/>
+                            <constraint firstItem="YRZ-F0-nWT" firstAttribute="trailing" secondItem="W6A-iH-eYW" secondAttribute="trailing" constant="16" id="ebY-8O-M9L"/>
+                            <constraint firstItem="YRZ-F0-nWT" firstAttribute="bottom" secondItem="zeg-gD-nXd" secondAttribute="bottom" constant="19" id="fms-uf-Z9n"/>
+                            <constraint firstItem="Rfs-Ll-yPj" firstAttribute="leading" secondItem="YRZ-F0-nWT" secondAttribute="leading" constant="16" id="jbc-tj-L6A"/>
+                            <constraint firstItem="mYj-2o-5v3" firstAttribute="top" secondItem="YRZ-F0-nWT" secondAttribute="top" constant="22" id="oa4-LE-GMV"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="YRZ-F0-nWT"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Node's Seed" id="Dbv-RN-LGs"/>
+                    <connections>
+                        <outlet property="birthdateLabel" destination="4JC-cM-wby" id="hA6-Gm-kLw"/>
+                        <outlet property="derivationLabel" destination="JNU-QS-Gqg" id="fmp-b7-IKK"/>
+                        <outlet property="savedOutlet" destination="zeg-gD-nXd" id="cJL-0u-a1F"/>
+                        <outlet property="textView" destination="Rfs-Ll-yPj" id="VUg-fh-SFK"/>
+                        <segue destination="pka-dK-9G9" kind="show" identifier="showOfflineSeed" id="rM8-oF-xn4"/>
+                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="nodeSeedQr" id="fP2-TS-xGx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dzt-Jt-AKw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5225" y="3279"/>
+        </scene>
+        <!--Offline Seed-->
         <scene sceneID="Mbu-zT-oG5">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="pka-dK-9G9" customClass="WalletCreatedSaveWordsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -3296,7 +3453,7 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ufy-g0-TWi">
-                                <rect key="frame" x="16" y="76" width="343" height="218"/>
+                                <rect key="frame" x="16" y="100" width="343" height="218"/>
                                 <color key="backgroundColor" red="0.0827972114717649" green="0.096391990463774654" blue="0.10330466230299495" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="218" id="fxO-Sf-qSu"/>
@@ -3318,7 +3475,7 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="1uX-03-JBB">
-                                <rect key="frame" x="277" y="44" width="82" height="23.5"/>
+                                <rect key="frame" x="277" y="68" width="82" height="23.5"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UHO-z4-l7D">
                                         <rect key="frame" x="0.0" y="0.0" width="21.5" height="23.5"/>
@@ -3347,11 +3504,11 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="5Gx-7n-W8Q">
-                                <rect key="frame" x="73" y="298" width="116.5" height="14.5"/>
+                                <rect key="frame" x="73" y="322" width="116.5" height="14.5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Ahv-TG-rIh">
-                                <rect key="frame" x="20" y="302" width="335" height="29"/>
+                                <rect key="frame" x="20" y="326" width="335" height="29"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f8Z-KN-x4m">
                                         <rect key="frame" x="0.0" y="0.0" width="335" height="14.5"/>
@@ -3403,7 +3560,7 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
                         <constraints>
                             <constraint firstItem="mpF-UN-6zB" firstAttribute="trailing" secondItem="Ahv-TG-rIh" secondAttribute="trailing" constant="20" id="5ig-2G-wp4"/>
                             <constraint firstItem="Ufy-g0-TWi" firstAttribute="top" secondItem="1uX-03-JBB" secondAttribute="bottom" constant="8.5" id="DGV-gh-4eV"/>
-                            <constraint firstItem="1uX-03-JBB" firstAttribute="top" secondItem="mpF-UN-6zB" secondAttribute="top" id="FGa-RH-H8n"/>
+                            <constraint firstItem="1uX-03-JBB" firstAttribute="top" secondItem="mpF-UN-6zB" secondAttribute="top" constant="24" id="FGa-RH-H8n"/>
                             <constraint firstItem="Ahv-TG-rIh" firstAttribute="leading" secondItem="mpF-UN-6zB" secondAttribute="leading" constant="20" id="IZ4-og-ArE"/>
                             <constraint firstItem="mpF-UN-6zB" firstAttribute="bottom" secondItem="XLw-9b-ixq" secondAttribute="bottom" constant="18" id="IdT-0f-BDg"/>
                             <constraint firstItem="mpF-UN-6zB" firstAttribute="trailing" secondItem="Ufy-g0-TWi" secondAttribute="trailing" constant="16" id="OXv-N6-0WT"/>
@@ -3414,7 +3571,7 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="mpF-UN-6zB"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Recovery Phrase" id="5t2-f1-VoZ"/>
+                    <navigationItem key="navigationItem" title="Offline Seed" id="5t2-f1-VoZ"/>
                     <connections>
                         <outlet property="birthdateLabel" destination="ZJo-Sa-r8x" id="pBn-bb-57A"/>
                         <outlet property="derivationLabel" destination="Ofy-n1-kBT" id="TRs-DI-PWN"/>
@@ -3459,7 +3616,7 @@ These words **WILL BE DELETED FOREVER** once you tap the "I saved them" button!
 
 At a minimum we recommend writing these words down on water proof paper with a permanent marker.</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
@@ -3479,6 +3636,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <outlet property="savedOutlet" destination="MpI-zv-VI9" id="7sK-7l-Yfj"/>
                         <outlet property="textView" destination="AFT-F7-8fK" id="Yve-1a-QOk"/>
                         <segue destination="pka-dK-9G9" kind="show" identifier="goSaveWords" id="c5y-jb-z8M"/>
+                        <segue destination="Ko8-An-eKd" kind="show" identifier="showNodesSeed" id="RSR-pt-bIE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XKh-yp-pOP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -4064,7 +4222,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gR4-VF-d5h" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3546.4000000000001" y="1810.344827586207"/>
+            <point key="canvasLocation" x="-3546" y="1828"/>
         </scene>
         <!--Displayer View Controller-->
         <scene sceneID="2P1-G0-q27">
@@ -4076,6 +4234,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="Mbb-B1-62W"/>
                     </view>
+                    <navigationItem key="navigationItem" id="kfz-v0-Ezr"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qiS-au-xqh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -5585,68 +5744,6 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                     <action selector="recoverAction:" destination="20O-ZD-xtI" eventType="touchUpInside" id="WQg-uv-Eer"/>
                                 </connections>
                             </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rvE-Zh-J5O">
-                                <rect key="frame" x="16" y="62" width="343" height="32"/>
-                                <segments>
-                                    <segment title="Bech32"/>
-                                    <segment title="Segwit Wrapped"/>
-                                    <segment title="Legacy"/>
-                                </segments>
-                                <color key="selectedSegmentTintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <action selector="derivationeAction:" destination="20O-ZD-xtI" eventType="valueChanged" id="MgG-DS-L9M"/>
-                                </connections>
-                            </segmentedControl>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="fh0-KZ-59e">
-                                <rect key="frame" x="16" y="138" width="343" height="32"/>
-                                <segments>
-                                    <segment title="Single-Sig"/>
-                                    <segment title="Multi-Sig"/>
-                                </segments>
-                                <color key="selectedSegmentTintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <action selector="signatureTypeAction:" destination="20O-ZD-xtI" eventType="valueChanged" id="nbW-Lh-hqG"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jER-yA-pk1">
-                                <rect key="frame" x="54" y="101" width="35" height="15"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP49" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yUQ-II-4AS">
-                                <rect key="frame" x="170.5" y="101" width="34" height="15"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP44" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZMB-OH-MZE">
-                                <rect key="frame" x="285" y="101" width="34" height="15"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dgi-5J-QXH">
-                                <rect key="frame" x="121" y="291" width="131" height="30"/>
-                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="131" id="JFo-hA-a2G"/>
-                                    <constraint firstAttribute="height" constant="30" id="tSd-V5-CZX"/>
-                                </constraints>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Create Wallet">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="createAction:" destination="20O-ZD-xtI" eventType="touchUpInside" id="a3M-uL-G6n"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="your device will hold the seed and sign psbt's, your node will be watch-only and build psbt's" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cRB-bS-5qT">
-                                <rect key="frame" x="16" y="177" width="343" height="29"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HOc-9d-jGc">
                                 <rect key="frame" x="16" y="570" width="73" height="30"/>
                                 <constraints>
@@ -5660,67 +5757,186 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                     <action selector="importAction:" destination="20O-ZD-xtI" eventType="touchUpInside" id="4P3-1c-Qbj"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose a wallet template:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dY0-2e-ZjJ">
+                                <rect key="frame" x="16" y="44" width="198" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="Gfq-3F-ewh"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qRS-Sq-Mau">
-                                <rect key="frame" x="163" y="515" width="51" height="31"/>
+                                <rect key="frame" x="163" y="546" width="51" height="31"/>
                                 <color key="onTintColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <action selector="switchCustomSeedAction:" destination="20O-ZD-xtI" eventType="valueChanged" id="l60-xI-Tgd"/>
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="custom seed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qpe-22-gpY">
-                                <rect key="frame" x="151.5" y="554" width="72.5" height="15"/>
+                                <rect key="frame" x="151.5" y="585" width="72.5" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OpB-Tc-o3m">
+                                <rect key="frame" x="16" y="88" width="309" height="38"/>
+                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="38" id="PgN-CH-712"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="  Hot    " image="flame" catalog="system">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="createHotWallet:" destination="20O-ZD-xtI" eventType="touchUpInside" id="VZi-um-b15"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ewt-c9-x2S">
+                                <rect key="frame" x="16" y="141" width="309" height="38"/>
+                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="38" id="pQA-6X-edf"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="  Warm" image="sun.min" catalog="system">
+                                    <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="createWarmWallet:" destination="20O-ZD-xtI" eventType="touchUpInside" id="Z10-oA-L66"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PPi-hJ-Vod">
+                                <rect key="frame" x="337" y="88" width="30" height="38"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="gZ7-Oo-IYk"/>
+                                    <constraint firstAttribute="height" constant="38" id="lCl-zc-1Wk"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="info.circle" catalog="system"/>
+                                <connections>
+                                    <action selector="hotInfo:" destination="20O-ZD-xtI" eventType="touchUpInside" id="1fS-5s-95v"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BhR-Vr-Wo2">
+                                <rect key="frame" x="337" y="142" width="30" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="fev-g9-zBK"/>
+                                    <constraint firstAttribute="height" constant="34" id="j2q-Qr-2kS"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="info.circle" catalog="system"/>
+                                <connections>
+                                    <action selector="warmInfo:" destination="20O-ZD-xtI" eventType="touchUpInside" id="OHO-jn-3MO"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y7A-9S-zfU">
+                                <rect key="frame" x="16" y="195" width="309" height="38"/>
+                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="38" id="Ybq-Pe-ciw"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title=" Cool   " image="cloud.sun" catalog="system">
+                                    <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="createCoolWallet:" destination="20O-ZD-xtI" eventType="touchUpInside" id="gmG-RC-93y"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M87-IP-UcZ">
+                                <rect key="frame" x="337" y="196" width="30" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="AsD-V5-R2A"/>
+                                    <constraint firstAttribute="height" constant="34" id="l2f-yw-d4n"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="info.circle" catalog="system"/>
+                                <connections>
+                                    <action selector="coolWalletInfo:" destination="20O-ZD-xtI" eventType="touchUpInside" id="4AU-YB-Xwg"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xeb-bL-FUE">
+                                <rect key="frame" x="16" y="250" width="309" height="38"/>
+                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="38" id="M3t-Ev-KQR"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="   Cold  " image="snow" catalog="system">
+                                    <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="createColdWallet:" destination="20O-ZD-xtI" eventType="touchUpInside" id="5Yj-ec-kt5"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AIf-WJ-xQ6">
+                                <rect key="frame" x="337" y="251" width="30" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="7aK-1E-VyX"/>
+                                    <constraint firstAttribute="width" constant="30" id="Bdw-9Q-kyK"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="info.circle" catalog="system"/>
+                                <connections>
+                                    <action selector="coldWalletInfo:" destination="20O-ZD-xtI" eventType="touchUpInside" id="iMx-gL-YdL"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="qRS-Sq-Mau" firstAttribute="centerX" secondItem="3Xx-cw-zsB" secondAttribute="centerX" id="0SL-0z-ZJF"/>
-                            <constraint firstItem="yUQ-II-4AS" firstAttribute="top" secondItem="rvE-Zh-J5O" secondAttribute="bottom" constant="8" id="63v-uw-mMk"/>
-                            <constraint firstItem="cRB-bS-5qT" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="8zo-Ju-8AK"/>
+                            <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="AIf-WJ-xQ6" secondAttribute="trailing" constant="8" id="21q-8t-b3i"/>
+                            <constraint firstItem="M87-IP-UcZ" firstAttribute="centerY" secondItem="y7A-9S-zfU" secondAttribute="centerY" constant="-1" id="6yK-Be-MGC"/>
                             <constraint firstItem="wnf-aC-02D" firstAttribute="bottom" secondItem="HOc-9d-jGc" secondAttribute="bottom" constant="18" id="9i3-J4-nGb"/>
-                            <constraint firstItem="fh0-KZ-59e" firstAttribute="top" secondItem="jER-yA-pk1" secondAttribute="bottom" constant="22" id="DRJ-I7-wBB"/>
-                            <constraint firstItem="Dgi-5J-QXH" firstAttribute="centerX" secondItem="3Xx-cw-zsB" secondAttribute="centerX" constant="-1" id="F1J-db-Pu9"/>
-                            <constraint firstItem="fh0-KZ-59e" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="KKl-tK-wBh"/>
+                            <constraint firstItem="dY0-2e-ZjJ" firstAttribute="top" secondItem="wnf-aC-02D" secondAttribute="top" id="Csn-yO-Jtg"/>
+                            <constraint firstItem="OpB-Tc-o3m" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="DXY-oy-mgW"/>
+                            <constraint firstItem="PPi-hJ-Vod" firstAttribute="centerY" secondItem="OpB-Tc-o3m" secondAttribute="centerY" id="Fh0-Qx-AQg"/>
+                            <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="BhR-Vr-Wo2" secondAttribute="trailing" constant="8" id="GVM-86-eiF"/>
+                            <constraint firstItem="PPi-hJ-Vod" firstAttribute="leading" secondItem="OpB-Tc-o3m" secondAttribute="trailing" constant="12" id="KdC-H9-zY8"/>
                             <constraint firstItem="qRS-Sq-Mau" firstAttribute="centerX" secondItem="3Xx-cw-zsB" secondAttribute="centerX" id="KsR-ad-4f7"/>
                             <constraint firstItem="qpe-22-gpY" firstAttribute="top" secondItem="qRS-Sq-Mau" secondAttribute="bottom" constant="8" id="LEQ-4G-tv4"/>
-                            <constraint firstItem="jER-yA-pk1" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="54" id="VHv-Sk-STA"/>
-                            <constraint firstItem="wnf-aC-02D" firstAttribute="bottom" secondItem="qpe-22-gpY" secondAttribute="bottom" constant="49" id="Vv6-ra-rPG"/>
-                            <constraint firstItem="cRB-bS-5qT" firstAttribute="top" secondItem="fh0-KZ-59e" secondAttribute="bottom" constant="8" id="YiP-ca-PMX"/>
-                            <constraint firstItem="rvE-Zh-J5O" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="bpt-rd-4EU"/>
-                            <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="rvE-Zh-J5O" secondAttribute="trailing" constant="16" id="f2t-fk-8fz"/>
-                            <constraint firstItem="yUQ-II-4AS" firstAttribute="centerX" secondItem="3Xx-cw-zsB" secondAttribute="centerX" id="fHh-rP-zHd"/>
-                            <constraint firstItem="Dgi-5J-QXH" firstAttribute="top" secondItem="cRB-bS-5qT" secondAttribute="bottom" constant="85" id="gJp-l2-Nwf"/>
-                            <constraint firstItem="ZMB-OH-MZE" firstAttribute="centerY" secondItem="jER-yA-pk1" secondAttribute="centerY" id="gja-Tg-Uwn"/>
-                            <constraint firstItem="yUQ-II-4AS" firstAttribute="centerY" secondItem="jER-yA-pk1" secondAttribute="centerY" id="goj-Gc-26H"/>
+                            <constraint firstItem="dY0-2e-ZjJ" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="La4-LQ-9vd"/>
+                            <constraint firstItem="Xeb-bL-FUE" firstAttribute="top" secondItem="y7A-9S-zfU" secondAttribute="bottom" constant="17" id="Mmi-h1-tNQ"/>
+                            <constraint firstItem="OpB-Tc-o3m" firstAttribute="top" secondItem="dY0-2e-ZjJ" secondAttribute="bottom" constant="8" id="UCc-pu-D22"/>
+                            <constraint firstItem="M87-IP-UcZ" firstAttribute="leading" secondItem="y7A-9S-zfU" secondAttribute="trailing" constant="12" id="WDk-m7-8Rk"/>
+                            <constraint firstItem="AIf-WJ-xQ6" firstAttribute="leading" secondItem="Xeb-bL-FUE" secondAttribute="trailing" constant="12" id="Xvg-wR-tSw"/>
+                            <constraint firstItem="Xeb-bL-FUE" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="aj8-OA-jdE"/>
+                            <constraint firstItem="y7A-9S-zfU" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="bZq-mf-15r"/>
+                            <constraint firstItem="BhR-Vr-Wo2" firstAttribute="leading" secondItem="Ewt-c9-x2S" secondAttribute="trailing" constant="12" id="cag-jz-T2F"/>
+                            <constraint firstItem="AIf-WJ-xQ6" firstAttribute="centerY" secondItem="Xeb-bL-FUE" secondAttribute="centerY" constant="-1" id="fQQ-Gu-Jrr"/>
+                            <constraint firstItem="BhR-Vr-Wo2" firstAttribute="centerY" secondItem="Ewt-c9-x2S" secondAttribute="centerY" constant="-1" id="hEP-H4-It2"/>
                             <constraint firstItem="HOc-9d-jGc" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="iFj-2w-t9u"/>
-                            <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="fh0-KZ-59e" secondAttribute="trailing" constant="16" id="j1f-74-nAs"/>
+                            <constraint firstItem="wnf-aC-02D" firstAttribute="bottom" secondItem="qpe-22-gpY" secondAttribute="bottom" constant="18" id="iTb-Kw-yqX"/>
                             <constraint firstItem="wnf-aC-02D" firstAttribute="bottom" secondItem="gC1-hS-rHa" secondAttribute="bottom" constant="18" id="kwf-VC-bVS"/>
-                            <constraint firstItem="rvE-Zh-J5O" firstAttribute="top" secondItem="wnf-aC-02D" secondAttribute="top" constant="18" id="n4V-de-Pga"/>
-                            <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="ZMB-OH-MZE" secondAttribute="trailing" constant="56" id="nB1-ax-hHa"/>
+                            <constraint firstItem="y7A-9S-zfU" firstAttribute="top" secondItem="Ewt-c9-x2S" secondAttribute="bottom" constant="16" id="our-Gy-R4q"/>
+                            <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="M87-IP-UcZ" secondAttribute="trailing" constant="8" id="p2Y-iV-eQr"/>
+                            <constraint firstItem="Ewt-c9-x2S" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="q6l-6Q-Cl9"/>
                             <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="gC1-hS-rHa" secondAttribute="trailing" constant="16" id="qsa-CV-08q"/>
-                            <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="cRB-bS-5qT" secondAttribute="trailing" constant="16" id="urT-Bh-tN2"/>
+                            <constraint firstItem="Ewt-c9-x2S" firstAttribute="top" secondItem="OpB-Tc-o3m" secondAttribute="bottom" constant="15" id="rZz-OB-FVv"/>
+                            <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="PPi-hJ-Vod" secondAttribute="trailing" constant="8" id="uJB-jb-s21"/>
                             <constraint firstItem="qpe-22-gpY" firstAttribute="centerX" secondItem="3Xx-cw-zsB" secondAttribute="centerX" id="vVE-LE-vp9"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wnf-aC-02D"/>
                     </view>
                     <navigationItem key="navigationItem" title="Create Wallet" id="3KJ-fc-Wns"/>
                     <connections>
-                        <outlet property="bip44Outlet" destination="ZMB-OH-MZE" id="S3A-Oz-QvM"/>
-                        <outlet property="bip49Outlet" destination="yUQ-II-4AS" id="3LC-9v-9ai"/>
-                        <outlet property="bip84Outlet" destination="jER-yA-pk1" id="Twp-Va-Oaa"/>
-                        <outlet property="buttonOutlet" destination="Dgi-5J-QXH" id="0lc-IG-VkB"/>
+                        <outlet property="coldInfoOutlet" destination="AIf-WJ-xQ6" id="Rt8-W9-xeg"/>
+                        <outlet property="coldWalletOutlet" destination="Xeb-bL-FUE" id="aN5-ph-MBD"/>
+                        <outlet property="coolInfoOutlet" destination="M87-IP-UcZ" id="ZUG-cT-P0Z"/>
+                        <outlet property="coolWalletOutlet" destination="y7A-9S-zfU" id="ZRc-z3-0KZ"/>
+                        <outlet property="customSeedLabel" destination="qpe-22-gpY" id="9ql-Dx-o9Y"/>
                         <outlet property="customSeedSwitch" destination="qRS-Sq-Mau" id="lZS-rL-cet"/>
-                        <outlet property="formatSwitch" destination="rvE-Zh-J5O" id="wLt-7i-aGg"/>
+                        <outlet property="hotWalletOutlet" destination="OpB-Tc-o3m" id="AYQ-Vi-hZf"/>
                         <outlet property="recoverWalletOutlet" destination="gC1-hS-rHa" id="Ovm-pY-q00"/>
-                        <outlet property="seedDescription" destination="cRB-bS-5qT" id="vTp-7b-tTz"/>
-                        <outlet property="templateSwitch" destination="fh0-KZ-59e" id="VNn-OD-2Ug"/>
+                        <outlet property="warmWalletOutlet" destination="Ewt-c9-x2S" id="LPK-tM-ha2"/>
                         <segue destination="Elr-wf-cyI" kind="show" identifier="goRecover" id="OhX-6s-iKf"/>
                         <segue destination="shH-Cs-byi" kind="show" identifier="walletCreated" id="hLe-Va-ofG"/>
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="goImport" id="dma-qk-Nos"/>
                         <segue destination="0g2-8e-jCH" kind="show" identifier="goConfirmImport" id="ugm-aB-vA9"/>
-                        <segue destination="QV1-we-EJN" kind="show" identifier="addSeedSegue" id="9Ib-wE-7tm"/>
+                        <segue destination="QV1-we-EJN" kind="show" identifier="addXpubSegue" id="9Ib-wE-7tm"/>
+                        <segue destination="kR7-Mg-fhs" kind="show" identifier="addCustomWords" id="fnD-hd-014"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FSZ-Yj-Svg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -5735,19 +5951,6 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rme-da-PT4">
-                                <rect key="frame" x="16" y="562" width="343" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="654-1G-JNa"/>
-                                    <constraint firstAttribute="width" constant="343" id="UNY-tP-uXa"/>
-                                </constraints>
-                                <state key="normal" title="add BIP39 words instead">
-                                    <color key="titleColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="addWordsAction:" destination="QV1-we-EJN" eventType="touchUpInside" id="reH-bc-XQw"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account Xpub:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L4I-Yd-soB">
                                 <rect key="frame" x="16" y="141" width="113.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -5804,9 +6007,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                             <constraint firstItem="L4I-Yd-soB" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="gfp-1k-xcf"/>
                             <constraint firstItem="L4I-Yd-soB" firstAttribute="top" secondItem="Uwi-UQ-UZ5" secondAttribute="bottom" constant="18" id="hl7-IM-3hq"/>
                             <constraint firstItem="BID-Jh-ufb" firstAttribute="trailing" secondItem="XOU-39-25F" secondAttribute="trailing" constant="16" id="hw5-nl-j0J"/>
-                            <constraint firstItem="BID-Jh-ufb" firstAttribute="bottom" secondItem="Rme-da-PT4" secondAttribute="bottom" constant="26" id="lNK-Rb-G1B"/>
                             <constraint firstItem="GWy-WU-bhE" firstAttribute="centerX" secondItem="ULy-HG-wOq" secondAttribute="centerX" id="lxk-EJ-Nfw"/>
-                            <constraint firstItem="Rme-da-PT4" firstAttribute="centerX" secondItem="ULy-HG-wOq" secondAttribute="centerX" id="wgO-1X-Pv8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="BID-Jh-ufb"/>
                     </view>
@@ -5815,7 +6016,6 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <outlet property="nextOutlet" destination="GWy-WU-bhE" id="Hdm-Ae-Pku"/>
                         <outlet property="textField" destination="Uwi-UQ-UZ5" id="ft0-bs-efQ"/>
                         <outlet property="textView" destination="XOU-39-25F" id="nV2-Zg-6vg"/>
-                        <segue destination="kR7-Mg-fhs" kind="show" identifier="segueToUserSuppliedWords" id="Kj4-mJ-Bc5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ePy-yX-YJl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -6101,6 +6301,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
         <image name="blockchain-commons-logo.png" width="500" height="148"/>
         <image name="checkmark.circle" catalog="system" width="64" height="60"/>
         <image name="checkmark.seal" catalog="system" width="64" height="60"/>
+        <image name="cloud.sun" catalog="system" width="64" height="44"/>
         <image name="desktopcomputer" catalog="system" width="64" height="50"/>
         <image name="doc.on.doc" catalog="system" width="58" height="64"/>
         <image name="dot.radiowaves.left.and.right" catalog="system" width="64" height="44"/>
@@ -6131,6 +6332,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
         <image name="qrcode" catalog="system" width="64" height="56"/>
         <image name="qrcode.viewfinder" catalog="system" width="64" height="56"/>
         <image name="rectangle.expand.vertical" catalog="system" width="64" height="60"/>
+        <image name="snow" catalog="system" width="60" height="64"/>
         <image name="square.stack.3d.down.right" catalog="system" width="62" height="64"/>
         <image name="sun.min" catalog="system" width="64" height="60"/>
         <image name="timer" catalog="system" width="64" height="60"/>
@@ -6141,9 +6343,10 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
     <inferredMetricsTieBreakers>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="pun-AW-DGw"/>
-        <segue reference="Kzq-6W-yKR"/>
-        <segue reference="Kj4-mJ-Bc5"/>
+        <segue reference="HTQ-38-5NU"/>
+        <segue reference="fnD-hd-014"/>
         <segue reference="ugm-aB-vA9"/>
+        <segue reference="rM8-oF-xn4"/>
         <segue reference="Xe1-Me-c8c"/>
         <segue reference="LzA-tD-DJD"/>
     </inferredMetricsTieBreakers>

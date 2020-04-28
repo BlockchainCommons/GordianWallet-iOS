@@ -13,6 +13,7 @@
 		D0139F5724208A7A00EF956E /* ConfirmRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */; };
 		D024A7C52454755B00115615 /* LibWally.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D024A7C42454755B00115615 /* LibWally.framework */; };
 		D024A7C9245475CA00115615 /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D024A7C8245475CA00115615 /* Tor.framework */; };
+		D042EFA22457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */; };
 		D047DDF72423464A004BC26D /* SweepToViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF62423464A004BC26D /* SweepToViewController.swift */; };
 		D047DDF9242B2F3F004BC26D /* IntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */; };
 		D047DDFB242B324A004BC26D /* WhatIsFN2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDFA242B324A004BC26D /* WhatIsFN2ViewController.swift */; };
@@ -169,6 +170,7 @@
 		D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmRecoveryViewController.swift; sourceTree = "<group>"; };
 		D024A7C42454755B00115615 /* LibWally.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LibWally.framework; path = Carthage/Build/iOS/LibWally.framework; sourceTree = "<group>"; };
 		D024A7C8245475CA00115615 /* Tor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Tor.framework; sourceTree = "<group>"; };
+		D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedNodesSeedViewController.swift; sourceTree = "<group>"; };
 		D047DDF62423464A004BC26D /* SweepToViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SweepToViewController.swift; sourceTree = "<group>"; };
 		D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionViewController.swift; sourceTree = "<group>"; };
 		D047DDFA242B324A004BC26D /* WhatIsFN2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatIsFN2ViewController.swift; sourceTree = "<group>"; };
@@ -764,6 +766,7 @@
 				D047DE0A242C651F004BC26D /* WalletCreatedWordsViewController.swift */,
 				D0109469242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift */,
 				D0502FEF24500DE000213870 /* AddExtendedKeyViewController.swift */,
+				D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */,
 			);
 			path = "Wallet Creation";
 			sourceTree = "<group>";
@@ -987,6 +990,7 @@
 				D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */,
 				D09D732723F0F3C000847DC8 /* ConfirmViewController.swift in Sources */,
 				D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */,
+				D042EFA22457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift in Sources */,
 				D09D732823F0F3C000847DC8 /* VerifyViewController.swift in Sources */,
 				D09D732F23F0F3C000847DC8 /* ScannerViewController.swift in Sources */,
 				D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */,

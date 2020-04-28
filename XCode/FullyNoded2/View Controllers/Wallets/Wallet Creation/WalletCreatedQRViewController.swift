@@ -13,6 +13,7 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
     @IBOutlet var qrView: UIImageView!
     @IBOutlet var nextOutlet: UIButton!
     
+    var nodesWords = ""
     var wallet = [String:Any]()
     var recoveryPhrase = ""
     var recoveryQr = ""
@@ -92,6 +93,7 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
             
             if let vc = segue.destination as? WalletCreatedWordsViewController {
                 
+                vc.nodesWords = nodesWords
                 vc.recoverPhrase = self.recoveryPhrase
                 vc.wallet = wallet
                 

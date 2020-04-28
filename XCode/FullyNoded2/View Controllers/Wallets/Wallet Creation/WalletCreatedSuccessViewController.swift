@@ -17,6 +17,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
     let tap = UITapGestureRecognizer()
     var wallet = [String:Any]()
     var recoveryPhrase = ""
+    var nodesWords = ""
     var recoveryQr = ""
     var w:WalletStruct!
     
@@ -163,6 +164,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
             
             if let vc = segue.destination as? WalletCreatedQRViewController {
                 
+                vc.nodesWords = self.nodesWords
                 vc.recoveryPhrase = self.recoveryPhrase
                 vc.recoveryQr = self.recoveryQr.replacingOccurrences(of: "\"label\":\"\"", with: "\"label\":\"\(textField.text!)\"")
                 vc.wallet = self.wallet

@@ -23,15 +23,14 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     var node:NodeStruct!
     var walletToImport = [String:Any]()
     var newWallet = [String:Any]()
-    var isBIP84 = Bool()
-    var isBIP49 = Bool()
-    var isBIP44 = Bool()
     var isMultiSig = Bool()
     var isSingleSig = Bool()
+    var showAdvanced = Bool()
     var publickeys = [String]()
     var fingerprints = [String]()
-    var localSeed = Data()
+    var localSeed:Data?
     var nodesSeed = ""
+    var nodesWords = ""
     var nodesHdSeed = ""
     var descriptor = ""
     var recoveryPubkey = ""
@@ -40,191 +39,171 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     var multiSigDoneBlock : (((success: Bool, recoveryPhrase: String, descriptor: String)) -> Void)?
     let creatingView = ConnectingView()
     var recoverDoneBlock : ((Bool) -> Void)?
+    let advancedButton = UIButton()
     
-    @IBOutlet var formatSwitch: UISegmentedControl!
-    @IBOutlet var templateSwitch: UISegmentedControl!
-    @IBOutlet var buttonOutlet: UIButton!
-    @IBOutlet var seedDescription: UILabel!
     @IBOutlet var recoverWalletOutlet: UIButton!
-    @IBOutlet weak var bip84Outlet: UILabel!
-    @IBOutlet weak var bip49Outlet: UILabel!
-    @IBOutlet weak var bip44Outlet: UILabel!
     @IBOutlet weak var customSeedSwitch: UISwitch!
-    
+    @IBOutlet weak var hotWalletOutlet: UIButton!
+    @IBOutlet weak var warmWalletOutlet: UIButton!
+    @IBOutlet weak var coolWalletOutlet: UIButton!
+    @IBOutlet weak var coldWalletOutlet: UIButton!
+    @IBOutlet weak var customSeedLabel: UILabel!
+    @IBOutlet weak var coolInfoOutlet: UIButton!
+    @IBOutlet weak var coldInfoOutlet: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        showAdvanced = false
         navigationController?.delegate = self
-        buttonOutlet.clipsToBounds = true
-        buttonOutlet.layer.cornerRadius = 10
         recoverWalletOutlet.layer.cornerRadius = 10
-        formatSwitch.selectedSegmentIndex = 0
-        templateSwitch.selectedSegmentIndex = 0
+        hotWalletOutlet.layer.cornerRadius = 8
+        warmWalletOutlet.layer.cornerRadius = 8
+        coolWalletOutlet.layer.cornerRadius = 8
+        coldWalletOutlet.layer.cornerRadius = 8
         customSeedSwitch.isOn = false
-        isBIP84 = true
-        isMultiSig = false
-        isSingleSig = true
-        seedDescription.text = "Your device will hold one seed and your node will hold 5,000 public keys derived from the same seed.\n\nYour node will build unsigned PSBT's acting as a watch-only wallet and pass them to your device for offline signing."
-        seedDescription.sizeToFit()
+        customSeedSwitch.alpha = 0
+        customSeedLabel.alpha = 0
+        coolInfoOutlet.alpha = 0
+        coldInfoOutlet.alpha = 0
+        coolWalletOutlet.alpha = 0
+        coldWalletOutlet.alpha = 0
+        showAdvancedOptions()
         
     }
     
-    @IBAction func switchCustomSeedAction(_ sender: Any) {
+    private func showAdvancedOptions() {
         
-        if customSeedSwitch.isOn {
+        advancedButton.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+        advancedButton.addTarget(self, action: #selector(show(_:)), for: .touchUpInside)
+        advancedButton.tintColor = .white
+        
+        if showAdvanced {
             
-            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: "Please proceed with caution, this feature is for advanced users only who completely understand the implications of what they are doing! This feature allows you to add your own BIP39 mnemonic, or xpub to use as the devices seed for the wallet you are about to create. If you add an xpub it will need to be the account xpub and you will need to supply a master key fingerprint, adding an xpub means the device will not be able to sign transactions and will be watch-only, you will have the option of adding a signer later if you would like to. If any of this does not make sense to you please disable this feature!", preferredStyle: .actionSheet)
+            let hideImage = UIImage(systemName: "rectangle.compress.vertical")
+            advancedButton.setImage(hideImage, for: .normal)
             
-            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
-            alert.popoverPresentationController?.sourceView = self.view
-            self.present(alert, animated: true, completion: nil)
+        } else {
+            
+            let expandImage = UIImage(systemName: "rectangle.expand.vertical")
+            advancedButton.setImage(expandImage, for: .normal)
             
         }
+       
+       let rightButton = UIBarButtonItem(customView: advancedButton)
+       
+       self.navigationItem.setRightBarButtonItems([rightButton], animated: true)
         
     }
     
-    
-    @IBAction func importAction(_ sender: Any) {
+    @objc func show(_ sender: Any) {
         
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.performSegue(withIdentifier: "goImport", sender: vc)
-            
-        }
-        
-    }
-    
-    
-    @IBAction func recoverAction(_ sender: Any) {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.performSegue(withIdentifier: "goRecover", sender: vc)
-            
-        }
-        
-    }
-    
-    @IBAction func close(_ sender: Any) {
-        
-        DispatchQueue.main.async {
-            
-            self.dismiss(animated: true, completion: nil)
-            
-        }
-        
-    }
-    
-    @IBAction func derivationeAction(_ sender: Any) {
-        
-        let impact = UIImpactFeedbackGenerator()
-        
-        DispatchQueue.main.async {
-            
-            impact.impactOccurred()
-            
-        }
-        
-        let switcher = sender as! UISegmentedControl
-        
-        switch switcher.selectedSegmentIndex {
-            
-        case 0:
-            
-            isBIP84 = true
-            isBIP44 = false
-            isBIP49 = false
-            
-        case 1:
-            
-            isBIP49 = true
-            isBIP44 = false
-            isBIP84 = false
-            
-        case 2:
-            
-            isBIP44 = true
-            isBIP84 = false
-            isBIP49 = false
-            
-        default:
-            
-            break
-            
-        }
-        
-    }
-    
-    @IBAction func signatureTypeAction(_ sender: Any) {
-        
-        let switcher = sender as! UISegmentedControl
-        
-        switch switcher.selectedSegmentIndex {
-            
-        case 0:
-            
-            isSingleSig = true
-            isMultiSig = false
-            
-            DispatchQueue.main.async { [unowned vc = self] in
-                
-                vc.formatSwitch.setTitle("Bech32", forSegmentAt: 0)
-                vc.formatSwitch.setTitle("Segwit Wrapped", forSegmentAt: 1)
-                vc.formatSwitch.setTitle("Legacy", forSegmentAt: 2)
-                vc.formatSwitch.setEnabled(true, forSegmentAt: 1)
-                vc.formatSwitch.setEnabled(true, forSegmentAt: 2)
-                vc.bip84Outlet.text = "BIP84"
-                vc.bip44Outlet.alpha = 1
-                vc.bip49Outlet.alpha = 1
-                
-                vc.seedDescription.text = "Your device will hold one seed and your node will hold 5,000 public keys derived from the same seed.\n\nYour node will build unsigned PSBT's acting as a watch-only wallet and pass them to your device for offline signing."
-                
+        if showAdvanced {
+            customSeedSwitch.isOn = false
+            UIView.animate(withDuration: 0.2) { [unowned vc = self] in
+                vc.customSeedSwitch.alpha = 0
+                vc.customSeedLabel.alpha = 0
+                vc.coolWalletOutlet.alpha = 0
+                vc.coldWalletOutlet.alpha = 0
+                vc.coolInfoOutlet.alpha = 0
+                vc.coldInfoOutlet.alpha = 0
             }
             
-        case 1:
+        } else {
+            UIView.animate(withDuration: 0.2) { [unowned vc = self] in
+                vc.customSeedSwitch.alpha = 1
+                vc.customSeedLabel.alpha = 1
+                vc.coolWalletOutlet.alpha = 1
+                vc.coldWalletOutlet.alpha = 1
+                vc.coolInfoOutlet.alpha = 1
+                vc.coldInfoOutlet.alpha = 1
+            }
             
-            isMultiSig = true
-            isSingleSig = false
-            
-            DispatchQueue.main.async { [unowned vc = self] in
-                
-                vc.formatSwitch.setTitle("Bech32", forSegmentAt: 0)
-                vc.formatSwitch.setTitle("", forSegmentAt: 1)
-                vc.formatSwitch.setTitle("", forSegmentAt: 2)
-                vc.formatSwitch.setEnabled(true, forSegmentAt: 0)
-                vc.formatSwitch.setEnabled(false, forSegmentAt: 1)
-                vc.formatSwitch.setEnabled(false, forSegmentAt: 2)
-                vc.bip84Outlet.text = "WIP48"
-                vc.bip44Outlet.alpha = 0
-                vc.bip49Outlet.alpha = 0
-                
-                vc.seedDescription.text = "Your device will hold one seed, your node will hold 5,000 private keys derived from a second seed, and you will securely store one seed offline for recovery purposes.\n\nYour node will create PSBT's and sign them with one key, passing the partially signed PSBT's to your device which will sign the PSBT's with the second key."
-                
+        }
+        
+        showAdvanced = !showAdvanced
+        showAdvancedOptions()
+        
+    }
+    
+    @IBAction func hotInfo(_ sender: Any) {
+        let alert = UIAlertController(title: "Hot self sovereign single signature wallet", message: " A master seed is held by your device and your node holds a watch-only key set. This is a live wallet meaning you can spend from it at anytime from your device.", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
+        alert.popoverPresentationController?.sourceView = self.view
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
+    @IBAction func warmInfo(_ sender: Any) {
+        let alert = UIAlertController(title: "Warm self sovereign 2 of 3 multi signature wallet", message: "One master seed is held by your device, the other two are held offline by you. We derive and import a key set into your node from one of your offline master seeds so that your node can be the second signer for this wallet. This adds a layer of security and redundancy in case you lost your node, device or offline seed storage. This a warm wallet as neither your device or your node can spend independently. In order to spend from this wallet your device will need to be connected to your node!", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
+        alert.popoverPresentationController?.sourceView = self.view
+        self.present(alert, animated: true, completion: nil)
                     
-                let alert = UIAlertController(title: "We now support \"WIP48\" which is a Wallet Improvement Proposal for HD multi-sig wallets", message: "Other popular wallets such as Electrum, Coldcard, CoPay, and Specter also support this cross platform HD multisig wallet derivation making using multiple devices/apps/hardware wallets with multisig and PSBT easier then ever. The path that will be used for mainnet is m/48'/0'/0'/2'/0 and testnet m/48'/1'/0'/2'/0", preferredStyle: .actionSheet)
-                
-                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
-                alert.popoverPresentationController?.sourceView = vc.view
-                vc.present(alert, animated: true, completion: nil)
-                
-            }
-            
-        default:
-            
-            break
-            
-        }
+    }
+    
+    @IBAction func coolWalletInfo(_ sender: Any) {
+        let alert = UIAlertController(title: "Cool self sovereign 2 of 3 multi signature wallet", message: "You will need to supply an xpub which will represent the devices master key. We will create two offline master seeds for you to backup, they will NOT be saved by the device. One of these master seeds will be used to derive a key set and import it into your node so that your node can be a single signer. Cool wallets are not capable of spending on their own! Cool wallets will build unsigned transactions and allow you to export them as PSBT's to other devices for signing. This is an ideal wallet type for collaborative multisig. You will always have the option to convert it to a warm wallet by adding a master seed in the form of BIP39 words to it.", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
+        alert.popoverPresentationController?.sourceView = self.view
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
+    @IBAction func coldWalletInfo(_ sender: Any) {
+        let alert = UIAlertController(title: "Cold self sovereign single signature wallet", message: "Cold wallets are single signature wallets where you will supply a master key xpub which is held by the device. The wallet will be purely watch-only and you will not be able to spend from it with this device. It will create unsigned transactions that can be exported to offline signers as PSBT's. You will always have the option to make it hot by adding a master seed to it in the form of BIP39 words.", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
+        alert.popoverPresentationController?.sourceView = self.view
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
+    @IBAction func createHotWallet(_ sender: Any) {
+        isSingleSig = true
+        isMultiSig = false
+        createNow()
                 
     }
     
-    @IBAction func createAction(_ sender: Any) {
+    @IBAction func createWarmWallet(_ sender: Any) {
+        isMultiSig = true
+        isSingleSig = false
+        createNow()
+        
+    }
+    
+    //addCustomWords
+    @IBAction func createCoolWallet(_ sender: Any) {
+        customSeedSwitch.isOn = false
+        isSingleSig = false
+        isMultiSig = true
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            vc.performSegue(withIdentifier: "addXpubSegue", sender: vc)
+            
+        }
+        
+    }
+    
+    @IBAction func createColdWallet(_ sender: Any) {
+        customSeedSwitch.isOn = false
+        isSingleSig = true
+        isMultiSig = false
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            vc.performSegue(withIdentifier: "addXpubSegue", sender: vc)
+            
+        }
+    }
+    
+    
+    private func createNow() {
         
         if customSeedSwitch.isOn {
             
             DispatchQueue.main.async { [unowned vc = self] in
                 
-                vc.performSegue(withIdentifier: "addSeedSegue", sender: vc)
+                vc.performSegue(withIdentifier: "addCustomWords", sender: vc)
                 
             }
             
@@ -251,7 +230,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             vc.newWallet["lastBalance"] = 0.0
                             vc.newWallet["isArchived"] = false
                             vc.newWallet["nodeId"] = vc.node.id
-                                            
+                            
                             if vc.isMultiSig {
                                 
                                 vc.newWallet["type"] = "MULTI"
@@ -276,41 +255,13 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 
                                 if vc.node.network == "testnet" {
                                     
-                                    if vc.isBIP84 {
-                                        
-                                        vc.newWallet["derivation"] = "m/84'/1'/0'"
-                                        vc.derivation = "BIP84 m/84'/1'/0'"
-                                        
-                                    } else if vc.isBIP49 {
-                                        
-                                        vc.newWallet["derivation"] = "m/49'/1'/0'"
-                                        vc.derivation = "BIP49 m/49'/1'/0'"
-                                        
-                                    } else if vc.isBIP44 {
-                                        
-                                        vc.newWallet["derivation"] = "m/44'/1'/0'"
-                                        vc.derivation = "BIP44 m/44'/1'/0'"
-                                        
-                                    }
+                                    vc.newWallet["derivation"] = "m/84'/1'/0'"
+                                    vc.derivation = "BIP84 m/84'/1'/0'"
                                     
                                 } else if vc.node.network == "mainnet" {
                                     
-                                    if vc.isBIP84 {
-                                        
-                                        vc.newWallet["derivation"] = "m/84'/0'/0'"
-                                        vc.derivation = "BIP84 m/84'/0'/0'"
-                                        
-                                    } else if vc.isBIP49 {
-                                        
-                                        vc.newWallet["derivation"] = "m/49'/0'/0'"
-                                        vc.derivation = "BIP49 m/44'/0'/0'"
-                                        
-                                    } else if vc.isBIP44 {
-                                        
-                                        vc.newWallet["derivation"] = "m/44'/0'/0'"
-                                        vc.derivation = "BIP44 m/44'/0'/0'"
-                                        
-                                    }
+                                    vc.newWallet["derivation"] = "m/84'/0'/0'"
+                                    vc.derivation = "BIP84 m/84'/0'/0'"
                                     
                                 }
                                 
@@ -335,6 +286,40 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 }
                 
             }
+            
+        }
+        
+    }
+    
+    @IBAction func switchCustomSeedAction(_ sender: Any) {
+        
+        if customSeedSwitch.isOn {
+            
+            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: "Please proceed with caution, this feature is for advanced users only who completely understand the implications of what they are doing! This feature allows you to add your own BIP39 mnemonic, or xpub to use as the devices seed for the wallet you are about to create. If you add an xpub it will need to be the account xpub and you will need to supply a master key fingerprint, adding an xpub means the device will not be able to sign transactions and will be watch-only, you will have the option of adding a signer later if you would like to. If any of this does not make sense to you please disable this feature!", preferredStyle: .actionSheet)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = self.view
+            self.present(alert, animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    @IBAction func importAction(_ sender: Any) {
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            vc.performSegue(withIdentifier: "goImport", sender: vc)
+            
+        }
+        
+    }
+    
+    @IBAction func recoverAction(_ sender: Any) {
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            vc.performSegue(withIdentifier: "goRecover", sender: vc)
             
         }
         
@@ -449,18 +434,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                         
                                     case "m/84'/0'/0'":
                                         param = "\"wpkh([\(fingerprint)/84'/0'/0']\(xpub)/0/*)\""
-                                        
-                                    case "m/44'/1'/0'":
-                                        param = "\"pkh([\(fingerprint)/44'/1'/0']\(xpub)/0/*)\""
-                                         
-                                    case "m/44'/0'/0'":
-                                        param = "\"pkh([\(fingerprint)/44'/0'/0']\(xpub)/0/*)\""
-                                        
-                                    case "m/49'/1'/0'":
-                                        param = "\"sh(wpkh([\(fingerprint)/49'/1'/0']\(xpub)/0/*))\""
-                                        
-                                    case "m/49'/0'/0'":
-                                        param = "\"sh(wpkh([\(fingerprint)/49'/0'/0']\(xpub)/0/*))\""
                                         
                                     default:
                                         
@@ -693,10 +666,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         }
                         
                         if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
-                            
-                            let offlineMasterXpub = masterKey.xpub
-                            print("offlineMasterXpub = \(offlineMasterXpub)")
-                            
+                                                        
                             let recoveryFingerPrint = masterKey.fingerprint.hexString
                             vc.fingerprints.append(recoveryFingerPrint)
                             
@@ -710,7 +680,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                     
                                     /// User supplied a custom xpub to create the multisig quorum with
                                     if vc.userSuppliedMultiSigXpub != "" {
-                                        print("userSuppliedMultiSigXpub = \(vc.userSuppliedMultiSigXpub)")
+                                        
                                         vc.fingerprints.append(vc.userSuppliedMultiSigFingerprint)
                                         vc.publickeys.append(vc.userSuppliedMultiSigXpub)
                                         vc.nodesSeed = vc.userSuppliedMultiSigXpub
@@ -866,7 +836,9 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             }
             
         } else {
+            
             print("creating with user supplied seed")
+            
             /// Use the user supplied mnemonic for the local seed.
             let unencryptedSeed = userSuppliedWords!.dataUsingUTF8StringEncoding
             Encryption.encryptData(dataToEncrypt: unencryptedSeed) { [unowned vc = self] (encryptedSeed, error) in
@@ -875,73 +847,68 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     
                     vc.localSeed = encryptedSeed!
                     MnemonicCreator.convert(words: vc.userSuppliedWords!) { [unowned vc = self] (mnemonic, error) in
+                        
+                        if !error {
                             
-                            if !error {
+                            vc.entropy = mnemonic!.entropy.description
+                            let derivation = vc.newWallet["derivation"] as! String
+                            var network:Network!
+                            if vc.node.network == "testnet" {
+                                network = .testnet
+                            } else {
+                                network = .mainnet
+                            }
+                            
+                            if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
                                 
-                                vc.entropy = mnemonic!.entropy.description
-                                let derivation = vc.newWallet["derivation"] as! String
-                                var network:Network!
-                                if vc.node.network == "testnet" {
-                                    network = .testnet
-                                } else {
-                                    network = .mainnet
-                                }
+                                let localFingerPrint = masterKey.fingerprint.hexString
+                                vc.fingerprints.append(localFingerPrint)
                                 
-                                if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
+                                if let path = BIP32Path(derivation) {
                                     
-                                    let devicesMasterXpub = masterKey.xpub
-                                    print("devicesMasterXpub = \(devicesMasterXpub)")
-                                    
-                                    let localFingerPrint = masterKey.fingerprint.hexString
-                                    vc.fingerprints.append(localFingerPrint)
-                                    
-                                    if let path = BIP32Path(derivation) {
+                                    do {
                                         
-                                        do {
+                                        let account = try masterKey.derive(path)
+                                        vc.publickeys.append(account.xpub)
+                                        
+                                        if account.xpriv != nil {
                                             
-                                            let account = try masterKey.derive(path)
-                                            vc.publickeys.append(account.xpub)
                                             
-                                            if account.xpriv != nil {
-                                                
-                                                
-                                                vc.localXprv = account.xpriv!
-                                                vc.createNodesKey()
-                                                
-                                            } else {
-                                                
-                                                vc.creatingView.removeConnectingView()
-                                                displayAlert(viewController: vc, isError: true, message: "failed deriving local xpriv")
-                                                
-                                            }
+                                            vc.localXprv = account.xpriv!
+                                            vc.createNodesKey()
                                             
-                                        } catch {
+                                        } else {
                                             
                                             vc.creatingView.removeConnectingView()
-                                            displayAlert(viewController: vc, isError: true, message: "failed deriving xpub")
+                                            displayAlert(viewController: vc, isError: true, message: "failed deriving local xpriv")
                                             
                                         }
                                         
-                                    } else {
+                                    } catch {
                                         
                                         vc.creatingView.removeConnectingView()
-                                        displayAlert(viewController: vc, isError: true, message: "failed initiating bip32 path")
+                                        displayAlert(viewController: vc, isError: true, message: "failed deriving xpub")
                                         
                                     }
                                     
                                 } else {
                                     
                                     vc.creatingView.removeConnectingView()
-                                    displayAlert(viewController: vc, isError: true, message: "failed creating masterkey")
+                                    displayAlert(viewController: vc, isError: true, message: "failed initiating bip32 path")
                                     
                                 }
                                 
                             } else {
                                 
                                 vc.creatingView.removeConnectingView()
-                                displayAlert(viewController: vc, isError: true, message: "error converting your words to BIP39 mnmemonic")
+                                displayAlert(viewController: vc, isError: true, message: "failed creating masterkey")
                                 
                             }
+                            
+                        } else {
+                            
+                            vc.creatingView.removeConnectingView()
+                            displayAlert(viewController: vc, isError: true, message: "error converting your words to BIP39 mnmemonic")
                             
                         }
                         
@@ -951,6 +918,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
             }
             
+        }
         
     }
     
@@ -960,8 +928,10 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         updateStatus(text: "creating node's seed")
         
         KeychainCreator.createKeyChain { [unowned vc = self] (words, error) in
-            
-            if !error {
+                        
+            if !error && words != nil {
+                
+                vc.nodesWords = words!
                 
                 MnemonicCreator.convert(words: words!) { (mnemonic, error) in
                     
@@ -977,9 +947,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         }
                         
                         if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
-                            
-                            let nodeMasterXpub = masterKey.xpub
-                            print("nodeMasterXpub = \(nodeMasterXpub)")
                             
                             let nodesFingerPrint = masterKey.fingerprint.hexString
                             vc.fingerprints.append(nodesFingerPrint)
@@ -1059,9 +1026,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         var changeDescriptor = ""
         
         switch derivation {
-            
-            //fe23bc9a/48h/1h/0h/2h
-            
+                        
         case "m/48'/1'/0'/2'":
                                             
             descriptor = "wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/48'/1'/0'/2']\(recoveryKey)/0/*, [\(localFingerprint)/48'/1'/0'/2']\(localKey)/0/*, [\(nodeFingerprint)/48'/1'/0'/2']\(nodeKey)/0/*))"
@@ -1073,30 +1038,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             descriptor = "wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/48'/0'/0'/2']\(recoveryKey)/0/*, [\(localFingerprint)/48'/0'/0'/2']\(localKey)/0/*, [\(nodeFingerprint)/48'/0'/0'/2']\(nodeKey)/0/*))"
             
             changeDescriptor = "wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/48'/0'/0'/2']\(recoveryKey)/1/*, [\(localFingerprint)/48'/0'/0'/2']\(localKey)/1/*, [\(nodeFingerprint)/48'/0'/0'/2']\(nodeKey)/1/*))"
-
-//        case "m/44'/1'/0'":
-//
-//            descriptor = "sh(sortedmulti(\(signatures),[\(recoveryFingerprint)/44'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/44'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/44'/1'/0']\(nodeKey)/0/*))"
-//
-//            changeDescriptor = "sh(sortedmulti(\(signatures),[\(recoveryFingerprint)/44'/1'/0']\(recoveryKey)/1/*, [\(localFingerprint)/44'/1'/0']\(localKey)/1/*, [\(nodeFingerprint)/44'/1'/0']\(nodeKey)/1/*))"
-//
-//        case "m/44'/0'/0'":
-//
-//            descriptor = "sh(sortedmulti(\(signatures),[\(recoveryFingerprint)/44'/0'/0']\(recoveryKey)/0/*, [\(localFingerprint)/44'/0'/0']\(localKey)/0/*, [\(nodeFingerprint)/44'/0'/0']\(nodeKey)/0/*))"
-//
-//            changeDescriptor = "sh(sortedmulti(\(signatures),[\(recoveryFingerprint)/44'/0'/0']\(recoveryKey)/1/*, [\(localFingerprint)/44'/0'/0']\(localKey)/1/*, [\(nodeFingerprint)/44'/0'/0']\(nodeKey)/1/*))"
-//
-//        case "m/49'/1'/0'":
-//
-//            descriptor = "sh(wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/49'/1'/0']\(recoveryKey)/0/*, [\(localFingerprint)/49'/1'/0']\(localKey)/0/*, [\(nodeFingerprint)/49'/1'/0']\(nodeKey)/0/*)))"
-//
-//            changeDescriptor = "sh(wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/49'/1'/0']\(recoveryKey)/1/*, [\(localFingerprint)/49'/1'/0']\(localKey)/1/*, [\(nodeFingerprint)/49'/1'/0']\(nodeKey)/1/*)))"
-//
-//        case "m/49'/0'/0'":
-//
-//            descriptor = "sh(wsh(multi(\(signatures),[\(recoveryFingerprint)/49'/0'/0']\(recoveryKey)/0/*, [\(localFingerprint)/49'/0'/0']\(localKey)/0/*, [\(nodeFingerprint)/49'/0'/0']\(nodeKey)/0/*)))"
-//
-//            changeDescriptor = "sh(wsh(multi(\(signatures),[\(recoveryFingerprint)/49'/0'/0']\(recoveryKey)/1/*, [\(localFingerprint)/49'/0'/0']\(localKey)/1/*, [\(nodeFingerprint)/49'/0'/0']\(nodeKey)/1/*)))"
             
         default:
             
@@ -1331,7 +1272,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 } else {
                     
                     cv.removeConnectingView()
-                    showAlert(vc: vc, title: "Error", message: "We currently only support bech32, multisig descriptoras from Specter")
+                    showAlert(vc: vc, title: "Error", message: "We currently only support importing bech32, 2 of 3 multisig descriptor from Specter.\n\nPlease consider sponsoring us or donating to fund further development.")
                     
                 }
                 
@@ -1403,41 +1344,13 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             
                             if vc.node.network == "testnet" {
                                 
-                                if vc.isBIP84 {
-                                    
-                                    vc.newWallet["derivation"] = "m/84'/1'/0'"
-                                    vc.derivation = "BIP84 m/84'/1'/0'"
-                                    
-                                } else if vc.isBIP49 {
-                                    
-                                    vc.newWallet["derivation"] = "m/49'/1'/0'"
-                                    vc.derivation = "BIP49 m/49'/1'/0'"
-                                    
-                                } else if vc.isBIP44 {
-                                    
-                                    vc.newWallet["derivation"] = "m/44'/1'/0'"
-                                    vc.derivation = "BIP44 m/44'/1'/0'"
-                                    
-                                }
+                                vc.newWallet["derivation"] = "m/84'/1'/0'"
+                                vc.derivation = "BIP84 m/84'/1'/0'"
                                 
                             } else if vc.node.network == "mainnet" {
                                 
-                                if vc.isBIP84 {
-                                    
-                                    vc.newWallet["derivation"] = "m/84'/0'/0'"
-                                    vc.derivation = "BIP84 m/84'/0'/0'"
-                                    
-                                } else if vc.isBIP49 {
-                                    
-                                    vc.newWallet["derivation"] = "m/49'/0'/0'"
-                                    vc.derivation = "BIP49 m/44'/0'/0'"
-                                    
-                                } else if vc.isBIP44 {
-                                    
-                                    vc.newWallet["derivation"] = "m/44'/0'/0'"
-                                    vc.derivation = "BIP44 m/44'/0'/0'"
-                                    
-                                }
+                                vc.newWallet["derivation"] = "m/84'/0'/0'"
+                                vc.derivation = "BIP84 m/84'/0'/0'"
                                 
                             }
                             
@@ -1525,18 +1438,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
         case "m/84'/0'/0'":
             param = "\"wpkh([\(fingerprint)/84'/0'/0']\(xpub)/0/*)\""
-            
-        case "m/44'/1'/0'":
-            param = "\"pkh([\(fingerprint)/44'/1'/0']\(xpub)/0/*)\""
-             
-        case "m/44'/0'/0'":
-            param = "\"pkh([\(fingerprint)/44'/0'/0']\(xpub)/0/*)\""
-            
-        case "m/49'/1'/0'":
-            param = "\"sh(wpkh([\(fingerprint)/49'/1'/0']\(xpub)/0/*))\""
-            
-        case "m/49'/0'/0'":
-            param = "\"sh(wpkh([\(fingerprint)/49'/0'/0']\(xpub)/0/*))\""
             
         default:
             
@@ -1658,6 +1559,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 vc.recoveryPhrase = self.backUpRecoveryPhrase
                 vc.recoveryQr = self.recoveryQr
                 vc.wallet = self.newWallet
+                vc.nodesWords = self.nodesWords
                 
             }
             
@@ -1701,7 +1603,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
             }
             
-        case "addSeedSegue":
+        case "addXpubSegue":
             
             if let vc = segue.destination as? AddExtendedKeyViewController {
                 
@@ -1711,6 +1613,15 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     
                 }
                 
+                
+                
+            }
+            
+        case "addCustomWords":
+            
+            if let vc = segue.destination as? WordRecoveryViewController {
+                
+                vc.addingSeed = true
                 vc.onSeedDoneBlock = { [unowned thisVc = self] mnemonic in
                     
                     thisVc.userSuppliedWords = mnemonic

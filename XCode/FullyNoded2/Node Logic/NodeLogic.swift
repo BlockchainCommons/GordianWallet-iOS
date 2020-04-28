@@ -129,6 +129,9 @@ class NodeLogic {
                     }
                     getPeerInfo()
                     
+                } else {
+                    completion((false, nil, "error getting blockchain info: \(errorDescription ?? "unknown error")"))
+                    
                 }
             }
         }
@@ -155,7 +158,7 @@ class NodeLogic {
                     }
                     getMiningInfo()
                 } else {
-                    completion((false, nil, "returned object is nil"))
+                    completion((false, nil, "error getting peer info: \(errorDescription ?? "unknown error")"))
                     
                 }
             }
@@ -171,7 +174,7 @@ class NodeLogic {
                     }
                     getUptime()
                 } else {
-                    completion((false, nil, "returned object is nil"))
+                    completion((false, nil, "error getting mining info: \(errorDescription ?? "unknown error")"))
                     
                 }
             }
@@ -184,7 +187,7 @@ class NodeLogic {
                     getMempoolInfo()
                                             
                 } else {
-                    completion((false, nil, "returned object is nil"))
+                    completion((false, nil, "error getting uptime: \(errorDesc ?? "unknown error")"))
                     
                 }
             }
@@ -203,7 +206,7 @@ class NodeLogic {
                     let feeRate = UserDefaults.standard.integer(forKey: "feeTarget")
                     esitimateSmartFee(feeRate: feeRate)
                 } else {
-                    completion((false, nil, "returned object is nil"))
+                    completion((false, nil, "error getting mempool info: \(errorDescription ?? "unknown error")"))
                     
                 }
             }
@@ -226,7 +229,7 @@ class NodeLogic {
                     completion((true, dictToReturn, nil))
                     
                 } else {
-                    completion((false, nil, "returned object is nil"))
+                    completion((false, nil, "error getting fee rate: \(errorDescription ?? "unknown error")"))
                     
                 }
             }

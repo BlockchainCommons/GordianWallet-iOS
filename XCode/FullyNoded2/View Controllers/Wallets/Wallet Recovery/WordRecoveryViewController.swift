@@ -25,7 +25,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     var autoCompleteCharacterCount = 0
     var timer = Timer()
     var onWordsDoneBlock: ((Bool) -> Void)?
-    var onAddSeedDoneBlock: ((String) -> Void)?
+    var onSeedDoneBlock: ((String) -> Void)?
     var addingSeed = Bool()
     
     @IBOutlet weak var textField: UITextField!
@@ -356,7 +356,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                         
                         DispatchQueue.main.async { [unowned vc = self] in
                             
-                            vc.onAddSeedDoneBlock!(vc.justWords.joined(separator: " "))
+                            vc.onSeedDoneBlock!(vc.justWords.joined(separator: " "))
                             vc.navigationController!.popViewController(animated: true)
                             
                         }

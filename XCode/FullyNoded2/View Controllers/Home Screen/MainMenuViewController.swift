@@ -123,10 +123,25 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBAction func uploadFile(_ sender: Any) {
         
-        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.item"], in: .import)
-        documentPicker.delegate = self
-        documentPicker.modalPresentationStyle = .formSheet
-        self.present(documentPicker, animated: true, completion: nil)
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            let alert = UIAlertController(title: "Upload a .psbt file?", message: "This button allows you to upload a .psbt file from the Files app, it only works with .psbt files as defined by BIP174. These are the same psbt files Coldcard and Electrum export. When uploading one of these files FullyNoded 2 will try and sign it with each of the seeds your device holds as well as with your current active node.", preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: "Upload", style: .default, handler: { [unowned vc = self] action in
+                
+                let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.item"], in: .import)
+                documentPicker.delegate = vc
+                documentPicker.modalPresentationStyle = .formSheet
+                vc.present(documentPicker, animated: true, completion: nil)
+
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+            
+        }
         
     }
     

@@ -757,8 +757,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             seedOnDeviceLabel.text = "Device is cold"
             offlineXprv.text = "xprv \(wallet.derivation)"
             offlineSeedLabel.text = "2 Offline Seed's"
-            walletType.text = "Cold Wallet"
-            walletTypeImage.image = UIImage(systemName: "snow")
+            walletType.text = "Cool Wallet"
+            walletTypeImage.image = UIImage(systemName: "cloud.sun")
             walletTypeImage.tintColor = .systemTeal
             deviceSeedImage.image = UIImage(systemName: "eye.fill")
             

@@ -14,7 +14,9 @@ class WalletCreatedWordsViewController: UIViewController, UINavigationController
     @IBOutlet var savedOutlet: UIButton!
     var recoverPhrase = ""
     var wallet = [String:Any]()
-
+    var nodesWords = ""
+    var w:WalletStruct!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -22,20 +24,22 @@ class WalletCreatedWordsViewController: UIViewController, UINavigationController
         navigationController?.delegate = self
         savedOutlet.layer.cornerRadius = 8
         
-        let w = WalletStruct(dictionary: wallet)
+        w = WalletStruct(dictionary: wallet)
         
         if w.type == "MULTI" {
             
             textView.text = """
-            On the next screen we will display 12 very important words.
+            On the next two screens we will display two master seeds.
 
-            You *MUST* write these 12 words down and save them seperately from the Recovery QR, *THEY ARE REQUIRED* to recover a multi-signature wallet if you lose your node.
+            You *MUST* save them seperately from each other! *THEY ARE REQUIRED* to fully recover a multi-signature wallet.
             
-            They are also required to add more keys to your node, we imported 2,500 keys into your node, when you use your 2,400th key we will prompt you to refill the keypool with these words. If you lose these words you should immediately create a new multi-sig wallet and "sweep to" it.
+            The first one represents your nodes master seed, it is important to note your node does not hold this seed, it only holds a key set that is derived from this seed. If you lose your node you will want to be able to use these words to recover your nodes private keys.
+            
+            The second master seed is your offline recovery words, these words will be need to fully recover this multi-sig wallet.
+            
+            These words **WILL BE DELETED FOREVER** from this device once you tap the "I saved them" button!
 
-            These words **WILL BE DELETED FOREVER** once you tap the "I saved them" button!
-
-            At a minimum we recommend writing these words down on water proof paper with a permanent marker.
+            At a minimum we recommend writing these words down on water proof paper with a permanent marker, ideally engrave them on titanium if you are going to store larger amounts.
             """
             
         } else {
@@ -56,9 +60,15 @@ class WalletCreatedWordsViewController: UIViewController, UINavigationController
     
     @IBAction func savedAction(_ sender: Any) {
         
-        DispatchQueue.main.async {
+        var segueString = "goSaveWords"
+        
+        if w.type == "MULTI" {
+            segueString = "showNodesSeed"
             
-            self.performSegue(withIdentifier: "goSaveWords", sender: self)
+        }
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: segueString, sender: vc)
             
         }
         
@@ -72,12 +82,21 @@ class WalletCreatedWordsViewController: UIViewController, UINavigationController
         // Pass the selected object to the new view controller.
         switch segue.identifier {
             
+        case "showNodesSeed":
+            
+            if let vc = segue.destination as? WalletCreatedNodesSeedViewController {
+                
+                vc.wallet = wallet
+                vc.recoverPhrase = recoverPhrase
+                vc.nodeWords = nodesWords
+            }
+            
         case "goSaveWords":
             
             if let vc = segue.destination as? WalletCreatedSaveWordsViewController {
                 
                 vc.wallet = wallet
-                vc.words = recoverPhrase
+                vc.recoverPhrase = recoverPhrase
                 
             }
             
