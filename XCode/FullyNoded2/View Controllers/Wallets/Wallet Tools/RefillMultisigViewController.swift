@@ -457,8 +457,16 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                             let xpub = hdKey.xpub
                             print("xpub = \(xpub)")
                             
-                            let existingXpubs = str.multiSigKeys
-                            print("exisiting xpubs = \(existingXpubs)")
+                            var existingXpubs = [String]()
+                            if vc.wallet.type == "MULTI" {
+                                existingXpubs = str.multiSigKeys
+                                
+                            } else {
+                                existingXpubs.append(str.accountXpub)
+                                
+                            }
+                            
+                            print("existingXpubs xpubs = \(existingXpubs)")
                             var xpubsMatch = false
                             
                             for (x, existingXpub) in existingXpubs.enumerated() {
@@ -475,7 +483,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                                         
                                         if !vc.addSeed {
                                             
-                                            if xpub == str.multiSigKeys[0] {
+                                            if xpub == str.multiSigKeys[0] || xpub == str.multiSigKeys[2] {
                                                 
                                                 DispatchQueue.main.async {
                                                     vc.connectingView.label.text = "xpub's match, refilling keypool"
@@ -485,7 +493,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                                             } else {
                                                 
                                                 vc.connectingView.removeConnectingView()
-                                                showAlert(vc: vc, title: "Error", message: "That xpub matches one of your xpubs but it is the incorrect one, in order to add private keys to your node to refill the keypool we need to use the offline recovery phrase.")
+                                                showAlert(vc: vc, title: "Error", message: "That xpub matches your device's xpub, in order to add private keys to your node to refill the keypool we need to use one of the offline recovery phrases.")
                                             }
                                                                                         
                                         } else {

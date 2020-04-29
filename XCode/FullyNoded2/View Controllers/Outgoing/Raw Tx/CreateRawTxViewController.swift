@@ -330,18 +330,18 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     
     func confirm(raw: String) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.creatingView.removeConnectingView()
-            self.amount = ""
-            self.amountInput.text = ""
-            self.addressInput.text = ""
-            self.outputs.removeAll()
-            self.outputArray.removeAll()
-            self.outputsString = ""
-            self.outputsTable.reloadData()
-            self.rawTxSigned = raw
-            self.performSegue(withIdentifier: "goConfirm", sender: self)
+            vc.creatingView.removeConnectingView()
+            vc.amount = ""
+            vc.amountInput.text = ""
+            vc.addressInput.text = ""
+            vc.outputs.removeAll()
+            vc.outputArray.removeAll()
+            vc.outputsString = ""
+            vc.outputsTable.reloadData()
+            vc.rawTxSigned = raw
+            vc.performSegue(withIdentifier: "goConfirm", sender: vc)
             
         }
         
@@ -349,18 +349,18 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     
     func confirmUnsigned(psbt: String) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.creatingView.removeConnectingView()
-            self.amount = ""
-            self.amountInput.text = ""
-            self.addressInput.text = ""
-            self.outputs.removeAll()
-            self.outputArray.removeAll()
-            self.outputsString = ""
-            self.outputsTable.reloadData()
-            self.unsignedPsbt = psbt
-            self.performSegue(withIdentifier: "goConfirm", sender: self)
+            vc.creatingView.removeConnectingView()
+            vc.amount = ""
+            vc.amountInput.text = ""
+            vc.addressInput.text = ""
+            vc.outputs.removeAll()
+            vc.outputArray.removeAll()
+            vc.outputsString = ""
+            vc.outputsTable.reloadData()
+            vc.unsignedPsbt = psbt
+            vc.performSegue(withIdentifier: "goConfirm", sender: vc)
             
         }
     }
@@ -750,8 +750,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             
         }
         
-        let multiSigTxBuilder = MultiSigTxBuilder()
-        multiSigTxBuilder.build(outputs: outputs) { [unowned vc = self] (signedTx, unsignedPsbt, errorDescription) in
+        MultiSigTxBuilder.build(outputs: outputs) { [unowned vc = self] (signedTx, unsignedPsbt, errorDescription) in
             
             if signedTx != nil {
                 
@@ -790,8 +789,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     func createSingleSig() {
         print("createSingleSig")
         
-        let builder = SingleSigBuilder()
-        builder.build(outputs: outputs) { [unowned vc = self] (signedTx, psbt, errorDescription) in
+        SingleSigBuilder.build(outputs: outputs) { [unowned vc = self] (signedTx, psbt, errorDescription) in
             
             if signedTx != nil {
                 

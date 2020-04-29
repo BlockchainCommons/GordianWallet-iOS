@@ -109,10 +109,7 @@
 		D09D736823F0F3C000847DC8 /* MultiSigTxBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */; };
 		D09D736923F0F3C000847DC8 /* SingleSigBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */; };
 		D09D736B23F0F3C000847DC8 /* CreateMultisigWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */; };
-		D09D736F23F0F3C000847DC8 /* OfflineSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730523F0F3C000847DC8 /* OfflineSigner.swift */; };
 		D09D737023F0F3C000847DC8 /* WalletCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730623F0F3C000847DC8 /* WalletCreator.swift */; };
-		D09D737123F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730723F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift */; };
-		D09D737223F0F3C000847DC8 /* OfflineSignerLegacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730823F0F3C000847DC8 /* OfflineSignerLegacy.swift */; };
 		D09D737523F0F40400847DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D09D737423F0F40400847DC8 /* Main.storyboard */; };
 		D09DCF6423F1045F008F5B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D09DCF6323F1045F008F5B9F /* Assets.xcassets */; };
 		D09DCF6623F10645008F5B9F /* Base32.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09DCF6523F10645008F5B9F /* Base32.swift */; };
@@ -272,10 +269,7 @@
 		D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSigTxBuilder.swift; sourceTree = "<group>"; };
 		D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleSigBuilder.swift; sourceTree = "<group>"; };
 		D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateMultisigWallet.swift; sourceTree = "<group>"; };
-		D09D730523F0F3C000847DC8 /* OfflineSigner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSigner.swift; sourceTree = "<group>"; };
 		D09D730623F0F3C000847DC8 /* WalletCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletCreator.swift; sourceTree = "<group>"; };
-		D09D730723F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSignerP2SHSegwit.swift; sourceTree = "<group>"; };
-		D09D730823F0F3C000847DC8 /* OfflineSignerLegacy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSignerLegacy.swift; sourceTree = "<group>"; };
 		D09D737423F0F40400847DC8 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		D09D737623F0F61300847DC8 /* FullyNoded2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FullyNoded2.entitlements; sourceTree = "<group>"; };
 		D09DCF6123F0FC7B008F5B9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -774,9 +768,6 @@
 		D0CD026C23FA376D009F2E7F /* Signers */ = {
 			isa = PBXGroup;
 			children = (
-				D09D730523F0F3C000847DC8 /* OfflineSigner.swift */,
-				D09D730723F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift */,
-				D09D730823F0F3C000847DC8 /* OfflineSignerLegacy.swift */,
 				D0502FEB244C44EA00213870 /* PSBTSigner.swift */,
 			);
 			path = Signers;
@@ -1026,8 +1017,6 @@
 				D09D736523F0F3C000847DC8 /* QRScanner.swift in Sources */,
 				D047DE05242B34BA004BC26D /* SignInViewController.swift in Sources */,
 				D09D732423F0F3C000847DC8 /* CreateRawTxViewController.swift in Sources */,
-				D09D737123F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift in Sources */,
-				D09D737223F0F3C000847DC8 /* OfflineSignerLegacy.swift in Sources */,
 				D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */,
 				D047DDFF242B331F004BC26D /* HowToUseFN2ViewController.swift in Sources */,
 				D09D732223F0F3C000847DC8 /* RecoveryViewController.swift in Sources */,
@@ -1065,7 +1054,6 @@
 				D0502FF024500DE000213870 /* AddExtendedKeyViewController.swift in Sources */,
 				D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */,
 				D047DDFB242B324A004BC26D /* WhatIsFN2ViewController.swift in Sources */,
-				D09D736F23F0F3C000847DC8 /* OfflineSigner.swift in Sources */,
 				D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */,
 				D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */,
 				D09D735E23F0F3C000847DC8 /* QRGenerator.swift in Sources */,
@@ -1227,7 +1215,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.98;
+				CURRENT_PROJECT_VERSION = 0.0.99;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1241,7 +1229,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.98;
+				MARKETING_VERSION = 0.0.99;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1256,7 +1244,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.98;
+				CURRENT_PROJECT_VERSION = 0.0.99;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1270,7 +1258,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.98;
+				MARKETING_VERSION = 0.0.99;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

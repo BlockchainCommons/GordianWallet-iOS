@@ -26,36 +26,43 @@ class PSBTSigner {
                             let hex = result["hex"] as! String
                             completion((true, nil, hex))
                         } else {
+                            print("fail finalize 0")
                             let psbt = result["psbt"] as! String
                             completion((true, psbt, nil))
                         }
                     } else {
+                        print("fail finalize 1")
                         completion((false, psbtToSign.description, nil))
                     }
                 } else {
+                    print("fail finalize 2")
                     completion((false, psbtToSign.description, nil))
                 }
             }
         }
         
         func processWithActiveWallet() {
+            print("processWithActiveWallet")
             getActiveWalletNow { (w, error) in
                 if w != nil {
                     Reducer.makeCommand(walletName: w!.name ?? "", command: .walletprocesspsbt, param: "\"\(psbtToSign.description)\", true, \"ALL\", true") { (object, errorDescription) in
                         if let dict = object as? NSDictionary {
-                            if let procccessedPsbt = dict["psbt"] as? String {
+                            if let processedPsbt = dict["psbt"] as? String {
                                 do {
-                                    psbtToSign = try PSBT(procccessedPsbt, chain)
+                                    psbtToSign = try PSBT(processedPsbt, chain)
                                     attemptToSignLocally()
                                 } catch {
+                                    print("catch processWithActiveWallet")
                                     attemptToSignLocally()
                                 }
                             }
                         } else {
+                            print("failed catch processWithActiveWallet")
                             completion((false, psbtToSign.description, nil))
                         }
                     }
                 } else {
+                    print("failed2 catch processWithActiveWallet")
                     completion((false, psbtToSign.description, nil))
                 }
             }
@@ -77,8 +84,31 @@ class PSBTSigner {
         
         
         func attemptToSignLocally() {
+            print("attemptToSignLocally")
+            
+            /// Need to ensure similiar seeds do not sign mutliple times. This can happen if a user utilizes the same seed for
+            /// a multisig wallet and a single sig wallet.
+            var xprvStrings = [String]()
+            
+            for xprv in xprvsToSignWith {
+                xprvStrings.append(xprv.description)
+                
+            }
+            
+            xprvsToSignWith.removeAll()
+            let uniqueXprvs = Array(Set(xprvStrings))
+            
+            for uniqueXprv in uniqueXprvs {
+                
+                if let xprv = HDKey(uniqueXprv) {
+                    xprvsToSignWith.append(xprv)
+                    
+                }
+            }
+            
             if xprvsToSignWith.count > 0 {
                 for (i, key) in xprvsToSignWith.enumerated() {
+                    print("sign")
                     psbtToSign.sign(key)
                     if i + 1 == xprvsToSignWith.count {
                         /// There is a bug in LibWally-Swift so until that gets fixed we rely on bitcoind to finalize PSBT's for us
@@ -91,6 +121,7 @@ class PSBTSigner {
         
         /// Fetch keys to sign with
         func getKeysToSignWith() {
+            xprvsToSignWith.removeAll()
             for (i, wallet) in walletsToSignWith.enumerated() {
                 let w = WalletStruct(dictionary: wallet)
                 let encryptedSeed = w.seed
@@ -103,18 +134,7 @@ class PSBTSigner {
                                         if let masterKey = HDKey(mnemonic!.seedHex(""), chain) {
                                             if let xprv = masterKey.xpriv {
                                                 if let hdkey = HDKey(xprv) {
-                                                    var alreadyAdded = false
-                                                    if xprvsToSignWith.count > 0 {
-                                                        for xprv in xprvsToSignWith {
-                                                            if xprv.description == hdkey.description {
-                                                                print("already added")
-                                                                alreadyAdded = true
-                                                            }
-                                                        }
-                                                    }
-                                                    if !alreadyAdded {
-                                                        xprvsToSignWith.append(hdkey)
-                                                    }
+                                                    xprvsToSignWith.append(hdkey)
                                                 }
                                             }
                                         }
@@ -125,6 +145,7 @@ class PSBTSigner {
                     }
                 }
                 if i + 1 == walletsToSignWith.count {
+                    print("processWithActiveWallet")
                     processWithActiveWallet()
                 }
             }
@@ -151,9 +172,7 @@ class PSBTSigner {
                 }
             }
         }
-        
-        /// Due to a bug in LibWally-Swift we need to ch
-        
+                
         /// Can only sign for one network so we get the active nodes network
         func getChain() {
             Encryption.getNode { (node, error) in
