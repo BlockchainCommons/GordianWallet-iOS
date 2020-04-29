@@ -295,7 +295,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
         if customSeedSwitch.isOn {
             
-            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: "Please proceed with caution, this feature is for advanced users only who completely understand the implications of what they are doing! This feature allows you to add your own BIP39 mnemonic, or xpub to use as the devices seed for the wallet you are about to create. If you add an xpub it will need to be the account xpub and you will need to supply a master key fingerprint, adding an xpub means the device will not be able to sign transactions and will be watch-only, you will have the option of adding a signer later if you would like to. If any of this does not make sense to you please disable this feature!", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: "This feature allows you to add your own BIP39 mnemonic as the device's master seed for the wallet you are about to create. This feature is only applicable to Hot and Warm wallets.", preferredStyle: .actionSheet)
             
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
             alert.popoverPresentationController?.sourceView = self.view
