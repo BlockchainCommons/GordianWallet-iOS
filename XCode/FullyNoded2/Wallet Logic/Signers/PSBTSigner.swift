@@ -153,6 +153,7 @@ class PSBTSigner {
         
         /// Fetch wallets on the same network
         func getSeeds() {
+            walletsToSignWith.removeAll()
             CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
                 if errorDescription == nil && wallets != nil {
                     for (i, w) in wallets!.enumerated() {

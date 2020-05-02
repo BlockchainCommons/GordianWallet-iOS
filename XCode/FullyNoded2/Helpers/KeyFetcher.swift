@@ -11,47 +11,45 @@ import LibWally
 
 class KeyFetcher {
     
-    class func fingerprint(wallet: WalletStruct, completion: @escaping ((fingerprint: String?, error: Bool)) -> Void) {
-        
-        //let derivationPath = wallet.derivation
-        
-        if String(data: wallet.seed, encoding: .utf8) != "no seed" {
-            
-            Encryption.decryptData(dataToDecrypt: wallet.seed) { (seed) in
-                
-                if seed != nil {
-                    
-                    if let words = String(data: seed!, encoding: .utf8) {
-                                            
-                        MnemonicCreator.convert(words: words) { (mnemonic, error) in
-                            
-                            if let masterKey = HDKey((mnemonic!.seedHex("")), network(descriptor: wallet.descriptor)) {
-                                
-                                completion((masterKey.fingerprint.hexString, false))
-                                
-                            } else {
-                                
-                                print("error getting master key")
-                                completion((nil, true))
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                }
-                
-            }
-            
-        } else {
-            
-            completion((nil, true))
-            print("no seed")
-            
-        }
-        
-    }
+//    class func fingerprint(seed: Data, chain: Network, completion: @escaping ((fingerprint: String?, error: Bool)) -> Void) {
+//
+//        if String(data: seed, encoding: .utf8) != "no seed" {
+//
+//            Encryption.decryptData(dataToDecrypt: seed) { (seed) in
+//
+//                if seed != nil {
+//
+//                    if let words = String(data: seed!, encoding: .utf8) {
+//
+//                        MnemonicCreator.convert(words: words) { (mnemonic, error) in
+//
+//                            if let masterKey = HDKey((mnemonic!.seedHex("")), chain) {
+//
+//                                completion((masterKey.fingerprint.hexString, false))
+//
+//                            } else {
+//
+//                                print("error getting master key")
+//                                completion((nil, true))
+//
+//                            }
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//        } else {
+//
+//            completion((nil, true))
+//            print("no seed")
+//
+//        }
+//
+//    }
     
 //    class func privKey(path: BIP32Path, completion: @escaping ((privKey: String?, error: Bool)) -> Void) {
 //        
@@ -324,10 +322,10 @@ class KeyFetcher {
         
     }
     
-    class func xpub(wallet: WalletStruct, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
+    class func xpub(seed: Data, chain: Network, derivation: String, completion: @escaping ((xpub: String?, fingerprint: String?, error: Bool)) -> Void) {
         
         //let derivationPath = wallet.derivation
-        Encryption.decryptData(dataToDecrypt: wallet.seed) { (seed) in
+        Encryption.decryptData(dataToDecrypt: seed) { (seed) in
             
             if seed != nil {
                 
@@ -336,36 +334,38 @@ class KeyFetcher {
                     
                     if !error {
                         
-                        if let masterKey = HDKey((mnemonic!.seedHex("")), network(descriptor: wallet.descriptor)) {
+                        if let masterKey = HDKey((mnemonic!.seedHex("")), chain) {
                             
-                            if let path = BIP32Path(wallet.derivation) {
+                            let fingerprint = masterKey.fingerprint.hexString
+                            
+                            if let path = BIP32Path(derivation) {
                                 
                                 do {
                                     
                                     let account = try masterKey.derive(path)
-                                    completion((account.xpub,false))
+                                    completion((account.xpub, fingerprint, false))
                                     
                                 } catch {
                                     
-                                    completion((nil,true))
+                                    completion((nil, nil, true))
                                     
                                 }
                                 
                             } else {
                                 
-                                completion((nil,true))
+                                completion((nil, nil, true))
                                 
                             }
                             
                         } else {
                             
-                            completion((nil,true))
+                            completion((nil, nil, true))
                             
                         }
                         
                     } else {
                         
-                        completion((nil,true))
+                        completion((nil, nil, true))
                         
                     }
                     
@@ -373,7 +373,7 @@ class KeyFetcher {
                 
             } else {
                 
-                completion((nil,true))
+                completion((nil, nil, true))
                 
             }
             

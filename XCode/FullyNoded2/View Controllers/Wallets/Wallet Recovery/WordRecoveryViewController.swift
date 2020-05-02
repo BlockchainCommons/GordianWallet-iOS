@@ -27,6 +27,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     var onWordsDoneBlock: ((Bool) -> Void)?
     var onSeedDoneBlock: ((String) -> Void)?
     var addingSeed = Bool()
+    var addingIndpendentSeed = Bool()
     
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var wordView: UIView!
@@ -42,7 +43,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         bip39Words = Bip39Words.validWords
         updatePlaceHolder(wordNumber: 1)
         
-        if addingSeed {
+        if addingSeed || addingIndpendentSeed {
             
             navigationItem.title = "Add BIP39 Phrase"
             
@@ -335,7 +336,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     
     private func validWordsAdded() {
         
-        if !addingSeed {
+        if !addingSeed && !addingIndpendentSeed {
             
             DispatchQueue.main.async { [unowned vc = self] in
                 
@@ -344,6 +345,47 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 
             }
             
+        } else if addingIndpendentSeed {
+            
+            DispatchQueue.main.async { [unowned vc = self] in
+                vc.textField.resignFirstResponder()
+                
+            }
+            
+            let unencryptedSeed = (justWords.joined(separator: " ")).dataUsingUTF8StringEncoding
+            
+            Encryption.encryptData(dataToEncrypt: unencryptedSeed) { [unowned vc = self] (encryptedSeed, error) in
+                
+                if encryptedSeed != nil {
+                    
+                    let dict = ["seed":encryptedSeed!,"id":UUID()] as [String:Any]
+                    CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDesc) in
+                        
+                        if success {
+                            
+                            DispatchQueue.main.async { [unowned vc = self] in
+                                vc.textField.text = ""
+                                vc.label.text = ""
+                                vc.justWords.removeAll()
+                                vc.addedWords.removeAll()
+                                vc.updatePlaceHolder(wordNumber: 1)
+                                
+                            }
+                            
+                            showAlert(vc: vc, title: "Seed saved!", message: "You may go back or add another seed.")
+                            
+                        } else {
+                            
+                           showAlert(vc: vc, title: "Error", message: "We had an error saving that seed.")
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+                
         } else {
             
             DispatchQueue.main.async { [unowned vc = self] in
@@ -759,6 +801,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         }
         
     private func checkDeviceForWallet(name: String) {
+        
         CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
             
             if wallets != nil {

@@ -29,7 +29,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         table.delegate = self
         table.dataSource = self
-        connectingView.addConnectingView(vc: self, description: "fetching your keys")
+        connectingView.addConnectingView(vc: self, description: "deriving your keys")
         
     }
     
@@ -117,12 +117,12 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         let addressView = cell.viewWithTag(1)!
         let pubkeysView = cell.viewWithTag(2)!
         let scriptPubKeyView = cell.viewWithTag(3)!
-        let wifView = cell.viewWithTag(4)!
+        //let wifView = cell.viewWithTag(4)!
         
         addressView.layer.cornerRadius = 8
         pubkeysView.layer.cornerRadius = 8
         scriptPubKeyView.layer.cornerRadius = 8
-        wifView.layer.cornerRadius = 8
+        //wifView.layer.cornerRadius = 8
         
         let addressLabel = cell.viewWithTag(5) as! UILabel
         addressLabel.adjustsFontSizeToFitWidth = true
@@ -138,16 +138,16 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         scriptPubKeyTextView.isEditable = false
         scriptPubKeyTextView.isSelectable = true
         
-        let wifLabel = cell.viewWithTag(8) as! UILabel
-        if keys[indexPath.section]["wif"] != nil {
-            if keys[indexPath.section]["wif"] != "" {
-                wifLabel.text = "**********************************************************"
-            } else {
-                wifLabel.text = "No private keys on device"
-            }
-        } else {
-            wifLabel.text = "No private keys on device"
-        }
+//        let wifLabel = cell.viewWithTag(8) as! UILabel
+//        if keys[indexPath.section]["wif"] != nil {
+//            if keys[indexPath.section]["wif"] != "" {
+//                wifLabel.text = "**********************************************************"
+//            } else {
+//                wifLabel.text = "No private keys on device"
+//            }
+//        } else {
+//            wifLabel.text = "No private keys on device"
+//        }
         
         let addressQRButton = cell.viewWithTag(9) as! UIButton
         let addressCopyButton = cell.viewWithTag(10) as! UIButton
@@ -155,8 +155,8 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         let publicKeysCopyButton = cell.viewWithTag(12) as! UIButton
         let scriptPubKeyQRButton = cell.viewWithTag(13) as! UIButton
         let scriptPubKeyCopyButton = cell.viewWithTag(14) as! UIButton
-        let wifQRButton = cell.viewWithTag(15) as! UIButton
-        let wifCopyButton = cell.viewWithTag(16) as! UIButton
+        //let wifQRButton = cell.viewWithTag(15) as! UIButton
+        //let wifCopyButton = cell.viewWithTag(16) as! UIButton
         
         addressQRButton.accessibilityLabel = "\(indexPath.section)"
         addressCopyButton.accessibilityLabel = "\(indexPath.section)"
@@ -164,11 +164,11 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         publicKeysQRButton.accessibilityLabel = "\(indexPath.section)"
         scriptPubKeyCopyButton.accessibilityLabel = "\(indexPath.section)"
         scriptPubKeyQRButton.accessibilityLabel = "\(indexPath.section)"
-        wifQRButton.accessibilityLabel = "\(indexPath.section)"
-        wifCopyButton.accessibilityLabel = "\(indexPath.section)"
+        //wifQRButton.accessibilityLabel = "\(indexPath.section)"
+        //wifCopyButton.accessibilityLabel = "\(indexPath.section)"
         
-        wifQRButton.addTarget(self, action: #selector(wifQR(_:)), for: .touchUpInside)
-        wifCopyButton.addTarget(self, action: #selector(copyWif(_:)), for: .touchUpInside)
+        //wifQRButton.addTarget(self, action: #selector(wifQR(_:)), for: .touchUpInside)
+        //wifCopyButton.addTarget(self, action: #selector(copyWif(_:)), for: .touchUpInside)
         
         publicKeysQRButton.addTarget(self, action: #selector(publicKeyQR(_:)), for: .touchUpInside)
         publicKeysCopyButton.addTarget(self, action: #selector(copyPublicKey(_:)), for: .touchUpInside)
@@ -201,11 +201,11 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         
         if !s.isMulti {
             
-            return 224
+            return 156
             
         } else {
             
-            return 375
+            return 305
             
         }
                 

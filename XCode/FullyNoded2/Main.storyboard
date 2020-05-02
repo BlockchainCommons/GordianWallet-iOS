@@ -54,11 +54,11 @@
                                 <rect key="frame" x="0.0" y="60.5" width="375" height="566.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="exportCell" rowHeight="224" id="sMA-Uo-GOc">
-                                        <rect key="frame" x="15" y="55.5" width="345" height="224"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="exportCell" rowHeight="156" id="sMA-Uo-GOc">
+                                        <rect key="frame" x="15" y="55.5" width="345" height="156"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="sMA-Uo-GOc" id="edp-c9-jpg">
-                                            <rect key="frame" x="0.0" y="0.0" width="345" height="224"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="345" height="156"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view clipsSubviews="YES" tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nlz-UB-koE">
@@ -157,75 +157,23 @@
                                                         <constraint firstItem="ZhE-Qg-cu9" firstAttribute="top" secondItem="VhE-JB-YLv" secondAttribute="topMargin" id="xT1-m8-rUy"/>
                                                     </constraints>
                                                 </view>
-                                                <view clipsSubviews="YES" tag="9" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WfM-VH-E2Z">
-                                                    <rect key="frame" x="15" y="153" width="315" height="58"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WIF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c8u-Nr-6pn">
-                                                            <rect key="frame" x="8" y="8" width="28" height="18"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
-                                                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxX-sH-3gU">
-                                                            <rect key="frame" x="239" y="6" width="20" height="22"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="22" id="Ksz-hl-ECf"/>
-                                                                <constraint firstAttribute="width" constant="20" id="rk6-zT-7RH"/>
-                                                            </constraints>
-                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <state key="normal" image="qrcode" catalog="system"/>
-                                                        </button>
-                                                        <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UMt-im-CBM">
-                                                            <rect key="frame" x="285" y="5" width="22" height="24"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="22" id="9p6-dF-UBg"/>
-                                                                <constraint firstAttribute="height" constant="24" id="NZO-Cl-xcb"/>
-                                                            </constraints>
-                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <state key="normal" image="doc.on.doc" catalog="system"/>
-                                                        </button>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="cinef92h9ef29enf92ne29uf29uef92uenn92u9ue9u2e9fu293f298efh9" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SBu-qp-ifb">
-                                                            <rect key="frame" x="8" y="37" width="299" height="11"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="9"/>
-                                                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <color key="backgroundColor" red="0.12222787490000001" green="0.13925489739999999" blue="0.16802866229999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstItem="UMt-im-CBM" firstAttribute="top" secondItem="WfM-VH-E2Z" secondAttribute="top" constant="5" id="3GT-tr-Xhb"/>
-                                                        <constraint firstItem="UMt-im-CBM" firstAttribute="leading" secondItem="bxX-sH-3gU" secondAttribute="trailing" constant="26" id="3eF-1L-xX0"/>
-                                                        <constraint firstAttribute="trailing" secondItem="SBu-qp-ifb" secondAttribute="trailing" constant="8" id="AA0-pP-WFY"/>
-                                                        <constraint firstAttribute="bottom" secondItem="SBu-qp-ifb" secondAttribute="bottom" constant="10" id="F2B-i2-leH"/>
-                                                        <constraint firstItem="c8u-Nr-6pn" firstAttribute="top" secondItem="WfM-VH-E2Z" secondAttribute="topMargin" id="H4e-8u-ofg"/>
-                                                        <constraint firstAttribute="height" constant="58" id="VSR-9R-oVo"/>
-                                                        <constraint firstItem="UMt-im-CBM" firstAttribute="centerY" secondItem="bxX-sH-3gU" secondAttribute="centerY" id="abB-yl-4NU"/>
-                                                        <constraint firstItem="SBu-qp-ifb" firstAttribute="leading" secondItem="WfM-VH-E2Z" secondAttribute="leading" constant="8" id="agj-2s-dcH"/>
-                                                        <constraint firstAttribute="trailing" secondItem="UMt-im-CBM" secondAttribute="trailing" constant="8" id="cbz-ri-ule"/>
-                                                        <constraint firstItem="c8u-Nr-6pn" firstAttribute="leading" secondItem="WfM-VH-E2Z" secondAttribute="leadingMargin" id="lil-56-MWN"/>
-                                                    </constraints>
-                                                </view>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="VhE-JB-YLv" firstAttribute="leading" secondItem="edp-c9-jpg" secondAttribute="leadingMargin" id="0xM-gO-lgH"/>
                                                 <constraint firstItem="VhE-JB-YLv" firstAttribute="top" secondItem="Nlz-UB-koE" secondAttribute="bottom" constant="12" id="Kkw-ao-WAL"/>
                                                 <constraint firstItem="VhE-JB-YLv" firstAttribute="trailing" secondItem="edp-c9-jpg" secondAttribute="trailingMargin" id="MQ5-Fk-QxB"/>
-                                                <constraint firstItem="WfM-VH-E2Z" firstAttribute="leading" secondItem="edp-c9-jpg" secondAttribute="leadingMargin" id="NgZ-lR-fSL"/>
-                                                <constraint firstItem="WfM-VH-E2Z" firstAttribute="trailing" secondItem="edp-c9-jpg" secondAttribute="trailingMargin" id="TiW-9L-HzD"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="WfM-VH-E2Z" secondAttribute="bottom" constant="2" id="Wk1-F3-l6H"/>
                                                 <constraint firstItem="Nlz-UB-koE" firstAttribute="top" secondItem="edp-c9-jpg" secondAttribute="topMargin" constant="2" id="co7-4H-KKa"/>
                                                 <constraint firstItem="Nlz-UB-koE" firstAttribute="leading" secondItem="edp-c9-jpg" secondAttribute="leadingMargin" id="hoq-8E-lEX"/>
                                                 <constraint firstItem="Nlz-UB-koE" firstAttribute="trailing" secondItem="edp-c9-jpg" secondAttribute="trailingMargin" id="mfZ-3g-sbQ"/>
-                                                <constraint firstItem="WfM-VH-E2Z" firstAttribute="top" secondItem="VhE-JB-YLv" secondAttribute="bottom" constant="12" id="veE-Y8-mh1"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="exportMultiSigCell" rowHeight="375" id="I0k-EW-0le">
-                                        <rect key="frame" x="15" y="279.5" width="345" height="375"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="exportMultiSigCell" rowHeight="305" id="I0k-EW-0le">
+                                        <rect key="frame" x="15" y="211.5" width="345" height="305"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="I0k-EW-0le" id="YzG-8t-O23">
-                                            <rect key="frame" x="0.0" y="0.0" width="345" height="375"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="345" height="305"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view clipsSubviews="YES" tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sIk-3o-hJh">
@@ -277,7 +225,7 @@
                                                     </constraints>
                                                 </view>
                                                 <view clipsSubviews="YES" tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VvA-GC-RcO">
-                                                    <rect key="frame" x="15" y="83" width="315" height="125"/>
+                                                    <rect key="frame" x="15" y="83" width="315" height="115"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public Keys" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ndm-cJ-zgn">
                                                             <rect key="frame" x="8" y="8" width="82.5" height="18"/>
@@ -304,7 +252,7 @@
                                                             <state key="normal" image="doc.on.doc" catalog="system"/>
                                                         </button>
                                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="6" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="W6A-sd-UO7">
-                                                            <rect key="frame" x="8" y="34" width="299" height="83"/>
+                                                            <rect key="frame" x="8" y="34" width="299" height="73"/>
                                                             <color key="backgroundColor" red="0.097498975690000003" green="0.1133993641" blue="0.13420683150000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -327,56 +275,8 @@
                                                         <constraint firstAttribute="bottom" secondItem="W6A-sd-UO7" secondAttribute="bottom" constant="8" id="qg0-BS-S2Z"/>
                                                     </constraints>
                                                 </view>
-                                                <view clipsSubviews="YES" tag="4" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k2c-Dz-v5d">
-                                                    <rect key="frame" x="15" y="306" width="315" height="58"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WIF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QoO-gr-aJt">
-                                                            <rect key="frame" x="8" y="8" width="28" height="18"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
-                                                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <button opaque="NO" tag="15" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Rv-zA-cQM">
-                                                            <rect key="frame" x="239" y="6" width="20" height="22"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="20" id="6Sa-Ka-YS2"/>
-                                                                <constraint firstAttribute="height" constant="22" id="Wbs-88-ujH"/>
-                                                            </constraints>
-                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <state key="normal" image="qrcode" catalog="system"/>
-                                                        </button>
-                                                        <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1No-6U-IBu">
-                                                            <rect key="frame" x="285" y="5" width="22" height="24"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="22" id="A1P-pn-OBM"/>
-                                                                <constraint firstAttribute="height" constant="24" id="A1R-yK-nVE"/>
-                                                            </constraints>
-                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <state key="normal" image="doc.on.doc" catalog="system"/>
-                                                        </button>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="8" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="cinef92h9ef29enf92ne29uf29uef92uenn92u9ue9u2e9fu293f298efh9" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UUx-iN-XZy">
-                                                            <rect key="frame" x="8" y="37" width="299" height="11"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="9"/>
-                                                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <color key="backgroundColor" red="0.12222787490000001" green="0.13925489739999999" blue="0.16802866229999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstItem="QoO-gr-aJt" firstAttribute="top" secondItem="k2c-Dz-v5d" secondAttribute="topMargin" id="2tH-JF-rRE"/>
-                                                        <constraint firstItem="1No-6U-IBu" firstAttribute="leading" secondItem="6Rv-zA-cQM" secondAttribute="trailing" constant="26" id="33R-Rx-1R9"/>
-                                                        <constraint firstAttribute="trailing" secondItem="UUx-iN-XZy" secondAttribute="trailing" constant="8" id="NUg-ew-m2s"/>
-                                                        <constraint firstItem="1No-6U-IBu" firstAttribute="centerY" secondItem="6Rv-zA-cQM" secondAttribute="centerY" id="OI4-ph-SIj"/>
-                                                        <constraint firstAttribute="height" constant="58" id="Ono-fV-6KK"/>
-                                                        <constraint firstItem="UUx-iN-XZy" firstAttribute="leading" secondItem="k2c-Dz-v5d" secondAttribute="leading" constant="8" id="UPh-ZN-Ral"/>
-                                                        <constraint firstItem="1No-6U-IBu" firstAttribute="top" secondItem="k2c-Dz-v5d" secondAttribute="top" constant="5" id="klu-vG-GmQ"/>
-                                                        <constraint firstAttribute="trailing" secondItem="1No-6U-IBu" secondAttribute="trailing" constant="8" id="qW4-G5-0rM"/>
-                                                        <constraint firstAttribute="bottom" secondItem="UUx-iN-XZy" secondAttribute="bottom" constant="10" id="xku-3U-rnO"/>
-                                                        <constraint firstItem="QoO-gr-aJt" firstAttribute="leading" secondItem="k2c-Dz-v5d" secondAttribute="leadingMargin" id="xt6-hv-Ycp"/>
-                                                    </constraints>
-                                                </view>
                                                 <view clipsSubviews="YES" tag="3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ag9-tE-dZz">
-                                                    <rect key="frame" x="15" y="216" width="315" height="82"/>
+                                                    <rect key="frame" x="15" y="206" width="315" height="82"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ScriptPubKey" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OLJ-qb-aKi">
                                                             <rect key="frame" x="8" y="8" width="97.5" height="18"/>
@@ -429,16 +329,12 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="sIk-3o-hJh" firstAttribute="top" secondItem="YzG-8t-O23" secondAttribute="topMargin" constant="2" id="0eO-0A-uAi"/>
-                                                <constraint firstItem="k2c-Dz-v5d" firstAttribute="leading" secondItem="YzG-8t-O23" secondAttribute="leadingMargin" id="2Cm-qi-F73"/>
-                                                <constraint firstItem="k2c-Dz-v5d" firstAttribute="trailing" secondItem="YzG-8t-O23" secondAttribute="trailingMargin" id="F4x-j7-heS"/>
                                                 <constraint firstItem="ag9-tE-dZz" firstAttribute="leading" secondItem="YzG-8t-O23" secondAttribute="leadingMargin" id="Jjk-jk-xyx"/>
-                                                <constraint firstItem="k2c-Dz-v5d" firstAttribute="top" secondItem="ag9-tE-dZz" secondAttribute="bottom" constant="8" id="Spv-jp-luk"/>
                                                 <constraint firstItem="ag9-tE-dZz" firstAttribute="trailing" secondItem="YzG-8t-O23" secondAttribute="trailingMargin" id="aNO-06-ZLi"/>
                                                 <constraint firstItem="sIk-3o-hJh" firstAttribute="leading" secondItem="YzG-8t-O23" secondAttribute="leadingMargin" id="b05-Ra-wX6"/>
                                                 <constraint firstItem="VvA-GC-RcO" firstAttribute="top" secondItem="sIk-3o-hJh" secondAttribute="bottom" constant="12" id="d1B-Ca-lqj"/>
                                                 <constraint firstItem="VvA-GC-RcO" firstAttribute="leading" secondItem="YzG-8t-O23" secondAttribute="leadingMargin" id="df0-JX-tBp"/>
                                                 <constraint firstItem="VvA-GC-RcO" firstAttribute="trailing" secondItem="YzG-8t-O23" secondAttribute="trailingMargin" id="f86-1O-hhe"/>
-                                                <constraint firstItem="k2c-Dz-v5d" firstAttribute="bottom" secondItem="YzG-8t-O23" secondAttribute="bottomMargin" id="uOZ-Yu-b5q"/>
                                                 <constraint firstItem="sIk-3o-hJh" firstAttribute="trailing" secondItem="YzG-8t-O23" secondAttribute="trailingMargin" id="wb0-7d-gkE"/>
                                                 <constraint firstItem="ag9-tE-dZz" firstAttribute="top" secondItem="VvA-GC-RcO" secondAttribute="bottom" constant="8" id="xsy-Zb-J24"/>
                                             </constraints>
@@ -1638,11 +1534,18 @@
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
-                        <barButtonItem key="rightBarButtonItem" image="gear" catalog="system" id="0PZ-Jg-vxe">
-                            <connections>
-                                <action selector="goToSettings:" destination="XmP-lK-cua" id="qEa-P5-u1a"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem image="gear" catalog="system" id="0PZ-Jg-vxe">
+                                <connections>
+                                    <action selector="goToSettings:" destination="XmP-lK-cua" id="qEa-P5-u1a"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="bitcoinsign.square" catalog="system" id="MWv-RR-Py5">
+                                <connections>
+                                    <action selector="showSeeds:" destination="XmP-lK-cua" id="O3D-Au-O1H"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -1657,6 +1560,7 @@
                         <segue destination="NHv-UH-1lX" kind="presentation" identifier="goDonate" id="C3T-yU-SMU"/>
                         <segue destination="reL-7P-R3q" kind="presentation" identifier="refillMsigFromHome" id="pun-AW-DGw"/>
                         <segue destination="xB3-mY-13p" kind="show" identifier="goConfirmPsbtSegue" id="Xe1-Me-c8c"/>
+                        <segue destination="VJd-Zg-l3G" kind="show" identifier="segueToSeeds" id="1Sp-OB-6eU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dhK-90-srt" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2271,6 +2175,54 @@ Blockchain Commons and Fully Noded 2 never share any data with any third party e
             </objects>
             <point key="canvasLocation" x="-9711" y="-1263"/>
         </scene>
+        <!--Seeds-->
+        <scene sceneID="vKB-66-bdF">
+            <objects>
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="VJd-Zg-l3G" customClass="SeedsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cYk-BM-UNZ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="AMy-2q-Zq7">
+                                <rect key="frame" x="0.0" y="44" width="375" height="574"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="seedCell" id="rmQ-0i-MOA">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rmQ-0i-MOA" id="j7I-Az-DBJ">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="VJd-Zg-l3G" id="6V1-cs-JmT"/>
+                                    <outlet property="delegate" destination="VJd-Zg-l3G" id="7fT-oB-GSl"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="AMy-2q-Zq7" firstAttribute="leading" secondItem="Rga-dx-ugh" secondAttribute="leading" id="3Gh-k1-EZP"/>
+                            <constraint firstItem="AMy-2q-Zq7" firstAttribute="trailing" secondItem="Rga-dx-ugh" secondAttribute="trailing" id="COw-v2-YHs"/>
+                            <constraint firstItem="AMy-2q-Zq7" firstAttribute="bottom" secondItem="Rga-dx-ugh" secondAttribute="bottom" id="isv-tk-mfe"/>
+                            <constraint firstItem="AMy-2q-Zq7" firstAttribute="top" secondItem="Rga-dx-ugh" secondAttribute="top" id="rSC-PI-X6c"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Rga-dx-ugh"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Seeds" id="OHg-dv-23m"/>
+                    <connections>
+                        <outlet property="seedsTable" destination="AMy-2q-Zq7" id="60g-eJ-PfT"/>
+                        <segue destination="kR7-Mg-fhs" kind="show" identifier="addSeedSegue" id="622-Us-Cp3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zXZ-R8-egb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-10927.200000000001" y="371.96401799100454"/>
+        </scene>
         <!--Donate View Controller-->
         <scene sceneID="7jc-m3-rrH">
             <objects>
@@ -2419,7 +2371,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
         <!--QuickConnect QR-->
         <scene sceneID="S5B-qY-ww0">
             <objects>
-                <viewController id="o69-RN-9VD" customClass="ScannerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tBq-5k-T1U">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2441,7 +2393,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                     <navigationItem key="navigationItem" title="QuickConnect QR" id="599-rY-RlY"/>
                     <connections>
                         <outlet property="imageView" destination="0zB-Cx-vSF" id="p6E-U5-ptt"/>
-                        <segue destination="xB3-mY-13p" kind="show" identifier="goConfirmPsbt" id="Sh6-1X-4BR"/>
+                        <segue destination="xB3-mY-13p" kind="presentation" identifier="goConfirmPsbt" id="Sh6-1X-4BR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yzr-Ht-6RX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2627,11 +2579,18 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hCl-Q8-hd5">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="668"/>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.0 btc / $0 available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6jp-Ka-1Xg">
+                                <rect key="frame" x="16" y="53" width="110" height="13.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="vds-w7-arV" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="2BM-5g-VLP"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="jXp-xP-J4h" secondAttribute="trailing" id="561-gS-kW0"/>
+                            <constraint firstItem="6jp-Ka-1Xg" firstAttribute="top" secondItem="C0H-pw-RSl" secondAttribute="top" constant="9" id="7Kz-bN-YV6"/>
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="top" secondItem="DIN-Fg-EH6" secondAttribute="top" id="9aj-Tf-f3P"/>
                             <constraint firstItem="uIC-Eu-XZD" firstAttribute="top" secondItem="WBT-v4-ipz" secondAttribute="bottom" constant="8" id="DXs-Lg-hVd"/>
                             <constraint firstItem="jXp-xP-J4h" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" id="HMJ-p4-PHt"/>
@@ -2641,6 +2600,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" id="OxE-DM-w3a"/>
                             <constraint firstItem="WBT-v4-ipz" firstAttribute="top" secondItem="WP2-Zk-iPW" secondAttribute="bottom" constant="2" id="PVV-4W-qTm"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="WP2-Zk-iPW" secondAttribute="trailing" constant="16" id="VGY-U4-MYV"/>
+                            <constraint firstItem="6jp-Ka-1Xg" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="XmC-VO-PkA"/>
                             <constraint firstItem="WP2-Zk-iPW" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="ZMe-Mx-WXx"/>
                             <constraint firstItem="WP2-Zk-iPW" firstAttribute="top" secondItem="QCt-8G-YWG" secondAttribute="bottom" constant="-9" id="b0D-jZ-HmO"/>
                             <constraint firstItem="WBT-v4-ipz" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="hK9-5c-4z1"/>
@@ -2669,6 +2629,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <outlet property="addressInput" destination="vds-w7-arV" id="5t3-zG-W8O"/>
                         <outlet property="amountInput" destination="WBT-v4-ipz" id="4zO-8O-Q8c"/>
                         <outlet property="amountLabel" destination="WP2-Zk-iPW" id="fVP-up-4Ws"/>
+                        <outlet property="availableBalance" destination="6jp-Ka-1Xg" id="d7g-QE-tRK"/>
                         <outlet property="outputsTable" destination="jXp-xP-J4h" id="y02-Rq-oD9"/>
                         <outlet property="qrScannerOutlet" destination="dOe-be-vZT" id="Dkz-st-n96"/>
                         <outlet property="receivingLabel" destination="uIC-Eu-XZD" id="wYg-jj-lxo"/>
@@ -2689,7 +2650,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="A2T-tZ-Y6M">
-                                <rect key="frame" x="16" y="95" width="343" height="509"/>
+                                <rect key="frame" x="16" y="95" width="343" height="558"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="inputCell" rowHeight="78" id="6pv-wa-mjr">
@@ -2854,7 +2815,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="yLm-bN-fYY">
-                                <rect key="frame" x="16" y="64" width="343" height="534"/>
+                                <rect key="frame" x="16" y="64" width="343" height="583"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -3067,8 +3028,8 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                     <outlet property="delegate" destination="lq5-Pd-gqW" id="z0d-FI-zxt"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device Seed Info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gaj-a7-OpI">
-                                <rect key="frame" x="16" y="5" width="234" height="54"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account Info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gaj-a7-OpI">
+                                <rect key="frame" x="16" y="5" width="178.5" height="54"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="54" id="9in-tV-luE"/>
                                 </constraints>
@@ -3127,7 +3088,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                     <constraint firstAttribute="height" constant="31" id="OBo-l1-eEK"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wallet successfully created!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aef-bh-l0x">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account successfully created!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aef-bh-l0x">
                                 <rect key="frame" x="53" y="52" width="306" height="83"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="83" id="Z8w-lx-P3y"/>
@@ -3137,11 +3098,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="uIe-4E-bmA">
-                                <rect key="frame" x="16" y="185" width="343" height="363"/>
+                                <rect key="frame" x="16" y="185" width="343" height="412"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">In order to ensure you can recover your wallet there is some information you ought to record securely.
+                                <string key="text">In order to ensure you can recover your account there is some information you ought to record securely.
 
-You will be presented with a Recovery QR code and a 12 word recovery phrase.
+You will be presented with an Account Map QR code and a 12 word seed phrase.
 
 You should make mutliple backups of each and store them in seperate locations.</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -3149,7 +3110,7 @@ You should make mutliple backups of each and store them in seperate locations.</
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xwM-qa-HzN">
-                                <rect key="frame" x="159" y="568" width="57" height="30"/>
+                                <rect key="frame" x="159" y="617" width="57" height="30"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="57" id="8cC-7B-qfE"/>
@@ -3198,7 +3159,7 @@ You should make mutliple backups of each and store them in seperate locations.</
             </objects>
             <point key="canvasLocation" x="-4452" y="1100.5997001499252"/>
         </scene>
-        <!--Recovery QR-->
+        <!--Wallet Import QR-->
         <scene sceneID="zcX-u3-cQY">
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="M6J-Vn-XJt" customClass="WalletCreatedQRViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -3207,7 +3168,7 @@ You should make mutliple backups of each and store them in seperate locations.</
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9dU-ye-Td9">
-                                <rect key="frame" x="155.5" y="524" width="64" height="30"/>
+                                <rect key="frame" x="155.5" y="573" width="64" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="64" id="9d9-3i-pvJ"/>
@@ -3220,26 +3181,26 @@ You should make mutliple backups of each and store them in seperate locations.</
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3e6-6s-1Ti">
-                                <rect key="frame" x="16" y="20" width="343" height="124"/>
+                                <rect key="frame" x="16" y="0.0" width="343" height="144"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="124" id="sd9-WE-sci"/>
+                                    <constraint firstAttribute="height" constant="144" id="sd9-WE-sci"/>
                                 </constraints>
-                                <string key="text">THIS QR MUST BE SAVED IN ORDER TO RECOVER YOUR WALLET!
+                                <string key="text">YOU WILL NEED THIS QR TO RECOVER A MULTI-SIG WALLET! Make many copies of it and save it in many physical and digital places!
 
-It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the event that you lost your device or deleted the app. Save it somewhere safe!</string>
+It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order to spend from it you will need the seed words.</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="tap to export" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bmQ-xs-Ux4">
-                                <rect key="frame" x="153.5" y="152" width="68" height="14"/>
+                                <rect key="frame" x="153.5" y="152" width="68" height="63"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Xql-p6-Jpw">
-                                <rect key="frame" x="24.5" y="174" width="326" height="326"/>
+                                <rect key="frame" x="24.5" y="223" width="326" height="326"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Xql-p6-Jpw" secondAttribute="height" multiplier="1:1" id="Q0O-u6-Mqr"/>
                                 </constraints>
@@ -3250,7 +3211,7 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
                             <constraint firstItem="Xql-p6-Jpw" firstAttribute="centerX" secondItem="9i8-aS-4OV" secondAttribute="centerX" id="1y0-3D-4UT"/>
                             <constraint firstItem="9dU-ye-Td9" firstAttribute="top" secondItem="Xql-p6-Jpw" secondAttribute="bottom" constant="24" id="5a8-w3-8IX"/>
                             <constraint firstItem="BhL-og-eCq" firstAttribute="bottom" secondItem="9dU-ye-Td9" secondAttribute="bottom" constant="20" id="BNF-jN-Vvf"/>
-                            <constraint firstItem="3e6-6s-1Ti" firstAttribute="top" secondItem="BhL-og-eCq" secondAttribute="top" constant="20" id="CU1-EI-rBF"/>
+                            <constraint firstItem="3e6-6s-1Ti" firstAttribute="top" secondItem="BhL-og-eCq" secondAttribute="top" id="CU1-EI-rBF"/>
                             <constraint firstItem="BhL-og-eCq" firstAttribute="trailing" secondItem="Xql-p6-Jpw" secondAttribute="trailing" constant="24.5" id="FPH-YI-i9B"/>
                             <constraint firstItem="BhL-og-eCq" firstAttribute="trailing" secondItem="3e6-6s-1Ti" secondAttribute="trailing" constant="16" id="Jqw-KH-UBg"/>
                             <constraint firstItem="Xql-p6-Jpw" firstAttribute="leading" secondItem="BhL-og-eCq" secondAttribute="leading" constant="24.5" id="Knm-vf-tlG"/>
@@ -3263,7 +3224,7 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="BhL-og-eCq"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Recovery QR" id="ydV-iu-p5u"/>
+                    <navigationItem key="navigationItem" title="Wallet Import QR" id="ydV-iu-p5u"/>
                     <connections>
                         <outlet property="nextOutlet" destination="9dU-ye-Td9" id="dDS-1I-1Xz"/>
                         <outlet property="qrView" destination="Xql-p6-Jpw" id="YPS-Zo-OQw"/>
@@ -3341,7 +3302,7 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </stackView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zeg-gD-nXd">
-                                <rect key="frame" x="133.5" y="569" width="108" height="30"/>
+                                <rect key="frame" x="133.5" y="618" width="108" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="108" id="AyX-sh-90j"/>
@@ -3440,7 +3401,7 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XLw-9b-ixq">
-                                <rect key="frame" x="133.5" y="570" width="108" height="30"/>
+                                <rect key="frame" x="133.5" y="619" width="108" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="0pu-CH-uyz"/>
@@ -3593,7 +3554,7 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MpI-zv-VI9">
-                                <rect key="frame" x="155" y="532" width="65" height="30"/>
+                                <rect key="frame" x="155" y="581" width="65" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="65" id="KaA-jr-Lbd"/>
@@ -3606,7 +3567,7 @@ It can be scanned or uploaded with FullyNoded 2 to recover this wallet in the ev
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AFT-F7-8fK">
-                                <rect key="frame" x="16" y="0.0" width="343" height="524"/>
+                                <rect key="frame" x="16" y="0.0" width="343" height="573"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <string key="text">On the next screen we will display 12 very important words.
 
@@ -3642,80 +3603,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XKh-yp-pOP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-4424.8000000000002" y="2570.4647676161921"/>
-        </scene>
-        <!--Recovery Info View Controller-->
-        <scene sceneID="kFv-7U-kQH">
-            <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="mpv-4x-lR1" customClass="RecoveryInfoViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="CQD-SJ-6Ik">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zvt-he-qUT">
-                                <rect key="frame" x="16" y="66" width="343" height="284.5"/>
-                                <string key="text">Simply enter your words one by one or scan the RecoveryQR, then tap "Recover Now".
-
-FullyNoded 2 allows you to use single signature and multi signature wallets. These wallets work in tandem on your device and node. Therefore there are a number of possible recovery scenarios to account for. Such as losing your device, or your node or both.
-
-In the event that you lost your node *AND* device and want to fully recover a multi-sig wallet you will need to add your Recovery words *AND* scan the RecoveryQR.
-
-For all other scenarios simply scanning the RecoveryQR will work just fine, that applies to multi-sig and single-sig wallets.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="2Zd-8m-YlV">
-                                <rect key="frame" x="16" y="20.5" width="30" height="37"/>
-                                <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="30" id="4Ie-J0-7fU"/>
-                                    <constraint firstAttribute="height" constant="38" id="80e-gw-bnN"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recovery Info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7kw-5I-2e6">
-                                <rect key="frame" x="64" y="21" width="191.5" height="36"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mxY-P8-UCi">
-                                <rect key="frame" x="110.5" y="370" width="154" height="57"/>
-                                <color key="backgroundColor" red="0.1194876269" green="0.1194876269" blue="0.1194876269" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="154" id="g7P-GF-l1G"/>
-                                    <constraint firstAttribute="height" constant="57" id="i6d-GA-H3N"/>
-                                </constraints>
-                                <state key="normal" title="Got it!">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="gotIt:" destination="riv-TL-Tgh" eventType="touchUpInside" id="g9b-Bf-u0z"/>
-                                    <action selector="gotit:" destination="mpv-4x-lR1" eventType="touchUpInside" id="Wx9-Y8-4tD"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="zvt-he-qUT" firstAttribute="top" secondItem="2Zd-8m-YlV" secondAttribute="bottom" constant="8" id="0JN-Ym-Iio"/>
-                            <constraint firstItem="zvt-he-qUT" firstAttribute="leading" secondItem="WSj-P4-KeQ" secondAttribute="leading" constant="16" id="3CB-ss-5k3"/>
-                            <constraint firstItem="WSj-P4-KeQ" firstAttribute="trailing" secondItem="zvt-he-qUT" secondAttribute="trailing" constant="16" id="Bu7-8i-L7t"/>
-                            <constraint firstItem="mxY-P8-UCi" firstAttribute="centerX" secondItem="CQD-SJ-6Ik" secondAttribute="centerX" id="Ekl-Nt-6x6"/>
-                            <constraint firstItem="mxY-P8-UCi" firstAttribute="top" secondItem="zvt-he-qUT" secondAttribute="bottom" constant="19.5" id="IhF-NU-GY4"/>
-                            <constraint firstItem="7kw-5I-2e6" firstAttribute="centerY" secondItem="2Zd-8m-YlV" secondAttribute="centerY" id="Q7B-T0-USx"/>
-                            <constraint firstItem="2Zd-8m-YlV" firstAttribute="leading" secondItem="WSj-P4-KeQ" secondAttribute="leading" constant="16" id="R23-5o-Kxz"/>
-                            <constraint firstItem="2Zd-8m-YlV" firstAttribute="top" secondItem="WSj-P4-KeQ" secondAttribute="top" constant="20" id="dGc-fd-Q7e"/>
-                            <constraint firstItem="7kw-5I-2e6" firstAttribute="leading" secondItem="2Zd-8m-YlV" secondAttribute="trailing" constant="18" id="ng3-lM-wzZ"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="WSj-P4-KeQ"/>
-                    </view>
-                    <connections>
-                        <outlet property="gotItOutlet" destination="mxY-P8-UCi" id="Shq-LM-Z6b"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="U6G-UL-aIx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="riv-TL-Tgh" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="-3546" y="2563"/>
         </scene>
         <!--Confirm-->
         <scene sceneID="ksL-eU-VG9">
@@ -4091,7 +3978,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
             </objects>
             <point key="canvasLocation" x="-8090.3999999999996" y="1234.6326836581711"/>
         </scene>
-        <!--Recovery QR-->
+        <!--Account Map QR-->
         <scene sceneID="k9E-E2-70I">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Elr-wf-cyI" customClass="WalletRecoverViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -4107,7 +3994,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                     <constraint firstAttribute="width" constant="283" id="wT5-bR-fEp"/>
                                 </constraints>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Scan recovery QR code" image="qrcode.viewfinder" catalog="system">
+                                <state key="normal" title="  Scan Account Map QR code" image="qrcode.viewfinder" catalog="system">
                                     <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -4115,7 +4002,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 </connections>
                             </button>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40V-y5-mzs">
-                                <rect key="frame" x="0.0" y="571" width="375" height="32"/>
+                                <rect key="frame" x="0.0" y="620" width="375" height="32"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="32" id="7HP-8K-AV8"/>
@@ -4141,11 +4028,10 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="duj-2r-qsr"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Recovery QR" id="vZu-kK-u52"/>
+                    <navigationItem key="navigationItem" title="Account Map QR" id="vZu-kK-u52"/>
                     <connections>
                         <outlet property="scanButton" destination="nsz-u9-Mzm" id="roa-rd-akK"/>
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="scanRecovery" id="zkr-zY-rLG"/>
-                        <segue destination="mpv-4x-lR1" kind="presentation" identifier="showInfo" id="bKo-Oo-Ia3"/>
                         <segue destination="0g2-8e-jCH" kind="show" identifier="goConfirmQr" id="mqi-NU-Y0K"/>
                         <segue destination="kR7-Mg-fhs" kind="show" identifier="getWords" id="7qw-Ys-xsH"/>
                     </connections>
@@ -4154,7 +4040,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
             </objects>
             <point key="canvasLocation" x="-3546.4000000000001" y="1100.5997001499252"/>
         </scene>
-        <!--Recovery Words-->
+        <!--Seed Words-->
         <scene sceneID="zAi-gs-cRc">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="kR7-Mg-fhs" customClass="WordRecoveryViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -4213,7 +4099,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gfM-eP-RM3"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Recovery Words" id="3Du-fY-hLc"/>
+                    <navigationItem key="navigationItem" title="Seed Words" id="3Du-fY-hLc"/>
                     <connections>
                         <outlet property="textField" destination="Gyn-mg-Z8d" id="ykG-0f-liV"/>
                         <outlet property="wordView" destination="Ir0-SX-h8D" id="MbA-iZ-B10"/>
@@ -4358,7 +4244,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
             </objects>
             <point key="canvasLocation" x="-95.200000000000003" y="375.56221889055473"/>
         </scene>
-        <!--Wallet Tools-->
+        <!--Tools-->
         <scene sceneID="s4f-Br-O6C">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="51a-bL-HRe" customClass="WalletToolsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -4404,7 +4290,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                     <constraint firstAttribute="width" constant="254" id="ihh-2x-n2Y"/>
                                 </constraints>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="   Refill keypool        " image="arrow.2.circlepath" catalog="system">
+                                <state key="normal" title="  Refill node keypool" image="arrow.2.circlepath" catalog="system">
                                     <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -4440,7 +4326,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="v75-Xo-dcA"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Wallet Tools" id="m1L-kq-wZ8"/>
+                    <navigationItem key="navigationItem" title="Tools" id="m1L-kq-wZ8"/>
                     <connections>
                         <outlet property="addSignerOutlet" destination="uqd-eM-Y70" id="gJ5-CB-BBP"/>
                         <outlet property="refillOutlet" destination="xJG-pY-hmO" id="Cod-JP-uX8"/>
@@ -4459,11 +4345,11 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="reL-7P-R3q" customClass="RefillMultisigViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZRF-hf-jJd">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In order to refill the keypool for multisig wallets you need to enter your offline recover phrase." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="np9-Jt-mqz">
-                                <rect key="frame" x="16" y="20" width="343" height="80"/>
+                                <rect key="frame" x="16" y="64" width="343" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="ynN-yl-bJb"/>
                                 </constraints>
@@ -4472,19 +4358,19 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 <nil key="highlightedColor"/>
                             </label>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y4A-rC-7g8">
-                                <rect key="frame" x="16" y="150" width="343" height="370"/>
+                                <rect key="frame" x="16" y="194" width="343" height="370"/>
                                 <color key="backgroundColor" red="0.10182027284263961" green="0.10182027284263961" blue="0.10182027284263961" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="370" id="qqO-Om-Ulf"/>
                                 </constraints>
                             </view>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="recovery words" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PUj-6s-7Hk">
-                                <rect key="frame" x="44" y="108" width="287" height="34"/>
+                                <rect key="frame" x="44" y="152" width="287" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Keb-UP-Izd">
-                                <rect key="frame" x="16" y="114" width="20" height="22"/>
+                                <rect key="frame" x="16" y="158" width="20" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="20" id="PbQ-R3-TsB"/>
                                     <constraint firstAttribute="height" constant="22" id="XLm-lW-kxj"/>
@@ -4496,7 +4382,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zu8-9H-CiC">
-                                <rect key="frame" x="339" y="114" width="20" height="22"/>
+                                <rect key="frame" x="339" y="158" width="20" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="20" id="76P-A3-eeA"/>
                                     <constraint firstAttribute="height" constant="22" id="aSZ-zt-yKs"/>
@@ -4508,7 +4394,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z3L-oO-DTP">
-                                <rect key="frame" x="99" y="601" width="177" height="27"/>
+                                <rect key="frame" x="99" y="621" width="177" height="27"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="27" id="DWa-of-avE"/>
                                     <constraint firstAttribute="width" constant="177" id="kJA-SC-WGa"/>
@@ -4563,7 +4449,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GAV-8b-V2V">
-                                <rect key="frame" x="16" y="89" width="343" height="509"/>
+                                <rect key="frame" x="16" y="89" width="343" height="558"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -4786,7 +4672,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
             </objects>
             <point key="canvasLocation" x="-94" y="1128"/>
         </scene>
-        <!--Wallets-->
+        <!--Accounts-->
         <scene sceneID="xPx-UU-NTd">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" modalPresentationStyle="fullScreen" id="3uQ-0D-YgM" customClass="WalletsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -4795,7 +4681,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="JXW-QX-3AG">
-                                <rect key="frame" x="0.0" y="63" width="375" height="556"/>
+                                <rect key="frame" x="0.0" y="63" width="375" height="605"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="singleSigWalletCell" rowHeight="385" id="GZc-Lm-9ch">
@@ -4973,7 +4859,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="📱" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fds-1S-xmg">
-                                                            <rect key="frame" x="254" y="10" width="20" height="17"/>
+                                                            <rect key="frame" x="287" y="10" width="20" height="17"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="17" id="ald-Z2-Bf7"/>
                                                                 <constraint firstAttribute="width" constant="20" id="b4q-g5-Qha"/>
@@ -4982,30 +4868,19 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jsT-JM-dwh">
-                                                            <rect key="frame" x="278" y="4.5" width="28" height="28"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="28" id="220-6L-vVe"/>
-                                                                <constraint firstAttribute="height" constant="28" id="eUE-iS-P1N"/>
-                                                            </constraints>
-                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <state key="normal" image="info.circle" catalog="system"/>
-                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.11157282175978181" green="0.14015675464891095" blue="0.16410052308781731" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="pyd-Ka-tcK" firstAttribute="leading" secondItem="dsR-fd-JD7" secondAttribute="trailing" constant="5" id="Dyv-cy-93U"/>
                                                         <constraint firstAttribute="height" constant="37" id="FTw-bS-4Ev"/>
-                                                        <constraint firstItem="jsT-JM-dwh" firstAttribute="centerY" secondItem="AMk-q2-GQu" secondAttribute="centerY" id="GNk-79-cyF"/>
                                                         <constraint firstAttribute="bottom" secondItem="GYH-38-DIo" secondAttribute="bottom" constant="3" id="Izd-hW-mtQ"/>
                                                         <constraint firstItem="Rv1-3Q-zmL" firstAttribute="leading" secondItem="GYH-38-DIo" secondAttribute="trailing" constant="6" id="MTh-Q0-kuQ"/>
                                                         <constraint firstItem="GYH-38-DIo" firstAttribute="top" secondItem="dsR-fd-JD7" secondAttribute="bottom" id="URf-Qi-t3E"/>
-                                                        <constraint firstItem="jsT-JM-dwh" firstAttribute="leading" secondItem="Fds-1S-xmg" secondAttribute="trailing" constant="4" id="VNj-zT-vBV"/>
                                                         <constraint firstItem="pyd-Ka-tcK" firstAttribute="centerY" secondItem="dsR-fd-JD7" secondAttribute="centerY" id="Zfb-G7-RKn"/>
                                                         <constraint firstItem="Fds-1S-xmg" firstAttribute="centerY" secondItem="AMk-q2-GQu" secondAttribute="centerY" id="acc-s9-4hI"/>
-                                                        <constraint firstAttribute="trailing" secondItem="jsT-JM-dwh" secondAttribute="trailing" constant="9" id="cpr-q0-XIy"/>
                                                         <constraint firstItem="dsR-fd-JD7" firstAttribute="leading" secondItem="AMk-q2-GQu" secondAttribute="leading" constant="4" id="dfK-7Y-Ebn"/>
                                                         <constraint firstItem="GYH-38-DIo" firstAttribute="leading" secondItem="AMk-q2-GQu" secondAttribute="leading" constant="4" id="hvF-ZG-W2i"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Fds-1S-xmg" secondAttribute="trailing" constant="8" id="jFU-Ue-GZP"/>
                                                         <constraint firstItem="dsR-fd-JD7" firstAttribute="top" secondItem="AMk-q2-GQu" secondAttribute="top" constant="4" id="lLX-G7-mNy"/>
                                                         <constraint firstItem="Rv1-3Q-zmL" firstAttribute="centerY" secondItem="GYH-38-DIo" secondAttribute="centerY" id="whB-Uq-CQi"/>
                                                     </constraints>
@@ -5130,22 +5005,27 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                             <rect key="frame" x="8" y="6" width="297" height="26"/>
                                                             <subviews>
                                                                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dy0-g8-zgF">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="85.5" height="26"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="59.5" height="26"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="eye" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ix-Mm-4fG">
-                                                                    <rect key="frame" x="105.5" y="0.0" width="86" height="26"/>
+                                                                    <rect key="frame" x="79.5" y="0.0" width="59" height="26"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="checkmark.seal" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5s-y7-UKM">
-                                                                    <rect key="frame" x="211.5" y="0.0" width="85.5" height="26"/>
+                                                                    <rect key="frame" x="158.5" y="0.0" width="59.5" height="26"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="list.number" catalog="system">
                                                                         <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     </state>
+                                                                </button>
+                                                                <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jsT-JM-dwh">
+                                                                    <rect key="frame" x="238" y="0.0" width="59" height="26"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <state key="normal" image="info.circle" catalog="system"/>
                                                                 </button>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -5290,12 +5170,12 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="oWp-iO-M9B">
                                                             <rect key="frame" x="142" y="11" width="61.5" height="22"/>
                                                             <subviews>
-                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
+                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
                                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="22"/>
                                                                     <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                                 </button>
-                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
                                                                     <rect key="frame" x="27" y="0.0" width="34.5" height="22"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -5494,7 +5374,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="📱" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfO-dM-Tf0">
-                                                            <rect key="frame" x="254" y="10" width="20" height="17"/>
+                                                            <rect key="frame" x="286" y="10" width="20" height="17"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="20" id="sYS-uw-jp1"/>
                                                                 <constraint firstAttribute="height" constant="17" id="xb0-1W-C9M"/>
@@ -5503,30 +5383,19 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VFK-kv-E0g">
-                                                            <rect key="frame" x="278" y="4.5" width="28" height="28"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="28" id="2oS-7W-pn9"/>
-                                                                <constraint firstAttribute="height" constant="28" id="Ibm-UI-SLV"/>
-                                                            </constraints>
-                                                            <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <state key="normal" image="info.circle" catalog="system"/>
-                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.098183676662712258" green="0.1306873117954245" blue="0.15651240682741119" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstItem="Wqe-tS-Vvx" firstAttribute="leading" secondItem="xIK-fc-Mq4" secondAttribute="leading" constant="4" id="1E5-rk-1EV"/>
-                                                        <constraint firstItem="VFK-kv-E0g" firstAttribute="centerY" secondItem="xIK-fc-Mq4" secondAttribute="centerY" id="4hp-2j-JG2"/>
                                                         <constraint firstItem="Z6v-s2-xfj" firstAttribute="leading" secondItem="xIK-fc-Mq4" secondAttribute="leading" constant="4" id="5Wa-V7-YAJ"/>
                                                         <constraint firstItem="dfO-dM-Tf0" firstAttribute="centerY" secondItem="xIK-fc-Mq4" secondAttribute="centerY" id="5bE-7f-aO2"/>
                                                         <constraint firstItem="WOV-GG-FCG" firstAttribute="leading" secondItem="Z6v-s2-xfj" secondAttribute="trailing" constant="5" id="8D2-nc-dm4"/>
                                                         <constraint firstAttribute="height" constant="37" id="IdV-yK-A0B"/>
                                                         <constraint firstItem="Z6v-s2-xfj" firstAttribute="top" secondItem="xIK-fc-Mq4" secondAttribute="top" constant="4" id="PON-lQ-Ae4"/>
                                                         <constraint firstItem="WOV-GG-FCG" firstAttribute="centerY" secondItem="Z6v-s2-xfj" secondAttribute="centerY" id="UFT-4q-DZE"/>
+                                                        <constraint firstAttribute="trailing" secondItem="dfO-dM-Tf0" secondAttribute="trailing" constant="8" id="UHz-ps-PhR"/>
                                                         <constraint firstItem="U4i-fI-IN8" firstAttribute="centerY" secondItem="Wqe-tS-Vvx" secondAttribute="centerY" id="VVw-6N-bQt"/>
                                                         <constraint firstItem="U4i-fI-IN8" firstAttribute="leading" secondItem="Wqe-tS-Vvx" secondAttribute="trailing" constant="6" id="VhH-j7-IIu"/>
-                                                        <constraint firstItem="VFK-kv-E0g" firstAttribute="leading" secondItem="dfO-dM-Tf0" secondAttribute="trailing" constant="4" id="d46-H7-55w"/>
-                                                        <constraint firstAttribute="trailing" secondItem="VFK-kv-E0g" secondAttribute="trailing" constant="8" id="r91-4D-tK9"/>
                                                         <constraint firstItem="Wqe-tS-Vvx" firstAttribute="top" secondItem="Z6v-s2-xfj" secondAttribute="bottom" id="vM1-oo-YPY"/>
                                                     </constraints>
                                                 </view>
@@ -5578,8 +5447,8 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                             <color key="textColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="📄" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HnI-vK-gV2">
-                                                            <rect key="frame" x="284" y="10" width="20" height="17"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HnI-vK-gV2">
+                                                            <rect key="frame" x="304" y="18.5" width="0.0" height="0.0"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -5608,17 +5477,17 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                             <rect key="frame" x="8" y="6" width="298" height="26"/>
                                                             <subviews>
                                                                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A8n-kc-3Gi">
-                                                                    <rect key="frame" x="0.0" y="2" width="86" height="22"/>
+                                                                    <rect key="frame" x="0.0" y="2" width="59.5" height="22"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="eye" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zca-xL-5Mz">
-                                                                    <rect key="frame" x="106" y="2" width="86" height="22"/>
+                                                                    <rect key="frame" x="79.5" y="2" width="59.5" height="22"/>
                                                                     <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="checkmark.seal" catalog="system"/>
                                                                 </button>
                                                                 <button opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IFi-Eu-JzX">
-                                                                    <rect key="frame" x="212" y="0.0" width="86" height="26"/>
+                                                                    <rect key="frame" x="159" y="0.0" width="59.5" height="26"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="75" id="nnD-px-wRB"/>
@@ -5628,6 +5497,11 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                                                     <state key="normal" image="list.number" catalog="system">
                                                                         <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     </state>
+                                                                </button>
+                                                                <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VFK-kv-E0g">
+                                                                    <rect key="frame" x="238.5" y="2" width="59.5" height="22"/>
+                                                                    <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <state key="normal" image="info.circle" catalog="system"/>
                                                                 </button>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -5706,7 +5580,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         <viewLayoutGuide key="safeArea" id="DAO-kd-lrb"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Wallets" image="square.stack.3d.down.right" catalog="system" id="3bs-tT-hzH"/>
-                    <navigationItem key="navigationItem" title="Wallets" id="E9A-mq-8W3"/>
+                    <navigationItem key="navigationItem" title="Accounts" id="E9A-mq-8W3"/>
                     <connections>
                         <outlet property="walletTable" destination="JXW-QX-3AG" id="FsL-zD-yAJ"/>
                         <segue destination="lq5-Pd-gqW" kind="presentation" identifier="exportSeed" id="Pnz-5F-hdP"/>
@@ -5721,16 +5595,16 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
             </objects>
             <point key="canvasLocation" x="-4199.1999999999998" y="-521.28935532233891"/>
         </scene>
-        <!--Create Wallet-->
+        <!--Create Account-->
         <scene sceneID="lEx-cV-voz">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="20O-ZD-xtI" customClass="ChooseWalletFormatViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="20O-ZD-xtI" customClass="ChooseWalletFormatViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3Xx-cw-zsB">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gC1-hS-rHa">
-                                <rect key="frame" x="285" y="570" width="74" height="30"/>
+                                <rect key="frame" x="285" y="619" width="74" height="30"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Cx2-wB-uV1"/>
@@ -5745,7 +5619,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HOc-9d-jGc">
-                                <rect key="frame" x="16" y="570" width="73" height="30"/>
+                                <rect key="frame" x="16" y="619" width="73" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="73" id="C56-lT-mcE"/>
                                     <constraint firstAttribute="height" constant="30" id="dxF-4o-waP"/>
@@ -5757,8 +5631,8 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                     <action selector="importAction:" destination="20O-ZD-xtI" eventType="touchUpInside" id="4P3-1c-Qbj"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose a wallet template:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dY0-2e-ZjJ">
-                                <rect key="frame" x="16" y="44" width="198" height="36"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose a template:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dY0-2e-ZjJ">
+                                <rect key="frame" x="16" y="44" width="148.5" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="36" id="Gfq-3F-ewh"/>
                                 </constraints>
@@ -5767,14 +5641,14 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qRS-Sq-Mau">
-                                <rect key="frame" x="163" y="546" width="51" height="31"/>
+                                <rect key="frame" x="163" y="595" width="51" height="31"/>
                                 <color key="onTintColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <action selector="switchCustomSeedAction:" destination="20O-ZD-xtI" eventType="valueChanged" id="l60-xI-Tgd"/>
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="custom seed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qpe-22-gpY">
-                                <rect key="frame" x="151.5" y="585" width="72.5" height="15"/>
+                                <rect key="frame" x="151.5" y="634" width="72.5" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -5920,7 +5794,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wnf-aC-02D"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Create Wallet" id="3KJ-fc-Wns"/>
+                    <navigationItem key="navigationItem" title="Create Account" id="3KJ-fc-Wns"/>
                     <connections>
                         <outlet property="coldInfoOutlet" destination="AIf-WJ-xQ6" id="Rt8-W9-xeg"/>
                         <outlet property="coldWalletOutlet" destination="Xeb-bL-FUE" id="aN5-ph-MBD"/>
@@ -6044,11 +5918,11 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
             </objects>
             <point key="canvasLocation" x="-4198" y="-2078"/>
         </scene>
-        <!--Wallets-->
+        <!--Accounts-->
         <scene sceneID="sfg-es-QcU">
             <objects>
                 <navigationController extendedLayoutIncludesOpaqueBars="YES" id="Tb8-sX-niL" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Wallets" image="square.stack.3d.down.right" catalog="system" id="Ng5-vU-qtu"/>
+                    <tabBarItem key="tabBarItem" title="Accounts" image="square.stack.3d.down.right" catalog="system" id="Ng5-vU-qtu"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="MnD-yK-HXB">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -6298,6 +6172,7 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
         <image name="arrow.down.circle" catalog="system" width="64" height="60"/>
         <image name="arrow.up.circle" catalog="system" width="64" height="60"/>
         <image name="arrowshape.turn.up.right" catalog="system" width="64" height="52"/>
+        <image name="bitcoinsign.square" catalog="system" width="64" height="56"/>
         <image name="blockchain-commons-logo.png" width="500" height="148"/>
         <image name="checkmark.circle" catalog="system" width="64" height="60"/>
         <image name="checkmark.seal" catalog="system" width="64" height="60"/>
@@ -6341,14 +6216,14 @@ For all other scenarios simply scanning the RecoveryQR will work just fine, that
         <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fBg-S5-BEW"/>
-        <segue reference="pun-AW-DGw"/>
-        <segue reference="HTQ-38-5NU"/>
-        <segue reference="fnD-hd-014"/>
-        <segue reference="ugm-aB-vA9"/>
+        <segue reference="msh-B5-XLl"/>
+        <segue reference="uaX-te-aDX"/>
+        <segue reference="Kzq-6W-yKR"/>
+        <segue reference="622-Us-Cp3"/>
+        <segue reference="9aM-UA-Kws"/>
         <segue reference="rM8-oF-xn4"/>
-        <segue reference="Xe1-Me-c8c"/>
-        <segue reference="LzA-tD-DJD"/>
+        <segue reference="cZz-Rg-m7M"/>
+        <segue reference="zkr-zY-rLG"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

@@ -9,7 +9,7 @@
 import UIKit
 import LibWally
 
-class ScannerViewController: UIViewController, UINavigationControllerDelegate {
+class ScannerViewController: UIViewController {
     
     var isImporting = Bool()
     var unsignedPsbt = ""
@@ -32,7 +32,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.delegate = self
         configureScanner()
         scanNow()
         
@@ -143,7 +142,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { [unowned vc = self] action in
                 
                 // Testnet Linode instance:
-                let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=BlockchainCommons%20Testing%20Node"
+                let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=Test%20Node"
                 vc.addBtcRpcQr(url: url)
 
             }))
@@ -163,7 +162,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         imageView.frame = view.frame
         imageView.isUserInteractionEnabled = true
         
-        print("scanningNode = \(scanningNode)")
         qrScanner.isScanningNode = scanningNode
         qrScanner.scanningRecovery = isRecovering
         qrScanner.isImporting = isImporting
@@ -413,9 +411,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                             if let _ = dict["descriptor"] as? String {
                                 
                                 if let _ = dict["birthdate"] as? Int32 {
-                                    
-                                    if let _ = dict["entropy"] as? String {
-                                        
+                                                                            
                                         if let _ = dict["blockheight"] as? Int {
                                             
                                             /// we know we are coming from wallet recovery view controller
@@ -458,12 +454,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                                             }
                                             
                                         }
-                                        
-                                    } else {
-                                        
-                                        invalidAlert()
-                                        
-                                    }
                                     
                                 } else {
                                     

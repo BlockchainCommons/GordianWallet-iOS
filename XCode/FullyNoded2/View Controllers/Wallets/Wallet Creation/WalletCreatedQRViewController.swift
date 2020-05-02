@@ -30,10 +30,10 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
         qrView.image = qr
         
         if error {
-            
-            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that sized image")
             
         }
+        
         nextOutlet.layer.cornerRadius = 8
         qrView.isUserInteractionEnabled = true
         tapQRGesture = UITapGestureRecognizer(target: self, action: #selector(self.shareQRCode(_:)))
@@ -43,9 +43,9 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
     
     @IBAction func nextAction(_ sender: Any) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.performSegue(withIdentifier: "goWords", sender: self)
+            vc.performSegue(withIdentifier: "goWords", sender: vc)
             
         }
         

@@ -39,6 +39,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     @IBOutlet var outputsTable: UITableView!
     @IBOutlet var scannerView: UIImageView!
     @IBOutlet var qrScannerOutlet: UIBarButtonItem!
+    @IBOutlet weak var availableBalance: UILabel!
     
     let creatingView = ConnectingView()
     let qrScanner = QRScanner()
@@ -52,6 +53,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         scannerView.frame = view.frame
         scannerView.isUserInteractionEnabled = true
         
+        qrScanner.scanningBip21 = true
         qrScanner.keepRunning = false
         qrScanner.vc = self
         qrScanner.imageView = scannerView
@@ -170,35 +172,25 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     
     func addOut() {
         
-        if outputArray.count > 0 && amountInput.text == "" && addressInput.text == "" {
+        if amountInput.text != "" && addressInput.text != "" && amountInput.text != "0.0" {
             
-            //tryRaw()
+            let dict = ["address":addressInput.text!, "amount":amountInput.text!] as [String : String]
             
-        } else {
-         
-            if amountInput.text != "" && addressInput.text != "" && amountInput.text != "0.0" {
-                
-                let dict = ["address":addressInput.text!, "amount":amountInput.text!] as [String : String]
-                
-                outputArray.append(dict)
-                recipients.append(addressInput.text!)
-                
-                DispatchQueue.main.async {
-                    
-                    //self.outputsTable.alpha = 1
-                    self.amountInput.text = ""
-                    self.addressInput.text = ""
-                    self.outputsTable.reloadData()
-                    
-                }
-                
-            } else {
-                
-                displayAlert(viewController: self,
-                             isError: true,
-                             message: "You need to fill out a recipient and amount first then tap this button, this button is used for adding multiple recipients aka \"batching\".")
+            outputArray.append(dict)
+            recipients.append(addressInput.text!)
+            
+            DispatchQueue.main.async { [unowned vc = self] in
+                vc.amountInput.text = ""
+                vc.addressInput.text = ""
+                vc.outputsTable.reloadData()
                 
             }
+            
+        } else {
+            
+            displayAlert(viewController: self,
+                         isError: true,
+                         message: "You need to fill out a recipient and amount first then tap this button, this button is used for adding multiple recipients aka \"batching\".")
             
         }
         
@@ -206,7 +198,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     
     @IBAction func addOutput(_ sender: Any) {
         
-        self.outputsTable.alpha = 1
+        outputsTable.alpha = 1
         addOut()
         
     }
@@ -284,6 +276,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         navigationController?.delegate = self
         outputsTable.tableFooterView = UIView(frame: .zero)
         outputsTable.alpha = 0
+        availableBalance.alpha = 0
         configureScanner()
         addTapGesture()
         scannerView.alpha = 0
@@ -299,13 +292,38 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     override func viewDidAppear(_ animated: Bool) {
         
         amount = ""
-        addressInput.text = ""
+        //addressInput.text = ""
         outputs.removeAll()
         outputArray.removeAll()
         outputsString = ""
         outputsTable.reloadData()
         rawTxSigned = ""
         outputsTable.alpha = 0
+        
+        getActiveWalletNow() { (wallet, error) in
+            
+            if wallet != nil {
+                
+                NodeLogic.sharedInstance.loadWalletData(wallet: wallet!) { (success, dictToReturn, errorDesc) in
+                    
+                    if success && dictToReturn != nil {
+                        let s = HomeStruct(dictionary: dictToReturn!)
+                        let btc = (s.coldBalance).doubleValue
+                        let fiat = s.fiatBalance
+                        
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.availableBalance.text = "\(btc) btc / \(fiat) available"
+                            vc.availableBalance.alpha = 1
+                            
+                        }
+                        
+                    }
+                    
+                }
+                                
+            }
+            
+        }
         
     }
     
@@ -376,14 +394,14 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         func noNodeOrWallet() {
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [unowned vc = self] in
                 
-                self.addressInput.text = ""
-                self.amountInput.text = ""
-                self.outputs.removeAll()
-                self.outputArray.removeAll()
-                self.outputsString = ""
-                self.outputsTable.reloadData()
+                //self.addressInput.text = ""
+                //self.amountInput.text = ""
+                vc.outputs.removeAll()
+                vc.outputArray.removeAll()
+                vc.outputsString = ""
+                vc.outputsTable.reloadData()
                 
             }
             
@@ -425,11 +443,28 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         creatingView.addConnectingView(vc: self,
                                        description: "Creating psbt")
         
-        if self.addressInput.text != "" && self.amountInput.text != "" {
+        if amountInput.text != "" && addressInput.text != "" && amountInput.text != "0.0" {
+              
+              let dict = ["address":addressInput.text!, "amount":amountInput.text!] as [String : String]
+              
+              outputArray.append(dict)
+              recipients.append(addressInput.text!)
+              
+              DispatchQueue.main.async { [unowned vc = self] in
+                  vc.amountInput.text = ""
+                  vc.addressInput.text = ""
+                  vc.outputsTable.reloadData()
+                  
+              }
+              
+          } else {
+              
+              displayAlert(viewController: self,
+                           isError: true,
+                           message: "You need to fill out a recipient and amount first then tap this button, this button is used for adding multiple recipients aka \"batching\".")
+              
+          }
             
-          addOut()
-            
-        }
         
         func convertOutputs() {
             
@@ -523,11 +558,11 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     
     @objc func back() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.updateLeftBarButton(isShowing: false)
-            self.scannerView.alpha = 0
-            self.scannerShowing = false
+            vc.updateLeftBarButton(isShowing: false)
+            vc.scannerView.alpha = 0
+            vc.scannerShowing = false
             
         }
         
@@ -552,29 +587,28 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     //MARK: Textfield methods
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print("shouldChangeCharactersInRange")
         
         if (textField.text?.contains("."))! {
-            
            let decimalCount = (textField.text?.components(separatedBy: ".")[1])?.count
             
-            if decimalCount! <= 7 {
+            if decimalCount! > 7 {
                 
-                
-            } else {
-                
-                DispatchQueue.main.async {
+                if let char = string.cString(using: String.Encoding.utf8) {
+                    let isBackSpace = strcmp(char, "\\b")
                     
-                    displayAlert(viewController: self,
-                                 isError: true,
-                                 message: "Only 8 decimal places allowed")
-                    
-                    self.amountInput.text = ""
-                    
+                    if (isBackSpace == -92) {
+                        print("Backspace was pressed")
+                        
+                    } else {
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            displayAlert(viewController: self, isError: true, message: "Only 8 decimal places allowed")
+                            let txt = vc.amountInput.text!.dropLast()
+                            vc.amountInput.text = "\(txt)"
+                            
+                        }
+                    }
                 }
-                
             }
-            
         }
         
         return true
@@ -598,7 +632,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print("textFieldShouldReturn")
         
         textField.endEditing(true)
         return true
@@ -618,7 +651,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     override func viewDidDisappear(_ animated: Bool) {
         
         amount = ""
-        addressInput.text = ""
+        //addressInput.text = ""
         outputs.removeAll()
         outputArray.removeAll()
         outputsString = ""
@@ -647,40 +680,34 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             let address = addressParser.parseAddress(url: url).address
             let amount = "\(addressParser.parseAddress(url: url).amount)"
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [unowned vc = self] in
                 
-                self.addressInput.resignFirstResponder()
-                self.amountInput.resignFirstResponder()
+                vc.addressInput.resignFirstResponder()
+                vc.amountInput.resignFirstResponder()
                 
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [unowned vc = self] in
                     
-                    DispatchQueue.main.async {
+                    if amount != "0.0" {
                         
-                        if amount != "0.0" {
-                            
-                            self.amountInput.text = amount
-                            
-                        }
+                        vc.amountInput.text = amount
                         
-                        if address != "" {
-                            
-                           self.addressInput.text = address
-                            
-                        }
+                    }
+                    
+                    if address != "" {
+                        
+                        vc.addressInput.text = address
                         
                     }
                     
                 }
                 
-                self.back()
+                vc.back()
                 
             }
             
         } else {
             
-            displayAlert(viewController: self,
-                         isError: true,
-                         message: errorDescription)
+            displayAlert(viewController: self, isError: true, message: errorDescription)
             
         }
         
@@ -702,7 +729,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     //MARK: Result Parsers
     
     func getRawTx() {
-        print("getRawTx")
         
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
@@ -740,7 +766,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     func createMultiSig(wallet: WalletStruct) {
-        print("createMultiSig")
         
         var amount = Double()
         for output in outputArray {
@@ -765,7 +790,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 DispatchQueue.main.async { [unowned vc = self] in
                     
                     vc.amount = ""
-                    vc.addressInput.text = ""
+                    //vc.addressInput.text = ""
                     vc.outputArray.removeAll()
                     vc.outputsTable.reloadData()
                     vc.rawTxSigned = ""
@@ -787,7 +812,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     func createSingleSig() {
-        print("createSingleSig")
         
         SingleSigBuilder.build(outputs: outputs) { [unowned vc = self] (signedTx, psbt, errorDescription) in
             
@@ -804,7 +828,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 DispatchQueue.main.async { [unowned vc = self] in
                     
                     vc.amount = ""
-                    vc.addressInput.text = ""
+                    //vc.addressInput.text = ""
                     vc.outputArray.removeAll()
                     vc.outputsTable.reloadData()
                     vc.rawTxSigned = ""
@@ -862,7 +886,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         if editingStyle == .delete {
             
-            self.outputArray.remove(at: indexPath.row)
+            outputArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         }
@@ -879,9 +903,9 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             
             if let vc = segue.destination as? ConfirmViewController {
                 
-                vc.signedRawTx = self.rawTxSigned
-                vc.recipients = self.recipients
-                vc.unsignedPsbt = self.unsignedPsbt
+                vc.signedRawTx = rawTxSigned
+                vc.recipients = recipients
+                vc.unsignedPsbt = unsignedPsbt
                 
             }
             

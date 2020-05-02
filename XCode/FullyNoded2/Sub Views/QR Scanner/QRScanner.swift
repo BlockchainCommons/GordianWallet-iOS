@@ -12,6 +12,7 @@ import AVFoundation
 
 class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    var scanningBip21 = Bool()
     var scanningRecovery = Bool()
     var isScanningNode = Bool()
     var isImporting = Bool()
@@ -299,9 +300,9 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
             
         } else if isImporting {
             
-            label.text = "Scan a Descriptor"
-            labelDetail.text = "FullyNoded 2 allows you to import and export your descriptors, this is a great way to recover your private keys or create a watch-only wallet."
-            addTestingNodeButton.setTitle("what is a descriptor?", for: .normal)
+            label.text = "Import an Account"
+            labelDetail.text = "You may scan an \"Account Map\", Bitcoin Core Descriptor or a Specter \"Wallet Import\" QR"
+            //addTestingNodeButton.setTitle("what is a descriptor?", for: .normal)
             configureLabel()
             configureDetailLabel()
             configureDontHaveAnodeButton()
@@ -314,6 +315,8 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
             configureLabel()
             configureDetailLabel()
             configureDontHaveAnodeButton()
+            
+        } else if scanningBip21 {
             
         } else {
             

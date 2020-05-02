@@ -91,7 +91,7 @@ class RecoverWallet {
                                     newWallet["lastBalance"] = json["lastBalance"] as? Double ?? 0.0
                                     newWallet["isArchived"] = false
                                     newWallet["type"] = "MULTI"
-                                    newWallet["seed"] = encryptedSeed!
+                                    //newWallet["seed"] = encryptedSeed!
                                     newWallet["nodeId"] = node.id
                                     newWallet["blockheight"] = json["blockheight"] as! Int32
                                     newWallet["maxRange"] = 2500
@@ -124,7 +124,18 @@ class RecoverWallet {
                                                     if let changeDescriptor = result["descriptor"] as? String {
                                                         
                                                         newWallet["changeDescriptor"] = changeDescriptor
-                                                        self.saveWallet(wallet: newWallet, completion: completion)
+                                                        
+                                                        self.saveSeed(seed: encryptedSeed!) { success in
+                                                            
+                                                            if success {
+                                                                self.saveWallet(wallet: newWallet, completion: completion)
+                                                                
+                                                            } else {
+                                                                completion((false, "failed saving seed"))
+                                                                
+                                                            }
+                                                            
+                                                        }
                                                         
                                                     }
                                                     
@@ -219,7 +230,7 @@ class RecoverWallet {
                                     newWallet["lastBalance"] = json["lastBalance"] as? Double ?? 0.0
                                     newWallet["isArchived"] = false
                                     newWallet["type"] = "DEFAULT"
-                                    newWallet["seed"] = encryptedSeed!
+                                    //newWallet["seed"] = encryptedSeed!
                                     newWallet["nodeId"] = node.id
                                     newWallet["blockheight"] = json["blockheight"] as! Int
                                     newWallet["maxRange"] = 2500
@@ -254,38 +265,46 @@ class RecoverWallet {
                                                         let changeDescriptor = dict["descriptor"] as! String
                                                         newWallet["changeDescriptor"] = changeDescriptor
                                                         
-                                                        if let walletExistsOnNode = json["walletExistsOnNode"] as? Bool {
+                                                        self.saveSeed(seed: encryptedSeed!) { success in
                                                             
-                                                            if !walletExistsOnNode {
+                                                            if success {
                                                                 
-                                                                let walletCreator = WalletCreator.sharedInstance
-                                                                walletCreator.createStandUpWallet(walletDict: newWallet) { (success, errorDescription) in
+                                                                if let walletExistsOnNode = json["walletExistsOnNode"] as? Bool {
                                                                     
-                                                                    if success {
+                                                                    if !walletExistsOnNode {
                                                                         
-                                                                        Reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "\(json["blockheight"] as! Int32)") { _ in
+                                                                        let walletCreator = WalletCreator.sharedInstance
+                                                                        walletCreator.createStandUpWallet(walletDict: newWallet) { (success, errorDescription) in
                                                                             
-                                                                            self.saveWallet(wallet: newWallet, completion: completion)
+                                                                            if success {
+                                                                                
+                                                                                Reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "\(json["blockheight"] as! Int32)") { _ in
+                                                                                    
+                                                                                    self.saveWallet(wallet: newWallet, completion: completion)
+                                                                                    
+                                                                                }
+                                                                                
+                                                                            } else {
+                                                                                completion((false, errorDescription ?? "unknown error"))
+                                                                                
+                                                                            }
                                                                             
                                                                         }
                                                                         
                                                                     } else {
-                                                                        
-                                                                        completion((false, errorDescription ?? "unknown error"))
+                                                                         self.saveWallet(wallet: newWallet, completion: completion)
                                                                         
                                                                     }
+                                                                    
+                                                                } else {
+                                                                     self.saveWallet(wallet: newWallet, completion: completion)
                                                                     
                                                                 }
                                                                 
                                                             } else {
-                                                                
-                                                                 self.saveWallet(wallet: newWallet, completion: completion)
+                                                                completion((false, "failed saving seed"))
                                                                 
                                                             }
-                                                            
-                                                        } else {
-                                                            
-                                                             self.saveWallet(wallet: newWallet, completion: completion)
                                                             
                                                         }
                                                         
@@ -419,48 +438,58 @@ class RecoverWallet {
                                                         
                                                         if !error && encryptedData != nil {
                                                             
-                                                            newWallet["seed"] = encryptedData!
-                                                            let wallet = WalletStruct(dictionary: newWallet)
-                                                            let create = CreateMultiSigWallet.sharedInstance
-                                                            
-                                                            create.create(wallet: wallet, nodeXprv: nodesXprv, nodeXpub: oldRecoveryXpub) { (success, error) in
+                                                            //newWallet["seed"] = encryptedData!
+                                                            self.saveSeed(seed: encryptedData!) { success in
                                                                 
                                                                 if success {
+                                                                    let wallet = WalletStruct(dictionary: newWallet)
+                                                                    let create = CreateMultiSigWallet.sharedInstance
                                                                     
-                                                                    Reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "\(blockheight)") { _ in
+                                                                    create.create(wallet: wallet, nodeXprv: nodesXprv, nodeXpub: oldRecoveryXpub) { (success, error) in
                                                                         
-                                                                        self.saveWallet(wallet: newWallet, completion: completion)
-                                                                        
-                                                                    }
-                                                                    
-                                                                } else if error != nil {
-                                                                    
-                                                                    // incase user inputs both the words and recoveryQR we revert to partial recovery
-                                                                    if error!.contains("already exists") {
-                                                                        
-                                                                        self.recoverPartialMultiSigQR(node: node, json: json) { (success, errorDescription) in
+                                                                        if success {
                                                                             
-                                                                            if success {
+                                                                            Reducer.makeCommand(walletName: (newWallet["name"] as! String), command: .rescanblockchain, param: "\(blockheight)") { _ in
                                                                                 
-                                                                                completion((true, nil))
-                                                                                
-                                                                            } else {
-                                                                                
-                                                                                completion((false, errorDescription!))
+                                                                                self.saveWallet(wallet: newWallet, completion: completion)
                                                                                 
                                                                             }
                                                                             
+                                                                        } else if error != nil {
+                                                                            
+                                                                            // incase user inputs both the words and recoveryQR we revert to partial recovery
+                                                                            if error!.contains("already exists") {
+                                                                                
+                                                                                self.recoverPartialMultiSigQR(node: node, json: json) { (success, errorDescription) in
+                                                                                    
+                                                                                    if success {
+                                                                                        
+                                                                                        completion((true, nil))
+                                                                                        
+                                                                                    } else {
+                                                                                        
+                                                                                        completion((false, errorDescription!))
+                                                                                        
+                                                                                    }
+                                                                                    
+                                                                                }
+                                                                                
+                                                                            } else {
+                                                                                
+                                                                                completion((false, error!))
+                                                                                
+                                                                            }
+                                                                            
+                                                                        } else {
+                                                                            
+                                                                            completion((false, "error creating wallet: unknown error"))
+                                                                            
                                                                         }
-                                                                        
-                                                                    } else {
-                                                                        
-                                                                        completion((false, error!))
                                                                         
                                                                     }
                                                                     
                                                                 } else {
-                                                                    
-                                                                    completion((false, "error creating wallet: unknown error"))
+                                                                    completion((false, "failed saving seed"))
                                                                     
                                                                 }
                                                                 
@@ -557,14 +586,19 @@ class RecoverWallet {
                     
                     if !error && encryptedData != nil {
                         
-                        newWallet["seed"] = encryptedData!
-                        
-                        let w = WalletStruct(dictionary: newWallet)
-                        KeyFetcher.xpub(wallet: w) { (xpub, error) in
+                        //newWallet["seed"] = encryptedData!
+                        self.saveSeed(seed: encryptedData!) { success in
                             
-                            if !error {
+                            if success {
                                 
-                                KeyFetcher.fingerprint(wallet: w) { (fingerprint, error) in
+                                let w = WalletStruct(dictionary: newWallet)
+                                
+                                var chain = Network.mainnet
+                                if w.derivation.contains("/1'/") {
+                                    chain = .testnet
+                                }
+                                
+                                KeyFetcher.xpub(seed: encryptedData!, chain: chain, derivation: w.derivation) { (xpub, fingerprint, error) in
                                     
                                     if !error && fingerprint != nil {
                                         
@@ -660,13 +694,19 @@ class RecoverWallet {
                                                 
                                             }
                                         }
+                                    } else {
+                                        completion((false, "error getting xpub"))
+                                        
                                     }
                                 }
+                                
                             } else {
-                                completion((false, "error getting xpub"))
+                               completion((false, "error saving seed"))
                                 
                             }
+                            
                         }
+                        
                     } else {
                         completion((false, "error encrypting your mnemonic"))
                         
@@ -732,6 +772,16 @@ class RecoverWallet {
                 
             }
         }
+    }
+    
+    private func saveSeed(seed: Data, completion: @escaping ((Bool)) -> Void) {
+        let dict = ["seed":seed,"id":UUID()] as [String : Any]
+        
+        CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDescription) in
+            completion((success))
+            
+        }
+    
     }
     
 }

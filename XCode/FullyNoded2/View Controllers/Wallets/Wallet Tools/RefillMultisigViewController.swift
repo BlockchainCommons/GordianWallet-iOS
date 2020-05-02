@@ -42,7 +42,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         if addSeed {
             
             navigationItem.title = "Add Signer"
-            descriptionLabel.text = "You can add a 12 or 24 word BIP39 recovery phrase which will be saved to this wallet as a signer."
+            descriptionLabel.text = "You can add a 12 or 24 word BIP39 seed phrase which can sign for this account."
             lostWordsOutlet.alpha = 0
             
         }
@@ -378,7 +378,9 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                 
                 if encryptedSeed != nil {
                     
-                    CoreDataService.updateEntity(id: vc.wallet.id!, keyToUpdate: "seed", newValue: encryptedSeed!, entityName: .wallets) { (success, errorDescription) in
+                    //CoreDataService.updateEntity(id: vc.wallet.id!, keyToUpdate: "seed", newValue: encryptedSeed!, entityName: .wallets) { (success, errorDescription) in
+                    let dict = ["seed":encryptedSeed!, "id":UUID()] as [String:Any]
+                    CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDescription) in
                         
                         vc.connectingView.removeConnectingView()
                         
@@ -466,7 +468,6 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                                 
                             }
                             
-                            print("existingXpubs xpubs = \(existingXpubs)")
                             var xpubsMatch = false
                             
                             for (x, existingXpub) in existingXpubs.enumerated() {

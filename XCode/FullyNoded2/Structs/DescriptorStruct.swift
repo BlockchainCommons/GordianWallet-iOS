@@ -6,8 +6,6 @@
 //  Copyright © 2020 Blockchain Commons, LLC. All rights reserved.
 //
 
-import Foundation
-
 public struct DescriptorStruct: CustomStringConvertible {
     
     let format:String
@@ -30,29 +28,34 @@ public struct DescriptorStruct: CustomStringConvertible {
     let accountXprv:String
     let derivation:String
     let derivationArray:[String]
+    let isSpecter:Bool
+    let isHD:Bool
+    let keysWithPath:[String]
     
     init(dictionary: [String: Any]) {
-        
-        self.format = dictionary["format"] as? String ?? ""
-        self.mOfNType = dictionary["mOfNType"] as? String ?? ""
-        self.isHot = dictionary["isHot"] as? Bool ?? false
-        self.chain = dictionary["chain"] as? String ?? ""
-        self.isMulti = dictionary["isMulti"] as? Bool ?? false
-        self.isBIP67 = dictionary["isBIP67"] as? Bool ?? false
-        self.isBIP49 = dictionary["isBIP49"] as? Bool ?? false
-        self.isBIP84 = dictionary["isBIP84"] as? Bool ?? false
-        self.isBIP44 = dictionary["isBIP44"] as? Bool ?? false
-        self.isP2PKH = dictionary["isP2PKH"] as? Bool ?? false
-        self.isP2WPKH = dictionary["isP2WPKH"] as? Bool ?? false
-        self.isP2SHP2WPKH = dictionary["isP2SHP2WPKH"] as? Bool ?? false
-        self.network = dictionary["network"] as? String ?? ""
-        self.multiSigKeys = dictionary["multiSigKeys"] as? [String] ?? [""]
-        self.multiSigPaths = dictionary["multiSigPaths"] as? [String] ?? [""]
-        self.sigsRequired = dictionary["sigsRequired"] as? UInt ?? 0
-        self.accountXpub = dictionary["accountXpub"] as? String ?? ""
-        self.accountXprv = dictionary["accountXprv"] as? String ?? ""
-        self.derivation = dictionary["derivation"] as? String ?? ""
-        self.derivationArray = dictionary["derivationArray"] as? [String] ?? [""]
+        format = dictionary["format"] as? String ?? ""
+        mOfNType = dictionary["mOfNType"] as? String ?? ""
+        isHot = dictionary["isHot"] as? Bool ?? false
+        chain = dictionary["chain"] as? String ?? ""
+        isMulti = dictionary["isMulti"] as? Bool ?? false
+        isBIP67 = dictionary["isBIP67"] as? Bool ?? false
+        isBIP49 = dictionary["isBIP49"] as? Bool ?? false
+        isBIP84 = dictionary["isBIP84"] as? Bool ?? false
+        isBIP44 = dictionary["isBIP44"] as? Bool ?? false
+        isP2PKH = dictionary["isP2PKH"] as? Bool ?? false
+        isP2WPKH = dictionary["isP2WPKH"] as? Bool ?? false
+        isP2SHP2WPKH = dictionary["isP2SHP2WPKH"] as? Bool ?? false
+        network = dictionary["network"] as? String ?? ""
+        multiSigKeys = dictionary["multiSigKeys"] as? [String] ?? [""]
+        multiSigPaths = dictionary["multiSigPaths"] as? [String] ?? [""]
+        sigsRequired = dictionary["sigsRequired"] as? UInt ?? 0
+        accountXpub = dictionary["accountXpub"] as? String ?? ""
+        accountXprv = dictionary["accountXprv"] as? String ?? ""
+        derivation = dictionary["derivation"] as? String ?? ""
+        derivationArray = dictionary["derivationArray"] as? [String] ?? [""]
+        isSpecter = dictionary["isSpecter"] as? Bool ?? false
+        isHD = dictionary["isHD"] as? Bool ?? false
+        keysWithPath = dictionary["keysWithPath"] as? [String] ?? [""]
         
     }
     

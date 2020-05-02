@@ -18,7 +18,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     var derivation = ""
     var recoveryQr = ""
     var walletName = ""
-    var entropy = ""
     var localXprv = ""
     var node:NodeStruct!
     var walletToImport = [String:Any]()
@@ -222,7 +221,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             
                             vc.newWallet["blockheight"] = Int32(blockheight)
                             vc.newWallet["maxRange"] = 2500
-                            vc.newWallet["birthdate"] = keyBirthday()
+                            //vc.newWallet["birthdate"] = keyBirthday()
                             vc.id = UUID()
                             vc.newWallet["id"] = vc.id
                             vc.newWallet["isActive"] = false
@@ -296,7 +295,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         if customSeedSwitch.isOn {
             
             let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: "This feature allows you to add your own BIP39 mnemonic as the device's master seed for the wallet you are about to create. This feature is only applicable to Hot and Warm wallets.", preferredStyle: .actionSheet)
-            
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
             alert.popoverPresentationController?.sourceView = self.view
             self.present(alert, animated: true, completion: nil)
@@ -352,8 +350,19 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         if !error {
                             
                             vc.updateStatus(text: "creating primary descriptor")
-                            vc.newWallet["seed"] = encryptedData!
-                            vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
+                            //vc.newWallet["seed"] = encryptedData!
+                            vc.saveSeed(seed: encryptedData!) { success in
+                                
+                                if success {
+                                    vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
+                                    
+                                } else {
+                                    vc.creatingView.removeConnectingView()
+                                    displayAlert(viewController: vc, isError: true, message: "error saving your seed")
+                                    
+                                }
+                                
+                            }
                             
                         } else {
                             
@@ -377,8 +386,19 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 if !error {
                     
                     vc.updateStatus(text: "creating primary descriptor")
-                    vc.newWallet["seed"] = encryptedData!
-                    vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
+                    //vc.newWallet["seed"] = encryptedData!
+                    vc.saveSeed(seed: encryptedData!) { success in
+                        
+                        if success {
+                            vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
+                            
+                        } else {
+                            vc.creatingView.removeConnectingView()
+                            displayAlert(viewController: vc, isError: true, message: "error saving your seed")
+                            
+                        }
+                        
+                    }
                     
                 } else {
                     
@@ -543,72 +563,31 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 
                                 if let words = String(data: mnemonic!, encoding: .utf8) {
                                     
-                                    if let bip39mnemonic = BIP39Mnemonic(words) {
+                                    if let _ = BIP39Mnemonic(words) {
                                         
-                                        let seed = bip39mnemonic.seedHex()
+                                        let recoveryQr = ["descriptor":"\(w.descriptor)", "blockheight":w.blockheight,"label":""] as [String : Any]
                                         
-                                        if let mk = HDKey(seed, network(descriptor: w.descriptor)) {
+                                        if let json = recoveryQr.json() {
                                             
-                                            if let path = BIP32Path(w.derivation) {
-                                                
-                                                do {
-                                                    
-                                                    if let xprv = try mk.derive(path).xpriv {
-                                                        
-                                                        let p = DescriptorParser()
-                                                        let str = p.descriptor(w.descriptor)
-                                                        let hotDesc = (w.descriptor).replacingOccurrences(of: str.accountXpub, with: xprv)
-                                                        let recoveryQr = ["entropy": bip39mnemonic.entropy.description, "descriptor":"\(hotDesc)", "birthdate":w.birthdate, "blockheight":w.blockheight,"label":""] as [String : Any]
-                                                        
-                                                        if let json = recoveryQr.json() {
-                                                            
-                                                            DispatchQueue.main.async {
-                                                                vc.creatingView.removeConnectingView()
-                                                                vc.backUpRecoveryPhrase = words
-                                                                vc.recoveryQr = json
-                                                                vc.performSegue(withIdentifier: "walletCreated", sender: vc)
-                                                                
-                                                            }
-                                                            
-                                                        } else {
-                                                            
-                                                            vc.creatingView.removeConnectingView()
-                                                            displayAlert(viewController: vc, isError: true, message: "error converting to json")
-                                                            
-                                                        }
-                                                        
-                                                    } else {
-                                                        
-                                                        vc.creatingView.removeConnectingView()
-                                                        displayAlert(viewController: vc, isError: true, message: "error deriving xprv")
-                                                        
-                                                    }
-                                                    
-                                                } catch {
-                                                    
-                                                    vc.creatingView.removeConnectingView()
-                                                    displayAlert(viewController: vc, isError: true, message: "error deriving xprv")
-                                                    
-                                                }
-                                                
-                                            } else {
-                                                
+                                            DispatchQueue.main.async {
                                                 vc.creatingView.removeConnectingView()
-                                                displayAlert(viewController: vc, isError: true, message: "error deriving bip32path")
+                                                vc.backUpRecoveryPhrase = words
+                                                vc.recoveryQr = json
+                                                vc.performSegue(withIdentifier: "walletCreated", sender: vc)
                                                 
                                             }
                                             
                                         } else {
                                             
                                             vc.creatingView.removeConnectingView()
-                                            displayAlert(viewController: vc, isError: true, message: "error deriving master key")
+                                            displayAlert(viewController: vc, isError: true, message: "error converting to json")
                                             
                                         }
                                                                                 
                                     } else {
                                         
                                         vc.creatingView.removeConnectingView()
-                                        displayAlert(viewController: vc, isError: true, message: "error deriving bip39mnemonic")
+                                        displayAlert(viewController: vc, isError: true, message: "error deriving bip39 mnemonic")
                                         
                                     }
                                     
@@ -753,7 +732,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 
                                 if !error {
                                     
-                                    vc.entropy = mnemonic!.entropy.description
                                     let derivation = vc.newWallet["derivation"] as! String
                                     var network:Network!
                                     if vc.node.network == "testnet" {
@@ -850,7 +828,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         
                         if !error {
                             
-                            vc.entropy = mnemonic!.entropy.description
                             let derivation = vc.newWallet["derivation"] as! String
                             var network:Network!
                             if vc.node.network == "testnet" {
@@ -1087,73 +1064,92 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                         
                                         vc.newWallet["descriptor"] = primaryDescriptor
                                         vc.newWallet["changeDescriptor"] = changeDesc
-                                        if vc.localSeed != nil {
-                                            vc.newWallet["seed"] = vc.localSeed
-                                        }
                                         vc.newWallet["name"] = Encryption.sha256hash(primaryDescriptor)
                                         
-                                        let multiSigCreator = CreateMultiSigWallet.sharedInstance
-                                        let wallet = WalletStruct(dictionary: vc.newWallet)
-                                        multiSigCreator.create(wallet: wallet, nodeXprv: vc.nodesSeed, nodeXpub: vc.publickeys[2]) { (success, error) in
-                                            
-                                            if success {
+                                        func create() {
+                                           
+                                            let multiSigCreator = CreateMultiSigWallet.sharedInstance
+                                            let wallet = WalletStruct(dictionary: vc.newWallet)
+                                            multiSigCreator.create(wallet: wallet, nodeXprv: vc.nodesSeed, nodeXpub: vc.publickeys[2]) { (success, error) in
                                                 
-                                                DispatchQueue.main.async {
+                                                if success {
                                                     
-                                                    vc.creatingView.label.text = "saving your wallet to your device"
-                                                    
-                                                }
-                                                
-                                                CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
-                                                    
-                                                    if success {
+                                                    DispatchQueue.main.async {
                                                         
-                                                        vc.creatingView.removeConnectingView()
+                                                        vc.creatingView.label.text = "saving your wallet to your device"
                                                         
-                                                        DispatchQueue.main.async {
+                                                    }
+                                                    
+                                                    CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
+                                                        
+                                                        if success {
                                                             
-                                                            // include the checksum as we will convert this back to a pubkey descriptor when recovering
-                                                            let hotDescriptor = primaryDescriptor.replacingOccurrences(of: vc.publickeys[1], with: vc.localXprv)
-                                                            let recoveryQr = ["entropy": vc.entropy, "descriptor":"\(hotDescriptor)", "birthdate":wallet.birthdate, "blockheight":wallet.blockheight, "label":""] as [String : Any]
+                                                            vc.creatingView.removeConnectingView()
                                                             
-                                                            if let json = recoveryQr.json() {
+                                                            DispatchQueue.main.async {
                                                                 
-                                                                DispatchQueue.main.async {
+                                                                let recoveryQr = ["descriptor":"\(wallet.descriptor)", "blockheight":wallet.blockheight, "label":""] as [String : Any]
+                                                                
+                                                                if let json = recoveryQr.json() {
                                                                     
-                                                                    vc.recoveryQr = json
-                                                                    vc.performSegue(withIdentifier: "walletCreated", sender: vc)
+                                                                    DispatchQueue.main.async {
+                                                                        
+                                                                        vc.recoveryQr = json
+                                                                        vc.performSegue(withIdentifier: "walletCreated", sender: vc)
+                                                                        
+                                                                    }
                                                                     
                                                                 }
                                                                 
                                                             }
+
+                                                            
+                                                        } else {
+                                                            
+                                                            vc.creatingView.removeConnectingView()
+                                                            displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving wallet")
                                                             
                                                         }
-
+                                                        
+                                                    }
+                                                    
+                                                } else {
+                                                    
+                                                    if error != nil {
+                                                        
+                                                        vc.creatingView.removeConnectingView()
+                                                        displayAlert(viewController: vc, isError: true, message: "error creating wallet: \(error!)")
                                                         
                                                     } else {
                                                         
                                                         vc.creatingView.removeConnectingView()
-                                                        displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving wallet")
+                                                        displayAlert(viewController: vc, isError: true, message: "error creating wallet")
                                                         
                                                     }
                                                     
                                                 }
                                                 
-                                            } else {
+                                            }
+                                            
+                                        }
+                                        
+                                        if vc.localSeed != nil {
+                                            //vc.newWallet["seed"] = vc.localSeed
+                                            vc.saveSeed(seed: vc.localSeed!) { success in
                                                 
-                                                if error != nil {
-                                                    
-                                                    vc.creatingView.removeConnectingView()
-                                                    displayAlert(viewController: vc, isError: true, message: "error creating wallet: \(error!)")
+                                                if success {
+                                                    create()
                                                     
                                                 } else {
-                                                    
                                                     vc.creatingView.removeConnectingView()
-                                                    displayAlert(viewController: vc, isError: true, message: "error creating wallet")
+                                                    displayAlert(viewController: vc, isError: true, message: "error saving your seed")
                                                     
                                                 }
                                                 
                                             }
+                                            
+                                        } else {
+                                            create()
                                             
                                         }
                                         
@@ -1188,103 +1184,52 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     private func processDescriptor(descriptor: String) {
         
         let cv = ConnectingView()
-        cv.addConnectingView(vc: self, description: "processing descriptor")
+        cv.addConnectingView(vc: self, description: "processing...")
         
-        Encryption.getNode { [unowned vc = self] (n, error) in
+        if let data = descriptor.data(using: .utf8) {
             
-            if n != nil {
-                
-                let p = DescriptorParser()
-                let str = p.descriptor(descriptor)
-                
-                /// Currently we only support 2 of 3 bech32 Specter descriptors, can expand on this later.
-                if descriptor.contains("&") && str.isMulti && descriptor.contains("wsh") && str.mOfNType == "2 of 3" {
+            do {
+            let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
+            
+                if let _ = dict["descriptor"] as? String {
                     
-                    ///     An example descriptor from Specter, we need to convert it to HD and create the change descriptor:
-                    ///     Key_123&wsh(sortedmulti(2,[fe23bc9a/48h/1h/0h/2h]tpubDEzBBGMH87CU5rCdo7gSaByN6SVvJW7c4WDkMuC6mKS8bcqpaVD3FCoiAEefcGhC4TwRCtACZnmnTZbPUk4cbx6dsLnHG8CyG8jz2Gr6j2z,
-                    ///     [e120e47b/48h/1h/0h/2h]tpubDEvTHKHDhi8rQyogJNsnoNsbF8hMefbAzXFCT8CuJiZtxeZM7vUHcH65qpsp7teB2hJPQMKpLV9QcEJkNy3fvnvR6zckoN1E3fFywzfmcBA,
-                    ///     [f0578536/48h/1h/0h/2h]tpubDE5GYE61m5mx2WrgtFe1kSAeAHT5Npoy5C2TpQTQGLTQkRkmsWMoA5PSP5XAkt4DBLgKY386iyGDjJKT5fVrRgShJ5CSEdd66UUc4icA8rw))
-                    
-                    let arr = descriptor.split(separator: "&")
-                    let label = "\(arr[0])"
-                    var primaryDesc = "\(arr[1])"
-                    let arr1 = primaryDesc.split(separator: ",")
-                    let key1 = "\(arr1[1])/0/*"
-                    let key2 = "\(arr1[2])/0/*"
-                    let key3 = "\(arr1[3])".replacingOccurrences(of: "))", with: "/0/*))")
-                    primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[1])", with: key1)
-                    primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[2])", with: key2)
-                    primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[3])", with: key3)
-                    let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
-                    
-                    Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(primaryDesc)\"") { [unowned vc = self] (object, errorDescription) in
-                        
-                        if let dict = object as? NSDictionary {
+                    if let _ = dict["blockheight"] as? Int {
+                        /// It is an Account Map.
+                        Import.importAccountMap(accountMap: dict) { walletDict in
+                            print("importAccountMap")
                             
-                            let descriptor = dict["descriptor"] as! String
-                            vc.walletToImport["descriptor"] = descriptor
-                            vc.walletToImport["birthdate"] = keyBirthday()
-                            vc.walletToImport["label"] = label
-                            vc.walletToImport["nodeId"] = n!.id
-                            vc.walletName = Encryption.sha256hash(descriptor)
-                            vc.walletToImport["name"] = vc.walletName
-                            vc.walletToImport["id"] = UUID()
-                            vc.walletToImport["isArchived"] = false
-                            vc.walletToImport["maxRange"] = 2500
-                            vc.walletToImport["index"] = 0
-                            vc.walletToImport["blockheight"] = 1
-                            vc.walletToImport["lastUsed"] = Date()
-                            vc.walletToImport["lastBalance"] = 0.0
-                            vc.walletToImport["type"] = "MULTI"
-                            
-                            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") { [unowned vc = self] (object, errorDescription) in
-                                
-                                if let dict = object as? NSDictionary {
-                                    
-                                    cv.removeConnectingView()
-                                    let changeDescriptor = dict["descriptor"] as! String
-                                    vc.walletToImport["changeDescriptor"] = changeDescriptor
-                                    
-                                    DispatchQueue.main.async { [unowned vc = self] in
-                                        
-                                        vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
-                                        
-                                    }
-                                    
-                                } else {
-                                    
-                                    cv.removeConnectingView()
-                                    showAlert(vc: vc, title: "Error", message: "error getting descriptor info: \(errorDescription ?? "unknown error")")
+                            if walletDict != nil {
+                                DispatchQueue.main.async { [unowned vc = self] in
+                                    vc.walletToImport = walletDict!
+                                    vc.walletName = walletDict!["name"] as! String
+                                    vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
                                     
                                 }
-                                
                             }
-                            
-                        } else {
-                            
-                            cv.removeConnectingView()
-                            showAlert(vc: vc, title: "Error", message: "error getting descriptor info: \(errorDescription ?? "unknown error")")
+                        }
+                    }
+                }
+                
+            } catch {
+                /// It is not an Account Map.
+                Import.importDescriptor(descriptor: descriptor) { [unowned vc = self] walletDict in
+                    
+                    if walletDict != nil {
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.walletToImport = walletDict!
+                            vc.walletName = walletDict!["name"] as! String
+                            vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
                             
                         }
                         
+                    } else {
+                        cv.removeConnectingView()
+                        showAlert(vc: vc, title: "Error", message: "error importing that account")
+                        
                     }
-                    
-                } else {
-                    
-                    cv.removeConnectingView()
-                    showAlert(vc: vc, title: "Error", message: "We currently only support importing bech32, 2 of 3 multisig descriptor from Specter.\n\nPlease consider sponsoring us or donating to fund further development.")
-                    
                 }
-                
-            } else {
-                
-                cv.removeConnectingView()
-                showAlert(vc: vc, title: "Error", message: "You need to be connected to a node to import a wallet")
-                
             }
-            
         }
-        
     }
     
     private func createWalletWithUserSuppliedSeed(dict: [String:String]?) {
@@ -1505,10 +1450,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     if success {
                         
                         let w = WalletStruct(dictionary: vc.newWallet)
-                        let p = DescriptorParser()
-                        let str = p.descriptor(w.descriptor)
-                        let hotDesc = (w.descriptor).replacingOccurrences(of: str.accountXpub, with: dict["key"]!)
-                        let recoveryQr = ["entropy": "", "descriptor":"\(hotDesc)", "birthdate":w.birthdate, "blockheight":w.blockheight,"label":""] as [String : Any]
+                        let recoveryQr = ["descriptor":w.descriptor, "blockheight":w.blockheight,"label":""] as [String : Any]
                         
                         if let json = recoveryQr.json() {
                             
@@ -1546,6 +1488,16 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
         }
         
+    }
+    
+    private func saveSeed(seed: Data, completion: @escaping ((Bool)) -> Void) {
+        let dict = ["seed":seed,"id":UUID()] as [String : Any]
+        
+        CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDescription) in
+            completion((success))
+            
+        }
+    
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
