@@ -11,9 +11,11 @@ import UIKit
 
 class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     
+    @IBOutlet weak var lostWordsOutlet: UIButton!
     @IBOutlet var descriptionLabel: UILabel!
     @IBOutlet var wordsView: UIView!
     @IBOutlet var textField: UITextField!
+    var addSeed = Bool()
     var multiSigRefillDoneBlock: ((Bool) -> Void)?
     let label = UILabel()
     let tap = UITapGestureRecognizer()
@@ -36,6 +38,15 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         view.addGestureRecognizer(tap)
         bip39Words = Bip39Words.validWords
         updatePlaceHolder(wordNumber: 1)
+        
+        if addSeed {
+            
+            navigationItem.title = "Add Signer"
+            descriptionLabel.text = "You can add a 12 or 24 word BIP39 seed phrase which can sign for this account."
+            lostWordsOutlet.alpha = 0
+            
+        }
+        
     }
     
     private func updatePlaceHolder(wordNumber: Int) {
@@ -357,28 +368,88 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    private func addSeedNow() {
+        
+        func add() {
+            
+            let words = justWords.joined(separator: " ")
+            let unencryptedData = words.dataUsingUTF8StringEncoding
+            Encryption.encryptData(dataToEncrypt: unencryptedData) { [unowned vc = self] (encryptedSeed, error) in
+                
+                if encryptedSeed != nil {
+                    
+                    //CoreDataService.updateEntity(id: vc.wallet.id!, keyToUpdate: "seed", newValue: encryptedSeed!, entityName: .wallets) { (success, errorDescription) in
+                    let dict = ["seed":encryptedSeed!, "id":UUID()] as [String:Any]
+                    CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDescription) in
+                        
+                        vc.connectingView.removeConnectingView()
+                        
+                        if success {
+                            
+                            DispatchQueue.main.async { [unowned vc = self] in
+                                
+                                vc.label.text = ""
+                                
+                            }
+                            
+                            showAlert(vc: vc, title: "Success!", message: "Signer added, the device will now be able to sign for this wallet.")
+                            
+                        } else {
+                            
+                            showAlert(vc: vc, title: "Error", message: "We had an error saving your seed: \(errorDescription ?? "unknown error")")
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            let alert = UIAlertController(title: "That mnemonic matches one of your wallets xpubs", message: "Would you like to add it as a signer?", preferredStyle: .actionSheet)
+            
+            alert.addAction(UIAlertAction(title: "Add signer", style: .default, handler: { action in
+                
+                add()
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+                
+                vc.connectingView.removeConnectingView()
+                
+            }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+            
+        }
+        
+    }
+    
     private func validWordsAdded() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.textField.text = ""
-            self.textField.resignFirstResponder()
-                        
+            vc.textField.text = ""
+            vc.textField.resignFirstResponder()
+            
         }
         
         connectingView.addConnectingView(vc: self, description: "verifying your xpub matches")
         let parser = DescriptorParser()
         let str = parser.descriptor(wallet.descriptor)
-        let backupXpub = str.multiSigKeys[0]
-        let derivation = self.wallet.derivation
+        let derivation = wallet.derivation
         
-        let mnemonicCreator = MnemonicCreator()
-        mnemonicCreator.convert(words: justWords.joined(separator: " ")) { [unowned vc = self] (mnemonic, error) in
+        MnemonicCreator.convert(words: justWords.joined(separator: " ")) { [unowned vc = self] (mnemonic, error) in
             
             if !error && mnemonic != nil {
                 
                 let seed = mnemonic!.seedHex()
-                if let mk = HDKey(seed, network(path: derivation)) {
+                if let mk = HDKey(seed, network(descriptor: vc.wallet.descriptor)) {
                     
                     if let path = BIP32Path(derivation) {
                         
@@ -386,20 +457,63 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                             
                             let hdKey = try mk.derive(path)
                             let xpub = hdKey.xpub
+                            print("xpub = \(xpub)")
                             
-                            if xpub == backupXpub {
-                                
-                                // from here we can refill
-                                DispatchQueue.main.async {
-                                   vc.connectingView.label.text = "xpub's match, refilling keypool"
-                                }
-                                
-                                vc.refillMulti(hdKey: hdKey)
+                            var existingXpubs = [String]()
+                            if vc.wallet.type == "MULTI" {
+                                existingXpubs = str.multiSigKeys
                                 
                             } else {
+                                existingXpubs.append(str.accountXpub)
                                 
-                                vc.connectingView.removeConnectingView()
-                                showAlert(vc: vc, title: "Error", message: "that recovery phrase does not match the required recovery phrase for this wallet")
+                            }
+                            
+                            var xpubsMatch = false
+                            
+                            for (x, existingXpub) in existingXpubs.enumerated() {
+                                
+                                if xpub == existingXpub {
+                                    
+                                    xpubsMatch = true
+                                    
+                                }
+                                
+                                if x + 1 == existingXpubs.count {
+                                    
+                                    if xpubsMatch {
+                                        
+                                        if !vc.addSeed {
+                                            
+                                            if xpub == str.multiSigKeys[0] || xpub == str.multiSigKeys[2] {
+                                                
+                                                DispatchQueue.main.async {
+                                                    vc.connectingView.label.text = "xpub's match, refilling keypool"
+                                                }
+                                                vc.refillMulti(hdKey: hdKey)
+                                                
+                                            } else {
+                                                
+                                                vc.connectingView.removeConnectingView()
+                                                showAlert(vc: vc, title: "Error", message: "That xpub matches your device's xpub, in order to add private keys to your node to refill the keypool we need to use one of the offline recovery phrases.")
+                                            }
+                                                                                        
+                                        } else {
+                                            
+                                            DispatchQueue.main.async {
+                                                vc.connectingView.removeConnectingView()
+                                            }
+                                            vc.addSeedNow()
+                                            
+                                        }
+                                        
+                                    } else {
+                                        
+                                        vc.connectingView.removeConnectingView()
+                                        showAlert(vc: vc, title: "Error", message: "that recovery phrase does not match the required recovery phrase for this wallet")
+                                        
+                                    }
+                                    
+                                }
                                 
                             }
                             

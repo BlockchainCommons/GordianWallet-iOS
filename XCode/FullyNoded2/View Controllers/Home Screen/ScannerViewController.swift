@@ -9,8 +9,9 @@
 import UIKit
 import LibWally
 
-class ScannerViewController: UIViewController, UINavigationControllerDelegate {
+class ScannerViewController: UIViewController {
     
+    var isImporting = Bool()
     var unsignedPsbt = ""
     var signedRawTx = ""
     var updatingNode = Bool()
@@ -21,6 +22,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     var closeButton = UIButton()
     var onDoneRecoveringBlock : (([String:Any]) -> Void)?
     var onDoneBlock : ((Bool) -> Void)?
+    var onImportDoneBlock : ((String) -> Void)?
     let qrScanner = QRScanner()
     var isTorchOn = Bool()
     let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
@@ -30,7 +32,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.delegate = self
         configureScanner()
         scanNow()
         
@@ -99,7 +100,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             }
             
         }
-        
+                
     }
     
     @objc func addTester() {
@@ -108,7 +109,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             
             DispatchQueue.main.async {
                 
-                let alert = UIAlertController(title: "Don't have a QuickConnect QR?", message: "We have a testnet node you can borrow for testing purposes only, just tap \"Add Testing Node\" to use it. This is a great way to get comfortable with the app and gain an idea of how it works.", preferredStyle: .actionSheet)
+                let alert = UIAlertController(title: "Connect to our testing node?", message: "We have a testnet node you can borrow for testing purposes only, just tap \"Add Testing Node\" to use it. This is a great way to get comfortable with the app and gain an idea of how it works.", preferredStyle: .actionSheet)
 
                 alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { action in
                     
@@ -134,9 +135,24 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
     func addnode() {
         
-        // Testnet Linode instance:
-        let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=BlockchainCommons%20Testing%20Node"
-        addBtcRpcQr(url: url)
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            let alert = UIAlertController(title: "Warning", message: "We may periodically delete testnet wallets from our testing node. Please make sure you save your recovery info when creating wallets so you can easily recover.", preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { [unowned vc = self] action in
+                
+                // Testnet Linode instance:
+                let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=Test%20Node"
+                vc.addBtcRpcQr(url: url)
+
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+            
+        }
         
     }
     
@@ -146,8 +162,9 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         imageView.frame = view.frame
         imageView.isUserInteractionEnabled = true
         
-        qrScanner.isScanningNode = self.scanningNode
-        qrScanner.scanningRecovery = self.isRecovering
+        qrScanner.isScanningNode = scanningNode
+        qrScanner.scanningRecovery = isRecovering
+        qrScanner.isImporting = isImporting
         qrScanner.keepRunning = false
         qrScanner.vc = self
         qrScanner.imageView = imageView
@@ -333,76 +350,102 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             
         }
         
-        if url.hasPrefix("btcrpc://") || url.hasPrefix("btcstandup://") {
+        if isImporting {
             
-            if !updatingNode {
+            dismiss(animated: true) { [unowned vc = self] in
                 
-                addnode()
-                
-            } else {
-                
-                updateNode()
+                vc.onImportDoneBlock!(url)
                 
             }
             
-        } else if let _ = Data(base64Encoded: url) {
+        } else {
             
-            signPSBT(psbt: url)
-            
-        } else if let data = url.data(using: .utf8) {
-            
-            func invalidAlert() {
+            if url.hasPrefix("btcrpc://") || url.hasPrefix("btcstandup://") {
                 
-                showAlert(vc: self, title: "Error", message: "Invalid Recovery QR")
-                
-            }
-            
-            Encryption.getNode { (node, error) in
-                
-                if !error && node != nil {
+                if !updatingNode {
                     
-                    do {
+                    addnode()
+                    
+                } else {
+                    
+                    updateNode()
+                    
+                }
+                
+            } else if let _ = Data(base64Encoded: url) {
+                
+                DispatchQueue.main.async { [unowned vc = self] in
+                    
+                    let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sing it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
                         
-                        let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
-                        
-                        if let _ = dict["descriptor"] as? String {
+                        vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
+                        vc.signPSBT(psbt: url)
+
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
                             
-                            if let _ = dict["birthdate"] as? Int32 {
+                    alert.popoverPresentationController?.sourceView = vc.view
+                    vc.present(alert, animated: true, completion: nil)
+                    
+                }
                                 
-                                if let _ = dict["entropy"] as? String {
-                                    
-                                    if let _ = dict["blockheight"] as? Int {
-                                        
-                                        /// we know we are coming from wallet recovery view controller
-                                        if self.isRecovering {
+            } else if let data = url.data(using: .utf8) {
+                
+                func invalidAlert() {
+                    
+                    showAlert(vc: self, title: "Error", message: "Invalid Recovery QR")
+                    
+                }
+                
+                Encryption.getNode { (node, error) in
+                    
+                    if !error && node != nil {
+                        
+                        do {
+                            
+                            let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
+                            
+                            if let _ = dict["descriptor"] as? String {
+                                
+                                if let _ = dict["birthdate"] as? Int32 {
+                                                                            
+                                        if let _ = dict["blockheight"] as? Int {
                                             
-                                            DispatchQueue.main.async {
+                                            /// we know we are coming from wallet recovery view controller
+                                            if self.isRecovering {
                                                 
-                                                self.connectingView.removeConnectingView()
-                                                self.onDoneRecoveringBlock!(dict)
-                                                self.dismiss(animated: true, completion: nil)
-                                                
-                                            }
-                                            
-                                        } else {
-                                            
-                                            // we can recover the wallet now
-                                            self.connectingView.addConnectingView(vc: self, description: "recovering your wallet")
-                                            let recovery = RecoverWallet.sharedInstance
-                                            recovery.recover(node: node!, json: dict, words: self.words, derivation: nil) { (success, error) in
-                                                
-                                                if success {
+                                                DispatchQueue.main.async {
                                                     
                                                     self.connectingView.removeConnectingView()
-                                                    showAlert(vc: self, title: "Success!", message: "Wallet recovered 🤩\n\nGo to wallets to activate it.")
+                                                    self.onDoneRecoveringBlock!(dict)
+                                                    self.dismiss(animated: true, completion: nil)
                                                     
-                                                } else {
+                                                }
+                                                
+                                            } else {
+                                                
+                                                // we can recover the wallet now
+                                                self.connectingView.addConnectingView(vc: self, description: "recovering your wallet")
+                                                let recovery = RecoverWallet.sharedInstance
+                                                recovery.recover(node: node!, json: dict, words: self.words, derivation: nil) { (success, error) in
                                                     
-                                                    self.connectingView.removeConnectingView()
-                                                    
-                                                    if error != nil {
+                                                    if success {
                                                         
-                                                        showAlert(vc: self, title: "Error!", message: "Wallet recovery error: \(error!)")
+                                                        self.connectingView.removeConnectingView()
+                                                        showAlert(vc: self, title: "Success!", message: "Wallet recovered 🤩\n\nGo to wallets to activate it.")
+                                                        
+                                                    } else {
+                                                        
+                                                        self.connectingView.removeConnectingView()
+                                                        
+                                                        if error != nil {
+                                                            
+                                                            showAlert(vc: self, title: "Error!", message: "Wallet recovery error: \(error!)")
+                                                            
+                                                        }
                                                         
                                                     }
                                                     
@@ -411,8 +454,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                                             }
                                             
                                         }
-                                        
-                                    }
                                     
                                 } else {
                                     
@@ -426,32 +467,28 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                                 
                             }
                             
-                        } else {
+                        } catch let error as NSError {
                             
-                            invalidAlert()
+                            displayAlert(viewController: self,
+                                         isError: true,
+                                         message: error.localizedDescription)
                             
                         }
                         
-                    } catch let error as NSError {
+                    } else {
                         
-                        displayAlert(viewController: self,
-                                     isError: true,
-                                     message: error.localizedDescription)
+                        self.connectingView.removeConnectingView()
+                        displayAlert(viewController: self, isError: true, message: "wallet recovery is not possible if there are no active nodes")
                         
                     }
                     
-                } else {
-                    
-                    self.connectingView.removeConnectingView()
-                    displayAlert(viewController: self, isError: true, message: "wallet recovery is not possible if there are no active nodes")
-                    
                 }
+                            
+            } else {
+                
+                displayAlert(viewController: self, isError: true, message: "That's not a compatible QR Code!")
                 
             }
-                        
-        } else {
-            
-            displayAlert(viewController: self, isError: true, message: "That's not a compatible QR Code!")
             
         }
                 

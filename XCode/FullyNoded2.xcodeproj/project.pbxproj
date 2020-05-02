@@ -7,10 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D00016B3245ABFFA0091F7CF /* Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B2245ABFFA0091F7CF /* Import.swift */; };
+		D00016B5245BBB5C0091F7CF /* SeedStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B4245BBB5C0091F7CF /* SeedStruct.swift */; };
+		D00016B7245BC49B0091F7CF /* SeedsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B6245BC49B0091F7CF /* SeedsViewController.swift */; };
+		D00016B9245BD89C0091F7CF /* SeedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B8245BD89C0091F7CF /* SeedParser.swift */; };
 		D006E34B243ED2FE007B1A5B /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = D006E34A243ED2FE007B1A5B /* Keychain.swift */; };
 		D006E34D244054B8007B1A5B /* _launch.png in Resources */ = {isa = PBXBuildFile; fileRef = D006E34C244054B8007B1A5B /* _launch.png */; };
 		D010946A242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0109469242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift */; };
 		D0139F5724208A7A00EF956E /* ConfirmRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */; };
+		D024A7C52454755B00115615 /* LibWally.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D024A7C42454755B00115615 /* LibWally.framework */; };
+		D024A7C9245475CA00115615 /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D024A7C8245475CA00115615 /* Tor.framework */; };
+		D042EFA22457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */; };
 		D047DDF72423464A004BC26D /* SweepToViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF62423464A004BC26D /* SweepToViewController.swift */; };
 		D047DDF9242B2F3F004BC26D /* IntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */; };
 		D047DDFB242B324A004BC26D /* WhatIsFN2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDFA242B324A004BC26D /* WhatIsFN2ViewController.swift */; };
@@ -26,6 +33,7 @@
 		D047DE0F242DDEB3004BC26D /* LocalNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DE0E242DDEB3004BC26D /* LocalNode.swift */; };
 		D0502FEC244C44EA00213870 /* PSBTSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0502FEB244C44EA00213870 /* PSBTSigner.swift */; };
 		D0502FEE244D2D4A00213870 /* FiatConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0502FED244D2D4A00213870 /* FiatConverter.swift */; };
+		D0502FF024500DE000213870 /* AddExtendedKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0502FEF24500DE000213870 /* AddExtendedKeyViewController.swift */; };
 		D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650072441A78E00754ACF /* VerifyKeysViewController.swift */; };
 		D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650092442C58200754ACF /* WordRecoveryViewController.swift */; };
 		D056500C2446BF6E00754ACF /* 1024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D056500B2446BF6D00754ACF /* 1024.jpg */; };
@@ -58,7 +66,6 @@
 		D09D732D23F0F3C000847DC8 /* AuthenticateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B323F0F3C000847DC8 /* AuthenticateViewController.swift */; };
 		D09D732E23F0F3C000847DC8 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */; };
 		D09D732F23F0F3C000847DC8 /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */; };
-		D09D733223F0F3C000847DC8 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72BA23F0F3C000847DC8 /* LogInViewController.swift */; };
 		D09D733323F0F3C000847DC8 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72BC23F0F3C000847DC8 /* Utilities.swift */; };
 		D09D733723F0F3C000847DC8 /* shim.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72C223F0F3C000847DC8 /* shim.swift */; };
 		D09D733823F0F3C000847DC8 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72C323F0F3C000847DC8 /* StringExtension.swift */; };
@@ -106,10 +113,7 @@
 		D09D736823F0F3C000847DC8 /* MultiSigTxBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */; };
 		D09D736923F0F3C000847DC8 /* SingleSigBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */; };
 		D09D736B23F0F3C000847DC8 /* CreateMultisigWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */; };
-		D09D736F23F0F3C000847DC8 /* OfflineSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730523F0F3C000847DC8 /* OfflineSigner.swift */; };
 		D09D737023F0F3C000847DC8 /* WalletCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730623F0F3C000847DC8 /* WalletCreator.swift */; };
-		D09D737123F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730723F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift */; };
-		D09D737223F0F3C000847DC8 /* OfflineSignerLegacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730823F0F3C000847DC8 /* OfflineSignerLegacy.swift */; };
 		D09D737523F0F40400847DC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D09D737423F0F40400847DC8 /* Main.storyboard */; };
 		D09DCF6423F1045F008F5B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D09DCF6323F1045F008F5B9F /* Assets.xcassets */; };
 		D09DCF6623F10645008F5B9F /* Base32.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09DCF6523F10645008F5B9F /* Base32.swift */; };
@@ -123,12 +127,12 @@
 		D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */; };
 		D0CA5415240750AA0096EE26 /* RecoverWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA5414240750AA0096EE26 /* RecoverWallet.swift */; };
 		D0D0F5642410CB8F007E0763 /* BIP39Words.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F5632410CB8F007E0763 /* BIP39Words.swift */; };
-		D0D0F5662410E3F0007E0763 /* RecoveryInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F5652410E3F0007E0763 /* RecoveryInfoViewController.swift */; };
 		D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */; };
 		D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FC24306B060085E3CC /* RefillMultiSig.swift */; };
 		D0D8DC162400D85000110A78 /* LibWallyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D8DC152400D85000110A78 /* LibWallyTests.swift */; };
 		D0DAD51E24546E2200769618 /* LibWally.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DAD51D24546E2200769618 /* LibWally.framework */; };
 		D0DAD52424546E7700769618 /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DAD52324546E7700769618 /* Tor.framework */; };
+		D0F661BB24551EC600AFBC7F /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0F661BA24551EC600AFBC7F /* Tor.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,11 +152,31 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D050300524541DAE00213870 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		D00016B2245ABFFA0091F7CF /* Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Import.swift; sourceTree = "<group>"; };
+		D00016B4245BBB5C0091F7CF /* SeedStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedStruct.swift; sourceTree = "<group>"; };
+		D00016B6245BC49B0091F7CF /* SeedsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedsViewController.swift; sourceTree = "<group>"; };
+		D00016B8245BD89C0091F7CF /* SeedParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedParser.swift; sourceTree = "<group>"; };
 		D006E34A243ED2FE007B1A5B /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		D006E34C244054B8007B1A5B /* _launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _launch.png; sourceTree = "<group>"; };
 		D0109469242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedSaveWordsViewController.swift; sourceTree = "<group>"; };
 		D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmRecoveryViewController.swift; sourceTree = "<group>"; };
+		D024A7C42454755B00115615 /* LibWally.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LibWally.framework; path = Carthage/Build/iOS/LibWally.framework; sourceTree = "<group>"; };
+		D024A7C8245475CA00115615 /* Tor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Tor.framework; sourceTree = "<group>"; };
+		D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedNodesSeedViewController.swift; sourceTree = "<group>"; };
 		D047DDF62423464A004BC26D /* SweepToViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SweepToViewController.swift; sourceTree = "<group>"; };
 		D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionViewController.swift; sourceTree = "<group>"; };
 		D047DDFA242B324A004BC26D /* WhatIsFN2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatIsFN2ViewController.swift; sourceTree = "<group>"; };
@@ -168,6 +192,7 @@
 		D047DE0E242DDEB3004BC26D /* LocalNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNode.swift; sourceTree = "<group>"; };
 		D0502FEB244C44EA00213870 /* PSBTSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSBTSigner.swift; sourceTree = "<group>"; };
 		D0502FED244D2D4A00213870 /* FiatConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatConverter.swift; sourceTree = "<group>"; };
+		D0502FEF24500DE000213870 /* AddExtendedKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExtendedKeyViewController.swift; sourceTree = "<group>"; };
 		D05650072441A78E00754ACF /* VerifyKeysViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyKeysViewController.swift; sourceTree = "<group>"; };
 		D05650092442C58200754ACF /* WordRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordRecoveryViewController.swift; sourceTree = "<group>"; };
 		D056500B2446BF6D00754ACF /* 1024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1024.jpg; sourceTree = "<group>"; };
@@ -205,7 +230,6 @@
 		D09D72B323F0F3C000847DC8 /* AuthenticateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateViewController.swift; sourceTree = "<group>"; };
 		D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
-		D09D72BA23F0F3C000847DC8 /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		D09D72BC23F0F3C000847DC8 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		D09D72BD23F0F3C000847DC8 /* StandUp-Remote-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StandUp-Remote-Bridging-Header.h"; sourceTree = "<group>"; };
 		D09D72C223F0F3C000847DC8 /* shim.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = shim.swift; sourceTree = "<group>"; };
@@ -254,10 +278,7 @@
 		D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSigTxBuilder.swift; sourceTree = "<group>"; };
 		D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleSigBuilder.swift; sourceTree = "<group>"; };
 		D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateMultisigWallet.swift; sourceTree = "<group>"; };
-		D09D730523F0F3C000847DC8 /* OfflineSigner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSigner.swift; sourceTree = "<group>"; };
 		D09D730623F0F3C000847DC8 /* WalletCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletCreator.swift; sourceTree = "<group>"; };
-		D09D730723F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSignerP2SHSegwit.swift; sourceTree = "<group>"; };
-		D09D730823F0F3C000847DC8 /* OfflineSignerLegacy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSignerLegacy.swift; sourceTree = "<group>"; };
 		D09D737423F0F40400847DC8 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		D09D737623F0F61300847DC8 /* FullyNoded2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FullyNoded2.entitlements; sourceTree = "<group>"; };
 		D09DCF6123F0FC7B008F5B9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -273,12 +294,12 @@
 		D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRecoverViewController.swift; sourceTree = "<group>"; };
 		D0CA5414240750AA0096EE26 /* RecoverWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverWallet.swift; sourceTree = "<group>"; };
 		D0D0F5632410CB8F007E0763 /* BIP39Words.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BIP39Words.swift; sourceTree = "<group>"; };
-		D0D0F5652410E3F0007E0763 /* RecoveryInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryInfoViewController.swift; sourceTree = "<group>"; };
 		D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillMultisigViewController.swift; sourceTree = "<group>"; };
 		D0D561FC24306B060085E3CC /* RefillMultiSig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillMultiSig.swift; sourceTree = "<group>"; };
 		D0D8DC152400D85000110A78 /* LibWallyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibWallyTests.swift; sourceTree = "<group>"; };
 		D0DAD51D24546E2200769618 /* LibWally.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LibWally.framework; path = Carthage/Build/iOS/LibWally.framework; sourceTree = "<group>"; };
 		D0DAD52324546E7700769618 /* Tor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Tor.framework; sourceTree = "<group>"; };
+		D0F661BA24551EC600AFBC7F /* Tor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Tor.framework; path = ../../../../Tor.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,6 +309,9 @@
 			files = (
 				D0DAD52424546E7700769618 /* Tor.framework in Frameworks */,
 				D0DAD51E24546E2200769618 /* LibWally.framework in Frameworks */,
+				D0F661BB24551EC600AFBC7F /* Tor.framework in Frameworks */,
+				D024A7C9245475CA00115615 /* Tor.framework in Frameworks */,
+				D024A7C52454755B00115615 /* LibWally.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,6 +337,9 @@
 			children = (
 				D0DAD51D24546E2200769618 /* LibWally.framework */,
 				D0DAD52324546E7700769618 /* Tor.framework */,
+				D0F661BA24551EC600AFBC7F /* Tor.framework */,
+				D024A7C42454755B00115615 /* LibWally.framework */,
+				D024A7C8245475CA00115615 /* Tor.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -330,7 +357,6 @@
 			isa = PBXGroup;
 			children = (
 				D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */,
-				D0D0F5652410E3F0007E0763 /* RecoveryInfoViewController.swift */,
 				D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */,
 				D05650092442C58200754ACF /* WordRecoveryViewController.swift */,
 			);
@@ -416,6 +442,7 @@
 				D09D728623F0F3BF00847DC8 /* HomeTableStruct.swift */,
 				D09D728723F0F3BF00847DC8 /* WalletStruct.swift */,
 				D0A0EAF123F7CF70004F9E15 /* DescriptorStruct.swift */,
+				D00016B4245BBB5C0091F7CF /* SeedStruct.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -443,7 +470,6 @@
 				D09D72A323F0F3C000847DC8 /* Outgoing */,
 				D09D72AB23F0F3C000847DC8 /* Incoming */,
 				D09D72AE23F0F3C000847DC8 /* Home Screen */,
-				D09D72B923F0F3C000847DC8 /* Unlock Screen */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -531,6 +557,7 @@
 				D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */,
 				D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */,
 				D0B08BE5241888500025AD04 /* DonateViewController.swift */,
+				D00016B6245BC49B0091F7CF /* SeedsViewController.swift */,
 			);
 			path = "Home Screen";
 			sourceTree = "<group>";
@@ -555,14 +582,6 @@
 				D047DE04242B34BA004BC26D /* SignInViewController.swift */,
 			);
 			path = Intro;
-			sourceTree = "<group>";
-		};
-		D09D72B923F0F3C000847DC8 /* Unlock Screen */ = {
-			isa = PBXGroup;
-			children = (
-				D09D72BA23F0F3C000847DC8 /* LogInViewController.swift */,
-			);
-			path = "Unlock Screen";
 			sourceTree = "<group>";
 		};
 		D09D72BB23F0F3C000847DC8 /* Miscellaneous */ = {
@@ -607,6 +626,7 @@
 				D047DE0E242DDEB3004BC26D /* LocalNode.swift */,
 				D006E34A243ED2FE007B1A5B /* Keychain.swift */,
 				D0502FED244D2D4A00213870 /* FiatConverter.swift */,
+				D00016B8245BD89C0091F7CF /* SeedParser.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -720,6 +740,7 @@
 				D0CD026D23FA37C8009F2E7F /* Creators */,
 				D0CD026C23FA376D009F2E7F /* Signers */,
 				D0109468242EFF52000B3A40 /* Refillers */,
+				D00016B2245ABFFA0091F7CF /* Import.swift */,
 			);
 			path = "Wallet Logic";
 			sourceTree = "<group>";
@@ -755,6 +776,8 @@
 				D047DE08242C5906004BC26D /* WalletCreatedQRViewController.swift */,
 				D047DE0A242C651F004BC26D /* WalletCreatedWordsViewController.swift */,
 				D0109469242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift */,
+				D0502FEF24500DE000213870 /* AddExtendedKeyViewController.swift */,
+				D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */,
 			);
 			path = "Wallet Creation";
 			sourceTree = "<group>";
@@ -762,9 +785,6 @@
 		D0CD026C23FA376D009F2E7F /* Signers */ = {
 			isa = PBXGroup;
 			children = (
-				D09D730523F0F3C000847DC8 /* OfflineSigner.swift */,
-				D09D730723F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift */,
-				D09D730823F0F3C000847DC8 /* OfflineSignerLegacy.swift */,
 				D0502FEB244C44EA00213870 /* PSBTSigner.swift */,
 			);
 			path = Signers;
@@ -800,6 +820,7 @@
 				D09D723A23F0EDBB00847DC8 /* Frameworks */,
 				D09D723B23F0EDBB00847DC8 /* Resources */,
 				D09D727323F0F1F800847DC8 /* ShellScript */,
+				D050300524541DAE00213870 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
@@ -970,6 +991,7 @@
 				D09D733723F0F3C000847DC8 /* shim.swift in Sources */,
 				D0D0F5642410CB8F007E0763 /* BIP39Words.swift in Sources */,
 				D09D734123F0F3C000847DC8 /* KeychainCreator.swift in Sources */,
+				D00016B9245BD89C0091F7CF /* SeedParser.swift in Sources */,
 				D09D734323F0F3C000847DC8 /* MakeRPCCall.swift in Sources */,
 				D09D724B23F0EDBB00847DC8 /* FullyNoded2.xcdatamodeld in Sources */,
 				D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */,
@@ -977,6 +999,8 @@
 				D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */,
 				D09D732723F0F3C000847DC8 /* ConfirmViewController.swift in Sources */,
 				D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */,
+				D00016B5245BBB5C0091F7CF /* SeedStruct.swift in Sources */,
+				D042EFA22457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift in Sources */,
 				D09D732823F0F3C000847DC8 /* VerifyViewController.swift in Sources */,
 				D09D732F23F0F3C000847DC8 /* ScannerViewController.swift in Sources */,
 				D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */,
@@ -1012,8 +1036,6 @@
 				D09D736523F0F3C000847DC8 /* QRScanner.swift in Sources */,
 				D047DE05242B34BA004BC26D /* SignInViewController.swift in Sources */,
 				D09D732423F0F3C000847DC8 /* CreateRawTxViewController.swift in Sources */,
-				D09D737123F0F3C000847DC8 /* OfflineSignerP2SHSegwit.swift in Sources */,
-				D09D737223F0F3C000847DC8 /* OfflineSignerLegacy.swift in Sources */,
 				D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */,
 				D047DDFF242B331F004BC26D /* HowToUseFN2ViewController.swift in Sources */,
 				D09D732223F0F3C000847DC8 /* RecoveryViewController.swift in Sources */,
@@ -1021,6 +1043,7 @@
 				D09D731F23F0F3C000847DC8 /* WalletsViewController.swift in Sources */,
 				D09D733A23F0F3C000847DC8 /* Entities.swift in Sources */,
 				D0139F5724208A7A00EF956E /* ConfirmRecoveryViewController.swift in Sources */,
+				D00016B3245ABFFA0091F7CF /* Import.swift in Sources */,
 				D09D736023F0F3C000847DC8 /* KeyPad.swift in Sources */,
 				D047DE09242C5906004BC26D /* WalletCreatedQRViewController.swift in Sources */,
 				D09DCF6823F1072A008F5B9F /* KeyGen.swift in Sources */,
@@ -1031,7 +1054,6 @@
 				D09D732623F0F3C000847DC8 /* UTXOViewController.swift in Sources */,
 				D09D733C23F0F3C000847DC8 /* CoreDataService.swift in Sources */,
 				D09D736423F0F3C000847DC8 /* RawDisplayer.swift in Sources */,
-				D0D0F5662410E3F0007E0763 /* RecoveryInfoViewController.swift in Sources */,
 				D047DE0F242DDEB3004BC26D /* LocalNode.swift in Sources */,
 				D09D734423F0F3C000847DC8 /* TorClient.swift in Sources */,
 				D047DDF9242B2F3F004BC26D /* IntroductionViewController.swift in Sources */,
@@ -1047,16 +1069,16 @@
 				D09D730D23F0F3C000847DC8 /* NodeStruct.swift in Sources */,
 				D09D736923F0F3C000847DC8 /* SingleSigBuilder.swift in Sources */,
 				D09D732A23F0F3C000847DC8 /* TransactionViewController.swift in Sources */,
-				D09D733223F0F3C000847DC8 /* LogInViewController.swift in Sources */,
 				D09DCF6623F10645008F5B9F /* Base32.swift in Sources */,
+				D0502FF024500DE000213870 /* AddExtendedKeyViewController.swift in Sources */,
 				D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */,
 				D047DDFB242B324A004BC26D /* WhatIsFN2ViewController.swift in Sources */,
-				D09D736F23F0F3C000847DC8 /* OfflineSigner.swift in Sources */,
 				D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */,
 				D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */,
 				D09D735E23F0F3C000847DC8 /* QRGenerator.swift in Sources */,
 				D09D732E23F0F3C000847DC8 /* MainMenuViewController.swift in Sources */,
 				D09D732323F0F3C000847DC8 /* SettingsViewController.swift in Sources */,
+				D00016B7245BC49B0091F7CF /* SeedsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1213,7 +1235,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.95;
+				CURRENT_PROJECT_VERSION = 0.1.0;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1227,7 +1249,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.95;
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1242,7 +1264,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.0.95;
+				CURRENT_PROJECT_VERSION = 0.1.0;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1256,7 +1278,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.95;
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

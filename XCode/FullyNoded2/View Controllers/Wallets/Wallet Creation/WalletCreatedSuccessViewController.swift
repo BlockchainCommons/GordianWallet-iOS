@@ -17,6 +17,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
     let tap = UITapGestureRecognizer()
     var wallet = [String:Any]()
     var recoveryPhrase = ""
+    var nodesWords = ""
     var recoveryQr = ""
     var w:WalletStruct!
     
@@ -38,11 +39,11 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         
         if w.type == "MULTI" {
             
-            textView.text = "In order to recover your wallet there is some information you ought to save securely.\n\nYou will be presented with a RecoveryQR code (your devices seed) and a 12 word recovery phrase (the offline backup seed).\n\nIt is recommended you store these two items in different locations.\n\nSaving both the RecoveryQR and the 12 word recovery phrase will ensure you can fully recover your multi-signature wallet *even* if you lose your device *AND* your node."
+            textView.text = "In order to recover your account there is some information you ought to save securely.\n\nYou will be presented with an \"Account Map\" QR code (the account public keys) and two 12 word seed phrases.\n\nIt is recommended you store the seed phrases in different locations, if they are stored together a thief may be able to access your funds.\n\nSaving both the \"Account Map QR\" and the two seed phrase's will ensure you can fully recover your multi-signature account if this device were to be lost or stolen."
             
         } else {
             
-            textView.text = "In order to ensure you can recover your wallets there is some information you ought to record securely.\n\nYou will be presented with a RecoveryQR code and a 12 word recovery phrase.\n\nYou should make multiple backups of each and store them in seperate locations."
+            textView.text = "In order to ensure you can recover your account there is some information you ought to record securely.\n\nYou will be presented with an \"Account Map\" QR code and a 12 word seed phrase.\n\nYou should make multiple backups of each and store them securely."
             
         }
         
@@ -163,6 +164,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
             
             if let vc = segue.destination as? WalletCreatedQRViewController {
                 
+                vc.nodesWords = self.nodesWords
                 vc.recoveryPhrase = self.recoveryPhrase
                 vc.recoveryQr = self.recoveryQr.replacingOccurrences(of: "\"label\":\"\"", with: "\"label\":\"\(textField.text!)\"")
                 vc.wallet = self.wallet

@@ -17,7 +17,7 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
     
     var wallet = [String:Any]()
     var w:WalletStruct!
-    var words = ""
+    var recoverPhrase = ""
     var mnemonic = ""
     
     override func viewDidLoad() {
@@ -28,7 +28,7 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
         saveOutlet.layer.cornerRadius = 8
         textView.layer.cornerRadius = 8
         w = WalletStruct(dictionary: wallet)
-        let wordArray = words.split(separator: " ")
+        let wordArray = recoverPhrase.split(separator: " ")
         
         for (i, word) in wordArray.enumerated() {
             
@@ -170,7 +170,7 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
         DispatchQueue.main.async { [unowned vc = self] in
             
             let qrGen = QRGenerator()
-            let image = qrGen.getQRCode(textInput: vc.mnemonic)
+            let image = qrGen.getQRCode(textInput: vc.mnemonic).qr
             let objectsToShare = [image]
             
             let activityController = UIActivityViewController(activityItems: objectsToShare,

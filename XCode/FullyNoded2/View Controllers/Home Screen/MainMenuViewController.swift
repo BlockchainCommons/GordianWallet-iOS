@@ -7,9 +7,8 @@
 //
 
 import UIKit
-import LibWally
 
-class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, OnionManagerDelegate {
+class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, OnionManagerDelegate, UIDocumentPickerDelegate {
     
     weak var nodeLogic = NodeLogic.sharedInstance
     weak var mgr = TorClient.sharedInstance
@@ -21,6 +20,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var nodeInfo:HomeStruct!
     var torInfo:HomeStruct!
     
+    var scanningNode = Bool()
     var showFiat = Bool()
     var walletExists = Bool()
     var bootStrapping = Bool()
@@ -59,6 +59,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var transactionArray = [[String:Any]]()
     
     var timer: Timer?
+    
+    var unsignedPsbt = ""
+    var signedRawTx = ""
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,7 +119,100 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         addStatusLabel(description: "     Bootstrapping Tor...")
         reloadSections([torCellIndex])
         
+        addSeedsToNewEntity()
+        
     }
+    
+    @IBAction func uploadFile(_ sender: Any) {
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            let alert = UIAlertController(title: "Upload a .psbt file?", message: "This button allows you to upload a .psbt file from the Files app, it only works with .psbt files as defined by BIP174. These are the same psbt files Coldcard and Electrum export. When uploading one of these files FullyNoded 2 will try and sign it with each of the seeds your device holds as well as with your current active node.", preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: "Upload", style: .default, handler: { [unowned vc = self] action in
+                
+                let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.item"], in: .import)
+                documentPicker.delegate = vc
+                documentPicker.modalPresentationStyle = .formSheet
+                vc.present(documentPicker, animated: true, completion: nil)
+
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        if controller.documentPickerMode == .import {
+            do {
+                let data = try Data(contentsOf: url.absoluteURL)
+                let psbt = data.base64EncodedString()
+                
+                DispatchQueue.main.async { [unowned vc = self] in
+                    
+                    let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sing it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
+                        
+                        print("psbt = \(psbt)")
+                        vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
+                        vc.signPSBT(psbt: psbt)
+
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                            
+                    alert.popoverPresentationController?.sourceView = vc.view
+                    vc.present(alert, animated: true, completion: nil)
+                    
+                }
+                
+            } catch {
+                connectingView.removeConnectingView()
+                showAlert(vc: self, title: "Error", message: "That is not a valid psbt")
+            }
+        }
+    }
+    
+    private func signPSBT(psbt: String) {
+        
+        PSBTSigner.sign(psbt: psbt) { [unowned vc = self] (success, psbt, rawTx) in
+            
+            if success {
+                
+                if psbt != nil {
+                    vc.connectingView.removeConnectingView()
+                    vc.unsignedPsbt = psbt!
+                    
+                } else if rawTx != nil {
+                    vc.connectingView.removeConnectingView()
+                    vc.signedRawTx = rawTx!
+                    
+                }
+                
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.performSegue(withIdentifier: "goConfirmPsbtSegue", sender: vc)
+                }
+                
+            } else {
+                
+                vc.connectingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error", message: "PSBT signing failed")
+            }
+            
+        }
+        
+    }
+
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        print("Cancelled")
+    }
+    
     
     @IBAction func goToSettings(_ sender: Any) {
         
@@ -230,13 +326,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             Encryption.getNode { [unowned vc = self] (node, error) in
                 
                 if !error && node != nil {
-                                        
                     vc.node = node!
                     
                     if vc.torConnected {
                         
                         if vc.initialLoad {
-                            
                             vc.initialLoad = false
                             vc.reloadTableData()
                             
@@ -245,33 +339,27 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                             getActiveWalletNow() { (w, error) in
                                                                 
                                 if !error && w != nil {
-                                    
                                     vc.wallet = w!
                                                                                                                                                 
                                     if vc.existingWalletName != w!.name && vc.existingNodeId != node!.id {
                                         // user switched to a different wallet on a different node
-                                        
                                         vc.existingNodeId = node!.id
                                         vc.refreshNow()
                                         
                                     } else if vc.existingWalletName != w!.name {
                                         // user switched wallets
-                                        
                                         vc.loadWalletData()
                                         
                                     }
                                     
                                 } else {
-                                                                        
                                     if vc.existingNodeId != node!.id {
                                         // this means the node was changed in node manager or a wallet on a different node was activated
-                                        
                                         vc.refreshNow()
                                         
                                     } else if vc.existingWalletName != "" {
                                         // this means the wallet was deleted without getting deactivated first, so we just force refresh
                                         // and manually set the wallet to nil
-                                        
                                         vc.wallet = nil
                                         vc.refreshNow()
                                         
@@ -289,6 +377,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 } else {
                     
+                    vc.scanningNode = true
                     vc.addNode()
                     
                 }
@@ -455,6 +544,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
         let changeKeysOnNodeDescription = cell.viewWithTag(27) as! UILabel
         let fiatBalance = cell.viewWithTag(28) as! UILabel
+        let signerImage = cell.viewWithTag(29) as! UIImageView
         
         nodeView.layer.cornerRadius = 8
         deviceView.layer.cornerRadius = 8
@@ -536,7 +626,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         coldBalanceLabel.adjustsFontSizeToFitWidth = true
         
         walletTypeLabel.text = "Single Signature"
-        seedOnDeviceLabel.text = "1 Signer on \(UIDevice.current.name)"
+        
+        if walletInfo.knownSigners > 0 {
+            seedOnDeviceLabel.text = "1 Signer on \(UIDevice.current.name)"
+            deviceXprv.text = "xprv \(wallet.derivation)"
+            signerImage.image = UIImage(imageLiteralResourceName: "Signature")
+            
+        } else {
+            seedOnDeviceLabel.text = "\(UIDevice.current.name) is cold"
+            deviceXprv.text = "xpub \(wallet.derivation)"
+            signerImage.image = UIImage(systemName: "eye.fill")
+            
+        }
         
         if wallet.derivation.contains("84") {
             
@@ -554,14 +655,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         keysOnNodeDescription.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
         changeKeysOnNodeDescription.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
-        deviceXprv.text = "xprv \(wallet.derivation)"
         walletNameLabel.text = reducedName(name: wallet.name!)
         
         return cell
         
     }
     
-    private func multiWalletCell(_ indexPath: IndexPath) -> UITableViewCell {
+    private func multiSigCell(_ indexPath: IndexPath) -> UITableViewCell {
         
         let cell = mainMenu.dequeueReusableCell(withIdentifier: "walletCell", for: indexPath)
         cell.selectionStyle = .none
@@ -583,6 +683,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
         let keysOnNodeDescription = cell.viewWithTag(27) as! UILabel
         let fiatBalance = cell.viewWithTag(28) as! UILabel
+        let deviceSeedImage = cell.viewWithTag(29) as! UIImageView
         
         nodeView.layer.cornerRadius = 8
         offlineView.layer.cornerRadius = 8
@@ -661,9 +762,33 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         coldBalanceLabel.adjustsFontSizeToFitWidth = true
         
         walletTypeLabel.text = "\(str.mOfNType) multisig"
-        backUpSeedLabel.text = "1 Seed Offline"
         seedOnNodeLabel.text = "1 Seedless \(node.label)"
-        seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
+        
+        if walletInfo.unknownSigners > 1 {
+            backUpSeedLabel.text = "\(walletInfo.unknownSigners) external signers"
+            
+        } else {
+            backUpSeedLabel.text = "\(walletInfo.unknownSigners) external signer"
+            
+        }
+        
+        if walletInfo.knownSigners > 1 {
+            seedOnDeviceLabel.text = "\(walletInfo.knownSigners) signers on \(UIDevice.current.name)"
+            deviceXprv.text = "xprv \(wallet.derivation)"
+            deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
+            
+        } else if walletInfo.knownSigners == 0 {
+            seedOnDeviceLabel.text = "\(walletInfo.knownSigners) signers on \(UIDevice.current.name)"
+            deviceXprv.text = "xpub \(wallet.derivation)"
+            deviceSeedImage.image = UIImage(systemName: "eye.fill")
+            
+        } else {
+            seedOnDeviceLabel.text = "\(walletInfo.knownSigners) signer on \(UIDevice.current.name)"
+            deviceXprv.text = "xprv \(wallet.derivation)"
+            deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
+            
+        }
+        
         nodeView.alpha = 1
         offlineView.alpha = 1
         
@@ -679,11 +804,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             derivationPathLabel.text = "P2SH Nested Segwit Account 0 (BIP49 \(wallet.derivation))"
             
+        } else if wallet.derivation.contains("48") {
+            
+            derivationPathLabel.text = "Bech32 HD Multisig WIP48 \(wallet.derivation)"
+            
         }
         
         nodeXprv.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
         keysOnNodeDescription.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
-        deviceXprv.text = "xprv \(wallet.derivation)"
+        
         offlineXprvLabel.text = "xprv \(wallet.derivation)"
         
         walletNameLabel.text = reducedName(name: wallet.name!)
@@ -1086,13 +1215,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 switch type {
                     
-                // Single sig wallet
+                /// Single sig wallet
                 case "DEFAULT":
                     return defaultWalletCell(indexPath)
                     
-                // Multi sig wallet
+                /// Multi sig wallet
                 case "MULTI":
-                    return multiWalletCell(indexPath)
+                    return multiSigCell(indexPath)
                     
                 default:
                     return blankCell()
@@ -1284,8 +1413,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             }
                             
         case self.walletCellIndex:
+            
+            if wallet != nil {
+               textLabel.text = wallet.label
+                
+            } else {
+                textLabel.text = "Active Account"
+                
+            }
                             
-            textLabel.text = "Active Wallet Info"
+            
             
             if walletSectionLoaded {
                 
@@ -1663,7 +1800,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if success && dictToReturn != nil {
                             
-                // we update the wallets database in NodeLogic, so we need to refresh the wallet struct here
+                /// we update the wallets database in NodeLogic, so we need to refresh the wallet struct here
                 getActiveWalletNow { (w, error) in
                     
                     if w != nil {
@@ -2025,7 +2162,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         refresher = UIRefreshControl()
         refresher.tintColor = UIColor.white
         refresher.attributedTitle = NSAttributedString(string: "", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-        refresher.addTarget(self, action: #selector(self.refreshNow), for: UIControl.Event.valueChanged)
+        refresher.addTarget(self, action: #selector(refreshNow), for: UIControl.Event.valueChanged)
         mainMenu.addSubview(refresher)
         
     }
@@ -2044,8 +2181,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func refreshNow() {
         
-        self.isRefreshingTorData = true
-        self.reloadTableData()
+        isRefreshingTorData = true
+        reloadTableData()
         
     }
     
@@ -2062,40 +2199,37 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     private func reloadTableData() {
         
         DispatchQueue.main.async { [unowned vc = self] in
-            
             vc.torSectionLoaded = false
             vc.walletSectionLoaded = false
             vc.transactionsSectionLoaded = false
             vc.nodeSectionLoaded = false
             vc.transactionArray.removeAll()
             vc.refresher.endRefreshing()
-            vc.addStatusLabel(description: "     Getting network info...")
             vc.mainMenu.reloadData()
+            vc.existingWalletName = ""
             
         }
         
         getActiveWalletNow() { [unowned vc = self] (w, error) in
-                
-            if !error {
-                
+
+            if !error && w != nil {
+                vc.wallet = w!
                 vc.loadTorData()
-                                
+
             } else {
-                                
+
                 if vc.node != nil {
-                    
                      vc.loadTorData()
-                    
+
                 } else {
-                    
                     vc.isRefreshingTorData = false
                     vc.removeStatusLabel()
                     displayAlert(viewController: vc, isError: true, message: "no active node, please go to node manager and activate one")
-                    
+
                 }
-                
+
             }
-            
+
         }
         
     }
@@ -2175,10 +2309,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if let vc = segue.destination as? ScannerViewController {
                 
-                vc.scanningNode = true
+                vc.scanningNode = scanningNode
                 
                 vc.onDoneBlock = { [unowned thisVc = self] result in
-                    
                     thisVc.nodeJustAdded()
                     
                 }
@@ -2196,6 +2329,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     thisVc.didAppear()
                     
                 }
+                
+            }
+            
+        case "goConfirmPsbtSegue":
+            
+            if let vc = segue.destination as? ConfirmViewController {
+                
+                vc.unsignedPsbt = unsignedPsbt
+                vc.signedRawTx = signedRawTx
                 
             }
             
@@ -2294,14 +2436,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func torConnProgress(_ progress: Int) {
-        
-        self.updateLabel(text: "     Bootstrapping Tor \(progress)%...")
+        updateLabel(text: "     Bootstrapping Tor \(progress)%...")
         
     }
     
     func torConnFinished() {
-        print("tor connected")
-        
         bootStrapping = false
         torConnected = true
         reloadSections([torCellIndex])
@@ -2310,11 +2449,102 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func torConnDifficulties() {
-        print("difficulties")
-        
         showAlert(vc: self, title: "Error", message: "We are having difficulties starting tor...")
         
     }
+    
+    
+    
+    private func deleteArchivedWallets() {
+        
+//        CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+//
+//            if wallets != nil {
+//
+//                if wallets!.count > 0 {
+//
+//                    for wallet in wallets! {
+//
+//                        if wallet["id"] != nil {
+//                            let w = WalletStruct(dictionary: wallet)
+//
+//                            if w.isArchived {
+//
+//                                CoreDataService.deleteEntity(id: w.id!, entityName: .wallets) { (success, errorDescription) in
+//
+//                                    print("deleted archived wallet success: \(success)")
+//
+//                                }
+//                            }
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//        }
+        
+    }
+    
+    private func addSeedsToNewEntity() {
+        
+        func addSeeds() {
+            CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+
+                if wallets != nil {
+
+                    if wallets!.count > 0 {
+
+                        for wallet in wallets! {
+
+                            if wallet["id"] != nil && wallet["seed"] != nil {
+                                let w = WalletStruct(dictionary: wallet)
+
+                                if String(data: w.seed, encoding: .utf8) != "no seed" {
+                                    let dict = ["seed":w.seed, "id":UUID(), "walletId":w.id!] as [String : Any]
+
+                                    CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDescription) in
+
+                                        if success {
+                                            print("success saving seed to new entity")
+
+                                        } else {
+                                            print("fail saving seed to new entity: \(errorDescription ?? "unknown error")")
+
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        CoreDataService.retrieveEntity(entityName: .seeds) { (seeds, errorDescription) in
+
+            if seeds != nil {
+
+                if seeds!.count == 0 {
+                   addSeeds()
+
+                }
+            }
+        }
+        
+    }
+    
+    @IBAction func showSeeds(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "segueToSeeds", sender: vc)
+            
+        }
+    }
+    
     
 }
 

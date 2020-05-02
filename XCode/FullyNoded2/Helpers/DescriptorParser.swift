@@ -33,6 +33,15 @@ class DescriptorParser {
     
     func descriptor(_ descriptor: String) -> DescriptorStruct {
         var dict = [String:Any]()
+        
+        if descriptor.contains("&") {
+            dict["isSpecter"] = true
+            
+        } else {
+            dict["isSpecter"] = false
+            
+        }
+        
         if descriptor.contains("multi") {
             dict["isMulti"] = true
             
@@ -81,11 +90,17 @@ class DescriptorParser {
                         if i != 0 {
                             keysWithPath.append("\(item)")
                         }
+                        
+                        if i + 1 == mofnarray.count {
+                            dict["keysWithPath"] = keysWithPath
+                        }
                     }
+                                        
                     var keyArray = [String]()
                     var paths = [String]()
                     var derivationArray = [String]()
-                    // extracting the xpubs and their paths so we can derive the individual multisig addresses locally
+                    
+                    /// extracting the xpubs and their paths so we can derive the individual multisig addresses locally
                     for key in keysWithPath {
                         var path = String()
                         if key.contains("/") {
@@ -126,6 +141,8 @@ class DescriptorParser {
                                     }
                                 }
                             }
+                        } else {
+                            /// The keys are child keys so we do not need to extract the path from them we can just use the prefix
                         }
                     }
                     
@@ -181,6 +198,7 @@ class DescriptorParser {
             if descriptor.contains("[") && descriptor.contains("]") {
                 
                 let arr1 = descriptor.split(separator: "[")
+                dict["keysWithPath"] = ["[" + "\(arr1[1])"]
                 let arr2 = arr1[1].split(separator: "]")
                 let derivation = arr2[0]
                 let extendedKeyWithPath = arr2[1]
@@ -294,18 +312,23 @@ class DescriptorParser {
         }
         
         if descriptor.contains("xpub") || descriptor.contains("xprv") {
-            
             dict["chain"] = "Mainnet"
+            dict["isHD"] = true
             
         } else if descriptor.contains("tpub") || descriptor.contains("tprv") {
-            
             dict["chain"] = "Testnet"
+            dict["isHD"] = true
+            
+        } else {
+            dict["isHD"] = false
             
         }
         
         if descriptor.contains("xprv") || descriptor.contains("tprv") {
-            
             dict["isHot"] = true
+            
+        } else {
+            dict["isHot"] = false
             
         }
         

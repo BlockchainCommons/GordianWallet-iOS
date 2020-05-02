@@ -33,40 +33,39 @@ public struct WalletStruct: CustomStringConvertible {
     let blockheight:Int32
     let label:String
     let lastUpdated:Date
-    var maxRange:Int
+    let maxRange:Int
+    let hasRange:Bool
+    let knownSigners:Int
+    let unknownSigners:Int
     
     init(dictionary: [String: Any]) {
-        
-        self.birthdate = dictionary["birthdate"] as? Int32 ?? 0
-        self.derivation = dictionary["derivation"] as? String ?? ""
-        self.id = dictionary["id"] as? UUID ?? nil
-        self.identity = dictionary["identity"] as? Data ?? "no identity yet".data(using: .utf8)!
-        self.isActive = dictionary["isActive"] as? Bool ?? false
-        self.name = dictionary["name"] as? String ?? nil
-        self.seed = dictionary["seed"] as? Data ?? "no seed".data(using: .utf8)!
-        self.type = dictionary["type"] as? String ?? "DEFAULT"
-        self.keys = dictionary["keys"] as? String ?? ""
-        self.descriptor = dictionary["descriptor"] as? String ?? ""
-        self.index = dictionary["index"] as? Int ?? 0
-        self.lastUsed = dictionary["lastUsed"] as? Date ?? Date()
-        self.lastBalance = dictionary["lastBalance"] as? Double ?? 0.0
-        self.nodeId = dictionary["nodeId"] as? UUID ?? UUID()
-        self.walletCreated = dictionary["walletCreated"] as? Bool ?? false
-        self.keysImported = dictionary["keysImported"] as? Bool ?? false
-        self.isArchived = dictionary["isArchived"] as? Bool ?? false
-        self.mOfNtype = dictionary["mOfNtype"] as? String ?? ""
-        self.changeDescriptor = dictionary["changeDescriptor"] as? String ?? ""
-        self.xprv = dictionary["xprv"] as? Data ?? nil
-        self.blockheight = dictionary["blockheight"] as? Int32 ?? 1
-        self.label = dictionary["label"] as? String ?? "Add a wallet label"
-        self.lastUpdated = dictionary["lastUpdated"] as? Date ?? Date()
-        self.maxRange = dictionary["maxRange"] as? Int ?? 999
-        
-        if self.maxRange == 0 {
-            
-            self.maxRange = 999
-            
-        }
+        birthdate = dictionary["birthdate"] as? Int32 ?? 0
+        derivation = dictionary["derivation"] as? String ?? ""
+        id = dictionary["id"] as? UUID ?? nil
+        identity = dictionary["identity"] as? Data ?? "no identity yet".data(using: .utf8)!
+        isActive = dictionary["isActive"] as? Bool ?? false
+        name = dictionary["name"] as? String ?? nil
+        seed = dictionary["seed"] as? Data ?? "no seed".data(using: .utf8)!
+        type = dictionary["type"] as? String ?? "DEFAULT"
+        keys = dictionary["keys"] as? String ?? ""
+        descriptor = dictionary["descriptor"] as? String ?? ""
+        index = dictionary["index"] as? Int ?? 0
+        lastUsed = dictionary["lastUsed"] as? Date ?? Date()
+        lastBalance = dictionary["lastBalance"] as? Double ?? 0.0
+        nodeId = dictionary["nodeId"] as? UUID ?? UUID()
+        walletCreated = dictionary["walletCreated"] as? Bool ?? false
+        keysImported = dictionary["keysImported"] as? Bool ?? false
+        isArchived = dictionary["isArchived"] as? Bool ?? false
+        mOfNtype = dictionary["mOfNtype"] as? String ?? ""
+        changeDescriptor = dictionary["changeDescriptor"] as? String ?? ""
+        xprv = dictionary["xprv"] as? Data ?? nil
+        blockheight = dictionary["blockheight"] as? Int32 ?? 1
+        label = dictionary["label"] as? String ?? "Add a wallet label"
+        lastUpdated = dictionary["lastUpdated"] as? Date ?? Date()
+        maxRange = dictionary["maxRange"] as? Int ?? 0
+        hasRange = dictionary["hasRange"] as? Bool ?? true
+        knownSigners = dictionary["knownSigners"] as? Int ?? 0
+        unknownSigners = dictionary["unknownSigners"] as? Int ?? 0
         
     }
     
