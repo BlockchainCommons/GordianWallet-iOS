@@ -3546,7 +3546,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
             </objects>
             <point key="canvasLocation" x="-4426.3999999999996" y="3279.3103448275865"/>
         </scene>
-        <!--Recovery Phrase-->
+        <!--Seed Words-->
         <scene sceneID="PTw-4b-9Ka">
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="94S-m3-HcE" customClass="WalletCreatedWordsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -3593,7 +3593,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gD1-Bt-o1p"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Recovery Phrase" id="KVk-aL-TNs"/>
+                    <navigationItem key="navigationItem" title="Seed Words" id="KVk-aL-TNs"/>
                     <connections>
                         <outlet property="savedOutlet" destination="MpI-zv-VI9" id="7sK-7l-Yfj"/>
                         <outlet property="textView" destination="AFT-F7-8fK" id="Yve-1a-QOk"/>
@@ -6222,7 +6222,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="HTQ-38-5NU"/>
         <segue reference="622-Us-Cp3"/>
         <segue reference="9aM-UA-Kws"/>
-        <segue reference="rM8-oF-xn4"/>
+        <segue reference="c5y-jb-z8M"/>
         <segue reference="cZz-Rg-m7M"/>
         <segue reference="zkr-zY-rLG"/>
     </inferredMetricsTieBreakers>
