@@ -38,8 +38,8 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
         
         textView.text = mnemonic
         mnemonic += "\nDerivation: \(w.derivation + "/0")\n"
-        mnemonic += "Birthdate unix: \(w.birthdate)"
-        birthdateLabel.text = "\(w.birthdate)"
+        mnemonic += "Birthblock: \(w.blockheight)"
+        birthdateLabel.text = "\(w.blockheight)"
         derivationLabel.text = w.derivation + "/0"
         
     }

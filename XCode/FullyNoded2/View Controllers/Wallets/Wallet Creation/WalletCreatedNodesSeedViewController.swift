@@ -39,8 +39,8 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
         
         textView.text = nodesMnemonic
         nodesMnemonic += "\nDerivation: \(w.derivation + "/0")\n"
-        nodesMnemonic += "Birthdate unix: \(w.birthdate)"
-        birthdateLabel.text = "\(w.birthdate)"
+        nodesMnemonic += "Birthblock: \(w.blockheight)"
+        birthdateLabel.text = "\(w.blockheight)"
         derivationLabel.text = w.derivation + "/0"
     }
     

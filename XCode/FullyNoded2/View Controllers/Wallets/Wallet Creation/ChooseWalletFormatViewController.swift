@@ -126,7 +126,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func hotInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Hot self sovereign single signature wallet", message: " A master seed is held by your device and your node holds a watch-only key set. This is a live wallet meaning you can spend from it at anytime from your device.", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Hot self sovereign single signature account", message: " A master seed is held by your device and your node holds a watch-only key set. This is a live account meaning you can spend from it at anytime from your device.", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -134,7 +134,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func warmInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Warm self sovereign 2 of 3 multi signature wallet", message: "One master seed is held by your device, the other two are held offline by you. We derive and import a key set into your node from one of your offline master seeds so that your node can be the second signer for this wallet. This adds a layer of security and redundancy in case you lost your node, device or offline seed storage. This a warm wallet as neither your device or your node can spend independently. In order to spend from this wallet your device will need to be connected to your node!", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Warm self sovereign 2 of 3 multi signature account", message: "One master seed is held by your device, the other two are held offline by you. We derive and import a key set into your node from one of your offline master seeds so that your node can be the second signer for this account. This adds a layer of security and redundancy in case you lost your node, device or offline seed storage. This a warm account as neither your device or your node can spend independently. In order to spend from this account your device will need to be connected to your node!", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -142,7 +142,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func coolWalletInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Cool self sovereign 2 of 3 multi signature wallet", message: "You will need to supply an xpub which will represent the devices master key. We will create two offline master seeds for you to backup, they will NOT be saved by the device. One of these master seeds will be used to derive a key set and import it into your node so that your node can be a single signer. Cool wallets are not capable of spending on their own! Cool wallets will build unsigned transactions and allow you to export them as PSBT's to other devices for signing. This is an ideal wallet type for collaborative multisig. You will always have the option to convert it to a warm wallet by adding a master seed in the form of BIP39 words to it.", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Cool self sovereign 2 of 3 multi signature account", message: "You will need to supply an xpub which will represent the devices master key. We will create two offline master seeds for you to backup, they will NOT be saved by the device. One of these master seeds will be used to derive a key set and import it into your node so that your node can be a single signer. Cool accounts are not capable of spending on their own! Cool accounts will build unsigned transactions and allow you to export them as PSBT's to other devices for signing. This is an ideal account type for collaborative multisig. You will always have the option to convert it to a warm account by adding a master seed in the form of BIP39 words to it.", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -150,7 +150,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func coldWalletInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Cold self sovereign single signature wallet", message: "Cold wallets are single signature wallets where you will supply a master key xpub which is held by the device. The wallet will be purely watch-only and you will not be able to spend from it with this device. It will create unsigned transactions that can be exported to offline signers as PSBT's. You will always have the option to make it hot by adding a master seed to it in the form of BIP39 words.", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Cold self sovereign single signature account", message: "Cold accounts are single signature accounts where you will supply a master key xpub which is held by the device. The account will be purely watch-only and you will not be able to spend from it with this device. It will create unsigned transactions that can be exported to offline signers as PSBT's. You will always have the option to make it hot by adding a master seed to it in the form of BIP39 words.", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -213,7 +213,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 if !error && node != nil {
                     
                     vc.node = node!
-                    vc.creatingView.addConnectingView(vc: self.navigationController!, description: "creating your wallet")
+                    vc.creatingView.addConnectingView(vc: self.navigationController!, description: "creating your account")
                     
                     Reducer.makeCommand(walletName: "", command: .getblockcount, param: "") { (object, errorDescription) in
                         
@@ -294,7 +294,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
         if customSeedSwitch.isOn {
             
-            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: "This feature allows you to add your own BIP39 mnemonic as the device's master seed for the wallet you are about to create. This feature is only applicable to Hot and Warm wallets.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: "This feature allows you to add your own BIP39 mnemonic as the device's master seed for the account you are about to create. This feature is only applicable to Hot and Warm accounts.", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
             alert.popoverPresentationController?.sourceView = self.view
             self.present(alert, animated: true, completion: nil)
@@ -354,7 +354,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             vc.saveSeed(seed: encryptedData!) { success in
                                 
                                 if success {
-                                    vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
+                                    vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
                                     
                                 } else {
                                     vc.creatingView.removeConnectingView()
@@ -378,7 +378,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
         } else {
             
-            creatingView.addConnectingView(vc: self, description: "creating single sig wallet")
+            creatingView.addConnectingView(vc: self, description: "creating single sig account")
             
             let dataToEncrypt = userSuppliedWords!.dataUsingUTF8StringEncoding
             Encryption.encryptData(dataToEncrypt: dataToEncrypt) { [unowned vc = self] (encryptedData, error) in
@@ -390,7 +390,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     vc.saveSeed(seed: encryptedData!) { success in
                         
                         if success {
-                            vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet))
+                            vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
                             
                         } else {
                             vc.creatingView.removeConnectingView()
@@ -414,110 +414,119 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
     }
     
-    func constructSingleSigPrimaryDescriptor(wallet: WalletStruct) {
-        
+    func constructSingleSigPrimaryDescriptor(wallet: WalletStruct, encryptedSeed: Data) {
         /// Need to get the xpub
-        Encryption.decryptData(dataToDecrypt: wallet.seed) { [unowned vc = self] (unencryptedSeed) in
+        var network:Network!
+        
+        if wallet.derivation.contains("/1'/") {
+            network = .testnet
             
-            if unencryptedSeed != nil {
+        } else {
+            network = .mainnet
+            
+        }
+        
+        KeyFetcher.xpub(seed: encryptedSeed, chain: network, derivation: wallet.derivation) { [unowned vc = self] (xpub, fingerprint, error) in
+            
+            if xpub != nil && fingerprint != nil {
+                var param = ""
                 
-                if let words = String(data: unencryptedSeed!, encoding: .utf8) {
+                switch wallet.derivation {
                     
-                    if let mnemonic = BIP39Mnemonic(words) {
-                        
-                        if let path = BIP32Path(wallet.derivation) {
-                            
-                            let seed = mnemonic.seedHex()
-                            var network:Network!
-                            
-                            if wallet.derivation.contains("/1'/") {
-                                network = .testnet
-                                
-                            } else {
-                                network = .mainnet
-                                
-                            }
-                            
-                            if let mk = HDKey(seed, network) {
-                                
-                                do {
-                                    
-                                    let key = try mk.derive(path)
-                                    let xpub = key.xpub
-                                    let fingerprint = mk.fingerprint.hexString
-                                    var param = ""
-                                    
-                                    switch wallet.derivation {
-                                        
-                                    case "m/84'/1'/0'":
-                                        param = "\"wpkh([\(fingerprint)/84'/1'/0']\(xpub)/0/*)\""
-                                        
-                                    case "m/84'/0'/0'":
-                                        param = "\"wpkh([\(fingerprint)/84'/0'/0']\(xpub)/0/*)\""
-                                        
-                                    default:
-                                        
-                                        break
-                                        
-                                    }
-                                    
-                                    Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
-                                        
-                                        if let dict = object as? NSDictionary {
-                                            
-                                            let primaryDescriptor = dict["descriptor"] as! String
-                                            vc.newWallet["descriptor"] = primaryDescriptor
-                                            vc.newWallet["name"] = Encryption.sha256hash(primaryDescriptor)
-                                            vc.updateStatus(text: "creating change descriptor")
-                                            let changeDescParam = param.replacingOccurrences(of: "/0/*", with: "/1/*")
-                                            vc.constructSingleSigChangeDescriptor(param: changeDescParam)
-                                                                            
-                                        } else {
-                                            
-                                            vc.creatingView.removeConnectingView()
-                                            displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
-                                            
-                                        }
-                                        
-                                    }
-                                    
-                                } catch {
-                                    
-                                    vc.creatingView.removeConnectingView()
-                                    displayAlert(viewController: vc, isError: true, message: "error creating your descriptor")
-                                    
-                                }
-                                
-                            } else {
-                                vc.creatingView.removeConnectingView()
-                                displayAlert(viewController: vc, isError: true, message: "error deriving master key")
-                                
-                            }
-                            
-                        } else {
-                            vc.creatingView.removeConnectingView()
-                            displayAlert(viewController: vc, isError: true, message: "error converting derivation to bip32 path")
-                            
-                        }
-                        
+                case "m/84'/1'/0'":
+                    param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/0/*)\""
+                    
+                case "m/84'/0'/0'":
+                    param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/0/*)\""
+                    
+                default:
+                    break
+                    
+                }
+                
+                Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
+                    
+                    if let dict = object as? NSDictionary {
+                        let primaryDescriptor = dict["descriptor"] as! String
+                        vc.newWallet["descriptor"] = primaryDescriptor
+                        vc.newWallet["name"] = Encryption.sha256hash(primaryDescriptor)
+                        vc.updateStatus(text: "creating change descriptor")
+                        let changeDescParam = param.replacingOccurrences(of: "/0/*", with: "/1/*")
+                        vc.constructSingleSigChangeDescriptor(param: changeDescParam)
+                                                        
                     } else {
                         vc.creatingView.removeConnectingView()
-                        displayAlert(viewController: vc, isError: true, message: "error converting words to BIP39 mnemonic")
+                        displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                         
                     }
-                    
-                } else {
-                    vc.creatingView.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: "error converting seed to string")
-                    
                 }
                 
             } else {
                 vc.creatingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "error decrypting your seed")
+                displayAlert(viewController: vc, isError: true, message: "error deriving your xpub and fingerprint")
                 
             }
+            
         }
+//        Encryption.decryptData(dataToDecrypt: wallet.seed) { [unowned vc = self] (unencryptedSeed) in
+//
+//            if unencryptedSeed != nil {
+//
+//                if let words = String(data: unencryptedSeed!, encoding: .utf8) {
+//
+//                    if let mnemonic = BIP39Mnemonic(words) {
+//
+//                        if let path = BIP32Path(wallet.derivation) {
+//
+//                            let seed = mnemonic.seedHex()
+//
+//
+//                            if let mk = HDKey(seed, network) {
+//
+//                                do {
+//
+//                                    let key = try mk.derive(path)
+//                                    let xpub = key.xpub
+//                                    let fingerprint = mk.fingerprint.hexString
+//
+//
+//                                } catch {
+//
+//                                    vc.creatingView.removeConnectingView()
+//                                    displayAlert(viewController: vc, isError: true, message: "error creating your descriptor")
+//
+//                                }
+//
+//                            } else {
+//                                vc.creatingView.removeConnectingView()
+//                                displayAlert(viewController: vc, isError: true, message: "error deriving master key")
+//
+//                            }
+//
+//                        } else {
+//                            vc.creatingView.removeConnectingView()
+//                            displayAlert(viewController: vc, isError: true, message: "error converting derivation to bip32 path")
+//
+//                        }
+//
+//                    } else {
+//                        vc.creatingView.removeConnectingView()
+//                        displayAlert(viewController: vc, isError: true, message: "error converting words to BIP39 mnemonic")
+//
+//                    }
+//
+//                } else {
+//                    vc.creatingView.removeConnectingView()
+//                    displayAlert(viewController: vc, isError: true, message: "error converting seed to string")
+//
+//                }
+//
+//            } else {
+//                vc.creatingView.removeConnectingView()
+//                displayAlert(viewController: vc, isError: true, message: "error decrypting your seed")
+//
+//            }
+//        }
     }
     
     func constructSingleSigChangeDescriptor(param: String) {
@@ -525,21 +534,17 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
             
             if let dict = object as? NSDictionary {
-                
                 let changeDescriptor = dict["descriptor"] as! String
                 vc.newWallet["changeDescriptor"] = changeDescriptor
-                vc.updateStatus(text: "creating the wallet on your node")
+                vc.updateStatus(text: "creating the account on your node")
                 vc.createSingleSigWallet()
                                                 
             } else {
-                
                 vc.creatingView.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                 
             }
-            
         }
-        
     }
     
     func createSingleSigWallet() {
@@ -549,63 +554,69 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
             if success {
                 
-                vc.updateStatus(text: "saving the wallet to your device")
+                vc.updateStatus(text: "saving the account to your device")
                 
                 CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
                     
                     if success {
                         
                         let w = WalletStruct(dictionary: vc.newWallet)
-                        let encryptedMnemonic = w.seed
-                        Encryption.decryptData(dataToDecrypt: encryptedMnemonic) { (mnemonic) in
+                        //let encryptedMnemonic = w.seed
+                        //Encryption.decryptData(dataToDecrypt: encryptedMnemonic) { (mnemonic) in
+                        
+                        //if mnemonic != nil {
+                        
+                        //if let words = String(data: mnemonic!, encoding: .utf8) {
+                        
+                        //if let _ = BIP39Mnemonic(words) {
+                        
+                        SeedParser.fetchSeeds(wallet: w) { wordSet in
                             
-                            if mnemonic != nil {
+                            if wordSet != nil {
                                 
-                                if let words = String(data: mnemonic!, encoding: .utf8) {
+                                let recoveryQr = ["descriptor":"\(w.descriptor)", "blockheight":w.blockheight,"label":""] as [String : Any]
+                                
+                                if let json = recoveryQr.json() {
                                     
-                                    if let _ = BIP39Mnemonic(words) {
-                                        
-                                        let recoveryQr = ["descriptor":"\(w.descriptor)", "blockheight":w.blockheight,"label":""] as [String : Any]
-                                        
-                                        if let json = recoveryQr.json() {
-                                            
-                                            DispatchQueue.main.async {
-                                                vc.creatingView.removeConnectingView()
-                                                vc.backUpRecoveryPhrase = words
-                                                vc.recoveryQr = json
-                                                vc.performSegue(withIdentifier: "walletCreated", sender: vc)
-                                                
-                                            }
-                                            
-                                        } else {
-                                            
-                                            vc.creatingView.removeConnectingView()
-                                            displayAlert(viewController: vc, isError: true, message: "error converting to json")
-                                            
-                                        }
-                                                                                
-                                    } else {
-                                        
+                                    DispatchQueue.main.async {
                                         vc.creatingView.removeConnectingView()
-                                        displayAlert(viewController: vc, isError: true, message: "error deriving bip39 mnemonic")
+                                        vc.backUpRecoveryPhrase = "\(wordSet![0])"
+                                        vc.recoveryQr = json
+                                        vc.performSegue(withIdentifier: "walletCreated", sender: vc)
                                         
                                     }
                                     
+                                } else {
+                                    
+                                    vc.creatingView.removeConnectingView()
+                                    displayAlert(viewController: vc, isError: true, message: "error converting to json")
+                                    
                                 }
-                                
-                            } else {
-                                
-                                vc.creatingView.removeConnectingView()
-                                displayAlert(viewController: vc, isError: true, message: "error decrypting seed")
-                                
                             }
-                            
                         }
+                        
+                        //                                    } else {
+                        //
+                        //                                        vc.creatingView.removeConnectingView()
+                        //                                        displayAlert(viewController: vc, isError: true, message: "error deriving bip39 mnemonic")
+                        //
+                        //                                    }
+                        
+                        //}
+                        
+                        //                            } else {
+                        //
+                        //                                vc.creatingView.removeConnectingView()
+                        //                                displayAlert(viewController: vc, isError: true, message: "error decrypting seed")
+                        //
+                        //                            }
+                        
+                        //}
                         
                     } else {
                         
                         vc.creatingView.removeConnectingView()
-                        displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving wallet")
+                        displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving account")
                         
                     }
                     
@@ -615,7 +626,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             } else {
                 
                 vc.creatingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "There was an error creating your wallet: \(errorDescription!)")
+                displayAlert(viewController: vc, isError: true, message: "There was an error creating your account: \(errorDescription!)")
                 
             }
             
@@ -1034,7 +1045,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
         DispatchQueue.main.async {
             
-            self.creatingView.label.text = "creating your wallets descriptors"
+            self.creatingView.label.text = "creating your accounts descriptors"
             
         }
         
@@ -1076,7 +1087,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                     
                                                     DispatchQueue.main.async {
                                                         
-                                                        vc.creatingView.label.text = "saving your wallet to your device"
+                                                        vc.creatingView.label.text = "saving your account to your device"
                                                         
                                                     }
                                                     
@@ -1107,7 +1118,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                         } else {
                                                             
                                                             vc.creatingView.removeConnectingView()
-                                                            displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving wallet")
+                                                            displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving account")
                                                             
                                                         }
                                                         
@@ -1118,12 +1129,12 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                     if error != nil {
                                                         
                                                         vc.creatingView.removeConnectingView()
-                                                        displayAlert(viewController: vc, isError: true, message: "error creating wallet: \(error!)")
+                                                        displayAlert(viewController: vc, isError: true, message: "error creating account: \(error!)")
                                                         
                                                     } else {
                                                         
                                                         vc.creatingView.removeConnectingView()
-                                                        displayAlert(viewController: vc, isError: true, message: "error creating wallet")
+                                                        displayAlert(viewController: vc, isError: true, message: "error creating account")
                                                         
                                                     }
                                                     
@@ -1234,7 +1245,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     
     private func createWalletWithUserSuppliedSeed(dict: [String:String]?) {
         
-        creatingView.addConnectingView(vc: self.navigationController!, description: "creating your wallet")
+        creatingView.addConnectingView(vc: self.navigationController!, description: "creating your account")
         
         Encryption.getNode { [unowned vc = self] (node, error) in
             
@@ -1422,7 +1433,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
                 let changeDescriptor = result["descriptor"] as! String
                 vc.newWallet["changeDescriptor"] = changeDescriptor
-                vc.updateStatus(text: "creating the wallet on your node")
+                vc.updateStatus(text: "creating the account on your node")
                 vc.createCustomSingleSigWallet(dict: dict)
                                                 
             } else {
@@ -1443,7 +1454,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
             if success {
                 
-                vc.updateStatus(text: "saving the wallet to your device")
+                vc.updateStatus(text: "saving the account to your device")
                 
                 CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
                     
@@ -1472,7 +1483,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     } else {
                         
                         vc.creatingView.removeConnectingView()
-                        displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving wallet")
+                        displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving account")
                         
                     }
                     
@@ -1482,7 +1493,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             } else {
                 
                 vc.creatingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "There was an error creating your wallet: \(errorDescription!)")
+                displayAlert(viewController: vc, isError: true, message: "There was an error creating your account: \(errorDescription!)")
                 
             }
             

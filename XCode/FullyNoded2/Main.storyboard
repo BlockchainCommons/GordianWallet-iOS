@@ -3122,7 +3122,7 @@ You should make mutliple backups of each and store them in seperate locations.</
                                     <action selector="nextAction:" destination="shH-Cs-byi" eventType="touchUpInside" id="7YL-Bl-ZOv"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="add a wallet label here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4PM-ox-jZp">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="add an account label here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4PM-ox-jZp">
                                 <rect key="frame" x="16" y="143" width="343" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -3159,7 +3159,7 @@ You should make mutliple backups of each and store them in seperate locations.</
             </objects>
             <point key="canvasLocation" x="-4452" y="1100.5997001499252"/>
         </scene>
-        <!--Wallet Import QR-->
+        <!--Account Map QR-->
         <scene sceneID="zcX-u3-cQY">
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="M6J-Vn-XJt" customClass="WalletCreatedQRViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -3224,8 +3224,9 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="BhL-og-eCq"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Wallet Import QR" id="ydV-iu-p5u"/>
+                    <navigationItem key="navigationItem" title="Account Map QR" id="ydV-iu-p5u"/>
                     <connections>
+                        <outlet property="accountMapLabel" destination="3e6-6s-1Ti" id="q5y-rX-jxX"/>
                         <outlet property="nextOutlet" destination="9dU-ye-Td9" id="dDS-1I-1Xz"/>
                         <outlet property="qrView" destination="Xql-p6-Jpw" id="YPS-Zo-OQw"/>
                         <segue destination="94S-m3-HcE" kind="show" identifier="goWords" id="HCX-to-Hwk"/>
@@ -3340,7 +3341,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fAV-qO-JSo">
                                         <rect key="frame" x="0.0" y="14.5" width="343" height="14.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unix Birthdate:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gqB-5w-w4n">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Birthblock:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gqB-5w-w4n">
                                                 <rect key="frame" x="0.0" y="0.0" width="100" height="14.5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="100" id="L0p-jW-MRL"/>
@@ -3494,7 +3495,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFS-od-lPk">
                                         <rect key="frame" x="0.0" y="14.5" width="335" height="14.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unix Birthdate:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="du8-Xd-t6I">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Birthblock" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="du8-Xd-t6I">
                                                 <rect key="frame" x="0.0" y="0.0" width="100" height="14.5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="100" id="cTg-2z-DZ1"/>
@@ -3545,7 +3546,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
             </objects>
             <point key="canvasLocation" x="-4426.3999999999996" y="3279.3103448275865"/>
         </scene>
-        <!--Recovery Phrase-->
+        <!--Seed Words-->
         <scene sceneID="PTw-4b-9Ka">
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="94S-m3-HcE" customClass="WalletCreatedWordsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -3592,7 +3593,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gD1-Bt-o1p"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Recovery Phrase" id="KVk-aL-TNs"/>
+                    <navigationItem key="navigationItem" title="Seed Words" id="KVk-aL-TNs"/>
                     <connections>
                         <outlet property="savedOutlet" destination="MpI-zv-VI9" id="7sK-7l-Yfj"/>
                         <outlet property="textView" destination="AFT-F7-8fK" id="Yve-1a-QOk"/>
@@ -6218,10 +6219,10 @@ At a minimum we recommend writing these words down on water proof paper with a p
     <inferredMetricsTieBreakers>
         <segue reference="msh-B5-XLl"/>
         <segue reference="uaX-te-aDX"/>
-        <segue reference="Kzq-6W-yKR"/>
+        <segue reference="HTQ-38-5NU"/>
         <segue reference="622-Us-Cp3"/>
         <segue reference="9aM-UA-Kws"/>
-        <segue reference="rM8-oF-xn4"/>
+        <segue reference="c5y-jb-z8M"/>
         <segue reference="cZz-Rg-m7M"/>
         <segue reference="zkr-zY-rLG"/>
     </inferredMetricsTieBreakers>
