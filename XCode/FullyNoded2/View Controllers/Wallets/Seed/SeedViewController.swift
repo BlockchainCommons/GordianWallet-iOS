@@ -264,6 +264,12 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         }
         
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            vc.tableView.reloadData()
+            
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

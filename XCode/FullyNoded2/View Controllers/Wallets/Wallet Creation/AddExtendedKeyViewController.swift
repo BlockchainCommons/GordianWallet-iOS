@@ -31,9 +31,6 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
         tap.addTarget(self, action: #selector(handleTap))
         view.addGestureRecognizer(tap)
         
-        textField.text = ""
-        textView.text = ""
-        
     }
     
     private func createDescriptors() {
