@@ -13,7 +13,7 @@ class PSBTSigner {
     
     class func sign(psbt: String, completion: @escaping ((success: Bool, psbt: String?, rawTx: String?)) -> Void) {
         
-        var walletsToSignWith = [[String:Any]]()
+        var seedsToSignWith = [[String:Any]]()
         var xprvsToSignWith = [HDKey]()
         var psbtToSign:PSBT!
         var chain:Network!
@@ -122,11 +122,12 @@ class PSBTSigner {
         /// Fetch keys to sign with
         func getKeysToSignWith() {
             xprvsToSignWith.removeAll()
-            for (i, wallet) in walletsToSignWith.enumerated() {
-                let w = WalletStruct(dictionary: wallet)
-                let encryptedSeed = w.seed
-                if String(bytes: encryptedSeed, encoding: .utf8) != "no seed" {
-                    Encryption.decryptData(dataToDecrypt: encryptedSeed) { (seed) in
+            for (i, seed) in seedsToSignWith.enumerated() {
+                let seedStruct = SeedStruct(dictionary: seed)
+                //let encryptedSeed = seedStruct.seed
+                //if String(bytes: encryptedSeed, encoding: .utf8) != "no seed" {
+                if seedStruct.seed != nil {
+                    Encryption.decryptData(dataToDecrypt: seedStruct.seed!) { (seed) in
                         if seed != nil {
                             if let words = String(data: seed!, encoding: .utf8) {
                                 MnemonicCreator.convert(words: words) { (mnemonic, error) in
@@ -144,7 +145,8 @@ class PSBTSigner {
                         }
                     }
                 }
-                if i + 1 == walletsToSignWith.count {
+                //}
+                if i + 1 == seedsToSignWith.count {
                     print("processWithActiveWallet")
                     processWithActiveWallet()
                 }
@@ -153,20 +155,20 @@ class PSBTSigner {
         
         /// Fetch wallets on the same network
         func getSeeds() {
-            walletsToSignWith.removeAll()
-            CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
-                if errorDescription == nil && wallets != nil {
-                    for (i, w) in wallets!.enumerated() {
-                        if w["id"] != nil && w["name"] != nil && w["isArchived"] != nil {
-                            let wallet = WalletStruct(dictionary: w)
-                            let walletNetwork = network(descriptor: wallet.descriptor)
-                            if !wallet.isArchived && walletNetwork == psbtToSign.network {
-                                if String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil {
-                                    walletsToSignWith.append(w)
-                                }
-                            }
-                        }
-                        if i + 1 == wallets!.count {
+            seedsToSignWith.removeAll()
+            CoreDataService.retrieveEntity(entityName: .seeds) { (seeds, errorDescription) in
+                if errorDescription == nil && seeds != nil {
+                    for (i, seed) in seeds!.enumerated() {
+                        //if w["id"] != nil && w["name"] != nil && w["isArchived"] != nil {
+                            //let wallet = WalletStruct(dictionary: w)
+                            //let walletNetwork = network(descriptor: wallet.descriptor)
+                            //if !wallet.isArchived && walletNetwork == psbtToSign.network {
+                                //if String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil {
+                                    seedsToSignWith.append(seed)
+                                //}
+                            //}
+                        //}
+                        if i + 1 == seeds!.count {
                             getKeysToSignWith()
                         }
                     }
