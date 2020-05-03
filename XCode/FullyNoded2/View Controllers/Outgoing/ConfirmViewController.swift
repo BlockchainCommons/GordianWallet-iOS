@@ -59,7 +59,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
             DispatchQueue.main.async {
                             
-                let alert = UIAlertController(title: "Broadcast transaction?", message: "Once you broadcast there is no going back", preferredStyle: .actionSheet)
+                let alert = UIAlertController(title: "Broadcast transaction?", message: "We use blockstream's esplora Tor V3 api to broadcast your transactions for improved privacy. Once you broadcast there is no going back!", preferredStyle: .actionSheet)
 
                 alert.addAction(UIAlertAction(title: "Yes, broadcast now", style: .default, handler: { [unowned vc = self] action in
                     
@@ -1022,8 +1022,62 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     private func broadcast() {
         
         self.creatingView.addConnectingView(vc: self, description: "broadcasting transaction")
-        self.executeNodeCommand(method: .sendrawtransaction, param: "\"\(self.signedRawTx)\"")
-        
+        let broadcaster = Broadcaster.sharedInstance
+        broadcaster.send(rawTx: self.signedRawTx) { [unowned vc = self] txid in
+            
+            if txid != nil {
+                
+                DispatchQueue.main.async {
+                    
+                    UIPasteboard.general.string = txid!
+                    vc.creatingView.removeConnectingView()
+                    vc.navigationItem.title = "Sent ✓"
+                    vc.broadcastButton.alpha = 0
+                    
+                    displayAlert(viewController: vc,
+                                 isError: false,
+                                 message: "Transaction sent ✓")
+                    
+                    if !vc.sweeping {
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            
+                            vc.navigationController?.popToRootViewController(animated: true)
+                            
+                        }
+                        
+                    } else {
+                        
+                        NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            
+                            vc.navigationController?.popToRootViewController(animated: true)
+                            
+                        }
+                        
+                    }
+                    
+                }
+            } else {
+                
+                DispatchQueue.main.async {
+                                
+                    let alert = UIAlertController(title: "There was an error broadcasting your transaction with blockstream's node.", message: "Broadcast the transaction with your node?", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Yes, broadcast now", style: .default, handler: { [unowned vc = self] action in
+                        
+                        vc.executeNodeCommand(method: .sendrawtransaction, param: "\"\(vc.signedRawTx)\"")
+                                            
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    self.present(alert, animated: true, completion: nil)
+                    
+                }
+            }
+        }
     }
     
     func showAuth() {
