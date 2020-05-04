@@ -31,6 +31,7 @@ public struct DescriptorStruct: CustomStringConvertible {
     let isSpecter:Bool
     let isHD:Bool
     let keysWithPath:[String]
+    let isAccount:Bool
     
     init(dictionary: [String: Any]) {
         format = dictionary["format"] as? String ?? ""
@@ -56,6 +57,7 @@ public struct DescriptorStruct: CustomStringConvertible {
         isSpecter = dictionary["isSpecter"] as? Bool ?? false
         isHD = dictionary["isHD"] as? Bool ?? false
         keysWithPath = dictionary["keysWithPath"] as? [String] ?? [""]
+        isAccount = dictionary["isAccount"] as? Bool ?? false
         
     }
     

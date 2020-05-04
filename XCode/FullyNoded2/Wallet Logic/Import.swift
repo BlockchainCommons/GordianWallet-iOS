@@ -17,6 +17,8 @@ class Import {
     
     class func importDescriptor(descriptor: String, completion: @escaping (([String:Any]?)) -> Void) {
         var walletToImport = [String:Any]()
+        let descriptorParser = DescriptorParser()
+        let descriptorStruct = descriptorParser.descriptor(descriptor)
         
         func getChangeDescriptor(changeDesc: String) {
             
@@ -71,27 +73,84 @@ class Import {
             
         }
         
+        func importBitcoinCoreDescriptor() {
+            /// First parse the descriptor to see if it is an account or not. If it is an account we manipulate it.
+            
+            if descriptorStruct.isAccount {
+                
+                if descriptor.contains("/0/*") {
+                    /// No need to add the child keys, just get the change descriptor and send it off.
+                    let changeDesc = descriptor.replacingOccurrences(of: "/0/*", with: "/1/*")
+                    getDescriptors(primaryDesc: descriptor, changeDesc: changeDesc)
+                    
+                } else {
+                    /// No child keys added, since it is account and HD we can add it.
+                    if descriptorStruct.isMulti {
+                        var primaryDesc = ""
+                        let keys = descriptorStruct.multiSigKeys
+                        
+                        for (i, key) in keys.enumerated() {
+                            
+                            if i == 0 {
+                               primaryDesc = descriptor.replacingOccurrences(of: key, with: key + "/0/*")
+                                
+                            } else {
+                                primaryDesc = primaryDesc.replacingOccurrences(of: key, with: key + "/0/*")
+                                
+                            }
+                            
+                        }
+                                                
+                        let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
+                        getDescriptors(primaryDesc: primaryDesc, changeDesc: changeDesc)
+                        
+                    } else {
+                        var key = ""
+                        
+                        if descriptorStruct.accountXprv != "" {
+                            key = descriptorStruct.accountXprv
+                            
+                        } else if descriptorStruct.accountXpub != "" {
+                            key = descriptorStruct.accountXpub
+                            
+                        }
+                        
+                        let primaryDesc = descriptor.replacingOccurrences(of: key, with: key + "/0/*")
+                        let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
+                        getDescriptors(primaryDesc: primaryDesc, changeDesc: changeDesc)
+                        
+                    }
+                    
+                }
+                
+            } else {
+                /// It is non standard, we use the same descriptor for receiving and change.
+                print("importing a non standard descriptor!")
+                getDescriptors(primaryDesc: descriptor, changeDesc: descriptor)
+                
+            }
+            
+        }
+        
         func process(node: NodeStruct) {
-            let p = DescriptorParser()
-            let str = p.descriptor(descriptor)
-            walletToImport["derivation"] = str.derivation
+            walletToImport["derivation"] = descriptorStruct.derivation
             walletToImport["nodeId"] = node.id
             walletToImport["birthdate"] = keyBirthday()
             walletToImport["id"] = UUID()
             walletToImport["isArchived"] = false
             walletToImport["maxRange"] = 2500
             walletToImport["index"] = 0
-            walletToImport["blockheight"] = 1
+            walletToImport["blockheight"] = Int32(1)
             walletToImport["lastUsed"] = Date()
             walletToImport["lastBalance"] = 0.0
             
-            if str.isSpecter && str.mOfNType == "2 of 3" {
+            if descriptorStruct.isSpecter && descriptorStruct.mOfNType == "2 of 3" {
                 walletToImport["type"] = "MULTI"
                 importSpecterWallet()
                 
-            } else if str.isHD {
+            } else if descriptorStruct.isHD && !descriptorStruct.isHot {
                 
-                if str.isMulti {
+                if descriptorStruct.isMulti {
                     walletToImport["type"] = "MULTI"
                     
                 } else {
@@ -100,6 +159,11 @@ class Import {
                 }
                 
                 /// Here we will need to process the descriptor.
+                importBitcoinCoreDescriptor()
+                
+            } else {
+                print("descriptor type is not supported...")
+                completion(nil)
                 
             }
             
@@ -145,7 +209,7 @@ class Import {
             walletToImport["name"] = walletName
             walletToImport["descriptor"] = descriptor
             walletToImport["nodeId"] = node.id
-            //walletToImport["birthdate"] = accountMap["birthdate"] as! Int32
+            walletToImport["birthdate"] = keyBirthday()
             walletToImport["id"] = UUID()
             walletToImport["isArchived"] = false
             walletToImport["maxRange"] = 2500
