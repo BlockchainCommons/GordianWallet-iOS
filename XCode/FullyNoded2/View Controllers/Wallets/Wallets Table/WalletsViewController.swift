@@ -764,7 +764,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
         if wallet.knownSigners == str.sigsRequired {
             
-            seedOnDeviceLabel.text = "\(wallet.knownSigners) signer on \(UIDevice.current.name)"
+            var signer = "signer"
+            if wallet.knownSigners > 1 {
+                signer = "signers"
+            }
+            
+            seedOnDeviceLabel.text = "\(wallet.knownSigners) \(signer) on \(UIDevice.current.name)"
             walletType.text = "Hot Account"
             walletTypeImage.image = UIImage(systemName: "flame")
             walletTypeImage.tintColor = .systemRed

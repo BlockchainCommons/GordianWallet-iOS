@@ -12,6 +12,7 @@ import LibWally
 
 class ConfirmViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
+    var psbtDict = ""
     var doneBlock: ((Bool) -> Void)?
     let creatingView = ConnectingView()
     var unsignedPsbt = ""
@@ -97,11 +98,27 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Text", style: .default, handler: { [unowned vc = self] action in
+            alert.addAction(UIAlertAction(title: "Base64 encoded text", style: .default, handler: { [unowned vc = self] action in
                 
                 DispatchQueue.main.async {
                     
                     let textToShare = [vc.unsignedPsbt]
+                    
+                    let activityViewController = UIActivityViewController(activityItems: textToShare,
+                                                                          applicationActivities: nil)
+                    
+                    activityViewController.popoverPresentationController?.sourceView = vc.view
+                    vc.present(activityViewController, animated: true) {}
+                    
+                }
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Plain text", style: .default, handler: { [unowned vc = self] action in
+                
+                DispatchQueue.main.async {
+                    
+                    let textToShare = [vc.psbtDict]
                     
                     let activityViewController = UIActivityViewController(activityItems: textToShare,
                                                                           applicationActivities: nil)
@@ -470,6 +487,8 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 Reducer.makeCommand(walletName: walletName, command: .decodepsbt, param: param) { [unowned vc = self] (object, errorDesc) in
                     
                     if let dict = object as? NSDictionary {
+                        
+                        vc.psbtDict = "\(dict)"
                         
                         if let txDict = dict["tx"] as? NSDictionary {
                             

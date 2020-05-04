@@ -258,15 +258,13 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         
         connectingView.addConnectingView(vc: self, description: "deriving addresses")
         
-        /// Need to replace xprv with xpub so the checksum is valid for FN2 wallets, we also check if it is watch-only e.g. and imported descriptor
+        let descriptor = walletDict["descriptor"] as! String
         
-        var descriptor = walletDict["descriptor"] as! String
-        
-        if descriptor.contains("xprv") || descriptor.contains("tprv") {
-            let xprv = descriptorStruct.multiSigKeys[1]
-            let xpub = HDKey(xprv)!.xpub
-            descriptor = descriptor.replacingOccurrences(of: xprv, with: xpub)
-        }
+//        if descriptor.contains("xprv") || descriptor.contains("tprv") {
+//            let xprv = descriptorStruct.multiSigKeys[1]
+//            let xpub = HDKey(xprv)!.xpub
+//            descriptor = descriptor.replacingOccurrences(of: xprv, with: xpub)
+//        }
         
         DispatchQueue.main.async { [unowned vc = self] in
             

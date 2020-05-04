@@ -834,7 +834,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let infoButton = cell.viewWithTag(9) as! UIButton
         let connectedView = cell.viewWithTag(10)!
         let clientOnionView = cell.viewWithTag(11)!
-        let excludeExitView = cell.viewWithTag(12)!
         let p2pView = cell.viewWithTag(13)!
         let v3OnionView = cell.viewWithTag(14)!
         let v3View = cell.viewWithTag(15)!
@@ -842,7 +841,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         v3View.layer.cornerRadius = 8
         connectedView.layer.cornerRadius = 8
         clientOnionView.layer.cornerRadius = 8
-        excludeExitView.layer.cornerRadius = 8
         p2pView.layer.cornerRadius = 8
         v3OnionView.layer.cornerRadius = 8
         
@@ -1592,7 +1590,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 } else {
                     
-                    return 178
+                    return 154
                     
                 }
                 

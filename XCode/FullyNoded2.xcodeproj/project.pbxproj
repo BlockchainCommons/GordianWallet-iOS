@@ -38,6 +38,7 @@
 		D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650092442C58200754ACF /* WordRecoveryViewController.swift */; };
 		D056500C2446BF6E00754ACF /* 1024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D056500B2446BF6D00754ACF /* 1024.jpg */; };
 		D07399D7245E6E5600860B7E /* Broadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399D6245E6E5600860B7E /* Broadcast.swift */; };
+		D07399DB245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DA245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift */; };
 		D080F49523F120B200CC8D6E /* ImportCustomDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */; };
 		D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724023F0EDBB00847DC8 /* AppDelegate.swift */; };
 		D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724223F0EDBB00847DC8 /* SceneDelegate.swift */; };
@@ -198,6 +199,7 @@
 		D05650092442C58200754ACF /* WordRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordRecoveryViewController.swift; sourceTree = "<group>"; };
 		D056500B2446BF6D00754ACF /* 1024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1024.jpg; sourceTree = "<group>"; };
 		D07399D6245E6E5600860B7E /* Broadcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Broadcast.swift; sourceTree = "<group>"; };
+		D07399DA245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseNumberOfSignersViewController.swift; sourceTree = "<group>"; };
 		D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCustomDescriptor.swift; sourceTree = "<group>"; };
 		D09D723D23F0EDBB00847DC8 /* FullyNoded 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FullyNoded 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D09D724023F0EDBB00847DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -361,6 +363,7 @@
 				D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */,
 				D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */,
 				D05650092442C58200754ACF /* WordRecoveryViewController.swift */,
+				D07399DA245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift */,
 			);
 			path = "Wallet Recovery";
 			sourceTree = "<group>";
@@ -1081,6 +1084,7 @@
 				D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */,
 				D09D735E23F0F3C000847DC8 /* QRGenerator.swift in Sources */,
 				D09D732E23F0F3C000847DC8 /* MainMenuViewController.swift in Sources */,
+				D07399DB245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift in Sources */,
 				D09D732323F0F3C000847DC8 /* SettingsViewController.swift in Sources */,
 				D00016B7245BC49B0091F7CF /* SeedsViewController.swift in Sources */,
 			);

@@ -11,6 +11,8 @@ import LibWally
 
 class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavigationControllerDelegate {
     
+    var seedArray = [String]()/// Used to recover multi-sig wallets with seed words only.
+    var recoveringMultiSigWithWordsOnly = Bool()
     let cv = ConnectingView()
     var testingWords = Bool()
     var words:String?
@@ -640,22 +642,92 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             }
             
         } else {
-            
             /// It's words only
-            DispatchQueue.main.async { [unowned vc = self] in
-                            
-                let alert = UIAlertController(title: "That is a valid recovery phrase", message: "You can now choose a derivation scheme or press cancel to add more words", preferredStyle: .actionSheet)
+            func addSeed() {
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.seedArray.append(vc.justWords.joined(separator: " "))
+                    print("seedArray = \(vc.seedArray)")
+                    vc.justWords.removeAll()
+                    vc.addedWords.removeAll()
+                    vc.textField.text = ""
+                    vc.label.text = ""
+                    vc.updatePlaceHolder(wordNumber: 1)
+                }
+            }
+            
+            func seedAddedAddAnother() {
+                DispatchQueue.main.async { [unowned vc = self] in
+                    let alert = UIAlertController(title: "Seed added, you may now add another.", message: "", preferredStyle: .actionSheet)
+                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    vc.present(alert, animated: true, completion: nil)
+                }
+            }
+            
+            func chooseDerivationScheme() {
+                DispatchQueue.main.async { [unowned vc = self] in
+                                
+                    let alert = UIAlertController(title: "That is a valid recovery phrase", message: "You can now choose a derivation scheme or press cancel to add more words", preferredStyle: .actionSheet)
 
-                alert.addAction(UIAlertAction(title: "Choose Derivation", style: .default, handler: { action in
+                    alert.addAction(UIAlertAction(title: "Choose Derivation", style: .default, handler: { action in
+                        vc.chooseDerivation()
+                        
+                    }))
                     
-                    vc.chooseDerivation()
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    vc.present(alert, animated: true, completion: nil)
                     
-                }))
+                }
+            }
+            
+            if !recoveringMultiSigWithWordsOnly {
+                DispatchQueue.main.async { [unowned vc = self] in
+                                
+                    let alert = UIAlertController(title: "That is a valid recovery phrase", message: "Are you recovering a multi-sig account or single-sig account?", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Single-sig", style: .default, handler: { action in
+                        chooseDerivationScheme()
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Multi-sig", style: .default, handler: { action in
+                        vc.recoveringMultiSigWithWordsOnly = true
+                        addSeed()
+                        seedAddedAddAnother()
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    vc.present(alert, animated: true, completion: nil)
+                    
+                }
                 
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                alert.popoverPresentationController?.sourceView = self.view
-                vc.present(alert, animated: true, completion: nil)
-                
+            } else {
+                /// Adding multiple sets of words to recover multi-sig with only words.
+                DispatchQueue.main.async { [unowned vc = self] in
+                    addSeed()
+                                
+                    let alert = UIAlertController(title: "That is a valid recovery phrase", message: "Add another seed phrase or recover this multi-sig account now? When recovering multi-sig accounts with words only we utilize BIP67 by default.", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Add another seed", style: .default, handler: { action in
+                        seedAddedAddAnother()
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Recover Now", style: .default, handler: { action in
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.performSegue(withIdentifier: "segueToNumberOfSigners", sender: vc)
+                        }
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    vc.present(alert, animated: true, completion: nil)
+                    
+                }
             }
         }
     }
@@ -859,11 +931,20 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         
     }
     
+    
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
         switch segue.identifier {
+            
+        case "segueToNumberOfSigners":
+            
+            if let vc = segue.destination as? ChooseNumberOfSignersViewController {
+                
+                vc.seedArray = seedArray
+                
+            }
             
         case "confirmFromWords":
             
