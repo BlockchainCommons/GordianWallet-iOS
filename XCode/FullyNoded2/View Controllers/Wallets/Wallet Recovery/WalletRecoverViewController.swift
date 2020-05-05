@@ -52,17 +52,17 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                                 
                                 if let _ = dict["descriptor"] as? String {
                                     
-                                    if let _ = dict["birthdate"] as? Int32 {
+                                    //if let _ = dict["birthdate"] as? Int32 {
                                         
-                                        if let _ = dict["entropy"] as? String {
+                                        //if let _ = dict["entropy"] as? String {
                                             
                                             if let _ = dict["blockheight"] as? Int {
                                                 
                                                 DispatchQueue.main.async { [unowned vc = self] in
                                                     
-                                                    let alert = UIAlertController(title: "There is a valid Recovery QR image on your clipboard", message: "Would you like to upload this image as a Recovery QR?", preferredStyle: .actionSheet)
+                                                    let alert = UIAlertController(title: "There is a valid Account Map QR image on your clipboard", message: "Would you like to upload this image as a Account Map QR?", preferredStyle: .actionSheet)
                                                     
-                                                    alert.addAction(UIAlertAction(title: "Upload Recovery QR", style: .default, handler: { action in
+                                                    alert.addAction(UIAlertAction(title: "Upload Account Map QR", style: .default, handler: { action in
                                                         
                                                         vc.recoveryDict = dict
                                                         vc.validRecoveryScanned()
@@ -77,9 +77,9 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                                                 }
                                             }
                                             
-                                        }
+                                        //}
                                         
-                                    }
+                                    //}
                                     
                                 }
                                 
@@ -109,17 +109,17 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                                 
                                 if let _ = dict["descriptor"] as? String {
                                     
-                                    if let _ = dict["birthdate"] as? Int32 {
+                                    //if let _ = dict["birthdate"] as? Int32 {
                                         
-                                        if let _ = dict["entropy"] as? String {
+                                        //if let _ = dict["entropy"] as? String {
                                             
                                             if let _ = dict["blockheight"] as? Int {
                                                 
                                                 DispatchQueue.main.async { [unowned vc = self] in
                                                                 
-                                                    let alert = UIAlertController(title: "There is a valid Recovery QR text on your clipboard", message: "Would you like to upload this text as a Recovery QR?", preferredStyle: .actionSheet)
+                                                    let alert = UIAlertController(title: "There is a valid Account Map text on your clipboard", message: "Would you like to upload this text as a Account Map QR?", preferredStyle: .actionSheet)
 
-                                                    alert.addAction(UIAlertAction(title: "Upload Recovery QR text", style: .default, handler: { action in
+                                                    alert.addAction(UIAlertAction(title: "Upload Account Map QR text", style: .default, handler: { action in
                                                         
                                                         vc.recoveryDict = dict
                                                         vc.validRecoveryScanned()
@@ -134,9 +134,9 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                                                 
                                             }
                                             
-                                        }
+                                        //}
                                         
-                                    }
+                                    //}
                                     
                                 }
                                 
@@ -153,6 +153,15 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         }
         
     }
+    
+    @IBAction func addXpubsManually(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "segueToManualXpubRecovery", sender: vc)
+            
+        }
+        
+    }
+    
     
     @IBAction func getWordsAction(_ sender: Any) {
         
@@ -466,6 +475,14 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
         switch segue.identifier {
+            
+        case "segueToManualXpubRecovery":
+            
+            if let vc = segue.destination as? AddExtendedKeyViewController {
+                
+                vc.isRecovering = true
+                
+            }
             
         case "getWords":
             

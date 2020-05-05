@@ -11,6 +11,7 @@ import LibWally
 
 class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UINavigationControllerDelegate {
     
+    var xpubArray = [String]()
     var walletName = ""
     var keys = ""
     var seedArray = [String]()
@@ -38,17 +39,36 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         requiredSigs = row + 1
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            let alert = UIAlertController(title: "Recover \(vc.requiredSigs) of \(vc.seedArray.count) now?", message: "", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Recover now", style: .default, handler: { action in
-                vc.buildWallet()
+        
+        if xpubArray.count == 0 {
+            DispatchQueue.main.async { [unowned vc = self] in
                 
-            }))
+                let alert = UIAlertController(title: "Recover \(vc.requiredSigs) of \(vc.seedArray.count) now?", message: "", preferredStyle: .actionSheet)
+                alert.addAction(UIAlertAction(title: "Recover now", style: .default, handler: { action in
+                    vc.buildWallet()
+                    
+                }))
+                
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                alert.popoverPresentationController?.sourceView = self.view
+                vc.present(alert, animated: true, completion: nil)
+                
+            }
             
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-            alert.popoverPresentationController?.sourceView = self.view
-            vc.present(alert, animated: true, completion: nil)
+        } else {
+            DispatchQueue.main.async { [unowned vc = self] in
+                
+                let alert = UIAlertController(title: "Recover \(vc.requiredSigs) of \(vc.xpubArray.count) now?", message: "", preferredStyle: .actionSheet)
+                alert.addAction(UIAlertAction(title: "Recover now", style: .default, handler: { action in
+                    vc.buildWalletFromXpubs()
+                    
+                }))
+                
+                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                alert.popoverPresentationController?.sourceView = self.view
+                vc.present(alert, animated: true, completion: nil)
+                
+            }
             
         }
         
@@ -209,6 +229,11 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
                 
             }
         }
+    }
+    
+    private func buildWalletFromXpubs() {
+        
+        
     }
     
      // MARK: - Navigation

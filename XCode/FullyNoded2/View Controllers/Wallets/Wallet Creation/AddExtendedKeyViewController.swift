@@ -11,17 +11,33 @@ import LibWally
 
 class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UINavigationControllerDelegate {
     
+    @IBOutlet weak var xpubLabel: UILabel!
+    @IBOutlet weak var fingerprintLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var nextOutlet: UIButton!
     @IBOutlet weak var textView: UITextView!
     let tap = UITapGestureRecognizer()
     var wallet:WalletStruct!
     var onDoneBlock: (([String:String]) -> Void)?
+    var isRecovering = Bool()
+    var keys = [String]()
+    var walletToRecover = [String:Any]()
+    var name = ""
+    var isRecoveringMulti = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationController?.delegate = self
+        
+        if isRecovering {
+            textField.alpha = 0
+            fingerprintLabel.alpha = 0
+            xpubLabel.text = "xpub with path and fingerprint:"
+            showAlert(vc: self, title: "Add your xpub(s)", message: "When recovering a wallet with xpubs you need to paste in the xpub with its path and master key fingerprint.\n\nExample: \n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
+            
+        }
+        
         textView.delegate = self
         nextOutlet.layer.cornerRadius = 8
         textView.layer.borderWidth = 1.0
@@ -34,25 +50,38 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     }
     
     private func createDescriptors() {
+        
         if textView.text != "" && textField.text != "" {
             
-            if textView.text.hasPrefix("xpub") || textView.text.hasPrefix("tpub") && textField.text!.count == 8 {
+            if !isRecovering {
                 
-                if let _ = HDKey(textView.text!) {
-                    let dict = ["key":textView.text!, "fingerprint":textField.text!]
-                    DispatchQueue.main.async { [unowned vc = self] in
-                        vc.onDoneBlock!((dict))
-                        vc.navigationController!.popViewController(animated: true)
+                if textView.text.hasPrefix("xpub") || textView.text.hasPrefix("tpub") && textField.text!.count == 8 {
+                    
+                    if let _ = HDKey(textView.text!) {
+                        let dict = ["key":textView.text!, "fingerprint":textField.text!]
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.onDoneBlock!((dict))
+                            vc.navigationController!.popViewController(animated: true)
+                            
+                        }
+                        
+                    } else {
+                        showAlert(vc: self, title: "Invalid xpub!", message: "That is not a valid xpub or tpub. FullyNoded 2 is powered by Bitcoin Core which is only compatible with xpub's and tpub's. You will need to use this tool to convert other types of extended keys to xpubs/tpubs: https://jlopp.github.io/xpub-converter/")
                         
                     }
+                    
                 } else {
-                    showAlert(vc: self, title: "Invalid xpub!", message: "That is not a valid xpub or tpub. FullyNoded 2 is powered by Bitcoin Core which is only compatible with xpub's and tpub's. You will need to use this tool to convert other types of extended keys to xpubs/tpubs: https://jlopp.github.io/xpub-converter/")
+                    showAlert(vc: self, title: "Only xpubs allowed here", message: "This option is only for creating watch-only wallets with user supplied xpub's. If you would like to supply a seed tap the \"add BIP39 words\" button below.")
+                    
                 }
-                
-            } else {
-                showAlert(vc: self, title: "Only xpubs allowed here", message: "This option is only for creating watch-only wallets with user supplied xpub's. If you would like to supply a seed tap the \"add BIP39 words\" button below.")
-                
             }
+            
+        } else if textView.text != "" && isRecovering {
+            processRecoveryXpub()
+            
+        } else {
+            shakeAlert(viewToShake: textView)
+            
         }
     }
     
@@ -66,6 +95,202 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     @IBAction func nextAction(_ sender: Any) {
         createDescriptors()
         
+    }
+    
+    private func processRecoveryXpub() {
+        
+        let key = textView.text!
+        
+        if key.contains("[") && key.contains("]") {
+            
+            let xpub = "\(key.split(separator: "]")[1])"
+            let path = "\(key.split(separator: "]")[0])"
+            let arr = path.split(separator: "/")
+            var plainPath = "m"
+            
+            for (i, item) in arr.enumerated() {
+                
+                if i != 0 {
+                    plainPath += "/" + "\(item)"
+                    
+                }
+                
+            }
+            
+            if let _ = HDKey(xpub) {
+                ///Its a valid xpub
+                
+                if let _ = BIP32Path(plainPath) {
+                    ///Its all good in the hood.
+                    keys.append(key)
+                    if !isRecoveringMulti {
+                        recoveringSingleOrMulti()
+                        
+                    } else {
+                        addMoreXpubs()
+                        
+                    }
+                    
+                    
+                } else {
+                    showAlert(vc: self, title: "Invalid path", message: "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
+                    
+                }
+                
+            } else {
+               showAlert(vc: self, title: "Invalid xpub", message: "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
+                
+            }
+            
+        } else {
+            showAlert(vc: self, title: "Invalid recovery format", message: "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
+            
+        }
+        
+    }
+    
+    private func addAnotherXpub() {
+        DispatchQueue.main.async { [unowned vc = self] in
+                        
+            let alert = UIAlertController(title: "You may add another xpub", message: "", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = self.view
+            vc.present(alert, animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    private func recoveringSingleOrMulti() {
+        DispatchQueue.main.async { [unowned vc = self] in
+                        
+            let alert = UIAlertController(title: "That is a valid recovery xpub", message: "Are you recovering a multi-sig account or single-sig account?", preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: "Single-sig", style: .default, handler: { action in
+                /// We are done. Construct descriptors and import them.
+                vc.recoverSingleSigWithJustanXpub()
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Multi-sig", style: .default, handler: { action in
+                /// Clear the textview and let them add another.
+                vc.textView.text = ""
+                vc.isRecoveringMulti = true
+                vc.addAnotherXpub()
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = self.view
+            vc.present(alert, animated: true, completion: nil)
+            
+        }
+    }
+    
+    private func addMoreXpubs() {
+        DispatchQueue.main.async { [unowned vc = self] in
+                        
+            let alert = UIAlertController(title: "Add another xpub?", message: "", preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: "Add more", style: .default, handler: { action in
+                vc.textView.text = ""
+                vc.addAnotherXpub()
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Recover now", style: .default, handler: { action in
+                /// Clear the textview and let them add another.
+                vc.recoverMultisigWithJustXpubsNow()
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = self.view
+            vc.present(alert, animated: true, completion: nil)
+            
+        }
+        
+    }
+    
+    private func recoverMultisigWithJustXpubsNow() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "segueToPublicKeyMultiSigSigners", sender: vc)
+            
+        }
+        
+    }
+    
+    private func recoverSingleSigWithJustanXpub() {
+        let connectingView = ConnectingView()
+        connectingView.addConnectingView(vc: self, description: "processing...")
+        let key = keys[0]
+        var prefix = ""
+        
+        if key.contains("/84'/") {
+            prefix = "wpkh("
+            
+        } else if key.contains("/49'/") {
+            prefix = "sh(wpkh("
+            
+        } else if key.contains("/44'/") {
+            prefix = "pkh("
+            
+        }
+        
+        var bitcoinCoreDescriptor = prefix + key + "/0/*)"
+        
+        if prefix == "sh(wpkh(" {
+            bitcoinCoreDescriptor += ")"
+            
+        }
+        
+        Import.importDescriptor(descriptor: bitcoinCoreDescriptor) { [unowned vc = self] wallet in
+            
+            if wallet != nil {
+                DispatchQueue.main.async { [unowned vc = self] in
+                    connectingView.removeConnectingView()
+                    vc.walletToRecover = wallet!
+                    vc.name = wallet!["name"] as! String
+                    vc.performSegue(withIdentifier: "goConfirmManualXpubRecovery", sender: vc)
+                    
+                }
+                
+            } else {
+                connectingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error", message: "There was an error deriving your account")
+                
+            }
+            
+        }
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+        switch segue.identifier {
+            
+        case "goConfirmManualXpubRecovery":
+            
+            if let vc = segue.destination as? ConfirmRecoveryViewController {
+                vc.isImporting = true
+                vc.walletNameHash = name
+                vc.walletDict = walletToRecover
+                
+            }
+            
+        case "segueToPublicKeyMultiSigSigners":
+            
+            if let vc = segue.destination as? ChooseNumberOfSignersViewController {
+                
+                vc.xpubArray = keys
+                
+            }
+            
+        default:
+            break
+            
+        }
     }
 
 }

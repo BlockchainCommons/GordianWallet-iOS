@@ -3995,7 +3995,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
             </objects>
             <point key="canvasLocation" x="-8090.3999999999996" y="1234.6326836581711"/>
         </scene>
-        <!--Account Map QR-->
+        <!--Recovery-->
         <scene sceneID="k9E-E2-70I">
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Elr-wf-cyI" customClass="WalletRecoverViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
@@ -4026,17 +4026,32 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="I don't have one">
+                                <state key="normal" title="recover with seed words">
                                     <color key="titleColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="getWordsAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="2Ri-M5-M4m"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Ai-bK-EJU">
+                                <rect key="frame" x="114" y="199" width="147" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="147" id="O1c-3b-EbX"/>
+                                    <constraint firstAttribute="height" constant="30" id="h9C-eg-beK"/>
+                                </constraints>
+                                <state key="normal" title="enter xpubs manually">
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="addXpubsManually:" destination="Elr-wf-cyI" eventType="touchUpInside" id="iOu-aU-iA6"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="0Ai-bK-EJU" firstAttribute="centerX" secondItem="JxN-8Z-mkw" secondAttribute="centerX" id="1Ri-Ac-NNS"/>
                             <constraint firstItem="nsz-u9-Mzm" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="7Cm-sH-wLs"/>
+                            <constraint firstItem="0Ai-bK-EJU" firstAttribute="top" secondItem="nsz-u9-Mzm" secondAttribute="bottom" constant="8" id="7m8-dl-FwM"/>
                             <constraint firstItem="40V-y5-mzs" firstAttribute="trailing" secondItem="duj-2r-qsr" secondAttribute="trailing" id="KLb-DD-ZZJ"/>
                             <constraint firstItem="duj-2r-qsr" firstAttribute="bottom" secondItem="40V-y5-mzs" secondAttribute="bottom" constant="15" id="L9s-WM-9BQ"/>
                             <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="nsz-u9-Mzm" secondAttribute="trailing" constant="46" id="hjb-Jw-CsU"/>
@@ -4045,12 +4060,13 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="duj-2r-qsr"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Account Map QR" id="vZu-kK-u52"/>
+                    <navigationItem key="navigationItem" title="Recovery" id="vZu-kK-u52"/>
                     <connections>
                         <outlet property="scanButton" destination="nsz-u9-Mzm" id="roa-rd-akK"/>
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="scanRecovery" id="zkr-zY-rLG"/>
                         <segue destination="0g2-8e-jCH" kind="show" identifier="goConfirmQr" id="mqi-NU-Y0K"/>
                         <segue destination="kR7-Mg-fhs" kind="show" identifier="getWords" id="7qw-Ys-xsH"/>
+                        <segue destination="QV1-we-EJN" kind="show" identifier="segueToManualXpubRecovery" id="WN6-Y9-PN0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZKN-I6-Ccq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -5905,9 +5921,13 @@ At a minimum we recommend writing these words down on water proof paper with a p
                     </view>
                     <navigationItem key="navigationItem" title="Add xpub" id="lb9-Xm-Xgr"/>
                     <connections>
+                        <outlet property="fingerprintLabel" destination="nHV-qm-mlE" id="bfV-VZ-lUf"/>
                         <outlet property="nextOutlet" destination="GWy-WU-bhE" id="Hdm-Ae-Pku"/>
                         <outlet property="textField" destination="Uwi-UQ-UZ5" id="ft0-bs-efQ"/>
                         <outlet property="textView" destination="XOU-39-25F" id="nV2-Zg-6vg"/>
+                        <outlet property="xpubLabel" destination="L4I-Yd-soB" id="nhm-xI-VWU"/>
+                        <segue destination="0g2-8e-jCH" kind="show" identifier="goConfirmManualXpubRecovery" id="ONV-Bz-eml"/>
+                        <segue destination="1BI-xh-FzJ" kind="show" identifier="segueToPublicKeyMultiSigSigners" id="NHy-Xu-LiC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ePy-yX-YJl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -6234,14 +6254,16 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="WN6-Y9-PN0"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="pun-AW-DGw"/>
         <segue reference="HTQ-38-5NU"/>
-        <segue reference="622-Us-Cp3"/>
-        <segue reference="tvy-tG-Sod"/>
+        <segue reference="7qw-Ys-xsH"/>
+        <segue reference="5VN-CA-j4y"/>
+        <segue reference="NHy-Xu-LiC"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="Xe1-Me-c8c"/>
-        <segue reference="LzA-tD-DJD"/>
+        <segue reference="zkr-zY-rLG"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

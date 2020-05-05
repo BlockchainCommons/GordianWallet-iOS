@@ -45,8 +45,6 @@ class Encryption {
     
     class func decryptData(dataToDecrypt: Data, completion: @escaping ((Data?)) -> Void) {
         
-        print("decryptData = \(dataToDecrypt)")
-        
         if let key = KeyChain.getData("privateKey") {
             
             do {
