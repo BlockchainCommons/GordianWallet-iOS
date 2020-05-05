@@ -46,8 +46,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var existingWalletName = ""
     
     var statusLabel = UILabel()
-    var tx = String()
-    
+        
     @IBOutlet var mainMenu: UITableView!
     @IBOutlet var sponsorView: UIView!
     @IBOutlet weak var halvingCountdownLabel: UILabel!
@@ -57,11 +56,14 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     var nodes = [[String:Any]]()
     var transactionArray = [[String:Any]]()
+    var coldcard = [String:Any]()
     
     var timer: Timer?
     
+    var tx = ""
     var unsignedPsbt = ""
     var signedRawTx = ""
+    var walletNameHash = ""
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,7 +129,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         DispatchQueue.main.async { [unowned vc = self] in
             
-            let alert = UIAlertController(title: "Upload a .psbt file?", message: "This button allows you to upload a .psbt file from the Files app, it only works with .psbt files as defined by BIP174. These are the same psbt files Coldcard and Electrum export. When uploading one of these files FullyNoded 2 will try and sign it with each of the seeds your device holds as well as with your current active node.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Upload a Coldcard file?", message: "This button allows you to upload files exported from your Coldcard via the Files app. For now we support the \"generic wallet export\" to import your single-sig Coldcard wallet into FullyNoded 2 and .psbt files so you can sign PSBT's from your Coldcard with FullyNoded 2.", preferredStyle: .actionSheet)
 
             alert.addAction(UIAlertAction(title: "Upload", style: .default, handler: { [unowned vc = self] action in
                 
@@ -148,34 +150,117 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        
         if controller.documentPickerMode == .import {
+            
             do {
+                
                 let data = try Data(contentsOf: url.absoluteURL)
                 let psbt = data.base64EncodedString()
                 
-                DispatchQueue.main.async { [unowned vc = self] in
+                do {
                     
-                    let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sing it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: .actionSheet)
-
-                    alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
+                    let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
+                    
+                    DispatchQueue.main.async { [unowned vc = self] in
                         
-                        print("psbt = \(psbt)")
-                        vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
-                        vc.signPSBT(psbt: psbt)
-
-                    }))
-                    
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                        let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: "You can choose either Native Segwit (BIP84, bech32 - bc1), Nested Segwit (BIP49, 3) or legacy (BIP44, 1) address types.", preferredStyle: .actionSheet)
+                        
+                        alert.addAction(UIAlertAction(title: "Native Segwit (BIP84, bc1)", style: .default, handler: { action in
+                            vc.connectingView.addConnectingView(vc: vc, description: "importing...")
+                            let bip84Dict = dict["bip84"] as! NSDictionary
                             
-                    alert.popoverPresentationController?.sourceView = vc.view
-                    vc.present(alert, animated: true, completion: nil)
+                            Import.importColdCard(coldcardDict: bip84Dict, fingerprint: dict["xfp"] as! String) { (walletToImport) in
+                                
+                                if walletToImport != nil {
+                                    DispatchQueue.main.async { [unowned vc = self] in
+                                        vc.connectingView.removeConnectingView()
+                                        vc.walletNameHash = walletToImport!["name"] as! String
+                                        vc.coldcard = walletToImport!
+                                        vc.performSegue(withIdentifier: "segueToConfirmImport", sender: vc)
+                                        
+                                    }
+                                }
+                            }
+                            
+                        }))
+                        
+                        alert.addAction(UIAlertAction(title: "Nested Segwit (BIP49, 3)", style: .default, handler: { action in
+                            vc.connectingView.addConnectingView(vc: vc, description: "importing...")
+                            let bip49Dict = dict["bip49"] as! NSDictionary
+                            
+                            Import.importColdCard(coldcardDict: bip49Dict, fingerprint: dict["xfp"] as! String) { (walletToImport) in
+                                
+                                if walletToImport != nil {
+                                    DispatchQueue.main.async { [unowned vc = self] in
+                                        vc.connectingView.removeConnectingView()
+                                        vc.walletNameHash = walletToImport!["name"] as! String
+                                        vc.coldcard = walletToImport!
+                                        vc.performSegue(withIdentifier: "segueToConfirmImport", sender: vc)
+                                        
+                                    }
+                                }
+                            }
+                            
+                            
+                        }))
+                        
+                        alert.addAction(UIAlertAction(title: "Legacy (BIP44, 1)", style: .default, handler: { action in
+                            vc.connectingView.addConnectingView(vc: vc, description: "importing...")
+                            let bip44Dict = dict["bip44"] as! NSDictionary
+                            
+                            Import.importColdCard(coldcardDict: bip44Dict, fingerprint: dict["xfp"] as! String) { (walletToImport) in
+                                
+                                if walletToImport != nil {
+                                    DispatchQueue.main.async { [unowned vc = self] in
+                                        vc.connectingView.removeConnectingView()
+                                        vc.walletNameHash = walletToImport!["name"] as! String
+                                        vc.coldcard = walletToImport!
+                                        vc.performSegue(withIdentifier: "segueToConfirmImport", sender: vc)
+                                        
+                                    }
+                                }
+                            }
+                            
+                            
+                        }))
+                        
+                        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                        
+                        alert.popoverPresentationController?.sourceView = vc.view
+                        vc.present(alert, animated: true, completion: nil)
+                        
+                    }
+                    
+                } catch {
+                    
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        
+                        let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sing it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: .actionSheet)
+                        
+                        alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
+                            
+                            print("psbt = \(psbt)")
+                            vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
+                            vc.signPSBT(psbt: psbt)
+                            
+                        }))
+                        
+                        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                        
+                        alert.popoverPresentationController?.sourceView = vc.view
+                        vc.present(alert, animated: true, completion: nil)
+                        
+                    }
                     
                 }
                 
             } catch {
                 connectingView.removeConnectingView()
-                showAlert(vc: self, title: "Error", message: "That is not a valid psbt")
+                showAlert(vc: self, title: "Error", message: "That is not a valid psbt or Coldcard export")
+                
             }
+            
         }
     }
     
@@ -2261,6 +2346,14 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier {
+            
+        case "segueToConfirmImport":
+            
+            if let vc = segue.destination as? ConfirmRecoveryViewController {
+                vc.walletDict = coldcard
+                vc.isImporting = true
+                vc.walletNameHash = walletNameHash
+            }
             
         case "settings":
             

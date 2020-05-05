@@ -228,6 +228,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     if wallets!.count == 0 {
                         
+                        vc.creatingView.removeConnectingView()
                         vc.isLoading = false
                         
                     } else {
@@ -243,6 +244,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             }
                             
                             if i + 1 == wallets!.count {
+                                
+                                if vc.sortedWallets.count == 0 {
+                                    vc.creatingView.removeConnectingView()
+                                    vc.isLoading = false
+                                }
                                 
                                 for (i, wallet) in vc.sortedWallets.enumerated() {
                                     let wstruct = WalletStruct(dictionary: wallet)
@@ -325,6 +331,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                 } else {
                     
+                    vc.creatingView.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: errorDescription!)
                     
                 }

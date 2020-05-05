@@ -247,4 +247,97 @@ class Import {
         
     }
     
+    class func importColdCard(coldcardDict: NSDictionary, fingerprint: String, completion: @escaping (([String:Any]?)) -> Void) {
+        
+        var accountToImport = [String:Any]()
+        accountToImport["birthdate"] = keyBirthday()
+        accountToImport["isArchived"] = false
+        accountToImport["blockheight"] = Int32(1)
+        accountToImport["maxRange"] = 2500
+        accountToImport["index"] = 0
+        accountToImport["lastUsed"] = Date()
+        accountToImport["lastBalance"] = 0.0
+        accountToImport["id"] = UUID()
+        accountToImport["type"] = "DEFAULT"
+        accountToImport["label"] = "COLDCARD"
+        
+        func getChangeDescriptor(changeDesc: String) {
+            
+            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") { (object, errorDescription) in
+                
+                if let dict = object as? NSDictionary {
+                    let changeDescriptor = dict["descriptor"] as! String
+                    accountToImport["changeDescriptor"] = changeDescriptor
+                    completion(accountToImport)
+                    
+                } else {
+                    completion(nil)
+                    
+                }
+            }
+        }
+        
+        func getDescriptors(primaryDesc: String, changeDesc: String) {
+            
+            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(primaryDesc)\"") { (object, errorDescription) in
+                
+                if let dict = object as? NSDictionary {
+                    let descriptor = dict["descriptor"] as! String
+                    let walletName = Encryption.sha256hash(descriptor)
+                    accountToImport["descriptor"] = descriptor
+                    accountToImport["name"] = walletName
+                    getChangeDescriptor(changeDesc: changeDesc)
+                    
+                } else {
+                    completion(nil)
+                    
+                }
+            }
+        }
+        
+        func process() {
+            let xpub = coldcardDict["xpub"] as! String
+            let derivation = coldcardDict["deriv"] as! String
+            accountToImport["derivation"] = derivation
+            let name = coldcardDict["name"] as! String
+            var prefix = ""
+            
+            switch name {
+            case "p2pkh": prefix = "pkh("
+            case "p2wpkh-p2sh": prefix = "sh(wpkh("
+            case "p2wpkh": prefix = "wpkh("
+            default:
+                break
+            }
+            
+            let path = derivation.replacingOccurrences(of: "m", with: fingerprint)
+            var primDesc = prefix + "[\(path)]\(xpub)/0/*"
+            
+            if prefix == "sh(wpkh(" {
+                primDesc += "))"
+                
+            } else {
+                primDesc += ")"
+                
+            }
+            
+            let changeDesc = primDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
+            getDescriptors(primaryDesc: primDesc, changeDesc: changeDesc)
+    
+        }
+        
+        Encryption.getNode { (n, error) in
+            
+            if n != nil {
+                accountToImport["nodeId"] = n!.id
+                process()
+                
+            } else {
+                completion(nil)
+                
+            }
+        }
+        
+    }
+    
 }

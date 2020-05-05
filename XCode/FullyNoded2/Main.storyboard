@@ -1534,6 +1534,7 @@
                         <segue destination="reL-7P-R3q" kind="presentation" identifier="refillMsigFromHome" id="pun-AW-DGw"/>
                         <segue destination="xB3-mY-13p" kind="show" identifier="goConfirmPsbtSegue" id="Xe1-Me-c8c"/>
                         <segue destination="VJd-Zg-l3G" kind="show" identifier="segueToSeeds" id="1Sp-OB-6eU"/>
+                        <segue destination="0g2-8e-jCH" kind="show" identifier="segueToConfirmImport" id="tvy-tG-Sod"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dhK-90-srt" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -6237,7 +6238,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="pun-AW-DGw"/>
         <segue reference="HTQ-38-5NU"/>
         <segue reference="622-Us-Cp3"/>
-        <segue reference="5VN-CA-j4y"/>
+        <segue reference="tvy-tG-Sod"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="Xe1-Me-c8c"/>
         <segue reference="LzA-tD-DJD"/>

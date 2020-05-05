@@ -482,7 +482,15 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 vc.connectingView.label.text = "importing change descriptor"
             }
             
-            let params = "[{ \"desc\": \"\(wallet.changeDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
+            var addToKeypool = false
+            var addToInternal = false
+            
+            if wallet.type == "DEFAULT" {
+                addToKeypool = true
+                addToInternal = true
+            }
+            
+            let params = "[{ \"desc\": \"\(wallet.changeDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"keypool\": \(addToKeypool), \"internal\": \(addToInternal) }]"
             
             Reducer.makeCommand(walletName: wallet.name!, command: .importmulti, param: params) { [unowned vc = self] (object, errorDescription) in
                 
@@ -543,7 +551,14 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 vc.connectingView.label.text = "importing primary descriptor"
             }
             
-            let params = "[{ \"desc\": \"\(wallet.descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }]"
+            var addToKeypool = false
+            
+            if wallet.type == "DEFAULT" {
+                addToKeypool = true
+                
+            }
+            
+            let params = "[{ \"desc\": \"\(wallet.descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": \(addToKeypool), \"internal\": false }]"
             
             Reducer.makeCommand(walletName: wallet.name!, command: .importmulti, param: params) { [unowned vc = self] (object, errorDescription) in
                 
