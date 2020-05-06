@@ -35,6 +35,7 @@ public struct HomeStruct: CustomStringConvertible {
     let halvingDate:Date
     let knownSigners:Int
     let unknownSigners:Int
+    let fxRate:String
     
     init(dictionary: [String: Any]) {
         
@@ -62,6 +63,7 @@ public struct HomeStruct: CustomStringConvertible {
         fiatBalance = dictionary["fiatBalance"] as? String ?? "$0"
         knownSigners = dictionary["knownSigners"] as? Int ?? 0
         unknownSigners = dictionary["unknownSigners"] as? Int ?? 0
+        fxRate = dictionary["fxRate"] as? String ?? ""
         
     }
     

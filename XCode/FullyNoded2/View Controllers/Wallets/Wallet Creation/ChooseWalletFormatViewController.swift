@@ -1212,6 +1212,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             
                             if walletDict != nil {
                                 DispatchQueue.main.async { [unowned vc = self] in
+                                    cv.removeConnectingView()
                                     vc.walletToImport = walletDict!
                                     vc.walletName = walletDict!["name"] as! String
                                     vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)

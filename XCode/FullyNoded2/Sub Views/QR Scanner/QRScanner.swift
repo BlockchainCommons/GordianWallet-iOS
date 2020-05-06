@@ -301,10 +301,10 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
         } else if isImporting {
             
             label.text = "Import an Account"
-            labelDetail.text = "You may scan an \"Account Map\", Bitcoin Core Descriptor or a Specter \"Wallet Import\" QR"
-            //addTestingNodeButton.setTitle("what is a descriptor?", for: .normal)
+            labelDetail.text = "You may scan an \"Account Map\", Bitcoin Core Descriptor, Specter \"Wallet Import\" QR, or Coldcard skeleton json"
             configureLabel()
             configureDetailLabel()
+            closeButton.alpha = 0
             configureDontHaveAnodeButton()
             
         } else if scanningRecovery {

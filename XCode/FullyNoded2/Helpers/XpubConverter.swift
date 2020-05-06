@@ -48,3 +48,63 @@ class XpupConverter {
                 
     }
 }
+
+/// Just some example code to help...
+
+/*
+ private static String xlatXPUB(String xpub, boolean isBIP84) throws AddressFormatException {
+
+     final int MAGIC_XPUB = 0x0488B21E;
+     final int MAGIC_TPUB = 0x043587CF;
+     final int MAGIC_YPUB = 0x049D7CB2;
+     final int MAGIC_UPUB = 0x044A5262;
+     final int MAGIC_ZPUB = 0x04B24746;
+     final int MAGIC_VPUB = 0x045F1CF6;
+
+     byte[] xpubBytes = Base58.decodeChecked(xpub);
+
+     ByteBuffer bb = ByteBuffer.wrap(xpubBytes);
+     int ver = bb.getInt();
+     if(ver != MAGIC_XPUB && ver != MAGIC_TPUB && ver != MAGIC_YPUB && ver != MAGIC_UPUB && ver != MAGIC_ZPUB && ver != MAGIC_VPUB)   {
+         throw new AddressFormatException("invalid xpub version");
+     }
+
+     int xlatVer = 0;
+     switch(ver)    {
+         case MAGIC_XPUB:
+             xlatVer = isBIP84 ? MAGIC_ZPUB : MAGIC_YPUB;
+             break;
+         case MAGIC_YPUB:
+             xlatVer = MAGIC_XPUB;
+             break;
+         case MAGIC_TPUB:
+             xlatVer = isBIP84 ? MAGIC_VPUB : MAGIC_UPUB;
+             break;
+         case MAGIC_UPUB:
+             xlatVer = MAGIC_TPUB;
+             break;
+         case MAGIC_ZPUB:
+             xlatVer = MAGIC_XPUB;
+             break;
+         case MAGIC_VPUB:
+             xlatVer = MAGIC_TPUB;
+             break;
+     }
+
+     ByteBuffer b = ByteBuffer.allocate(4);
+     b.putInt(xlatVer);
+     byte[] bVer = b.array();
+
+     System.arraycopy(bVer, 0, xpubBytes, 0, bVer.length);
+
+     // append checksum
+     byte[] checksum = Arrays.copyOfRange(Sha256Hash.hashTwice(xpubBytes), 0, 4);
+     byte[] xlatXpub = new byte[xpubBytes.length + checksum.length];
+     System.arraycopy(xpubBytes, 0, xlatXpub, 0, xpubBytes.length);
+     System.arraycopy(checksum, 0, xlatXpub, xlatXpub.length - 4, checksum.length);
+
+     String ret = Base58.encode(xlatXpub);
+
+     return ret;
+ }
+ */

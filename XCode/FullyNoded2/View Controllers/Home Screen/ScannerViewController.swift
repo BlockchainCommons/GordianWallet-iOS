@@ -9,7 +9,7 @@
 import UIKit
 import LibWally
 
-class ScannerViewController: UIViewController {
+class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
     var isImporting = Bool()
     var unsignedPsbt = ""
@@ -32,6 +32,7 @@ class ScannerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.delegate = self
         configureScanner()
         scanNow()
         
@@ -181,13 +182,13 @@ class ScannerViewController: UIViewController {
     
     func addScannerButtons() {
         
-        self.addBlurView(frame: CGRect(x: self.imageView.frame.maxX - 80,
-                                       y: self.imageView.frame.maxY - 120,
+        self.addBlurView(frame: CGRect(x: self.view.frame.maxX - 80,
+                                       y: self.view.frame.maxY - 140,
                                        width: 70,
                                        height: 70), button: self.qrScanner.uploadButton)
         
         self.addBlurView(frame: CGRect(x: 10,
-                                       y: self.imageView.frame.maxY - 120,
+                                       y: self.view.frame.maxY - 140,
                                        width: 70,
                                        height: 70), button: self.qrScanner.torchButton)
         
@@ -352,11 +353,15 @@ class ScannerViewController: UIViewController {
         
         if isImporting {
             
-            dismiss(animated: true) { [unowned vc = self] in
-                
-                vc.onImportDoneBlock!(url)
-                
-            }
+            onImportDoneBlock!(url)
+            self.navigationController?.popViewController(animated: true)
+            
+            
+//            dismiss(animated: true) { [unowned vc = self] in
+//
+//                vc.onImportDoneBlock!(url)
+//
+//            }
             
         } else {
             
@@ -410,7 +415,7 @@ class ScannerViewController: UIViewController {
                             
                             if let _ = dict["descriptor"] as? String {
                                 
-                                if let _ = dict["birthdate"] as? Int32 {
+                                //if let _ = dict["birthdate"] as? Int32 {
                                                                             
                                         if let _ = dict["blockheight"] as? Int {
                                             
@@ -455,11 +460,11 @@ class ScannerViewController: UIViewController {
                                             
                                         }
                                     
-                                } else {
-                                    
-                                    invalidAlert()
-                                    
-                                }
+//                                } else {
+//
+//                                    invalidAlert()
+//
+//                                }
                                 
                             } else {
                                 

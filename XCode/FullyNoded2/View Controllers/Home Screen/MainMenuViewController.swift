@@ -601,37 +601,42 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = mainMenu.dequeueReusableCell(withIdentifier: "singleSigCell", for: indexPath)
         cell.selectionStyle = .none
         
-        let walletNameLabel = cell.viewWithTag(1) as! UILabel
+        //let walletNameLabel = cell.viewWithTag(1) as! UILabel
         let coldBalanceLabel = cell.viewWithTag(2) as! UILabel
         let walletTypeLabel = cell.viewWithTag(4) as! UILabel
-        let derivationPathLabel = cell.viewWithTag(5) as! UILabel
-        let seedOnDeviceLabel = cell.viewWithTag(8) as! UILabel
-        let infoButton = cell.viewWithTag(12) as! UIButton
-        let deviceXprv = cell.viewWithTag(15) as! UILabel
-        let deviceView = cell.viewWithTag(16)!
-        let nodeView = cell.viewWithTag(24)!
-        let keysOnNodeDescription = cell.viewWithTag(25) as! UILabel
+        let walletlabel = cell.viewWithTag(5) as! UILabel
+        //let derivationPathLabel = cell.viewWithTag(5) as! UILabel
+        //let seedOnDeviceLabel = cell.viewWithTag(8) as! UILabel
+        //let infoButton = cell.viewWithTag(12) as! UIButton
+        //let deviceXprv = cell.viewWithTag(15) as! UILabel
+        //let deviceView = cell.viewWithTag(16)!
+        //let nodeView = cell.viewWithTag(24)!
+        //let keysOnNodeDescription = cell.viewWithTag(25) as! UILabel
         let confirmedIcon = cell.viewWithTag(26) as! UIImageView
-        let changeKeysOnNodeDescription = cell.viewWithTag(27) as! UILabel
+        //let changeKeysOnNodeDescription = cell.viewWithTag(27) as! UILabel
         let fiatBalance = cell.viewWithTag(28) as! UILabel
-        let signerImage = cell.viewWithTag(29) as! UIImageView
+        //let signerImage = cell.viewWithTag(29) as! UIImageView
+        let accountTypeIcon = cell.viewWithTag(3) as! UIImageView
+        let fxRate = cell.viewWithTag(29) as! UILabel
         
-        nodeView.layer.cornerRadius = 8
-        deviceView.layer.cornerRadius = 8
+        fxRate.text = walletInfo.fxRate
         
-        infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
+        //nodeView.layer.cornerRadius = 8
+        //deviceView.layer.cornerRadius = 8
         
-        if infoHidden {
-            
-            let image = UIImage(systemName: "rectangle.expand.vertical")
-            infoButton.setImage(image, for: .normal)
-            
-        } else {
-            
-            let image = UIImage(systemName: "rectangle.compress.vertical")
-            infoButton.setImage(image, for: .normal)
-            
-        }
+        //infoButton.addTarget(self, action: #selector(getWalletInfo(_:)), for: .touchUpInside)
+        
+//        if infoHidden {
+//
+//            let image = UIImage(systemName: "rectangle.expand.vertical")
+//            infoButton.setImage(image, for: .normal)
+//
+//        } else {
+//
+//            let image = UIImage(systemName: "rectangle.compress.vertical")
+//            infoButton.setImage(image, for: .normal)
+//
+//        }
         
         var coldBalance = walletInfo.coldBalance
         
@@ -654,10 +659,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        if wallet.type == "CUSTOM" {
-            
-            coldBalanceLabel.textColor = .systemGray
-        }
+//        if wallet.type == "CUSTOM" {
+//
+//            coldBalanceLabel.textColor = .systemGray
+//        }
+        walletlabel.text = wallet.label
         
         if !showFiat {
             
@@ -695,37 +701,76 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         coldBalanceLabel.adjustsFontSizeToFitWidth = true
         
-        walletTypeLabel.text = "Single Signature"
-        
-        if walletInfo.knownSigners > 0 {
-            seedOnDeviceLabel.text = "1 Signer on \(UIDevice.current.name)"
-            deviceXprv.text = "xprv \(wallet.derivation)"
-            signerImage.image = UIImage(imageLiteralResourceName: "Signature")
+        if !str.isMulti {
+            
             
         } else {
-            seedOnDeviceLabel.text = "\(UIDevice.current.name) is cold"
-            deviceXprv.text = "xpub \(wallet.derivation)"
-            signerImage.image = UIImage(systemName: "eye.fill")
+            
             
         }
         
-        if wallet.derivation.contains("84") {
+        if str.isMulti {
+            walletTypeLabel.text = "\(str.mOfNType) Multi Signature"
             
-            derivationPathLabel.text = "Native Segwit Account 0 (BIP84 \(wallet.derivation))"
+            if walletInfo.knownSigners >= str.sigsRequired {
+                accountTypeIcon.image = UIImage(systemName: "flame")
+                accountTypeIcon.tintColor = .systemRed
+                
+            } else if walletInfo.knownSigners == 0 {
+                accountTypeIcon.image = UIImage(systemName: "cloud.sun")
+                accountTypeIcon.tintColor = .systemTeal
+                
+            } else if wallet.knownSigners < str.sigsRequired {
+                accountTypeIcon.image = UIImage(systemName: "sun.min")
+                accountTypeIcon.tintColor = .systemYellow
+                
+            }
             
-        } else if wallet.derivation.contains("44") {
+        } else {
+            walletTypeLabel.text = "Single Signature"
             
-            derivationPathLabel.text = "Legacy Account 0 (BIP44 \(wallet.derivation))"
-            
-        } else if wallet.derivation.contains("49") {
-            
-            derivationPathLabel.text = "P2SH Nested Segwit Account 0 (BIP49 \(wallet.derivation))"
-            
+            if walletInfo.knownSigners > 0 {
+                accountTypeIcon.image = UIImage(systemName: "flame")
+                accountTypeIcon.tintColor = .systemRed
+                
+            } else {
+                accountTypeIcon.image = UIImage(systemName: "snow")
+                accountTypeIcon.tintColor = .white
+            }
         }
         
-        keysOnNodeDescription.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
-        changeKeysOnNodeDescription.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
-        walletNameLabel.text = reducedName(name: wallet.name!)
+        
+        
+        
+//        if walletInfo.knownSigners > 0 {
+//            seedOnDeviceLabel.text = "1 Signer on \(UIDevice.current.name)"
+//            deviceXprv.text = "xprv \(wallet.derivation)"
+//            signerImage.image = UIImage(imageLiteralResourceName: "Signature")
+//
+//        } else {
+//            seedOnDeviceLabel.text = "\(UIDevice.current.name) is cold"
+//            deviceXprv.text = "xpub \(wallet.derivation)"
+//            signerImage.image = UIImage(systemName: "eye.fill")
+//
+//        }
+//
+//        if wallet.derivation.contains("84") {
+//
+//            derivationPathLabel.text = "Native Segwit Account 0 (BIP84 \(wallet.derivation))"
+//
+//        } else if wallet.derivation.contains("44") {
+//
+//            derivationPathLabel.text = "Legacy Account 0 (BIP44 \(wallet.derivation))"
+//
+//        } else if wallet.derivation.contains("49") {
+//
+//            derivationPathLabel.text = "P2SH Nested Segwit Account 0 (BIP49 \(wallet.derivation))"
+//
+//        }
+//
+//        keysOnNodeDescription.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
+//        changeKeysOnNodeDescription.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
+//        walletNameLabel.text = reducedName(name: wallet.name!)
         
         return cell
         
@@ -1279,21 +1324,23 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if walletExists {
                 
-                let type = wallet.type
+                return defaultWalletCell(indexPath)
                 
-                switch type {
-                    
-                /// Single sig wallet
-                case "DEFAULT":
-                    return defaultWalletCell(indexPath)
-                    
-                /// Multi sig wallet
-                case "MULTI":
-                    return multiSigCell(indexPath)
-                    
-                default:
-                    return blankCell()
-                }
+//                let type = wallet.type
+//
+//                switch type {
+//
+//                /// Single sig wallet
+//                case "DEFAULT":
+//                    return defaultWalletCell(indexPath)
+//
+//                /// Multi sig wallet
+//                case "MULTI":
+//                    return multiSigCell(indexPath)
+//
+//                default:
+//                    return blankCell()
+//                }
                 
             } else {
                 
@@ -1458,7 +1505,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         refreshButton.tintColor = .white
         refreshButton.tag = section
         refreshButton.addTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
-        let refreshButtonX = header.frame.maxX - 32
+        let refreshButtonX = header.frame.maxX - 29
         
         switch section {
             
@@ -1482,15 +1529,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                             
         case self.walletCellIndex:
             
-            if wallet != nil {
-               textLabel.text = wallet.label
-                
-            } else {
-                textLabel.text = "Active Account"
-                
-            }
+//            if wallet != nil {
+//               textLabel.text = wallet.label
+//
+//            } else {
+//                textLabel.text = "Active Account"
+//
+//            }
                             
-            
+            textLabel.text = "Current Account Status"
             
             if walletSectionLoaded {
                 
@@ -1602,31 +1649,33 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if walletSectionLoaded {
             
-            if wallet.type == "MULTI" {
-                
-                if infoHidden {
-                    
-                    return 115
-                    
-                } else {
-                   
-                    return 317
-                    
-                }
-                
-            } else {
-                
-                if infoHidden {
-                
-                    return 115
-                    
-                } else {
-                    
-                    return 272
-                    
-                }
-                
-            }
+            return 116
+            
+//            if wallet.type == "MULTI" {
+//
+//                if infoHidden {
+//
+//                    return 115
+//
+//                } else {
+//
+//                    return 317
+//
+//                }
+//
+//            } else {
+//
+//                if infoHidden {
+//
+//                    return 115
+//
+//                } else {
+//
+//                    return 272
+//
+//                }
+//
+//            }
 
         } else {
 
