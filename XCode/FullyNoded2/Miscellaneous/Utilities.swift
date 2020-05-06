@@ -213,15 +213,23 @@ public func rounded(number: Double) -> Double {
 
 public func displayAlert(viewController: UIViewController, isError: Bool, message: String) {
     
-    DispatchQueue.main.async {
+    if isError {
         
-        let errorView = ErrorView()
+        showAlert(vc: viewController, title: "Error", message: message)
         
-        errorView.isUserInteractionEnabled = true
-        
-        errorView.showErrorView(vc: viewController,
-                                text: message,
-                                isError: isError)
+    } else {
+     
+        DispatchQueue.main.async {
+            
+            let errorView = ErrorView()
+            
+            errorView.isUserInteractionEnabled = true
+            
+            errorView.showErrorView(vc: viewController,
+                                    text: message,
+                                    isError: isError)
+            
+        }
         
     }
     

@@ -33,7 +33,14 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return seedArray.count
+        
+        if seedArray.count > 0 {
+            return seedArray.count
+            
+        } else {
+            return xpubArray.count
+            
+        }
         
     }
     
@@ -60,7 +67,7 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
                 
                 let alert = UIAlertController(title: "Recover \(vc.requiredSigs) of \(vc.xpubArray.count) now?", message: "", preferredStyle: .actionSheet)
                 alert.addAction(UIAlertAction(title: "Recover now", style: .default, handler: { action in
-                    vc.buildWalletFromXpubs()
+                    vc.buildDescriptorFromXpubs()
                     
                 }))
                 
@@ -231,8 +238,66 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
         }
     }
     
-    private func buildWalletFromXpubs() {
+    private func buildDescriptorFromXpubs() {
         
+        var prefix = ""
+        var xpubsWithChildKeys = ""
+        
+        for (i, xpub) in xpubArray.enumerated() {
+            
+            if xpub.contains("/48'/1'/0'/2'") || xpub.contains("/48'/0'/0'/2'") {
+                prefix = "wsh(sortedmulti(\(requiredSigs),"
+                
+                
+            } else if xpub.contains("/48'/1'/0'/1'") || xpub.contains("/48'/0'/0'/1'") {
+                prefix = "sh(sortedmulti(\(requiredSigs),"
+                
+            } else if xpub.contains("/48'/1'/0'/3'") || xpub.contains("/48'/0'/0'/3'") {
+                prefix = "sh(wsh(sortedmulti(\(requiredSigs),"
+                
+            }
+            
+            if i + 1 < xpubArray.count {
+                xpubsWithChildKeys += xpub + "/0/*,"
+                
+            } else {
+                xpubsWithChildKeys += xpub + "/0/*"
+                
+            }
+                        
+        }
+        
+        var primDesc = prefix + xpubsWithChildKeys
+        
+        if prefix == "sh(wsh(sortedmulti(\(requiredSigs)," {
+            primDesc += ")))"
+            
+        } else {
+            primDesc += "))"
+            
+        }
+        
+        let connectingView = ConnectingView()
+        connectingView.addConnectingView(vc: self, description: "processing...")
+        
+        Import.importDescriptor(descriptor: primDesc) { [unowned vc = self] wallet in
+            
+            if wallet != nil {
+                vc.walletName = wallet!["name"] as! String
+                vc.recoveryDict = wallet!
+                DispatchQueue.main.async { [unowned vc = self] in
+                    connectingView.removeConnectingView()
+                    vc.performSegue(withIdentifier: "segueConfirmMultiSigFromWords", sender: vc)
+                    
+                }
+                
+            } else {
+                connectingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error", message: "error processing your xpub's")
+                
+            }
+            
+        }
         
     }
     

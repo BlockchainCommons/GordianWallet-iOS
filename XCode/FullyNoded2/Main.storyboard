@@ -5888,7 +5888,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="XOU-39-25F">
                                 <rect key="frame" x="16" y="170" width="343" height="75"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="0.10045824149564046" green="0.10713528002469989" blue="0.11777862796040606" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="75" id="OgN-cm-fx5"/>
                                 </constraints>
@@ -5901,20 +5901,29 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Format: [7645GFT/48'/0'/0'/2']xpub..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LPY-5a-8SN">
+                                <rect key="frame" x="16" y="253" width="343" height="13.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="GWy-WU-bhE" firstAttribute="top" secondItem="LPY-5a-8SN" secondAttribute="bottom" constant="17.5" id="3eI-1q-mg0"/>
+                            <constraint firstItem="LPY-5a-8SN" firstAttribute="top" secondItem="XOU-39-25F" secondAttribute="bottom" constant="8" id="4py-eV-s8T"/>
                             <constraint firstItem="Uwi-UQ-UZ5" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="5Aw-jh-dzZ"/>
                             <constraint firstItem="Uwi-UQ-UZ5" firstAttribute="top" secondItem="nHV-qm-mlE" secondAttribute="bottom" constant="8" id="6sL-qr-cpc"/>
                             <constraint firstItem="nHV-qm-mlE" firstAttribute="top" secondItem="BID-Jh-ufb" secondAttribute="top" constant="16" id="9eq-DK-re0"/>
+                            <constraint firstItem="LPY-5a-8SN" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="Ux6-TR-S0a"/>
                             <constraint firstItem="XOU-39-25F" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="cJA-Pc-37Y"/>
                             <constraint firstItem="XOU-39-25F" firstAttribute="top" secondItem="L4I-Yd-soB" secondAttribute="bottom" constant="8" id="d3K-y8-xw4"/>
                             <constraint firstItem="BID-Jh-ufb" firstAttribute="trailing" secondItem="Uwi-UQ-UZ5" secondAttribute="trailing" constant="16" id="eTd-ZE-X2T"/>
                             <constraint firstItem="nHV-qm-mlE" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="f7x-Cj-6wq"/>
-                            <constraint firstItem="GWy-WU-bhE" firstAttribute="top" secondItem="XOU-39-25F" secondAttribute="bottom" constant="39" id="gGW-hZ-Kx8"/>
                             <constraint firstItem="L4I-Yd-soB" firstAttribute="leading" secondItem="BID-Jh-ufb" secondAttribute="leading" constant="16" id="gfp-1k-xcf"/>
                             <constraint firstItem="L4I-Yd-soB" firstAttribute="top" secondItem="Uwi-UQ-UZ5" secondAttribute="bottom" constant="18" id="hl7-IM-3hq"/>
                             <constraint firstItem="BID-Jh-ufb" firstAttribute="trailing" secondItem="XOU-39-25F" secondAttribute="trailing" constant="16" id="hw5-nl-j0J"/>
+                            <constraint firstItem="BID-Jh-ufb" firstAttribute="trailing" secondItem="LPY-5a-8SN" secondAttribute="trailing" constant="16" id="hzs-E5-pfg"/>
                             <constraint firstItem="GWy-WU-bhE" firstAttribute="centerX" secondItem="ULy-HG-wOq" secondAttribute="centerX" id="lxk-EJ-Nfw"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="BID-Jh-ufb"/>
@@ -5922,6 +5931,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                     <navigationItem key="navigationItem" title="Add xpub" id="lb9-Xm-Xgr"/>
                     <connections>
                         <outlet property="fingerprintLabel" destination="nHV-qm-mlE" id="bfV-VZ-lUf"/>
+                        <outlet property="formatLabel" destination="LPY-5a-8SN" id="CPg-9Z-7kf"/>
                         <outlet property="nextOutlet" destination="GWy-WU-bhE" id="Hdm-Ae-Pku"/>
                         <outlet property="textField" destination="Uwi-UQ-UZ5" id="ft0-bs-efQ"/>
                         <outlet property="textView" destination="XOU-39-25F" id="nV2-Zg-6vg"/>
@@ -6259,7 +6269,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="pun-AW-DGw"/>
         <segue reference="HTQ-38-5NU"/>
         <segue reference="7qw-Ys-xsH"/>
-        <segue reference="5VN-CA-j4y"/>
+        <segue reference="ONV-Bz-eml"/>
         <segue reference="NHy-Xu-LiC"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="Xe1-Me-c8c"/>

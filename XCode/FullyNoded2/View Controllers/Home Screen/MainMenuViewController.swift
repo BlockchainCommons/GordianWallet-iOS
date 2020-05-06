@@ -120,8 +120,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         bootStrapping = true
         addStatusLabel(description: "     Bootstrapping Tor...")
         reloadSections([torCellIndex])
-        
         addSeedsToNewEntity()
+        
+        //XpupConverter.convert(xpub: "Vpub5msFd9xUDJSUembTvw45xuKcfZJYkZWUbCE9pn1k2ZHt5JZSjcY7A8hgxeSSuJuum1Wqmtu98P54k3hQ4Zdy9nxBZFBuzn898nqYF1Z5Dwk")
         
     }
     

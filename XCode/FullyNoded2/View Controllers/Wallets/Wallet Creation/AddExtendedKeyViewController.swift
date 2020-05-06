@@ -11,6 +11,7 @@ import LibWally
 
 class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UINavigationControllerDelegate {
     
+    @IBOutlet weak var formatLabel: UILabel!
     @IBOutlet weak var xpubLabel: UILabel!
     @IBOutlet weak var fingerprintLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
@@ -34,7 +35,13 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
             textField.alpha = 0
             fingerprintLabel.alpha = 0
             xpubLabel.text = "xpub with path and fingerprint:"
-            showAlert(vc: self, title: "Add your xpub(s)", message: "When recovering a wallet with xpubs you need to paste in the xpub with its path and master key fingerprint.\n\nExample: \n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
+            showAlert(vc: self, title: "Add your xpub", message: "When recovering a wallet with xpubs you need to paste in the xpub with its path and master key fingerprint.\n\nExample: \n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
+            
+        } else {
+            formatLabel.alpha = 0
+            textField.alpha = 1
+            fingerprintLabel.alpha = 1
+            xpubLabel.text = "xpub:"
             
         }
         
@@ -117,30 +124,54 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
                 
             }
             
-            if let _ = HDKey(xpub) {
-                ///Its a valid xpub
+            switch plainPath {
+            case "m/48'/1'/0'/2'",
+                 "m/48'/0'/0'/2'",
+                 "m/48'/1'/0'/1'",
+                 "m/48'/0'/0'/1'",
+                 "m/48'/1'/0'/3'",
+                 "m/48'/0'/0'/3'":
                 
-                if let _ = BIP32Path(plainPath) {
-                    ///Its all good in the hood.
-                    keys.append(key)
-                    if !isRecoveringMulti {
-                        recoveringSingleOrMulti()
+                if let _ = HDKey(xpub) {
+                    ///Its a valid xpub
+                    
+                    if let _ = BIP32Path(plainPath) {
+                        ///Its all good in the hood.
+                        keys.append(key)
+                        if !isRecoveringMulti {
+                            recoveringSingleOrMulti()
+                            
+                        } else {
+                            addMoreXpubs()
+                            
+                        }
                         
                     } else {
-                        addMoreXpubs()
+                        showAlert(vc: self, title: "Invalid path", message: "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
                         
                     }
                     
-                    
                 } else {
-                    showAlert(vc: self, title: "Invalid path", message: "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
+                   showAlert(vc: self, title: "Invalid xpub", message: "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
                     
                 }
                 
-            } else {
-               showAlert(vc: self, title: "Invalid xpub", message: "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
+            default:
+                showAlert(vc: self, title: "Invalid path", message: "FullyNoded 2 only accepts BIP48 aka WIP48 derivation scheme for importing multisig wallets with xpubs only for now.")
                 
             }
+            
+//            if xpub.contains("/48'/1'/0'/2'") || xpub.contains("/48'/0'/0'/2'") {
+//                prefix = "wsh(sortedmulti(\(requiredSigs),"
+//
+//
+//            } else if xpub.contains("/48'/1'/0'/1'") || xpub.contains("/48'/0'/0'/1'") {
+//                prefix = "sh(sortedmulti(\(requiredSigs),"
+//
+//            } else if xpub.contains("/48'/1'/0'/3'") || xpub.contains("/48'/0'/0'/3'") {
+//                prefix = "sh(wsh(sortedmulti(\(requiredSigs),"
+//
+//            }
             
         } else {
             showAlert(vc: self, title: "Invalid recovery format", message: "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")

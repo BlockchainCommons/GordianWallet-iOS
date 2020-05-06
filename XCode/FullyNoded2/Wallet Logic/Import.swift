@@ -302,6 +302,7 @@ class Import {
             let name = coldcardDict["name"] as! String
             var prefix = ""
             
+            /// Only working for single-sig now.
             switch name {
             case "p2pkh": prefix = "pkh("
             case "p2wpkh-p2sh": prefix = "sh(wpkh("

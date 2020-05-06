@@ -39,6 +39,9 @@
 		D056500C2446BF6E00754ACF /* 1024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D056500B2446BF6D00754ACF /* 1024.jpg */; };
 		D07399D7245E6E5600860B7E /* Broadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399D6245E6E5600860B7E /* Broadcast.swift */; };
 		D07399DB245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DA245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift */; };
+		D07399DD2461764700860B7E /* XpubConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DC2461764700860B7E /* XpubConverter.swift */; };
+		D07399DF2461796A00860B7E /* Base58.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DE2461796A00860B7E /* Base58.swift */; };
+		D07399E324617A1000860B7E /* base58.c in Sources */ = {isa = PBXBuildFile; fileRef = D07399E224617A1000860B7E /* base58.c */; };
 		D080F49523F120B200CC8D6E /* ImportCustomDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */; };
 		D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724023F0EDBB00847DC8 /* AppDelegate.swift */; };
 		D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724223F0EDBB00847DC8 /* SceneDelegate.swift */; };
@@ -200,6 +203,11 @@
 		D056500B2446BF6D00754ACF /* 1024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1024.jpg; sourceTree = "<group>"; };
 		D07399D6245E6E5600860B7E /* Broadcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Broadcast.swift; sourceTree = "<group>"; };
 		D07399DA245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseNumberOfSignersViewController.swift; sourceTree = "<group>"; };
+		D07399DC2461764700860B7E /* XpubConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XpubConverter.swift; sourceTree = "<group>"; };
+		D07399DE2461796A00860B7E /* Base58.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base58.swift; sourceTree = "<group>"; };
+		D07399E024617A0F00860B7E /* FullyNoded2-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FullyNoded2-Bridging-Header.h"; sourceTree = "<group>"; };
+		D07399E124617A1000860B7E /* base58.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base58.h; sourceTree = "<group>"; };
+		D07399E224617A1000860B7E /* base58.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = base58.c; sourceTree = "<group>"; };
 		D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCustomDescriptor.swift; sourceTree = "<group>"; };
 		D09D723D23F0EDBB00847DC8 /* FullyNoded 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FullyNoded 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D09D724023F0EDBB00847DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -633,6 +641,11 @@
 				D0502FED244D2D4A00213870 /* FiatConverter.swift */,
 				D00016B8245BD89C0091F7CF /* SeedParser.swift */,
 				D07399D6245E6E5600860B7E /* Broadcast.swift */,
+				D07399DC2461764700860B7E /* XpubConverter.swift */,
+				D07399DE2461796A00860B7E /* Base58.swift */,
+				D07399E124617A1000860B7E /* base58.h */,
+				D07399E224617A1000860B7E /* base58.c */,
+				D07399E024617A0F00860B7E /* FullyNoded2-Bridging-Header.h */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -885,6 +898,7 @@
 				TargetAttributes = {
 					D09D723C23F0EDBB00847DC8 = {
 						CreatedOnToolsVersion = 11.3;
+						LastSwiftMigration = 1130;
 					};
 					D09D725523F0EDC300847DC8 = {
 						CreatedOnToolsVersion = 11.3;
@@ -1032,6 +1046,7 @@
 				D09D734623F0F3C000847DC8 /* AddressParser.swift in Sources */,
 				D09D731C23F0F3C000847DC8 /* QRViewController.swift in Sources */,
 				D09D730F23F0F3C000847DC8 /* WalletStruct.swift in Sources */,
+				D07399E324617A1000860B7E /* base58.c in Sources */,
 				D09D730E23F0F3C000847DC8 /* HomeTableStruct.swift in Sources */,
 				D09D734023F0F3C000847DC8 /* Commands.swift in Sources */,
 				D09D737023F0F3C000847DC8 /* WalletCreator.swift in Sources */,
@@ -1060,6 +1075,7 @@
 				D080F49523F120B200CC8D6E /* ImportCustomDescriptor.swift in Sources */,
 				D09D732623F0F3C000847DC8 /* UTXOViewController.swift in Sources */,
 				D09D733C23F0F3C000847DC8 /* CoreDataService.swift in Sources */,
+				D07399DD2461764700860B7E /* XpubConverter.swift in Sources */,
 				D09D736423F0F3C000847DC8 /* RawDisplayer.swift in Sources */,
 				D047DE0F242DDEB3004BC26D /* LocalNode.swift in Sources */,
 				D09D734423F0F3C000847DC8 /* TorClient.swift in Sources */,
@@ -1071,6 +1087,7 @@
 				D09D733323F0F3C000847DC8 /* Utilities.swift in Sources */,
 				D09D731123F0F3C000847DC8 /* ExportKeysViewController.swift in Sources */,
 				D0CA5415240750AA0096EE26 /* RecoverWallet.swift in Sources */,
+				D07399DF2461796A00860B7E /* Base58.swift in Sources */,
 				D047DE03242B340A004BC26D /* LicenseDisclaimerViewController.swift in Sources */,
 				D09D732923F0F3C000847DC8 /* InvoiceViewController.swift in Sources */,
 				D09D730D23F0F3C000847DC8 /* NodeStruct.swift in Sources */,
@@ -1241,6 +1258,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0.1.4;
@@ -1261,6 +1279,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "FullyNoded2/Helpers/FullyNoded2-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1270,6 +1290,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0.1.4;
@@ -1290,6 +1311,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "FullyNoded2/Helpers/FullyNoded2-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
