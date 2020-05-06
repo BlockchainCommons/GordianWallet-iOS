@@ -127,9 +127,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func uploadFile(_ sender: Any) {
-        
         DispatchQueue.main.async { [unowned vc = self] in
-            
             let alert = UIAlertController(title: "Upload a Coldcard file?", message: "This button allows you to upload files exported from your Coldcard via the Files app. For now we support the \"generic wallet export\" to import your single-sig Coldcard wallet into FullyNoded 2 and .psbt files so you can sign PSBT's from your Coldcard with FullyNoded 2.", preferredStyle: .actionSheet)
 
             alert.addAction(UIAlertAction(title: "Upload", style: .default, handler: { [unowned vc = self] action in
@@ -142,7 +140,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             }))
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                    
             alert.popoverPresentationController?.sourceView = vc.view
             vc.present(alert, animated: true, completion: nil)
             
@@ -155,16 +152,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if controller.documentPickerMode == .import {
             
             do {
-                
                 let data = try Data(contentsOf: url.absoluteURL)
                 let psbt = data.base64EncodedString()
                 
                 do {
-                    
                     let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
                     
                     DispatchQueue.main.async { [unowned vc = self] in
-                        
                         let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: "You can choose either Native Segwit (BIP84, bech32 - bc1), Nested Segwit (BIP49, 3) or legacy (BIP44, 1) address types.", preferredStyle: .actionSheet)
                         
                         alert.addAction(UIAlertAction(title: "Native Segwit (BIP84, bc1)", style: .default, handler: { action in
@@ -203,7 +197,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                 }
                             }
                             
-                            
                         }))
                         
                         alert.addAction(UIAlertAction(title: "Legacy (BIP44, 1)", style: .default, handler: { action in
@@ -223,11 +216,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                 }
                             }
                             
-                            
                         }))
                         
                         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                        
                         alert.popoverPresentationController?.sourceView = vc.view
                         vc.present(alert, animated: true, completion: nil)
                         
@@ -236,24 +227,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 } catch {
                     
                     DispatchQueue.main.async { [unowned vc = self] in
-                        
                         let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sing it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: .actionSheet)
                         
                         alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
-                            
-                            print("psbt = \(psbt)")
                             vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
                             vc.signPSBT(psbt: psbt)
                             
                         }))
                         
                         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                        
                         alert.popoverPresentationController?.sourceView = vc.view
                         vc.present(alert, animated: true, completion: nil)
                         
                     }
-                    
                 }
                 
             } catch {
@@ -261,7 +247,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 showAlert(vc: self, title: "Error", message: "That is not a valid psbt or Coldcard export")
                 
             }
-            
         }
     }
     
@@ -286,7 +271,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 }
                 
             } else {
-                
                 vc.connectingView.removeConnectingView()
                 showAlert(vc: vc, title: "Error", message: "PSBT signing failed")
             }
@@ -2508,7 +2492,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func sponsorNow() {
         
-        //impact()
         UIApplication.shared.open(URL(string: "https://github.com/sponsors/BlockchainCommons")!) { (Bool) in }
         
     }
@@ -2629,14 +2612,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
     }
-    
-    @IBAction func showSeeds(_ sender: Any) {
-        DispatchQueue.main.async { [unowned vc = self] in
-            vc.performSegue(withIdentifier: "segueToSeeds", sender: vc)
-            
-        }
-    }
-    
     
 }
 

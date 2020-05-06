@@ -1507,18 +1507,11 @@
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
-                        <rightBarButtonItems>
-                            <barButtonItem image="gear" catalog="system" id="0PZ-Jg-vxe">
-                                <connections>
-                                    <action selector="goToSettings:" destination="XmP-lK-cua" id="qEa-P5-u1a"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem image="bitcoinsign.square" catalog="system" id="MWv-RR-Py5">
-                                <connections>
-                                    <action selector="showSeeds:" destination="XmP-lK-cua" id="O3D-Au-O1H"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" image="gear" catalog="system" id="0PZ-Jg-vxe">
+                            <connections>
+                                <action selector="goToSettings:" destination="XmP-lK-cua" id="qEa-P5-u1a"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -1533,7 +1526,6 @@
                         <segue destination="NHv-UH-1lX" kind="presentation" identifier="goDonate" id="C3T-yU-SMU"/>
                         <segue destination="reL-7P-R3q" kind="presentation" identifier="refillMsigFromHome" id="pun-AW-DGw"/>
                         <segue destination="xB3-mY-13p" kind="show" identifier="goConfirmPsbtSegue" id="Xe1-Me-c8c"/>
-                        <segue destination="VJd-Zg-l3G" kind="show" identifier="segueToSeeds" id="1Sp-OB-6eU"/>
                         <segue destination="0g2-8e-jCH" kind="show" identifier="segueToConfirmImport" id="tvy-tG-Sod"/>
                     </connections>
                 </viewController>
@@ -2195,7 +2187,7 @@ Blockchain Commons and Fully Noded 2 never share any data with any third party e
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zXZ-R8-egb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-10927.200000000001" y="371.96401799100454"/>
+            <point key="canvasLocation" x="-8983" y="1235"/>
         </scene>
         <!--Donate View Controller-->
         <scene sceneID="7jc-m3-rrH">
@@ -2916,11 +2908,18 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <viewLayoutGuide key="safeArea" id="Cze-jj-bFe"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Settings" id="n34-O3-Fyo"/>
-                    <navigationItem key="navigationItem" title="Settings" id="YNb-Gd-Hqq"/>
+                    <navigationItem key="navigationItem" title="Settings" id="YNb-Gd-Hqq">
+                        <barButtonItem key="rightBarButtonItem" image="bitcoinsign.square" catalog="system" id="MWv-RR-Py5">
+                            <connections>
+                                <action selector="goToSeeds:" destination="AS8-ke-Yxh" id="Qmu-Vk-32R"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="settingsTable" destination="hcp-eG-lok" id="xPg-8r-KBs"/>
                         <segue destination="FI5-Kv-Y72" kind="show" identifier="goToAuth" id="FYa-hr-w4j"/>
                         <segue destination="DOn-IQ-sOy" kind="show" identifier="nodeManager" id="SNM-Ay-Yq0"/>
+                        <segue destination="VJd-Zg-l3G" kind="show" identifier="segueToSeeds" id="XT4-bS-sLg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k6b-ep-z2U" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -6268,12 +6267,12 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="fBg-S5-BEW"/>
         <segue reference="pun-AW-DGw"/>
         <segue reference="HTQ-38-5NU"/>
-        <segue reference="7qw-Ys-xsH"/>
-        <segue reference="ONV-Bz-eml"/>
+        <segue reference="622-Us-Cp3"/>
+        <segue reference="tvy-tG-Sod"/>
         <segue reference="NHy-Xu-LiC"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="Xe1-Me-c8c"/>
-        <segue reference="zkr-zY-rLG"/>
+        <segue reference="LzA-tD-DJD"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>
