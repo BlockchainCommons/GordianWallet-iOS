@@ -12,6 +12,7 @@
 ///     [f0578536/48h/1h/0h/2h]tpubDE5GYE61m5mx2WrgtFe1kSAeAHT5Npoy5C2TpQTQGLTQkRkmsWMoA5PSP5XAkt4DBLgKY386iyGDjJKT5fVrRgShJ5CSEdd66UUc4icA8rw))
 
 import Foundation
+import LibWally
 
 class Import {
     
@@ -335,6 +336,167 @@ class Import {
                 
             } else {
                 completion(nil)
+                
+            }
+        }
+        
+    }
+    
+    class func importColdCardMultiSig(coldcardDict: [String:Any], completion: @escaping ((coldcardWallet: [String:Any]?, offlineWords: String?, deviceWords: String?)) -> Void) {
+        var chain:Network!
+        var path:BIP32Path!
+        var deviceKey = ""
+        var nodeKey = ""
+        var coldCardKey = ""
+        var offlineWords = ""
+        var deviceWords = ""
+        var accountToImport = [String:Any]()
+        accountToImport["birthdate"] = keyBirthday()
+        accountToImport["isArchived"] = false
+        accountToImport["blockheight"] = Int32(1)
+        accountToImport["maxRange"] = 2500
+        accountToImport["index"] = 0
+        accountToImport["lastUsed"] = Date()
+        accountToImport["lastBalance"] = 0.0
+        accountToImport["id"] = UUID()
+        accountToImport["type"] = "MULTI"
+        accountToImport["label"] = "COLDCARD"
+        
+        func getChangeDescriptor(changeDesc: String) {
+            
+            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") { (object, errorDescription) in
+                
+                if let dict = object as? NSDictionary {
+                    let changeDescriptor = dict["descriptor"] as! String
+                    accountToImport["changeDescriptor"] = changeDescriptor
+                    completion((accountToImport, offlineWords, deviceWords))
+                    
+                } else {
+                    completion((nil,nil,nil))
+                    
+                }
+            }
+        }
+        
+        func getDescriptors(primaryDesc: String, changeDesc: String) {
+            
+            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(primaryDesc)\"") { (object, errorDescription) in
+                
+                if let dict = object as? NSDictionary {
+                    let descriptor = dict["descriptor"] as! String
+                    let walletName = Encryption.sha256hash(descriptor)
+                    accountToImport["descriptor"] = descriptor
+                    accountToImport["name"] = walletName
+                    getChangeDescriptor(changeDesc: changeDesc)
+                    
+                } else {
+                    completion((nil,nil,nil))
+                    
+                }
+            }
+        }
+        
+        func getDeviceXpub(mnemonic: BIP39Mnemonic) {
+            let seed = mnemonic.seedHex("")
+            
+            if let masterKey = HDKey(seed, chain) {
+                let fingerprint = masterKey.fingerprint.hexString
+                
+                do {
+                    let xpub = try masterKey.derive(path).xpub
+                    let path1 = (path.description).replacingOccurrences(of: "m", with: fingerprint)
+                    deviceKey = "[\(path1)]\(xpub)/0/*"
+                    
+                } catch {
+                    completion((nil,nil,nil))
+                    
+                }
+                
+            } else {
+                completion((nil,nil,nil))
+                
+            }
+        }
+        
+        func getNodeXpub(mnemonic: BIP39Mnemonic) {
+            let seed = mnemonic.seedHex("")
+            
+            if let masterKey = HDKey(seed, chain) {
+                let fingerprint = masterKey.fingerprint.hexString
+                
+                do {
+                    let xpub = try masterKey.derive(path).xpub
+                    let path1 = (path.description).replacingOccurrences(of: "m", with: fingerprint)
+                    nodeKey = "[\(path1)]\(xpub)/0/*"
+                    
+                } catch {
+                    completion((nil,nil,nil))
+                    
+                }
+                
+            } else {
+                completion((nil,nil,nil))
+                
+            }
+        }
+        
+        func process() {
+            let zpub = coldcardDict["p2wsh"] as! String
+            let fingerprint = coldcardDict["xfp"] as! String
+            let xpub = XpubConverter.convert(extendedKey: zpub)
+            let derivation = coldcardDict["p2wsh_deriv"] as! String
+            path = BIP32Path(derivation)
+            accountToImport["derivation"] = derivation
+            
+            KeychainCreator.createKeyChain() { (device_words, error) in
+                
+                if device_words != nil {
+                    deviceWords = device_words!
+                    
+                    KeychainCreator.createKeyChain() { (offline_words, error) in
+                        
+                        if offline_words != nil {
+                            offlineWords = offline_words!
+                            let deviceMnemonic = BIP39Mnemonic(device_words!)
+                            let offlineMnemonic = BIP39Mnemonic(offline_words!)
+                            getDeviceXpub(mnemonic: deviceMnemonic!)
+                            getNodeXpub(mnemonic: offlineMnemonic!)
+                            let path1 = (path.description).replacingOccurrences(of: "m", with: fingerprint)
+                            
+                            if xpub != nil {
+                                coldCardKey = "[\(path1)]\(xpub!)/0/*"
+                                let primDesc = "wsh(sortedmulti(2,\(coldCardKey),\(deviceKey),\(nodeKey)))"
+                                let changeDesc = primDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
+                                getDescriptors(primaryDesc: primDesc, changeDesc: changeDesc)
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+            }
+    
+        }
+        
+        Encryption.getNode { (n, error) in
+            
+            if n != nil {
+                
+                if n!.network == "testnet" {
+                    chain = .testnet
+                    
+                } else {
+                    chain = .mainnet
+                    
+                }
+                
+                accountToImport["nodeId"] = n!.id
+                process()
+                
+            } else {
+                completion((nil,nil,nil))
                 
             }
         }

@@ -384,6 +384,25 @@
 			path = Recovery;
 			sourceTree = "<group>";
 		};
+		D07399E42463C89C00860B7E /* Extended Key Converter */ = {
+			isa = PBXGroup;
+			children = (
+				D07399DC2461764700860B7E /* XpubConverter.swift */,
+				D07399DE2461796A00860B7E /* Base58.swift */,
+				D07399E124617A1000860B7E /* base58.h */,
+				D07399E224617A1000860B7E /* base58.c */,
+			);
+			path = "Extended Key Converter";
+			sourceTree = "<group>";
+		};
+		D07399E52463EE0000860B7E /* Importers */ = {
+			isa = PBXGroup;
+			children = (
+				D00016B2245ABFFA0091F7CF /* Import.swift */,
+			);
+			path = Importers;
+			sourceTree = "<group>";
+		};
 		D09D723423F0EDBB00847DC8 = {
 			isa = PBXGroup;
 			children = (
@@ -641,11 +660,8 @@
 				D0502FED244D2D4A00213870 /* FiatConverter.swift */,
 				D00016B8245BD89C0091F7CF /* SeedParser.swift */,
 				D07399D6245E6E5600860B7E /* Broadcast.swift */,
-				D07399DC2461764700860B7E /* XpubConverter.swift */,
-				D07399DE2461796A00860B7E /* Base58.swift */,
-				D07399E124617A1000860B7E /* base58.h */,
-				D07399E224617A1000860B7E /* base58.c */,
 				D07399E024617A0F00860B7E /* FullyNoded2-Bridging-Header.h */,
+				D07399E42463C89C00860B7E /* Extended Key Converter */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -759,7 +775,7 @@
 				D0CD026D23FA37C8009F2E7F /* Creators */,
 				D0CD026C23FA376D009F2E7F /* Signers */,
 				D0109468242EFF52000B3A40 /* Refillers */,
-				D00016B2245ABFFA0091F7CF /* Import.swift */,
+				D07399E52463EE0000860B7E /* Importers */,
 			);
 			path = "Wallet Logic";
 			sourceTree = "<group>";

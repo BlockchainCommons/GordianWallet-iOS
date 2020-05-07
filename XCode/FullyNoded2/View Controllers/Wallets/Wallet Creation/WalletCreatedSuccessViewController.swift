@@ -19,6 +19,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
     var recoveryPhrase = ""
     var nodesWords = ""
     var recoveryQr = ""
+    var isColdcard = Bool()
     var w:WalletStruct!
     
     override func viewDidLoad() {
@@ -44,6 +45,14 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         } else {
             
             textView.text = "In order to ensure you can recover your account there is some information you ought to record securely.\n\nYou will be presented with an \"Account Map\" QR code and a 12 word seed phrase.\n\nYou should make multiple backups of each and store them securely."
+            
+        }
+        
+        if isColdcard {
+            textField.text = "COLDCARD 2 OF 3"
+            
+        } else {
+            textField.text = ""
             
         }
         
@@ -163,7 +172,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         case "toRecoveryQr":
             
             if let vc = segue.destination as? WalletCreatedQRViewController {
-                
+                vc.isColdcard = isColdcard
                 vc.nodesWords = self.nodesWords
                 vc.recoveryPhrase = self.recoveryPhrase
                 vc.recoveryQr = self.recoveryQr.replacingOccurrences(of: "\"label\":\"\"", with: "\"label\":\"\(textField.text!)\"")

@@ -14,6 +14,7 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
     @IBOutlet var nextOutlet: UIButton!
     @IBOutlet weak var accountMapLabel: UITextView!
     
+    var isColdcard = Bool()
     var nodesWords = ""
     var wallet = [String:Any]()
     var recoveryPhrase = ""
@@ -109,7 +110,7 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
         case "goWords":
             
             if let vc = segue.destination as? WalletCreatedWordsViewController {
-                
+                vc.isColdcard = isColdcard
                 vc.nodesWords = nodesWords
                 vc.recoverPhrase = self.recoveryPhrase
                 vc.wallet = wallet

@@ -15,6 +15,7 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
     @IBOutlet weak var derivationLabel: UILabel!
     @IBOutlet weak var birthdateLabel: UILabel!
     
+    var isColdcard = Bool()
     var wallet = [String:Any]()
     var w:WalletStruct!
     var nodeWords = ""
@@ -37,6 +38,14 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
             
         }
         
+        if isColdcard {
+            navigationItem.title = "Device Seed"
+            
+        } else {
+            navigationItem.title = "Node's Seed"
+            
+        }
+        
         textView.text = nodesMnemonic
         nodesMnemonic += "\nDerivation: \(w.derivation + "/0")\n"
         nodesMnemonic += "Birthblock: \(w.blockheight)"
@@ -52,7 +61,7 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
             
             let message = "Once you tap \"Yes, I saved them\" the backup words will be gone forever! If you tap \"Oops, I forgot\" we will show them to you again so you may save them."
             
-            let alert = UIAlertController(title: "Are you sure you saved the nodes seed?", message: message, preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Are you sure you saved the seed?", message: message, preferredStyle: .actionSheet)
             
             alert.view.superview?.subviews[0].isUserInteractionEnabled = false
 
