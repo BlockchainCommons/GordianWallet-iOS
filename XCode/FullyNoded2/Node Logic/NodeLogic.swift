@@ -263,6 +263,8 @@ class NodeLogic {
                 
             }
             
+            dictToReturn["noUtxos"] = false
+            
             if utxos.count == 0 {
                 dictToReturn["coldBalance"] = "0.0"
                 dictToReturn["noUtxos"] = true
@@ -280,10 +282,9 @@ class NodeLogic {
                     
                 }
                 
-            } else {
-                dictToReturn["noUtxos"] = false
-                
             }
+            
+            dictToReturn["unconfirmed"] = false
             
             for (x, utxo) in utxos.enumerated() {
                 if let utxoDict = utxo as? NSDictionary {
@@ -293,7 +294,7 @@ class NodeLogic {
                     /// If the wallets index is less than or equal to the highest utxo index we increase
                     /// the wallets index to be greater then the highest utxo index. This way we avoid
                     /// reusing an address in the scenario where a user may use external software to
-                    /// receive to the app or for example they export their keys within the app and use
+                    /// receive to the account or for example they export their keys within the app and use
                     /// random addresses as invoices.
                     
                     if let desc = utxoDict["desc"] as? String {
@@ -340,11 +341,8 @@ class NodeLogic {
                                     
                                 }
                             }
-                            if confirmations < 1 {
+                            if confirmations == 0 {
                                 dictToReturn["unconfirmed"] = true
-                                
-                            } else {
-                                dictToReturn["unconfirmed"] = false
                                 
                             }
                         }

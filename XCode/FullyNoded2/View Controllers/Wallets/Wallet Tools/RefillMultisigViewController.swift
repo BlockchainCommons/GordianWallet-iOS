@@ -40,7 +40,6 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         updatePlaceHolder(wordNumber: 1)
         
         if addSeed {
-            
             navigationItem.title = "Add Signer"
             descriptionLabel.text = "You can add a 12 or 24 word BIP39 seed phrase which can sign for this account."
             lostWordsOutlet.alpha = 0
@@ -50,13 +49,10 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func updatePlaceHolder(wordNumber: Int) {
-        
         DispatchQueue.main.async { [unowned vc = self] in
-            
             vc.textField.attributedPlaceholder = NSAttributedString(string: "add word #\(wordNumber)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
             
         }
-        
     }
     
     @objc func handleTap() {
@@ -387,7 +383,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                         if success {
                             
                             DispatchQueue.main.async { [unowned vc = self] in
-                                
+                                vc.updatePlaceHolder(wordNumber: 1)
                                 vc.label.text = ""
                                 
                             }
@@ -447,8 +443,8 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         MnemonicCreator.convert(words: justWords.joined(separator: " ")) { [unowned vc = self] (mnemonic, error) in
             
             if !error && mnemonic != nil {
-                
                 let seed = mnemonic!.seedHex()
+                
                 if let mk = HDKey(seed, network(descriptor: vc.wallet.descriptor)) {
                     
                     if let path = BIP32Path(derivation) {
@@ -457,9 +453,8 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                             
                             let hdKey = try mk.derive(path)
                             let xpub = hdKey.xpub
-                            print("xpub = \(xpub)")
-                            
                             var existingXpubs = [String]()
+                            
                             if vc.wallet.type == "MULTI" {
                                 existingXpubs = str.multiSigKeys
                                 

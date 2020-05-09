@@ -62,18 +62,33 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
             
             if !isRecovering {
                 
-                if textView.text.hasPrefix("xpub") || textView.text.hasPrefix("tpub") && textField.text!.count == 8 {
+                if textField.text!.count == 8 {
                     
-                    if let _ = HDKey(textView.text!) {
-                        let dict = ["key":textView.text!, "fingerprint":textField.text!]
-                        DispatchQueue.main.async { [unowned vc = self] in
-                            vc.onDoneBlock!((dict))
-                            vc.navigationController!.popViewController(animated: true)
+                    func checkKey(key: String) {
+                        
+                        if let _ = HDKey(key) {
+                            let dict = ["key":key, "fingerprint":textField.text!]
+                            DispatchQueue.main.async { [unowned vc = self] in
+                                vc.onDoneBlock!((dict))
+                                vc.navigationController!.popViewController(animated: true)
+                                
+                            }
+                            
+                        } else {
+                            showAlert(vc: self, title: "Invalid xpub!", message: "That is not a valid xpub or tpub. FullyNoded 2 is powered by Bitcoin Core which is only compatible with xpub's and tpub's. You will need to use this tool to convert other types of extended keys to xpubs/tpubs: https://jlopp.github.io/xpub-converter/")
+                            
+                        }
+                    }
+                    
+                    if !textView.text.hasPrefix("tpub") && !textView.text.hasPrefix("xpub") {
+                        
+                        if let convertedKey = XpubConverter.convert(extendedKey: textView.text) {
+                            checkKey(key: convertedKey)
                             
                         }
                         
                     } else {
-                        showAlert(vc: self, title: "Invalid xpub!", message: "That is not a valid xpub or tpub. FullyNoded 2 is powered by Bitcoin Core which is only compatible with xpub's and tpub's. You will need to use this tool to convert other types of extended keys to xpubs/tpubs: https://jlopp.github.io/xpub-converter/")
+                        checkKey(key: textView.text)
                         
                     }
                     

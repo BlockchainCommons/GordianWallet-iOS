@@ -525,14 +525,8 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
             
             if let vc = segue.destination as? ScannerViewController {
                 
-                //vc.importin = true
-                vc.isImporting = true
-//                vc.onDoneRecoveringBlock = { [unowned thisVc = self] dict in
-//
-//                    thisVc.recoveryDict = dict
-//                    thisVc.validRecoveryScanned()
-//
-//                }
+                vc.isRecovering = true
+                
                 vc.onImportDoneBlock = { [unowned thisVc = self] descriptor in
                     
                     thisVc.processDescriptor(descriptor: descriptor)

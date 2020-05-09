@@ -26,23 +26,19 @@ class PSBTSigner {
                             let hex = result["hex"] as! String
                             completion((true, nil, hex))
                         } else {
-                            print("fail finalize 0")
                             let psbt = result["psbt"] as! String
                             completion((true, psbt, nil))
                         }
                     } else {
-                        print("fail finalize 1")
                         completion((false, psbtToSign.description, nil))
                     }
                 } else {
-                    print("fail finalize 2")
                     completion((false, psbtToSign.description, nil))
                 }
             }
         }
         
         func processWithActiveWallet() {
-            print("processWithActiveWallet")
             getActiveWalletNow { (w, error) in
                 if w != nil {
                     Reducer.makeCommand(walletName: w!.name ?? "", command: .walletprocesspsbt, param: "\"\(psbtToSign.description)\", true, \"ALL\", true") { (object, errorDescription) in
@@ -52,39 +48,20 @@ class PSBTSigner {
                                     psbtToSign = try PSBT(processedPsbt, chain)
                                     attemptToSignLocally()
                                 } catch {
-                                    print("catch processWithActiveWallet")
                                     attemptToSignLocally()
                                 }
                             }
                         } else {
-                            print("failed catch processWithActiveWallet")
                             completion((false, psbtToSign.description, nil))
                         }
                     }
                 } else {
-                    print("failed2 catch processWithActiveWallet")
                     completion((false, psbtToSign.description, nil))
                 }
             }
         }
         
-        /// There is a bug in LibWally-Swift so until that gets fixed we rely on bitcoind to finalize PSBT's for us
-        
-//        func finalizePsbtLocally() {
-//            if psbtToSign.finalize() {
-//                if let hex = psbtToSign.transactionFinal?.description {
-//                    completion((true, nil, hex))
-//                } else {
-//                    //processWithActiveWallet()
-//                    completion((true, psbtToSign.description, nil))
-//                }
-//            }
-//        }
-        
-        
-        
         func attemptToSignLocally() {
-            print("attemptToSignLocally")
             
             /// Need to ensure similiar seeds do not sign mutliple times. This can happen if a user utilizes the same seed for
             /// a multisig wallet and a single sig wallet.
@@ -107,12 +84,21 @@ class PSBTSigner {
             }
             
             if xprvsToSignWith.count > 0 {
+                
                 for (i, key) in xprvsToSignWith.enumerated() {
-                    print("sign")
-                    psbtToSign.sign(key)
+                    let inputs = psbtToSign.inputs
+                    
+                    for input in inputs {
+                        
+                        /// Only attempt to sign if the key is able to sign.
+                        if input.canSign(key) {
+                            psbtToSign.sign(key)
+                            
+                        }
+                    }
+                    
                     if i + 1 == xprvsToSignWith.count {
                         /// There is a bug in LibWally-Swift so until that gets fixed we rely on bitcoind to finalize PSBT's for us
-                        //finalizePsbtLocally()
                         finalizeWithBitcoind()
                     }
                 }
@@ -124,8 +110,6 @@ class PSBTSigner {
             xprvsToSignWith.removeAll()
             for (i, seed) in seedsToSignWith.enumerated() {
                 let seedStruct = SeedStruct(dictionary: seed)
-                //let encryptedSeed = seedStruct.seed
-                //if String(bytes: encryptedSeed, encoding: .utf8) != "no seed" {
                 if seedStruct.seed != nil {
                     Encryption.decryptData(dataToDecrypt: seedStruct.seed!) { (seed) in
                         if seed != nil {
@@ -145,9 +129,8 @@ class PSBTSigner {
                         }
                     }
                 }
-                //}
+                
                 if i + 1 == seedsToSignWith.count {
-                    print("processWithActiveWallet")
                     processWithActiveWallet()
                 }
             }
@@ -159,15 +142,7 @@ class PSBTSigner {
             CoreDataService.retrieveEntity(entityName: .seeds) { (seeds, errorDescription) in
                 if errorDescription == nil && seeds != nil {
                     for (i, seed) in seeds!.enumerated() {
-                        //if w["id"] != nil && w["name"] != nil && w["isArchived"] != nil {
-                            //let wallet = WalletStruct(dictionary: w)
-                            //let walletNetwork = network(descriptor: wallet.descriptor)
-                            //if !wallet.isArchived && walletNetwork == psbtToSign.network {
-                                //if String(data: wallet.seed, encoding: .utf8) != "no seed" || wallet.xprv != nil {
-                                    seedsToSignWith.append(seed)
-                                //}
-                            //}
-                        //}
+                        seedsToSignWith.append(seed)
                         if i + 1 == seeds!.count {
                             getKeysToSignWith()
                         }

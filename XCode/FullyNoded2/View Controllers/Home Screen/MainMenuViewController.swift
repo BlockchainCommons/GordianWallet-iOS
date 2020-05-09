@@ -125,8 +125,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         reloadSections([torCellIndex])
         addSeedsToNewEntity()
         
-        //let xpub = XpubConverter.convert(extendedKey: "Vpub5mtnnUUL8u4oyRf5d2NZJqDypgmpx8FontedpqxNyjXTi6fLp8fmpp2wedS6UyuNpDgLDoVH23c6rYpFSEfB9jhdbD8gek2stjxhwJeE1Eq")
-        
     }
     
     @IBAction func uploadFile(_ sender: Any) {

@@ -221,7 +221,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             
                             vc.newWallet["blockheight"] = Int32(blockheight)
                             vc.newWallet["maxRange"] = 2500
-                            //vc.newWallet["birthdate"] = keyBirthday()
+                            vc.newWallet["birthdate"] = keyBirthday()
                             vc.id = UUID()
                             vc.newWallet["id"] = vc.id
                             vc.newWallet["isActive"] = false
@@ -468,65 +468,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             }
             
         }
-//        Encryption.decryptData(dataToDecrypt: wallet.seed) { [unowned vc = self] (unencryptedSeed) in
-//
-//            if unencryptedSeed != nil {
-//
-//                if let words = String(data: unencryptedSeed!, encoding: .utf8) {
-//
-//                    if let mnemonic = BIP39Mnemonic(words) {
-//
-//                        if let path = BIP32Path(wallet.derivation) {
-//
-//                            let seed = mnemonic.seedHex()
-//
-//
-//                            if let mk = HDKey(seed, network) {
-//
-//                                do {
-//
-//                                    let key = try mk.derive(path)
-//                                    let xpub = key.xpub
-//                                    let fingerprint = mk.fingerprint.hexString
-//
-//
-//                                } catch {
-//
-//                                    vc.creatingView.removeConnectingView()
-//                                    displayAlert(viewController: vc, isError: true, message: "error creating your descriptor")
-//
-//                                }
-//
-//                            } else {
-//                                vc.creatingView.removeConnectingView()
-//                                displayAlert(viewController: vc, isError: true, message: "error deriving master key")
-//
-//                            }
-//
-//                        } else {
-//                            vc.creatingView.removeConnectingView()
-//                            displayAlert(viewController: vc, isError: true, message: "error converting derivation to bip32 path")
-//
-//                        }
-//
-//                    } else {
-//                        vc.creatingView.removeConnectingView()
-//                        displayAlert(viewController: vc, isError: true, message: "error converting words to BIP39 mnemonic")
-//
-//                    }
-//
-//                } else {
-//                    vc.creatingView.removeConnectingView()
-//                    displayAlert(viewController: vc, isError: true, message: "error converting seed to string")
-//
-//                }
-//
-//            } else {
-//                vc.creatingView.removeConnectingView()
-//                displayAlert(viewController: vc, isError: true, message: "error decrypting your seed")
-//
-//            }
-//        }
+
     }
     
     func constructSingleSigChangeDescriptor(param: String) {
@@ -552,23 +494,12 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         let walletCreator = WalletCreator.sharedInstance
         walletCreator.createStandUpWallet(walletDict: newWallet) { [unowned vc = self] (success, errorDescription) in
             
-            if success {
-                
-                vc.updateStatus(text: "saving the account to your device")
-                
+            func save() {
                 CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
                     
                     if success {
                         
                         let w = WalletStruct(dictionary: vc.newWallet)
-                        //let encryptedMnemonic = w.seed
-                        //Encryption.decryptData(dataToDecrypt: encryptedMnemonic) { (mnemonic) in
-                        
-                        //if mnemonic != nil {
-                        
-                        //if let words = String(data: mnemonic!, encoding: .utf8) {
-                        
-                        //if let _ = BIP39Mnemonic(words) {
                         
                         SeedParser.fetchSeeds(wallet: w) { wordSet in
                             
@@ -595,24 +526,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             }
                         }
                         
-                        //                                    } else {
-                        //
-                        //                                        vc.creatingView.removeConnectingView()
-                        //                                        displayAlert(viewController: vc, isError: true, message: "error deriving bip39 mnemonic")
-                        //
-                        //                                    }
-                        
-                        //}
-                        
-                        //                            } else {
-                        //
-                        //                                vc.creatingView.removeConnectingView()
-                        //                                displayAlert(viewController: vc, isError: true, message: "error decrypting seed")
-                        //
-                        //                            }
-                        
-                        //}
-                        
                     } else {
                         
                         vc.creatingView.removeConnectingView()
@@ -621,12 +534,34 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     }
                     
                 }
+            }
+            
+            if success {
                 
+                vc.updateStatus(text: "saving the account to your device")
+                save()
                 
             } else {
                 
-                vc.creatingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "There was an error creating your account: \(errorDescription!)")
+                if errorDescription != nil {
+                    
+                    if errorDescription!.contains("already exists") {
+                        
+                        save()
+                        
+                    } else {
+                        
+                        vc.creatingView.removeConnectingView()
+                        displayAlert(viewController: vc, isError: true, message: "There was an error creating your account: \(errorDescription!)")
+                        
+                    }
+                    
+                } else {
+                 
+                    vc.creatingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: "There was an error creating your account")
+                    
+                }
                 
             }
             
@@ -1083,14 +1018,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                             let wallet = WalletStruct(dictionary: vc.newWallet)
                                             multiSigCreator.create(wallet: wallet, nodeXprv: vc.nodesSeed, nodeXpub: vc.publickeys[2]) { (success, error) in
                                                 
-                                                if success {
-                                                    
-                                                    DispatchQueue.main.async {
-                                                        
-                                                        vc.creatingView.label.text = "saving your account to your device"
-                                                        
-                                                    }
-                                                    
+                                                func save() {
                                                     CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
                                                         
                                                         if success {
@@ -1121,15 +1049,33 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                             displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving account")
                                                             
                                                         }
+                                                    }
+                                                }
+                                                
+                                                if success {
+                                                    
+                                                    DispatchQueue.main.async {
+                                                        
+                                                        vc.creatingView.label.text = "saving your account to your device"
                                                         
                                                     }
+                                                    
+                                                    save()
                                                     
                                                 } else {
                                                     
                                                     if error != nil {
                                                         
-                                                        vc.creatingView.removeConnectingView()
-                                                        displayAlert(viewController: vc, isError: true, message: "error creating account: \(error!)")
+                                                        if error!.contains("already exists") {
+                                                            
+                                                            save()
+                                                            
+                                                        } else {
+                                                            
+                                                            vc.creatingView.removeConnectingView()
+                                                            displayAlert(viewController: vc, isError: true, message: "error creating account: \(error!)")
+                                                            
+                                                        }
                                                         
                                                     } else {
                                                         
@@ -1524,10 +1470,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         let walletCreator = WalletCreator.sharedInstance
         walletCreator.createStandUpWallet(walletDict: newWallet) { [unowned vc = self] (success, errorDescription) in
             
-            if success {
-                
-                vc.updateStatus(text: "saving the account to your device")
-                
+            func save() {
                 CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
                     
                     if success {
@@ -1560,12 +1503,30 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     }
                     
                 }
+            }
+            
+            if success {
                 
+                vc.updateStatus(text: "saving the account to your device")
+                save()
                 
             } else {
                 
-                vc.creatingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "There was an error creating your account: \(errorDescription!)")
+                if errorDescription != nil {
+                    
+                    if errorDescription!.contains("already exists") {
+                        save()
+                        
+                    } else {
+                        vc.creatingView.removeConnectingView()
+                        displayAlert(viewController: vc, isError: true, message: "There was an error creating your account: \(errorDescription!)")
+                    }
+                    
+                } else {
+                    vc.creatingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: "There was an error creating your account")
+                    
+                }
                 
             }
             

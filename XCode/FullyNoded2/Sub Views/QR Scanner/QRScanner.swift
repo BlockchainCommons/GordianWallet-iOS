@@ -309,8 +309,8 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
             
         } else if scanningRecovery {
             
-            label.text = "Scan a RecoveryQR"
-            labelDetail.text = "FullyNoded 2 allows you to backup/export a RecoveryQR Code for each wallet you create. You can scan one at anytime to recover lost funds and recreate the wallet on your device."
+            label.text = "Scan an Account Map"
+            labelDetail.text = "FullyNoded 2 allows you to backup/export an Account Map QR code for each wallet you create. You can scan one at anytime to recreate the wallet as watch-only, you can then add signers to it."
             addTestingNodeButton.setTitle("more info please", for: .normal)
             configureLabel()
             configureDetailLabel()

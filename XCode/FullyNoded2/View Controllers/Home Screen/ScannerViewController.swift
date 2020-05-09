@@ -351,7 +351,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             
         }
         
-        if isImporting {
+        if isImporting || isRecovering {
             
             onImportDoneBlock!(url)
             self.navigationController?.popViewController(animated: true)
