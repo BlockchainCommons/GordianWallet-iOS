@@ -130,7 +130,6 @@
 		D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B08BE5241888500025AD04 /* DonateViewController.swift */; };
 		D0C4E63124173F1B00E49DA5 /* WalletToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C4E63024173F1B00E49DA5 /* WalletToolsViewController.swift */; };
 		D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */; };
-		D0CA5415240750AA0096EE26 /* RecoverWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA5414240750AA0096EE26 /* RecoverWallet.swift */; };
 		D0D0F5642410CB8F007E0763 /* BIP39Words.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F5632410CB8F007E0763 /* BIP39Words.swift */; };
 		D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */; };
 		D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FC24306B060085E3CC /* RefillMultiSig.swift */; };
@@ -304,7 +303,6 @@
 		D0B08BE5241888500025AD04 /* DonateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonateViewController.swift; sourceTree = "<group>"; };
 		D0C4E63024173F1B00E49DA5 /* WalletToolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletToolsViewController.swift; sourceTree = "<group>"; };
 		D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRecoverViewController.swift; sourceTree = "<group>"; };
-		D0CA5414240750AA0096EE26 /* RecoverWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverWallet.swift; sourceTree = "<group>"; };
 		D0D0F5632410CB8F007E0763 /* BIP39Words.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BIP39Words.swift; sourceTree = "<group>"; };
 		D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillMultisigViewController.swift; sourceTree = "<group>"; };
 		D0D561FC24306B060085E3CC /* RefillMultiSig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillMultiSig.swift; sourceTree = "<group>"; };
@@ -374,14 +372,6 @@
 				D07399DA245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift */,
 			);
 			path = "Wallet Recovery";
-			sourceTree = "<group>";
-		};
-		D05650062441A45800754ACF /* Recovery */ = {
-			isa = PBXGroup;
-			children = (
-				D0CA5414240750AA0096EE26 /* RecoverWallet.swift */,
-			);
-			path = Recovery;
 			sourceTree = "<group>";
 		};
 		D07399E42463C89C00860B7E /* Extended Key Converter */ = {
@@ -770,7 +760,6 @@
 		D09D72FB23F0F3C000847DC8 /* Wallet Logic */ = {
 			isa = PBXGroup;
 			children = (
-				D05650062441A45800754ACF /* Recovery */,
 				D0CD026F23FA380B009F2E7F /* Transaction Builders */,
 				D0CD026D23FA37C8009F2E7F /* Creators */,
 				D0CD026C23FA376D009F2E7F /* Signers */,
@@ -1102,7 +1091,6 @@
 				D09D736323F0F3C000847DC8 /* ErrorView.swift in Sources */,
 				D09D733323F0F3C000847DC8 /* Utilities.swift in Sources */,
 				D09D731123F0F3C000847DC8 /* ExportKeysViewController.swift in Sources */,
-				D0CA5415240750AA0096EE26 /* RecoverWallet.swift in Sources */,
 				D07399DF2461796A00860B7E /* Base58.swift in Sources */,
 				D047DE03242B340A004BC26D /* LicenseDisclaimerViewController.swift in Sources */,
 				D09D732923F0F3C000847DC8 /* InvoiceViewController.swift in Sources */,
@@ -1277,7 +1265,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.6;
+				CURRENT_PROJECT_VERSION = 0.1.7;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1291,7 +1279,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.6;
+				MARKETING_VERSION = 0.1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1309,7 +1297,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.6;
+				CURRENT_PROJECT_VERSION = 0.1.7;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1323,7 +1311,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.6;
+				MARKETING_VERSION = 0.1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

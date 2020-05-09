@@ -260,12 +260,6 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         
         let descriptor = walletDict["descriptor"] as! String
         
-//        if descriptor.contains("xprv") || descriptor.contains("tprv") {
-//            let xprv = descriptorStruct.multiSigKeys[1]
-//            let xpub = HDKey(xprv)!.xpub
-//            descriptor = descriptor.replacingOccurrences(of: xprv, with: xpub)
-//        }
-        
         DispatchQueue.main.async { [unowned vc = self] in
             
             self.walletName.text = self.reducedName(name: vc.walletNameHash)
@@ -358,69 +352,6 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         DispatchQueue.main.async { [unowned vc = self] in
             
             vc.dismiss(animated: true) {}
-            
-        }
-        
-    }
-    
-    private func recover(dict: [String:Any]) {
-        
-        let connectingView = ConnectingView()
-        connectingView.addConnectingView(vc: self, description: "recovering your wallet")
-        let recovery = RecoverWallet.sharedInstance
-        
-        Encryption.getNode { [unowned vc = self] (node, error) in
-            
-            if !error && node != nil {
-                
-                recovery.recover(node: node!, json: dict, words: vc.words, derivation: vc.derivation) { [unowned vc = self] (success, error) in
-                    
-                    if success {
-                        
-                        /// Use this notifaction to refresh all wallet data on the wallets page, this will ensure rescan labels show up and balances
-                        ///  - only necessary for wallets that have been recovered on the node.
-                        NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
-                        
-                        connectingView.removeConnectingView()
-                        
-                        DispatchQueue.main.async { [unowned vc = self] in
-                                        
-                            let alert = UIAlertController(title: "Wallet recovered!", message: "Your recovered wallet will now show up in \"Wallets\"", preferredStyle: .actionSheet)
-
-                            alert.addAction(UIAlertAction(title: "Done", style: .cancel, handler: { action in
-                                
-                                DispatchQueue.main.async { [unowned vc = self] in
-                                    
-                                    vc.navigationController?.popToRootViewController(animated: true)
-                                    
-                                }
-                                
-                            }))
-                            alert.popoverPresentationController?.sourceView = self.view
-                            vc.present(alert, animated: true, completion: nil)
-                            
-                        }
-                        
-                    } else {
-                        
-                        connectingView.removeConnectingView()
-                        
-                        if error != nil {
-                            
-                            showAlert(vc: vc, title: "Error!", message: "Wallet recovery error: \(error!)")
-                            
-                        }
-                        
-                    }
-                    
-                }
-                
-            } else {
-                
-                connectingView.removeConnectingView()
-                showAlert(vc: vc, title: "Error!", message: "Recovering wallets requires an active node!")
-                
-            }
             
         }
         
@@ -649,15 +580,17 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     
     @IBAction func confirmAction(_ sender: Any) {
         
-        if !isImporting {
-            
-            recover(dict: walletDict)
-            
-        } else {
-            
-            importWallet()
-            
-        }
+        importWallet()
+        
+//        if !isImporting {
+//
+//            recover(dict: walletDict)
+//
+//        } else {
+//
+//            importWallet()
+//
+//        }
         
     }
     
