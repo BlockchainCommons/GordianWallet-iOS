@@ -1134,18 +1134,18 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="28" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$2,047.09" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gnv-Lb-Mlq">
-                                                    <rect key="frame" x="269.5" y="26" width="60.5" height="13"/>
+                                                    <rect key="frame" x="269.5" y="25" width="60.5" height="13"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="13" id="ZKz-Mh-1t1"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
-                                                    <color key="textColor" systemColor="systemPurpleColor" red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="29" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 btc / $9,112" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2qz-Se-un8">
-                                                    <rect key="frame" x="278.5" y="41" width="51.5" height="10"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="8"/>
-                                                    <color key="textColor" systemColor="systemPurpleColor" red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <rect key="frame" x="273" y="40" width="57" height="11"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="9"/>
+                                                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You wallet Label goes here" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lT8-r3-H6s">
@@ -2114,11 +2114,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tBq-5k-T1U">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0zB-Cx-vSF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="574"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                         </subviews>
@@ -3837,7 +3837,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                     <navigationItem key="navigationItem" title="Recovery" id="vZu-kK-u52"/>
                     <connections>
                         <outlet property="scanButton" destination="nsz-u9-Mzm" id="roa-rd-akK"/>
-                        <segue destination="o69-RN-9VD" kind="presentation" identifier="scanRecovery" id="zkr-zY-rLG"/>
+                        <segue destination="o69-RN-9VD" kind="show" identifier="scanRecovery" id="zkr-zY-rLG"/>
                         <segue destination="0g2-8e-jCH" kind="show" identifier="goConfirmQr" id="mqi-NU-Y0K"/>
                         <segue destination="kR7-Mg-fhs" kind="show" identifier="getWords" id="7qw-Ys-xsH"/>
                         <segue destination="QV1-we-EJN" kind="show" identifier="segueToManualXpubRecovery" id="WN6-Y9-PN0"/>
@@ -4978,12 +4978,12 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="oWp-iO-M9B">
                                                             <rect key="frame" x="142" y="11" width="61.5" height="22"/>
                                                             <subviews>
-                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
+                                                                <button opaque="NO" tag="10" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PjG-od-EAV">
                                                                     <rect key="frame" x="0.0" y="0.0" width="20" height="22"/>
                                                                     <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" image="info.circle" catalog="system"/>
                                                                 </button>
-                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="BIP84" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbq-pg-bVi">
                                                                     <rect key="frame" x="27" y="0.0" width="34.5" height="22"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -6048,7 +6048,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="c5y-jb-z8M"/>
         <segue reference="MTV-lr-E4R"/>
         <segue reference="Xe1-Me-c8c"/>
-        <segue reference="LzA-tD-DJD"/>
+        <segue reference="zkr-zY-rLG"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

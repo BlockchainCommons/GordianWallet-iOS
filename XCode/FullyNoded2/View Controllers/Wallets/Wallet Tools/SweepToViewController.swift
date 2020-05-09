@@ -462,17 +462,16 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
         let param = "''\(processedInputs())'', ''{\"\(receivingAddress)\":\(rounded(number: totalAmount))}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget()), \"subtractFeeFromOutputs\": [0], \"changeAddress\": \"\(receivingAddress)\"}'', true"
 
         Reducer.makeCommand(walletName: wallet.name!, command: .walletcreatefundedpsbt, param: param) { [unowned vc = self] (object, errorDesc) in
-
-            if let psbtDict = object as? NSDictionary {
+            
+            if errorDesc != nil {
+             
+                vc.showError(title: "Error building psbt", message: "\(errorDesc!)")
+                
+            } else if let psbtDict = object as? NSDictionary {
 
                 if let psbt = psbtDict["psbt"] as? String {
 
                     vc.sign(psbt: psbt)
-                    //vc.processPsbt(psbt: psbt, wallet: wallet)
-
-                } else {
-
-                    vc.showError(title: "Error building psbt", message: "")
 
                 }
 
