@@ -1481,11 +1481,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 
                                 //MARK: To enable mainnet accounts just uncomment the following lines of code:
                                 
-                                DispatchQueue.main.async {
-
-                                    vc.performSegue(withIdentifier: "addWallet", sender: vc)
-
-                                }
+//                                DispatchQueue.main.async {
+//
+//                                    vc.performSegue(withIdentifier: "addWallet", sender: vc)
+//
+//                                }
                                 
                             }))
                             

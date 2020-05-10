@@ -86,16 +86,7 @@ class PSBTSigner {
             if xprvsToSignWith.count > 0 {
                 
                 for (i, key) in xprvsToSignWith.enumerated() {
-                    let inputs = psbtToSign.inputs
-                    
-                    for input in inputs {
-                        
-                        /// Only attempt to sign if the key is able to sign.
-                        if input.canSign(key) {
-                            psbtToSign.sign(key)
-                            
-                        }
-                    }
+                    psbtToSign.sign(key)
                     
                     if i + 1 == xprvsToSignWith.count {
                         /// There is a bug in LibWally-Swift so until that gets fixed we rely on bitcoind to finalize PSBT's for us
