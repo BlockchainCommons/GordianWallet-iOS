@@ -59,18 +59,46 @@ class Import {
         func importSpecterWallet() {
             /// TODO: Support any type of m of n from Specter. Need to puzzle UI first.
             let arr = descriptor.split(separator: "&")
-            let label = "\(arr[0])"
-            var primaryDesc = "\(arr[1])"
-            let arr1 = primaryDesc.split(separator: ",")
-            let key1 = "\(arr1[1])/0/*"
-            let key2 = "\(arr1[2])/0/*"
-            let key3 = "\(arr1[3])".replacingOccurrences(of: "))", with: "/0/*))")
-            primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[1])", with: key1)
-            primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[2])", with: key2)
-            primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[3])", with: key3)
-            let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
-            walletToImport["label"] = label
-            getDescriptors(primaryDesc: primaryDesc, changeDesc: changeDesc)
+            
+            if arr.count > 0 {
+                let label = "\(arr[0])"
+                var primaryDesc = "\(arr[1])"
+                
+                if primaryDesc.contains(",") {
+                    let arr1 = primaryDesc.split(separator: ",")
+                    
+                    if arr1.count == 4 {
+                        
+                        if !(arr1[1]).contains("/0/*") && !(arr1[2]).contains("/0/*") && (arr1[3]).contains("))") {
+                            let key1 = "\(arr1[1])/0/*"
+                            let key2 = "\(arr1[2])/0/*"
+                            let key3 = "\(arr1[3])".replacingOccurrences(of: "))", with: "/0/*))")
+                            primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[1])", with: key1)
+                            primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[2])", with: key2)
+                            primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[3])", with: key3)
+                            let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
+                            walletToImport["label"] = label
+                            getDescriptors(primaryDesc: primaryDesc, changeDesc: changeDesc)
+                            
+                        } else {
+                            completion(nil)
+                            
+                        }
+                        
+                    } else {
+                        completion(nil)
+                        
+                    }
+                    
+                } else {
+                    completion(nil)
+                    
+                }
+                
+            } else {
+                completion(nil)
+                
+            }
             
         }
         
