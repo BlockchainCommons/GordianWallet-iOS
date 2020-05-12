@@ -647,7 +647,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func noActiveWalletCell(_ indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = descriptionCell(description: "⚠︎ No active wallet")
+        let cell = descriptionCell(description: "⚠︎ No active account")
         let addWalletButton = UIButton()
         addWalletButton.frame = CGRect(x: mainMenu.frame.maxX - 80, y: (cell.frame.height / 2) - 10, width: 20, height: 20)
         addWalletButton.addTarget(self, action: #selector(addWallet), for: .touchUpInside)
@@ -1495,7 +1495,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else if self.wallet == nil && nodeSectionLoaded {
                 
-                return descriptionCell(description: "⚠︎ No active wallet")
+                return descriptionCell(description: "⚠︎ No active account")
                 
             } else if self.wallet != nil && nodeSectionLoaded {
                 
@@ -1515,7 +1515,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else if self.wallet == nil {
                 
-                return descriptionCell(description: "⚠︎ No active wallet")
+                return descriptionCell(description: "⚠︎ No active account")
                 
             } else {
                 

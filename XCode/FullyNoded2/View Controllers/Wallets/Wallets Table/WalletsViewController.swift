@@ -838,7 +838,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let cell = UITableViewCell()
         cell.backgroundColor = .black
-        cell.textLabel?.text = "⚠︎ No wallets created yet, tap the +"
+        cell.textLabel?.text = "⚠︎ No account's created yet, tap the +"
         cell.textLabel?.textColor = .lightGray
         cell.textLabel?.font = .systemFont(ofSize: 17)
         return cell
