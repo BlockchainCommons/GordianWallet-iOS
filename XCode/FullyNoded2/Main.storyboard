@@ -428,7 +428,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="WFU-Fl-Gfe">
-                                <rect key="frame" x="0.0" y="71" width="375" height="498"/>
+                                <rect key="frame" x="0.0" y="71" width="375" height="547"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexBackgroundColor" red="0.089775554839999994" green="0.1016174331" blue="0.1224028692" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1238,29 +1238,16 @@
                                     <constraint firstAttribute="trailing" secondItem="nlH-b0-8Cr" secondAttribute="trailing" constant="23" id="wa5-fh-Swy"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mxA-Ld-4IJ">
-                                <rect key="frame" x="0.0" y="569" width="375" height="49"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="49" id="nEZ-yJ-zeW"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <color key="textColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="WFU-Fl-Gfe" firstAttribute="top" secondItem="ioR-4d-qfe" secondAttribute="top" constant="27" id="5lM-jG-Jem"/>
                             <constraint firstItem="AbS-c9-gmz" firstAttribute="trailing" secondItem="ioR-4d-qfe" secondAttribute="trailing" id="Gqe-RG-Ykc"/>
-                            <constraint firstItem="mxA-Ld-4IJ" firstAttribute="trailing" secondItem="ioR-4d-qfe" secondAttribute="trailing" id="Yye-eJ-B3S"/>
-                            <constraint firstItem="mxA-Ld-4IJ" firstAttribute="bottom" secondItem="ioR-4d-qfe" secondAttribute="bottom" id="a8h-Ev-Noe"/>
+                            <constraint firstItem="WFU-Fl-Gfe" firstAttribute="bottom" secondItem="ioR-4d-qfe" secondAttribute="bottom" id="XLn-nC-qo1"/>
                             <constraint firstItem="ioR-4d-qfe" firstAttribute="trailing" secondItem="WFU-Fl-Gfe" secondAttribute="trailing" id="bj2-pg-lic"/>
-                            <constraint firstItem="mxA-Ld-4IJ" firstAttribute="top" secondItem="WFU-Fl-Gfe" secondAttribute="bottom" id="dww-dg-hqW"/>
                             <constraint firstItem="AbS-c9-gmz" firstAttribute="leading" secondItem="ioR-4d-qfe" secondAttribute="leading" id="gVX-ZN-B14"/>
                             <constraint firstItem="AbS-c9-gmz" firstAttribute="top" secondItem="ioR-4d-qfe" secondAttribute="top" constant="5" id="qF6-NY-BoE"/>
                             <constraint firstItem="WFU-Fl-Gfe" firstAttribute="leading" secondItem="ioR-4d-qfe" secondAttribute="leading" id="y2z-ak-hGg"/>
-                            <constraint firstItem="mxA-Ld-4IJ" firstAttribute="leading" secondItem="ioR-4d-qfe" secondAttribute="leading" id="yjF-Pt-lfC"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ioR-4d-qfe"/>
                     </view>
@@ -1289,7 +1276,6 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="halvingCountdownLabel" destination="mxA-Ld-4IJ" id="0vF-ba-hu6"/>
                         <outlet property="mainMenu" destination="WFU-Fl-Gfe" id="lGR-uB-jyD"/>
                         <outlet property="sponsorView" destination="AbS-c9-gmz" id="ZTm-oj-hzR"/>
                         <segue destination="MkV-nj-qUL" kind="show" identifier="getTransaction" id="La4-nW-6qo"/>
@@ -2114,11 +2100,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tBq-5k-T1U">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0zB-Cx-vSF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                         </subviews>
@@ -2388,11 +2374,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="xB3-mY-13p" customClass="ConfirmViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="T5K-PU-RA6">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="A2T-tZ-Y6M">
-                                <rect key="frame" x="16" y="51" width="343" height="582"/>
+                                <rect key="frame" x="16" y="95" width="343" height="509"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="inputCell" rowHeight="78" id="6pv-wa-mjr">
@@ -2512,7 +2498,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="anh-YQ-Dnl">
-                                <rect key="frame" x="157" y="0.0" width="202" height="43"/>
+                                <rect key="frame" x="157" y="44" width="202" height="43"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="43" id="GV3-Qj-cUB"/>
                                     <constraint firstAttribute="width" constant="202" id="dgc-Md-hpQ"/>
@@ -2553,11 +2539,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="J96-pV-r6d" customClass="VerifyViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XGu-4Z-bs0">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="yLm-bN-fYY">
-                                <rect key="frame" x="16" y="20" width="343" height="607"/>
+                                <rect key="frame" x="16" y="64" width="343" height="534"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -6048,8 +6034,8 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="NHy-Xu-LiC"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="MTV-lr-E4R"/>
-        <segue reference="Sh6-1X-4BR"/>
-        <segue reference="zkr-zY-rLG"/>
+        <segue reference="Xe1-Me-c8c"/>
+        <segue reference="LzA-tD-DJD"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

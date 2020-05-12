@@ -49,7 +49,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
     @IBOutlet var mainMenu: UITableView!
     @IBOutlet var sponsorView: UIView!
-    @IBOutlet weak var halvingCountdownLabel: UILabel!
     
     var refresher: UIRefreshControl!
     var connectingView = ConnectingView()
@@ -57,9 +56,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var nodes = [[String:Any]]()
     var transactionArray = [[String:Any]]()
     var coldcard = [String:Any]()
-    
-    var timer: Timer?
-    
+        
     var deviceWords = ""
     var offlineWords = ""
     var tx = ""
@@ -90,7 +87,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         infoHidden = true
         torInfoHidden = true
         showNodeInfo = false
-        halvingCountdownLabel.adjustsFontSizeToFitWidth = true
         
         if ud?.object(forKey: "firstTime") == nil {
             
@@ -2122,16 +2118,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     vc.sponsorThisApp()
                                         
                 }
-                
-                if vc.timer != nil {
-                    
-                    vc.timer?.invalidate()
-                    vc.timer = nil
-                    
-                }
-                
-                vc.runHalvingCountdown()
-                
+                                
             } else {
                 
                 vc.nodeSectionLoaded = false
@@ -2141,36 +2128,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 displayAlert(viewController: vc, isError: true, message: errorDesc ?? "error fetching node stats")
                 
             }
-            
-        }
-        
-    }
-    
-    private var countdown: DateComponents {
-        
-        return Calendar.current.dateComponents([.day, .hour, .minute, .second], from: Date(), to: nodeInfo.halvingDate)
-        
-    }
-
-    @objc func updateTime() {
-        
-        let countdown = self.countdown
-        let days = countdown.day!
-        let hours = countdown.hour!
-        let minutes = countdown.minute!
-        let seconds = countdown.second!
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            vc.halvingCountdownLabel.text = "Next block reward halving in:\n~\(days) days: \(hours) hours: \(minutes) mins: \(seconds) secs"
-        }
-        
-    }
-
-    private func runHalvingCountdown() {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(vc.updateTime), userInfo: nil, repeats: true)
             
         }
         
