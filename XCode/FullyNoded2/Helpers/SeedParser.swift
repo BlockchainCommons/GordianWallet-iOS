@@ -256,7 +256,7 @@ class SeedParser {
                                     
                                     if xpub == hdkey.xpub {
                                         accountsSeeds.append(potentialSeed)
-                                        
+
                                     }
                                     
                                     if i + 1 == xpubs.count && p + 1 == unique.count {

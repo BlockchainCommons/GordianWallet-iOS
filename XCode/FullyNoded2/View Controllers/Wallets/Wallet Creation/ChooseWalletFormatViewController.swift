@@ -350,7 +350,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         if !error {
                             
                             vc.updateStatus(text: "creating primary descriptor")
-                            //vc.newWallet["seed"] = encryptedData!
                             vc.saveSeed(seed: encryptedData!) { success in
                                 
                                 if success {
@@ -386,7 +385,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 if !error {
                     
                     vc.updateStatus(text: "creating primary descriptor")
-                    //vc.newWallet["seed"] = encryptedData!
                     vc.saveSeed(seed: encryptedData!) { success in
                         
                         if success {

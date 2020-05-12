@@ -17,7 +17,7 @@ class MultiSigTxBuilder {
             if wallet != nil && !error {
 
                 func signPsbt(psbt: String) {
-
+                    
                     PSBTSigner.sign(psbt: psbt) { (success, incompletePsbt, rawTx) in
 
                         if success {
@@ -39,7 +39,6 @@ class MultiSigTxBuilder {
                         }
 
                     }
-
 
                 }
 

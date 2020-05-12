@@ -309,7 +309,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
 
                 }
                 
-                let entities = [ENTITY.nodes, ENTITY.auth, ENTITY.wallets]
+                let entities = [ENTITY.nodes, ENTITY.auth, ENTITY.wallets, ENTITY.seeds]
                 
                 for entity in entities {
                     
