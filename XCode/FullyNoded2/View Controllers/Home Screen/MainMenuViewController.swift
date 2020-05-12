@@ -667,6 +667,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let fiatBalance = cell.viewWithTag(28) as! UILabel
         let accountTypeIcon = cell.viewWithTag(3) as! UIImageView
         let fxRate = cell.viewWithTag(29) as! UILabel
+        let view1 = cell.viewWithTag(30)!
+        let view2 = cell.viewWithTag(31)!
+        let view3 = cell.viewWithTag(32)!
+        
+        view1.clipsToBounds = true
+        view2.clipsToBounds = true
+        view3.clipsToBounds = true
+        view1.layer.cornerRadius = 8
+        view2.layer.cornerRadius = 8
+        view3.layer.cornerRadius = 8
         
         fxRate.text = walletInfo.fxRate
         
@@ -1458,7 +1468,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if walletSectionLoaded {
             
-            return 116
+            return 159
 
         } else {
 
