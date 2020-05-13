@@ -253,16 +253,6 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
     }
     
-    @IBAction func close(_ sender: Any) {
-        
-        DispatchQueue.main.async {
-            
-            self.dismiss(animated: true, completion: nil)
-            
-        }
-        
-    }
-    
     func addSpinner() {
         
         DispatchQueue.main.async {

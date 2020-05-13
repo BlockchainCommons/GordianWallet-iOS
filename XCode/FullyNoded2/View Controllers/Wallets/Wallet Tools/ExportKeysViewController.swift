@@ -188,17 +188,6 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
 
     }
 
-    @IBAction func close(_ sender: Any) {
-
-        DispatchQueue.main.async {
-
-            self.dismiss(animated: true, completion: nil)
-
-        }
-
-    }
-
-
     @objc func copyAddress(_ sender: UIButton) {
 
         let impact = UIImpactFeedbackGenerator()

@@ -21,47 +21,126 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     var infoText = ""
     var barTitle = ""
     var wallet:WalletStruct!
+    
+    @IBOutlet weak var viewUtxosOutlet: UIButton!
+    @IBOutlet weak var verifyAddressesOutlet: UIButton!
+    @IBOutlet weak var viewAddressesOutlet: UIButton!
+    @IBOutlet weak var accountLabel: UILabel!
     @IBOutlet var tableView: UITableView!
+    @IBOutlet weak var editLabelOutlet: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        editLabelOutlet.alpha = 0
         tableView.alpha = 0
+        accountLabel.alpha = 0
+        viewUtxosOutlet.alpha = 0
+        verifyAddressesOutlet.alpha = 0
+        viewAddressesOutlet.alpha = 0
+        viewUtxosOutlet.layer.cornerRadius = 8
+        verifyAddressesOutlet.layer.cornerRadius = 8
+        viewAddressesOutlet.layer.cornerRadius = 8
         verified = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
         #if !targetEnvironment(simulator)
-        showAuth()
+        if !verified {
+            showAuth()
+        }
         #else
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
             if wallet != nil && !error {
-                
                 vc.tableView.alpha = 1
                 vc.wallet = wallet!
                 vc.loadData()
                 
             } else {
-                
                 displayAlert(viewController: vc, isError: true, message: "no active wallet")
                 
             }
-            
         }
         #endif
         
     }
     
-    @IBAction func close(_ sender: Any) {
+    @IBAction func editLabel(_ sender: Any) {
         
-        DispatchQueue.main.async {
-            
-            self.dismiss(animated: true, completion: nil)
-            
+        let title = "Give your wallet a label"
+        let message = "Add a label so you can easily identify your wallets"
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = "Add a label"
+            textField.keyboardAppearance = .dark
         }
         
+        alert.addAction(UIAlertAction(title: "Save", style: .default) { [unowned vc = self] (alertAction) in
+            let textFields = alert.textFields
+            weak var textField:UITextField?
+            
+            if textFields != nil {
+                
+                if textFields!.count > 0 {
+                    
+                    textField = textFields![0]
+                    
+                    if textField!.text! != "" {
+                        
+                        let newLabel = textField!.text!
+                        
+                        CoreDataService.updateEntity(id: vc.wallet.id!, keyToUpdate: "label", newValue: newLabel, entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
+                            
+                            if success {
+                                
+                                DispatchQueue.main.async {
+                                    
+                                    vc.accountLabel.text = newLabel
+                                    
+                                }
+                                
+                            } else {
+                                
+                                showAlert(vc: vc, title: "Error!", message: "There was a problem saving your wallets label")
+                                
+                            }
+                                                        
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default) { _ in })
+        self.present(alert, animated:true, completion: nil)
+        
     }
+    
+    @IBAction func viewAddresses(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "viewKeysSegue", sender: vc)
+        }
+    }
+    
+    @IBAction func verifyAddresses(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "verifyAddresses", sender: vc)
+        }
+    }
+    
+    @IBAction func listUtxos(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "seeUtxos", sender: vc)
+        }
+    }
+    
+    
     
     @objc func handleCopyTap(_ sender: UIButton) {
         
@@ -265,8 +344,17 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         DispatchQueue.main.async { [unowned vc = self] in
-            
+            vc.accountLabel.text = vc.wallet.label
             vc.tableView.reloadData()
+            
+            UIView.animate(withDuration: 0.2) {
+                vc.editLabelOutlet.alpha = 1
+                vc.accountLabel.alpha = 1
+                vc.viewUtxosOutlet.alpha = 1
+                vc.verifyAddressesOutlet.alpha = 1
+                vc.viewAddressesOutlet.alpha = 1
+                vc.tableView.alpha = 1
+            }
             
         }
         
@@ -299,6 +387,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     private func recoveryCell(_ indexPath: IndexPath) -> UITableViewCell {
         
         let recoveryCell = tableView.dequeueReusableCell(withIdentifier: "recoveryCell", for: indexPath)
+        recoveryCell.selectionStyle = .none
         let imageview = recoveryCell.viewWithTag(1) as! UIImageView
         imageview.image = self.recoveryImage
         return recoveryCell
@@ -426,6 +515,9 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             textLabel.text = "Account Map (public keys)"
             header.addSubview(textLabel)
             header.addSubview(shareButton)
+            header.addSubview(copyButton)
+            copyButton.frame = CGRect(x: shareButton.frame.minX - 30, y: 0, width: 20, height: 20)
+            copyButton.center.y = shareButton.center.y
             
         case 1:
             textLabel.text = "Seed Words"
@@ -618,8 +710,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 if wallet != nil && !error {
                                     
                                     DispatchQueue.main.async { [unowned vc = self] in
-                                        
-                                        vc.tableView.alpha = 1
+                                        vc.verified = true
                                         vc.wallet = wallet!
                                         vc.loadData()
                                         
