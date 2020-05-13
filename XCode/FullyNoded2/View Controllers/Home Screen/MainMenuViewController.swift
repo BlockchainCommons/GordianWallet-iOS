@@ -1076,7 +1076,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let labelLabel = cell.viewWithTag(4) as! UILabel
         let dateLabel = cell.viewWithTag(5) as! UILabel
         let infoButton = cell.viewWithTag(6) as! UIButton
+        let changeImage = cell.viewWithTag(7) as! UIImageView
         
+        changeImage.tintColor = .darkGray
         infoButton.addTarget(self, action: #selector(getTransaction(_:)), for: .touchUpInside)
         infoButton.restorationIdentifier = "\( indexPath.section)"
         amountLabel.alpha = 1
@@ -1132,6 +1134,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             amountLabel.textColor = .darkGray
             labelLabel.textColor = .systemGray
             dateLabel.textColor = .systemGray
+            changeImage.image = UIImage(systemName: "arrow.up.right")
+            changeImage.tintColor = .darkGray
             
         } else {
             
@@ -1139,13 +1143,18 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             amountLabel.textColor = .lightGray
             labelLabel.textColor = .systemGray
             dateLabel.textColor = .systemGray
+            changeImage.image = UIImage(systemName: "arrow.down.left")
+            changeImage.tintColor = .lightGray
                                 
         }
         
         if selfTransfer {
-            
-            amountLabel.text = (amountLabel.text!).replacingOccurrences(of: "+", with: "🔄")
-            amountLabel.text = (amountLabel.text!).replacingOccurrences(of: "-", with: "🔄")
+            amountLabel.text = (amountLabel.text!).replacingOccurrences(of: "+", with: "")
+            amountLabel.text = (amountLabel.text!).replacingOccurrences(of: "-", with: "")
+            changeImage.alpha = 1
+            amountLabel.textColor = .darkGray
+            changeImage.image = UIImage.init(systemName: "arrow.2.circlepath")
+            changeImage.tintColor = .darkGray
             
         }
         
@@ -2307,14 +2316,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     @objc func sponsorNow() {
         
         UIApplication.shared.open(URL(string: "https://github.com/sponsors/BlockchainCommons")!) { (Bool) in }
-        
-    }
-    
-    private func reducedName(name: String) -> String {
-        
-        let first = String(name.prefix(5))
-        let last = String(name.suffix(5))
-        return "\(first)*****\(last).dat"
         
     }
     
