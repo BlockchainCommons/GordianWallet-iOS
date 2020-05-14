@@ -22,9 +22,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     var barTitle = ""
     var wallet:WalletStruct!
     
-    @IBOutlet weak var viewUtxosOutlet: UIButton!
-    @IBOutlet weak var verifyAddressesOutlet: UIButton!
-    @IBOutlet weak var viewAddressesOutlet: UIButton!
     @IBOutlet weak var accountLabel: UILabel!
     @IBOutlet var tableView: UITableView!
     @IBOutlet weak var editLabelOutlet: UIButton!
@@ -34,12 +31,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         editLabelOutlet.alpha = 0
         tableView.alpha = 0
         accountLabel.alpha = 0
-        viewUtxosOutlet.alpha = 0
-        verifyAddressesOutlet.alpha = 0
-        viewAddressesOutlet.alpha = 0
-        viewUtxosOutlet.layer.cornerRadius = 8
-        verifyAddressesOutlet.layer.cornerRadius = 8
-        viewAddressesOutlet.layer.cornerRadius = 8
         verified = false
     }
     
@@ -122,26 +113,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
-    @IBAction func viewAddresses(_ sender: Any) {
-        DispatchQueue.main.async { [unowned vc = self] in
-            vc.performSegue(withIdentifier: "viewKeysSegue", sender: vc)
-        }
-    }
-    
-    @IBAction func verifyAddresses(_ sender: Any) {
-        DispatchQueue.main.async { [unowned vc = self] in
-            vc.performSegue(withIdentifier: "verifyAddresses", sender: vc)
-        }
-    }
-    
-    @IBAction func listUtxos(_ sender: Any) {
-        DispatchQueue.main.async { [unowned vc = self] in
-            vc.performSegue(withIdentifier: "seeUtxos", sender: vc)
-        }
-    }
-    
-    
-    
     @objc func handleCopyTap(_ sender: UIButton) {
         
         let section = sender.tag
@@ -195,9 +166,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 2:
             itemToDisplay = xpubs
             shareText()
-//        case 3:
-//            itemToDisplay = privateKeyDescriptor
-//            shareText()
 
         default:
             break
@@ -232,6 +200,23 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         }
         
+    }
+    
+    @objc func deleteSeed() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Delete seed?", message: "Are you sure!? You WILL NOT be able to spend from this wallet and it will be watch-only.", preferredStyle: .actionSheet)
+
+            alert.addAction(UIAlertAction(title: "💀 Delete", style: .destructive, handler: { [unowned vc = self] action in
+                
+                showAlert(vc: vc, title: "🛠 Under Construction", message: "The ability to delete seeds here is still a work in progress.")
+
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+            
+        }
     }
     
     func shareText() {
@@ -350,9 +335,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             UIView.animate(withDuration: 0.2) {
                 vc.editLabelOutlet.alpha = 1
                 vc.accountLabel.alpha = 1
-                vc.viewUtxosOutlet.alpha = 1
-                vc.verifyAddressesOutlet.alpha = 1
-                vc.viewAddressesOutlet.alpha = 1
                 vc.tableView.alpha = 1
             }
             
@@ -402,7 +384,13 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.textLabel?.numberOfLines = 0
         cell.textLabel?.textColor = .lightGray
         cell.textLabel?.font = .systemFont(ofSize: 15, weight: .regular)
-        cell.textLabel?.text = seed
+        
+        if seed == "" {
+            cell.textLabel?.text = "⚠︎ No seed on device"
+        } else {
+            cell.textLabel?.text = seed
+        }
+        
         return cell
         
     }
@@ -509,6 +497,15 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         copyButton.frame = CGRect(x: qrButton.frame.minX - 30, y: 0, width: 20, height: 20)
         copyButton.center.y = textLabel.center.y
         
+        let deleteButton = UIButton()
+        let deleteImage = UIImage(systemName: "trash")
+        deleteButton.setImage(deleteImage, for: .normal)
+        deleteButton.tintColor = .systemRed
+        deleteButton.tag = section
+        deleteButton.addTarget(self, action: #selector(deleteSeed), for: .touchUpInside)
+        deleteButton.frame = CGRect(x: copyButton.frame.minX - 30, y: 0, width: 20, height: 20)
+        deleteButton.center.y = textLabel.center.y
+        
         switch section {
             
         case 0:
@@ -525,6 +522,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             header.addSubview(shareButton)
             header.addSubview(qrButton)
             header.addSubview(copyButton)
+            header.addSubview(deleteButton)
             
         case 2:
             textLabel.text = "Account XPUB's"
@@ -603,7 +601,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     
                 case 0:
                     
-                    label.text = "This \"Account Map\" QR can be used with either FullyNoded 2 to recreate this wallet as watch-only. ENSURE you back it up safely, it is required to recover multi-sig wallets."
+                    label.text = "This \"Account Map\" QR can be used with FullyNoded 2 to recreate this wallet as watch-only. ENSURE you back it up safely, it is required to recover multi-sig wallets."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 50)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 50)
                     

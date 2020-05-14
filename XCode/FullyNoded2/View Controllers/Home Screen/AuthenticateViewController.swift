@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AuthenticateViewController: UIViewController {
+class AuthenticateViewController: UIViewController, UINavigationControllerDelegate {
     
     var pubkey = ""
     var tapQRGesture = UITapGestureRecognizer()
@@ -16,12 +16,11 @@ class AuthenticateViewController: UIViewController {
     let displayer = RawDisplayer()
     let qrGenerator = QRGenerator()
     var isadding = Bool()
-    @IBOutlet var descriptionLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        navigationController?.delegate = self
         
         
     }
@@ -31,17 +30,6 @@ class AuthenticateViewController: UIViewController {
         configureDisplayer()
         
     }
-    
-    @IBAction func close(_ sender: Any) {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.dismiss(animated: true, completion: nil)
-            
-        }
-        
-    }
-    
     
     func getpubkey() {
         
@@ -119,7 +107,7 @@ class AuthenticateViewController: UIViewController {
     func configureDisplayer() {
                 
         displayer.vc = self
-        displayer.y = self.descriptionLabel.frame.maxY + 10
+        displayer.y = 100
         tapQRGesture = UITapGestureRecognizer(target: self,
                                               action: #selector(shareQRCode(_:)))
         
@@ -127,6 +115,9 @@ class AuthenticateViewController: UIViewController {
         
         tapTextViewGesture = UITapGestureRecognizer(target: self,
                                                     action: #selector(shareRawText(_:)))
+        
+        displayer.copyButton.addTarget(self, action: #selector(copyText), for: .touchUpInside)
+        displayer.shareButton.addTarget(self, action: #selector(shareQRCode(_:)), for: .touchUpInside)
         
         displayer.textView.addGestureRecognizer(tapTextViewGesture)
         displayer.textView.isSelectable = true
@@ -143,6 +134,15 @@ class AuthenticateViewController: UIViewController {
             
         }
         
+    }
+    
+    @objc func copyText() {
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            let pasteboard = UIPasteboard.general
+            pasteboard.string = vc.pubkey
+            displayAlert(viewController: vc, isError: false, message: "authentication key copied to clipboard")
+        }
     }
     
     @objc func shareRawText(_ sender: UITapGestureRecognizer) {
@@ -193,7 +193,7 @@ class AuthenticateViewController: UIViewController {
                 
             }
             
-            let qrImage = vc.qrGenerator.getQRCode(textInput: vc.displayer.rawString)
+            let qrImage = vc.qrGenerator.getQRCode(textInput: vc.displayer.rawString).qr
             let objectsToShare = [qrImage]
             
             let activityController = UIActivityViewController(activityItems: objectsToShare,

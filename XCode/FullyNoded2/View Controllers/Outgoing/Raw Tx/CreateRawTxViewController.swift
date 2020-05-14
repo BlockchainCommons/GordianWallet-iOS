@@ -29,17 +29,21 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     var outputs = [Any]()
     var outputsString = ""
     var recipients = [String]()
+    let scannerButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
     
+    @IBOutlet weak var addOutlet: UIButton!
     @IBOutlet var addressInput: UITextView!
-    @IBOutlet var addOutlet: UIButton!
     @IBOutlet var amountInput: UITextField!
     @IBOutlet var amountLabel: UILabel!
     @IBOutlet var actionOutlet: UIButton!
     @IBOutlet var receivingLabel: UILabel!
     @IBOutlet var outputsTable: UITableView!
     @IBOutlet var scannerView: UIImageView!
-    @IBOutlet var qrScannerOutlet: UIBarButtonItem!
     @IBOutlet weak var availableBalance: UILabel!
+    @IBOutlet weak var createOutlet: UIButton!
+    @IBOutlet weak var feeSliderOutlet: UISlider!
+    @IBOutlet weak var blockTargetOutlet: UILabel!
+    
     
     let creatingView = ConnectingView()
     let qrScanner = QRScanner()
@@ -49,6 +53,8 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     func configureScanner() {
         
         isFirstTime = true
+        addOutlet.alpha = 0
+        createOutlet.alpha = 0
         scannerView.alpha = 0
         scannerView.frame = view.frame
         scannerView.isUserInteractionEnabled = true
@@ -94,7 +100,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     
     func updateLeftBarButton(isShowing: Bool){
         
-        let scannerButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
         scannerButton.addTarget(self, action: #selector(scanNow(_:)), for: .touchUpInside)
         scannerButton.tintColor = .white
 
@@ -197,10 +202,8 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     @IBAction func addOutput(_ sender: Any) {
-        
         outputsTable.alpha = 1
         addOut()
-        
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -254,7 +257,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             let address = outputArray[indexPath.row]["address"]!
             let amount = outputArray[indexPath.row]["amount"]!
             
-            cell.textLabel?.text = "#\(indexPath.row + 1)\nSending: \(String(describing: amount))\nTo: \(String(describing: address))"
+            cell.textLabel?.text = "Value: \(String(describing: amount))\n\n\(String(describing: address))"
             
         } else {
             
@@ -286,13 +289,30 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         addressInput.layer.borderColor = UIColor.darkGray.cgColor
         addressInput.clipsToBounds = true
         addressInput.layer.cornerRadius = 4
+        feeSliderOutlet.addTarget(self, action: #selector(setFee), for: .allEvents)
+        feeSliderOutlet.maximumValue = 2 * -1
+        feeSliderOutlet.minimumValue = 432 * -1
+        let ud = UserDefaults.standard
+        
+        if ud.object(forKey: "feeTarget") != nil {
+            
+            let numberOfBlocks = ud.object(forKey: "feeTarget") as! Int
+            feeSliderOutlet.value = Float(numberOfBlocks) * -1
+            updateFeeLabel(label: blockTargetOutlet, numberOfBlocks: numberOfBlocks)
+            
+        } else {
+            
+            blockTargetOutlet.text = "Minimum fee set"
+            feeSliderOutlet.value = 432 * -1
+            
+        }
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
+        scannerButton.tintColor = .white
         amount = ""
-        //addressInput.text = ""
         outputs.removeAll()
         outputArray.removeAll()
         outputsString = ""
@@ -325,6 +345,16 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             
         }
         
+        if amountInput.text != "" && addressInput.text != "" {
+            createOutlet.alpha = 1
+            addOutlet.alpha = 1
+            
+        } else {
+            createOutlet.alpha = 0
+            addOutlet.alpha = 0
+            
+        }
+        
     }
     
     func addTapGesture() {
@@ -340,7 +370,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     func getQRCode() {
         
         let stringURL = qrScanner.stringToReturn
-        processKeys(key: stringURL)
+        processBIP21(url: stringURL)
         
     }
     
@@ -396,8 +426,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             
             DispatchQueue.main.async { [unowned vc = self] in
                 
-                //self.addressInput.text = ""
-                //self.amountInput.text = ""
                 vc.outputs.removeAll()
                 vc.outputArray.removeAll()
                 vc.outputsString = ""
@@ -438,34 +466,28 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     @objc func tryRaw() {
-        print("tryraw")
         
-        creatingView.addConnectingView(vc: self,
-                                       description: "Creating psbt")
+        creatingView.addConnectingView(vc: self, description: "Creating psbt")
         
         if amountInput.text != "" && addressInput.text != "" && amountInput.text != "0.0" {
-              
-              let dict = ["address":addressInput.text!, "amount":amountInput.text!] as [String : String]
-              
-              outputArray.append(dict)
-              recipients.append(addressInput.text!)
-              
-              DispatchQueue.main.async { [unowned vc = self] in
-                  vc.amountInput.text = ""
-                  vc.addressInput.text = ""
-                  vc.outputsTable.reloadData()
-                  
-              }
-              
-          } else {
-              
-              displayAlert(viewController: self,
-                           isError: true,
-                           message: "You need to fill out a recipient and amount first then tap this button, this button is used for adding multiple recipients aka \"batching\".")
-              
-          }
+            let dict = ["address":addressInput.text!, "amount":amountInput.text!] as [String : String]
             
+            outputArray.append(dict)
+            recipients.append(addressInput.text!)
+            
+        }
         
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.scannerButton.tintColor = .clear
+            vc.amountInput.text = ""
+            vc.addressInput.text = ""
+            vc.scannerButton.tintColor = .clear
+            vc.createOutlet.alpha = 0
+            vc.addOutlet.alpha = 0
+            vc.outputsTable.reloadData()
+            
+        }
+            
         func convertOutputs() {
             
             for output in outputArray {
@@ -491,7 +513,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             outputsString = outputs.description
             outputsString = outputsString.replacingOccurrences(of: "[", with: "")
             outputsString = outputsString.replacingOccurrences(of: "]", with: "")
-            self.getRawTx()
+            getRawTx()
             
         }
         
@@ -525,7 +547,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     func didPickImage() {
         
         let qrString = qrScanner.qrString
-        processKeys(key: qrString)
+        processBIP21(url: qrString)
         
     }
     
@@ -615,17 +637,32 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
+    func textViewDidEndEditing(_ textView: UITextView) {
+        
+        if textView == addressInput && addressInput.text != "" {
+            
+            processBIP21(url: addressInput.text!)
+            
+        } else if textView == addressInput && addressInput.text == "" {
+            
+            shakeAlert(viewToShake: self.qrScanner.textField)
+            
+        }
+        
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
         
         textField.resignFirstResponder()
         
-        if textField == addressInput && addressInput.text != "" {
+        if addressInput.text != "" {
             
-            processKeys(key: addressInput.text!)
-            
-        } else if textField == addressInput && addressInput.text == "" {
-            
-            shakeAlert(viewToShake: self.qrScanner.textField)
+            if amountInput.text != "" && amountInput.text != "0.0" && addressInput.text != "" {
+                
+                createOutlet.alpha = 1
+                addOutlet.alpha = 1
+                
+            }
             
         }
         
@@ -651,7 +688,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     override func viewDidDisappear(_ animated: Bool) {
         
         amount = ""
-        //addressInput.text = ""
         outputs.removeAll()
         outputArray.removeAll()
         outputsString = ""
@@ -699,10 +735,17 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                         
                     }
                     
+                    if vc.amountInput.text != "" && vc.amountInput.text != "0.0" && vc.addressInput.text != "" {
+                        
+                        vc.createOutlet.alpha = 1
+                        vc.addOutlet.alpha = 1
+                        
+                    }
+                    
                 }
                 
                 vc.back()
-                
+                                
             }
             
         } else {
@@ -717,12 +760,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         case noCameraAvailable
         case videoInputInitFail
-        
-    }
-    
-    func processKeys(key: String) {
-        
-        self.processBIP21(url: key)
         
     }
     
@@ -828,7 +865,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 DispatchQueue.main.async { [unowned vc = self] in
                     
                     vc.amount = ""
-                    //vc.addressInput.text = ""
                     vc.outputArray.removeAll()
                     vc.outputsTable.reloadData()
                     vc.rawTxSigned = ""
@@ -851,28 +887,50 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     
     //MARK: Node Commands
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
+//    func textViewDidBeginEditing(_ textView: UITextView) {
+//
+//        if textView == addressInput {
+//
+//            if textView.text != "" {
+//
+//                textView.becomeFirstResponder()
+//
+//            } else {
+//
+//                if let string = UIPasteboard.general.string {
+//
+//                    textView.becomeFirstResponder()
+//                    textView.text = string
+//
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//                        textView.resignFirstResponder()
+//                    }
+//
+//                } else {
+//
+//                    textView.becomeFirstResponder()
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
-        if textView == addressInput {
+        if editingStyle == .delete {
             
-            if textView.text != "" {
+            outputArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            if outputArray.count == 0 {
+                outputsTable.alpha = 0
                 
-                textView.becomeFirstResponder()
-                
-            } else {
-                
-                if let string = UIPasteboard.general.string {
-                    
-                    textView.becomeFirstResponder()
-                    textView.text = string
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        textView.resignFirstResponder()
-                    }
-                    
-                } else {
-                    
-                    textView.becomeFirstResponder()
+                if amountInput.text == "" && addressInput.text == "" {
+                    createOutlet.alpha = 0
+                    addOutlet.alpha = 0
                     
                 }
                 
@@ -882,15 +940,60 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func updateFeeLabel(label: UILabel, numberOfBlocks: Int) {
         
-        if editingStyle == .delete {
+        let seconds = ((numberOfBlocks * 10) * 60)
+        let ud = UserDefaults.standard
+        
+        func updateFeeSetting() {
             
-            outputArray.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            ud.set(numberOfBlocks, forKey: "feeTarget")
             
         }
         
+        DispatchQueue.main.async {
+            
+            if seconds < 86400 {
+                
+                if seconds < 3600 {
+                    
+                    DispatchQueue.main.async {
+                        
+                        label.text = "\(numberOfBlocks) blocks (\(seconds / 60) minutes)"
+                        
+                    }
+                    
+                } else {
+                    
+                    DispatchQueue.main.async {
+                        
+                        label.text = "\(numberOfBlocks) blocks (\(seconds / 3600) hours)"
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                DispatchQueue.main.async {
+                    
+                    label.text = "\(numberOfBlocks) blocks (\(seconds / 86400) days)"
+                    
+                }
+                
+            }
+            
+            updateFeeSetting()
+            
+        }
+            
+    }
+    
+    @objc func setFee(_ sender: UISlider) {
+        
+        let numberOfBlocks = Int(sender.value) * -1
+        updateFeeLabel(label: blockTargetOutlet, numberOfBlocks: numberOfBlocks)
+            
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

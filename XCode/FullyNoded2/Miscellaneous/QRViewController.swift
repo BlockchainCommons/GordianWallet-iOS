@@ -52,14 +52,26 @@ class QRViewController: UIViewController, UINavigationControllerDelegate {
         tapTextViewGesture = UITapGestureRecognizer(target: self,
                                                     action: #selector(shareRawText(_:)))
         
+        displayer.copyButton.addTarget(self, action: #selector(copyText), for: .touchUpInside)
+        displayer.shareButton.addTarget(self, action: #selector(shareQRCode(_:)), for: .touchUpInside)
+        
         displayer.textView.addGestureRecognizer(tapTextViewGesture)
         displayer.textView.isSelectable = true
         
     }
     
+    @objc func copyText() {
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            let pasteboard = UIPasteboard.general
+            pasteboard.string = vc.itemToDisplay
+            displayAlert(viewController: vc, isError: false, message: "\(vc.barTitle) copied to clipboard")
+        }
+    }
+    
     @objc func shareRawText(_ sender: UITapGestureRecognizer) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
             UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                 
@@ -75,13 +87,13 @@ class QRViewController: UIViewController, UINavigationControllerDelegate {
                 
             }
                             
-            let textToShare = [self.itemToDisplay]
+            let textToShare = [vc.itemToDisplay]
             
             let activityViewController = UIActivityViewController(activityItems: textToShare,
                                                                   applicationActivities: nil)
             
-            activityViewController.popoverPresentationController?.sourceView = self.view
-            self.present(activityViewController, animated: true) {}
+            activityViewController.popoverPresentationController?.sourceView = vc.view
+            vc.present(activityViewController, animated: true) {}
             
         }
         
@@ -106,7 +118,7 @@ class QRViewController: UIViewController, UINavigationControllerDelegate {
                 
             }
             
-            let qrImage = vc.qrGenerator.getQRCode(textInput: vc.displayer.rawString)
+            let qrImage = vc.qrGenerator.getQRCode(textInput: vc.displayer.rawString).qr
             let objectsToShare = [qrImage]
             
             let activityController = UIActivityViewController(activityItems: objectsToShare,

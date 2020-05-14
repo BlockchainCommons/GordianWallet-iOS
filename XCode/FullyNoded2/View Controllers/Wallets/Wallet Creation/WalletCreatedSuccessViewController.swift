@@ -40,11 +40,11 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         
         if w.type == "MULTI" {
             
-            textView.text = "In order to recover your account there is some information you ought to save securely.\n\nYou will be presented with an \"Account Map\" QR code (the account public keys) and two 12 word seed phrases.\n\nIt is recommended you store the seed phrases in different locations, if they are stored together a thief may be able to access your funds.\n\nSaving both the \"Account Map QR\" and the two seed phrase's will ensure you can fully recover your multi-signature account if this device were to be lost or stolen."
+            textView.text = TextBlurbs.multiSigWalletCreatedSuccess()
             
         } else {
             
-            textView.text = "In order to ensure you can recover your account there is some information you ought to record securely.\n\nYou will be presented with an \"Account Map\" QR code and a 12 word seed phrase.\n\nYou should make multiple backups of each and store them securely."
+            textView.text = TextBlurbs.singleSigWalletCreatedSuccess()
             
         }
         

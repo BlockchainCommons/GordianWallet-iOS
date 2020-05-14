@@ -227,51 +227,72 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     
     func showAddress(address: String) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
             let pasteboard = UIPasteboard.general
             pasteboard.string = address
             
-            self.qrCode = self.generateQrCode(key: address)
-            self.qrView.image = self.qrCode
-            self.qrView.isUserInteractionEnabled = true
-            self.qrView.alpha = 0
-            self.qrView.frame = CGRect(x: 32, y: self.amountField.frame.maxY + 20, width: self.view.frame.width - 64, height: self.view.frame.width - 64)
-            self.view.addSubview(self.qrView)
+            vc.qrCode = vc.generateQrCode(key: address)
+            vc.qrView.image = vc.qrCode
+            vc.qrView.isUserInteractionEnabled = true
+            vc.qrView.alpha = 0
+            vc.qrView.frame = CGRect(x: 32, y: vc.amountField.frame.maxY + 20, width: vc.view.frame.width - 64, height: vc.view.frame.width - 64)
+            vc.qrView.center = vc.view.center
+            vc.view.addSubview(vc.qrView)
             
-            self.addressOutlet.frame = CGRect(x: 32, y: self.qrView.frame.maxY + 5, width: self.view.frame.width - 64, height: 20)
-            self.addressOutlet.adjustsFontSizeToFitWidth = true
-            self.addressOutlet.textAlignment = .center
-            self.view.addSubview(self.addressOutlet)
+            vc.addressOutlet.frame = CGRect(x: 32, y: vc.qrView.frame.maxY + 5, width: vc.view.frame.width - 64, height: 20)
+            vc.addressOutlet.adjustsFontSizeToFitWidth = true
+            vc.addressOutlet.textAlignment = .center
+            vc.view.addSubview(vc.addressOutlet)
             
-            self.descriptionLabel.frame = CGRect(x: 10, y: self.tabBarController!.tabBar.frame.minY - 20, width: self.view.frame.width - 20, height: 20)
+            vc.descriptionLabel.frame = CGRect(x: 10, y: vc.tabBarController!.tabBar.frame.minY - 20, width: vc.view.frame.width - 20, height: 20)
             
-            self.descriptionLabel.textAlignment = .center
+            vc.descriptionLabel.textAlignment = .center
             
-            self.descriptionLabel.font = UIFont.init(name: "HelveticaNeue-Light",
+            vc.descriptionLabel.font = UIFont.init(name: "HelveticaNeue-Light",
                                                 size: 12)
             
-            self.descriptionLabel.textColor = .lightGray
-            self.descriptionLabel.text = "Tap the QR Code or text to copy/save/share"
-            self.descriptionLabel.adjustsFontSizeToFitWidth = true
-            self.descriptionLabel.alpha = 0
-            self.view.addSubview(self.descriptionLabel)
+            vc.descriptionLabel.textColor = .lightGray
+            vc.descriptionLabel.text = "Tap the QR Code or text to copy/save/share"
+            vc.descriptionLabel.adjustsFontSizeToFitWidth = true
+            vc.descriptionLabel.alpha = 0
+            vc.view.addSubview(vc.descriptionLabel)
             
-            self.tapAddressGesture = UITapGestureRecognizer(target: self,
-                                                       action: #selector(self.shareAddressText(_:)))
+            vc.tapAddressGesture = UITapGestureRecognizer(target: vc,
+                                                       action: #selector(vc.shareAddressText(_:)))
             
-            self.addressOutlet.addGestureRecognizer(self.tapAddressGesture)
+            vc.addressOutlet.addGestureRecognizer(vc.tapAddressGesture)
             
-            self.tapQRGesture = UITapGestureRecognizer(target: self,
-                                                  action: #selector(self.shareQRCode(_:)))
+            vc.tapQRGesture = UITapGestureRecognizer(target: vc,
+                                                  action: #selector(vc.shareQRCode(_:)))
             
-            self.qrView.addGestureRecognizer(self.tapQRGesture)
+            vc.qrView.addGestureRecognizer(vc.tapQRGesture)
+            
+            let copyButton = UIButton()
+            copyButton.alpha = 0
+            let copyImage = UIImage(systemName: "doc.on.doc")!
+            copyButton.tintColor = .systemTeal
+            copyButton.setImage(copyImage, for: .normal)
+            copyButton.addTarget(vc, action: #selector(vc.copyAddress), for: .touchUpInside)
+            copyButton.frame = CGRect(x: vc.qrView.frame.maxX - 25, y: vc.qrView.frame.minY - 30, width: 25, height: 25)
+            vc.view.addSubview(copyButton)
+            
+            let shareButton = UIButton()
+            shareButton.alpha = 0
+            let shareImage = UIImage(systemName: "arrowshape.turn.up.right")!
+            shareButton.tintColor = .systemTeal
+            shareButton.setImage(shareImage, for: .normal)
+            shareButton.addTarget(vc, action: #selector(vc.shareQR), for: .touchUpInside)
+            shareButton.frame = CGRect(x: copyButton.frame.minX - 35, y: vc.qrView.frame.minY - 30, width: 25, height: 25)
+            vc.view.addSubview(shareButton)
             
             UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
                 
                 vc.descriptionLabel.alpha = 1
                 vc.qrView.alpha = 1
                 vc.addressOutlet.alpha = 1
+                copyButton.alpha = 1
+                shareButton.alpha = 1
                 
             }) { [unowned vc = self] _ in
                 
@@ -282,6 +303,14 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             
         }
         
+    }
+    
+    @objc func copyAddress() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let pasteboard = UIPasteboard.general
+            pasteboard.string = vc.addressString
+            displayAlert(viewController: vc, isError: false, message: "address copied to clipboard")
+        }
     }
     
     func addCopiedLabel() {
@@ -354,7 +383,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    @objc func shareQRCode(_ sender: UITapGestureRecognizer) {
+    @objc func shareQR() {
         
         UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
             
@@ -377,6 +406,12 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             }
             
         }
+        
+    }
+    
+    @objc func shareQRCode(_ sender: UITapGestureRecognizer) {
+        
+        shareQR()
         
     }
     

@@ -32,16 +32,7 @@ class HowToUseFN2ViewController: UIViewController, UITextViewDelegate, UINavigat
         titleLabel.adjustsFontSizeToFitWidth = true
         textView.delegate = self
         
-        textView.text = """
-        Ready to get started?
-
-        Connect to your node by scanning the QuickConnect QR code that your node software produces. The app will then do all the hard work for you. Supported node software includes StandUp.app (MacOS), BTCPay, MyNode, RaspiBlitz, and Nodl with more to come!
-
-        Once FullyNoded 2 connected, using it is straightforward:
-
-        * To create a Bitcoin invoice just tap the "In" button.
-        * To spend Bitcoin just tap the "Out" button.
-        """
+        textView.text = TextBlurbs.howToUseFN2Text()
         
         textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["StandUp.app": standupAppLink, "StandUp.sh scripts": scriptLink, "MyNode": myNodeLink, "RaspiBlitz": raspiBlitzLink, "Nodl": nodlLink, "BTCPay": btcpayLink, "QuickConnect QR": quickConnectLink])
     }

@@ -424,7 +424,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let balanceLabel = cell.viewWithTag(1) as! UILabel
         let walletToolsButton = cell.viewWithTag(3) as! UIButton
         let refreshButton = cell.viewWithTag(9) as! UIButton
-        let derivationLabel = cell.viewWithTag(11) as! UILabel
+        //let derivationLabel = cell.viewWithTag(11) as! UILabel
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
         let shareSeedButton = cell.viewWithTag(16) as! UIButton
@@ -506,19 +506,19 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
                     
-        if derivation.contains("84") {
-            
-            derivationLabel.text = "BIP84"
-            
-        } else if derivation.contains("44") {
-            
-            derivationLabel.text = "BIP44"
-            
-        } else if derivation.contains("49") {
-            
-            derivationLabel.text = "BIP49"
-            
-        }
+//        if derivation.contains("84") {
+//
+//            derivationLabel.text = "BIP84"
+//
+//        } else if derivation.contains("44") {
+//
+//            derivationLabel.text = "BIP44"
+//
+//        } else if derivation.contains("49") {
+//
+//            derivationLabel.text = "BIP49"
+//
+//        }
         
         if wallet.knownSigners == 1 {
             
@@ -576,11 +576,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let balanceLabel = cell.viewWithTag(1) as! UILabel
         let walletToolsButton = cell.viewWithTag(3) as! UIButton
-        let bipImage = cell.viewWithTag(10) as! UIButton
-        let derivationLabel = cell.viewWithTag(11) as! UILabel
+        //let bipImage = cell.viewWithTag(10) as! UIButton
+        //let derivationLabel = cell.viewWithTag(11) as! UILabel
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
-        let shareSeedButton = cell.viewWithTag(16) as! UIButton
+        //let shareSeedButton = cell.viewWithTag(16) as! UIButton
         let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
         let walletFileLabel = cell.viewWithTag(20) as! UILabel
         let seedOnDeviceView = cell.viewWithTag(21)!
@@ -629,10 +629,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.contentView.alpha = 1
             bannerView.backgroundColor = #colorLiteral(red: 0, green: 0.1631944358, blue: 0.3383367703, alpha: 1)
             refreshButton.addTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
-            shareSeedButton.addTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
+            //shareSeedButton.addTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             walletToolsButton.addTarget(self, action: #selector(walletTools(_:)), for: .touchUpInside)
             refreshButton.alpha = 1
-            shareSeedButton.alpha = 1
+            //shareSeedButton.alpha = 1
             walletToolsButton.alpha = 1
             
         } else if !wallet.isActive {
@@ -640,15 +640,15 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.contentView.alpha = 0.6
             bannerView.backgroundColor = #colorLiteral(red: 0.1051254794, green: 0.1292803288, blue: 0.1418488324, alpha: 1)
             refreshButton.removeTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
-            shareSeedButton.removeTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
+            //shareSeedButton.removeTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             walletToolsButton.removeTarget(self, action: #selector(walletTools(_:)), for: .touchUpInside)
             refreshButton.alpha = 0
-            shareSeedButton.alpha = 0
+            //shareSeedButton.alpha = 0
             walletToolsButton.alpha = 0
             
         }
         
-        shareSeedButton.restorationIdentifier = "\(indexPath.section)"
+        //shareSeedButton.restorationIdentifier = "\(indexPath.section)"
         walletToolsButton.restorationIdentifier = "\(indexPath.section)"
         
         nodeView.layer.cornerRadius = 8
@@ -669,31 +669,31 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        if derivation.contains("84") {
-            
-            derivationLabel.text = "BIP84"
-            derivationLabel.alpha = 1
-            bipImage.alpha = 1
-            
-        } else if derivation.contains("44") {
-            
-            derivationLabel.text = "BIP44"
-            derivationLabel.alpha = 1
-            bipImage.alpha = 1
-            
-        } else if derivation.contains("49") {
-            
-            derivationLabel.text = "BIP49"
-            derivationLabel.alpha = 1
-            bipImage.alpha = 1
-            
-        } else if derivation.contains("48") {
-            
-            derivationLabel.text = "WIP48"
-            derivationLabel.alpha = 1
-            bipImage.alpha = 1
-            
-        }
+//        if derivation.contains("84") {
+//            
+//            derivationLabel.text = "BIP84"
+//            derivationLabel.alpha = 1
+//            bipImage.alpha = 1
+//            
+//        } else if derivation.contains("44") {
+//            
+//            derivationLabel.text = "BIP44"
+//            derivationLabel.alpha = 1
+//            bipImage.alpha = 1
+//            
+//        } else if derivation.contains("49") {
+//            
+//            derivationLabel.text = "BIP49"
+//            derivationLabel.alpha = 1
+//            bipImage.alpha = 1
+//            
+//        } else if derivation.contains("48") {
+//            
+//            derivationLabel.text = "WIP48"
+//            derivationLabel.alpha = 1
+//            bipImage.alpha = 1
+//            
+//        }
                 
         if wallet.knownSigners == str.sigsRequired {
             
@@ -822,23 +822,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
     }
     
-    @objc func makeActive(_ sender: UIButton) {
-        
-        let index = Int(sender.restorationIdentifier!)!
-        let wallet = WalletStruct(dictionary: self.sortedWallets[index])
-        
-        if !wallet.isActive {
-            
-            activateNow(wallet: wallet, index: index)
-            
-        } else {
-            
-            deactivateNow(wallet: wallet, index: index)
-            
-        }
-        
-    }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if sortedWallets.count > 0 {
@@ -945,11 +928,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if !isLoading {
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [unowned vc = self] in
                 
-                let w = WalletStruct(dictionary: self.sortedWallets[sender.tag])
-                self.wallet = w
-                self.performSegue(withIdentifier: "goToTools", sender: self)
+                let index = Int(sender.restorationIdentifier!)!
+                let w = WalletStruct(dictionary: vc.sortedWallets[index])
+                vc.wallet = w
+                vc.performSegue(withIdentifier: "goToTools", sender: vc)
                 
             }
             
@@ -995,7 +979,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             vc.isLoading = false
                             
                         }
-                        
                         
                     }
                     
@@ -1049,7 +1032,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                         DispatchQueue.main.async {
                             
-                            //vc.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
                             vc.walletTable.reloadData()
                             vc.isLoading = false
                             vc.creatingView.removeConnectingView()
@@ -1121,70 +1103,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { [unowned vc = self] _ in
                 
                 vc.activate(walletToActivate: wallet.id!, index: index)
-                //vc.reloadIndividualSection(index: index)
-                
-            }
-            
-            // update the views
-//            for (i, _) in sortedWallets.enumerated() {
-//
-//                if index == i {
-//
-//                    // wallet to activate
-//                    self.sortedWallets[i]["lastUsed"]  = Date()
-//                    self.sortedWallets[i]["isActive"] = true
-//
-//                } else {
-//
-//                    self.sortedWallets[i]["isActive"] = false
-//
-//                }
-//
-//                if i + 1 == sortedWallets.count {
-//
-//                    // update the actual data
-//                    CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { [unowned vc = self] _ in
-//
-//                        vc.activate(walletToActivate: wallet.id!, index: index)
-//                        vc.reloadIndividualSection(index: index)
-//
-//                    }
-//
-////                    DispatchQueue.main.async { [unowned vc = self] in
-////
-////                        vc.walletTable.reloadSections(IndexSet(arrayLiteral: index), with: .fade)
-////
-////                    }
-//
-//               }
-                
-  //          }
-            
-        }
-        
-    }
-    
-    func deactivateNow(wallet: WalletStruct, index: Int) {
-        
-        if wallet.isActive {
-            
-            // update the views
-            for (i, _) in sortedWallets.enumerated() {
-                
-                if index == i {
-                    
-                    // wallet to deactivate
-                    self.sortedWallets[i]["isActive"] = false
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.walletTable.reloadSections(IndexSet(arrayLiteral: i), with: .fade)
-                                            
-                    }
-                    
-                    CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
-                    
-                }
                 
             }
             
@@ -1239,16 +1157,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 CoreDataService.updateEntity(id: str.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { [unowned vc = self] (success, errorDesc) in
                     
-                    if success {
-                        
-                        if i + 1 == vc.sortedWallets.count {
-                            
-                            vc.fullRefresh = false
-                            vc.refresh()
-                                                        
-                        }
-                        
-                    } else {
+                    if !success {
                         
                         displayAlert(viewController: vc, isError: true, message: "error deactivating account")
                         
@@ -1256,6 +1165,13 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                 }
                 
+            }
+            
+            if i + 1 == sortedWallets.count {
+                
+                fullRefresh = false
+                refresh()
+                                            
             }
             
         }

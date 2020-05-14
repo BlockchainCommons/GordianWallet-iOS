@@ -125,7 +125,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBAction func uploadFile(_ sender: Any) {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Upload a file?", message: "This button allows you to upload files via the iOS Files app. Currently we support psbt data files that comply with BIP174 and the Coldcard specific \"generic wallet export\" (single sig import) and \"multisig xpub export\".", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Upload a file?", message: TextBlurbs.uploadAFileMessage(), preferredStyle: .actionSheet)
 
             alert.addAction(UIAlertAction(title: "Upload", style: .default, handler: { [unowned vc = self] action in
                 
@@ -169,7 +169,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         }
                         
                         DispatchQueue.main.async { [unowned vc = self] in
-                            let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: "You can choose either Native Segwit (BIP84, bech32 - bc1), Nested Segwit (BIP49, 3) or legacy (BIP44, 1) address types.", preferredStyle: .actionSheet)
+                            let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: TextBlurbs.chooseColdcardDerivationToImport(), preferredStyle: .actionSheet)
                             
                             alert.addAction(UIAlertAction(title: "Native Segwit (BIP84, bc1)", style: .default, handler: { action in
                                 vc.connectingView.addConnectingView(vc: vc, description: "importing...")
@@ -286,7 +286,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 } catch {
                     
                     DispatchQueue.main.async { [unowned vc = self] in
-                        let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sing it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: .actionSheet)
+                        let alert = UIAlertController(title: "Sign PSBT?", message: TextBlurbs.signPsbtMessage(), preferredStyle: .actionSheet)
                         
                         alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
                             vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
@@ -527,7 +527,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
             if self.wallet.type == "MULTI" {
                 
-                message = "Your node only has \(self.wallet.maxRange - self.wallet.index) more keys left to sign with. In order for your node to be able to continue signing transactions you need to refill the keypool, you will need your offline recovery words."
+                message = TextBlurbs.refillMultiSigWarningMessage(keysRemainging: self.wallet.maxRange - self.wallet.index)
                 
                 alertAction = {
                     
@@ -541,7 +541,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                message = "Your node only has \(self.wallet.maxRange - self.wallet.index) more public keys. We need to import more public keys into your node at this point to ensure your node is able to verify this wallets balances and build psbt's for us."
+                message = TextBlurbs.refillSingleSigWarningMessage(keysRemainging: self.wallet.maxRange - self.wallet.index)
                 
                 alertAction = { [unowned vc = self] in
                     
@@ -738,14 +738,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         coldBalanceLabel.adjustsFontSizeToFitWidth = true
-        
-        if !str.isMulti {
-            
-            
-        } else {
-            
-            
-        }
         
         if str.isMulti {
             walletTypeLabel.text = "\(str.mOfNType) Multi Signature"
@@ -1135,7 +1127,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             labelLabel.textColor = .systemGray
             dateLabel.textColor = .systemGray
             changeImage.image = UIImage(systemName: "arrow.up.right")
-            changeImage.tintColor = .darkGray
+            changeImage.tintColor = .systemRed
             
         } else {
             
@@ -1144,7 +1136,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             labelLabel.textColor = .systemGray
             dateLabel.textColor = .systemGray
             changeImage.image = UIImage(systemName: "arrow.down.left")
-            changeImage.tintColor = .lightGray
+            changeImage.tintColor = .systemGreen
                                 
         }
         

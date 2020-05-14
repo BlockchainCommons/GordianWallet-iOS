@@ -75,7 +75,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
                             }
                             
                         } else {
-                            showAlert(vc: self, title: "Invalid xpub!", message: "That is not a valid xpub or tpub. FullyNoded 2 is powered by Bitcoin Core which is only compatible with xpub's and tpub's. You will need to use this tool to convert other types of extended keys to xpubs/tpubs: https://jlopp.github.io/xpub-converter/")
+                            showAlert(vc: self, title: "Invalid xpub!", message: TextBlurbs.invalidXpubWarning())
                             
                         }
                     }
@@ -93,7 +93,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
                     }
                     
                 } else {
-                    showAlert(vc: self, title: "Only xpubs allowed here", message: "This option is only for creating watch-only wallets with user supplied xpub's. If you would like to supply a seed tap the \"add BIP39 words\" button below.")
+                    showAlert(vc: self, title: "Only xpubs allowed here", message: TextBlurbs.onlyXpubsHereWarning())
                     
                 }
             }
@@ -162,34 +162,22 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
                         }
                         
                     } else {
-                        showAlert(vc: self, title: "Invalid path", message: "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
+                        showAlert(vc: self, title: "Invalid path", message: TextBlurbs.invalidPathWarning())
                         
                     }
                     
                 } else {
-                   showAlert(vc: self, title: "Invalid xpub", message: "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
+                    showAlert(vc: self, title: "Invalid xpub", message: TextBlurbs.invalidXpubWithPathWarning())
                     
                 }
                 
             default:
-                showAlert(vc: self, title: "Invalid path", message: "FullyNoded 2 only accepts BIP48 aka WIP48 derivation scheme for importing multisig wallets with xpubs only for now.")
+                showAlert(vc: self, title: "Unsupported path", message: TextBlurbs.unsupportedMultiSigPath())
                 
             }
             
-//            if xpub.contains("/48'/1'/0'/2'") || xpub.contains("/48'/0'/0'/2'") {
-//                prefix = "wsh(sortedmulti(\(requiredSigs),"
-//
-//
-//            } else if xpub.contains("/48'/1'/0'/1'") || xpub.contains("/48'/0'/0'/1'") {
-//                prefix = "sh(sortedmulti(\(requiredSigs),"
-//
-//            } else if xpub.contains("/48'/1'/0'/3'") || xpub.contains("/48'/0'/0'/3'") {
-//                prefix = "sh(wsh(sortedmulti(\(requiredSigs),"
-//
-//            }
-            
         } else {
-            showAlert(vc: self, title: "Invalid recovery format", message: "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4...")
+            showAlert(vc: self, title: "Invalid recovery format", message: TextBlurbs.invalidRecoveryFormat())
             
         }
         

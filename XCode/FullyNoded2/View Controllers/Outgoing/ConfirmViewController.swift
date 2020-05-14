@@ -728,13 +728,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     
     func loadTableData() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.confirmTable.reloadData()
+            vc.confirmTable.reloadData()
             
         }
         
-        self.creatingView.removeConnectingView()
+        creatingView.removeConnectingView()
     }
     
     func parsePrevTx(method: BTC_CLI_COMMAND, param: String, vout: Int) {
@@ -815,7 +815,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     
     func numberOfSections(in tableView: UITableView) -> Int {
         
-        return 3
+        return 4
         
     }
     
@@ -831,7 +831,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
             return outputArray.count
             
-        case 2:
+        case 2, 3:
             
             return 1
             
@@ -851,7 +851,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
             return 78
             
-        case 2:
+        case 2, 3:
             
             return 44
             
@@ -878,7 +878,6 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             } else {
                 
                 
-                
             }
             
             let inputIndexLabel = inputCell.viewWithTag(1) as! UILabel
@@ -890,6 +889,9 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             inputAddressLabel.text = (input["address"] as! String)
             inputAddressLabel.adjustsFontSizeToFitWidth = true
             inputCell.selectionStyle = .none
+            inputIndexLabel.textColor = .lightGray
+            inputAmountLabel.textColor = .lightGray
+            inputAddressLabel.textColor = .lightGray
             return inputCell
             
         case 1:
@@ -920,9 +922,9 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             } else {
                 
-                outputAddressLabel.textColor = .white
-                outputAmountLabel.textColor = .white
-                outputIndexLabel.textColor = .white
+                outputAddressLabel.textColor = .lightGray
+                outputAmountLabel.textColor = .lightGray
+                outputIndexLabel.textColor = .lightGray
                 changeLabel.alpha = 0
                 
             }
@@ -947,13 +949,55 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             let miningLabel = miningFeeCell.viewWithTag(1) as! UILabel
             miningLabel.text = self.miningFee
             miningFeeCell.selectionStyle = .none
+            miningLabel.textColor = .lightGray
             return miningFeeCell
+            
+        case 3:
+            
+            let etaCell = tableView.dequeueReusableCell(withIdentifier: "miningFeeCell", for: indexPath)
+            
+            if unsignedPsbt != "" {
+            
+                etaCell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
+                
+            }
+            
+            let etaLabel = etaCell.viewWithTag(1) as! UILabel
+            etaLabel.text = eta()
+            etaLabel.textColor = .lightGray
+            etaCell.selectionStyle = .none
+            return etaCell
             
         default:
             
             return UITableViewCell()
             
         }
+        
+    }
+    
+    private func eta() -> String {
+        var eta = ""
+        let ud = UserDefaults.standard
+        let numberOfBlocks = ud.object(forKey: "feeTarget") as? Int ?? 432
+        let seconds = ((numberOfBlocks * 10) * 60)
+        
+        if seconds < 86400 {
+            
+            if seconds < 3600 {
+                eta = "\(seconds / 60) minutes"
+                
+            } else {
+                eta = "\(seconds / 3600) hours"
+                
+            }
+            
+        } else {
+            eta = "\(seconds / 86400) days"
+            
+        }
+        
+        return eta
         
     }
     
@@ -967,7 +1011,9 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         case 1:
             sectionString = "Outputs"
         case 2:
-            sectionString = "Mining Fee"
+            sectionString = "Mining fee"
+        case 3:
+            sectionString = "Estimated time to confirmation"
         default:
             break
         }
@@ -981,7 +1027,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         (view as! UITableViewHeaderFooterView).backgroundView?.backgroundColor = UIColor.clear
         (view as! UITableViewHeaderFooterView).textLabel?.textAlignment = .left
         (view as! UITableViewHeaderFooterView).textLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
-        (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.white
+        (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.lightGray
         (view as! UITableViewHeaderFooterView).textLabel?.alpha = 1
         
     }

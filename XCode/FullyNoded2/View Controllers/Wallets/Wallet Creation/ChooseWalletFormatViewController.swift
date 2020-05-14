@@ -131,7 +131,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func hotInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Hot self sovereign single signature account", message: " A master seed is held by your device and your node holds a watch-only key set. This is a live account meaning you can spend from it at anytime from your device.", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Hot self sovereign single signature account", message: TextBlurbs.hotWalletInfo(), preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -139,7 +139,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func warmInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Warm self sovereign 2 of 3 multi signature account", message: "One master seed is held by your device, the other two are held offline by you. We derive and import a key set into your node from one of your offline master seeds so that your node can be the second signer for this account. This adds a layer of security and redundancy in case you lost your node, device or offline seed storage. This a warm account as neither your device or your node can spend independently. In order to spend from this account your device will need to be connected to your node!", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Warm self sovereign 2 of 3 multi signature account", message: TextBlurbs.warmWalletInfo(), preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -147,7 +147,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func coolWalletInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Cool self sovereign 2 of 3 multi signature account", message: "You will need to supply an xpub which will represent the devices master key. We will create two offline master seeds for you to backup, they will NOT be saved by the device. One of these master seeds will be used to derive a key set and import it into your node so that your node can be a single signer. Cool accounts are not capable of spending on their own! Cool accounts will build unsigned transactions and allow you to export them as PSBT's to other devices for signing. This is an ideal account type for collaborative multisig. You will always have the option to convert it to a warm account by adding a master seed in the form of BIP39 words to it.", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Cool self sovereign 2 of 3 multi signature account", message: TextBlurbs.coolWalletInfo(), preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -155,7 +155,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func coldWalletInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Cold self sovereign single signature account", message: "Cold accounts are single signature accounts where you will supply a master key xpub which is held by the device. The account will be purely watch-only and you will not be able to spend from it with this device. It will create unsigned transactions that can be exported to offline signers as PSBT's. You will always have the option to make it hot by adding a master seed to it in the form of BIP39 words.", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Cold self sovereign single signature account", message: TextBlurbs.coldWalletInfo(), preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -299,7 +299,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
         if customSeedSwitch.isOn {
             
-            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: "This feature allows you to add your own BIP39 mnemonic as the device's master seed for the account you are about to create. This feature is only applicable to Hot and Warm accounts.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: TextBlurbs.customSeedInfo(), preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
             alert.popoverPresentationController?.sourceView = self.view
             self.present(alert, animated: true, completion: nil)
@@ -1175,7 +1175,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     cv.removeConnectingView()
                     DispatchQueue.main.async { [unowned vc = self] in
                         
-                        let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: "You can choose either Native Segwit (BIP84, bech32 - bc1), Nested Segwit (BIP49, 3) or legacy (BIP44, 1) address types.", preferredStyle: .actionSheet)
+                        let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: TextBlurbs.chooseColdcardDerivationToImport(), preferredStyle: .actionSheet)
                         
                         alert.addAction(UIAlertAction(title: "Native Segwit (BIP84, bc1)", style: .default, handler: { action in
                             cv.addConnectingView(vc: vc, description: "importing...")

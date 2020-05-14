@@ -54,7 +54,7 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
             
             if self.w.type == "MULTI" {
                 
-                message = "Once you tap \"Yes, I saved them\" the backup words will be gone forever! If you tap \"Oops, I forgot\" we will show them to you again so you may save them."
+                message = TextBlurbs.warnSeedWordsWillDisappear()
                 
             } else {
                 

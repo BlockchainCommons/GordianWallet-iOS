@@ -30,44 +30,16 @@ class WalletCreatedWordsViewController: UIViewController, UINavigationController
         if w.type == "MULTI" {
             
             if isColdcard {
-                textView.text = """
-                On the next two screens we will display two master seeds.
-
-                You *MUST* save them seperately from each other! *THEY ARE REQUIRED* to fully recover a multi-signature account.
-                
-                The first seed represents your offline seed, and is only needed if you ever lose your Coldcard or this device. These words **WILL BE DELETED FOREVER** from this device once you tap the "I saved them" button!
-                
-                The second master seed is your device's seed words, these words will be needed to fully recover this multi-sig wallet if you lose your Coldcard seed or backup seed.
-                
-                At a minimum we recommend writing these words down on water proof paper with a permanent marker, ideally engrave them on titanium if you are going to store larger amounts.
-                """
+                textView.text = TextBlurbs.coldCardMultiSigCreatedSeedWarning()
                 
             } else {
-                textView.text = """
-                On the next two screens we will display two master seeds.
-
-                You *MUST* save them seperately from each other! *THEY ARE REQUIRED* to fully recover a multi-signature account.
-                
-                The first one represents your nodes master seed, it is important to note your node does not hold this seed, it only holds a key set that is derived from this seed. If you lose your node you will want to be able to use these words to recover your nodes private keys.
-                
-                The second master seed is your offline seed words, these words will be needed to fully recover this multi-sig wallet.
-                
-                These words **WILL BE DELETED FOREVER** from this device once you tap the "I saved them" button!
-
-                At a minimum we recommend writing these words down on water proof paper with a permanent marker, ideally engrave them on titanium if you are going to store larger amounts.
-                """
+                textView.text = TextBlurbs.multiSigCreatedSeedWarning()
                 
             }
             
         } else {
             
-            textView.text = """
-            On the next screen we will display your devices seed as a 12 word BIP39 mnemonic.
-
-            You should write these 12 words down and save them as they are REQUIRED to recover this account!
-            
-            At a minimum we recommend writing these words down on water proof paper with a permanent marker.
-            """
+            textView.text = TextBlurbs.singleSigCreatedSeedWarning()
             
         }
         
