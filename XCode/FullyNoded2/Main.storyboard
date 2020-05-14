@@ -1843,11 +1843,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tBq-5k-T1U">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0zB-Cx-vSF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                         </subviews>
@@ -5090,12 +5090,12 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gC1-hS-rHa">
-                                <rect key="frame" x="285" y="570" width="74" height="30"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gC1-hS-rHa">
+                                <rect key="frame" x="16" y="521" width="343" height="38"/>
+                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Cx2-wB-uV1"/>
-                                    <constraint firstAttribute="width" constant="74" id="yNh-VM-a1V"/>
+                                    <constraint firstAttribute="height" constant="38" id="Cx2-wB-uV1"/>
+                                    <constraint firstAttribute="width" constant="343" id="yNh-VM-a1V"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Recover">
@@ -5105,11 +5105,12 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                     <action selector="recoverAction:" destination="20O-ZD-xtI" eventType="touchUpInside" id="WQg-uv-Eer"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HOc-9d-jGc">
-                                <rect key="frame" x="16" y="570" width="73" height="30"/>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HOc-9d-jGc">
+                                <rect key="frame" x="16" y="567" width="343" height="38"/>
+                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="73" id="C56-lT-mcE"/>
-                                    <constraint firstAttribute="height" constant="30" id="dxF-4o-waP"/>
+                                    <constraint firstAttribute="width" constant="343" id="C56-lT-mcE"/>
+                                    <constraint firstAttribute="height" constant="38" id="dxF-4o-waP"/>
                                 </constraints>
                                 <state key="normal" title="Import">
                                     <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -5125,19 +5126,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qRS-Sq-Mau">
-                                <rect key="frame" x="163" y="546" width="51" height="31"/>
-                                <color key="onTintColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <action selector="switchCustomSeedAction:" destination="20O-ZD-xtI" eventType="valueChanged" id="l60-xI-Tgd"/>
-                                </connections>
-                            </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="custom seed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qpe-22-gpY">
-                                <rect key="frame" x="151.5" y="585" width="72.5" height="15"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OpB-Tc-o3m">
@@ -5244,13 +5232,27 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                     <action selector="coldWalletInfo:" destination="20O-ZD-xtI" eventType="touchUpInside" id="iMx-gL-YdL"/>
                                 </connections>
                             </button>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qRS-Sq-Mau">
+                                <rect key="frame" x="163" y="459" width="51" height="31"/>
+                                <color key="onTintColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="switchCustomSeedAction:" destination="20O-ZD-xtI" eventType="valueChanged" id="l60-xI-Tgd"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="custom seed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qpe-22-gpY">
+                                <rect key="frame" x="151.5" y="498" width="72.5" height="15"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="qRS-Sq-Mau" firstAttribute="centerX" secondItem="3Xx-cw-zsB" secondAttribute="centerX" id="0SL-0z-ZJF"/>
                             <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="AIf-WJ-xQ6" secondAttribute="trailing" constant="8" id="21q-8t-b3i"/>
+                            <constraint firstItem="HOc-9d-jGc" firstAttribute="top" secondItem="gC1-hS-rHa" secondAttribute="bottom" constant="8" id="2MV-zX-LT2"/>
                             <constraint firstItem="M87-IP-UcZ" firstAttribute="centerY" secondItem="y7A-9S-zfU" secondAttribute="centerY" constant="-1" id="6yK-Be-MGC"/>
-                            <constraint firstItem="wnf-aC-02D" firstAttribute="bottom" secondItem="HOc-9d-jGc" secondAttribute="bottom" constant="18" id="9i3-J4-nGb"/>
+                            <constraint firstItem="gC1-hS-rHa" firstAttribute="top" secondItem="qpe-22-gpY" secondAttribute="bottom" constant="8" id="BBU-gT-Xm1"/>
                             <constraint firstItem="dY0-2e-ZjJ" firstAttribute="top" secondItem="wnf-aC-02D" secondAttribute="top" id="Csn-yO-Jtg"/>
                             <constraint firstItem="OpB-Tc-o3m" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="DXY-oy-mgW"/>
                             <constraint firstItem="PPi-hJ-Vod" firstAttribute="centerY" secondItem="OpB-Tc-o3m" secondAttribute="centerY" id="Fh0-Qx-AQg"/>
@@ -5264,13 +5266,14 @@ At a minimum we recommend writing these words down on water proof paper with a p
                             <constraint firstItem="M87-IP-UcZ" firstAttribute="leading" secondItem="y7A-9S-zfU" secondAttribute="trailing" constant="12" id="WDk-m7-8Rk"/>
                             <constraint firstItem="AIf-WJ-xQ6" firstAttribute="leading" secondItem="Xeb-bL-FUE" secondAttribute="trailing" constant="12" id="Xvg-wR-tSw"/>
                             <constraint firstItem="Xeb-bL-FUE" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="aj8-OA-jdE"/>
+                            <constraint firstItem="wnf-aC-02D" firstAttribute="bottom" secondItem="HOc-9d-jGc" secondAttribute="bottom" constant="13" id="bAX-L7-r9t"/>
                             <constraint firstItem="y7A-9S-zfU" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="bZq-mf-15r"/>
                             <constraint firstItem="BhR-Vr-Wo2" firstAttribute="leading" secondItem="Ewt-c9-x2S" secondAttribute="trailing" constant="12" id="cag-jz-T2F"/>
                             <constraint firstItem="AIf-WJ-xQ6" firstAttribute="centerY" secondItem="Xeb-bL-FUE" secondAttribute="centerY" constant="-1" id="fQQ-Gu-Jrr"/>
+                            <constraint firstItem="gC1-hS-rHa" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="gFl-Zb-wA0"/>
                             <constraint firstItem="BhR-Vr-Wo2" firstAttribute="centerY" secondItem="Ewt-c9-x2S" secondAttribute="centerY" constant="-1" id="hEP-H4-It2"/>
                             <constraint firstItem="HOc-9d-jGc" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="iFj-2w-t9u"/>
-                            <constraint firstItem="wnf-aC-02D" firstAttribute="bottom" secondItem="qpe-22-gpY" secondAttribute="bottom" constant="18" id="iTb-Kw-yqX"/>
-                            <constraint firstItem="wnf-aC-02D" firstAttribute="bottom" secondItem="gC1-hS-rHa" secondAttribute="bottom" constant="18" id="kwf-VC-bVS"/>
+                            <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="HOc-9d-jGc" secondAttribute="trailing" constant="16" id="jaC-2F-7xc"/>
                             <constraint firstItem="y7A-9S-zfU" firstAttribute="top" secondItem="Ewt-c9-x2S" secondAttribute="bottom" constant="16" id="our-Gy-R4q"/>
                             <constraint firstItem="wnf-aC-02D" firstAttribute="trailing" secondItem="M87-IP-UcZ" secondAttribute="trailing" constant="8" id="p2Y-iV-eQr"/>
                             <constraint firstItem="Ewt-c9-x2S" firstAttribute="leading" secondItem="wnf-aC-02D" secondAttribute="leading" constant="16" id="q6l-6Q-Cl9"/>
@@ -5290,6 +5293,8 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <outlet property="customSeedLabel" destination="qpe-22-gpY" id="9ql-Dx-o9Y"/>
                         <outlet property="customSeedSwitch" destination="qRS-Sq-Mau" id="lZS-rL-cet"/>
                         <outlet property="hotWalletOutlet" destination="OpB-Tc-o3m" id="AYQ-Vi-hZf"/>
+                        <outlet property="importOutlet" destination="HOc-9d-jGc" id="IQo-v3-5jL"/>
+                        <outlet property="recoverOutlet" destination="gC1-hS-rHa" id="eiH-dg-OUJ"/>
                         <outlet property="recoverWalletOutlet" destination="gC1-hS-rHa" id="Ovm-pY-q00"/>
                         <outlet property="warmWalletOutlet" destination="Ewt-c9-x2S" id="LPK-tM-ha2"/>
                         <segue destination="Elr-wf-cyI" kind="show" identifier="goRecover" id="OhX-6s-iKf"/>
@@ -5704,12 +5709,12 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="pun-AW-DGw"/>
         <segue reference="Kzq-6W-yKR"/>
         <segue reference="fnD-hd-014"/>
-        <segue reference="tvy-tG-Sod"/>
+        <segue reference="ugm-aB-vA9"/>
         <segue reference="NHy-Xu-LiC"/>
         <segue reference="c5y-jb-z8M"/>
-        <segue reference="MTV-lr-E4R"/>
+        <segue reference="hLe-Va-ofG"/>
         <segue reference="Xe1-Me-c8c"/>
-        <segue reference="LzA-tD-DJD"/>
+        <segue reference="dma-qk-Nos"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

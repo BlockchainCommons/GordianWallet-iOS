@@ -49,6 +49,9 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     @IBOutlet weak var customSeedLabel: UILabel!
     @IBOutlet weak var coolInfoOutlet: UIButton!
     @IBOutlet weak var coldInfoOutlet: UIButton!
+    @IBOutlet weak var recoverOutlet: UIButton!
+    @IBOutlet weak var importOutlet: UIButton!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,6 +59,8 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         showAdvanced = false
         navigationController?.delegate = self
         recoverWalletOutlet.layer.cornerRadius = 10
+        recoverOutlet.layer.cornerRadius = 8
+        importOutlet.layer.cornerRadius = 8
         hotWalletOutlet.layer.cornerRadius = 8
         warmWalletOutlet.layer.cornerRadius = 8
         coolWalletOutlet.layer.cornerRadius = 8
