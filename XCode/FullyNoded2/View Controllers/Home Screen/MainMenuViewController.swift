@@ -125,7 +125,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBAction func uploadFile(_ sender: Any) {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Upload a Coldcard file?", message: "This button allows you to upload files exported from your Coldcard via the Files app. We support the \"generic wallet export\" (single sig import), \"multisig xpub export\" (2 of 3 collaborative multisig with Coldcard) and .psbt files so you can sign PSBT's from your Coldcard.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Upload a file?", message: "This button allows you to upload files via the iOS Files app. Currently we support psbt data files that comply with BIP174 and the Coldcard specific \"generic wallet export\" (single sig import) and \"multisig xpub export\".", preferredStyle: .actionSheet)
 
             alert.addAction(UIAlertAction(title: "Upload", style: .default, handler: { [unowned vc = self] action in
                 
