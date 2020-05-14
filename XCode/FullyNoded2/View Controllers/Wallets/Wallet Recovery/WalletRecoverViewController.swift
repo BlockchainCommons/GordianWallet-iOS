@@ -17,12 +17,18 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     var walletName = ""
     var recoveryDict = [String:Any]()
     var onQrDoneBlock: ((Bool) -> Void)?
+    
+    
+    @IBOutlet weak var seedWordsOutlet: UIButton!
+    @IBOutlet weak var xpubsOutlet: UIButton!
     @IBOutlet var scanButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         scanButton.layer.cornerRadius = 8
+        seedWordsOutlet.layer.cornerRadius = 8
+        xpubsOutlet.layer.cornerRadius = 8
         
     }
     
@@ -501,23 +507,6 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                 vc.walletNameHash = walletName
                 vc.walletDict = recoveryDict
                 vc.isImporting = true
-//                vc.confirmedDoneBlock = { [unowned thisVc = self] result in
-//                    
-//                    if result {
-//                        
-//                        thisVc.recover(dict: thisVc.recoveryDict)
-//                        
-//                    } else {
-//                        
-//                        DispatchQueue.main.async {
-//                            
-//                            thisVc.dismiss(animated: true, completion: nil)
-//                            
-//                        }
-//                        
-//                    }
-//                    
-//                }
                 
             }
             

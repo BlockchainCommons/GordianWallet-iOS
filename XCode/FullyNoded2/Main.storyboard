@@ -3576,58 +3576,63 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                     <constraint firstAttribute="width" constant="283" id="wT5-bR-fEp"/>
                                 </constraints>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Scan Account Map QR code" image="qrcode.viewfinder" catalog="system">
+                                <state key="normal" title="  Scan account map QR" image="qrcode.viewfinder" catalog="system">
                                     <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="scanAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="3za-sk-NIG"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40V-y5-mzs">
-                                <rect key="frame" x="0.0" y="571" width="375" height="32"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Ai-bK-EJU">
+                                <rect key="frame" x="46" y="199" width="283" height="58"/>
+                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="32" id="7HP-8K-AV8"/>
+                                    <constraint firstAttribute="height" constant="58" id="Wpm-ma-zrj"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="recover with seed words">
-                                    <color key="titleColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="getWordsAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="2Ri-M5-M4m"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Ai-bK-EJU">
-                                <rect key="frame" x="114" y="199" width="147" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="147" id="O1c-3b-EbX"/>
-                                    <constraint firstAttribute="height" constant="30" id="h9C-eg-beK"/>
-                                </constraints>
-                                <state key="normal" title="enter xpubs manually">
+                                <state key="normal" title=" Enter xpubs manually  " image="pencil.and.ellipsis.rectangle" catalog="system">
                                     <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="addXpubsManually:" destination="Elr-wf-cyI" eventType="touchUpInside" id="iOu-aU-iA6"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40V-y5-mzs">
+                                <rect key="frame" x="46" y="265" width="283" height="58"/>
+                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="58" id="Suh-eJ-EUf"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="  Enter seed words       " image="bitcoinsign.square" catalog="system">
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="getWordsAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="2Ri-M5-M4m"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="0Ai-bK-EJU" firstAttribute="centerX" secondItem="JxN-8Z-mkw" secondAttribute="centerX" id="1Ri-Ac-NNS"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="0Ai-bK-EJU" secondAttribute="trailing" constant="46" id="2lF-IX-O9F"/>
+                            <constraint firstItem="40V-y5-mzs" firstAttribute="top" secondItem="0Ai-bK-EJU" secondAttribute="bottom" constant="8" id="6LF-do-HxP"/>
                             <constraint firstItem="nsz-u9-Mzm" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="7Cm-sH-wLs"/>
                             <constraint firstItem="0Ai-bK-EJU" firstAttribute="top" secondItem="nsz-u9-Mzm" secondAttribute="bottom" constant="8" id="7m8-dl-FwM"/>
-                            <constraint firstItem="40V-y5-mzs" firstAttribute="trailing" secondItem="duj-2r-qsr" secondAttribute="trailing" id="KLb-DD-ZZJ"/>
-                            <constraint firstItem="duj-2r-qsr" firstAttribute="bottom" secondItem="40V-y5-mzs" secondAttribute="bottom" constant="15" id="L9s-WM-9BQ"/>
+                            <constraint firstItem="40V-y5-mzs" firstAttribute="trailing" secondItem="duj-2r-qsr" secondAttribute="trailing" constant="-46" id="KLb-DD-ZZJ"/>
+                            <constraint firstItem="0Ai-bK-EJU" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="UDh-KB-FR1"/>
                             <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="nsz-u9-Mzm" secondAttribute="trailing" constant="46" id="hjb-Jw-CsU"/>
                             <constraint firstItem="nsz-u9-Mzm" firstAttribute="top" secondItem="duj-2r-qsr" secondAttribute="top" constant="89" id="xKT-9p-MJT"/>
-                            <constraint firstItem="40V-y5-mzs" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" id="zgj-Mv-4xW"/>
+                            <constraint firstItem="40V-y5-mzs" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="zgj-Mv-4xW"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="duj-2r-qsr"/>
                     </view>
                     <navigationItem key="navigationItem" title="Recovery" id="vZu-kK-u52"/>
                     <connections>
                         <outlet property="scanButton" destination="nsz-u9-Mzm" id="roa-rd-akK"/>
+                        <outlet property="seedWordsOutlet" destination="40V-y5-mzs" id="pM4-AL-CF1"/>
+                        <outlet property="xpubsOutlet" destination="0Ai-bK-EJU" id="NXR-iW-A7g"/>
                         <segue destination="o69-RN-9VD" kind="show" identifier="scanRecovery" id="zkr-zY-rLG"/>
                         <segue destination="0g2-8e-jCH" kind="show" identifier="goConfirmQr" id="mqi-NU-Y0K"/>
                         <segue destination="kR7-Mg-fhs" kind="show" identifier="getWords" id="7qw-Ys-xsH"/>
@@ -5687,6 +5692,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <image name="minus.circle" catalog="system" width="64" height="60"/>
         <image name="paintbrush" catalog="system" width="64" height="64"/>
         <image name="pencil" catalog="system" width="64" height="56"/>
+        <image name="pencil.and.ellipsis.rectangle" catalog="system" width="64" height="40"/>
         <image name="pencil.circle" catalog="system" width="64" height="60"/>
         <image name="person.3" catalog="system" width="72" height="35"/>
         <image name="person.crop.circle.badge.checkmark" catalog="system" width="64" height="50"/>
@@ -5704,17 +5710,17 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="9Ib-wE-7tm"/>
+        <segue reference="WN6-Y9-PN0"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="pun-AW-DGw"/>
         <segue reference="Kzq-6W-yKR"/>
-        <segue reference="fnD-hd-014"/>
-        <segue reference="ugm-aB-vA9"/>
+        <segue reference="7qw-Ys-xsH"/>
+        <segue reference="mqi-NU-Y0K"/>
         <segue reference="NHy-Xu-LiC"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="hLe-Va-ofG"/>
         <segue reference="Xe1-Me-c8c"/>
-        <segue reference="dma-qk-Nos"/>
+        <segue reference="zkr-zY-rLG"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

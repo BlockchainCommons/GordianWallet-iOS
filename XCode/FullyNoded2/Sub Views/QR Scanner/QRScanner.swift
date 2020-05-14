@@ -316,6 +316,7 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
             configureLabel()
             configureDetailLabel()
             configureDontHaveAnodeButton()
+            closeButton.alpha = 0
             
         } else if verifying {
             
