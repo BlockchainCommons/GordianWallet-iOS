@@ -14,7 +14,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     var qrCode = UIImage()
     var spendable = Double()
     var rawTxUnsigned = String()
-    var unsignedPsbt = String()
+    var incompletePsbt = String()
     var rawTxSigned = String()
     var amountAvailable = Double()
     let qrImageView = UIImageView()
@@ -317,6 +317,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         outputArray.removeAll()
         outputsString = ""
         outputsTable.reloadData()
+        incompletePsbt = ""
         rawTxSigned = ""
         outputsTable.alpha = 0
         
@@ -407,7 +408,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             vc.outputArray.removeAll()
             vc.outputsString = ""
             vc.outputsTable.reloadData()
-            vc.unsignedPsbt = psbt
+            vc.incompletePsbt = psbt
             vc.performSegue(withIdentifier: "goConfirm", sender: vc)
             
         }
@@ -827,7 +828,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 DispatchQueue.main.async { [unowned vc = self] in
                     
                     vc.amount = ""
-                    //vc.addressInput.text = ""
                     vc.outputArray.removeAll()
                     vc.outputsTable.reloadData()
                     vc.rawTxSigned = ""
@@ -884,39 +884,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         }
         
     }
-    
-    //MARK: Node Commands
-    
-//    func textViewDidBeginEditing(_ textView: UITextView) {
-//
-//        if textView == addressInput {
-//
-//            if textView.text != "" {
-//
-//                textView.becomeFirstResponder()
-//
-//            } else {
-//
-//                if let string = UIPasteboard.general.string {
-//
-//                    textView.becomeFirstResponder()
-//                    textView.text = string
-//
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-//                        textView.resignFirstResponder()
-//                    }
-//
-//                } else {
-//
-//                    textView.becomeFirstResponder()
-//
-//                }
-//
-//            }
-//
-//        }
-//
-//    }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
@@ -1005,10 +972,9 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         case "goConfirm":
             
             if let vc = segue.destination as? ConfirmViewController {
-                
                 vc.signedRawTx = rawTxSigned
                 vc.recipients = recipients
-                vc.unsignedPsbt = unsignedPsbt
+                vc.unsignedPsbt = incompletePsbt
                 
             }
             

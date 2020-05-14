@@ -427,7 +427,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         //let derivationLabel = cell.viewWithTag(11) as! UILabel
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
-        let shareSeedButton = cell.viewWithTag(16) as! UIButton
+        //let shareSeedButton = cell.viewWithTag(16) as! UIButton
         let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
         let walletFileLabel = cell.viewWithTag(20) as! UILabel
         let seedOnDeviceView = cell.viewWithTag(21)!
@@ -453,10 +453,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.contentView.alpha = 1
             bannerView.backgroundColor = #colorLiteral(red: 0, green: 0.1631944358, blue: 0.3383367703, alpha: 1)
             refreshButton.addTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
-            shareSeedButton.addTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
+            //shareSeedButton.addTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             walletToolsButton.addTarget(self, action: #selector(walletTools(_:)), for: .touchUpInside)
             refreshButton.alpha = 1
-            shareSeedButton.alpha = 1
+            //shareSeedButton.alpha = 1
             walletToolsButton.alpha = 1
             
         } else if !wallet.isActive {
@@ -464,10 +464,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.contentView.alpha = 0.6
             bannerView.backgroundColor = #colorLiteral(red: 0.1051254794, green: 0.1292803288, blue: 0.1418488324, alpha: 1)
             refreshButton.removeTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
-            shareSeedButton.removeTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
+            //shareSeedButton.removeTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
             walletToolsButton.removeTarget(self, action: #selector(walletTools(_:)), for: .touchUpInside)
             refreshButton.alpha = 0
-            shareSeedButton.alpha = 0
+            //shareSeedButton.alpha = 0
             walletToolsButton.alpha = 0
             
         }
@@ -488,7 +488,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         walletToolsButton.restorationIdentifier = "\(indexPath.section)"
         refreshButton.restorationIdentifier = "\(indexPath.section)"
-        shareSeedButton.restorationIdentifier = "\(indexPath.section)"
+        //shareSeedButton.restorationIdentifier = "\(indexPath.section)"
         
         nodeView.layer.cornerRadius = 8
         stackView.layer.cornerRadius = 8

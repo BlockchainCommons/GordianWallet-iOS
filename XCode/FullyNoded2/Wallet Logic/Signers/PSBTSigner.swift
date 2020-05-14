@@ -18,21 +18,32 @@ class PSBTSigner {
         var psbtToSign:PSBT!
         var chain:Network!
         
+        func reset() {
+            seedsToSignWith.removeAll()
+            xprvsToSignWith.removeAll()
+            psbtToSign = nil
+            chain = nil
+        }
+        
         func finalizeWithBitcoind() {
             Reducer.makeCommand(walletName: "", command: .finalizepsbt, param: "\"\(psbtToSign.description)\"") { (object, errorDescription) in
                 if let result = object as? NSDictionary {
                     if let complete = result["complete"] as? Bool {
                         if complete {
                             let hex = result["hex"] as! String
+                            reset()
                             completion((true, nil, hex))
                         } else {
                             let psbt = result["psbt"] as! String
+                            reset()
                             completion((true, psbt, nil))
                         }
                     } else {
+                        reset()
                         completion((false, psbtToSign.description, nil))
                     }
                 } else {
+                    reset()
                     completion((false, psbtToSign.description, nil))
                 }
             }
@@ -52,11 +63,13 @@ class PSBTSigner {
                                 }
                             }
                         } else {
-                            completion((false, psbtToSign.description, nil))
+                            reset()
+                            completion((false, nil, nil))
                         }
                     }
                 } else {
-                    completion((false, psbtToSign.description, nil))
+                    reset()
+                    completion((false, nil, nil))
                 }
             }
         }
