@@ -1073,6 +1073,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             if !wallet.isActive {
                 
+                UIView.animate(withDuration: 0.3) { [unowned vc = self] in
+                    vc.walletTable.alpha = 0
+                }
+                
                 activateNow(wallet: wallet, index: indexPath.section)
                 
             }
@@ -1171,6 +1175,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 fullRefresh = false
                 refresh()
+                
+                UIView.animate(withDuration: 0.5) { [unowned vc = self] in
+                    vc.walletTable.alpha = 1
+                }
                                             
             }
             

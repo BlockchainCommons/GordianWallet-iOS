@@ -827,7 +827,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 
                 DispatchQueue.main.async { [unowned vc = self] in
                     
-                    vc.amount = ""
+                    //vc.amount = ""
                     vc.outputArray.removeAll()
                     vc.outputsTable.reloadData()
                     vc.rawTxSigned = ""
@@ -864,7 +864,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 
                 DispatchQueue.main.async { [unowned vc = self] in
                     
-                    vc.amount = ""
+                    //vc.amount = ""
                     vc.outputArray.removeAll()
                     vc.outputsTable.reloadData()
                     vc.rawTxSigned = ""
@@ -926,7 +926,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                     
                     DispatchQueue.main.async {
                         
-                        label.text = "\(numberOfBlocks) blocks (\(seconds / 60) minutes)"
+                        label.text = "\(seconds / 60) minutes (\(numberOfBlocks) blocks)"
                         
                     }
                     
@@ -934,7 +934,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                     
                     DispatchQueue.main.async {
                         
-                        label.text = "\(numberOfBlocks) blocks (\(seconds / 3600) hours)"
+                        label.text = "\(seconds / 3600) hours (\(numberOfBlocks) blocks)"
                         
                     }
                     
@@ -944,7 +944,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 
                 DispatchQueue.main.async {
                     
-                    label.text = "\(numberOfBlocks) blocks (\(seconds / 86400) days)"
+                    label.text = "\(seconds / 86400) days (\(numberOfBlocks) blocks)"
                     
                 }
                 

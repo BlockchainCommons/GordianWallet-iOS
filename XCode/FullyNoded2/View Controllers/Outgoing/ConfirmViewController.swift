@@ -8,10 +8,11 @@
 
 import UIKit
 import AuthenticationServices
-import LibWally
+//import LibWally
 
 class ConfirmViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
+    var txid = ""
     var psbtDict = ""
     var doneBlock: ((Bool) -> Void)?
     let creatingView = ConnectingView()
@@ -31,19 +32,24 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     var sweeping = Bool()
     @IBOutlet var confirmTable: UITableView!
     @IBOutlet var broadcastButton: UIButton!
+    @IBOutlet weak var exportTx: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationController?.delegate = self
+        confirmTable.delegate = self
+        confirmTable.dataSource = self
         
         if unsignedPsbt == "" {
             
+            exportTx.alpha = 1
             creatingView.addConnectingView(vc: self, description: "verifying signed transaction")
             executeNodeCommand(method: .decoderawtransaction, param: "\"\(signedRawTx)\"")
             
         } else {
             
+            exportTx.alpha = 0
             let exportImage = UIImage(systemName: "arrowshape.turn.up.right")!
             broadcastButton.setImage(exportImage, for: .normal)
             broadcastButton.setTitle("  Export PSBT", for: .normal)
@@ -52,6 +58,14 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
         }
         
+    }
+    
+    @IBAction func exportSignedTx(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let activityViewController = UIActivityViewController(activityItems: [vc.signedRawTx], applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = vc.view
+            vc.present(activityViewController, animated: true) {}
+        }
     }
     
     @IBAction func sendNow(_ sender: Any) {
@@ -451,21 +465,21 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                             
                             if !vc.sweeping {
                                 
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                    
-                                    vc.navigationController?.popToRootViewController(animated: true)
-                                    
-                                }
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+//
+//                                    vc.navigationController?.popToRootViewController(animated: true)
+//
+//                                }
                                 
                             } else {
                                 
                                 NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
                                 
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                    
-                                    vc.navigationController?.popToRootViewController(animated: true)
-                                    
-                                }
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+//
+//                                    vc.navigationController?.popToRootViewController(animated: true)
+//
+//                                }
                                 
                             }
                             
@@ -492,6 +506,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                         
                         if let txDict = dict["tx"] as? NSDictionary {
                             
+                            vc.txid = txDict["txid"] as! String
                             vc.parseTransaction(tx: txDict)
                             
                         }
@@ -513,6 +528,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     
                     if let dict = object as? NSDictionary {
                         
+                        vc.txid = dict["txid"] as! String
                         vc.parseTransaction(tx: dict)
                         
                     } else {
@@ -718,9 +734,25 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
         } else if index + 1 == inputArray.count {
             
-            let txfee = (self.inputTotal - self.outputTotal).avoidNotation
-            self.miningFee = "\(txfee) btc"
-            loadTableData()
+            let txfee = (inputTotal - outputTotal).avoidNotation
+            let fiatConverter = FiatConverter.sharedInstance
+            fiatConverter.getFxRate { [unowned vc = self] (fxRate) in
+                
+                if fxRate != nil {
+                    
+                    let fiatFee = fxRate! * Double(txfee)!
+                    let roundedFiatFee = Double(round(100*fiatFee)/100)
+                    vc.miningFee = "\(txfee) btc / $\(roundedFiatFee)"
+                    vc.loadTableData()
+                    
+                } else {
+                    vc.miningFee = "\(txfee) btc / error fetching fx rate"
+                    vc.loadTableData()
+                    
+                }
+                
+            }
+            
             
         }
         
@@ -815,7 +847,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     
     func numberOfSections(in tableView: UITableView) -> Int {
         
-        return 4
+        return 5
         
     }
     
@@ -823,15 +855,15 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
         switch section {
             
-        case 0:
+        case 1:
             
             return inputArray.count
             
-        case 1:
+        case 2:
             
             return outputArray.count
             
-        case 2, 3:
+        case 3, 4, 0:
             
             return 1
             
@@ -847,11 +879,11 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
         switch indexPath.section {
             
-        case 0, 1:
+        case 1, 2:
             
             return 78
             
-        case 2, 3:
+        case 0, 3, 4:
             
             return 44
             
@@ -868,6 +900,23 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         switch indexPath.section {
             
         case 0:
+            
+            let txidCell = tableView.dequeueReusableCell(withIdentifier: "miningFeeCell", for: indexPath)
+            
+            if unsignedPsbt != "" {
+            
+                txidCell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
+                
+            }
+            
+            let txidLabel = txidCell.viewWithTag(1) as! UILabel
+            txidLabel.text = txid
+            txidCell.selectionStyle = .none
+            txidLabel.textColor = .lightGray
+            txidLabel.adjustsFontSizeToFitWidth = true
+            return txidCell
+            
+        case 1:
             
             let inputCell = tableView.dequeueReusableCell(withIdentifier: "inputCell", for: indexPath)
             
@@ -894,7 +943,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             inputAddressLabel.textColor = .lightGray
             return inputCell
             
-        case 1:
+        case 2:
             
             let outputCell = tableView.dequeueReusableCell(withIdentifier: "outputCell", for: indexPath)
             
@@ -936,7 +985,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             outputCell.selectionStyle = .none
             return outputCell
             
-        case 2:
+        case 3:
             
             let miningFeeCell = tableView.dequeueReusableCell(withIdentifier: "miningFeeCell", for: indexPath)
             
@@ -947,12 +996,12 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             }
             
             let miningLabel = miningFeeCell.viewWithTag(1) as! UILabel
-            miningLabel.text = self.miningFee
+            miningLabel.text = miningFee
             miningFeeCell.selectionStyle = .none
             miningLabel.textColor = .lightGray
             return miningFeeCell
             
-        case 3:
+        case 4:
             
             let etaCell = tableView.dequeueReusableCell(withIdentifier: "miningFeeCell", for: indexPath)
             
@@ -997,38 +1046,80 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
         }
         
+        let todaysDate = Date()
+        let futureDate = Date(timeInterval: Double(seconds), since: todaysDate)
+        eta += " / \(formattedDate(date: futureDate))"
+        
         return eta
         
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        
-        var sectionString = ""
-        
-        switch section {
-        case 0:
-            sectionString = "Inputs"
-        case 1:
-            sectionString = "Outputs"
-        case 2:
-            sectionString = "Mining fee"
-        case 3:
-            sectionString = "Estimated time to confirmation"
-        default:
-            break
-        }
-        
-        return sectionString
-        
+    private func formattedDate(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = .current
+        dateFormatter.dateFormat = "yyyy-MMM-dd hh:mm"
+        let strDate = dateFormatter.string(from: date)
+        return strDate
     }
     
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+                
+        let header = UIView()
+        header.backgroundColor = UIColor.clear
         
-        (view as! UITableViewHeaderFooterView).backgroundView?.backgroundColor = UIColor.clear
-        (view as! UITableViewHeaderFooterView).textLabel?.textAlignment = .left
-        (view as! UITableViewHeaderFooterView).textLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
-        (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.lightGray
-        (view as! UITableViewHeaderFooterView).textLabel?.alpha = 1
+        let textLabel = UILabel()
+        textLabel.textAlignment = .left
+        textLabel.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        textLabel.textColor = .lightGray
+        
+        switch section {
+            
+        case 0:
+             
+            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
+            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 30)
+            textLabel.text = "TRANSACTION ID"
+            let copyButton = UIButton()
+            let copyImage = UIImage(systemName: "doc.on.doc")!
+            copyButton.tintColor = .systemTeal
+            copyButton.setImage(copyImage, for: .normal)
+            copyButton.addTarget(self, action: #selector(copyTxid), for: .touchUpInside)
+            copyButton.frame = CGRect(x: header.frame.maxX - 60, y: 0, width: 15, height: 18)
+            copyButton.center.y = textLabel.center.y
+            header.addSubview(copyButton)
+                            
+        case 1:
+             
+            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 20)
+            textLabel.text = "INPUTS"
+            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
+                            
+        case 2:
+            
+            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 20)
+            textLabel.text = "OUTPUTS"
+            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
+            
+        case 3:
+            
+            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 20)
+            textLabel.text = "MINING FEE"
+            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
+        
+        case 4:
+            
+            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 20)
+            textLabel.text = "ESTIMATED TIME TO CONFIRMATION"
+            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
+                            
+        default:
+            
+            break
+            
+        }
+        
+        header.addSubview(textLabel)
+        return header
         
     }
     
@@ -1105,21 +1196,21 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     
                     if !vc.sweeping {
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            
-                            vc.navigationController?.popToRootViewController(animated: true)
-                            
-                        }
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+//
+//                            vc.navigationController?.popToRootViewController(animated: true)
+//
+//                        }
                         
                     } else {
                         
                         NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            
-                            vc.navigationController?.popToRootViewController(animated: true)
-                            
-                        }
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+//
+//                            vc.navigationController?.popToRootViewController(animated: true)
+//
+//                        }
                         
                     }
                     
@@ -1143,6 +1234,15 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 }
             }
         }
+    }
+    
+    @objc func copyTxid() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let pasteBoard = UIPasteboard.general
+            pasteBoard.string = vc.txid
+            displayAlert(viewController: vc, isError: false, message: "Transaction ID copied to clipboard")
+        }
+        
     }
     
     func showAuth() {

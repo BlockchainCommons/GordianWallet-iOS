@@ -10,6 +10,8 @@ import UIKit
 
 class InvoiceViewController: UIViewController, UITextFieldDelegate {
     
+    let copyButton = UIButton()
+    let shareButton = UIButton()
     let spinner = UIActivityIndicatorView(style: .medium)
     var textToShareViaQRCode = String()
     var addressString = String()
@@ -30,18 +32,20 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     var wallet:WalletStruct!
     var addressOutlet = UILabel()
     
+    @IBOutlet weak var createOutlet: UIButton!
     @IBOutlet var amountField: UITextField!
     @IBOutlet var labelField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
+        createOutlet.layer.cornerRadius = 8
         initialLoad = true
         addressOutlet.isUserInteractionEnabled = true
         addressOutlet.text = ""
         amountField.delegate = self
         labelField.delegate = self
-        self.addressOutlet.alpha = 0
+        addressOutlet.alpha = 0
         configureCopiedLabel()
         
         amountField.addTarget(self,
@@ -60,11 +64,23 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
+        
+        copyButton.alpha = 0
+        shareButton.alpha = 0
+        descriptionLabel.alpha = 0
+        createOutlet.alpha = 1
+        addressOutlet.alpha = 0
+        qrView.alpha = 0
+        qrView.image = nil
+    }
+    
+    @IBAction func createNow(_ sender: Any) {
         
         load()
         
     }
+    
     
     @IBAction func refresh(_ sender: Any) {
         
@@ -268,31 +284,30 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             
             vc.qrView.addGestureRecognizer(vc.tapQRGesture)
             
-            let copyButton = UIButton()
-            copyButton.alpha = 0
+            vc.copyButton.alpha = 0
             let copyImage = UIImage(systemName: "doc.on.doc")!
-            copyButton.tintColor = .systemTeal
-            copyButton.setImage(copyImage, for: .normal)
-            copyButton.addTarget(vc, action: #selector(vc.copyAddress), for: .touchUpInside)
-            copyButton.frame = CGRect(x: vc.qrView.frame.maxX - 25, y: vc.qrView.frame.minY - 30, width: 25, height: 25)
-            vc.view.addSubview(copyButton)
+            vc.copyButton.tintColor = .systemTeal
+            vc.copyButton.setImage(copyImage, for: .normal)
+            vc.copyButton.addTarget(vc, action: #selector(vc.copyAddress), for: .touchUpInside)
+            vc.copyButton.frame = CGRect(x: vc.qrView.frame.maxX - 25, y: vc.qrView.frame.minY - 30, width: 25, height: 25)
+            vc.view.addSubview(vc.copyButton)
             
-            let shareButton = UIButton()
-            shareButton.alpha = 0
+            vc.shareButton.alpha = 0
             let shareImage = UIImage(systemName: "arrowshape.turn.up.right")!
-            shareButton.tintColor = .systemTeal
-            shareButton.setImage(shareImage, for: .normal)
-            shareButton.addTarget(vc, action: #selector(vc.shareQR), for: .touchUpInside)
-            shareButton.frame = CGRect(x: copyButton.frame.minX - 35, y: vc.qrView.frame.minY - 30, width: 25, height: 25)
-            vc.view.addSubview(shareButton)
+            vc.shareButton.tintColor = .systemTeal
+            vc.shareButton.setImage(shareImage, for: .normal)
+            vc.shareButton.addTarget(vc, action: #selector(vc.shareQR), for: .touchUpInside)
+            vc.shareButton.frame = CGRect(x: vc.copyButton.frame.minX - 35, y: vc.qrView.frame.minY - 30, width: 25, height: 25)
+            vc.view.addSubview(vc.shareButton)
             
             UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
                 
+                vc.createOutlet.alpha = 0
                 vc.descriptionLabel.alpha = 1
                 vc.qrView.alpha = 1
                 vc.addressOutlet.alpha = 1
-                copyButton.alpha = 1
-                shareButton.alpha = 1
+                vc.copyButton.alpha = 1
+                vc.shareButton.alpha = 1
                 
             }) { [unowned vc = self] _ in
                 

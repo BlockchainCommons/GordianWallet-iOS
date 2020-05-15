@@ -8,7 +8,7 @@
 
 class TextBlurbs {
     
-    // Random Home screen blurbs
+    // MARK: - Random Home screen blurbs
     
     class func refillSingleSigWarningMessage(keysRemainging: Int) -> String {
         
@@ -39,7 +39,7 @@ class TextBlurbs {
         return "This button allows you to upload files via the iOS Files app. Currently we support psbt data files that comply with BIP174 and the Coldcard specific \"generic wallet export\" (single sig import) and \"multisig xpub export\"."
     }
     
-    // Account creation
+    // MARK: - Account creation
     
     class func hotWalletInfo() -> String {
         
@@ -68,7 +68,7 @@ class TextBlurbs {
         
     }
     
-    // Sponsor Us text
+    // MARK: - Sponsor Us text
     
     class func supportBlockchainCommons() -> String {
         
@@ -81,7 +81,7 @@ class TextBlurbs {
         """
     }
     
-    // Account created successfully
+    // MARK: - Account created successfully
     
     class func multiSigWalletCreatedSuccess() -> String {
         
@@ -161,7 +161,7 @@ class TextBlurbs {
         
     }
     
-    // Account recovery and creating accounts with user supplied xpubs
+    // MARK: - Account recovery and creating accounts with user supplied xpubs
     
     class func invalidXpubWarning() -> String {
         
@@ -193,7 +193,7 @@ class TextBlurbs {
         return "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4..."
     }
     
-    // Introduction blurbs...
+    // MARK: - Introduction blurbs...
     
     class func introductionText() -> String {
         
@@ -279,5 +279,42 @@ class TextBlurbs {
 
         Blockchain Commons and Fully Noded 2 never share any data with any third party ever. The only server the app connects to is your specified node, and only using Tor. "Sign in with Apple" is simply a secure way of ensuring no one else can spend your funds.
         """
+    }
+    
+    // MARK: - Wallet Tools Info
+    
+    class func rescanInfoText() -> String {
+        
+        return "This tool allows you to rescan the blockchain for your current account. This is useful if you have just recovered an account or imported an account and no balance is showing yet."
+    }
+    
+    class func sweepToInfoText() -> String {
+        
+        return "This tool allows you to sweep all your current account funds to another account."
+    }
+    
+    class func refillKeypoolText() -> String {
+        
+        return "This tools allows you to refill your nodes keypool."
+    }
+    
+    class func addSignerText() -> String {
+        
+        return "This tool allows you to add a master seed in the form of a BIP39 mnemonic which can sign for your current account."
+    }
+    
+    class func backupInfoText() -> String {
+        
+        return "This tool allows you to view and export your current account info, including your device's seed, your account xpub's and the Account Map."
+    }
+    
+    class func viewUtxosText() -> String {
+        
+        return "This tool allows you to view your UTXO's."
+    }
+    
+    class func exportKeysText() -> String {
+        
+        return "This tool allows you to view and export your addresses, public keys, and scriptpubkey as well displaying the derivation path for each."
     }
 }
