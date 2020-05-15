@@ -554,13 +554,17 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                 
                 if success {
                     
-                    vc.connectingView.removeConnectingView()
-                    
-                    DispatchQueue.main.async {
+                    CoreDataService.updateEntity(id: vc.wallet.id!, keyToUpdate: "nodeIsSigner", newValue: true, entityName: .wallets) { _ in
                         
-                        vc.dismiss(animated: true) {
+                        vc.connectingView.removeConnectingView()
+                        
+                        DispatchQueue.main.async {
                             
-                            vc.multiSigRefillDoneBlock!(true)
+                            vc.dismiss(animated: true) {
+                                
+                                vc.multiSigRefillDoneBlock!(true)
+                                
+                            }
                             
                         }
                         

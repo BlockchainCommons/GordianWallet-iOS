@@ -256,6 +256,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             } else if vc.isSingleSig {
                                 
                                 vc.newWallet["type"] = "DEFAULT"
+                                vc.newWallet["nodeIsSigner"] = false
                                 
                                 if vc.node.network == "testnet" {
                                     
@@ -887,6 +888,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                     if account.xpriv != nil {
                                         
                                         vc.nodesSeed = account.xpriv!
+                                        vc.newWallet["nodeIsSigner"] = true
                                         vc.constructDescriptor(derivation: derivation)
                                         
                                     } else {

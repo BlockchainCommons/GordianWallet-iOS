@@ -40,7 +40,6 @@
 		D07399DD2461764700860B7E /* XpubConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DC2461764700860B7E /* XpubConverter.swift */; };
 		D07399DF2461796A00860B7E /* Base58.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DE2461796A00860B7E /* Base58.swift */; };
 		D07399E324617A1000860B7E /* base58.c in Sources */ = {isa = PBXBuildFile; fileRef = D07399E224617A1000860B7E /* base58.c */; };
-		D080F49523F120B200CC8D6E /* ImportCustomDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */; };
 		D08A3DF4246D0F6900ADDDC6 /* TextBlurbs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08A3DF3246D0F6900ADDDC6 /* TextBlurbs.swift */; };
 		D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724023F0EDBB00847DC8 /* AppDelegate.swift */; };
 		D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724223F0EDBB00847DC8 /* SceneDelegate.swift */; };
@@ -203,7 +202,6 @@
 		D07399E024617A0F00860B7E /* FullyNoded2-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FullyNoded2-Bridging-Header.h"; sourceTree = "<group>"; };
 		D07399E124617A1000860B7E /* base58.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base58.h; sourceTree = "<group>"; };
 		D07399E224617A1000860B7E /* base58.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = base58.c; sourceTree = "<group>"; };
-		D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCustomDescriptor.swift; sourceTree = "<group>"; };
 		D08A3DF3246D0F6900ADDDC6 /* TextBlurbs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBlurbs.swift; sourceTree = "<group>"; };
 		D09D723D23F0EDBB00847DC8 /* FullyNoded 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FullyNoded 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D09D724023F0EDBB00847DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -810,7 +808,6 @@
 			children = (
 				D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */,
 				D09D730623F0F3C000847DC8 /* WalletCreator.swift */,
-				D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */,
 			);
 			path = Creators;
 			sourceTree = "<group>";
@@ -1069,7 +1066,6 @@
 				D047DE07242C478A004BC26D /* WalletCreatedSuccessViewController.swift in Sources */,
 				D09D736823F0F3C000847DC8 /* MultiSigTxBuilder.swift in Sources */,
 				D006E34B243ED2FE007B1A5B /* Keychain.swift in Sources */,
-				D080F49523F120B200CC8D6E /* ImportCustomDescriptor.swift in Sources */,
 				D09D732623F0F3C000847DC8 /* UTXOViewController.swift in Sources */,
 				D09D733C23F0F3C000847DC8 /* CoreDataService.swift in Sources */,
 				D07399DD2461764700860B7E /* XpubConverter.swift in Sources */,

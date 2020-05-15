@@ -602,6 +602,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let deviceSeedImage = cell.viewWithTag(41) as! UIImageView
         let refreshButton = cell.viewWithTag(9) as! UIButton
         let accountLabel = cell.viewWithTag(42) as! UILabel
+        let primaryKeysNodeSignerImage = cell.viewWithTag(43) as! UIImageView
+        let changeKeysNodeSignerImage = cell.viewWithTag(44) as! UIImageView
+        
         refreshButton.restorationIdentifier = "\(indexPath.section)"
         accountLabel.text = wallet.label
         let p = DescriptorParser()
@@ -694,6 +697,25 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
 //            bipImage.alpha = 1
 //            
 //        }
+        
+        if wallet.nodeIsSigner != nil {
+            
+            if wallet.nodeIsSigner! {
+                primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
+                changeKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
+                
+            } else {
+                primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
+                changeKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
+                
+            }
+            
+        } else {
+            
+            primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
+            changeKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
+            
+        }
                 
         if wallet.knownSigners == str.sigsRequired {
             

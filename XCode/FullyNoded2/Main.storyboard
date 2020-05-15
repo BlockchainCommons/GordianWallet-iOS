@@ -2053,13 +2053,13 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </connections>
                             </button>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Ipy-yo-xxh">
-                                <rect key="frame" x="14" y="587.5" width="347" height="31"/>
+                                <rect key="frame" x="14" y="601.5" width="347" height="31"/>
                                 <color key="minimumTrackTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="maximumTrackTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="thumbTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </slider>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="timer" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="EVv-F0-8a1">
-                                <rect key="frame" x="16" y="559" width="22" height="21"/>
+                                <rect key="frame" x="16" y="580" width="22" height="21"/>
                                 <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="22" id="Ewp-aN-Fn0"/>
@@ -2067,13 +2067,13 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirmation target" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n6j-yg-uLt">
-                                <rect key="frame" x="46" y="559" width="150" height="21"/>
+                                <rect key="frame" x="46" y="580" width="150" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 blocks / 1 hour 30 min" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LiM-LT-3Xz">
-                                <rect key="frame" x="16" y="625.5" width="343" height="21"/>
+                                <rect key="frame" x="16" y="630.5" width="343" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="w6c-5X-uPL"/>
                                 </constraints>
@@ -2110,9 +2110,9 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="6jp-Ka-1Xg" firstAttribute="top" secondItem="C0H-pw-RSl" secondAttribute="top" constant="9" id="7Kz-bN-YV6"/>
                             <constraint firstItem="EVv-F0-8a1" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="84m-jQ-j6T"/>
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="top" secondItem="DIN-Fg-EH6" secondAttribute="top" id="9aj-Tf-f3P"/>
-                            <constraint firstItem="C0H-pw-RSl" firstAttribute="bottom" secondItem="LiM-LT-3Xz" secondAttribute="bottom" constant="20.5" id="9k9-lL-dVH"/>
-                            <constraint firstItem="EVv-F0-8a1" firstAttribute="top" secondItem="jXp-xP-J4h" secondAttribute="bottom" constant="8.5" id="9sd-te-3ke"/>
-                            <constraint firstItem="Ipy-yo-xxh" firstAttribute="top" secondItem="EVv-F0-8a1" secondAttribute="bottom" constant="7" id="C8j-Jf-Bvd"/>
+                            <constraint firstItem="C0H-pw-RSl" firstAttribute="bottom" secondItem="LiM-LT-3Xz" secondAttribute="bottom" constant="15.5" id="9k9-lL-dVH"/>
+                            <constraint firstItem="EVv-F0-8a1" firstAttribute="top" secondItem="jXp-xP-J4h" secondAttribute="bottom" constant="29.5" id="9sd-te-3ke"/>
+                            <constraint firstItem="Ipy-yo-xxh" firstAttribute="top" secondItem="EVv-F0-8a1" secondAttribute="bottom" id="C8j-Jf-Bvd"/>
                             <constraint firstItem="uIC-Eu-XZD" firstAttribute="top" secondItem="WBT-v4-ipz" secondAttribute="bottom" constant="8" id="DXs-Lg-hVd"/>
                             <constraint firstItem="jXp-xP-J4h" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" id="HMJ-p4-PHt"/>
                             <constraint firstItem="uIC-Eu-XZD" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="LUf-xe-94t"/>
@@ -2121,7 +2121,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="WBT-v4-ipz" firstAttribute="top" secondItem="WP2-Zk-iPW" secondAttribute="bottom" constant="2" id="PVV-4W-qTm"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="QCt-8G-YWG" secondAttribute="trailing" constant="16" id="QBS-V5-A63"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="WP2-Zk-iPW" secondAttribute="trailing" constant="16" id="VGY-U4-MYV"/>
-                            <constraint firstItem="LiM-LT-3Xz" firstAttribute="top" secondItem="Ipy-yo-xxh" secondAttribute="bottom" constant="8" id="VI2-We-knv"/>
+                            <constraint firstItem="LiM-LT-3Xz" firstAttribute="top" secondItem="Ipy-yo-xxh" secondAttribute="bottom" constant="-1" id="VI2-We-knv"/>
                             <constraint firstItem="6jp-Ka-1Xg" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="XmC-VO-PkA"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="LiM-LT-3Xz" secondAttribute="trailing" constant="16" id="Y0r-fO-mrB"/>
                             <constraint firstItem="WP2-Zk-iPW" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="ZMe-Mx-WXx"/>
@@ -4836,7 +4836,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                                 <constraint firstAttribute="width" constant="21" id="NaG-6P-C8M"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Signature" translatesAutoresizingMaskIntoConstraints="NO" id="9rt-PG-G24">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="43" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Signature" translatesAutoresizingMaskIntoConstraints="NO" id="9rt-PG-G24">
                                                             <rect key="frame" x="8" y="35" width="20" height="15"/>
                                                             <color key="tintColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
@@ -4853,7 +4853,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                             <color key="textColor" red="0.57864717509999997" green="0.57864717509999997" blue="0.57864717509999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Signature" translatesAutoresizingMaskIntoConstraints="NO" id="Hrd-XI-SN4">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="44" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Signature" translatesAutoresizingMaskIntoConstraints="NO" id="Hrd-XI-SN4">
                                                             <rect key="frame" x="8" y="54" width="20" height="15"/>
                                                             <color key="tintColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
