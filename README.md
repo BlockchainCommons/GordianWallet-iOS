@@ -116,8 +116,8 @@ You can contact them at:
 
 | Name              | Role                | Github                                            | Email                                 | GPG Fingerprint                                    |
 | ----------------- | ------------------- | ------------------------------------------------- | ------------------------------------- | -------------------------------------------------- |
-| Christopher Allen | Principal Architect | [@ChristopherA](https://github.com/@ChristopherA) | \<ChristopherA@LifeWithAlacrity.com\> | FDFE 14A5 4ECB 30FC 5D22  74EF F8D3 6C91 3574 05ED |
-| Peter Denton      | Project Lead        | @Fonta1n3                                         | \<fontainedenton@googlemail.com\>     | 3B37 97FA 0AE8 4BE5 B440  6591 8564 01D7 121C 32FC |
+| Christopher Allen | Principal Architect | [@ChristopherA](https://github.com/ChristopherA) | \<ChristopherA@LifeWithAlacrity.com\> | FDFE 14A5 4ECB 30FC 5D22  74EF F8D3 6C91 3574 05ED |
+| Peter Denton      | Project Lead        | [@Fonta1n3](https://github.com/Fonta1n3)                                      | \<fontainedenton@googlemail.com\>     | 3B37 97FA 0AE8 4BE5 B440  6591 8564 01D7 121C 32FC |
 
 You can add your name here by getting involved — the first step is to learn how to contribute from our [CONTRIBUTING.md](./Docs/CONTRIBUTING.md) documentation.
 
