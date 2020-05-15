@@ -120,7 +120,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             
             vc.spinner.stopAnimating()
             vc.spinner.alpha = 0
-            vc.refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: vc, action: #selector(vc.load))
+            vc.refreshButton = UIBarButtonItem(barButtonSystemItem: .add, target: vc, action: #selector(vc.load))
             vc.refreshButton.tintColor = UIColor.white.withAlphaComponent(1)
             vc.navigationItem.setRightBarButton(vc.refreshButton, animated: true)
                         
