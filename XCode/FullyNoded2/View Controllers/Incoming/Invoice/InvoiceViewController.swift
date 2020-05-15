@@ -245,9 +245,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         
         DispatchQueue.main.async { [unowned vc = self] in
             
-            let pasteboard = UIPasteboard.general
-            pasteboard.string = address
-            
             vc.qrCode = vc.generateQrCode(key: address)
             vc.qrView.image = vc.qrCode
             vc.qrView.isUserInteractionEnabled = true

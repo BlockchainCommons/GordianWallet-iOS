@@ -1198,7 +1198,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 fullRefresh = false
                 refresh()
                 
-                UIView.animate(withDuration: 0.5) { [unowned vc = self] in
+                UIView.animate(withDuration: 1.5) { [unowned vc = self] in
                     vc.walletTable.alpha = 1
                 }
                                             

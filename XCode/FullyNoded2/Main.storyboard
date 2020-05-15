@@ -4337,8 +4337,8 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LSr-9Y-WXJ">
                                                             <rect key="frame" x="123.5" y="8" width="98" height="28"/>
                                                             <subviews>
-                                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ciE-Bi-Iml">
-                                                                    <rect key="frame" x="8" y="2.5" width="20" height="22"/>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ciE-Bi-Iml">
+                                                                    <rect key="frame" x="8" y="3" width="20" height="22"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="20" id="HhS-hq-jNN"/>
                                                                         <constraint firstAttribute="height" constant="22" id="ozp-kY-Xhq"/>
@@ -4359,6 +4359,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
+                                                                <constraint firstItem="ciE-Bi-Iml" firstAttribute="centerY" secondItem="LSr-9Y-WXJ" secondAttribute="centerY" id="1fx-CV-iVX"/>
                                                                 <constraint firstItem="ciE-Bi-Iml" firstAttribute="leading" secondItem="LSr-9Y-WXJ" secondAttribute="leading" constant="8" id="a7p-VF-DeN"/>
                                                                 <constraint firstAttribute="trailing" secondItem="yya-jz-VRS" secondAttribute="trailing" constant="9" id="fR8-o8-cNO"/>
                                                                 <constraint firstAttribute="height" constant="28" id="g3z-nN-WKB"/>
