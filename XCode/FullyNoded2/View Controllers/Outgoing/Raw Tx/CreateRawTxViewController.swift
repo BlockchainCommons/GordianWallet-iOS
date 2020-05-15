@@ -480,8 +480,8 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         DispatchQueue.main.async { [unowned vc = self] in
             vc.scannerButton.tintColor = .clear
-            vc.amountInput.text = ""
-            vc.addressInput.text = ""
+            //vc.amountInput.text = ""
+            //vc.addressInput.text = ""
             vc.scannerButton.tintColor = .clear
             vc.createOutlet.alpha = 0
             vc.addOutlet.alpha = 0
@@ -827,7 +827,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 
                 DispatchQueue.main.async { [unowned vc = self] in
                     
-                    //vc.amount = ""
+                    vc.amount = ""
                     vc.outputArray.removeAll()
                     vc.outputsTable.reloadData()
                     vc.rawTxSigned = ""
@@ -864,7 +864,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 
                 DispatchQueue.main.async { [unowned vc = self] in
                     
-                    //vc.amount = ""
+                    vc.amount = ""
                     vc.outputArray.removeAll()
                     vc.outputsTable.reloadData()
                     vc.rawTxSigned = ""
