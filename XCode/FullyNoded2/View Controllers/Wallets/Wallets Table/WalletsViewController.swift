@@ -1201,6 +1201,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 UIView.animate(withDuration: 1.5) { [unowned vc = self] in
                     vc.walletTable.alpha = 1
                 }
+                
+                NotificationCenter.default.post(name: .didSwitchAccounts, object: nil, userInfo: nil)
                                             
             }
             

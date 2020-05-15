@@ -86,6 +86,7 @@ extension Notification.Name {
     public static let didStartBootstrappingTor = Notification.Name(rawValue: "didStartBootstrappingTor")
     public static let didCompleteOnboarding = Notification.Name(rawValue: "didCompleteOnboarding")
     public static let didSweep = Notification.Name(rawValue: "didSweep")
+    public static let didSwitchAccounts = Notification.Name(rawValue: "didSwitchAccounts")
 }
 
 public extension Int {

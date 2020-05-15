@@ -62,10 +62,11 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         view.addGestureRecognizer(tap)
         addDoneButtonOnKeyboard()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(clearInvoice), name: .didSwitchAccounts, object: nil)
+        
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        
+    @objc func clearInvoice() {
         copyButton.alpha = 0
         shareButton.alpha = 0
         descriptionLabel.alpha = 0
@@ -309,7 +310,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             }) { [unowned vc = self] _ in
                 
                 vc.addressOutlet.text = address
-                vc.addCopiedLabel()
                 
             }
             
@@ -323,46 +323,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             pasteboard.string = vc.addressString
             displayAlert(viewController: vc, isError: false, message: "address copied to clipboard")
         }
-    }
-    
-    func addCopiedLabel() {
-        
-        view.addSubview(copiedLabel)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            
-            UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                
-                if vc.tabBarController != nil {
-                    
-                    vc.copiedLabel.frame = CGRect(x: 0,
-                                                    y: vc.tabBarController!.tabBar.frame.minY - 50,
-                                                    width: vc.view.frame.width,
-                                                    height: 50)
-                    
-                }
-                
-            })
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
-                
-                UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                    
-                    vc.copiedLabel.frame = CGRect(x: 0,
-                                                    y: vc.view.frame.maxY + 100,
-                                                    width: vc.view.frame.width,
-                                                    height: 50)
-                    
-                }, completion: { [unowned vc = self] _ in
-                    
-                    vc.copiedLabel.removeFromSuperview()
-                    
-                })
-                
-            })
-            
-        }
-        
     }
     
     @objc func shareAddressText(_ sender: UITapGestureRecognizer) {
