@@ -15,7 +15,6 @@ class RawDisplayer {
     let textView = UITextView()
     var qrView = UIImageView()
     let qrGenerator = QRGenerator()
-    let copiedLabel = UILabel()
     var vc = UIViewController()
     var rawString = ""
     let copyButton = UIButton()
@@ -41,7 +40,6 @@ class RawDisplayer {
         
         configureQrView()
         configureTextView()
-        configureCopiedLabel()
         
         let (qr, error) = qrGenerator.getQRCode(textInput: rawString)
         qrView.image = qr
@@ -50,8 +48,6 @@ class RawDisplayer {
         }
         
         textView.text = rawString
-        UIPasteboard.general.string = rawString
-        
         vc.view.addSubview(qrView)
         vc.view.addSubview(textView)
         
@@ -79,7 +75,6 @@ class RawDisplayer {
                                 
                 DispatchQueue.main.async { [unowned thisClass = self] in
                     
-                    thisClass.addCopiedLabel()
                     thisClass.addButtons()
                     
                 }
@@ -87,58 +82,6 @@ class RawDisplayer {
             })
             
         })
-        
-    }
-    
-    func addCopiedLabel() {
-        
-        vc.view.addSubview(copiedLabel)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            
-            UIView.animate(withDuration: 0.3, animations: { [unowned thisClass = self] in
-                
-                thisClass.copiedLabel.frame = CGRect(x: 0,
-                                                y: thisClass.vc.view.frame.maxY - 50,
-                                                width: thisClass.vc.view.frame.width,
-                                                height: 50)
-                
-            })
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: { [unowned thisClass = self] in
-                
-                UIView.animate(withDuration: 0.3, animations: { [unowned thisClass = self] in
-                    
-                    thisClass.copiedLabel.frame = CGRect(x: 0,
-                                                    y: thisClass.vc.view.frame.maxY + 100,
-                                                    width: thisClass.vc.view.frame.width,
-                                                    height: 50)
-                    
-                }, completion: { _ in
-                    
-                    thisClass.copiedLabel.removeFromSuperview()
-                    
-                })
-                
-            })
-            
-        }
-        
-    }
-    
-    func configureCopiedLabel() {
-        
-        copiedLabel.text = "copied to clipboard ✓"
-        
-        copiedLabel.frame = CGRect(x: 0,
-                                   y: vc.view.frame.maxY + 100,
-                                   width: vc.view.frame.width,
-                                   height: 50)
-        
-        copiedLabel.textColor = UIColor.darkGray
-        copiedLabel.font = UIFont.init(name: "HiraginoSans-W3", size: 17)
-        copiedLabel.backgroundColor = UIColor.black
-        copiedLabel.textAlignment = .center
         
     }
     

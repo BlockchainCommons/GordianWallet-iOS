@@ -52,7 +52,7 @@ class QRViewController: UIViewController, UINavigationControllerDelegate {
         tapTextViewGesture = UITapGestureRecognizer(target: self,
                                                     action: #selector(shareRawText(_:)))
         
-        displayer.copyButton.addTarget(self, action: #selector(copyText), for: .touchUpInside)
+        displayer.copyButton.addTarget(self, action: #selector(copyQR), for: .touchUpInside)
         displayer.shareButton.addTarget(self, action: #selector(shareQRCode(_:)), for: .touchUpInside)
         
         displayer.textView.addGestureRecognizer(tapTextViewGesture)
@@ -60,12 +60,12 @@ class QRViewController: UIViewController, UINavigationControllerDelegate {
         
     }
     
-    @objc func copyText() {
+    @objc func copyQR() {
         
         DispatchQueue.main.async { [unowned vc = self] in
             let pasteboard = UIPasteboard.general
-            pasteboard.string = vc.itemToDisplay
-            displayAlert(viewController: vc, isError: false, message: "\(vc.barTitle) copied to clipboard")
+            pasteboard.image = vc.displayer.qrView.image
+            displayAlert(viewController: vc, isError: false, message: "\(vc.barTitle) qr copied to clipboard")
         }
     }
     
@@ -100,7 +100,6 @@ class QRViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     @objc func shareQRCode(_ sender: UITapGestureRecognizer) {
-        print("shareQRCode")
         
         DispatchQueue.main.async { [unowned vc = self] in
             

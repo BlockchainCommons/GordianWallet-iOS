@@ -37,6 +37,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         walletTable.dataSource = self
         editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editWallets))
         addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createWallet))
+        editButton.tintColor = .lightGray
+        addButton.tintColor = .lightGray
         navigationItem.setRightBarButton(addButton, animated: true)
         navigationItem.setLeftBarButton(editButton, animated: true)
         configureRefresher()

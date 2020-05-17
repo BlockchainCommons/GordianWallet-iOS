@@ -29,7 +29,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     var outputs = [Any]()
     var outputsString = ""
     var recipients = [String]()
-    let scannerButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
     
     @IBOutlet weak var addOutlet: UIButton!
     @IBOutlet var addressInput: UITextView!
@@ -43,12 +42,155 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     @IBOutlet weak var createOutlet: UIButton!
     @IBOutlet weak var feeSliderOutlet: UISlider!
     @IBOutlet weak var blockTargetOutlet: UILabel!
+    @IBOutlet weak var scannerButton: UIBarButtonItem!
     
     
     let creatingView = ConnectingView()
     let qrScanner = QRScanner()
     var isTorchOn = Bool()
     var outputArray = [[String:String]]()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        amountInput.delegate = self
+        addressInput.delegate = self
+        outputsTable.delegate = self
+        outputsTable.dataSource = self
+        navigationController?.delegate = self
+        outputsTable.tableFooterView = UIView(frame: .zero)
+        outputsTable.alpha = 0
+        availableBalance.alpha = 0
+        configureScanner()
+        addTapGesture()
+        scannerView.alpha = 0
+        scannerView.backgroundColor = UIColor.black
+        //updateLeftBarButton(isShowing: false)
+        addressInput.layer.borderWidth = 1.0
+        addressInput.layer.borderColor = UIColor.darkGray.cgColor
+        addressInput.clipsToBounds = true
+        addressInput.layer.cornerRadius = 4
+        feeSliderOutlet.addTarget(self, action: #selector(setFee), for: .allEvents)
+        feeSliderOutlet.maximumValue = 2 * -1
+        feeSliderOutlet.minimumValue = 432 * -1
+        let ud = UserDefaults.standard
+        
+        if ud.object(forKey: "feeTarget") != nil {
+            
+            let numberOfBlocks = ud.object(forKey: "feeTarget") as! Int
+            feeSliderOutlet.value = Float(numberOfBlocks) * -1
+            updateFeeLabel(label: blockTargetOutlet, numberOfBlocks: numberOfBlocks)
+            
+        } else {
+            
+            blockTargetOutlet.text = "Minimum fee set"
+            feeSliderOutlet.value = 432 * -1
+            
+        }
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        //scannerButton.tintColor = .white
+        amount = ""
+        outputs.removeAll()
+        outputArray.removeAll()
+        outputsString = ""
+        outputsTable.reloadData()
+        incompletePsbt = ""
+        rawTxSigned = ""
+        outputsTable.alpha = 0
+        
+        getActiveWalletNow() { (wallet, error) in
+            
+            if wallet != nil {
+                
+                NodeLogic.sharedInstance.loadWalletData(wallet: wallet!) { (success, dictToReturn, errorDesc) in
+                    
+                    if success && dictToReturn != nil {
+                        let s = HomeStruct(dictionary: dictToReturn!)
+                        let btc = (s.coldBalance).doubleValue
+                        let fiat = s.fiatBalance
+                        
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.availableBalance.text = "\(btc) btc / \(fiat) available"
+                            vc.availableBalance.alpha = 1
+                            
+                        }
+                        
+                    }
+                    
+                }
+                                
+            }
+            
+        }
+        
+        if amountInput.text != "" && addressInput.text != "" {
+            createOutlet.alpha = 1
+            addOutlet.alpha = 1
+            
+        } else {
+            createOutlet.alpha = 0
+            addOutlet.alpha = 0
+            
+        }
+        
+    }
+    
+    @IBAction func scannerAction(_ sender: Any) {
+        
+        if scannerShowing {
+            
+            back()
+            
+        } else {
+            
+            scannerShowing = true
+            addressInput.resignFirstResponder()
+            amountInput.resignFirstResponder()
+            
+            if isFirstTime {
+                
+                DispatchQueue.main.async {
+                    
+                    self.qrScanner.scanQRCode()
+                    self.addScannerButtons()
+                    self.scannerView.addSubview(self.qrScanner.closeButton)
+                    self.isFirstTime = false
+                    
+                    UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
+                        
+                        vc.scannerView.alpha = 1
+                        
+                    })
+                                                            
+                }
+                
+            } else {
+                
+                self.qrScanner.startScanner()
+                self.addScannerButtons()
+                
+                DispatchQueue.main.async {
+                    
+                    UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
+                        
+                        vc.scannerView.alpha = 1
+                        
+                    })
+                    
+                }
+                
+            }
+            
+            //self.updateLeftBarButton(isShowing: true)
+            
+        }
+        
+    }
+    
     
     func configureScanner() {
         
@@ -98,82 +240,29 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
-    func updateLeftBarButton(isShowing: Bool){
-        
-        scannerButton.addTarget(self, action: #selector(scanNow(_:)), for: .touchUpInside)
-        scannerButton.tintColor = .white
+//    func updateLeftBarButton(isShowing: Bool){
+//
+//        scannerButton.addTarget(self, action: #selector(scanNow(_:)), for: .touchUpInside)
+//        scannerButton.tintColor = .white
+//
+//        if isShowing {
+//
+//            let pasteImage = UIImage.init(systemName: "doc.append")
+//            scannerButton.setImage(pasteImage, for: .normal)
+//
+//        } else {
+//
+//            let qrImage = UIImage.init(systemName: "qrcode.viewfinder")
+//            scannerButton.setImage(qrImage, for: .normal)
+//
+//        }
+//
+//        let leftButton = UIBarButtonItem(customView: scannerButton)
+//        leftButton.customView?.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+//        self.navigationItem.setLeftBarButtonItems([leftButton], animated: true)
+//
+//    }
 
-        if isShowing {
-            
-            let pasteImage = UIImage.init(systemName: "doc.append")
-            scannerButton.setImage(pasteImage, for: .normal)
-            
-        } else {
-            
-            let qrImage = UIImage.init(systemName: "qrcode.viewfinder")
-            scannerButton.setImage(qrImage, for: .normal)
-            
-        }
-        
-        let leftButton = UIBarButtonItem(customView: scannerButton)
-        
-        self.navigationItem.setLeftBarButtonItems([leftButton], animated: true)
-        
-    }
-    
-    @IBAction func scanNow(_ sender: Any) {
-        
-        print("scanNow")
-        
-        if scannerShowing {
-            
-            back()
-            
-        } else {
-            
-            scannerShowing = true
-            addressInput.resignFirstResponder()
-            amountInput.resignFirstResponder()
-            
-            if isFirstTime {
-                
-                DispatchQueue.main.async {
-                    
-                    self.qrScanner.scanQRCode()
-                    self.addScannerButtons()
-                    self.scannerView.addSubview(self.qrScanner.closeButton)
-                    self.isFirstTime = false
-                    
-                    UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                        
-                        vc.scannerView.alpha = 1
-                        
-                    })
-                                                            
-                }
-                
-            } else {
-                
-                self.qrScanner.startScanner()
-                self.addScannerButtons()
-                
-                DispatchQueue.main.async {
-                    
-                    UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                        
-                        vc.scannerView.alpha = 1
-                        
-                    })
-                    
-                }
-                
-            }
-            
-            self.updateLeftBarButton(isShowing: true)
-            
-        }
-        
-    }
     
     func addOut() {
         
@@ -266,95 +355,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         }
         
         return cell
-        
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        amountInput.delegate = self
-        addressInput.delegate = self
-        outputsTable.delegate = self
-        outputsTable.dataSource = self
-        navigationController?.delegate = self
-        outputsTable.tableFooterView = UIView(frame: .zero)
-        outputsTable.alpha = 0
-        availableBalance.alpha = 0
-        configureScanner()
-        addTapGesture()
-        scannerView.alpha = 0
-        scannerView.backgroundColor = UIColor.black
-        updateLeftBarButton(isShowing: false)
-        addressInput.layer.borderWidth = 1.0
-        addressInput.layer.borderColor = UIColor.darkGray.cgColor
-        addressInput.clipsToBounds = true
-        addressInput.layer.cornerRadius = 4
-        feeSliderOutlet.addTarget(self, action: #selector(setFee), for: .allEvents)
-        feeSliderOutlet.maximumValue = 2 * -1
-        feeSliderOutlet.minimumValue = 432 * -1
-        let ud = UserDefaults.standard
-        
-        if ud.object(forKey: "feeTarget") != nil {
-            
-            let numberOfBlocks = ud.object(forKey: "feeTarget") as! Int
-            feeSliderOutlet.value = Float(numberOfBlocks) * -1
-            updateFeeLabel(label: blockTargetOutlet, numberOfBlocks: numberOfBlocks)
-            
-        } else {
-            
-            blockTargetOutlet.text = "Minimum fee set"
-            feeSliderOutlet.value = 432 * -1
-            
-        }
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
-        scannerButton.tintColor = .white
-        amount = ""
-        outputs.removeAll()
-        outputArray.removeAll()
-        outputsString = ""
-        outputsTable.reloadData()
-        incompletePsbt = ""
-        rawTxSigned = ""
-        outputsTable.alpha = 0
-        
-        getActiveWalletNow() { (wallet, error) in
-            
-            if wallet != nil {
-                
-                NodeLogic.sharedInstance.loadWalletData(wallet: wallet!) { (success, dictToReturn, errorDesc) in
-                    
-                    if success && dictToReturn != nil {
-                        let s = HomeStruct(dictionary: dictToReturn!)
-                        let btc = (s.coldBalance).doubleValue
-                        let fiat = s.fiatBalance
-                        
-                        DispatchQueue.main.async { [unowned vc = self] in
-                            vc.availableBalance.text = "\(btc) btc / \(fiat) available"
-                            vc.availableBalance.alpha = 1
-                            
-                        }
-                        
-                    }
-                    
-                }
-                                
-            }
-            
-        }
-        
-        if amountInput.text != "" && addressInput.text != "" {
-            createOutlet.alpha = 1
-            addOutlet.alpha = 1
-            
-        } else {
-            createOutlet.alpha = 0
-            addOutlet.alpha = 0
-            
-        }
         
     }
     
@@ -479,7 +479,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         }
         
         DispatchQueue.main.async { [unowned vc = self] in
-            vc.scannerButton.tintColor = .clear
             //vc.amountInput.text = ""
             //vc.addressInput.text = ""
             vc.scannerButton.tintColor = .clear
@@ -583,7 +582,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         DispatchQueue.main.async { [unowned vc = self] in
             
-            vc.updateLeftBarButton(isShowing: false)
+            //vc.updateLeftBarButton(isShowing: false)
             vc.scannerView.alpha = 0
             vc.scannerShowing = false
             
