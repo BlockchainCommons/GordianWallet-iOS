@@ -91,7 +91,6 @@ class SeedParser {
                                                     } catch {
                                                         
                                                         
-                                                        
                                                     }
                                                     
                                                 }
@@ -115,8 +114,12 @@ class SeedParser {
                         
                     }
                     
+                } else {
+                    completion((nil,nil))
                 }
                 
+            } else {
+                completion((nil,nil))
             }
             
         }

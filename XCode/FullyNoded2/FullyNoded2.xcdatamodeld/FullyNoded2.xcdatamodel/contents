@@ -19,6 +19,22 @@
         <attribute name="seed" optional="YES" attributeType="Binary"/>
         <attribute name="walletId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
     </entity>
+    <entity name="Transactions" representedClassName="Transactions" syncable="YES" codeGenerationType="class">
+        <attribute name="accountLabel" optional="YES" attributeType="String"/>
+        <attribute name="btcReceived" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="btcSent" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="derivation" optional="YES" attributeType="String"/>
+        <attribute name="descriptor" optional="YES" attributeType="String"/>
+        <attribute name="fingerprint" optional="YES" attributeType="String"/>
+        <attribute name="fxRate" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="incoming" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="memo" optional="YES" attributeType="String"/>
+        <attribute name="miningFeeBtc" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="outgoing" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="txid" optional="YES" attributeType="String"/>
+        <attribute name="xpub" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="Wallets" representedClassName="Wallets" syncable="YES" codeGenerationType="class">
         <attribute name="birthdate" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="blockheight" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
@@ -49,5 +65,6 @@
         <element name="Nodes" positionX="-54" positionY="-9" width="128" height="148"/>
         <element name="Seeds" positionX="-45" positionY="135" width="128" height="103"/>
         <element name="Wallets" positionX="-36" positionY="9" width="128" height="388"/>
+        <element name="Transactions" positionX="-45" positionY="135" width="128" height="253"/>
     </elements>
 </model>

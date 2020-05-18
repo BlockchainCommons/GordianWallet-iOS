@@ -262,7 +262,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         
         DispatchQueue.main.async { [unowned vc = self] in
             
-            self.walletName.text = self.reducedName(name: vc.walletNameHash)
+            vc.walletName.text = vc.reducedName(name: vc.walletNameHash)
             
         }
         

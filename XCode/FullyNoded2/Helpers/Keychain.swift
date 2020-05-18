@@ -12,6 +12,7 @@ class KeyChain {
 
     class func set(_ data: Data, forKey: String) -> Bool {
         let query = [
+            kSecAttrSynchronizable as String : true,
             kSecClass as String       : kSecClassGenericPassword as String,
             kSecAttrAccount as String : forKey,
             kSecValueData as String   : data ] as [String : Any]

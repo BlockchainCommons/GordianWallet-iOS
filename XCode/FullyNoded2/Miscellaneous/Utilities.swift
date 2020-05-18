@@ -24,7 +24,6 @@ public extension UITextView {
         attributedOriginalText.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 17), range: fullRange)
         attributedOriginalText.addAttribute(.foregroundColor, value: UIColor.lightGray, range: fullRange)
     }
-
     self.linkTextAttributes = [
         NSAttributedString.Key.foregroundColor: UIColor.systemTeal
     ]
@@ -107,156 +106,90 @@ public func isValidCharacters(_ string: String) -> Bool {
 }
 
 public func getActiveWalletNow(completion: @escaping ((wallet: WalletStruct?, error: Bool)) -> Void) {
-    
     CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
-        
         if errorDescription == nil {
-            
             if wallets!.count > 0 {
-                
                 var walletToReturn:WalletStruct!
-                
                 Encryption.getNode { (node, error) in
-                    
                     if !error && node != nil {
-                        
                         for (i, wallet) in wallets!.enumerated() {
-                            
                             let w = WalletStruct(dictionary: wallet)
-                            
                             if w.isActive && !w.isArchived && node!.id == w.nodeId && w.name != nil && w.id != nil {
-                                
                                 walletToReturn = w
-                                
                             }
-                            
                             if i + 1 == wallets!.count {
-                                
                                 if walletToReturn != nil {
-                                    
                                     completion((walletToReturn, false))
-                                    
                                 } else {
-                                    
                                     completion((nil, true))
-                                    
                                 }
-                                
                             }
-                            
                         }
-                        
                     } else {
-                        
-                        print("error getting active wallet: no active node")
                         completion((nil, true))
-                        
                     }
-                    
                 }
-                
             } else {
-                
-                print("error getting active wallet: wallets count = 0")
                 completion((nil, true))
-                
             }
-            
         } else {
-            
-            print("error getting active wallet: \(errorDescription!)")
             completion((nil,true))
-            
         }
-        
     }
-    
 }
 
 public func dateToUnix(inputdate: Date) -> Int {
-    
     let unixTime = inputdate.timeIntervalSince1970
     return Int(unixTime)
-    
 }
 
 public func keyBirthday() -> Int32 {
-    
     let date = Date()
     return Int32(date.timeIntervalSince1970)
-    
 }
 
 public func showAlert(vc: UIViewController, title: String, message: String) {
-    
     DispatchQueue.main.async {
-        
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in }))
         vc.present(alert, animated: true, completion: nil)
-        
     }
-    
 }
 
 public func randomString(length: Int) -> String {
-    
     let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     return String((0...length-1).map{ _ in letters.randomElement()! })
-    
 }
 
 public func rounded(number: Double) -> Double {
-    
     return Double(round(100000000*number)/100000000)
-    
 }
 
 public func displayAlert(viewController: UIViewController, isError: Bool, message: String) {
-    
     if isError {
-        
         showAlert(vc: viewController, title: "Error", message: message)
-        
     } else {
-     
         DispatchQueue.main.async {
-            
             let errorView = ErrorView()
-            
             errorView.isUserInteractionEnabled = true
-            
-            errorView.showErrorView(vc: viewController,
-                                    text: message,
-                                    isError: isError)
-            
+            errorView.showErrorView(vc: viewController, text: message, isError: isError)
         }
-        
     }
-    
 }
 
 public func network(descriptor: String) -> Network {
-    
     let p = DescriptorParser()
     let str = p.descriptor(descriptor)
-    
     if str.chain == "Testnet" {
         return Network.testnet
-        
     } else {
         return Network.mainnet
-        
     }
-    
 }
 
 public func isWalletRPC(command: BTC_CLI_COMMAND) -> Bool {
-    
     var boolToReturn = Bool()
-    
     switch command {
-        
     case .listtransactions,
          .getnewaddress,
          .getwalletinfo,
@@ -278,33 +211,22 @@ public func isWalletRPC(command: BTC_CLI_COMMAND) -> Bool {
          .fetchexternalbalances,
          .getsweeptoaddress,
          .getexternalwalletinfo:
-        
         boolToReturn = true
-        
     default:
-        
         boolToReturn = false
-        
     }
-    
     return boolToReturn
-    
 }
 
 public func shakeAlert(viewToShake: UIView) {
-    print("shakeAlert")
-    
     let animation = CABasicAnimation(keyPath: "position")
     animation.duration = 0.07
     animation.repeatCount = 4
     animation.autoreverses = true
     animation.fromValue = NSValue(cgPoint: CGPoint(x: viewToShake.center.x - 10, y: viewToShake.center.y))
     animation.toValue = NSValue(cgPoint: CGPoint(x: viewToShake.center.x + 10, y: viewToShake.center.y))
-    
     DispatchQueue.main.async {
-        
         viewToShake.layer.add(animation, forKey: "position")
-        
     }
 }
 
@@ -315,19 +237,15 @@ public func getDocumentsDirectory() -> URL {
 }
 
 public extension Double {
-    
     var avoidNotation: String {
-        
         let numberFormatter = NumberFormatter()
         numberFormatter.maximumFractionDigits = 8
         numberFormatter.numberStyle = .decimal
         return numberFormatter.string(for: self) ?? ""
-        
     }
 }
 
 public extension UIDevice {
-    
     static let modelName: String = {
         var systemInfo = utsname()
         uname(&systemInfo)
@@ -336,7 +254,6 @@ public extension UIDevice {
             guard let value = element.value as? Int8, value != 0 else { return identifier }
             return identifier + String(UnicodeScalar(UInt8(value)))
         }
-        
         func mapToDevice(identifier: String) -> String { // swiftlint:disable:this cyclomatic_complexity
             #if os(iOS)
             switch identifier {
@@ -391,10 +308,8 @@ public extension UIDevice {
             }
             #endif
         }
-        
         return mapToDevice(identifier: identifier)
     }()
-    
 }
 
 

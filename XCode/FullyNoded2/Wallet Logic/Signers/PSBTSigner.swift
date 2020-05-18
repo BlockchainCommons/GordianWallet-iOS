@@ -76,8 +76,7 @@ class PSBTSigner {
         
         func attemptToSignLocally() {
             
-            /// Need to ensure similiar seeds do not sign mutliple times. This can happen if a user utilizes the same seed for
-            /// a multisig wallet and a single sig wallet.
+            /// Need to ensure similiar seeds do not sign mutliple times. This can happen if a user adds the same seed multiple times.
             var xprvStrings = [String]()
             
             for xprv in xprvsToSignWith {
