@@ -79,23 +79,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
         
-        // We force quit the tor thread when the app enters the background as it can not stay alive
-        // for extended periods of time in the background. We only do this on non iPhone 11 models
-        // as for some reason resigning the Tor thread crashes iPhone 11's.
-        let device = UIDevice.modelName
-        
-        if device != "iPhone 11 pro max" && device != "iPhone XS Max" {
-            
+        /// We force quit the tor thread when the app enters the background as it can not stay alive
+        /// for extended periods of time in the background. We only do this on non iPhone 11 models
+        /// as for some reason resigning the Tor thread crashes iPhone 11's.
+        //let device = UIDevice.modelName
+        //if device != "iPhone 11 pro max" && device != "iPhone XS Max" {
             let mgr = TorClient.sharedInstance
-            
             if mgr.state != .stopped {
-                
                 mgr.state = .refreshing
                 mgr.resign()
-                                                    
             }
-            
-        }
+        //}
 
         // Save changes in the application's managed object context when the application transitions to the background.
         //(UIApplication.shared.delegate as? AppDelegate)?.saveContext()
