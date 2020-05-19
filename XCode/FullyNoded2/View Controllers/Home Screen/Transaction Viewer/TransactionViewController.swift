@@ -10,16 +10,16 @@ import UIKit
 
 class TransactionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
+    var miningFeeText = ""
+    var fee = Double()
+    var amountText = ""
     var walletName = ""
-    var recipients = [String]()
     var inputArray = [[String:Any]]()
     var inputTableArray = [[String:Any]]()
     var outputArray = [[String:Any]]()
     var index = Int()
     var inputTotal = Double()
     var outputTotal = Double()
-    var outputsString = ""
-    var inputsString = ""
     var txDict:NSDictionary?
     var txStruct:TransactionStruct?
     var inputs = [String]()
@@ -33,9 +33,7 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         transactionTable.delegate = self
         transactionTable.dataSource = self
         creatingView.addConnectingView(vc: self, description: "getting transaction")
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self,
-                                                                 action: #selector(dismissKeyboard))
-        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tap)
     }
     
@@ -57,13 +55,14 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
+    private func roundedToTwo(number: Double) -> Double {
+        return Double(round(100*number)/100)
+    }
+    
     private func parseTxDict(dict: NSDictionary) {
         print("dict = \(dict)")
         txDict = dict
         decodeTx(walletName: walletName, param: "\"\(dict["hex"] as! String)\"")
-        //reloadTable()
-        //creatingView.removeConnectingView()
-        
     }
     
     private func fetchLocalData() {
@@ -94,23 +93,8 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
-    // MARK: - TABLE STRUCTURE
-    /// - Memo - editable textfield
-    /// - Txid - copy button
-    /// - Incoming or Outgoing
-    /// - Amount sent or recieved
-    /// - Number of confs
-    /// - Date received or sent
-    /// - Inputs with addresses and amounts (like verify view)
-    /// - Outputs with addresses and amounts (like verify view)
-    /// - USD value sent/receieved at time of tx and USD value now
-    /// - Mining fee in btc and sats per byte and Mining fee in USD when sent and now
-    /// - ETA if unconfirmed
-    /// - RBF enabled - ideally with option to bump fee (future feature)
-    /// - Raw hex with a copy button
-    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 13
+        return 11
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -143,7 +127,6 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         standardCell.selectionStyle = .none
         let label = standardCell.viewWithTag(1) as! UILabel
         label.text = text
-        label.adjustsFontSizeToFitWidth = true
         return standardCell
     }
     
@@ -173,24 +156,10 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         changeLabel.textColor = .darkGray
         let output = outputArray[indexPath.row]
         let address = (output["address"] as! String)
-        let isChange = (output["isChange"] as! Bool)
-        
-        if isChange {
-            
-            outputAddressLabel.textColor = .darkGray
-            outputAmountLabel.textColor = .darkGray
-            outputIndexLabel.textColor = .darkGray
-            changeLabel.alpha = 1
-            
-        } else {
-            
-            outputAddressLabel.textColor = .lightGray
-            outputAmountLabel.textColor = .lightGray
-            outputIndexLabel.textColor = .lightGray
-            changeLabel.alpha = 0
-            
-        }
-        
+        outputAddressLabel.textColor = .lightGray
+        outputAmountLabel.textColor = .lightGray
+        outputIndexLabel.textColor = .lightGray
+        changeLabel.alpha = 0
         outputIndexLabel.text = "Output #\(output["index"] as! Int)"
         outputAmountLabel.text = "\((output["amount"] as! String)) btc"
         outputAddressLabel.text = address
@@ -199,21 +168,99 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         return outputCell
     }
     
+    private func miningFeeCell(indexPath: IndexPath) -> UITableViewCell {
+        let miningFeeCell = transactionTable.dequeueReusableCell(withIdentifier: "standardCell", for: indexPath)
+        let label = miningFeeCell.viewWithTag(1) as! UILabel
+        label.text = miningFeeText
+        return miningFeeCell
+    }
+    
+    private func rbfEnabled(indexPath: IndexPath) -> UITableViewCell {
+        let rbfEnabled = transactionTable.dequeueReusableCell(withIdentifier: "standardCell", for: indexPath)
+        let label = rbfEnabled.viewWithTag(1) as! UILabel
+        if txDict?["bip125-replaceable"] as! String == "no" {
+            label.text = "BIP125 - Not replaceable"
+        } else {
+            label.text = "BIP125 - Replaceable"
+        }
+        return rbfEnabled
+    }
+    
+    private func rawHex(indexPath: IndexPath) -> UITableViewCell {
+        let rawHexCell = transactionTable.dequeueReusableCell(withIdentifier: "standardCell", for: indexPath)
+        let label = rawHexCell.viewWithTag(1) as! UILabel
+        label.text = txDict?["hex"] as? String ?? ""
+        label.adjustsFontSizeToFitWidth = false
+        return rawHexCell
+    }
+    
+    private func getAmountText() {
+        if let btcAmount = txDict?["amount"] as? Double {
+            let fiatConverter = FiatConverter.sharedInstance
+            fiatConverter.getFxRate { [unowned vc = self] currentFxRate in
+                if currentFxRate != nil {
+                    let usdCurrentValue = vc.roundedToTwo(number: btcAmount * currentFxRate!)
+                    let miningFeePresent = vc.roundedToTwo(number: vc.fee * currentFxRate!)
+                    if let fxRateAtTheTime = vc.txStruct?.fxRate {
+                        let usdValueAtTheTime = vc.roundedToTwo(number: btcAmount * fxRateAtTheTime)
+                        vc.amountText = "\(btcAmount) btc - $\(usdCurrentValue.withCommas()) current - $\(usdValueAtTheTime.withCommas()) at creation"
+                        let miningFeePast = vc.roundedToTwo(number: vc.fee * fxRateAtTheTime)
+                        vc.miningFeeText = "\(vc.fee.avoidNotation) btc - $\(miningFeePresent) current - $\(miningFeePast) at creation"
+                        vc.reloadTable()
+                        vc.creatingView.removeConnectingView()
+                    } else {
+                        vc.amountText = "\(btcAmount) btc - $\(usdCurrentValue.withCommas()) current"
+                        vc.miningFeeText = "\(vc.fee.avoidNotation) btc - $\(miningFeePresent) current"
+                        vc.reloadTable()
+                        vc.creatingView.removeConnectingView()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func dateFromUnix(unix: Int32) -> String {
+        let date = Date(timeIntervalSince1970: Double(unix))
+        return formattedDate(date: date)
+    }
+    
+    private func dateUnix(unix: Int32) -> Date {
+        return Date(timeIntervalSince1970: Double(unix))
+    }
+    
+    private func getDate() -> String {
+        var date = ""
+        if txStruct?.date != nil {
+            date = formattedDate(date: txStruct!.date!)
+        } else {
+            if txDict != nil {
+                date = dateFromUnix(unix: txDict!["time"] as! Int32)
+            }
+        }
+        return date
+    }
+    
+    private func toggleCategory(indexPath: IndexPath) -> UITableViewCell {
+        if txStruct?.outgoing ?? false {
+            return standardCell(indexPath: indexPath, text: "Outgoing")
+        } else {
+            return standardCell(indexPath: indexPath, text: "Incoming")
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0: return memoCell(indexPath: indexPath)
-        case 1: return standardCell(indexPath: indexPath, text: txStruct?.txid ?? "")
-        case 2:
-            if txStruct?.outgoing ?? false {
-                return standardCell(indexPath: indexPath, text: "Outgoing")
-            } else {
-                return standardCell(indexPath: indexPath, text: "Incoming")
-            }
-        case 3: return standardCell(indexPath: indexPath, text: "\(txDict?["amount"] as? Double ?? 0.0)")
+        case 1: return standardCell(indexPath: indexPath, text: txid)
+        case 2: return toggleCategory(indexPath: indexPath)
+        case 3: return standardCell(indexPath: indexPath, text: amountText)
         case 4: return standardCell(indexPath: indexPath, text: "\(txDict?["confirmations"] as? Int ?? 0)")
-        case 5: return standardCell(indexPath: indexPath, text: formattedDate(date: txStruct?.date ?? Date.distantPast))
+        case 5: return standardCell(indexPath: indexPath, text: getDate())
         case 6: return inputsCell(indexPath: indexPath)
         case 7: return outputsCell(indexPath: indexPath)
+        case 8: return miningFeeCell(indexPath: indexPath)
+        case 9: return rbfEnabled(indexPath: indexPath)
+        case 10: return rawHex(indexPath: indexPath)
         default:
             return UITableViewCell()
         }
@@ -222,51 +269,47 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = UIView()
         header.backgroundColor = UIColor.clear
+        header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
         let textLabel = UILabel()
         textLabel.textAlignment = .left
         textLabel.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         textLabel.textColor = .lightGray
+        textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 30)
+        let copyButton = UIButton()
+        let copyImage = UIImage(systemName: "doc.on.doc")!
+        copyButton.tintColor = .systemTeal
+        copyButton.setImage(copyImage, for: .normal)
         switch section {
         case 0:
-            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
-            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 30)
             textLabel.text = "MEMO - tap to edit"
         case 1:
-            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
-            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 30)
             textLabel.text = "ID"
-            let copyButton = UIButton()
-            let copyImage = UIImage(systemName: "doc.on.doc")!
-            copyButton.tintColor = .systemTeal
-            copyButton.setImage(copyImage, for: .normal)
-            copyButton.addTarget(self, action: #selector(copyTxid), for: .touchUpInside)
             copyButton.frame = CGRect(x: header.frame.maxX - 25, y: 0, width: 15, height: 18)
+            copyButton.addTarget(self, action: #selector(copyTxid), for: .touchUpInside)
             copyButton.center.y = textLabel.center.y
             header.addSubview(copyButton)
         case 2:
-            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
             textLabel.text = "CATEGORY"
-            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 30)
         case 3:
-            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
             textLabel.text = "AMOUNT"
-            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 30)
         case 4:
-            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
             textLabel.text = "CONFIRMATIONS"
-            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 30)
         case 5:
-            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
             textLabel.text = "DATE"
-            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 30)
         case 6:
-            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
             textLabel.text = "INPUTS"
-            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 30)
         case 7:
-            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
             textLabel.text = "OUTPUTS"
-            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 30)
+        case 8:
+            textLabel.text = "FEE"
+        case 9:
+            textLabel.text = "RBF"
+        case 10:
+            textLabel.text = "RAW HEX"
+            copyButton.frame = CGRect(x: header.frame.maxX - 25, y: 0, width: 15, height: 18)
+            copyButton.addTarget(self, action: #selector(copyHex), for: .touchUpInside)
+            copyButton.center.y = textLabel.center.y
+            header.addSubview(copyButton)
         default:
             break
         }
@@ -279,247 +322,142 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func decodeTx(walletName: String, param: String) {
-        
         Reducer.makeCommand(walletName: walletName, command: .decoderawtransaction, param: param) { [unowned vc = self] (object, errorDesc) in
-            
             if let dict = object as? NSDictionary {
-                
                 vc.txid = dict["txid"] as! String
                 vc.parseTransaction(tx: dict)
-                
             } else {
-                
                 vc.creatingView.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: errorDesc ?? "")
-                
             }
-            
         }
-        
     }
     
     func parseTransaction(tx: NSDictionary) {
-        
         let inputs = tx["vin"] as! NSArray
         let outputs = tx["vout"] as! NSArray
         parseOutputs(outputs: outputs)
         parseInputs(inputs: inputs, completion: getFirstInputInfo)
-        
     }
     
     func getFirstInputInfo() {
-        
         index = 0
         getInputInfo(index: index)
-        
     }
     
     func getInputInfo(index: Int) {
-        
         let dict = inputArray[index]
         let txid = dict["txid"] as! String
         let vout = dict["vout"] as! Int
-        
-        parsePrevTx(method: .getrawtransaction,
-                    param: "\"\(txid)\"",
-                    vout: vout)
-        
+        parsePrevTx(method: .getrawtransaction, param: "\"\(txid)\"", vout: vout)
     }
     
     func parseInputs(inputs: NSArray, completion: @escaping () -> Void) {
-        
         for (index, i) in inputs.enumerated() {
-            
             let input = i as! NSDictionary
             let txid = input["txid"] as! String
             let vout = input["vout"] as! Int
             let dict = ["inputNumber":index + 1, "txid":txid, "vout":vout as Any] as [String : Any]
             inputArray.append(dict)
-            
             if index + 1 == inputs.count {
-                
                 completion()
-                
             }
-            
         }
-        
     }
     
     func parseOutputs(outputs: NSArray) {
-        
         for (i, o) in outputs.enumerated() {
-            
             let output = o as! NSDictionary
             let scriptpubkey = output["scriptPubKey"] as! NSDictionary
             let addresses = scriptpubkey["addresses"] as? NSArray ?? []
             let amount = output["value"] as! Double
             let number = i + 1
             var addressString = ""
-            
             if addresses.count > 1 {
-                
                 for a in addresses {
-                    
                     addressString += a as! String + " "
-                    
                 }
-                
             } else {
-                
                 addressString = addresses[0] as! String
-                
             }
-            
             outputTotal += amount
-            outputsString += "Output #\(number):\nAmount: \(amount.avoidNotation)\nAddress: \(addressString)\n\n"
-            var isChange = true
-            
-            for recipient in recipients {
-                
-                if addressString == recipient {
-                    
-                    isChange = false
-                    
-                }
-                
-            }
-            
             let outputDict:[String:Any] = [
-            
                 "index": number,
                 "amount": amount.avoidNotation,
-                "address": addressString,
-                "isChange": isChange
-            
+                "address": addressString
             ]
-            
             outputArray.append(outputDict)
-            
         }
-        
     }
     
     func parsePrevTxOutput(outputs: NSArray, vout: Int) {
-        
         for o in outputs {
-            
             let output = o as! NSDictionary
             let n = output["n"] as! Int
-            
             if n == vout {
-                
                 //this is our inputs output, get amount and address
                 let scriptpubkey = output["scriptPubKey"] as! NSDictionary
                 let addresses = scriptpubkey["addresses"] as! NSArray
                 let amount = output["value"] as! Double
                 var addressString = ""
-                
                 if addresses.count > 1 {
-                    
                     for a in addresses {
-                        
                         addressString += a as! String + " "
-                        
                     }
-                    
                 } else {
-                    
                     addressString = addresses[0] as! String
-                    
                 }
-                
                 inputTotal += amount
-                inputsString += "Input #\(index + 1):\nAmount: \(amount.avoidNotation)\nAddress: \(addressString)\n\n"
-                
                 let inputDict:[String:Any] = [
-                
                     "index": index + 1,
                     "amount": amount.avoidNotation,
                     "address": addressString
-                
                 ]
-                
                 inputTableArray.append(inputDict)
-                
             }
-            
         }
-        
         if index + 1 < inputArray.count {
-            
             index += 1
             getInputInfo(index: index)
-            
         } else if index + 1 == inputArray.count {
-            
-            reloadTable()
-            creatingView.removeConnectingView()
-            
+            fee = inputTotal - outputTotal
+            getAmountText()
         }
-        
     }
     
     func parsePrevTx(method: BTC_CLI_COMMAND, param: String, vout: Int) {
         
-        func decodeRaw(walletName: String) {
-            
+        func decodeRaw() {
             Reducer.makeCommand(walletName: walletName, command: .decoderawtransaction, param: param) { [unowned vc = self] (object, errorDescription) in
-                
                 if let txDict = object as? NSDictionary {
-                    
                     if let outputs = txDict["vout"] as? NSArray {
-                        
                         vc.parsePrevTxOutput(outputs: outputs, vout: vout)
-                        
                     }
-                    
                 } else {
-                    
                     vc.creatingView.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "Error parsing inputs")
-                    
                 }
-                
             }
-            
         }
         
-        func getRawTx(walletName: String) {
-            
+        func getRawTx() {
             Reducer.makeCommand(walletName: walletName, command: .getrawtransaction, param: param) { [unowned vc = self] (object, errorDescription) in
-                
                 if let rawTransaction = object as? String {
-                    
-                    vc.parsePrevTx(method: .decoderawtransaction,
-                                param: "\"\(rawTransaction)\"",
-                                vout: vout)
-                    
+                    vc.parsePrevTx(method: .decoderawtransaction, param: "\"\(rawTransaction)\"", vout: vout)
                 } else {
-                    
                     vc.creatingView.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "Error parsing inputs")
-                    
                 }
-                
             }
-            
         }
         
         switch method {
-            
         case .decoderawtransaction:
-            
-            decodeRaw(walletName: walletName)
-            
+            decodeRaw()
         case .getrawtransaction:
-            
-            getRawTx(walletName: walletName)
-            
+            getRawTx()
         default:
-            
             break
-            
         }
         
     }
@@ -532,9 +470,106 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
+    @objc func copyHex() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let pasteBoard = UIPasteboard.general
+            pasteBoard.string = vc.txDict?["hex"] as? String ?? ""
+            displayAlert(viewController: vc, isError: false, message: "Transaction hex copied to clipboard")
+        }
+    }
+    
+    private func updateExistsingTx(id: UUID, memo: String) {
+        CoreDataService.updateEntity(id: id, keyToUpdate: "memo", newValue: memo, entityName: .transactions) { [unowned vc = self] (success, errorDescription) in
+            if success{
+                displayAlert(viewController: vc, isError: false, message: "Transaction memo updated")
+            }
+        }
+    }
+    
+    private func xpub(_ descriptor: String) -> String {
+        let descriptorParser = DescriptorParser()
+        let descriptorStruct = descriptorParser.descriptor(descriptor)
+        if descriptorStruct.isMulti {
+            return (descriptorStruct.multiSigKeys).description
+        } else {
+            return descriptorStruct.accountXpub
+        }
+    }
+    
+    private func fingerprint(_ descriptor: String) -> String {
+        let descriptorParser = DescriptorParser()
+        let descriptorStruct = descriptorParser.descriptor(descriptor)
+        return descriptorStruct.fingerprint
+    }
+    
+    private func saveTransactionDict(dict: [String:Any]) {
+        CoreDataService.saveEntity(dict: dict, entityName: .transactions) { [unowned vc = self] (success, errorDescription) in
+            if !success {
+                showAlert(vc: vc, title: "", message: "There was an error saving the transaction locally, when it confirms you can tap the transaction on the home screen to add a memo to it. Let us know about the issue so we can fix it. Thank you.")
+            } else {
+                displayAlert(viewController: vc, isError: false, message: "Transaction saved successfully")
+            }
+        }
+    }
+    
+    private func saveNewTx(memo: String) {
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
+            if wallet != nil {
+                var dict = [String:Any]()
+                dict["id"] = UUID()
+                dict["date"] = vc.dateUnix(unix: vc.txDict!["time"] as! Int32)
+                dict["txid"] = vc.txid
+                dict["memo"] = memo
+                dict["accountLabel"] = wallet!.label
+                dict["descriptor"] = wallet?.descriptor
+                dict["xpub"] = vc.xpub(wallet!.descriptor)
+                dict["miningFeeBtc"] = vc.fee
+                dict["fingerprint"] = vc.fingerprint(wallet!.descriptor)
+                if (vc.txDict!["amount"] as! Double) < 0 {
+                    dict["btcSent"] = vc.txDict!["amount"] as! Double
+                    dict["outgoing"] = true
+                    dict["incoming"] = false
+                } else {
+                    dict["btcReceived"] = vc.txDict!["amount"] as! Double
+                    dict["incoming"] = true
+                    dict["outgoing"] = false
+                }
+                dict["derivation"] = wallet!.derivation
+                vc.saveTransactionDict(dict: dict)
+            } else {
+                showAlert(vc: vc, title: "", message: "There was an error saving the transaction locally, when it confirms you can tap the transaction on the home screen to add a memo to it. Let us know about the issue so we can fix it. Thank you.")
+            }
+        }
+    }
+    
+    private func updateTx(memo: String) {
+        CoreDataService.retrieveEntity(entityName: .transactions) { [unowned vc = self] (transactions, errorDescription) in
+            if transactions != nil {
+                if transactions!.count > 0 {
+                    var exists = false
+                    for (i, transaction) in transactions!.enumerated() {
+                        let transactionStruct = TransactionStruct(dictionary: transaction)
+                        if transactionStruct.txid == vc.txid {
+                            exists = true
+                        }
+                        if i + 1 == transactions!.count {
+                            if exists {
+                                if transactionStruct.id != nil {
+                                    vc.updateExistsingTx(id: transactionStruct.id!, memo: memo)
+                                }
+                            } else {
+                                vc.saveNewTx(memo: memo)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField.text != "" {
-            /// Update Core Data here.
+            updateTx(memo: textField.text!)
         }
     }
     
@@ -545,76 +580,5 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         let strDate = dateFormatter.string(from: date)
         return strDate
     }
-    
-    
 
 }
-
-// MARK: - EXAMPLE DICT:
-
-// SELF TRANSFER:
-
-/*
- amount = 0;
- "bip125-replaceable" = no;
- blockhash = 0000000000000129cfc07a52c223038ae6222b4b939aba214b43b46a4d1a0430;
- blockheight = 1745666;
- blockindex = 55;
- blocktime = 1589861211;
- confirmations = 16;
- details =     (
-             {
-         abandoned = 0;
-         address = tb1qxkcsr5g5ewlfpr3dr0sp24yq00jzn06k4ja4jp;
-         amount = "-0.0001";
-         category = send;
-         fee = "-1.41e-06";
-         involvesWatchonly = 1;
-         label = "";
-         vout = 0;
-     },
-             {
-         address = tb1qxkcsr5g5ewlfpr3dr0sp24yq00jzn06k4ja4jp;
-         amount = "0.0001";
-         category = receive;
-         involvesWatchonly = 1;
-         label = "";
-         vout = 0;
-     }
- );
- fee = "-1.41e-06";
- hex = 02000000000101843047c0c02602d568ac3a098ad3c0a743d5c22fc998a27839f7b6b9e69845fd0000000000fdffffff02102700000000000016001435b101d114cbbe908e2d1be01554807be429bf56a31a0f000000000016001430e8aadbfada5b1970688c3454aa3a340c9f1d620247304402207ad4c8bf7a19459c49ce9a0737614ee21725027b1abf2f71bc72564098f79ee902203aa8758c12df24436e6b34925750f8ca5cfe1c0f3da134f71c781ad94e3fe289012103944cd4052d6f6d06d20336fb05f52df3484b0fc9886928beff7a76da50e63a3c00000000;
- time = 1589861160;
- timereceived = 1589861160;
-
- txid = 0d4f845f0abe7d1f72b02ea9773fa13541faffcf90a7f3eef1279b27b070bd3d;
- walletconflicts =     (
- );
- */
-
-// RECEIVE
-/*
- amount = "0.01";
- "bip125-replaceable" = no;
- blockhash = 0000000000000f4f2390da07249bd74835cd783518301fc118334f8b9cd8c60e;
- blockheight = 1745646;
- blockindex = 89;
- blocktime = 1589854767;
- confirmations = 36;
- details =     (
-             {
-         address = tb1qczflynvkcu8jswm5jh455shc3zxafptrlj7lxz;
-         amount = "0.01";
-         category = receive;
-         involvesWatchonly = 1;
-         label = "";
-         vout = 0;
-     }
- );
- hex = 02000000000101b502f62636b8cb17e628e81fe53f8a75da932ceec058b8b02a2ca6780e18c54a010000001716001410f2ef432f5435d5a945a97366d3c298c8e08bc8feffffff0240420f0000000000160014c093f24d96c70f283b7495eb4a42f8888dd485631617230000000000160014fcd60aed2043e043d145ceb9c2b16328ea74b0d90247304402201cd922dcd4f509a7b8064042980c8aaff81c78e34774b0ce08b85b26bcc3e5a1022003f66dc2da05ce53cfbccce9c647ca07b5a65c1315cefe5f2f96806110722d8e01210320e5bd6dfe5021e9e6c97d342e012888961add06e32aa778244036db97098b50eca21a00;
- time = 1589854112;
- timereceived = 1589854112;
- txid = fd4598e6b9b6f73978a298c92fc2d543a7c0d38a093aac68d50226c0c0473084;
- walletconflicts =     (
- );
- */

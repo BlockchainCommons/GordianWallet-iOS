@@ -992,6 +992,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             if wallet != nil {
                 var txDict = [String:Any]()
+                txDict["id"] = UUID()
                 txDict["date"] = Date()
                 txDict["txid"] = vc.txid
                 txDict["memo"] = vc.memo
