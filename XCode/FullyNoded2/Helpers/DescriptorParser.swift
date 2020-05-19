@@ -96,13 +96,17 @@ class DescriptorParser {
                     dict["mOfNType"] = "\(mofnarray[0]) of \(numberOfKeys)"
                     dict["sigsRequired"] = UInt(mofnarray[0])
                     var keysWithPath = [String]()
+                    var fingerprints = [String]()
                     for (i, item) in mofnarray.enumerated() {
                         if i != 0 {
                             keysWithPath.append("\(item)")
+                        } else {
+                            fingerprints.append("\(item)")
                         }
                         
                         if i + 1 == mofnarray.count {
                             dict["keysWithPath"] = keysWithPath
+                            dict["fingerprint"] = fingerprints.description
                         }
                     }
                                         
@@ -244,6 +248,7 @@ class DescriptorParser {
                 dict["keysWithPath"] = ["[" + "\(arr1[1])"]
                 let arr2 = arr1[1].split(separator: "]")
                 let derivation = arr2[0]
+                dict["fingerprint"] = "\((derivation.split(separator: "/"))[0])"
                 let extendedKeyWithPath = arr2[1]
                 let arr4 = extendedKeyWithPath.split(separator: "/")
                 let extendedKey = arr4[0]

@@ -895,8 +895,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         textLabel.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         textLabel.textColor = .systemGray
         let refreshButton = UIButton()
-        let image = UIImage(systemName: "arrow.clockwise")
-        refreshButton.setImage(image, for: .normal)
+        let refreshImage = UIImage(systemName: "arrow.clockwise")
+        refreshButton.setImage(refreshImage, for: .normal)
         refreshButton.tintColor = .white
         refreshButton.tag = section
         refreshButton.addTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
@@ -994,7 +994,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if !torConnected {
             return 47
         } else {
-            if self.node != nil {
+            if node != nil {
                 if torInfoHidden {
                     if torSectionLoaded {
                         return 38

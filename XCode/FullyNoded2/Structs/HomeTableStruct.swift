@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 public struct HomeStruct: CustomStringConvertible {
     
     let fiatBalance:String
