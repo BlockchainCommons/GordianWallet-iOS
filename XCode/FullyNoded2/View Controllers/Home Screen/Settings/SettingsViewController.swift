@@ -162,9 +162,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func resetApp() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
                         
-            let alert = UIAlertController(title: "Are you sure!?", message: "This will delete ALL your wallets from your device, nodes, auth keys, encryption keys and will completely reset the app!\n\nAfter using this button you should force quit the app and reopen it to prevent weird behavior and possible crashes.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Are you sure!?", message: "This will delete ALL your wallets from your device, nodes, auth keys, encryption keys and will completely wipe the app!\n\nAfter using this button you should force quit the app and reopen it to prevent weird behavior and possible crashes.", preferredStyle: .actionSheet)
 
             alert.addAction(UIAlertAction(title: "Yes, reset now!", style: .destructive, handler: { [unowned vc = self] action in
                 
@@ -202,7 +202,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
 
                 }
                 
-                let entities = [ENTITY.nodes, ENTITY.auth, ENTITY.wallets, ENTITY.seeds]
+                let entities = [ENTITY.nodes, ENTITY.auth, ENTITY.wallets, ENTITY.seeds, ENTITY.transactions]
                 
                 for entity in entities {
                     
@@ -210,34 +210,43 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 }
                 
-                if KeyChain.remove(key: "privateKey"), KeyChain.remove(key: "userIdentifier") {
+                var succes = true
+                
+                if KeyChain.remove(key: "userIdentifier") {
                     
-                    let ft = FirstTime()
-                    ft.firstTimeHere { (success) in
-                        
-                        if success {
-                            
-                            displayAlert(viewController: vc, isError: false, message: "app has been reset")
-                            
-                        } else {
-                            
-                            displayAlert(viewController: vc, isError: true, message: "app reset partially failed, please force quit before using the app")
-                            
-                        }
-                        
-                    }
+                    print("private key deleted")
                     
                 } else {
-                    
-                    displayAlert(viewController: vc, isError: true, message: "app reset partially failed")
-                    
+                    succes = false
                 }
+                
+                if KeyChain.remove(key: "acceptedDisclaimer") {
+                    
+                    print("private key deleted")
+                    
+                } else {
+                    succes = false
+                }
+                
+                if KeyChain.remove(key: "privateKey") {
+                    
+                    print("private key deleted")
+                    
+                } else {
+                    succes = false
+                }
+                
+                if succes {
+                    displayAlert(viewController: vc, isError: false, message: "App has been wiped! Force close it and reopen to use.")
+                } else {
+                    displayAlert(viewController: vc, isError: false, message: "App partially wiped...")
+                }                
                 
             }))
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                    
-            self.present(alert, animated: true, completion: nil)
+            alert.popoverPresentationController?.sourceView = vc.settingsTable
+            vc.present(alert, animated: true, completion: nil)
             
         }
         

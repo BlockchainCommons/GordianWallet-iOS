@@ -39,7 +39,7 @@ class FirstTime {
                             }
                         }
                     } else {
-                        print("error encrypting pubkey")
+                        print("error encrypting auth key")
                         completion(false)
                     }
                 }

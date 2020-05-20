@@ -58,19 +58,15 @@ class LicenseDisclaimerViewController: UIViewController, UITextViewDelegate, UIN
     }
     
     @IBAction func acceptAction(_ sender: Any) {
-        
-        DispatchQueue.main.async {
-            
-            UserDefaults.standard.set(true, forKey: "acceptedDisclaimer1")
-            self.performSegue(withIdentifier: "next6", sender: self)
-            
+        DispatchQueue.main.async { [unowned vc = self] in
+            if KeyChain.set("acceptedDisclaimer".dataUsingUTF8StringEncoding, forKey: "acceptedDisclaimer") {
+                vc.performSegue(withIdentifier: "next6", sender: vc)
+            }
         }
-        
     }
     
     @IBAction func declineAction(_ sender: Any) {
         
-        UserDefaults.standard.set(false, forKey: "acceptedDisclaimer1")
         showAlert(vc: self, title: "Are you sure?", message: "Unfortunately if you decline the disclaimer then you can not use the app.")
         
     }

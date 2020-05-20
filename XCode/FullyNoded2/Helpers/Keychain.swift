@@ -12,8 +12,10 @@ class KeyChain {
 
     class func set(_ data: Data, forKey: String) -> Bool {
         let query = [
-            kSecAttrSynchronizable as String : true,
             kSecClass as String       : kSecClassGenericPassword as String,
+            kSecAttrSynchronizable as String : kCFBooleanTrue!,
+            kSecAttrAccessible as String : kSecAttrAccessibleAfterFirstUnlock,
+            kSecAttrAccessGroup as String: "YZHG975W3A.com.blockchaincommons.sharedItems",
             kSecAttrAccount as String : forKey,
             kSecValueData as String   : data ] as [String : Any]
 
@@ -24,6 +26,9 @@ class KeyChain {
         if status == noErr {
             return true
         } else {
+            if let err = SecCopyErrorMessageString(status, nil) {
+                print("Set failed: \(err)")
+            }
             return false
         }
     }
@@ -33,6 +38,9 @@ class KeyChain {
             kSecClass as String       : kSecClassGenericPassword,
             kSecAttrAccount as String : key,
             kSecReturnData as String  : kCFBooleanTrue!,
+            kSecAttrAccessible as String : kSecAttrAccessibleAfterFirstUnlock,
+            kSecAttrSynchronizable as String : kCFBooleanTrue!,
+            kSecAttrAccessGroup as String: "YZHG975W3A.com.blockchaincommons.sharedItems",
             kSecMatchLimit as String  : kSecMatchLimitOne ] as [String : Any]
 
         var dataTypeRef: AnyObject? = nil
@@ -42,6 +50,9 @@ class KeyChain {
         if status == noErr {
             return dataTypeRef as! Data?
         } else {
+            if let err = SecCopyErrorMessageString(status, nil) {
+                print("Get failed: \(err)")
+            }
             return nil
         }
     }
@@ -49,6 +60,8 @@ class KeyChain {
     class func remove(key: String) -> Bool {
         let query = [
             kSecClass as String       : kSecClassGenericPassword as String,
+            kSecAttrSynchronizable as String : kCFBooleanTrue!,
+            kSecAttrAccessible as String : kSecAttrAccessibleAfterFirstUnlock,
             kSecAttrAccount as String : key] as [String : Any]
 
         // Delete any existing items

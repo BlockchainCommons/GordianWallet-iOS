@@ -1224,7 +1224,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
 
             }
             
-            // MARK: - Annnnd comment the following lines of code:
+            // MARK: - And comment the following lines of code:
             
             // ---------------------------------------------------
             

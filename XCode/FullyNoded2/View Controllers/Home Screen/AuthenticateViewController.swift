@@ -75,6 +75,12 @@ class AuthenticateViewController: UIViewController, UINavigationControllerDelega
                 
                 if authKeys != nil {
                     
+                    for pk in authKeys! {
+                        let pubkey = pk["pubkey"] as! Data
+                        let str = String(bytes: pubkey, encoding: .utf8)!
+                        print("str = \(str)")
+                    }
+                    
                     if authKeys!.count > 0 {
                         
                         let pubkey = authKeys![0]["pubkey"] as! Data

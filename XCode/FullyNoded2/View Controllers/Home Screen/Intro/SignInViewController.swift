@@ -73,6 +73,7 @@ class SignInViewController: UIViewController, ASAuthorizationControllerDelegate,
                 
                 let userIdentifier = appleIDCredential.user
                 if KeyChain.set(userIdentifier.dataUsingUTF8StringEncoding, forKey: "userIdentifier") {
+                    print("userIdentifier set")
                     self.navigationController?.popToRootViewController(animated: true)
                 }                
             }

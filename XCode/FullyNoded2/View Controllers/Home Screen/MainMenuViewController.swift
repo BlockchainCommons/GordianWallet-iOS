@@ -58,6 +58,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         showFiat = false
         torConnected = false
         mainMenu.delegate = self
@@ -77,18 +78,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         infoHidden = true
         torInfoHidden = true
         showNodeInfo = false
+        
         if ud?.object(forKey: "firstTime") == nil {
             firstTimeHere()
-        } else {
-            if ud?.object(forKey: "hasUpdatedPrivKey") == nil {
-                /// Need to edit our encryption key to ensure it is synchronizable to be compatible with iCloud syncing.
-                if let privateKey = KeyChain.getData("privateKey") {
-                    if KeyChain.set(privateKey, forKey: "privateKey") {
-                        ud?.set(true, forKey: "hasUpdatedPrivKey")
-                    }
-                }
-            }
         }
+        
         Encryption.getNode { [unowned vc = self] (node, error) in
             if !error && node != nil {
                 vc.node = node!
@@ -101,6 +95,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         }
+        
         bootStrapping = true
         addStatusLabel(description: "     Bootstrapping Tor...")
         reloadSections([torCellIndex])
@@ -129,7 +124,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 let psbt = data.base64EncodedString()
                 do {
                     let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
-                    if let chain = dict["chain"] as? String {
+                    if let _ = dict["chain"] as? String {
                         /// We know its a coldcard skeleton import
                         func importColdcardSkeleton(walletToImport: [String:Any]) {
                             DispatchQueue.main.async { [unowned vc = self] in
@@ -293,7 +288,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func setTitleView() {
-        
         let imageView = UIImageView(image: UIImage(named: "1024.jpg"))
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
@@ -305,14 +299,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         imageView.addGestureRecognizer(tapRecognizer)
         titleView.addSubview(imageView)
         self.navigationItem.titleView = titleView
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if ud?.object(forKey: "acceptedDisclaimer1") == nil || KeyChain.getData("userIdentifier") == nil {
-            ud?.set(false, forKey: "acceptedDisclaimer1")
-            showIntro()
-        } else if ud?.object(forKey: "acceptedDisclaimer1") as! Bool == false {
+        if KeyChain.getData("userIdentifier") == nil || KeyChain.getData("acceptedDisclaimer") == nil {
             showIntro()
         } else {
             didAppear()
@@ -414,7 +404,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     alertAction()
                 }))
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                alert.popoverPresentationController?.sourceView = self.view
+                alert.popoverPresentationController?.sourceView = vc.view
                 vc.present(alert, animated: true, completion: nil)
             }
         }
