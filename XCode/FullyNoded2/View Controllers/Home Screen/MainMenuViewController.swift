@@ -58,7 +58,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         showFiat = false
         torConnected = false
         mainMenu.delegate = self
@@ -127,148 +126,159 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
                     if let _ = dict["chain"] as? String {
                         /// We know its a coldcard skeleton import
-                        
-                        func importColdcardSkeleton(walletToImport: [String:Any]) {
-                            DispatchQueue.main.async { [unowned vc = self] in
-                                vc.connectingView.removeConnectingView()
-                                vc.walletNameHash = walletToImport["name"] as! String
-                                vc.coldcard = walletToImport
-                                vc.performSegue(withIdentifier: "segueToConfirmImport", sender: vc)
-                            }
-                        }
-                        
-                        func importSingleSigColdCard(derivation: String) {
-                            connectingView.addConnectingView(vc: self, description: "importing...")
-                            let singleSigDict = dict[derivation] as! NSDictionary
-                            let fingerprint = dict["xfp"] as! String
-                            Import.importColdCard(coldcardDict: singleSigDict, fingerprint: fingerprint) { (walletToImport) in
-                                if walletToImport != nil {
-                                    importColdcardSkeleton(walletToImport: walletToImport!)
-                                }
-                            }
-                        }
-                        
-                        DispatchQueue.main.async { [unowned vc = self] in
-                            let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: TextBlurbs.chooseColdcardDerivationToImport(), preferredStyle: .actionSheet)
-                            
-                            alert.addAction(UIAlertAction(title: "Native Segwit (BIP84, bc1)", style: .default, handler: { action in
-                                importSingleSigColdCard(derivation: "bip84")
-                            }))
-                            
-                            alert.addAction(UIAlertAction(title: "Nested Segwit (BIP49, 3)", style: .default, handler: { action in
-                                importSingleSigColdCard(derivation: "bip49")
-                            }))
-                            
-                            alert.addAction(UIAlertAction(title: "Legacy (BIP44, 1)", style: .default, handler: { action in
-                                importSingleSigColdCard(derivation: "bip44")
-                            }))
-                            
-                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                            alert.popoverPresentationController?.sourceView = vc.view
-                            vc.present(alert, animated: true, completion: nil)
-                        }
-                        
+                        importColdCardSingleSig(dict: dict)
                     } else if let _ = dict["p2wsh_deriv"] as? String, let _ = dict["xfp"] as? String {
                         /// It is most likely a multi-sig wallet export
-                        
-                        func saveColdCardMultiSigWallet(coldCardWallet: [String:Any], w: WalletStruct) {
-                            CoreDataService.saveEntity(dict: coldCardWallet, entityName: .wallets) { (success, errorDescription) in
-                                if success {
-                                    /// Segue to confirmation
-                                    DispatchQueue.main.async { [unowned vc = self] in
-                                        vc.connectingView.removeConnectingView()
-                                        let recoveryQr = ["descriptor":w.descriptor, "blockheight":w.blockheight,"label":"COLDCARD 2 of 3"] as [String : Any]
-                                        if let json = recoveryQr.json() {
-                                            vc.accountMap = json
-                                        }
-                                        vc.coldcard = coldCardWallet
-                                        vc.performSegue(withIdentifier: "segueToColdcardMusigCreated", sender: vc)
-                                    }
-                                }
-                            }
-                        }
-                        
-                        func saveColdCardMultiSigSeed(dict: [String:Any], coldCardWallet: [String:Any], w: WalletStruct) {
-                            CoreDataService.saveEntity(dict: dict, entityName: .seeds) { [unowned vc = self] (success, errorDescription) in
-                                if success {
-                                    saveColdCardMultiSigWallet(coldCardWallet: coldCardWallet, w: w)
-                                } else {
-                                    vc.connectingView.removeConnectingView()
-                                    showAlert(vc: vc, title: "Error", message: "There was an error saving your Coldcard multisig seed.")
-                                }
-                            }
-                        }
-                        
-                        func encryptDeviceSeed(coldcardWallet: [String:Any], offline_words: String, device_words: String, w: WalletStruct) {
-                            let deviceSeedData = device_words.dataUsingUTF8StringEncoding
-                            Encryption.encryptData(dataToEncrypt: deviceSeedData) { [unowned vc = self] (encryptedData, error) in
-                                if encryptedData != nil {
-                                    let d = ["seed":encryptedData!, "birthdate": Date(), "id":UUID()] as [String : Any]
-                                    vc.deviceWords = device_words
-                                    vc.offlineWords = offline_words
-                                    saveColdCardMultiSigSeed(dict: d, coldCardWallet: coldcardWallet, w: w)
-                                } else {
-                                    vc.connectingView.removeConnectingView()
-                                    showAlert(vc: vc, title: "Error", message: "There was an error encrypting your Coldcard multisig wallet.")
-                                }
-                            }
-                        }
-                        
-                        func createMultiSigColdcard(coldcardWallet: [String:Any], offline_words: String, device_words: String) {
-                            let creator = CreateMultiSigWallet.sharedInstance
-                            let w = WalletStruct(dictionary: coldcardWallet)
-                            creator.createNodeWatchOnly(primDesc: w.descriptor, changeDesc: w.changeDescriptor) { [unowned vc = self] (success, error) in
-                                if success {
-                                    encryptDeviceSeed(coldcardWallet: coldcardWallet, offline_words: offline_words, device_words: device_words, w: w)
-                                } else {
-                                    vc.connectingView.removeConnectingView()
-                                    showAlert(vc: vc, title: "Error", message: "There was an error creating your Coldcard multisig wallet.")
-                                }
-                            }
-                        }
-                        
-                        func importMultiSigColdcard() {
-                            Import.importColdCardMultiSig(coldcardDict: dict) { [unowned vc = self] (coldcardWallet, offline_words, device_words) in
-                                if coldcardWallet != nil && offline_words != nil && device_words != nil {
-                                    createMultiSigColdcard(coldcardWallet: coldcardWallet!, offline_words: offline_words!, device_words: device_words!)
-                                } else {
-                                    vc.connectingView.removeConnectingView()
-                                    showAlert(vc: vc, title: "Error", message: "There was an error importing your Coldcard multisig wallet.")
-                                }
-                            }
-                        }
-                        
-                        DispatchQueue.main.async { [unowned vc = self] in
-                            let alert = UIAlertController(title: "Create a 2 of 3 multi-sig wallet with your Coldcard?", message: "", preferredStyle: .actionSheet)
-                            
-                            alert.addAction(UIAlertAction(title: "Create", style: .default, handler: { action in
-                                vc.connectingView.addConnectingView(vc: vc, description: "creating...")
-                                importMultiSigColdcard()
-                            }))
-                            
-                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                            alert.popoverPresentationController?.sourceView = vc.view
-                            vc.present(alert, animated: true, completion: nil)
-                        }
+                        coldcardTwoOfThree(importedDict: dict)
                     }
                 } catch {
-                    DispatchQueue.main.async { [unowned vc = self] in
-                        let alert = UIAlertController(title: "Sign PSBT?", message: TextBlurbs.signPsbtMessage(), preferredStyle: .actionSheet)
-                        
-                        alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
-                            vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
-                            vc.signPSBT(psbt: psbt)
-                        }))
-                        
-                        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                        alert.popoverPresentationController?.sourceView = vc.view
-                        vc.present(alert, animated: true, completion: nil)
-                    }
+                    signPsbtAlert(psbt: psbt)
                 }
             } catch {
                 connectingView.removeConnectingView()
                 showAlert(vc: self, title: "Error", message: "That is not a valid psbt or Coldcard export")
             }
+        }
+    }
+    
+    private func importColdCardSingleSig(dict: [String:Any]) {
+        
+        func importColdcardSkeleton(walletToImport: [String:Any]) {
+            DispatchQueue.main.async { [unowned vc = self] in
+                vc.connectingView.removeConnectingView()
+                vc.walletNameHash = walletToImport["name"] as! String
+                vc.coldcard = walletToImport
+                vc.performSegue(withIdentifier: "segueToConfirmImport", sender: vc)
+            }
+        }
+        
+        func importSingleSigColdCard(derivation: String) {
+            connectingView.addConnectingView(vc: self, description: "importing...")
+            let singleSigDict = dict[derivation] as! NSDictionary
+            let fingerprint = dict["xfp"] as! String
+            Import.importColdCard(coldcardDict: singleSigDict, fingerprint: fingerprint) { (walletToImport) in
+                if walletToImport != nil {
+                    importColdcardSkeleton(walletToImport: walletToImport!)
+                }
+            }
+        }
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: TextBlurbs.chooseColdcardDerivationToImport(), preferredStyle: .actionSheet)
+            
+            alert.addAction(UIAlertAction(title: "Native Segwit (BIP84, bc1)", style: .default, handler: { action in
+                importSingleSigColdCard(derivation: "bip84")
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Nested Segwit (BIP49, 3)", style: .default, handler: { action in
+                importSingleSigColdCard(derivation: "bip49")
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Legacy (BIP44, 1)", style: .default, handler: { action in
+                importSingleSigColdCard(derivation: "bip44")
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func coldcardTwoOfThree(importedDict: [String:Any]) {
+        
+        func saveColdCardMultiSigWallet(coldCardWallet: [String:Any], w: WalletStruct) {
+            CoreDataService.saveEntity(dict: coldCardWallet, entityName: .wallets) { (success, errorDescription) in
+                if success {
+                    /// Segue to confirmation
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        vc.connectingView.removeConnectingView()
+                        let recoveryQr = ["descriptor":w.descriptor, "blockheight":w.blockheight,"label":"COLDCARD 2 of 3"] as [String : Any]
+                        if let json = recoveryQr.json() {
+                            vc.accountMap = json
+                        }
+                        vc.coldcard = coldCardWallet
+                        vc.performSegue(withIdentifier: "segueToColdcardMusigCreated", sender: vc)
+                    }
+                }
+            }
+        }
+        
+        func saveColdCardMultiSigSeed(dict: [String:Any], coldCardWallet: [String:Any], w: WalletStruct) {
+            CoreDataService.saveEntity(dict: dict, entityName: .seeds) { [unowned vc = self] (success, errorDescription) in
+                if success {
+                    saveColdCardMultiSigWallet(coldCardWallet: coldCardWallet, w: w)
+                } else {
+                    vc.connectingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "There was an error saving your Coldcard multisig seed.")
+                }
+            }
+        }
+        
+        func encryptDeviceSeed(coldcardWallet: [String:Any], offline_words: String, device_words: String, w: WalletStruct) {
+            let deviceSeedData = device_words.dataUsingUTF8StringEncoding
+            Encryption.encryptData(dataToEncrypt: deviceSeedData) { [unowned vc = self] (encryptedData, error) in
+                if encryptedData != nil {
+                    let d = ["seed":encryptedData!, "birthdate": Date(), "id":UUID()] as [String : Any]
+                    vc.deviceWords = device_words
+                    vc.offlineWords = offline_words
+                    saveColdCardMultiSigSeed(dict: d, coldCardWallet: coldcardWallet, w: w)
+                } else {
+                    vc.connectingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "There was an error encrypting your Coldcard multisig wallet.")
+                }
+            }
+        }
+        
+        func createMultiSigColdcard(coldcardWallet: [String:Any], offline_words: String, device_words: String) {
+            let creator = CreateMultiSigWallet.sharedInstance
+            let w = WalletStruct(dictionary: coldcardWallet)
+            creator.createNodeWatchOnly(primDesc: w.descriptor, changeDesc: w.changeDescriptor) { [unowned vc = self] (success, error) in
+                if success {
+                    encryptDeviceSeed(coldcardWallet: coldcardWallet, offline_words: offline_words, device_words: device_words, w: w)
+                } else {
+                    vc.connectingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "There was an error creating your Coldcard multisig wallet.")
+                }
+            }
+        }
+        
+        func importMultiSigColdcard() {
+            Import.importColdCardMultiSig(coldcardDict: importedDict) { [unowned vc = self] (coldcardWallet, offline_words, device_words) in
+                if coldcardWallet != nil && offline_words != nil && device_words != nil {
+                    createMultiSigColdcard(coldcardWallet: coldcardWallet!, offline_words: offline_words!, device_words: device_words!)
+                } else {
+                    vc.connectingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "There was an error importing your Coldcard multisig wallet.")
+                }
+            }
+        }
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Create a 2 of 3 multi-sig wallet with your Coldcard?", message: "", preferredStyle: .actionSheet)
+            
+            alert.addAction(UIAlertAction(title: "Create", style: .default, handler: { action in
+                vc.connectingView.addConnectingView(vc: vc, description: "creating...")
+                importMultiSigColdcard()
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func signPsbtAlert(psbt: String) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Sign PSBT?", message: TextBlurbs.signPsbtMessage(), preferredStyle: .actionSheet)
+            
+            alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
+                vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
+                vc.signPSBT(psbt: psbt)
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -805,7 +815,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let dateLabel = cell.viewWithTag(5) as! UILabel
         let infoButton = cell.viewWithTag(6) as! UIButton
         let changeImage = cell.viewWithTag(7) as! UIImageView
+        let backView = cell.viewWithTag(10)!
         
+        backView.layer.cornerRadius = 8
         changeImage.tintColor = .darkGray
         infoButton.addTarget(self, action: #selector(getTransaction(_:)), for: .touchUpInside)
         infoButton.restorationIdentifier = "\( indexPath.section)"

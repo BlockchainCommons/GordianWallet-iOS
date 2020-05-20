@@ -50,7 +50,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     @IBOutlet weak var coolInfoOutlet: UIButton!
     @IBOutlet weak var coldInfoOutlet: UIButton!
     @IBOutlet weak var recoverOutlet: UIButton!
-    @IBOutlet weak var importOutlet: UIButton!
     
 
     override func viewDidLoad() {
@@ -60,7 +59,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         navigationController?.delegate = self
         recoverWalletOutlet.layer.cornerRadius = 10
         recoverOutlet.layer.cornerRadius = 8
-        importOutlet.layer.cornerRadius = 8
+        //importOutlet.layer.cornerRadius = 8
         hotWalletOutlet.layer.cornerRadius = 8
         warmWalletOutlet.layer.cornerRadius = 8
         coolWalletOutlet.layer.cornerRadius = 8
@@ -135,7 +134,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
-        
     }
     
     @IBAction func warmInfo(_ sender: Any) {
@@ -309,17 +307,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
     }
     
-    @IBAction func importAction(_ sender: Any) {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.performSegue(withIdentifier: "goImport", sender: vc)
-            
-        }
-        
-    }
-    
-    @IBAction func recoverAction(_ sender: Any) {
+   @IBAction func recoverAction(_ sender: Any) {
         
         DispatchQueue.main.async { [unowned vc = self] in
             
@@ -1143,129 +1131,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
     }
     
-    private func processDescriptor(descriptor: String) {
-        
-        let cv = ConnectingView()
-        cv.addConnectingView(vc: self, description: "processing...")
-        
-        if let data = descriptor.data(using: .utf8) {
-            
-            do {
-                
-            let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
-            
-                if let _ = dict["descriptor"] as? String {
-                    
-                    if let _ = dict["blockheight"] as? Int {
-                        /// It is an Account Map.
-                        Import.importAccountMap(accountMap: dict) { walletDict in
-                            print("importAccountMap")
-                            
-                            if walletDict != nil {
-                                DispatchQueue.main.async { [unowned vc = self] in
-                                    cv.removeConnectingView()
-                                    vc.walletToImport = walletDict!
-                                    vc.walletName = walletDict!["name"] as! String
-                                    vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
-                                    
-                                }
-                            }
-                        }
-                    }
-                } else if let fingerprint = dict["xfp"] as? String {
-                    /// It is a coldcard wallet skeleton file.
-                    cv.removeConnectingView()
-                    DispatchQueue.main.async { [unowned vc = self] in
-                        
-                        let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: TextBlurbs.chooseColdcardDerivationToImport(), preferredStyle: .actionSheet)
-                        
-                        alert.addAction(UIAlertAction(title: "Native Segwit (BIP84, bc1)", style: .default, handler: { action in
-                            cv.addConnectingView(vc: vc, description: "importing...")
-                            let bip84Dict = dict["bip84"] as! NSDictionary
-                            
-                            Import.importColdCard(coldcardDict: bip84Dict, fingerprint: fingerprint) { (walletToImport) in
-                                
-                                if walletToImport != nil {
-                                    DispatchQueue.main.async { [unowned vc = self] in
-                                        cv.removeConnectingView()
-                                        vc.walletName = walletToImport!["name"] as! String
-                                        vc.walletToImport = walletToImport!
-                                        vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
-                                        
-                                    }
-                                }
-                            }
-                            
-                        }))
-                        
-                        alert.addAction(UIAlertAction(title: "Nested Segwit (BIP49, 3)", style: .default, handler: { action in
-                            cv.addConnectingView(vc: vc, description: "importing...")
-                            let bip49Dict = dict["bip49"] as! NSDictionary
-                            
-                            Import.importColdCard(coldcardDict: bip49Dict, fingerprint: fingerprint) { (walletToImport) in
-                                
-                                if walletToImport != nil {
-                                    DispatchQueue.main.async { [unowned vc = self] in
-                                        cv.removeConnectingView()
-                                        vc.walletName = walletToImport!["name"] as! String
-                                        vc.walletToImport = walletToImport!
-                                        vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
-                                        
-                                    }
-                                }
-                            }
-                            
-                            
-                        }))
-                        
-                        alert.addAction(UIAlertAction(title: "Legacy (BIP44, 1)", style: .default, handler: { action in
-                            cv.addConnectingView(vc: vc, description: "importing...")
-                            let bip44Dict = dict["bip44"] as! NSDictionary
-                            
-                            Import.importColdCard(coldcardDict: bip44Dict, fingerprint: fingerprint) { (walletToImport) in
-                                
-                                if walletToImport != nil {
-                                    DispatchQueue.main.async { [unowned vc = self] in
-                                        cv.removeConnectingView()
-                                        vc.walletName = walletToImport!["name"] as! String
-                                        vc.walletToImport = walletToImport!
-                                        vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
-                                        
-                                    }
-                                }
-                            }
-                            
-                        }))
-                        
-                        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                        alert.popoverPresentationController?.sourceView = vc.view
-                        vc.present(alert, animated: true, completion: nil)
-                        
-                    }
-                }
-                
-            } catch {
-                /// It is not an Account Map.
-                Import.importDescriptor(descriptor: descriptor) { [unowned vc = self] walletDict in
-                    
-                    if walletDict != nil {
-                        DispatchQueue.main.async { [unowned vc = self] in
-                            vc.walletToImport = walletDict!
-                            vc.walletName = walletDict!["name"] as! String
-                            vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
-                            
-                        }
-                        
-                    } else {
-                        cv.removeConnectingView()
-                        showAlert(vc: vc, title: "Error", message: "error importing that account")
-                        
-                    }
-                }
-            }
-        }
-    }
-    
     private func createWalletWithUserSuppliedSeed(dict: [String:String]?) {
         
         creatingView.addConnectingView(vc: self.navigationController!, description: "creating your account")
@@ -1576,19 +1441,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         thisVc.navigationController!.popToRootViewController(animated: true)
                         
                     }                    
-                    
-                }
-                
-            }
-            
-        case "goImport":
-            
-            if let vc = segue.destination as? ScannerViewController {
-                
-                vc.isImporting = true
-                vc.onImportDoneBlock = { [unowned thisVc = self] descriptor in
-                    
-                    thisVc.processDescriptor(descriptor: descriptor)
                     
                 }
                 

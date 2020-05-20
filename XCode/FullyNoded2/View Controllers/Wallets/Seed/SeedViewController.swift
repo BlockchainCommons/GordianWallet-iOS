@@ -57,6 +57,11 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
+    @IBAction func deletAccount(_ sender: Any) {
+        showAlert(vc: self, title: "Coming soon", message: "This button will delete this account in the very near future.")
+    }
+    
+    
     @IBAction func editLabel(_ sender: Any) {
         
         let title = "Give your wallet a label"
