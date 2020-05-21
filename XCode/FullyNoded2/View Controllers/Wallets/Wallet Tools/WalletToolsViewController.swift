@@ -10,12 +10,14 @@ import UIKit
 
 class WalletToolsViewController: UIViewController {
     
+    var addSeed = Bool()
     var wallet:WalletStruct!
     var sweepDoneBlock: ((Bool) -> Void)?
     var refillDoneBlock: ((Bool) -> Void)?
     @IBOutlet var rescanOutlet: UIButton!
     @IBOutlet var sweepToOutlet: UIButton!
     @IBOutlet var refillOutlet: UIButton!
+    @IBOutlet weak var addSignerOutlet: UIButton!
     
     let creatingView = ConnectingView()
     
@@ -25,6 +27,13 @@ class WalletToolsViewController: UIViewController {
         rescanOutlet.layer.cornerRadius = 8
         sweepToOutlet.layer.cornerRadius = 8
         refillOutlet.layer.cornerRadius = 8
+        addSignerOutlet.layer.cornerRadius = 8
+        
+        if String(data: wallet.seed, encoding: .utf8) != "no seed" {
+            
+            addSignerOutlet.alpha = 0
+            
+        }
         
     }
     
@@ -68,6 +77,18 @@ class WalletToolsViewController: UIViewController {
         }
         
     }
+    
+    @IBAction func addSigner(_ sender: Any) {
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            vc.addSeed = true
+            vc.performSegue(withIdentifier: "refillMultisig", sender: vc)
+            
+        }
+        
+    }
+    
     
     @IBAction func refillKeypool(_ sender: Any) {
         
@@ -363,6 +384,7 @@ class WalletToolsViewController: UIViewController {
             
             if let vc = segue.destination as? RefillMultisigViewController {
                 
+                vc.addSeed = addSeed
                 vc.wallet = wallet
                 vc.multiSigRefillDoneBlock = { [unowned thisVc = self] result in
                     

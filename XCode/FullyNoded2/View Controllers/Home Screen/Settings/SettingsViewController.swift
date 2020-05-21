@@ -28,11 +28,20 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    @IBAction func goToSeeds(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "segueToSeeds", sender: vc)
+            
+        }
+        
+    }
+    
+    
     @IBAction func close(_ sender: Any) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.dismiss(animated: true, completion: nil)
+            vc.dismiss(animated: true, completion: nil)
             
         }
         
@@ -47,9 +56,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func load() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.settingsTable.reloadData()
+            vc.settingsTable.reloadData()
             
         }
         
@@ -122,9 +131,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         
         switch indexPath.section {
             
-//        case 0:
-//            thumbnail.image = UIImage(systemName: <#T##String#>)
-            
         case 0:
             thumbnail.image = UIImage(systemName: "lock.shield")
             label.text = "Export Tor V3 Authentication Public Key"
@@ -175,7 +181,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-        }
+    }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         
@@ -253,9 +259,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func goToSecurityCenter() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.performSegue(withIdentifier: "security", sender: self)
+            vc.performSegue(withIdentifier: "security", sender: vc)
             
         }
         
@@ -363,20 +369,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//
-//        let id = segue.identifier
-//
-//        switch id {
-//
-//        default:
-//
-//            break
-//
-//        }
-//
-//    }
     
 }
 

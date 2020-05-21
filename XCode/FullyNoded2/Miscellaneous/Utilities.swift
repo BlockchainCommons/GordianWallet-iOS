@@ -213,35 +213,40 @@ public func rounded(number: Double) -> Double {
 
 public func displayAlert(viewController: UIViewController, isError: Bool, message: String) {
     
-    DispatchQueue.main.async {
+    if isError {
         
-        let errorView = ErrorView()
+        showAlert(vc: viewController, title: "Error", message: message)
         
-        errorView.isUserInteractionEnabled = true
-        
-        errorView.showErrorView(vc: viewController,
-                                text: message,
-                                isError: isError)
+    } else {
+     
+        DispatchQueue.main.async {
+            
+            let errorView = ErrorView()
+            
+            errorView.isUserInteractionEnabled = true
+            
+            errorView.showErrorView(vc: viewController,
+                                    text: message,
+                                    isError: isError)
+            
+        }
         
     }
     
 }
 
-public func network(path: String) -> Network {
+public func network(descriptor: String) -> Network {
     
-    var network:Network!
+    let p = DescriptorParser()
+    let str = p.descriptor(descriptor)
     
-    if path.contains("/1'") {
-        
-        network = .testnet
+    if str.chain == "Testnet" {
+        return Network.testnet
         
     } else {
-        
-        network = .mainnet
+        return Network.mainnet
         
     }
-    
-    return network
     
 }
 

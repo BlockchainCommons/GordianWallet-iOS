@@ -12,6 +12,7 @@ import AVFoundation
 
 class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    var scanningBip21 = Bool()
     var scanningRecovery = Bool()
     var isScanningNode = Bool()
     var isImporting = Bool()
@@ -297,27 +298,32 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
             configureDetailLabel()
             configureDontHaveAnodeButton()
             
-        }
-        
-        if isImporting {
+        } else if isImporting {
             
-            label.text = "Scan a Descriptor"
-            labelDetail.text = "FullyNoded 2 allows you to import and export your descriptors, this is a great way to recover your private keys or create a watch-only wallet."
-            addTestingNodeButton.setTitle("what is a descriptor?", for: .normal)
+            label.text = "Import an Account"
+            labelDetail.text = "You may scan an \"Account Map\", Bitcoin Core Descriptor, Specter \"Wallet Import\" QR, or Coldcard skeleton json"
             configureLabel()
             configureDetailLabel()
+            closeButton.alpha = 0
             configureDontHaveAnodeButton()
             
-        }
-        
-        if scanningRecovery {
+        } else if scanningRecovery {
             
-            label.text = "Scan a RecoveryQR"
-            labelDetail.text = "FullyNoded 2 allows you to backup/export a RecoveryQR Code for each wallet you create. You can scan one at anytime to recover lost funds and recreate the wallet on your device."
+            label.text = "Scan an Account Map"
+            labelDetail.text = "FullyNoded 2 allows you to backup/export an Account Map QR code for each wallet you create. You can scan one at anytime to recreate the wallet as watch-only, you can then add signers to it."
             addTestingNodeButton.setTitle("more info please", for: .normal)
             configureLabel()
             configureDetailLabel()
             configureDontHaveAnodeButton()
+            
+        } else if scanningBip21 {
+            
+        } else {
+            
+            label.text = "Scan a QR Code"
+            labelDetail.text = "You can scan a QuickConnect QR to add a node, or a PSBT to sign"
+            configureLabel()
+            configureDetailLabel()
             
         }
         

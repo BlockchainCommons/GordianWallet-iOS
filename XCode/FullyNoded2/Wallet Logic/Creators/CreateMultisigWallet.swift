@@ -159,4 +159,76 @@ class CreateMultiSigWallet {
         
     }
     
+    func createNodeWatchOnly(primDesc: String, changeDesc: String, completion: @escaping ((success: Bool, error: String?)) -> Void) {
+        let walletName = Encryption.sha256hash(primDesc)
+        
+        func importChange() {
+            let params = "[{ \"desc\": \"\(changeDesc)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
+            Reducer.makeCommand(walletName: walletName, command: .importmulti, param: params) { (object, errorDesc) in
+                
+                if object != nil {
+                    completion((true, nil))
+                    
+                } else {
+                    completion((false, errorDesc))
+                    
+                }
+            }
+        }
+        
+        func importMulti(param: Any) {
+        
+            Reducer.makeCommand(walletName: walletName, command: .importmulti, param: param) { (object, errorDesc) in
+                
+                if let result = object as? NSArray {
+                    
+                    if result.count > 0 {
+                        
+                        if let dict = result[0] as? NSDictionary {
+                            
+                            if let success = dict["success"] as? Bool {
+                                
+                                if success {
+                                    importChange()
+                                    
+                                } else {
+                                    
+                                    if let errorDict = dict["error"] as? NSDictionary {
+                                        
+                                        if let error = errorDict["message"] as? String {
+                                            completion((false, "error importing multi: \(error)"))
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                } else {
+                    completion((false, errorDesc))
+                    
+                }
+            }
+        }
+        
+        func createWallet() {
+                let param = "\"\(walletName)\", false, true, \"\", true"
+            
+                Reducer.makeCommand(walletName: walletName, command: .createwallet, param: param) { (object, errorDesc) in
+                    
+                    if object != nil {
+                        let params = "[{ \"desc\": \"\(primDesc)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
+                        importMulti(param: params)
+                        
+                    } else {
+                        completion((false, errorDesc))
+                        
+                    }
+                }
+            }
+        createWallet()
+        
+    }
+    
 }

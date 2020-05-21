@@ -8,10 +8,10 @@
 
 import UIKit
 import AuthenticationServices
-import LibWally
 
 class SeedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
+    var xpubs = ""
     var verified = Bool()
     let qrGenerator = QRGenerator()
     var recoveryQr = ""
@@ -20,10 +20,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     var itemToDisplay = ""
     var infoText = ""
     var barTitle = ""
-    var privateKeyDescriptor = ""
-    var publicKeyDescriptor = ""
-    var birthdate = "\"now\""
-    var recoveryText = ""
     var wallet:WalletStruct!
     @IBOutlet var tableView: UITableView!
     
@@ -69,8 +65,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @objc func handleCopyTap(_ sender: UIButton) {
         
-        print("copy tapped")
-        
         let section = sender.tag
         
         var textToCopy = ""
@@ -80,23 +74,15 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         case 0:
             textToCopy = recoveryQr
-            message = "your recovery QR text was copied to your clipboard and will be erased in one minute"
+            message = "your \"Account Map\" text was copied to your clipboard and will be erased in one minute"
             
         case 1:
-            textToCopy = "Devices seed:" + " " + seed + "derivation: \(wallet.derivation)/0" + "birthdate unix: \(wallet.birthdate)"
+            textToCopy = "Devices seed:" + " " + seed + "derivation: \(wallet.derivation)/0" + "blockheight: \(wallet.blockheight)"
             message = "your seed was copied to your clipboard and will be erased in one minute"
             
         case 2:
-            textToCopy = "Public Key Descriptors: \(publicKeyDescriptor)"
-            message = "your public key descriptor was copied to your clipboard and will be erased in one minute"
-            
-        case 3:
-            textToCopy = "Private Key Descriptors: \(privateKeyDescriptor)"
-            message = "your private key descriptor was copied to your clipboard and will be erased in one minute"
-            
-//        case 4:
-//            textToCopy = "Bitcoin Core recovery commands: \(recoveryText)"
-//            message = "your recovery command was copied to your clipboard and will be erased in one minute"
+            textToCopy = "Account xpub's: \(xpubs)"
+            message = "your xpub's were copied to your clipboard and will be erased in one minute"
             
         default:
             break
@@ -128,14 +114,12 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             itemToDisplay = seed
             shareText()
         case 2:
-            itemToDisplay = publicKeyDescriptor
+            itemToDisplay = xpubs
             shareText()
-        case 3:
-            itemToDisplay = privateKeyDescriptor
-            shareText()
-        case 4:
-            itemToDisplay = recoveryText
-            shareText()
+//        case 3:
+//            itemToDisplay = privateKeyDescriptor
+//            shareText()
+
         default:
             break
         }
@@ -151,30 +135,17 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 1:
             
             itemToDisplay = seed
-            infoText = "Your BIP39 recovery phrase which can be imported into BIP39 compatible wallets, by default StandUp does not create a password for your recovery phrase."
+            infoText = "Your BIP39 seed phrase which can be imported into BIP39 compatible wallets, by default Fully Noded does not create a passphrase for your seed words."
             barTitle = "BIP39 Mnemonic"
             goToQRDisplayer()
             
         case 2:
-            
-            itemToDisplay = publicKeyDescriptor
-            infoText = "Your public key descriptor which can be used with the importmulti command to create a watch-only wallet with Bitcoin Core."
-            barTitle = "Pubkey Descriptor"
+
+            itemToDisplay = xpubs
+            infoText = "Your account xpub's along with fingerprints and derivation paths."
+            barTitle = "Account XPUB's"
             goToQRDisplayer()
-            
-        case 3:
-            
-            itemToDisplay = privateKeyDescriptor
-            infoText = "Your private key descriptor which can be used with the importmulti command to recover your StandUp wallet with Bitcoin Core."
-            barTitle = "Private Key Descriptor"
-            goToQRDisplayer()
-            
-//        case 4:
-//
-//            itemToDisplay = recoveryText
-//            infoText = "This command can be pasted into a terminal to add all your devices private keys to your node, this would be useful if you lost your device as you can use your node to recover your wallet."
-//            barTitle = "Recovery Command"
-//            goToQRDisplayer()
+
             
         default:
             
@@ -218,142 +189,84 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func loadData() {
         
-        let p = DescriptorParser()
-        let s = p.descriptor(self.wallet.descriptor)
-        self.publicKeyDescriptor = "\(self.wallet.descriptor)\n\n\(self.wallet.changeDescriptor)"
+        let recoveryQr = ["descriptor":"\(wallet.descriptor)", "blockheight":wallet.blockheight, "label": wallet.label] as [String : Any]
         
-        self.xprv { [unowned vc = self] (xprv) in
+        if let json = recoveryQr.json() {
             
-            if xprv != "" {
+            let (qr, error) = qrGenerator.getQRCode(textInput: json)
+            recoveryImage = qr
+            
+            if error {
                 
-                let encryptedWords = vc.wallet.seed
-                Encryption.decryptData(dataToDecrypt: encryptedWords) { (decryptedWords) in
+                showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+                
+            }
+            
+        }
+        
+        SeedParser.fetchSeeds(wallet: wallet) { [unowned vc = self] seeds in
+            
+            var str = ""
+            
+            if seeds != nil {
+                
+                for (x, s) in seeds!.enumerated() {
                     
-                    if decryptedWords != nil {
+                    let arr = s.split(separator: " ")
+                    
+                    for (i, word) in arr.enumerated() {
                         
-                        if let words = String(data: decryptedWords!, encoding: .utf8) {
+                        if i + 1 == arr.count {
                             
-                            if let bip39words = BIP39Mnemonic(words) {
+                            /// There are multiple seeds so split them up with a triple new line.
+                            if x == 0 && seeds!.count > 1 {
                                 
-                                let entropyString = bip39words.entropy.description
+                               str += "\(i + 1). \(word)\n\n\n"
                                 
-                                vc.xpub(descriptorStruct: s) { (xpub) in
+                            } else {
                                 
-                                    if xpub != "" {
-                                        
-                                        if !s.isMulti {
-                                         
-                                            // its single sig
-                                            var privKeyDesc = vc.wallet.descriptor
-                                            privKeyDesc = privKeyDesc.replacingOccurrences(of: xpub, with: xprv)
-                                            let recoveryDesc = privKeyDesc.replacingOccurrences(of: xpub, with: xprv)
-                                            let arr = privKeyDesc.split(separator: "#")
-                                            privKeyDesc = "\(arr[0])"
-                                            
-                                            var changeDescriptor = vc.wallet.changeDescriptor
-                                            changeDescriptor = changeDescriptor.replacingOccurrences(of: xpub, with: xprv)
-                                            let arr1 = changeDescriptor.split(separator: "#")
-                                            changeDescriptor = "\(arr1[0])"
-                                            
-                                            let recoveryQr = ["entropy": entropyString, "descriptor":"\(recoveryDesc)","birthdate":vc.wallet.birthdate, "blockheight":vc.wallet.blockheight, "label": vc.wallet.label] as [String : Any]
-                                            
-                                            if let json = recoveryQr.json() {
-                                                
-                                                let (qr, error) = vc.qrGenerator.getQRCode(textInput: json)
-                                                vc.recoveryImage = qr
-                                                
-                                                if error {
-                                                    
-                                                    showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
-                                                    
-                                                }
-                                                
-                                            }
-                                            
-                                            vc.privateKeyDescriptor = "\(privKeyDesc)\n\n\(changeDescriptor)"
-                                            
-                                        } else {
-                                         
-                                            // its multisig
-                                            var primaryDesc = vc.wallet.descriptor
-                                            var changeDesc = vc.wallet.changeDescriptor
-                                            
-                                            primaryDesc = primaryDesc.replacingOccurrences(of: xpub, with: xprv)
-                                            let arr = primaryDesc.split(separator: "#")
-                                            primaryDesc = "\(arr[0])"
-                                            
-                                            changeDesc = changeDesc.replacingOccurrences(of: xpub, with: xprv)
-                                            let arr1 = changeDesc.split(separator: "#")
-                                            changeDesc = "\(arr1[0])"
-                                            
-                                            // we need to preserve the public key descriptor checksum when creating the recovery qr as the descriptor is manipulated and converted back to a public key descriptor during the recovery process. It is more efficient to do it this way then making extra rpc calls to the node during recovery.
-                                            let recoveryDesc = (vc.wallet.descriptor).replacingOccurrences(of: xpub, with: xprv)
-                                            
-                                            let recoveryQr = ["entropy": entropyString, "descriptor":"\(recoveryDesc)","birthdate":vc.wallet.birthdate, "blockheight":vc.wallet.blockheight, "label": vc.wallet.label] as [String : Any]
-                                            
-                                            if let json = recoveryQr.json() {
-                                                
-                                                let (qr, error) = vc.qrGenerator.getQRCode(textInput: json)
-                                                vc.recoveryImage = qr
-                                                
-                                                if error {
-                                                    
-                                                    showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
-                                                    
-                                                }
-                                                
-                                            }
-                                                                                        
-                                            vc.privateKeyDescriptor = "\(primaryDesc)\n\n\(changeDesc)"
-                                            
-//                                            vc.recoveryText = "bitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(primaryDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }\n\nbitcoin-cli -rpcwallet=\(vc.wallet.name!) importmulti { \"desc\": \"\(changeDesc)\", \"timestamp\": \(vc.wallet.birthdate), \"range\": [0,999], \"watchonly\": false, \"keypool\": false, \"internal\": false }"
-                                            
-                                        }
-                                        
-                                        DispatchQueue.main.async {
-                                            
-                                            vc.tableView.reloadData()
-                                            
-                                        }
-                                        
-                                    }
-                                    
-                                }
-                                                            
+                                /// Its the last word of the last seed.
+                                str += "\(i + 1). \(word)"
+                                
                             }
+                            
+                        } else {
+                            
+                            /// Its not the last word, add a new line between each seed word.
+                            str += "\(i + 1). \(word)\n"
                             
                         }
                         
                     }
                     
+                    if x + 1 == seeds!.count {
+                        vc.seed = str
+                        
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            
+                            vc.tableView.reloadData()
+                            
+                        }
+                        
+                    }
+                                
                 }
                 
             } else {
                 
-                // wallet is cold
-                
-                let recoveryQr = ["descriptor":"\(vc.wallet.descriptor)","birthdate":vc.wallet.birthdate, "blockheight":vc.wallet.blockheight] as [String : Any]
-                
-                if let json = recoveryQr.json() {
-                    
-                    let (qr, error) = vc.qrGenerator.getQRCode(textInput: json)
-                    vc.recoveryImage = qr
-                    
-                    if error {
-                        
-                        showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
-                        
-                    }
-                    
-                }
-                
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [unowned vc = self] in
                     
                     vc.tableView.reloadData()
                     
                 }
                 
             }
+            
+        }
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            vc.tableView.reloadData()
             
         }
         
@@ -379,12 +292,10 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func numberOfSections(in tableView: UITableView) -> Int {
                 
-        return 4//5
+        return 3
         
     }
-    
-    
-    
+        
     private func recoveryCell(_ indexPath: IndexPath) -> UITableViewCell {
         
         let recoveryCell = tableView.dequeueReusableCell(withIdentifier: "recoveryCell", for: indexPath)
@@ -402,53 +313,30 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.textLabel?.numberOfLines = 0
         cell.textLabel?.textColor = .lightGray
         cell.textLabel?.font = .systemFont(ofSize: 15, weight: .regular)
-     
-        if wallet != nil {
-            
-            if wallet.type == "CUSTOM" {
-                
-                cell.textLabel?.text = "⚠︎ No seed on device"
-                
-            }
-            
-        }
+        cell.textLabel?.text = seed
+        return cell
         
-        if wallet?.seed != nil {
-            
-            let encryptedSeed = wallet!.seed
-            
-            Encryption.decryptData(dataToDecrypt: encryptedSeed) { [unowned vc = self] (decryptedData) in
-                
-                if decryptedData != nil {
-                    
-                    let decryptedSeed = String(bytes: decryptedData!, encoding: .utf8)!
-                    vc.seed = decryptedSeed
-                    let arr = decryptedSeed.split(separator: " ")
-                    var str = ""
-                    
-                    for (i, word) in arr.enumerated() {
-                        
-                        if i + 1 == arr.count {
-                            
-                            str += "\(i + 1). \(word)"
-                            
-                        } else {
-                            
-                            str += "\(i + 1). \(word)\n"
-                            
-                        }
-                        
-                    }
-                    
-                    cell.textLabel?.text = str
-                    
-                }
+    }
+    
+    private func xpubsCell(_ indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = UITableViewCell()
+        cell.backgroundColor = #colorLiteral(red: 0.0507061556, green: 0.05862525851, blue: 0.0711022839, alpha: 1)
+        cell.selectionStyle = .none
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.textColor = .lightGray
+        cell.textLabel?.font = .systemFont(ofSize: 15, weight: .regular)
+        
+        if wallet != nil {
+            let descriptorParser = DescriptorParser()
+            let descriptorStruct = descriptorParser.descriptor(wallet.descriptor)
+            var xpubtext = ""
+            for key in descriptorStruct.keysWithPath {
+                xpubtext += key.replacingOccurrences(of: "/0/*", with: "") + "\n\n"
                 
             }
-            
-        } else {
-            
-            cell.textLabel?.text = "⚠︎ No seed on device"
+            xpubs = "\(xpubtext.split(separator: ")")[0])"
+            cell.textLabel?.text = xpubs
             
         }
         
@@ -473,52 +361,11 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         case 1:
             
-            if wallet != nil {
-                
-                if String(data: wallet.seed, encoding: .utf8) != "no seed" {
-                    
-                    return seedCell(indexPath)
-                    
-                } else {
-                    
-                    cell.textLabel?.text = "No BIP39 Menmonic available"
-                    return cell
-                    
-                }
-                
-            } else {
-                
-                return cell
-                
-            }
+            return seedCell(indexPath)
                         
         case 2:
             
-            cell.textLabel?.text = self.publicKeyDescriptor
-            return cell
-            
-        case 3:
-            
-            if self.wallet != nil {
-                
-                if self.wallet.type == "CUSTOM" {
-                    
-                    cell.textLabel?.text = "⚠︎ No private keys on device"
-                    
-                } else {
-                    
-                    cell.textLabel?.text = self.privateKeyDescriptor
-                    
-                }
-                
-            }
-            
-            return cell
-            
-//        case 4:
-//
-//            cell.textLabel?.text = self.recoveryText
-//            return cell
+            return xpubsCell(indexPath)
             
         default:
             
@@ -576,33 +423,19 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         switch section {
             
         case 0:
-            textLabel.text = "Recovery QR"
+            textLabel.text = "Account Map (public keys)"
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             
         case 1:
-            textLabel.text = "BIP39 Mnemonic"
+            textLabel.text = "Seed Words"
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(qrButton)
             header.addSubview(copyButton)
             
         case 2:
-            textLabel.text = "Public Key Descriptors"
-            header.addSubview(textLabel)
-            header.addSubview(shareButton)
-            header.addSubview(qrButton)
-            header.addSubview(copyButton)
-            
-        case 3:
-            textLabel.text = "Private Key Descriptors"
-            header.addSubview(textLabel)
-            header.addSubview(shareButton)
-            header.addSubview(qrButton)
-            header.addSubview(copyButton)
-            
-        case 4:
-            textLabel.text = "Bitcoin Core Recovery"
+            textLabel.text = "Account XPUB's"
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(qrButton)
@@ -633,9 +466,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 case 2: return 80
                     
                 case 3: return 150
-                    
-                //case 4: return 120
-                    
+                                        
                 default:
                     
                     return 0
@@ -645,18 +476,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             } else if wallet.type == "DEFAULT"  {
                 
                 return 80
-                
-            } else if wallet.type == "CUSTOM" {
-                
-                switch section {
-                    
-                case 1, 3: return 80
-                                        
-                default:
-                    
-                    return 0
-                    
-                }
                 
             } else {
                 
@@ -692,7 +511,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     
                 case 0:
                     
-                    label.text = "This Recovery QR can be used with either FullyNoded 2 or StandUp.app to recover this wallet. ENSURE you back it up safely."
+                    label.text = "This \"Account Map\" QR can be used with either FullyNoded 2 to recreate this wallet as watch-only. ENSURE you back it up safely, it is required to recover multi-sig wallets."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 50)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 50)
                     
@@ -704,21 +523,9 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     
                 case 2:
                     
-                    label.text = "You must back this up in order to recover your wallet. Your public key descriptor can be used to easily create watch-only wallets with Bitcoin Core or to supplement multisig wallet recovery. You may use it to derive the public keys and addresses associated with this wallet."
+                    label.text = "The account xpub's along with their fingerprint's and paths. Your Account Map already holds all the xpub's but we export them here so you may use them in other wallets."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
-                    
-                case 3:
-                    
-                    label.text = "Your private key descriptor can be used to recover or spend from your wallet by importing it into your node. You may use it to derive the private keys associated with the seed which is held on this device for the current wallet. This private key descriptor will only allow you to sign for one of the two required signatures needed to spend from your StandUp multisig wallet. In order to fully recover your wallet you also need either your node that you created the wallet on or your recovery seed which should have been saved by you when you created this wallet."
-                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 150)
-                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 150)
-                    
-//                case 4:
-//
-//                    label.text = "You may paste this command directly into a terminal where Bitcoin Core is running and it will automatically import all the private keys from the seed which is held on this device for the current wallet. In order to fully recover your wallet you will also need either your node that you created the wallet on or your recovery seed which should have been saved by you when you created this wallet."
-//                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 120)
-//                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 120)
                     
                 default:
                     
@@ -732,35 +539,23 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     
                 case 0:
                 
-                    label.text = "This Recovery QR can be used with either FullyNoded 2 or StandUp.app to recover this wallet. ENSURE you back it up safely."
+                    label.text = "This \"Wallet Import QR\" can be used with either FullyNoded 2 or StandUp.app to recreate this wallet as watch-only. ENSURE you back it up safely."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 50)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 50)
                     
-                case 1: label.text = "You can recover this wallet with BIP39 compatible wallets and tools, by default there is no passphrase associated with this mnemonic."
+                case 1: label.text = "You can recover this account with BIP39 compatible wallets and tools, by default there is no passphrase associated with the seed words created by Fully Noded 2."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
                     
-                case 2: label.text = "Your public key descriptor can be used to easily create watch-only wallets with Bitcoin Core or supplement multisig wallet recovery. You may use it to derive the addresses associated with this wallet."
+                case 2: label.text = "The account xpub's along with their fingerprint's and paths. Your Account Map already holds all the xpub's but if you want we export them here so you may use them in other wallets."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
-                    
-                case 3: label.text = "Your private key descriptor can be used to recover or spend from your wallet by importing it into your node. You may use it to derive the private keys associated with this wallet which are held on this device."
-                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
-                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
-                    
-//                case 4: label.text = "You may paste these two commands directly into a terminal where Bitcoin Core is running and your node will automatically import all the private keys from the current wallet."
-//                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
-//                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
                     
                 default:
                     
                     label.text = ""
                     
                 }
-                
-            } else {
-                
-                label.text = ""
                 
             }
             
@@ -785,86 +580,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
     }
-    
-    func xpub(descriptorStruct: DescriptorStruct, completion: @escaping ((String)) -> Void) {
-        
-        KeyFetcher.accountXpub(descriptorStruct: descriptorStruct) { (xpub, error) in
-            
-            if !error {
-                
-                completion((xpub!))
-                
-            } else {
-                
-                completion((""))
-                
-            }
-            
-        }
-        
-    }
-    
-    func xprv(completion: @escaping ((String)) -> Void) {
-        
-        KeyFetcher.accountXprv { [unowned vc = self] (xprv, error) in
-            
-            if !error {
-                
-                completion((xprv!))
-                
-            } else {
-                
-                if vc.wallet.xprv != nil {
-                    
-                    let encryptedXprv = vc.wallet.xprv!
-                    Encryption.decryptData(dataToDecrypt: encryptedXprv) { (xprv) in
-                        
-                        if xprv != nil {
-                            
-                            if let xprvString = String(data: xprv!, encoding: .utf8) {
-                                
-                                completion((xprvString))
-                                
-                            } else {
-                                
-                                completion((""))
-                                
-                            }
-                            
-                            
-                        } else {
-                            
-                            completion((""))
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                    completion((""))
-                    
-                }
-                                
-            }
-            
-        }
-        
-    }
-    
-//    func shareRecoveryCommand() {
-//        
-//        DispatchQueue.main.async {
-//            
-//            let activityViewController = UIActivityViewController(activityItems: [self.recoveryText],
-//                                                                  applicationActivities: nil)
-//            
-//            activityViewController.popoverPresentationController?.sourceView = self.view
-//            self.present(activityViewController, animated: true) {}
-//            
-//        }
-//        
-//    }
     
     func showAuth() {
         

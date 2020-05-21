@@ -11,7 +11,7 @@ import LibWally
 
 class MnemonicCreator {
     
-    func convert(words: String, completion: @escaping ((mnemonic: BIP39Mnemonic?, error: Bool)) -> Void) {
+    class func convert(words: String, completion: @escaping ((mnemonic: BIP39Mnemonic?, error: Bool)) -> Void) {
         
         let wordArray = words.split(separator: " ")
         var array = [String]()

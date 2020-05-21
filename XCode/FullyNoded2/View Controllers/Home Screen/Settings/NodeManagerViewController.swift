@@ -45,7 +45,6 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
-    
     @objc func addNode() {
         
         let impact = UIImpactFeedbackGenerator()
@@ -403,6 +402,49 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
             
         }
         
+        deactiveateWallets()
+        
+    }
+    
+    private func deactiveateWallets() {
+        
+        CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+            
+            if wallets != nil {
+                
+                for wallet in wallets! {
+                    
+                    if wallet["id"] != nil && wallet["isArchived"] != nil {
+                        let w = WalletStruct(dictionary: wallet)
+                        
+                        if !w.isArchived && w.isActive {
+                            
+                            CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { (success, errorDescription) in
+                                
+                                if success {
+                                    #if DEBUG
+                                    print("wallet deactived after switching nodes")
+                                    #endif
+                                    
+                                } else {
+                                    #if DEBUG
+                                    print("wallet deactivation failed after switching nodes!")
+                                    #endif
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
     }
     
     // MARK: - Navigation
@@ -432,6 +474,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
             
             if let vc = segue.destination as? ScannerViewController {
                 
+                vc.scanningNode = true
                 vc.onDoneBlock = { [unowned thisVc = self] result in
                     
                     thisVc.load()

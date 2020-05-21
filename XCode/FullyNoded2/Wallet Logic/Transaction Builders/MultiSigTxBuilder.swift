@@ -7,237 +7,99 @@
 //
 
 import Foundation
-import LibWally
 
 class MultiSigTxBuilder {
-    
-    func build(outputs: [Any], completion: @escaping ((signedTx: String?, unsignedPsbt: String?, errorDescription: String?)) -> Void) {
-        
+
+    class func build(outputs: [Any], completion: @escaping ((signedTx: String?, unsignedPsbt: String?, errorDescription: String?)) -> Void) {
+
         getActiveWalletNow { (wallet, error) in
-            
+
             if wallet != nil && !error {
-                
-                func signPsbt(psbt: String, privateKeys: [String]) {
-                    print("signPsbt")
-                    
-                    do {
-                        
-                        let chain = network(path: wallet!.derivation)
-                        var localPSBT = try PSBT(psbt, chain)
-                        
-                        for (i, key) in privateKeys.enumerated() {
-                            
-                            let pk = Key(key, chain)
-                            localPSBT.sign(pk!)
-                            
-                            if i + 1 == privateKeys.count {
-                                
-                                let final = localPSBT.finalize()
-                                let complete = localPSBT.complete
-                                
-                                if final {
-                                    
-                                    if complete {
-                                        
-                                        if let hex = localPSBT.transactionFinal?.description {
-                                            
-                                            completion((hex, nil, nil))
-                                            
-                                        } else {
-                                            
-                                            completion((nil, localPSBT.description, nil))
-                                            
-                                        }
-                                        
-                                    } else {
-                                        
-                                        completion((nil, localPSBT.description, nil))
-                                        
-                                    }
-                                    
-                                } else {
-                                    
-                                    completion((nil, localPSBT.description, nil))
-                                    
-                                }
-                                
+
+                func signPsbt(psbt: String) {
+
+                    PSBTSigner.sign(psbt: psbt) { (success, incompletePsbt, rawTx) in
+
+                        if success {
+
+                            if incompletePsbt != nil {
+
+                                completion((nil, incompletePsbt!, nil))
+
+                            } else if rawTx != nil {
+
+                                completion((rawTx!, nil, nil))
+
                             }
-                            
-                        }
-                        
-                    } catch {
-                        
-                        completion((nil, nil, "Error creating local PSBT"))
-                        
-                    }
-                    
-                }
-                
-                func parsePsbt(decodePsbt: NSDictionary, psbt: String) {
-                    
-                    var privateKeys = [String]()
-                    let inputs = decodePsbt["inputs"] as! NSArray
-                    
-                    if inputs.count > 0 {
-                        
-                        for (i, input) in inputs.enumerated() {
-                            
-                            let dict = input as! NSDictionary
-                            let bip32derivs = dict["bip32_derivs"] as! NSArray
-                            let bip32deriv = bip32derivs[0] as! NSDictionary
-                            let path = bip32deriv["path"] as! String
-                            if let bip32path = BIP32Path(path) {
-                                
-//                                KeyFetcher.privKey(path: bip32path) { (privKey, error) in
-//                                    
-//                                    if !error {
-//                                        
-//                                        privateKeys.append(privKey!)
-//                                        
-//                                        if i + 1 == inputs.count {
-//                                            
-//                                            signPsbt(psbt: psbt, privateKeys: privateKeys)
-//                                            
-//                                        }
-//                                        
-//                                    } else {
-//                                        
-//                                        completion((nil, nil, "Error fetching private key"))
-//                                        
-//                                    }
-//                                    
-//                                }
-                                
-                            } else {
-                                
-                                completion((nil, nil, "Error converting bip32 path from psbt"))
-                                
-                            }
-                            
-                        }
-                        
-                    } else {
-                        
-                        completion((nil, nil, "Error, no inputs"))
-                        
-                    }
-                    
-                }
-                
-                func decodePsbt(psbt: String) {
-                    
-                    let param = "\"\(psbt)\""
-                    Reducer.makeCommand(walletName: wallet!.name!, command: .decodepsbt, param: param) { (object, errorDesc) in
-                        
-                        if let dict = object as? NSDictionary {
-                            
-                            parsePsbt(decodePsbt: dict, psbt: psbt)
-                            
+
                         } else {
-                            
-                            completion((nil, nil, "Error decoding transaction: \(errorDesc ?? "")"))
-                            
+
+                            completion((nil, nil, "Error signing psbt"))
+
                         }
-                        
+
                     }
-                    
+
+
                 }
-                
-                func processPsbt(psbt: String) {
-                    
-                    let param = "\"\(psbt)\", true, \"ALL\", true"
-                    Reducer.makeCommand(walletName: wallet!.name!, command: .walletprocesspsbt, param: param) { (object, errorDesc) in
-                        
-                        if let dict = object as? NSDictionary {
-                            
-                            if let procccessedPsbt = dict["psbt"] as? String {
-                                
-                                let descParser = DescriptorParser()
-                                let descStr = descParser.descriptor(wallet!.descriptor)
-                                
-                                if descStr.isHot || String(data: wallet!.seed, encoding: .utf8) != "no seed" || wallet?.xprv != nil {
-                                    
-                                    decodePsbt(psbt: procccessedPsbt)
-                                    
-                                } else {
-                                    
-                                    completion((nil, procccessedPsbt, nil))
-                                    
-                                }
-                                
-                            } else {
-                                
-                                completion((nil, nil, "Error decoding transaction"))
-                                
-                            }
-                            
-                        } else {
-                            
-                            completion((nil, nil, "Error decoding transaction: \(errorDesc ?? "")"))
-                            
-                        }
-                        
-                    }
-                    
-                }
-                
+
                 func createPsbt(changeAddress: String) {
-                    
+
                     let feeTarget = UserDefaults.standard.object(forKey: "feeTarget") as? Int ?? 432
                     var outputsString = outputs.description
                     outputsString = outputsString.replacingOccurrences(of: "[", with: "")
                     outputsString = outputsString.replacingOccurrences(of: "]", with: "")
-                    
-                    let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"changeAddress\": \"\(changeAddress)\"}'', true"
-                    
+
+                    let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"changeAddress\": \"\(changeAddress)\"}'', false"
+
                     Reducer.makeCommand(walletName: wallet!.name!, command: .walletcreatefundedpsbt, param: param) { (object, errorDesc) in
-                        
+
                         if let psbtDict = object as? NSDictionary {
-                            
+
                             if let psbt = psbtDict["psbt"] as? String {
-                                
-                                processPsbt(psbt: psbt)
-                                
+
+                                signPsbt(psbt: psbt)
+
                             } else {
-                                
+
                                 completion((nil, nil, "error creating psbt"))
-                                
+
                             }
-                            
+
                         } else {
-                            
+
                             completion((nil, nil, "error creating psbt"))
-                            
+
                         }
-                        
+
                     }
-                    
+
                 }
-                
+
                 func getChangeAddress() {
-                    
+
                     KeyFetcher.musigChangeAddress { (address, error, errorDescription) in
-                        
+
                         if !error {
-                            
+
                             createPsbt(changeAddress: address!)
-                            
+
                         } else {
-                            
+
                             completion((nil, nil, errorDescription ?? "error getting change address"))
-                            
+
                         }
-                        
+
                     }
-                    
+
                 }
-                
+
                 getChangeAddress()
-                
+
             }
-            
+
         }
-        
+
     }
-    
+
 }

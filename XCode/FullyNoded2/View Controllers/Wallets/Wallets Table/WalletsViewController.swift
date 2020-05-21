@@ -219,13 +219,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         sortedWallets.removeAll()
         
         func loadWallets() {
+            
+            creatingView.addConnectingView(vc: self, description: "loading accounts")
                         
             CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
-                                
+                                                
                 if errorDescription == nil {
                     
                     if wallets!.count == 0 {
                         
+                        vc.creatingView.removeConnectingView()
                         vc.isLoading = false
                         
                     } else {
@@ -242,57 +245,84 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             
                             if i + 1 == wallets!.count {
                                 
-                                vc.sortedWallets = self.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
-                                
                                 if vc.sortedWallets.count == 0 {
-                                    
+                                    vc.creatingView.removeConnectingView()
                                     vc.isLoading = false
-                                    vc.createWallet()
+                                }
+                                
+                                for (i, wallet) in vc.sortedWallets.enumerated() {
+                                    let wstruct = WalletStruct(dictionary: wallet)
                                     
-                                } else {
-                                    
-                                    if vc.nodes.count == 0 {
+                                    SeedParser.parseWallet(wallet: wstruct) { (known, unknown) in
                                         
-                                        vc.isLoading = false
-                                        vc.walletTable.isUserInteractionEnabled = false
-                                        
-                                        for (i, wallet) in self.sortedWallets.enumerated() {
-                                            
-                                            let w = WalletStruct(dictionary: wallet)
-                                            CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
-                                            
-                                            if i + 1 == vc.sortedWallets.count {
-                                                
-                                                DispatchQueue.main.async {
-                                                    
-                                                    vc.walletTable.reloadData()
-                                                    
-                                                }
-                                                
-                                            }
+                                        if known != nil && unknown != nil {
+                                            vc.sortedWallets[i]["knownSigners"] = known!
+                                            vc.sortedWallets[i]["unknownSigners"] = unknown!
                                             
                                         }
                                         
-                                    } else {
-                                        
-                                        DispatchQueue.main.async {
+                                        if i + 1 == vc.sortedWallets.count {
                                             
-                                            if vc.fullRefresh {
+                                            vc.creatingView.removeConnectingView()
+                                            
+                                            vc.sortedWallets = vc.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
+                                            
+                                            if vc.sortedWallets.count == 0 {
                                                 
-                                                vc.isLoading = true
-                                                vc.index = 0
-                                                vc.getBalances()
+                                                vc.isLoading = false
+                                                vc.createWallet()
                                                 
+                                            } else {
+                                                
+                                                if vc.nodes.count == 0 {
+                                                    
+                                                    vc.isLoading = false
+                                                    vc.walletTable.isUserInteractionEnabled = false
+                                                    
+                                                    for (i, wallet) in vc.sortedWallets.enumerated() {
+                                                        
+                                                        let w = WalletStruct(dictionary: wallet)
+                                                        CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
+                                                        
+                                                        if i + 1 == vc.sortedWallets.count {
+                                                            
+                                                            DispatchQueue.main.async {
+                                                                
+                                                                vc.walletTable.reloadData()
+                                                                
+                                                            }
+                                                            
+                                                        }
+                                                        
+                                                    }
+                                                    
+                                                } else {
+                                                    
+                                                    DispatchQueue.main.async {
+                                                        
+                                                        if vc.fullRefresh {
+                                                            
+                                                            vc.creatingView.removeConnectingView()
+                                                            vc.isLoading = true
+                                                            vc.index = 0
+                                                            vc.getBalances()
+                                                            
+                                                        }
+                                                        
+                                                        vc.walletTable.reloadData()
+                                                        
+                                                    }
+                                                    
+                                                }
+                                                                                    
                                             }
-                                            
-                                            vc.walletTable.reloadData()
                                             
                                         }
                                         
                                     }
-                                                                        
+                                    
                                 }
-                                
+                                                                
                             }
                             
                         }
@@ -301,6 +331,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                 } else {
                     
+                    vc.creatingView.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: errorDescription!)
                     
                 }
@@ -411,6 +442,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let nodeKeysLabel = cell.viewWithTag(33) as! UILabel
         let rescanLabel = cell.viewWithTag(34) as! UILabel
         let nodeChangeKeys = cell.viewWithTag(36) as! UILabel
+        let seedOnDeviceLabel = cell.viewWithTag(37) as! UILabel
+        let deviceSeedImage = cell.viewWithTag(38) as! UIImageView
+        let walletTypeLabel = cell.viewWithTag(39) as! UILabel
+        let walletTypeImage = cell.viewWithTag(40) as! UIImageView
         
         rescanLabel.alpha = 0
         rescanLabel.adjustsFontSizeToFitWidth = true
@@ -522,9 +557,28 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
+        if wallet.knownSigners == 1 {
+            
+            seedOnDeviceLabel.text = "1 Signer on \(UIDevice.current.name)"
+            deviceXprv.text = "xprv \(wallet.derivation)"
+            deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
+            walletTypeLabel.text = "Hot Account"
+            walletTypeImage.image = UIImage(systemName: "flame")
+            walletTypeImage.tintColor = .systemRed
+            
+        } else {
+            
+            seedOnDeviceLabel.text = "\(UIDevice.current.name) is cold"
+            deviceXprv.text = "xpub \(wallet.derivation)"
+            deviceSeedImage.image = UIImage(systemName: "eye.fill")
+            walletTypeLabel.text = "Cold Account"
+            walletTypeImage.image = UIImage(systemName: "snow")
+            walletTypeImage.tintColor = .white
+            
+        }
+        
         nodeKeysLabel.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
         nodeChangeKeys.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
-        deviceXprv.text = "xprv \(wallet.derivation)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
         walletFileLabel.text = reducedWalletName(name: wallet.name!)
@@ -563,6 +617,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let verifyAddresses = cell.viewWithTag(4) as! UIButton
         let networkLabel = cell.viewWithTag(8) as! UILabel
         let utxosButton = cell.viewWithTag(9) as! UIButton
+        let bipImage = cell.viewWithTag(10) as! UIButton
         let derivationLabel = cell.viewWithTag(11) as! UILabel
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
@@ -582,6 +637,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let bannerView = cell.viewWithTag(33)!
         let rescanLabel = cell.viewWithTag(34) as! UILabel
         let nodeChangeKeysLabel = cell.viewWithTag(35) as! UILabel
+        let seedOnDeviceLabel = cell.viewWithTag(36) as! UILabel
+        let offlineSeedLabel = cell.viewWithTag(37) as! UILabel
+        let mOfnTypeLabel = cell.viewWithTag(38) as! UILabel
+        let walletType = cell.viewWithTag(39) as! UILabel
+        let walletTypeImage = cell.viewWithTag(40) as! UIImageView
+        let deviceSeedImage = cell.viewWithTag(41) as! UIImageView
+        
+        let p = DescriptorParser()
+        let str = p.descriptor(wallet.descriptor)
+        mOfnTypeLabel.text = "\(str.mOfNType) multisig"
                 
         rescanLabel.alpha = 0
         rescanLabel.adjustsFontSizeToFitWidth = true
@@ -592,8 +657,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let isRescanning = sortedWallets[indexPath.section]["isRescanning"] as? Bool {
             
             if isRescanning {
-                
-                print("wallet is rescanning")
                 
                 if let progress = sortedWallets[indexPath.section]["progress"] as? String {
                     
@@ -609,7 +672,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             } else {
                 
-                print("wallet not rescanning")
                 rescanLabel.alpha = 0
                 
             }
@@ -684,21 +746,70 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if derivation.contains("84") {
             
             derivationLabel.text = "BIP84"
+            derivationLabel.alpha = 1
+            bipImage.alpha = 1
             
         } else if derivation.contains("44") {
             
             derivationLabel.text = "BIP44"
+            derivationLabel.alpha = 1
+            bipImage.alpha = 1
             
         } else if derivation.contains("49") {
             
             derivationLabel.text = "BIP49"
+            derivationLabel.alpha = 1
+            bipImage.alpha = 1
+            
+        } else if derivation.contains("48") {
+            
+            derivationLabel.text = "WIP48"
+            derivationLabel.alpha = 1
+            bipImage.alpha = 1
+            
+        }
+                
+        if wallet.knownSigners == str.sigsRequired {
+            
+            var signer = "signer"
+            if wallet.knownSigners > 1 {
+                signer = "signers"
+            }
+            
+            seedOnDeviceLabel.text = "\(wallet.knownSigners) \(signer) on \(UIDevice.current.name)"
+            walletType.text = "Hot Account"
+            walletTypeImage.image = UIImage(systemName: "flame")
+            walletTypeImage.tintColor = .systemRed
+            deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
+            deviceXprv.text = "xprv \(wallet.derivation)"
+            
+        } else if wallet.knownSigners == 0 {
+            
+            seedOnDeviceLabel.text = "\(wallet.knownSigners) signers on \(UIDevice.current.name)"
+            walletType.text = "Cool Account"
+            walletTypeImage.image = UIImage(systemName: "cloud.sun")
+            walletTypeImage.tintColor = .systemTeal
+            deviceSeedImage.image = UIImage(systemName: "eye.fill")
+            deviceXprv.text = "xpub \(wallet.derivation)"
+            
+        } else if wallet.knownSigners < str.sigsRequired {
+            
+            seedOnDeviceLabel.text = "\(wallet.knownSigners) signer on \(UIDevice.current.name)"
+            walletType.text = "Warm Account"
+            walletTypeImage.image = UIImage(systemName: "sun.min")
+            walletTypeImage.tintColor = .systemYellow
+            deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
+            deviceXprv.text = "xprv \(wallet.derivation)"
             
         }
         
-        deviceXprv.text = "xprv \(wallet.derivation)"
+        
+        offlineSeedLabel.text = "\(wallet.unknownSigners) external signers"
+        offlineXprv.text = "xprv \(wallet.derivation)"
+        
         nodeKeys.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
         nodeChangeKeysLabel.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
-        offlineXprv.text = "xprv \(wallet.derivation)"
+        
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
         walletFileLabel.text = reducedWalletName(name: wallet.name!)
@@ -722,9 +833,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
         
     }
-    
-
-    
+        
     private func noWalletCell() -> UITableViewCell {
         
         let cell = UITableViewCell()
@@ -1308,7 +1417,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             } else {
                 
-                displayAlert(viewController: vc, isError: true, message: "error deactivating wallet")
+                displayAlert(viewController: vc, isError: true, message: "error deactivating account")
                 
             }
             
@@ -1342,7 +1451,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                     } else {
                         
-                        displayAlert(viewController: vc, isError: true, message: "error deactivating wallet")
+                        displayAlert(viewController: vc, isError: true, message: "error deactivating account")
                         
                     }
                     
@@ -1366,15 +1475,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                         DispatchQueue.main.async {
                                         
-                            let alert = UIAlertController(title: "Warning!", message: "The app is still in late alpha so please test with small amounts when using mainnet", preferredStyle: .actionSheet)
+                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
 
                             alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { [unowned vc = self] action in
                                 
-                                DispatchQueue.main.async {
-
-                                    vc.performSegue(withIdentifier: "addWallet", sender: vc)
-
-                                }
+                                //MARK: To enable mainnet accounts just uncomment the following lines of code:
+                                
+//                                DispatchQueue.main.async {
+//
+//                                    vc.performSegue(withIdentifier: "addWallet", sender: vc)
+//
+//                                }
                                 
                             }))
                             
@@ -1535,7 +1646,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     private func reducedWalletName(name: String) -> String {
-        
         let first = String(name.prefix(5))
         let last = String(name.suffix(5))
         return "\(first)*****\(last).dat"
@@ -1543,15 +1653,13 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     private func reduceLabel(label: String) -> String {
-        
-        let first = String(label.prefix(5))
-        let last = String(label.suffix(5))
+        let first = String(label.prefix(10))
+        let last = String(label.suffix(10))
         return "\(first)...\(last)"
         
     }
     
     override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
-        
         walletTable.reloadData()
         
     }

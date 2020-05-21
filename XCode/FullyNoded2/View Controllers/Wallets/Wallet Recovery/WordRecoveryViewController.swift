@@ -11,6 +11,8 @@ import LibWally
 
 class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavigationControllerDelegate {
     
+    var seedArray = [String]()/// Used to recover multi-sig wallets with seed words only.
+    var recoveringMultiSigWithWordsOnly = Bool()
     let cv = ConnectingView()
     var testingWords = Bool()
     var words:String?
@@ -25,6 +27,9 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     var autoCompleteCharacterCount = 0
     var timer = Timer()
     var onWordsDoneBlock: ((Bool) -> Void)?
+    var onSeedDoneBlock: ((String) -> Void)?
+    var addingSeed = Bool()
+    var addingIndpendentSeed = Bool()
     
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var wordView: UIView!
@@ -39,6 +44,12 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         wordView.layer.cornerRadius = 8
         bip39Words = Bip39Words.validWords
         updatePlaceHolder(wordNumber: 1)
+        
+        if addingSeed || addingIndpendentSeed {
+            
+            navigationItem.title = "Add BIP39 Phrase"
+            
+        }
     }
     
     private func updatePlaceHolder(wordNumber: Int) {
@@ -327,10 +338,82 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     
     private func validWordsAdded() {
         
-        DispatchQueue.main.async { [unowned vc = self] in
+        if !addingSeed && !addingIndpendentSeed {
             
-            vc.textField.resignFirstResponder()
-            vc.verify()
+            DispatchQueue.main.async { [unowned vc = self] in
+                
+                vc.textField.resignFirstResponder()
+                vc.verify()
+                
+            }
+            
+        } else if addingIndpendentSeed {
+            
+            DispatchQueue.main.async { [unowned vc = self] in
+                vc.textField.resignFirstResponder()
+                
+            }
+            
+            let unencryptedSeed = (justWords.joined(separator: " ")).dataUsingUTF8StringEncoding
+            
+            Encryption.encryptData(dataToEncrypt: unencryptedSeed) { [unowned vc = self] (encryptedSeed, error) in
+                
+                if encryptedSeed != nil {
+                    
+                    let dict = ["seed":encryptedSeed!,"id":UUID()] as [String:Any]
+                    CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDesc) in
+                        
+                        if success {
+                            
+                            DispatchQueue.main.async { [unowned vc = self] in
+                                vc.textField.text = ""
+                                vc.label.text = ""
+                                vc.justWords.removeAll()
+                                vc.addedWords.removeAll()
+                                vc.updatePlaceHolder(wordNumber: 1)
+                                
+                            }
+                            
+                            showAlert(vc: vc, title: "Seed saved!", message: "You may go back or add another seed.")
+                            
+                        } else {
+                            
+                           showAlert(vc: vc, title: "Error", message: "We had an error saving that seed.")
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+                
+        } else {
+            
+            DispatchQueue.main.async { [unowned vc = self] in
+                
+                if vc.justWords.count == 12 {
+                    
+                    let alert = UIAlertController(title: "That is a valid BIP39 mnemonic", message: "You may now create your wallet", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Create wallet", style: .default, handler: { action in
+                        
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            
+                            vc.onSeedDoneBlock!(vc.justWords.joined(separator: " "))
+                            vc.navigationController!.popViewController(animated: true)
+                            
+                        }
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    vc.present(alert, animated: true, completion: nil)
+                    
+                }
+                
+            }
             
         }
         
@@ -481,20 +564,18 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         
         let parser = DescriptorParser()
         words = justWords.joined(separator: " ")
-        
         if let desc = recoveryDict["descriptor"] as? String {
             
             let str = parser.descriptor(desc)
             let backupXpub = str.multiSigKeys[0]
             let derivation = str.derivationArray[0]
             
-            let mnemonicCreator = MnemonicCreator()
-            mnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
+            MnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
                 
                 if !error && mnemonic != nil {
                     
                     let seed = mnemonic!.seedHex()
-                    if let mk = HDKey(seed, network(path: derivation)) {
+                    if let mk = HDKey(seed, network(descriptor: desc)) {
                         
                         if let path = BIP32Path(derivation) {
                             
@@ -561,37 +642,111 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             }
             
         } else {
-            
             /// It's words only
-            DispatchQueue.main.async { [unowned vc = self] in
-                            
-                let alert = UIAlertController(title: "That is a valid recovery phrase", message: "You can now choose a derivation scheme or press cancel to add more words", preferredStyle: .actionSheet)
+            func addSeed() {
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.seedArray.append(vc.justWords.joined(separator: " "))
+                    print("seedArray = \(vc.seedArray)")
+                    vc.justWords.removeAll()
+                    vc.addedWords.removeAll()
+                    vc.textField.text = ""
+                    vc.label.text = ""
+                    vc.updatePlaceHolder(wordNumber: 1)
+                }
+            }
+            
+            func seedAddedAddAnother() {
+                DispatchQueue.main.async { [unowned vc = self] in
+                    let alert = UIAlertController(title: "Seed added, you may now add another.", message: "", preferredStyle: .actionSheet)
+                    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    vc.present(alert, animated: true, completion: nil)
+                }
+            }
+            
+            func chooseDerivationScheme() {
+                DispatchQueue.main.async { [unowned vc = self] in
+                                
+                    let alert = UIAlertController(title: "That is a valid recovery phrase", message: "You can now choose a derivation scheme or press cancel to add more words", preferredStyle: .actionSheet)
 
-                alert.addAction(UIAlertAction(title: "Choose Derivation", style: .default, handler: { action in
+                    alert.addAction(UIAlertAction(title: "Choose Derivation", style: .default, handler: { action in
+                        vc.chooseDerivation()
+                        
+                    }))
                     
-                    vc.chooseDerivation()
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    vc.present(alert, animated: true, completion: nil)
                     
-                }))
+                }
+            }
+            
+            if !recoveringMultiSigWithWordsOnly {
+                DispatchQueue.main.async { [unowned vc = self] in
+                                
+                    let alert = UIAlertController(title: "That is a valid recovery phrase", message: "Are you recovering a multi-sig account or single-sig account?", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Single-sig", style: .default, handler: { action in
+                        chooseDerivationScheme()
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Multi-sig", style: .default, handler: { action in
+                        vc.recoveringMultiSigWithWordsOnly = true
+                        addSeed()
+                        seedAddedAddAnother()
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    vc.present(alert, animated: true, completion: nil)
+                    
+                }
                 
-                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                alert.popoverPresentationController?.sourceView = self.view
-                vc.present(alert, animated: true, completion: nil)
-                
+            } else {
+                /// Adding multiple sets of words to recover multi-sig with only words.
+                DispatchQueue.main.async { [unowned vc = self] in
+                    addSeed()
+                                
+                    let alert = UIAlertController(title: "That is a valid recovery phrase", message: "Add another seed phrase or recover this multi-sig account now? When recovering multi-sig accounts with words only we utilize BIP67 by default.", preferredStyle: .actionSheet)
+
+                    alert.addAction(UIAlertAction(title: "Add another seed", style: .default, handler: { action in
+                        seedAddedAddAnother()
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Recover Now", style: .default, handler: { action in
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.performSegue(withIdentifier: "segueToNumberOfSigners", sender: vc)
+                        }
+                        
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    vc.present(alert, animated: true, completion: nil)
+                    
+                }
             }
         }
-        
     }
     
     private func buildDescriptor() {
         
         cv.addConnectingView(vc: self, description: "building your wallets descriptor")
-        
-        let mnemonicCreator = MnemonicCreator()
-        mnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
+        MnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
             
             if !error && mnemonic != nil {
                 
-                let mk = HDKey(mnemonic!.seedHex(), network(path: vc.derivation!))!
+                var network:Network!
+                if vc.derivation!.contains("1") {
+                    network = .testnet
+                } else {
+                    network = .mainnet
+                }
+                
+                let mk = HDKey(mnemonic!.seedHex(), network)!
                 let fingerprint = mk.fingerprint.hexString
                 var param = ""
                 
@@ -631,14 +786,15 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                             
                             let desc = dict["descriptor"] as! String
                             vc.walletNameHash = Encryption.sha256hash(desc)
+                            
                             /// Now check if the wallet exists on the node or not
                             DispatchQueue.main.async { [unowned vc = self] in
                                 vc.cv.label.text = "searching your node for the wallet"
                             }
+                            
                             vc.checkIfWalletExists(name: vc.walletNameHash)
                             
                         } else {
-                            
                             vc.cv.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                             
@@ -647,21 +803,17 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                     }
                                         
                 } catch {
-                    
                     vc.cv.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "error constructing descriptor")
                     
                 }
                 
             } else {
-                
                 vc.cv.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: "error deriving mnemonic")
                 
             }
-            
         }
-        
     }
     
     private func checkIfWalletExists(name: String) {
@@ -721,6 +873,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         }
         
     private func checkDeviceForWallet(name: String) {
+        
         CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
             
             if wallets != nil {
@@ -778,11 +931,20 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         
     }
     
+    
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
         switch segue.identifier {
+            
+        case "segueToNumberOfSigners":
+            
+            if let vc = segue.destination as? ChooseNumberOfSignersViewController {
+                
+                vc.seedArray = seedArray
+                
+            }
             
         case "confirmFromWords":
             

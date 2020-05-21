@@ -12,12 +12,14 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
     
     @IBOutlet var qrView: UIImageView!
     @IBOutlet var nextOutlet: UIButton!
+    @IBOutlet weak var accountMapLabel: UITextView!
     
+    var isColdcard = Bool()
+    var nodesWords = ""
     var wallet = [String:Any]()
     var recoveryPhrase = ""
     var recoveryQr = ""
     var tapQRGesture = UITapGestureRecognizer()
-    
     let qrGenerator = QRGenerator()
 
     override func viewDidLoad() {
@@ -29,22 +31,39 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
         qrView.image = qr
         
         if error {
-            
-            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that sized image")
             
         }
+        
         nextOutlet.layer.cornerRadius = 8
         qrView.isUserInteractionEnabled = true
         tapQRGesture = UITapGestureRecognizer(target: self, action: #selector(self.shareQRCode(_:)))
         qrView.addGestureRecognizer(tapQRGesture)
         
+        if wallet["type"] as! String == "MULTI" {
+            accountMapLabel.text =
+            """
+            YOU WILL NEED THIS QR TO RECOVER A MULTI-SIG WALLET! Make many copies of it and save it in many physical and digital places!
+
+            It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order to spend from it you will need the seed words too.
+            """
+            
+        } else {
+            accountMapLabel.text =
+            """
+            The Account Map QR ***ONLY holds your wallets PUBLIC KEYS***, and can not be used to spend funds!
+            
+            ***In order to spend from it you will NEED the seed words too!***
+            """
+        }
+        
     }
     
     @IBAction func nextAction(_ sender: Any) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.performSegue(withIdentifier: "goWords", sender: self)
+            vc.performSegue(withIdentifier: "goWords", sender: vc)
             
         }
         
@@ -91,7 +110,8 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
         case "goWords":
             
             if let vc = segue.destination as? WalletCreatedWordsViewController {
-                
+                vc.isColdcard = isColdcard
+                vc.nodesWords = nodesWords
                 vc.recoverPhrase = self.recoveryPhrase
                 vc.wallet = wallet
                 

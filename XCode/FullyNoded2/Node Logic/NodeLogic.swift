@@ -55,6 +55,8 @@ class NodeLogic {
                     completion((true, dictToReturn, nil))
                     
                 }
+            } else {
+                completion((false, nil, "error getting netowork info: \(errorDesc ?? "unknown error")"))
             }
         }
     }
@@ -127,6 +129,9 @@ class NodeLogic {
                     }
                     getPeerInfo()
                     
+                } else {
+                    completion((false, nil, "error getting blockchain info: \(errorDescription ?? "unknown error")"))
+                    
                 }
             }
         }
@@ -153,7 +158,7 @@ class NodeLogic {
                     }
                     getMiningInfo()
                 } else {
-                    completion((false, nil, "returned object is nil"))
+                    completion((false, nil, "error getting peer info: \(errorDescription ?? "unknown error")"))
                     
                 }
             }
@@ -169,7 +174,7 @@ class NodeLogic {
                     }
                     getUptime()
                 } else {
-                    completion((false, nil, "returned object is nil"))
+                    completion((false, nil, "error getting mining info: \(errorDescription ?? "unknown error")"))
                     
                 }
             }
@@ -182,7 +187,7 @@ class NodeLogic {
                     getMempoolInfo()
                                             
                 } else {
-                    completion((false, nil, "returned object is nil"))
+                    completion((false, nil, "error getting uptime: \(errorDesc ?? "unknown error")"))
                     
                 }
             }
@@ -201,7 +206,7 @@ class NodeLogic {
                     let feeRate = UserDefaults.standard.integer(forKey: "feeTarget")
                     esitimateSmartFee(feeRate: feeRate)
                 } else {
-                    completion((false, nil, "returned object is nil"))
+                    completion((false, nil, "error getting mempool info: \(errorDescription ?? "unknown error")"))
                     
                 }
             }
@@ -224,7 +229,7 @@ class NodeLogic {
                     completion((true, dictToReturn, nil))
                     
                 } else {
-                    completion((false, nil, "returned object is nil"))
+                    completion((false, nil, "error getting fee rate: \(errorDescription ?? "unknown error")"))
                     
                 }
             }
@@ -249,96 +254,20 @@ class NodeLogic {
     func parseUtxos(wallet: WalletStruct, utxos: NSArray, completion: @escaping ((success: Bool, dict: [String:Any]?, errorDescription: String?)) -> Void) {
         var amount = 0.0
         var dictToReturn = [String:Any]()
-        if utxos.count == 0 {
-            dictToReturn["coldBalance"] = "0.0"
-            dictToReturn["noUtxos"] = true
-            if wallet.id != nil {
-                CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastBalance", newValue: amount, entityName: .wallets) { _ in
-                    CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { _ in
-                        CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) { _ in
-                            completion((true, dictToReturn, nil))
-                            
-                        }
-                    }
-                }
-            } else {
-                completion((true, dictToReturn, nil))
+        
+        SeedParser.parseWallet(wallet: wallet) { (known, unknown) in
+            
+            if known != nil && unknown != nil {
+                dictToReturn["knownSigners"] = known!
+                dictToReturn["unknownSigners"] = unknown!
                 
             }
             
-        } else {
             dictToReturn["noUtxos"] = false
             
-        }
-        
-        for (x, utxo) in utxos.enumerated() {
-            if let utxoDict = utxo as? NSDictionary {
-                
-                /// Here we check the utxos descriptor to see what the path is for each pubkey.
-                /// We take the highest index for each pubkey and compare it to the wallets index.
-                /// If the wallets index is less than or equal to the highest utxo index we increase
-                /// the wallets index to be greater then the highest utxo index. This way we avoid
-                /// reusing an address in the scenario where a user may use external software to
-                /// receive to the app or for example they export their keys within the app and use
-                /// random addresses as invoices.
-                
-                if let desc = utxoDict["desc"] as? String {
-                    let p = DescriptorParser()
-                    let str = p.descriptor(desc)
-                    var paths:[String]!
-                    if str.isMulti {
-                        paths = str.derivationArray
-                        
-                    } else {
-                        paths = [str.derivation]
-                        
-                    }
-                    
-                    for path in paths {
-                        let arr = path.split(separator: "/")
-                        for (i, comp) in arr.enumerated() {
-                            if i + 1 == arr.count {
-                                if let int = Int(comp) {
-                                    if wallet.id != nil {
-                                        if wallet.index <= int {
-                                            CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "index", newValue: int + 1, entityName: .wallets) { (success, errorDescription) in
-                                                if success {
-                                                    print("updated index from utxo")
-                                                    
-                                                } else {
-                                                    print("failed to update index from utxo")
-                                                    
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                if let spendable = utxoDict["spendable"] as? Bool {
-                    if let confirmations = utxoDict["confirmations"] as? Int {
-                        if !spendable {
-                            if let balance = utxoDict["amount"] as? Double {
-                                amount += balance
-                                
-                            }
-                        }
-                        if confirmations < 1 {
-                            dictToReturn["unconfirmed"] = true
-                            
-                        } else {
-                            dictToReturn["unconfirmed"] = false
-                            
-                        }
-                    }
-                }
-            }
-            
-            /// We fetch balances when we check for wallet recovery confirmation, therefore it does not have an ID yet if it has not been recovered
-            func complete() {
+            if utxos.count == 0 {
+                dictToReturn["coldBalance"] = "0.0"
+                dictToReturn["noUtxos"] = true
                 if wallet.id != nil {
                     CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastBalance", newValue: amount, entityName: .wallets) { _ in
                         CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { _ in
@@ -352,24 +281,110 @@ class NodeLogic {
                     completion((true, dictToReturn, nil))
                     
                 }
+                
             }
             
-            if x + 1 == utxos.count {
-                if amount == 0.0 {
-                    dictToReturn["coldBalance"] = "0.0"
-                    complete()
+            dictToReturn["unconfirmed"] = false
+            
+            for (x, utxo) in utxos.enumerated() {
+                if let utxoDict = utxo as? NSDictionary {
                     
-                } else {
-                    dictToReturn["coldBalance"] = "\((round(100000000*amount)/100000000).avoidNotation)"
-                    let fx = FiatConverter.sharedInstance
-                    fx.getFxRate() { (fxRate) in
-                        if fxRate != nil {
-                            dictToReturn["fiatBalance"] = "$\(Int(amount * fxRate!).withCommas())"
+                    /// Here we check the utxos descriptor to see what the path is for each pubkey.
+                    /// We take the highest index for each pubkey and compare it to the wallets index.
+                    /// If the wallets index is less than or equal to the highest utxo index we increase
+                    /// the wallets index to be greater then the highest utxo index. This way we avoid
+                    /// reusing an address in the scenario where a user may use external software to
+                    /// receive to the account or for example they export their keys within the app and use
+                    /// random addresses as invoices.
+                    
+                    if let desc = utxoDict["desc"] as? String {
+                        let p = DescriptorParser()
+                        let str = p.descriptor(desc)
+                        var paths:[String]!
+                        if str.isMulti {
+                            paths = str.derivationArray
+                            
+                        } else {
+                            paths = [str.derivation]
+                            
                         }
+                        
+                        for path in paths {
+                            let arr = path.split(separator: "/")
+                            for (i, comp) in arr.enumerated() {
+                                if i + 1 == arr.count {
+                                    if let int = Int(comp) {
+                                        if wallet.id != nil {
+                                            if wallet.index <= int {
+                                                CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "index", newValue: int + 1, entityName: .wallets) { (success, errorDescription) in
+                                                    if success {
+                                                        print("updated index from utxo")
+                                                        
+                                                    } else {
+                                                        print("failed to update index from utxo")
+                                                        
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    if let spendable = utxoDict["spendable"] as? Bool {
+                        if let confirmations = utxoDict["confirmations"] as? Int {
+                            if !spendable {
+                                if let balance = utxoDict["amount"] as? Double {
+                                    amount += balance
+                                    
+                                }
+                            }
+                            if confirmations == 0 {
+                                dictToReturn["unconfirmed"] = true
+                                
+                            }
+                        }
+                    }
+                }
+                
+                /// We fetch balances when we check for wallet recovery confirmation, therefore it does not have an ID yet if it has not been recovered
+                func complete() {
+                    if wallet.id != nil {
+                        CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastBalance", newValue: amount, entityName: .wallets) { _ in
+                            CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUsed", newValue: Date(), entityName: .wallets) { _ in
+                                CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "lastUpdated", newValue: Date(), entityName: .wallets) { _ in
+                                    completion((true, dictToReturn, nil))
+                                    
+                                }
+                            }
+                        }
+                    } else {
+                        completion((true, dictToReturn, nil))
+                        
+                    }
+                }
+                
+                if x + 1 == utxos.count {
+                    if amount == 0.0 {
+                        dictToReturn["coldBalance"] = "0.0"
                         complete()
+                        
+                    } else {
+                        dictToReturn["coldBalance"] = "\((round(100000000*amount)/100000000).avoidNotation)"
+                        let fx = FiatConverter.sharedInstance
+                        fx.getFxRate() { (fxRate) in
+                            if fxRate != nil {
+                                dictToReturn["fiatBalance"] = "$\(Int(amount * fxRate!).withCommas())"
+                                dictToReturn["fxRate"] = "1 btc / $\(fxRate!)"
+                            }
+                            complete()
+                        }
                     }
                 }
             }
+            
         }
     }
     
