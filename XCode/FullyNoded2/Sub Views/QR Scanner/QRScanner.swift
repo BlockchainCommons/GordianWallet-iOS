@@ -327,6 +327,11 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
             
         } else if scanningBip21 {
             
+            label.text = "Scan an Address or BIP21 Invoice"
+            labelDetail.text = "You can scan a Bitcoin address or a BIP21 invoice."
+            configureLabel()
+            configureDetailLabel()
+            
         } else {
             
             label.text = "Scan a QR Code"

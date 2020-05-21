@@ -11,6 +11,7 @@ import LibWally
 
 class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
+    var isScanningInvoice = Bool()
     var isImporting = Bool()
     var unsignedPsbt = ""
     var signedRawTx = ""
@@ -22,6 +23,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     var closeButton = UIButton()
     var onDoneRecoveringBlock : (([String:Any]) -> Void)?
     var onDoneBlock : ((Bool) -> Void)?
+    var onScanBip21DoneBlock: ((String) -> Void)?
     var onImportDoneBlock : ((String) -> Void)?
     let qrScanner = QRScanner()
     var isTorchOn = Bool()
@@ -163,6 +165,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         imageView.frame = view.frame
         imageView.isUserInteractionEnabled = true
         
+        qrScanner.scanningBip21 = isScanningInvoice
         qrScanner.isScanningNode = scanningNode
         qrScanner.scanningRecovery = isRecovering
         qrScanner.isImporting = isImporting
@@ -351,10 +354,15 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             
         }
         
-        if isImporting || isRecovering {
+        if isScanningInvoice {
+            
+            onScanBip21DoneBlock!(url)
+            self.dismiss(animated: true, completion: nil)
+            
+        } else if isImporting || isRecovering {
             
             onImportDoneBlock!(url)
-            self.navigationController?.popViewController(animated: true)
+            self.dismiss(animated: true, completion: nil)
             
         } else {
             

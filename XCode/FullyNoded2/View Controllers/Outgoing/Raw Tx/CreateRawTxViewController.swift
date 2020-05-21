@@ -10,21 +10,15 @@ import UIKit
 
 class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UINavigationControllerDelegate {
     
-    let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-    var qrCode = UIImage()
     var spendable = Double()
     var rawTxUnsigned = String()
     var incompletePsbt = String()
     var rawTxSigned = String()
     var amountAvailable = Double()
-    let qrImageView = UIImageView()
-    var stringURL = String()
     var address = String()
     let nextButton = UIButton()
     var amount = String()
-    var blurArray = [UIVisualEffectView]()
     let rawDisplayer = RawDisplayer()
-    var scannerShowing = false
     var isFirstTime = Bool()
     var outputs = [Any]()
     var outputsString = ""
@@ -37,7 +31,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     @IBOutlet var actionOutlet: UIButton!
     @IBOutlet var receivingLabel: UILabel!
     @IBOutlet var outputsTable: UITableView!
-    @IBOutlet var scannerView: UIImageView!
     @IBOutlet weak var availableBalance: UILabel!
     @IBOutlet weak var createOutlet: UIButton!
     @IBOutlet weak var feeSliderOutlet: UISlider!
@@ -46,8 +39,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     
     
     let creatingView = ConnectingView()
-    let qrScanner = QRScanner()
-    var isTorchOn = Bool()
     var outputArray = [[String:String]]()
     
     override func viewDidLoad() {
@@ -61,11 +52,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         outputsTable.tableFooterView = UIView(frame: .zero)
         outputsTable.alpha = 0
         availableBalance.alpha = 0
-        configureScanner()
         addTapGesture()
-        scannerView.alpha = 0
-        scannerView.backgroundColor = UIColor.black
-        //updateLeftBarButton(isShowing: false)
         addressInput.layer.borderWidth = 1.0
         addressInput.layer.borderColor = UIColor.darkGray.cgColor
         addressInput.clipsToBounds = true
@@ -92,7 +79,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     
     override func viewDidAppear(_ animated: Bool) {
         
-        //scannerButton.tintColor = .white
         amount = ""
         outputs.removeAll()
         outputArray.removeAll()
@@ -140,129 +126,10 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     @IBAction func scannerAction(_ sender: Any) {
-        
-        if scannerShowing {
-            
-            back()
-            
-        } else {
-            
-            scannerShowing = true
-            addressInput.resignFirstResponder()
-            amountInput.resignFirstResponder()
-            
-            if isFirstTime {
-                
-                DispatchQueue.main.async {
-                    
-                    self.qrScanner.scanQRCode()
-                    self.addScannerButtons()
-                    self.scannerView.addSubview(self.qrScanner.closeButton)
-                    self.isFirstTime = false
-                    
-                    UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                        
-                        vc.scannerView.alpha = 1
-                        
-                    })
-                                                            
-                }
-                
-            } else {
-                
-                self.qrScanner.startScanner()
-                self.addScannerButtons()
-                
-                DispatchQueue.main.async {
-                    
-                    UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                        
-                        vc.scannerView.alpha = 1
-                        
-                    })
-                    
-                }
-                
-            }
-            
-            //self.updateLeftBarButton(isShowing: true)
-            
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "scanBip21Segue", sender: vc)
         }
-        
     }
-    
-    
-    func configureScanner() {
-        
-        isFirstTime = true
-        addOutlet.alpha = 0
-        createOutlet.alpha = 0
-        scannerView.alpha = 0
-        scannerView.frame = view.frame
-        scannerView.isUserInteractionEnabled = true
-        
-        qrScanner.scanningBip21 = true
-        qrScanner.keepRunning = false
-        qrScanner.vc = self
-        qrScanner.imageView = scannerView
-        qrScanner.textField.alpha = 0
-        qrScanner.downSwipeAction = { self.back() }
-        qrScanner.completion = { self.getQRCode() }
-        qrScanner.didChooseImage = { self.didPickImage() }
-        
-        qrScanner.uploadButton.addTarget(self,
-                                         action: #selector(self.chooseQRCodeFromLibrary),
-                                         for: .touchUpInside)
-        
-        qrScanner.torchButton.addTarget(self,
-                                        action: #selector(toggleTorch),
-                                        for: .touchUpInside)
-        
-        isTorchOn = false
-        
-        qrScanner.closeButton.addTarget(self,
-                                        action: #selector(back),
-                                        for: .touchUpInside)
-        
-    }
-    
-    func addScannerButtons() {
-        
-        self.addBlurView(frame: CGRect(x: self.scannerView.frame.maxX - 80,
-                                       y: self.scannerView.frame.maxY - 80,
-                                       width: 70,
-                                       height: 70), button: self.qrScanner.uploadButton)
-        
-        self.addBlurView(frame: CGRect(x: 10,
-                                       y: self.scannerView.frame.maxY - 80,
-                                       width: 70,
-                                       height: 70), button: self.qrScanner.torchButton)
-        
-    }
-    
-//    func updateLeftBarButton(isShowing: Bool){
-//
-//        scannerButton.addTarget(self, action: #selector(scanNow(_:)), for: .touchUpInside)
-//        scannerButton.tintColor = .white
-//
-//        if isShowing {
-//
-//            let pasteImage = UIImage.init(systemName: "doc.append")
-//            scannerButton.setImage(pasteImage, for: .normal)
-//
-//        } else {
-//
-//            let qrImage = UIImage.init(systemName: "qrcode.viewfinder")
-//            scannerButton.setImage(qrImage, for: .normal)
-//
-//        }
-//
-//        let leftButton = UIBarButtonItem(customView: scannerButton)
-//        leftButton.customView?.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-//        self.navigationItem.setLeftBarButtonItems([leftButton], animated: true)
-//
-//    }
-
     
     func addOut() {
         
@@ -365,13 +232,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         tapGesture.numberOfTapsRequired = 1
         self.view.addGestureRecognizer(tapGesture)
-        
-    }
-    
-    func getQRCode() {
-        
-        let stringURL = qrScanner.stringToReturn
-        processBIP21(url: stringURL)
         
     }
     
@@ -544,65 +404,10 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
-    func didPickImage() {
-        
-        let qrString = qrScanner.qrString
-        processBIP21(url: qrString)
-        
-    }
-    
-    @objc func chooseQRCodeFromLibrary() {
-        
-        qrScanner.chooseQRCodeFromLibrary()
-        
-    }
-    
     @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
         
         amountInput.resignFirstResponder()
         addressInput.resignFirstResponder()
-        
-    }
-    
-    //MARK: User Interface
-    
-    func addBlurView(frame: CGRect, button: UIButton) {
-        
-        button.removeFromSuperview()
-        let blur = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffect.Style.dark))
-        blur.frame = frame
-        blur.clipsToBounds = true
-        blur.layer.cornerRadius = frame.width / 2
-        blur.contentView.addSubview(button)
-        self.scannerView.addSubview(blur)
-        
-    }
-    
-    @objc func back() {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            //vc.updateLeftBarButton(isShowing: false)
-            vc.scannerView.alpha = 0
-            vc.scannerShowing = false
-            
-        }
-        
-    }
-    
-    @objc func toggleTorch() {
-        
-        if isTorchOn {
-            
-            qrScanner.toggleTorch(on: false)
-            isTorchOn = false
-            
-        } else {
-            
-            qrScanner.toggleTorch(on: true)
-            isTorchOn = true
-            
-        }
         
     }
     
@@ -643,10 +448,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             
             processBIP21(url: addressInput.text!)
             
-        } else if textView == addressInput && addressInput.text == "" {
-            
-            shakeAlert(viewToShake: self.qrScanner.textField)
-            
         }
         
     }
@@ -672,16 +473,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         textField.endEditing(true)
         return true
-        
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        
-        if isTorchOn {
-            
-            toggleTorch()
-            
-        }
         
     }
     
@@ -743,9 +534,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                     }
                     
                 }
-                
-                vc.back()
-                                
+                                                
             }
             
         } else {
@@ -963,26 +752,27 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         let id = segue.identifier
-        
         switch id {
+        case "scanBip21Segue":
+            if let vc = segue.destination as? ScannerViewController {
+                vc.isScanningInvoice = true
+                vc.onScanBip21DoneBlock = { [unowned thisVc = self] result in
+                    thisVc.processBIP21(url: result)
+                }
+            }
             
         case "goConfirm":
-            
             if let vc = segue.destination as? ConfirmViewController {
                 vc.signedRawTx = rawTxSigned
                 vc.recipients = recipients
                 vc.unsignedPsbt = incompletePsbt
-                
             }
             
         default:
-            
             break
             
         }
-        
     }
     
 }

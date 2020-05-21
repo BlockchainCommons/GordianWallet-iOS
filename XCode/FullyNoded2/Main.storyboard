@@ -2367,8 +2367,8 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <outlet property="outputsTable" destination="jXp-xP-J4h" id="y02-Rq-oD9"/>
                         <outlet property="receivingLabel" destination="uIC-Eu-XZD" id="wYg-jj-lxo"/>
                         <outlet property="scannerButton" destination="ynQ-Sz-wh0" id="7Kg-PV-l2l"/>
-                        <outlet property="scannerView" destination="hCl-Q8-hd5" id="iVt-0D-Bjm"/>
                         <segue destination="xB3-mY-13p" kind="show" identifier="goConfirm" id="cZz-Rg-m7M"/>
+                        <segue destination="o69-RN-9VD" kind="presentation" identifier="scanBip21Segue" id="zTj-XW-s3J"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BlL-9x-Sif" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2384,7 +2384,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="A2T-tZ-Y6M">
-                                <rect key="frame" x="16" y="95" width="343" height="509"/>
+                                <rect key="frame" x="16" y="95" width="343" height="558"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="inputCell" rowHeight="78" id="6pv-wa-mjr">
@@ -2591,7 +2591,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="yLm-bN-fYY">
-                                <rect key="frame" x="16" y="64" width="343" height="534"/>
+                                <rect key="frame" x="16" y="64" width="343" height="583"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -5293,7 +5293,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.035155422989999997" green="0.0390829891" blue="0.047393254939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="JXW-QX-3AG" firstAttribute="leading" secondItem="DAO-kd-lrb" secondAttribute="leading" id="3Bh-zG-WUa"/>
                             <constraint firstItem="JXW-QX-3AG" firstAttribute="top" secondItem="DAO-kd-lrb" secondAttribute="top" id="CTk-io-Lff"/>
@@ -5896,8 +5896,8 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="NHy-Xu-LiC"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="MTV-lr-E4R"/>
-        <segue reference="Xe1-Me-c8c"/>
-        <segue reference="LzA-tD-DJD"/>
+        <segue reference="cZz-Rg-m7M"/>
+        <segue reference="zTj-XW-s3J"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>

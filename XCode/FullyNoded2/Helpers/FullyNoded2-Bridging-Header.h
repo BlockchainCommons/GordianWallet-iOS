@@ -3,3 +3,4 @@
 //
 
 #import "base58.h"
+#import "bc-bech32.h"

@@ -462,15 +462,20 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     //MARK: Tableview Methods
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if transactionArray.count > 0 {
-            return 3 + transactionArray.count
-        } else {
-            return 4
-        }
+        return 4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        if section == 3 {
+            if transactionArray.count == 0 {
+                return 1
+            } else {
+                return transactionArray.count
+            }
+        } else {
+            return 1
+        }
+        
     }
     
     private func spinningCell() -> UITableViewCell {
@@ -807,7 +812,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     private func transactionCell(_ indexPath: IndexPath) -> UITableViewCell {
         let cell = mainMenu.dequeueReusableCell(withIdentifier: "MainMenuCell", for: indexPath)
         cell.selectionStyle = .none
-        mainMenu.separatorColor = .darkGray
+        mainMenu.separatorColor = .clear
         
         let amountLabel = cell.viewWithTag(2) as! UILabel
         let confirmationsLabel = cell.viewWithTag(3) as! UILabel
@@ -820,13 +825,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         backView.layer.cornerRadius = 8
         changeImage.tintColor = .darkGray
         infoButton.addTarget(self, action: #selector(getTransaction(_:)), for: .touchUpInside)
-        infoButton.restorationIdentifier = "\( indexPath.section)"
+        infoButton.restorationIdentifier = "\(indexPath.row)"
         amountLabel.alpha = 1
         confirmationsLabel.alpha = 1
         labelLabel.alpha = 1
         dateLabel.alpha = 1
         
-        let dict = self.transactionArray[indexPath.section - 3]
+        let dict = self.transactionArray[indexPath.row]
         confirmationsLabel.text = (dict["confirmations"] as! String) + " " + "confs"
         let label = dict["label"] as? String
         
@@ -1405,7 +1410,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     @objc func getTransaction(_ sender: UIButton) {
         let index = Int(sender.restorationIdentifier!)!
-        let selectedTx = self.transactionArray[index - 3]
+        let selectedTx = self.transactionArray[index]
         let txID = selectedTx["txID"] as! String
         tx = txID
         UIPasteboard.general.string = txID

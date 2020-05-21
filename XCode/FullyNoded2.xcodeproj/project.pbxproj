@@ -15,6 +15,8 @@
 		D006E34D244054B8007B1A5B /* _launch.png in Resources */ = {isa = PBXBuildFile; fileRef = D006E34C244054B8007B1A5B /* _launch.png */; };
 		D010946A242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0109469242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift */; };
 		D0139F5724208A7A00EF956E /* ConfirmRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */; };
+		D04179EF247629D40096F74D /* segwit_addr.c in Sources */ = {isa = PBXBuildFile; fileRef = D04179EE247629D40096F74D /* segwit_addr.c */; };
+		D04179F2247630470096F74D /* BCB32.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04179F1247630470096F74D /* BCB32.swift */; };
 		D042EFA22457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */; };
 		D047DDF72423464A004BC26D /* SweepToViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF62423464A004BC26D /* SweepToViewController.swift */; };
 		D047DDF9242B2F3F004BC26D /* IntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */; };
@@ -177,6 +179,10 @@
 		D006E34C244054B8007B1A5B /* _launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _launch.png; sourceTree = "<group>"; };
 		D0109469242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedSaveWordsViewController.swift; sourceTree = "<group>"; };
 		D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmRecoveryViewController.swift; sourceTree = "<group>"; };
+		D04179EC247629920096F74D /* bc-bech32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "bc-bech32.h"; sourceTree = "<group>"; };
+		D04179ED247629D40096F74D /* segwit_addr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = segwit_addr.h; sourceTree = "<group>"; };
+		D04179EE247629D40096F74D /* segwit_addr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = segwit_addr.c; sourceTree = "<group>"; };
+		D04179F1247630470096F74D /* BCB32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BCB32.swift; sourceTree = "<group>"; };
 		D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedNodesSeedViewController.swift; sourceTree = "<group>"; };
 		D047DDF62423464A004BC26D /* SweepToViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SweepToViewController.swift; sourceTree = "<group>"; };
 		D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionViewController.swift; sourceTree = "<group>"; };
@@ -366,6 +372,17 @@
 				D07399DA245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift */,
 			);
 			path = "Wallet Recovery";
+			sourceTree = "<group>";
+		};
+		D04179F024762A460096F74D /* bc-b32 */ = {
+			isa = PBXGroup;
+			children = (
+				D04179EC247629920096F74D /* bc-bech32.h */,
+				D04179ED247629D40096F74D /* segwit_addr.h */,
+				D04179EE247629D40096F74D /* segwit_addr.c */,
+				D04179F1247630470096F74D /* BCB32.swift */,
+			);
+			path = "bc-b32";
 			sourceTree = "<group>";
 		};
 		D07399E42463C89C00860B7E /* Extended Key Converter */ = {
@@ -647,6 +664,7 @@
 				D07399D6245E6E5600860B7E /* Broadcast.swift */,
 				D07399E024617A0F00860B7E /* FullyNoded2-Bridging-Header.h */,
 				D07399E42463C89C00860B7E /* Extended Key Converter */,
+				D04179F024762A460096F74D /* bc-b32 */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1034,6 +1052,7 @@
 				D047DE0B242C651F004BC26D /* WalletCreatedWordsViewController.swift in Sources */,
 				D047DDF72423464A004BC26D /* SweepToViewController.swift in Sources */,
 				D0C4E63124173F1B00E49DA5 /* WalletToolsViewController.swift in Sources */,
+				D04179F2247630470096F74D /* BCB32.swift in Sources */,
 				D09D733823F0F3C000847DC8 /* StringExtension.swift in Sources */,
 				D09D736B23F0F3C000847DC8 /* CreateMultisigWallet.swift in Sources */,
 				D0A0EAF223F7CF70004F9E15 /* DescriptorStruct.swift in Sources */,
@@ -1062,6 +1081,7 @@
 				D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */,
 				D047DDFF242B331F004BC26D /* HowToUseFN2ViewController.swift in Sources */,
 				D09D732223F0F3C000847DC8 /* RecoveryViewController.swift in Sources */,
+				D04179EF247629D40096F74D /* segwit_addr.c in Sources */,
 				D09D731023F0F3C000847DC8 /* NodeLogic.swift in Sources */,
 				D09D731F23F0F3C000847DC8 /* WalletsViewController.swift in Sources */,
 				D09D733A23F0F3C000847DC8 /* Entities.swift in Sources */,
@@ -1174,6 +1194,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1234,6 +1255,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1333,6 +1355,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.FullyNoded2Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FullyNoded 2.app/FullyNoded 2";
@@ -1355,6 +1378,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.FullyNoded2Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FullyNoded 2.app/FullyNoded 2";
