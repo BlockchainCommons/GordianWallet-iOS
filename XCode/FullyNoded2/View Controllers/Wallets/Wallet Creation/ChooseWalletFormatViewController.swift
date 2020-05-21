@@ -50,7 +50,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     @IBOutlet weak var coolInfoOutlet: UIButton!
     @IBOutlet weak var coldInfoOutlet: UIButton!
     @IBOutlet weak var recoverOutlet: UIButton!
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +58,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         navigationController?.delegate = self
         recoverWalletOutlet.layer.cornerRadius = 10
         recoverOutlet.layer.cornerRadius = 8
-        //importOutlet.layer.cornerRadius = 8
         hotWalletOutlet.layer.cornerRadius = 8
         warmWalletOutlet.layer.cornerRadius = 8
         coolWalletOutlet.layer.cornerRadius = 8
@@ -946,14 +944,10 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         case "m/48'/1'/0'/2'":
                                             
             descriptor = "wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/48'/1'/0'/2']\(recoveryKey)/0/*, [\(localFingerprint)/48'/1'/0'/2']\(localKey)/0/*, [\(nodeFingerprint)/48'/1'/0'/2']\(nodeKey)/0/*))"
-
-            changeDescriptor = "wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/48'/1'/0'/2']\(recoveryKey)/1/*, [\(localFingerprint)/48'/1'/0'/2']\(localKey)/1/*, [\(nodeFingerprint)/48'/1'/0'/2']\(nodeKey)/1/*))"
             
         case "m/48'/0'/0'/2'":
 
             descriptor = "wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/48'/0'/0'/2']\(recoveryKey)/0/*, [\(localFingerprint)/48'/0'/0'/2']\(localKey)/0/*, [\(nodeFingerprint)/48'/0'/0'/2']\(nodeKey)/0/*))"
-            
-            changeDescriptor = "wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/48'/0'/0'/2']\(recoveryKey)/1/*, [\(localFingerprint)/48'/0'/0'/2']\(localKey)/1/*, [\(nodeFingerprint)/48'/0'/0'/2']\(nodeKey)/1/*))"
             
         default:
             
@@ -961,6 +955,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
         }
         
+        changeDescriptor = descriptor.replacingOccurrences(of: "/0/*", with: "/1/*")
         descriptor = descriptor.replacingOccurrences(of: "\"", with: "")
         descriptor = descriptor.replacingOccurrences(of: " ", with: "")
         changeDescriptor = changeDescriptor.replacingOccurrences(of: "\"", with: "")
@@ -1443,16 +1438,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     }                    
                     
                 }
-                
-            }
-            
-        case "goConfirmImport":
-            
-            if let vc = segue.destination as? ConfirmRecoveryViewController {
-                
-                vc.walletNameHash = walletName
-                vc.isImporting = true
-                vc.walletDict = walletToImport
                 
             }
             

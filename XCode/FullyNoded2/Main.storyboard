@@ -4560,11 +4560,11 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 <rect key="frame" x="0.0" y="44" width="375" height="575"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="singleSigWalletCell" rowHeight="340" id="GZc-Lm-9ch">
-                                        <rect key="frame" x="15" y="55.5" width="345" height="340"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="singleSigWalletCell" rowHeight="320" id="GZc-Lm-9ch">
+                                        <rect key="frame" x="15" y="55.5" width="345" height="320"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GZc-Lm-9ch" id="nN1-0D-mSU">
-                                            <rect key="frame" x="0.0" y="0.0" width="345" height="340"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="345" height="320"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view tag="32" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7yp-J1-Thl">
@@ -4587,8 +4587,17 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LSr-9Y-WXJ">
                                                             <rect key="frame" x="239" y="8" width="98" height="28"/>
                                                             <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="43" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Single Sig - Segwit" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yya-jz-VRS">
+                                                                    <rect key="frame" x="-17" y="3.5" width="107" height="21"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="21" id="ndd-QZ-pmk"/>
+                                                                    </constraints>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ciE-Bi-Iml">
-                                                                    <rect key="frame" x="8" y="3" width="20" height="22"/>
+                                                                    <rect key="frame" x="-43" y="3" width="20" height="22"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="20" id="HhS-hq-jNN"/>
                                                                         <constraint firstAttribute="height" constant="22" id="ozp-kY-Xhq"/>
@@ -4596,22 +4605,12 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                                     <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" image="pencil.circle" catalog="system"/>
                                                                 </button>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Single Sig" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yya-jz-VRS">
-                                                                    <rect key="frame" x="32" y="3.5" width="57" height="21"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="width" constant="57" id="jR1-Wh-JUW"/>
-                                                                        <constraint firstAttribute="height" constant="21" id="ndd-QZ-pmk"/>
-                                                                    </constraints>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstItem="ciE-Bi-Iml" firstAttribute="centerY" secondItem="LSr-9Y-WXJ" secondAttribute="centerY" id="1fx-CV-iVX"/>
-                                                                <constraint firstItem="ciE-Bi-Iml" firstAttribute="leading" secondItem="LSr-9Y-WXJ" secondAttribute="leading" constant="8" id="a7p-VF-DeN"/>
-                                                                <constraint firstAttribute="trailing" secondItem="yya-jz-VRS" secondAttribute="trailing" constant="9" id="fR8-o8-cNO"/>
+                                                                <constraint firstItem="yya-jz-VRS" firstAttribute="leading" secondItem="ciE-Bi-Iml" secondAttribute="trailing" constant="6" id="eEe-77-Csd"/>
+                                                                <constraint firstAttribute="trailing" secondItem="yya-jz-VRS" secondAttribute="trailing" constant="8" id="fR8-o8-cNO"/>
                                                                 <constraint firstAttribute="height" constant="28" id="g3z-nN-WKB"/>
                                                                 <constraint firstItem="yya-jz-VRS" firstAttribute="centerY" secondItem="LSr-9Y-WXJ" secondAttribute="centerY" id="jAK-4x-xOe"/>
                                                                 <constraint firstAttribute="width" constant="98" id="yMR-jt-YKG"/>
@@ -4733,16 +4732,16 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                     </constraints>
                                                 </view>
                                                 <view clipsSubviews="YES" tag="26" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mus-be-FaA">
-                                                    <rect key="frame" x="15" y="223" width="315" height="102"/>
+                                                    <rect key="frame" x="15" y="223" width="315" height="83"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="uhRD45u_StandUp.dat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LpX-Z8-tmr">
-                                                            <rect key="frame" x="120" y="82" width="110" height="12"/>
+                                                            <rect key="frame" x="120" y="65" width="110" height="12"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RPC Hidden Service:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="car-yr-b08">
-                                                            <rect key="frame" x="8" y="68" width="106" height="12"/>
+                                                            <rect key="frame" x="8" y="51" width="106" height="12"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="106" id="FIK-y9-2Jh"/>
                                                                 <constraint firstAttribute="height" constant="12" id="m84-HH-tRS"/>
@@ -4752,13 +4751,13 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Node Wallet File:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g8x-Ld-Ezw">
-                                                            <rect key="frame" x="8" y="82" width="86.5" height="12"/>
+                                                            <rect key="frame" x="8" y="65" width="86.5" height="12"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
                                                             <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="19" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="uf47hf*****ijef4.onion:1309" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ev4-Ba-BNf">
-                                                            <rect key="frame" x="120" y="67" width="132" height="14.5"/>
+                                                            <rect key="frame" x="120" y="50" width="132" height="14.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="14.5" id="5cR-FM-OYq"/>
                                                             </constraints>
@@ -4774,19 +4773,10 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                                 <constraint firstAttribute="width" constant="20" id="938-fY-TFG"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="33" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="primary keys m'/84'/1'/0'/0/0 to 1999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i60-gh-Nax">
-                                                            <rect key="frame" x="36" y="31.5" width="208" height="14.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="33" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Keypool 0 to 1999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i60-gh-Nax">
+                                                            <rect key="frame" x="36" y="31.5" width="103" height="14.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="14.5" id="Ur2-EI-36j"/>
-                                                            </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <color key="textColor" red="0.57864717509999997" green="0.57864717509999997" blue="0.57864717509999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="36" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="change keys m'/84'/1'/0'/1/0 to 1999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dAG-DJ-Dkd">
-                                                            <rect key="frame" x="36" y="49.5" width="271" height="14.5"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="14.5" id="kgz-Br-ChC"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <color key="textColor" red="0.57864717509999997" green="0.57864717509999997" blue="0.57864717509999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -4798,14 +4788,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="19" id="Eex-46-oGR"/>
                                                                 <constraint firstAttribute="width" constant="20" id="i3g-Ut-Qrb"/>
-                                                            </constraints>
-                                                        </imageView>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eye.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="2YQ-De-0Pw">
-                                                            <rect key="frame" x="8" y="49.5" width="20" height="14"/>
-                                                            <color key="tintColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="20" id="OEi-lf-Wfe"/>
-                                                                <constraint firstAttribute="height" constant="17.5" id="bC2-cE-kXd"/>
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="27" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Testing Node" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lGp-Ln-vMg">
@@ -4824,19 +4806,14 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                         <constraint firstItem="ev4-Ba-BNf" firstAttribute="leading" secondItem="car-yr-b08" secondAttribute="trailing" constant="6" id="Ejf-nm-mYA"/>
                                                         <constraint firstItem="LpX-Z8-tmr" firstAttribute="centerY" secondItem="g8x-Ld-Ezw" secondAttribute="centerY" id="G5x-k3-tgS"/>
                                                         <constraint firstItem="car-yr-b08" firstAttribute="leading" secondItem="g8x-Ld-Ezw" secondAttribute="leading" id="GM9-Xx-V9X"/>
-                                                        <constraint firstItem="2YQ-De-0Pw" firstAttribute="leading" secondItem="Mus-be-FaA" secondAttribute="leading" constant="8" id="I9x-pZ-SyW"/>
                                                         <constraint firstItem="ev4-Ba-BNf" firstAttribute="centerY" secondItem="car-yr-b08" secondAttribute="centerY" id="KDU-5j-hq8"/>
                                                         <constraint firstItem="lGp-Ln-vMg" firstAttribute="leading" secondItem="Mus-be-FaA" secondAttribute="leading" constant="8" id="Qcm-9r-Qbv"/>
                                                         <constraint firstItem="car-yr-b08" firstAttribute="leading" secondItem="Mus-be-FaA" secondAttribute="leading" constant="8" id="ZeP-0L-KBn"/>
                                                         <constraint firstItem="3Cs-N1-Juh" firstAttribute="top" secondItem="Mus-be-FaA" secondAttribute="top" constant="8" id="dI2-Qk-fQo"/>
-                                                        <constraint firstItem="dAG-DJ-Dkd" firstAttribute="leading" secondItem="2YQ-De-0Pw" secondAttribute="trailing" constant="8" id="fMg-fV-d8h"/>
-                                                        <constraint firstItem="2YQ-De-0Pw" firstAttribute="top" secondItem="czI-ur-V3d" secondAttribute="bottom" constant="0.5" id="gDT-Av-PFv"/>
                                                         <constraint firstItem="g8x-Ld-Ezw" firstAttribute="top" secondItem="car-yr-b08" secondAttribute="bottom" constant="2" id="gdL-rk-p74"/>
-                                                        <constraint firstAttribute="height" constant="102" id="hHU-PO-3AJ"/>
-                                                        <constraint firstAttribute="bottom" secondItem="g8x-Ld-Ezw" secondAttribute="bottom" constant="8" id="j0x-oJ-F2h"/>
+                                                        <constraint firstAttribute="height" constant="83" id="hHU-PO-3AJ"/>
+                                                        <constraint firstAttribute="bottom" secondItem="g8x-Ld-Ezw" secondAttribute="bottom" constant="6" id="j0x-oJ-F2h"/>
                                                         <constraint firstItem="czI-ur-V3d" firstAttribute="top" secondItem="lGp-Ln-vMg" secondAttribute="bottom" constant="5" id="keT-va-qBi"/>
-                                                        <constraint firstItem="dAG-DJ-Dkd" firstAttribute="centerY" secondItem="2YQ-De-0Pw" secondAttribute="centerY" id="l1H-bN-5Ul"/>
-                                                        <constraint firstAttribute="trailing" secondItem="dAG-DJ-Dkd" secondAttribute="trailing" constant="8" id="mrq-sI-yPX"/>
                                                         <constraint firstItem="lGp-Ln-vMg" firstAttribute="top" secondItem="Mus-be-FaA" secondAttribute="top" constant="9" id="oPK-CL-ti0"/>
                                                         <constraint firstItem="i60-gh-Nax" firstAttribute="leading" secondItem="czI-ur-V3d" secondAttribute="trailing" constant="8" id="qWE-8u-doz"/>
                                                         <constraint firstAttribute="trailing" secondItem="3Cs-N1-Juh" secondAttribute="trailing" constant="8" id="rqf-5n-A6J"/>
@@ -4894,11 +4871,11 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.085763759910000001" green="0.10179834810000001" blue="0.1143214479" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="multiSigWalletCell" rowHeight="371" id="Pu7-d1-gy4">
-                                        <rect key="frame" x="15" y="395.5" width="345" height="371"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="multiSigWalletCell" rowHeight="354" id="Pu7-d1-gy4">
+                                        <rect key="frame" x="15" y="375.5" width="345" height="354"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Pu7-d1-gy4" id="EKP-cw-XcR">
-                                            <rect key="frame" x="0.0" y="0.0" width="345" height="371"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="345" height="354"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view tag="33" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kho-sl-W6K">
@@ -4924,14 +4901,14 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y3m-tm-HVP">
                                                             <rect key="frame" x="215" y="8.5" width="122" height="27"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" tag="38" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 of 3 multisig" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fPC-rc-FTn">
-                                                                    <rect key="frame" x="35" y="6.5" width="81" height="14.5"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" tag="38" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 of 3 multisig - Segwit" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fPC-rc-FTn">
+                                                                    <rect key="frame" x="-18" y="6" width="132" height="15"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vmf-kd-EW6">
-                                                                    <rect key="frame" x="7" y="2.5" width="20" height="22"/>
+                                                                    <rect key="frame" x="-41" y="2.5" width="20" height="22"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="22" id="9YD-ag-9Ga"/>
                                                                         <constraint firstAttribute="width" constant="20" id="nnp-Ep-f3r"/>
@@ -4942,10 +4919,10 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
-                                                                <constraint firstItem="fPC-rc-FTn" firstAttribute="centerY" secondItem="Y3m-tm-HVP" secondAttribute="centerY" id="HNQ-U2-fFO"/>
                                                                 <constraint firstAttribute="height" constant="27" id="V2I-KF-74k"/>
-                                                                <constraint firstAttribute="trailing" secondItem="fPC-rc-FTn" secondAttribute="trailing" constant="6" id="aTL-Ft-DIg"/>
-                                                                <constraint firstItem="vmf-kd-EW6" firstAttribute="leading" secondItem="Y3m-tm-HVP" secondAttribute="leading" constant="7" id="ijl-cf-Sgo"/>
+                                                                <constraint firstItem="vmf-kd-EW6" firstAttribute="centerY" secondItem="fPC-rc-FTn" secondAttribute="centerY" id="Wgb-E0-yek"/>
+                                                                <constraint firstAttribute="trailing" secondItem="fPC-rc-FTn" secondAttribute="trailing" constant="8" id="aTL-Ft-DIg"/>
+                                                                <constraint firstItem="fPC-rc-FTn" firstAttribute="leading" secondItem="vmf-kd-EW6" secondAttribute="trailing" constant="3" id="gjW-ma-DrE"/>
                                                                 <constraint firstAttribute="width" constant="122" id="tkj-T0-Rf3"/>
                                                                 <constraint firstItem="vmf-kd-EW6" firstAttribute="centerY" secondItem="Y3m-tm-HVP" secondAttribute="centerY" id="zVr-DC-e3y"/>
                                                             </constraints>
@@ -4996,7 +4973,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view clipsSubviews="YES" tag="26" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pie-V8-QKM">
-                                                    <rect key="frame" x="14" y="251" width="315" height="110"/>
+                                                    <rect key="frame" x="14" y="251" width="315" height="93"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="desktopcomputer" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cmh-IY-0zE">
                                                             <rect key="frame" x="286" y="8.5" width="21" height="19"/>
@@ -5014,8 +4991,8 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                                 <constraint firstAttribute="height" constant="15" id="cxs-d0-Cth"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="primary keys m'/84'/1'/0'/0/0 to 1999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6GI-Av-oYU">
-                                                            <rect key="frame" x="34" y="35.5" width="208" height="14.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Keypool 0 to 1999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6GI-Av-oYU">
+                                                            <rect key="frame" x="34" y="35.5" width="103" height="14.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="14.5" id="CJ2-4p-ggv"/>
                                                             </constraints>
@@ -5023,31 +5000,20 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                             <color key="textColor" red="0.57864717509999997" green="0.57864717509999997" blue="0.57864717509999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="44" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Signature" translatesAutoresizingMaskIntoConstraints="NO" id="Hrd-XI-SN4">
-                                                            <rect key="frame" x="8" y="54" width="20" height="15"/>
-                                                            <color key="tintColor" red="0.56318080459999997" green="0.56318080459999997" blue="0.56318080459999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="20" id="T4i-e1-rji"/>
-                                                                <constraint firstAttribute="height" constant="15" id="pXa-qh-hJ7"/>
-                                                            </constraints>
-                                                        </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="35" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="change keys m'/84'/1'/0'/1/0 to 1999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NOQ-ao-iMy">
-                                                            <rect key="frame" x="34" y="54.5" width="205" height="14.5"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="14.5" id="Sln-Sp-s1W"/>
-                                                            </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <color key="textColor" red="0.57864717509999997" green="0.57864717509999997" blue="0.57864717509999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="27" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Testing Node" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2l-aT-168">
+                                                            <rect key="frame" x="9" y="10" width="85" height="16"/>
+                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="uhRD45u_StandUp.dat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sbj-zs-EQC">
-                                                            <rect key="frame" x="119" y="92" width="110" height="12"/>
+                                                            <rect key="frame" x="119" y="75" width="110" height="12"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RPC Hidden Service:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hMn-I7-11U">
-                                                            <rect key="frame" x="8" y="78" width="106" height="12"/>
+                                                            <rect key="frame" x="8" y="61" width="106" height="12"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="106" id="U1P-Gl-YGZ"/>
                                                                 <constraint firstAttribute="height" constant="12" id="sNj-77-AZf"/>
@@ -5057,23 +5023,17 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Node Wallet File:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Fz-Xw-tv1">
-                                                            <rect key="frame" x="8" y="92" width="86.5" height="12"/>
+                                                            <rect key="frame" x="8" y="75" width="86.5" height="12"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
                                                             <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="19" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="uf47hf*****ijef4.onion:1309" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hNy-iI-3Iy">
-                                                            <rect key="frame" x="119" y="77" width="132" height="14.5"/>
+                                                            <rect key="frame" x="119" y="60" width="132" height="14.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="14.5" id="7gb-OC-8pF"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                                            <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="27" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Testing Node" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2l-aT-168">
-                                                            <rect key="frame" x="9" y="10" width="85" height="16"/>
-                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -5082,13 +5042,10 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="cmh-IY-0zE" secondAttribute="trailing" constant="8" id="1BN-ai-3SJ"/>
                                                         <constraint firstItem="cmh-IY-0zE" firstAttribute="centerY" secondItem="f2l-aT-168" secondAttribute="centerY" id="602-1n-vPg"/>
-                                                        <constraint firstItem="Hrd-XI-SN4" firstAttribute="top" secondItem="9rt-PG-G24" secondAttribute="bottom" constant="4" id="D6b-a2-yti"/>
                                                         <constraint firstItem="hNy-iI-3Iy" firstAttribute="centerY" secondItem="hMn-I7-11U" secondAttribute="centerY" id="Go7-1J-cWX"/>
                                                         <constraint firstItem="hNy-iI-3Iy" firstAttribute="leading" secondItem="hMn-I7-11U" secondAttribute="trailing" constant="5" id="IKs-FV-87u"/>
                                                         <constraint firstItem="sbj-zs-EQC" firstAttribute="leading" secondItem="hNy-iI-3Iy" secondAttribute="leading" id="Jv9-Gi-Ss1"/>
-                                                        <constraint firstItem="NOQ-ao-iMy" firstAttribute="leading" secondItem="Hrd-XI-SN4" secondAttribute="trailing" constant="6" id="K7f-u0-jnP"/>
                                                         <constraint firstItem="9rt-PG-G24" firstAttribute="leading" secondItem="Pie-V8-QKM" secondAttribute="leading" constant="8" id="MW8-dM-p6A"/>
-                                                        <constraint firstItem="Hrd-XI-SN4" firstAttribute="leading" secondItem="Pie-V8-QKM" secondAttribute="leading" constant="8" id="Muy-27-lwx"/>
                                                         <constraint firstItem="4Fz-Xw-tv1" firstAttribute="leading" secondItem="Pie-V8-QKM" secondAttribute="leading" constant="8" id="Oxw-CQ-4AB"/>
                                                         <constraint firstItem="4Fz-Xw-tv1" firstAttribute="top" secondItem="hMn-I7-11U" secondAttribute="bottom" constant="2" id="STS-zt-pIT"/>
                                                         <constraint firstItem="9rt-PG-G24" firstAttribute="top" secondItem="f2l-aT-168" secondAttribute="bottom" constant="9" id="SZj-hB-5bE"/>
@@ -5099,7 +5056,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                         <constraint firstItem="f2l-aT-168" firstAttribute="leading" secondItem="Pie-V8-QKM" secondAttribute="leading" constant="9" id="jHd-s7-aVH"/>
                                                         <constraint firstItem="sbj-zs-EQC" firstAttribute="centerY" secondItem="4Fz-Xw-tv1" secondAttribute="centerY" id="l8i-El-LSr"/>
                                                         <constraint firstItem="hMn-I7-11U" firstAttribute="leading" secondItem="Pie-V8-QKM" secondAttribute="leading" constant="8" id="o3x-zw-zAn"/>
-                                                        <constraint firstItem="NOQ-ao-iMy" firstAttribute="centerY" secondItem="Hrd-XI-SN4" secondAttribute="centerY" id="xnA-LH-r6j"/>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Signers:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iY3-wV-4kw">
@@ -5259,6 +5215,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                 <constraint firstItem="Pie-V8-QKM" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leadingMargin" constant="-1" id="Gmd-EU-n77"/>
                                                 <constraint firstItem="iY3-wV-4kw" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leadingMargin" id="HZe-gV-b13"/>
                                                 <constraint firstItem="kho-sl-W6K" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leading" id="JJF-lh-J2S"/>
+                                                <constraint firstAttribute="bottom" secondItem="Pie-V8-QKM" secondAttribute="bottom" constant="10" id="LId-yP-dj8"/>
                                                 <constraint firstItem="Pd7-kd-359" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leadingMargin" id="MbO-sa-cdl"/>
                                                 <constraint firstItem="pII-Us-N4E" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leadingMargin" id="ND1-fe-X7x"/>
                                                 <constraint firstItem="Ckd-q3-zNx" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leading" constant="15" id="NeX-tC-pYW"/>
@@ -5275,7 +5232,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                 <constraint firstItem="KGY-cW-hyS" firstAttribute="top" secondItem="kho-sl-W6K" secondAttribute="bottom" constant="8" id="hr2-dR-dtR"/>
                                                 <constraint firstItem="Pd7-kd-359" firstAttribute="trailing" secondItem="EKP-cw-XcR" secondAttribute="trailingMargin" id="kAp-qs-uzc"/>
                                                 <constraint firstItem="xIK-fc-Mq4" firstAttribute="trailing" secondItem="EKP-cw-XcR" secondAttribute="trailingMargin" constant="-1" id="kKX-cS-AQB"/>
-                                                <constraint firstAttribute="bottom" secondItem="Pie-V8-QKM" secondAttribute="bottom" constant="10" id="l8M-Lh-gDY"/>
                                                 <constraint firstItem="KGY-cW-hyS" firstAttribute="trailing" secondItem="EKP-cw-XcR" secondAttribute="trailingMargin" id="oCn-MF-wdW"/>
                                                 <constraint firstAttribute="trailing" secondItem="xiT-PY-mWf" secondAttribute="trailing" constant="17.5" id="otd-jJ-klc"/>
                                                 <constraint firstItem="xiT-PY-mWf" firstAttribute="centerY" secondItem="75R-94-8gm" secondAttribute="centerY" id="sUg-ID-fje"/>
@@ -5330,6 +5286,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <segue destination="20O-ZD-xtI" kind="show" identifier="addWallet" id="9mw-a6-V0T"/>
                         <segue destination="51a-bL-HRe" kind="show" identifier="goToTools" id="vN9-gb-vqV"/>
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="goImport" id="ufe-jz-pkY"/>
+                        <segue destination="0g2-8e-jCH" kind="show" identifier="goConfirmImport" id="igz-Ga-xca"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GpR-E8-6UF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -5535,7 +5492,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <outlet property="warmWalletOutlet" destination="Ewt-c9-x2S" id="LPK-tM-ha2"/>
                         <segue destination="Elr-wf-cyI" kind="show" identifier="goRecover" id="OhX-6s-iKf"/>
                         <segue destination="shH-Cs-byi" kind="show" identifier="walletCreated" id="hLe-Va-ofG"/>
-                        <segue destination="0g2-8e-jCH" kind="show" identifier="goConfirmImport" id="ugm-aB-vA9"/>
                         <segue destination="QV1-we-EJN" kind="show" identifier="addXpubSegue" id="9Ib-wE-7tm"/>
                         <segue destination="kR7-Mg-fhs" kind="show" identifier="addCustomWords" id="fnD-hd-014"/>
                     </connections>
@@ -5892,12 +5848,12 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="Kzq-6W-yKR"/>
         <segue reference="fnD-hd-014"/>
         <segue reference="Q0b-Zn-K45"/>
-        <segue reference="tvy-tG-Sod"/>
+        <segue reference="igz-Ga-xca"/>
         <segue reference="NHy-Xu-LiC"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="MTV-lr-E4R"/>
         <segue reference="cZz-Rg-m7M"/>
-        <segue reference="zTj-XW-s3J"/>
+        <segue reference="ufe-jz-pkY"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>

@@ -576,8 +576,17 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         coldBalanceLabel.adjustsFontSizeToFitWidth = true
         
+        var format = ""
+        if wallet.derivation.contains("84") || wallet.derivation.contains("48") {
+            format = "Segwit"
+        } else if wallet.derivation.contains("49") {
+            format = "Nested Segwit"
+        } else if wallet.derivation.contains("44") {
+            format = "Legacy"
+        }
+        
         if str.isMulti {
-            walletTypeLabel.text = "\(str.mOfNType) Multi Signature"
+            walletTypeLabel.text = "\(str.mOfNType) Multi Signature - \(format)"
             if walletInfo.knownSigners >= str.sigsRequired {
                 accountTypeIcon.image = UIImage(systemName: "flame")
                 accountTypeIcon.tintColor = .systemRed
@@ -589,7 +598,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 accountTypeIcon.tintColor = .systemYellow
             }
         } else {
-            walletTypeLabel.text = "Single Signature"
+            walletTypeLabel.text = "Single Signature - \(format)"
             if walletInfo.knownSigners > 0 {
                 accountTypeIcon.image = UIImage(systemName: "flame")
                 accountTypeIcon.tintColor = .systemRed

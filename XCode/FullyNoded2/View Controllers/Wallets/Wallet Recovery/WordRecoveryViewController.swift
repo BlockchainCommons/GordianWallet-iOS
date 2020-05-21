@@ -127,6 +127,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 DispatchQueue.main.async {
                     
                     let network = node!.network
+                    vc.recoveryDict["nodeId"] = node!.id
                     var chain = ""
                     
                     let alert = UIAlertController(title: "Choose a derivation", message: "When only using words to recover you need to let us know which derivation scheme you want to utilize, if you are not sure you can recover the wallet three times, once for each derivation.", preferredStyle: .actionSheet)
@@ -151,7 +152,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                             break
                         }
                         
-                        //vc.recoveryDict["derivation"] = vc.derivation
+                        vc.recoveryDict["derivation"] = vc.derivation
                         vc.buildDescriptor()
                         
                     }))
@@ -167,7 +168,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                             break
                         }
                         
-                        //vc.recoveryDict["derivation"] = vc.derivation
+                        vc.recoveryDict["derivation"] = vc.derivation
                         vc.buildDescriptor()
                         
                     }))
@@ -183,7 +184,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                             break
                         }
                         
-                        //vc.recoveryDict["derivation"] = vc.derivation
+                        vc.recoveryDict["derivation"] = vc.derivation
                         vc.buildDescriptor()
                         
                     }))
@@ -646,7 +647,6 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             func addSeed() {
                 DispatchQueue.main.async { [unowned vc = self] in
                     vc.seedArray.append(vc.justWords.joined(separator: " "))
-                    print("seedArray = \(vc.seedArray)")
                     vc.justWords.removeAll()
                     vc.addedWords.removeAll()
                     vc.textField.text = ""
@@ -688,14 +688,12 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
 
                     alert.addAction(UIAlertAction(title: "Single-sig", style: .default, handler: { action in
                         chooseDerivationScheme()
-                        
                     }))
                     
                     alert.addAction(UIAlertAction(title: "Multi-sig", style: .default, handler: { action in
                         vc.recoveringMultiSigWithWordsOnly = true
                         addSeed()
                         seedAddedAddAnother()
-                        
                     }))
                     
                     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
@@ -780,19 +778,43 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                         
                     }
                     
+                    let changeDesc = param.replacingOccurrences(of: "/0/*", with: "/1/*")
+                    
                     Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
                         
                         if let dict = object as? NSDictionary {
                             
                             let desc = dict["descriptor"] as! String
                             vc.walletNameHash = Encryption.sha256hash(desc)
+                            vc.recoveryDict["descriptor"] = desc
+                            vc.recoveryDict["type"] = "DEFAULT"
+                            vc.recoveryDict["id"] = UUID()
+                            vc.recoveryDict["blockheight"] = Int32(0)
+                            vc.recoveryDict["maxRange"] = 2500
+                            vc.recoveryDict["isActive"] = false
+                            vc.recoveryDict["lastUsed"] = Date()
+                            vc.recoveryDict["isArchived"] = false
+                            vc.recoveryDict["birthdate"] = keyBirthday()
+                            vc.recoveryDict["name"] = vc.walletNameHash
+                            vc.recoveryDict["nodeIsSigner"] = false
                             
-                            /// Now check if the wallet exists on the node or not
-                            DispatchQueue.main.async { [unowned vc = self] in
-                                vc.cv.label.text = "searching your node for the wallet"
+                            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: changeDesc) { [unowned vc = self] (object, errorDescription) in
+                                
+                                if let dict = object as? NSDictionary {
+                                    let changedescriptor = dict["descriptor"] as! String
+                                    vc.recoveryDict["changeDescriptor"] = changedescriptor
+                                    /// Now check if the wallet exists on the node or not
+                                    DispatchQueue.main.async { [unowned vc = self] in
+                                        vc.cv.label.text = "searching your node for the wallet"
+                                    }
+                                    vc.confirm()
+                                    
+                                } else {
+                                    vc.cv.removeConnectingView()
+                                    displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
+                                }
+                                
                             }
-                            
-                            vc.checkIfWalletExists(name: vc.walletNameHash)
                             
                         } else {
                             vc.cv.removeConnectingView()
@@ -816,123 +838,6 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         }
     }
     
-    private func checkIfWalletExists(name: String) {
-            
-            // First check if the wallet exists on the current node
-            Reducer.makeCommand(walletName: "", command: .listwalletdir, param: "") { [unowned vc = self] (object, errorDescription) in
-                
-                if let dict = object as? NSDictionary {
-                    
-                    if let wallets = dict["wallets"] as? NSArray {
-                        
-                        var walletExists = false
-                        
-                        for (i, wallet) in wallets.enumerated() {
-                            
-                            if let walletDict = wallet as? NSDictionary {
-                                
-                                if (walletDict["name"] as? String ?? "") == name {
-                                    
-                                    walletExists = true
-                                    
-                                }
-                                
-                                if i + 1 == wallets.count {
-                                    
-                                    if walletExists {
-                                        
-                                        print("wallet exists")
-                                        vc.checkDeviceForWallet(name: name)
-                                        
-                                    } else {
-                                        
-                                        print("wallet does not exist")
-                                        vc.cv.removeConnectingView()
-                                        vc.confirm()
-                                        
-                                    }
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                    vc.cv.removeConnectingView()
-                    showAlert(vc: vc, title: "Error", message: "error: \(errorDescription ?? "invalid response from bitcoind")")
-                    print("error that is not an array")
-                    
-                }
-                
-            }
-            
-        }
-        
-    private func checkDeviceForWallet(name: String) {
-        
-        CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
-            
-            if wallets != nil {
-                
-                if wallets!.count > 0 {
-                    
-                    var walletExists = false
-                    
-                    for (i, wallet) in wallets!.enumerated() {
-                        
-                        let str = WalletStruct(dictionary: wallet)
-                        if str.id != nil && str.name != nil && !str.isArchived {
-                            
-                            if str.name! == name {
-                                
-                                walletExists = true
-                                
-                            }
-                            
-                        }
-                        
-                        if i + 1 == wallets!.count {
-                            
-                            if walletExists {
-                                
-                                vc.cv.removeConnectingView()
-                                showAlert(vc: vc, title: "Wallet already exists", message: "That wallet already exists on your node and device, there is no need to recover it.")
-                                
-                            } else {
-                                
-                                vc.cv.removeConnectingView()
-                                vc.confirm()
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                    vc.cv.removeConnectingView()
-                    vc.confirm()
-                    
-                }
-                
-            } else {
-                
-                vc.cv.removeConnectingView()
-                vc.confirm()
-                
-            }
-            
-        }
-        
-    }
-    
-    
-
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.

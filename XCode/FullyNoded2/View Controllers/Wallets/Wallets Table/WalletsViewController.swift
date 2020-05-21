@@ -446,27 +446,22 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.selectionStyle = .none
         
         let balanceLabel = cell.viewWithTag(1) as! UILabel
-        //let walletToolsButton = cell.viewWithTag(3) as! UIButton
-        //let refreshButton = cell.viewWithTag(9) as! UIButton
-        //let derivationLabel = cell.viewWithTag(11) as! UILabel
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
-        //let shareSeedButton = cell.viewWithTag(16) as! UIButton
         let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
         let walletFileLabel = cell.viewWithTag(20) as! UILabel
         let seedOnDeviceView = cell.viewWithTag(21)!
-        //let stackView = cell.viewWithTag(25)!
         let nodeView = cell.viewWithTag(26)!
         let nodeLabel = cell.viewWithTag(27) as! UILabel
         let deviceXprv = cell.viewWithTag(28) as! UILabel
         let bannerView = cell.viewWithTag(32)!
         let nodeKeysLabel = cell.viewWithTag(33) as! UILabel
-        let nodeChangeKeys = cell.viewWithTag(36) as! UILabel
         let seedOnDeviceLabel = cell.viewWithTag(37) as! UILabel
         let deviceSeedImage = cell.viewWithTag(38) as! UIImageView
         let walletTypeLabel = cell.viewWithTag(39) as! UILabel
         let walletTypeImage = cell.viewWithTag(40) as! UIImageView
         let accountLabel = cell.viewWithTag(42) as! UILabel
+        let typeLabel = cell.viewWithTag(43) as! UILabel
         
         accountLabel.text = wallet.label
         balanceLabel.adjustsFontSizeToFitWidth = true
@@ -476,23 +471,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             cell.contentView.alpha = 1
             bannerView.backgroundColor = #colorLiteral(red: 0, green: 0.1631944358, blue: 0.3383367703, alpha: 1)
-            //refreshButton.addTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
-            //shareSeedButton.addTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
-            //walletToolsButton.addTarget(self, action: #selector(walletTools(_:)), for: .touchUpInside)
-            //refreshButton.alpha = 1
-            //shareSeedButton.alpha = 1
-            //walletToolsButton.alpha = 1
             
         } else if !wallet.isActive {
             
-            cell.contentView.alpha = 0.6
+            cell.contentView.alpha = 0.4
             bannerView.backgroundColor = #colorLiteral(red: 0.1051254794, green: 0.1292803288, blue: 0.1418488324, alpha: 1)
-            //refreshButton.removeTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
-            //shareSeedButton.removeTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
-            //walletToolsButton.removeTarget(self, action: #selector(walletTools(_:)), for: .touchUpInside)
-            //refreshButton.alpha = 0
-            //shareSeedButton.alpha = 0
-            //walletToolsButton.alpha = 0
             
         }
         
@@ -510,12 +493,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        //walletToolsButton.restorationIdentifier = "\(indexPath.section)"
-        //refreshButton.restorationIdentifier = "\(indexPath.section)"
-        //shareSeedButton.restorationIdentifier = "\(indexPath.section)"
-        
         nodeView.layer.cornerRadius = 8
-        //stackView.layer.cornerRadius = 8
         seedOnDeviceView.layer.cornerRadius = 8
         
         let derivation = wallet.derivation
@@ -529,20 +507,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             balanceLabel.textColor = .systemGreen
             
         }
-                    
-//        if derivation.contains("84") {
-//
-//            derivationLabel.text = "BIP84"
-//
-//        } else if derivation.contains("44") {
-//
-//            derivationLabel.text = "BIP44"
-//
-//        } else if derivation.contains("49") {
-//
-//            derivationLabel.text = "BIP49"
-//
-//        }
         
         if wallet.knownSigners == 1 {
             
@@ -564,11 +528,24 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        nodeKeysLabel.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
-        nodeChangeKeys.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
+        nodeKeysLabel.text = "Keypool \(wallet.index) to \(wallet.maxRange)"
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
         walletFileLabel.text = reducedWalletName(name: wallet.name!)
+        
+        if derivation.contains("84") {
+
+            typeLabel.text = "Single Sig - Segwit"
+
+        } else if derivation.contains("44") {
+
+            typeLabel.text = "Single Sig - Legacy"
+
+        } else if derivation.contains("49") {
+
+            typeLabel.text = "Single Sig - Nested Segwit"
+
+        }
         
         for n in nodes {
             
@@ -599,41 +576,31 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.selectionStyle = .none
         
         let balanceLabel = cell.viewWithTag(1) as! UILabel
-        //let walletToolsButton = cell.viewWithTag(3) as! UIButton
-        //let bipImage = cell.viewWithTag(10) as! UIButton
-        //let derivationLabel = cell.viewWithTag(11) as! UILabel
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
-        //let shareSeedButton = cell.viewWithTag(16) as! UIButton
         let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
         let walletFileLabel = cell.viewWithTag(20) as! UILabel
         let seedOnDeviceView = cell.viewWithTag(21)!
         let seedOnNodeView = cell.viewWithTag(22)!
         let seedOfflineView = cell.viewWithTag(23)!
-        //let stackView = cell.viewWithTag(25)!
         let nodeView = cell.viewWithTag(26)!
         let nodeLabel = cell.viewWithTag(27) as! UILabel
         let deviceXprv = cell.viewWithTag(29) as! UILabel
         let nodeKeys = cell.viewWithTag(30) as! UILabel
         let offlineXprv = cell.viewWithTag(31) as! UILabel
         let bannerView = cell.viewWithTag(33)!
-        let nodeChangeKeysLabel = cell.viewWithTag(35) as! UILabel
         let seedOnDeviceLabel = cell.viewWithTag(36) as! UILabel
         let offlineSeedLabel = cell.viewWithTag(37) as! UILabel
         let mOfnTypeLabel = cell.viewWithTag(38) as! UILabel
         let walletType = cell.viewWithTag(39) as! UILabel
         let walletTypeImage = cell.viewWithTag(40) as! UIImageView
         let deviceSeedImage = cell.viewWithTag(41) as! UIImageView
-        //let refreshButton = cell.viewWithTag(9) as! UIButton
         let accountLabel = cell.viewWithTag(42) as! UILabel
         let primaryKeysNodeSignerImage = cell.viewWithTag(43) as! UIImageView
-        let changeKeysNodeSignerImage = cell.viewWithTag(44) as! UIImageView
         
-        //refreshButton.restorationIdentifier = "\(indexPath.section)"
         accountLabel.text = wallet.label
         let p = DescriptorParser()
         let str = p.descriptor(wallet.descriptor)
-        mOfnTypeLabel.text = "\(str.mOfNType) multisig"
         balanceLabel.adjustsFontSizeToFitWidth = true
         balanceLabel.text = "\(wallet.lastBalance.avoidNotation) BTC"
                 
@@ -655,31 +622,15 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             cell.contentView.alpha = 1
             bannerView.backgroundColor = #colorLiteral(red: 0, green: 0.1631944358, blue: 0.3383367703, alpha: 1)
-            //refreshButton.addTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
-            //shareSeedButton.addTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
-            //walletToolsButton.addTarget(self, action: #selector(walletTools(_:)), for: .touchUpInside)
-            //refreshButton.alpha = 1
-            //shareSeedButton.alpha = 1
-            //walletToolsButton.alpha = 1
             
         } else if !wallet.isActive {
             
             cell.contentView.alpha = 0.6
             bannerView.backgroundColor = #colorLiteral(red: 0.1051254794, green: 0.1292803288, blue: 0.1418488324, alpha: 1)
-            //refreshButton.removeTarget(self, action: #selector(reloadSection(_:)), for: .touchUpInside)
-            //shareSeedButton.removeTarget(self, action: #selector(exportSeed(_:)), for: .touchUpInside)
-            //walletToolsButton.removeTarget(self, action: #selector(walletTools(_:)), for: .touchUpInside)
-            //refreshButton.alpha = 0
-            //shareSeedButton.alpha = 0
-            //walletToolsButton.alpha = 0
             
         }
         
-        //shareSeedButton.restorationIdentifier = "\(indexPath.section)"
-        //walletToolsButton.restorationIdentifier = "\(indexPath.section)"
-        
         nodeView.layer.cornerRadius = 8
-        //stackView.layer.cornerRadius = 8
         seedOnDeviceView.layer.cornerRadius = 8
         seedOnNodeView.layer.cornerRadius = 8
         seedOfflineView.layer.cornerRadius = 8
@@ -696,48 +647,35 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-//        if derivation.contains("84") {
-//            
-//            derivationLabel.text = "BIP84"
-//            derivationLabel.alpha = 1
-//            bipImage.alpha = 1
-//            
-//        } else if derivation.contains("44") {
-//            
-//            derivationLabel.text = "BIP44"
-//            derivationLabel.alpha = 1
-//            bipImage.alpha = 1
-//            
-//        } else if derivation.contains("49") {
-//            
-//            derivationLabel.text = "BIP49"
-//            derivationLabel.alpha = 1
-//            bipImage.alpha = 1
-//            
-//        } else if derivation.contains("48") {
-//            
-//            derivationLabel.text = "WIP48"
-//            derivationLabel.alpha = 1
-//            bipImage.alpha = 1
-//            
-//        }
+        if derivation.contains("84") {
+            
+            mOfnTypeLabel.text = "\(str.mOfNType) multisig - Segwit"
+            
+        } else if derivation.contains("44") {
+            
+            mOfnTypeLabel.text = "\(str.mOfNType) multisig - Legacy"
+            
+        } else if derivation.contains("49") {
+            
+            mOfnTypeLabel.text = "\(str.mOfNType) multisig - Nested Segwit"
+            
+        } else if derivation.contains("48") {
+            
+            mOfnTypeLabel.text = "\(str.mOfNType) multisig - Segwit"
+            
+        }
         
         if wallet.nodeIsSigner != nil {
-            
             if wallet.nodeIsSigner! {
                 primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
-                changeKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
                 
             } else {
                 primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
-                changeKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
                 
             }
             
         } else {
-            
             primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
-            changeKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
             
         }
                 
@@ -775,12 +713,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        
         offlineSeedLabel.text = "\(wallet.unknownSigners) external signers"
         offlineXprv.text = "xprv \(wallet.derivation)"
-        
-        nodeKeys.text = "primary keys \(wallet.derivation)/0/\(wallet.index) to \(wallet.maxRange)"
-        nodeChangeKeysLabel.text = "change keys \(wallet.derivation)/1/\(wallet.index) to \(wallet.maxRange)"
+        nodeKeys.text = "Keypool \(wallet.index) to \(wallet.maxRange)"
         
         updatedLabel.text = "\(formatDate(date: wallet.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: wallet.birthdate))"
@@ -878,11 +813,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             case "DEFAULT":
                 
-                return 340
+                return 320
                 
             case "MULTI":
                 
-                return 371
+                return 354
                 
             default:
                 
@@ -1497,6 +1432,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let id = segue.identifier
         
         switch id {
+            
+        case "goConfirmImport":
+            if let vc = segue.destination as? ConfirmRecoveryViewController {
+                vc.walletNameHash = walletName
+                vc.walletDict = walletToImport
+            }
             
         case "goImport":
         
