@@ -13,7 +13,6 @@ class ErrorView: UIView, UIGestureRecognizerDelegate {
     
     let errorLabel = UILabel()
     let impact = UIImpactFeedbackGenerator()
-    //let upSwipe = UISwipeGestureRecognizer()
     let backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     let tap = UITapGestureRecognizer()
     let infoButton = UIButton()
@@ -23,78 +22,45 @@ class ErrorView: UIView, UIGestureRecognizerDelegate {
     
     
     @objc func handleTap(_ sender: UIGestureRecognizer) {
-        
         hide()
-        
     }
-    
-//    @objc func handleSwipes(_ sender: UIGestureRecognizer) {
-//
-//        print("handleSwipes")
-//
-//        hide()
-//
-//    }
     
     func hide() {
         
-        UIView.animate(withDuration: 0.2, animations: {
+        UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
             
-            self.backgroundView.frame = CGRect(x: 0,
-                                          y: 0,
-                                          width: self.backgroundView.frame.width,
-                                          height: 61)
+            vc.errorLabel.frame.origin.y = -30
             
-            self.errorLabel.frame = CGRect(x: 16,
-                                           y: -61,
-                                           width: self.backgroundView.frame.width,
-                                           height: 61)
+        }) { [unowned vc = self] _ in
             
-        }) { _ in
-            
-            UIView.animate(withDuration: 0.2, animations: {
-                
-                
-            }, completion: { _ in
-                
-                self.backgroundView.removeFromSuperview()
-                
-            })
+            vc.backgroundView.removeFromSuperview()
             
         }
         
     }
     
     @objc func showInfo() {
-        print("show info")
-        
         action()
-        
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        
         return !(touch.view is UIButton)
-        
     }
 
     
     func showErrorView(vc: UIViewController, text: String, isError: Bool) {
         
         tap.delegate = self
-        //tap.cancelsTouchesInView = false
-        self.isUserInteractionEnabled = true
-        //upSwipe.direction = .up
-        //upSwipe.addTarget(self, action: #selector(handleSwipes(_:)))
-        tap.addTarget(self, action: #selector(self.handleTap(_:)))
-        backgroundView.addGestureRecognizer(self.tap)
+        isUserInteractionEnabled = true
+        tap.addTarget(self, action: #selector(handleTap(_:)))
+        backgroundView.addGestureRecognizer(tap)
         
         let width = vc.view.frame.width - 32
         
         backgroundView.frame = CGRect(x: 0,
-                                      y: -61,
+                                      y: -30,
                                       width: vc.view.frame.width,
-                                      height: 61)
+                                      height: 30)
         
         backgroundView.alpha = 0
         
@@ -108,10 +74,10 @@ class ErrorView: UIView, UIGestureRecognizerDelegate {
             
         }
         
-        errorLabel.frame = CGRect(x: 16,
-                                  y: -61,
+        errorLabel.frame = CGRect(x: 8,
+                                  y: -30,
                                   width: width,
-                                  height: 61)
+                                  height: 30)
         
         errorLabel.font = UIFont.systemFont(ofSize: 12)
         errorLabel.text = text.lowercased()
@@ -122,58 +88,45 @@ class ErrorView: UIView, UIGestureRecognizerDelegate {
         infoButton.target(forAction: #selector(showInfo), withSender: self)
         
         if isError {
-         
             let infoImage = UIImage(systemName: "exclamationmark.circle")!
             infoButton.setImage(infoImage, for: .normal)
             infoButton.tintColor = .systemRed
-            
-            
         } else {
-            
             let infoImage = UIImage(systemName: "checkmark.circle")!
             infoButton.setImage(infoImage, for: .normal)
             infoButton.tintColor = .systemGreen
-            
         }
-        
-        //errorLabel.addSubview(infoButton)
         
         backgroundView.contentView.addSubview(errorLabel)
         backgroundView.contentView.addSubview(infoButton)
-        
         vc.view.addSubview(backgroundView)
-        
         var y = CGFloat()
         
         if vc.navigationController != nil {
-            
             y = vc.navigationController!.navigationBar.frame.maxY
-            
         } else {
-            
             y = 0
-            
         }
         
-        UIView.animate(withDuration: 0.3, animations: {
+        UIView.animate(withDuration: 0.3, animations: { [unowned thisVc = self] in
             
-            self.backgroundView.alpha = 1
+            thisVc.backgroundView.alpha = 1
             
-            self.backgroundView.frame = CGRect(x: 0,
-                                               y: y,
-                                               width: vc.view.frame.width,
-                                               height: 61)
+            thisVc.backgroundView.frame = CGRect(x: 0,
+                                                 y: y,
+                                                 width: vc.view.frame.width,
+                                                 height: 30)
             
-            self.errorLabel.frame = CGRect(x: 16,
-                                           y: 0,
-                                           width: width,
-                                           height: 61)
+            thisVc.errorLabel.frame = CGRect(x: 8,
+                                             y: 0,
+                                             width: width,
+                                             height: 30)
             
         }) { _ in
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [unowned thisVc = self] in
                 
-                self.impact.impactOccurred()
+                thisVc.impact.impactOccurred()
                 
             }
             
@@ -181,30 +134,19 @@ class ErrorView: UIView, UIGestureRecognizerDelegate {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + deadlineTime, execute: {
                 
-                UIView.animate(withDuration: 0.3, animations: {
+                UIView.animate(withDuration: 0.3, animations: { [unowned thisVc = self] in
                     
-                    self.backgroundView.frame = CGRect(x: 0,
-                                                       y: -61,
+                    thisVc.backgroundView.frame = CGRect(x: 0,
+                                                       y: -30,
                                                        width: width,
-                                                       height: 61)
+                                                       height: 30)
                     
-                    self.errorLabel.frame = CGRect(x: 16,
-                                                   y: -61,
+                    thisVc.errorLabel.frame = CGRect(x: 8,
+                                                   y: -30,
                                                    width: width,
-                                                   height: 61)
+                                                   height: 30)
                     
-                }) { _ in
-                    
-                    UIView.animate(withDuration: 0.3, animations: {
-                        
-                        
-                    }, completion: { _ in
-                        
-                        self.backgroundView.removeFromSuperview()
-             
-                    })
-                    
-                }
+                })
                 
             })
             

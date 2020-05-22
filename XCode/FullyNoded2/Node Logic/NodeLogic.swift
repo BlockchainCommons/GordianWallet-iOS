@@ -56,7 +56,7 @@ class NodeLogic {
                     
                 }
             } else {
-                completion((false, nil, "error getting netowork info: \(errorDesc ?? "unknown error")"))
+                completion((false, nil, "error getting network info: \(errorDesc ?? "unknown error")"))
             }
         }
     }

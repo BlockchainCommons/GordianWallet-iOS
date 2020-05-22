@@ -23,8 +23,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var sortedWallets = [[String:Any]]()
     let dateFormatter = DateFormatter()
     let creatingView = ConnectingView()
-    //var editButton = UIBarButtonItem()
-    //var addButton = UIBarButtonItem()
     var nodes = [[String:Any]]()
     var recoveryPhrase = ""
     var descriptor = ""
@@ -33,20 +31,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         navigationController?.delegate = self
         walletTable.delegate = self
         walletTable.dataSource = self
-        //editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editWallets))
-        //addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createWallet))
-        //editButton.tintColor = .lightGray
-        //addButton.tintColor = .lightGray
-        //navigationItem.setRightBarButton(addButton, animated: true)
-        //navigationItem.setLeftBarButton(editButton, animated: true)
         configureRefresher()
         walletTable.setContentOffset(.zero, animated: true)
         NotificationCenter.default.addObserver(self, selector: #selector(didSweep(_:)), name: .didSweep, object: nil)
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -68,13 +58,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         } else {
             showAlert(vc: self, title: "No active account", message: "Tap an account to activate it, then you can use tools. If you don't have any accounts create one by tapping the + button or import one by tapping the QR scanner.")
         }
-        
     }
     
     @IBAction func addAccount(_ sender: Any) {
         createWallet()
     }
-    
     
     @objc func didSweep(_ notification: Notification) {
         

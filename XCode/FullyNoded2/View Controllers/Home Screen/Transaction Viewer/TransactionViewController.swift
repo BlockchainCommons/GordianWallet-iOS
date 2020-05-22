@@ -513,6 +513,7 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func saveNewTx(memo: String) {
+        print("saveNewTx")
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             if wallet != nil {
                 var dict = [String:Any]()
@@ -543,6 +544,7 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func updateTx(memo: String) {
+        print("updateTx")
         CoreDataService.retrieveEntity(entityName: .transactions) { [unowned vc = self] (transactions, errorDescription) in
             if transactions != nil {
                 if transactions!.count > 0 {
@@ -562,6 +564,8 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
                             }
                         }
                     }
+                } else {
+                    vc.saveNewTx(memo: memo)
                 }
             }
         }
