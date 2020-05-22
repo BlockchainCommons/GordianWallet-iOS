@@ -152,7 +152,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         
         func walletSuccessfullyCreated() {
             DispatchQueue.main.async { [unowned vc = self] in
-                let alert = UIAlertController(title: "Account \(importedOrRecovered)!", message: "Your \(importedOrRecovered) account will now show up in \"Accounts\"", preferredStyle: .actionSheet)
+                let alert = UIAlertController(title: "Account \(importedOrRecovered)!", message: "Your \(importedOrRecovered) account will now show up in \"Accounts\", a blockchain rescan has been initiated", preferredStyle: .actionSheet)
                 alert.addAction(UIAlertAction(title: "Done", style: .cancel, handler: { action in
                     DispatchQueue.main.async { [unowned vc = self] in
                         vc.navigationController?.popToRootViewController(animated: true)
@@ -163,12 +163,18 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             }
         }
         
+        func rescan() {
+            updateLabel(text: "Initiating a rescan")
+            Reducer.makeCommand(walletName: wallet.name ?? walletNameHash, command: .rescanblockchain, param: "\(wallet.blockheight)") { [unowned vc = self] (object, errorDescription) in
+                vc.connectingView.removeConnectingView()
+                walletSuccessfullyCreated()
+            }
+        }
+        
         func saveWallet() {
-            CoreDataService.saveEntity(dict: walletDict, entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
+            CoreDataService.saveEntity(dict: walletDict, entityName: .wallets) { (success, errorDescription) in
                 if success {
-                    NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
-                    vc.connectingView.removeConnectingView()
-                    walletSuccessfullyCreated()
+                    rescan()
                 } else {
                     showError(message: "Import error, unable to save that wallet: \(errorDescription ?? "unknown error")")
                 }

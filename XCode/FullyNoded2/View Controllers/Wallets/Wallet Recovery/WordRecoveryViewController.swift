@@ -113,9 +113,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     }
     
     @IBAction func addWordAction(_ sender: Any) {
-        
         processTextfieldInput()
-        
     }
     
     private func chooseDerivation() {
@@ -203,12 +201,15 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     }
     
     private func processTextfieldInput() {
+        print("processTextfieldInput")
         
         if textField.text != "" {
             
             //check if user pasted more then one word
             let processed = processedCharacters(textField.text!)
-            let userAddedWords = (processed).split(separator: " ")
+            let userAddedWords = processed.split(separator: " ")
+            var multipleWords = [String]()
+            
             
             if userAddedWords.count > 1 {
                 
@@ -220,9 +221,8 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                     for bip39Word in bip39Words {
                         
                         if word == bip39Word {
-                            
                             isValid = true
-                            
+                            multipleWords.append("\(word)")
                         }
                         
                     }
@@ -233,11 +233,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                         if isValid {
                             
                             // they are valid bip39 words
-                            for word in userAddedWords {
-                                
-                                addWord(word: "\(word)")
-                                
-                            }
+                            addMultipleWords(words: multipleWords)
                             
                             textField.text = ""
                             
@@ -319,6 +315,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 
                 if let _ = BIP39Mnemonic(vc.processedCharacters(vc.textField.text!)) {
                     
+                    vc.processTextfieldInput()
                     vc.textField.textColor = .systemGreen
                     vc.validWordsAdded()
                     
@@ -440,11 +437,8 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
         processTextfieldInput()
-        
         return true
-        
     }
     
     func getAutocompleteSuggestions(userText: String) -> [String]{
@@ -502,14 +496,15 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         
     }
     
-    private func addWord(word: String) {
+    private func addMultipleWords(words: [String]) {
         
         DispatchQueue.main.async { [unowned vc = self] in
             
             vc.label.removeFromSuperview()
             vc.label.text = ""
             vc.addedWords.removeAll()
-            vc.justWords.append(word)
+            vc.justWords = words
+            print("justwords = \(vc.justWords)")
             
             for (i, word) in vc.justWords.enumerated() {
                 
@@ -525,14 +520,59 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             vc.label.sizeToFit()
             vc.wordView.addSubview(vc.label)
             
-            if vc.justWords.count == 12 || vc.justWords.count == 24 {
+            
+            if vc.justWords.count == 24 || vc.justWords.count == 12 {
                 
                 if let _ = BIP39Mnemonic(vc.justWords.joined(separator: " ")) {
                     
                     vc.validWordsAdded()
                     
                 } else {
+                                        
+                    showAlert(vc: vc, title: "Invalid", message: "Just so you know that is not a valid recovery phrase, if you are inputting a 24 word phrase ignore this message and keep adding your words.")
                     
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    private func addWord(word: String) {
+        print("addWord")
+        
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            vc.label.removeFromSuperview()
+            vc.label.text = ""
+            vc.addedWords.removeAll()
+            vc.justWords.append(word)
+            print("justwords = \(vc.justWords)")
+            
+            for (i, word) in vc.justWords.enumerated() {
+                
+                vc.addedWords.append("\(i + 1). \(word)\n")
+                vc.updatePlaceHolder(wordNumber: i + 2)
+                
+            }
+            
+            vc.label.textColor = .systemGreen
+            vc.label.text = vc.addedWords.joined(separator: "")
+            vc.label.frame = CGRect(x: 16, y: 0, width: vc.wordView.frame.width - 32, height: vc.wordView.frame.height - 10)
+            vc.label.numberOfLines = 0
+            vc.label.sizeToFit()
+            vc.wordView.addSubview(vc.label)
+            
+            
+            if vc.justWords.count == 24 || vc.justWords.count == 12 {
+                
+                if let _ = BIP39Mnemonic(vc.justWords.joined(separator: " ")) {
+                    
+                    vc.validWordsAdded()
+                    
+                } else {
+                                        
                     showAlert(vc: vc, title: "Invalid", message: "Just so you know that is not a valid recovery phrase, if you are inputting a 24 word phrase ignore this message and keep adding your words.")
                     
                 }
@@ -544,21 +584,16 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     }
     
     private func processedCharacters(_ string: String) -> String {
-        
         var result = string.filter("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ".contains)
         result = result.condenseWhitespace()
         return result
-        
     }
     
     private func confirm() {
-        
         DispatchQueue.main.async { [unowned vc = self] in
-            
+            vc.label.text = ""
             vc.performSegue(withIdentifier: "confirmFromWords", sender: vc)
-            
         }
-        
     }
     
     private func verify() {
@@ -664,22 +699,22 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 }
             }
             
-            func chooseDerivationScheme() {
-                DispatchQueue.main.async { [unowned vc = self] in
-                                
-                    let alert = UIAlertController(title: "That is a valid recovery phrase", message: "You can now choose a derivation scheme or press cancel to add more words", preferredStyle: .actionSheet)
-
-                    alert.addAction(UIAlertAction(title: "Choose Derivation", style: .default, handler: { action in
-                        vc.chooseDerivation()
-                        
-                    }))
-                    
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                    alert.popoverPresentationController?.sourceView = self.view
-                    vc.present(alert, animated: true, completion: nil)
-                    
-                }
-            }
+//            func chooseDerivationScheme() {
+//                DispatchQueue.main.async { [unowned vc = self] in
+//                                
+//                    let alert = UIAlertController(title: "Choose a derivation scheme", message: "You can now choose a derivation scheme or press cancel to add more words", preferredStyle: .actionSheet)
+//
+//                    alert.addAction(UIAlertAction(title: "Choose Derivation", style: .default, handler: { action in
+//                        
+//                        
+//                    }))
+//                    
+//                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+//                    alert.popoverPresentationController?.sourceView = self.view
+//                    vc.present(alert, animated: true, completion: nil)
+//                    
+//                }
+//            }
             
             if !recoveringMultiSigWithWordsOnly {
                 DispatchQueue.main.async { [unowned vc = self] in
@@ -687,7 +722,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                     let alert = UIAlertController(title: "That is a valid recovery phrase", message: "Are you recovering a multi-sig account or single-sig account?", preferredStyle: .actionSheet)
 
                     alert.addAction(UIAlertAction(title: "Single-sig", style: .default, handler: { action in
-                        chooseDerivationScheme()
+                        vc.chooseDerivation()
                     }))
                     
                     alert.addAction(UIAlertAction(title: "Multi-sig", style: .default, handler: { action in
@@ -791,7 +826,15 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                             vc.recoveryDict["id"] = UUID()
                             vc.recoveryDict["blockheight"] = Int32(0)
                             vc.recoveryDict["maxRange"] = 2500
-                            vc.recoveryDict["isActive"] = false
+                            CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+                                if wallets != nil {
+                                    if wallets!.count == 0 {
+                                        vc.recoveryDict["isActive"] = true
+                                    } else {
+                                        vc.recoveryDict["isActive"] = false
+                                    }
+                                }
+                            }
                             vc.recoveryDict["lastUsed"] = Date()
                             vc.recoveryDict["isArchived"] = false
                             vc.recoveryDict["birthdate"] = keyBirthday()
@@ -803,17 +846,13 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                                 if let dict = object as? NSDictionary {
                                     let changedescriptor = dict["descriptor"] as! String
                                     vc.recoveryDict["changeDescriptor"] = changedescriptor
-                                    /// Now check if the wallet exists on the node or not
-                                    DispatchQueue.main.async { [unowned vc = self] in
-                                        vc.cv.label.text = "searching your node for the wallet"
-                                    }
+                                    vc.cv.removeConnectingView()
                                     vc.confirm()
                                     
                                 } else {
                                     vc.cv.removeConnectingView()
                                     displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                                 }
-                                
                             }
                             
                         } else {
@@ -821,7 +860,6 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                             displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                             
                         }
-                        
                     }
                                         
                 } catch {
@@ -839,35 +877,24 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
         switch segue.identifier {
-            
         case "segueToNumberOfSigners":
-            
             if let vc = segue.destination as? ChooseNumberOfSignersViewController {
-                
                 vc.seedArray = seedArray
-                
             }
             
         case "confirmFromWords":
-            
             if let vc = segue.destination as? ConfirmRecoveryViewController {
-                
                 vc.walletNameHash = self.walletNameHash
                 vc.walletDict = self.recoveryDict
                 vc.words = self.words
                 vc.derivation = self.derivation
-                
             }
             
         default:
-            
             break
             
         }
-        
     }
 
 }
