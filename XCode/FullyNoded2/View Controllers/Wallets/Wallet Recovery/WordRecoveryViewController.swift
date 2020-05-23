@@ -699,23 +699,6 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 }
             }
             
-//            func chooseDerivationScheme() {
-//                DispatchQueue.main.async { [unowned vc = self] in
-//                                
-//                    let alert = UIAlertController(title: "Choose a derivation scheme", message: "You can now choose a derivation scheme or press cancel to add more words", preferredStyle: .actionSheet)
-//
-//                    alert.addAction(UIAlertAction(title: "Choose Derivation", style: .default, handler: { action in
-//                        
-//                        
-//                    }))
-//                    
-//                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-//                    alert.popoverPresentationController?.sourceView = self.view
-//                    vc.present(alert, animated: true, completion: nil)
-//                    
-//                }
-//            }
-            
             if !recoveringMultiSigWithWordsOnly {
                 DispatchQueue.main.async { [unowned vc = self] in
                                 

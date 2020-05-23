@@ -273,7 +273,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         }
         
-        SeedParser.fetchSeeds(wallet: wallet) { [unowned vc = self] seeds in
+        SeedParser.fetchSeeds(wallet: wallet) { [unowned vc = self] (seeds, fingerprints) in
             
             var str = ""
             

@@ -44,7 +44,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         /// We start the tor thread automatically here whenever the app enters the foreground.
         let mgr = TorClient.sharedInstance
-        if !startingUp && mgr.state != .started && mgr.state != .connected  {
+        if !startingUp && mgr.state != .started && mgr.state != .connected && mgr.state != .refreshing {
             mgr.start(delegate: nil)
         } else {
             startingUp = false

@@ -11,7 +11,6 @@ import LibWally
 class SeedParser {
     
     class func parseWallet(wallet: WalletStruct, completion: @escaping ((known: Int?, unknown: Int?)) -> Void) {
-        
         var xpubs = [String]()
         var derivedXpubs = [String]()
         let descriptorParser = DescriptorParser()
@@ -217,12 +216,12 @@ class SeedParser {
         
     }
     
-    class func fetchSeeds(wallet: WalletStruct, completion: @escaping (([String]?)) -> Void) {
+    class func fetchSeeds(wallet: WalletStruct, completion: @escaping ((words: [String]?, fingerprints: [String]?)) -> Void) {
         
         var xpubs = [String]()
-        var derivedXpubs = [String]()
         var potentialSeeds = [String]()
         var accountsSeeds = [String]()
+        var fingerprints = [String]()
         let descriptorParser = DescriptorParser()
         let descriptorStruct = descriptorParser.descriptor(wallet.descriptor)
         let chain = network(descriptor: wallet.descriptor)
@@ -236,7 +235,7 @@ class SeedParser {
         }
         
         guard let bip32path = BIP32Path(wallet.derivation) else {
-            completion((nil))
+            completion((nil, nil))
             return
         }
         
@@ -259,11 +258,12 @@ class SeedParser {
                                     
                                     if xpub == hdkey.xpub {
                                         accountsSeeds.append(potentialSeed)
+                                        fingerprints.append(masterKey.fingerprint.hexString)
 
                                     }
                                     
                                     if i + 1 == xpubs.count && p + 1 == unique.count {
-                                        completion((accountsSeeds))
+                                        completion((accountsSeeds, fingerprints))
 
                                     }
                                     

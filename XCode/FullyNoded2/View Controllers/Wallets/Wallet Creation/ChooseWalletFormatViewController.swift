@@ -491,7 +491,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         
                         let w = WalletStruct(dictionary: vc.newWallet)
                         
-                        SeedParser.fetchSeeds(wallet: w) { wordSet in
+                        SeedParser.fetchSeeds(wallet: w) { (wordSet, fingerprints) in
                             
                             if wordSet != nil {
                                 

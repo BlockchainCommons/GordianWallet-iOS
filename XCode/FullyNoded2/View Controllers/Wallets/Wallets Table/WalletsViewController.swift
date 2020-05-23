@@ -257,90 +257,76 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                             
                                         }
                                         
-                                        if i + 1 == vc.sortedWallets.count {
+                                        SeedParser.fetchSeeds(wallet: wstruct) { (words, fingerprints) in
                                             
-                                            vc.sortedWallets = vc.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
+                                            if fingerprints != nil {
+                                                vc.sortedWallets[i]["knownFingerprints"] = fingerprints!
+                                            }
                                             
-                                            if vc.sortedWallets.count == 0 {
+                                            if i + 1 == vc.sortedWallets.count {
                                                 
-                                                vc.isLoading = false
-                                                vc.createWallet()
+                                                vc.sortedWallets = vc.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
                                                 
-                                            } else {
-                                                
-                                                if vc.nodes.count == 0 {
+                                                if vc.sortedWallets.count == 0 {
                                                     
                                                     vc.isLoading = false
-                                                    vc.walletTable.isUserInteractionEnabled = false
+                                                    vc.createWallet()
                                                     
-                                                    for (i, wallet) in vc.sortedWallets.enumerated() {
+                                                } else {
+                                                    
+                                                    if vc.nodes.count == 0 {
                                                         
-                                                        let w = WalletStruct(dictionary: wallet)
-                                                        CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
+                                                        vc.isLoading = false
+                                                        vc.walletTable.isUserInteractionEnabled = false
                                                         
-                                                        if i + 1 == vc.sortedWallets.count {
+                                                        for (i, wallet) in vc.sortedWallets.enumerated() {
                                                             
-                                                            DispatchQueue.main.async {
-                                                                vc.creatingView.removeConnectingView()
-                                                                vc.walletTable.reloadData()
+                                                            let w = WalletStruct(dictionary: wallet)
+                                                            CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
+                                                            
+                                                            if i + 1 == vc.sortedWallets.count {
+                                                                
+                                                                DispatchQueue.main.async {
+                                                                    vc.creatingView.removeConnectingView()
+                                                                    vc.walletTable.reloadData()
+                                                                }
+                                                                
                                                             }
                                                             
                                                         }
                                                         
-                                                    }
-                                                    
-                                                } else {
-                                                    
-                                                    func reloadNow() {
-                                                        DispatchQueue.main.async { [unowned vc = self] in
-                                                            vc.walletTable.reloadData()
-                                                            vc.creatingView.removeConnectingView()
-                                                            vc.walletTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-                                                            vc.fullRefresh = false
-                                                            vc.isLoading = false
+                                                    } else {
+                                                        
+                                                        func reloadNow() {
+                                                            DispatchQueue.main.async { [unowned vc = self] in
+                                                                vc.walletTable.reloadData()
+                                                                vc.creatingView.removeConnectingView()
+                                                                vc.walletTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+                                                                vc.fullRefresh = false
+                                                                vc.isLoading = false
+                                                            }
+                                                        }
+                                                        
+                                                        let account = WalletStruct(dictionary: vc.sortedWallets[0])
+                                                        vc.getWalletBalance(walletStruct: account) {
+                                                            reloadNow()
                                                         }
                                                     }
-                                                    
-//                                                    if vc.fullRefresh {
-//                                                        vc.isLoading = true
-//                                                        let account = WalletStruct(dictionary: vc.sortedWallets[0])
-//                                                        vc.getWalletBalance(wallet: account) {
-//                                                            reloadNow()
-//                                                        }
-//                                                    } else {
-//                                                        reloadNow()
-//                                                    }
-                                                    let account = WalletStruct(dictionary: vc.sortedWallets[0])
-                                                    vc.getWalletBalance(walletStruct: account) {
-                                                        reloadNow()
-                                                    }
-                                                    
-                                                    
                                                 }
-                                                                                    
                                             }
-                                            
                                         }
-                                        
                                     }
-                                    
                                 }
-                                                                
                             }
-                            
                         }
-                        
                     }
                     
                 } else {
-                    
                     vc.creatingView.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: errorDescription!)
                     
                 }
-                
             }
-            
         }
         
         CoreDataService.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodes, errorDescription) in
@@ -418,7 +404,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func singleSigCell(_ indexPath: IndexPath) -> UITableViewCell {
         
         let d = sortedWallets[indexPath.section]
-        let walletStrunct = WalletStruct.init(dictionary: d)
+        let walletStruct = WalletStruct.init(dictionary: d)
         
         let cell = walletTable.dequeueReusableCell(withIdentifier: "singleSigWalletCell", for: indexPath)
         cell.selectionStyle = .none
@@ -441,16 +427,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let accountLabel = cell.viewWithTag(42) as! UILabel
         let typeLabel = cell.viewWithTag(43) as! UILabel
         
-        accountLabel.text = walletStrunct.label
+        accountLabel.text = walletStruct.label
         balanceLabel.adjustsFontSizeToFitWidth = true
-        balanceLabel.text = "\(walletStrunct.lastBalance.avoidNotation) BTC"
+        balanceLabel.text = "\(walletStruct.lastBalance.avoidNotation) BTC"
         
-        if walletStrunct.isActive {
+        if walletStruct.isActive {
             
             cell.contentView.alpha = 1
             bannerView.backgroundColor = #colorLiteral(red: 0, green: 0.1631944358, blue: 0.3383367703, alpha: 1)
             
-        } else if !walletStrunct.isActive {
+        } else if !walletStruct.isActive {
             
             cell.contentView.alpha = 0.4
             bannerView.backgroundColor = #colorLiteral(red: 0.1051254794, green: 0.1292803288, blue: 0.1418488324, alpha: 1)
@@ -458,7 +444,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         if let isRescanning = sortedWallets[indexPath.section]["isRescanning"] as? Bool {
-            print("isRescanning = \(isRescanning)")
             
             if isRescanning {
                 
@@ -475,7 +460,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         nodeView.layer.cornerRadius = 8
         seedOnDeviceView.layer.cornerRadius = 8
         
-        let derivation = walletStrunct.derivation
+        let derivation = walletStruct.derivation
         
         if derivation.contains("1") {
             
@@ -487,10 +472,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        if walletStrunct.knownSigners == 1 {
+        let descriptorParser = DescriptorParser()
+        let descriptorStruct = descriptorParser.descriptor(walletStruct.descriptor)
+        let fingerprint = descriptorStruct.fingerprint
+                
+        if walletStruct.knownSigners == 1 {
             
-            seedOnDeviceLabel.text = "1 Signer on \(UIDevice.current.name)"
-            deviceXprv.text = "xprv \(walletStrunct.derivation)"
+            seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
+            deviceXprv.text = "1 root xprv: \(fingerprint)"
             deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
             walletTypeLabel.text = "Hot Account"
             walletTypeImage.image = UIImage(systemName: "flame")
@@ -499,7 +488,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         } else {
             
             seedOnDeviceLabel.text = "\(UIDevice.current.name) is cold"
-            deviceXprv.text = "xpub \(walletStrunct.derivation)"
+            deviceXprv.text = "1 account xpub: \(fingerprint)"
             deviceSeedImage.image = UIImage(systemName: "eye.fill")
             walletTypeLabel.text = "Cold Account"
             walletTypeImage.image = UIImage(systemName: "snow")
@@ -507,10 +496,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        nodeKeysLabel.text = "Keypool \(walletStrunct.index) to \(walletStrunct.maxRange)"
-        updatedLabel.text = "\(formatDate(date: walletStrunct.lastUpdated))"
-        createdLabel.text = "\(getDate(unixTime: walletStrunct.birthdate))"
-        walletFileLabel.text = reducedWalletName(name: walletStrunct.name!)
+        nodeKeysLabel.text = "Keypool \(walletStruct.index) to \(walletStruct.maxRange)"
+        updatedLabel.text = "\(formatDate(date: walletStruct.lastUpdated))"
+        createdLabel.text = "\(getDate(unixTime: walletStruct.birthdate))"
+        walletFileLabel.text = reducedWalletName(name: walletStruct.name!)
         
         if derivation.contains("84") {
 
@@ -524,13 +513,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
 
             typeLabel.text = "Single Sig - Nested Segwit"
 
+        } else {
+            
+            typeLabel.text = "Single Sig - Custom"
         }
         
         for n in nodes {
             
             let s = NodeStruct(dictionary: n)
             
-            if s.id == walletStrunct.nodeId {
+            if s.id == walletStruct.nodeId {
                 
                 let rpcOnion = s.onionAddress
                 let first10 = String(rpcOnion.prefix(5))
@@ -549,7 +541,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func multiSigWalletCell(_ indexPath: IndexPath) -> UITableViewCell {
         
         let d = sortedWallets[indexPath.section]
-        let walletStrunct = WalletStruct.init(dictionary: d)
+        let walletStruct = WalletStruct.init(dictionary: d)
         
         let cell = walletTable.dequeueReusableCell(withIdentifier: "multiSigWalletCell", for: indexPath)
         cell.selectionStyle = .none
@@ -577,11 +569,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let accountLabel = cell.viewWithTag(42) as! UILabel
         let primaryKeysNodeSignerImage = cell.viewWithTag(43) as! UIImageView
         
-        accountLabel.text = walletStrunct.label
+        accountLabel.text = walletStruct.label
         let p = DescriptorParser()
-        let str = p.descriptor(walletStrunct.descriptor)
+        let str = p.descriptor(walletStruct.descriptor)
         balanceLabel.adjustsFontSizeToFitWidth = true
-        balanceLabel.text = "\(walletStrunct.lastBalance.avoidNotation) BTC"
+        balanceLabel.text = "\(walletStruct.lastBalance.avoidNotation) BTC"
                 
         if let isRescanning = sortedWallets[indexPath.section]["isRescanning"] as? Bool {
             
@@ -597,12 +589,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        if walletStrunct.isActive {
+        if walletStruct.isActive {
             
             cell.contentView.alpha = 1
             bannerView.backgroundColor = #colorLiteral(red: 0, green: 0.1631944358, blue: 0.3383367703, alpha: 1)
             
-        } else if !walletStrunct.isActive {
+        } else if !walletStruct.isActive {
             
             cell.contentView.alpha = 0.6
             bannerView.backgroundColor = #colorLiteral(red: 0.1051254794, green: 0.1292803288, blue: 0.1418488324, alpha: 1)
@@ -614,7 +606,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         seedOnNodeView.layer.cornerRadius = 8
         seedOfflineView.layer.cornerRadius = 8
         
-        let derivation = walletStrunct.derivation
+        let derivation = walletStruct.derivation
         
         if derivation.contains("1") {
             
@@ -642,10 +634,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             mOfnTypeLabel.text = "\(str.mOfNType) multisig - Segwit"
             
+        } else {
+            
+            mOfnTypeLabel.text = "\(str.mOfNType) multisig - Custom"
+            
         }
         
-        if walletStrunct.nodeIsSigner != nil {
-            if walletStrunct.nodeIsSigner! {
+        if walletStruct.nodeIsSigner != nil {
+            if walletStruct.nodeIsSigner! {
                 primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
                 
             } else {
@@ -657,48 +653,54 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
             
         }
+        
+        let descriptorParser = DescriptorParser()
+        let descriptorStruct = descriptorParser.descriptor(walletStruct.descriptor)
+        let processedFingerprint = process(walletStruct.knownFingerprints ?? [""])
+        var unknownFingerprints = descriptorStruct.fingerprint.replacingOccurrences(of: processedFingerprint + ",", with: "")
+        unknownFingerprints = unknownFingerprints.replacingOccurrences(of: ", " + processedFingerprint, with: "")
                 
-        if walletStrunct.knownSigners == str.sigsRequired {
+        if walletStruct.knownSigners == str.sigsRequired {
             
-            var signer = "signer"
-            if walletStrunct.knownSigners > 1 {
-                signer = "signers"
+            var signer = "Seed"
+            if walletStruct.knownSigners > 1 {
+                signer = "Seeds"
             }
             
-            seedOnDeviceLabel.text = "\(walletStrunct.knownSigners) \(signer) on \(UIDevice.current.name)"
+            seedOnDeviceLabel.text = "\(walletStruct.knownSigners) \(signer) on \(UIDevice.current.name)"
             walletType.text = "Hot Account"
             walletTypeImage.image = UIImage(systemName: "flame")
             walletTypeImage.tintColor = .systemRed
             deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
-            deviceXprv.text = "xprv \(walletStrunct.derivation)"
+            deviceXprv.text = "root xprv's: \(processedFingerprint)"
             
-        } else if walletStrunct.knownSigners == 0 {
+        } else if walletStruct.knownSigners == 0 {
             
-            seedOnDeviceLabel.text = "\(walletStrunct.knownSigners) signers on \(UIDevice.current.name)"
+            seedOnDeviceLabel.text = "0 Seed's on \(UIDevice.current.name)"
             walletType.text = "Cool Account"
             walletTypeImage.image = UIImage(systemName: "cloud.sun")
             walletTypeImage.tintColor = .systemTeal
             deviceSeedImage.image = UIImage(systemName: "eye.fill")
-            deviceXprv.text = "xpub \(walletStrunct.derivation)"
+            deviceXprv.text = "xpub's: \(unknownFingerprints)"
             
-        } else if walletStrunct.knownSigners < str.sigsRequired {
+        } else if walletStruct.knownSigners < str.sigsRequired {
             
-            seedOnDeviceLabel.text = "\(walletStrunct.knownSigners) signer on \(UIDevice.current.name)"
+            seedOnDeviceLabel.text = "\(walletStruct.knownSigners) Seed on \(UIDevice.current.name)"
             walletType.text = "Warm Account"
             walletTypeImage.image = UIImage(systemName: "sun.min")
             walletTypeImage.tintColor = .systemYellow
             deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
-            deviceXprv.text = "xprv \(walletStrunct.derivation)"
+            deviceXprv.text = "root xprv: \(processedFingerprint)"
             
         }
         
-        offlineSeedLabel.text = "\(walletStrunct.unknownSigners) external signers"
-        offlineXprv.text = "xprv \(walletStrunct.derivation)"
-        nodeKeys.text = "Keypool \(walletStrunct.index) to \(walletStrunct.maxRange)"
+        offlineSeedLabel.text = "\(walletStruct.unknownSigners) external seed's"
+        offlineXprv.text = "xprv's: \(unknownFingerprints)"
+        nodeKeys.text = "Keypool \(walletStruct.index) to \(walletStruct.maxRange)"
         
-        updatedLabel.text = "\(formatDate(date: walletStrunct.lastUpdated))"
-        createdLabel.text = "\(getDate(unixTime: walletStrunct.birthdate))"
-        walletFileLabel.text = reducedWalletName(name: walletStrunct.name!)
+        updatedLabel.text = "\(formatDate(date: walletStruct.lastUpdated))"
+        createdLabel.text = "\(getDate(unixTime: walletStruct.birthdate))"
+        walletFileLabel.text = reducedWalletName(name: walletStruct.name!)
         
         for n in nodes {
             
@@ -718,6 +720,13 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         return cell
         
+    }
+    
+    private func process(_ fingerprints:[String]) -> String {
+        var processed = fingerprints.description.replacingOccurrences(of: "[", with: "")
+        processed = processed.replacingOccurrences(of: "]", with: "")
+        processed = processed.replacingOccurrences(of: "\"", with: "")
+        return processed
     }
         
     private func noWalletCell() -> UITableViewCell {

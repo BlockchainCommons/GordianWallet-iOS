@@ -96,20 +96,16 @@ class DescriptorParser {
                     dict["mOfNType"] = "\(mofnarray[0]) of \(numberOfKeys)"
                     dict["sigsRequired"] = UInt(mofnarray[0])
                     var keysWithPath = [String]()
-                    var fingerprints = [String]()
                     for (i, item) in mofnarray.enumerated() {
                         if i != 0 {
                             keysWithPath.append("\(item)")
-                        } else {
-                            fingerprints.append("\(item)")
                         }
-                        
                         if i + 1 == mofnarray.count {
                             dict["keysWithPath"] = keysWithPath
-                            dict["fingerprint"] = fingerprints.description
                         }
                     }
-                                        
+                     
+                    var fingerprints = [String]()
                     var keyArray = [String]()
                     var paths = [String]()
                     var derivationArray = [String]()
@@ -124,6 +120,7 @@ class DescriptorParser {
                                 let rootPath = arr[0].replacingOccurrences(of: "[", with: "")
                                 
                                 let rootPathArr = rootPath.split(separator: "/")
+                                fingerprints.append("\(rootPathArr[0])")
                                 var deriv = "m"
                                 for (i, rootPathItem) in rootPathArr.enumerated() {
                                     
@@ -163,6 +160,11 @@ class DescriptorParser {
                     dict["derivationArray"] = derivationArray
                     dict["multiSigKeys"] = keyArray
                     dict["multiSigPaths"] = paths
+                    
+                    var processed = fingerprints.description.replacingOccurrences(of: "[", with: "")
+                    processed = processed.replacingOccurrences(of: "]", with: "")
+                    processed = processed.replacingOccurrences(of: "\"", with: "")
+                    dict["fingerprint"] = processed
                     
                     for deriv in derivationArray {
 
