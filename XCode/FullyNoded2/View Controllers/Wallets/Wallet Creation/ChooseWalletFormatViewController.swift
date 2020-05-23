@@ -172,17 +172,13 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
     }
     
-    //addCustomWords
     @IBAction func createCoolWallet(_ sender: Any) {
         customSeedSwitch.isOn = false
         isSingleSig = false
         isMultiSig = true
         DispatchQueue.main.async { [unowned vc = self] in
-            
             vc.performSegue(withIdentifier: "addXpubSegue", sender: vc)
-            
         }
-        
     }
     
     @IBAction func createColdWallet(_ sender: Any) {
@@ -190,9 +186,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         isSingleSig = true
         isMultiSig = false
         DispatchQueue.main.async { [unowned vc = self] in
-            
             vc.performSegue(withIdentifier: "addXpubSegue", sender: vc)
-            
         }
     }
     
@@ -214,7 +208,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 if !error && node != nil {
                     
                     vc.node = node!
-                    vc.creatingView.addConnectingView(vc: self.navigationController!, description: "creating your account")
+                    vc.creatingView.addConnectingView(vc: vc.navigationController!, description: "creating your account")
                     
                     Reducer.makeCommand(walletName: "", command: .getblockcount, param: "") { (object, errorDescription) in
                         
@@ -226,6 +220,13 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             vc.id = UUID()
                             vc.newWallet["id"] = vc.id
                             vc.newWallet["isActive"] = false
+                            CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+                                if wallets != nil {
+                                    if wallets!.count == 0 {
+                                        vc.newWallet["isActive"] = true
+                                    }
+                                }
+                            }
                             vc.newWallet["lastUsed"] = Date()
                             vc.newWallet["lastBalance"] = 0.0
                             vc.newWallet["isArchived"] = false

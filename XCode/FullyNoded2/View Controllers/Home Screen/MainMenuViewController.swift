@@ -350,11 +350,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        #if DEBUG
+        didAppear()
+        #else
         if KeyChain.getData("userIdentifier") == nil || KeyChain.getData("acceptedDisclaimer") == nil {
             showIntro()
         } else {
             didAppear()
         }
+        #endif
     }
     
     private func showIntro() {

@@ -319,6 +319,8 @@ class SeedParser {
                         
                     }
                     
+                } else {
+                    completion((nil, nil))
                 }
                 
             }

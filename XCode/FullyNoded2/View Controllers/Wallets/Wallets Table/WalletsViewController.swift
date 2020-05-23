@@ -64,120 +64,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @objc func didSweep(_ notification: Notification) {
-        print("didSweep")
         creatingView.addConnectingView(vc: self, description: "refreshing your wallets data")
         fullRefresh = true
         refresh()
-        
     }
     
     private func configureRefresher() {
-        
         refresher = UIRefreshControl()
         refresher.tintColor = UIColor.white
         refresher.attributedTitle = NSAttributedString(string: "refresh data", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         refresher.addTarget(self, action: #selector(self.reloadActiveWallet), for: UIControl.Event.valueChanged)
         walletTable.addSubview(refresher)
-        
-    }
-    
-    @objc func editWallets() {
-        
-//        if !isLoading {
-//
-//            walletTable.setEditing(!walletTable.isEditing, animated: true)
-//
-//            if walletTable.isEditing {
-//
-//                editButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(editWallets))
-//
-//            } else {
-//
-//                editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editWallets))
-//
-//            }
-//
-//            self.navigationItem.setLeftBarButton(editButton, animated: true)
-//
-//        } else {
-//
-//            showAlert(vc: self, title: "Fetching wallet data from your node...", message: "Please wait until the spinner disappears as the app is currently fetching wallet data from your node.")
-//
-//        }
-        
-    }
-    
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        
-        if tableView.isEditing {
-            
-            return .delete
-            
-        }
-
-        return .none
-        
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-        if editingStyle == .delete {
-            
-            if !isLoading {
-                
-                if sortedWallets.count > 0 {
-                 
-                    let id = sortedWallets[indexPath.section]["id"] as! UUID
-                    CoreDataService.updateEntity(id: id, keyToUpdate: "isArchived", newValue: true, entityName: .wallets) { (success, errorDescription) in
-                        
-                        if success {
-                            
-                            if self.sortedWallets.count == 1 {
-                                
-                                DispatchQueue.main.async {
-                                    
-                                    self.sortedWallets.removeAll()
-                                    self.editWallets()
-                                    self.walletTable.reloadData()
-                                    
-                                }
-                                
-                            } else {
-                                
-                                DispatchQueue.main.async {
-                                    
-                                    self.sortedWallets.remove(at: indexPath.section)
-                                    tableView.deleteSections(IndexSet(arrayLiteral: indexPath.section), with: .fade)
-                                    
-                                }
-                                
-                            }
-                            
-                        } else {
-                            
-                            displayAlert(viewController: self, isError: true, message: "error deleting node")
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                    self.editWallets()
-                    displayAlert(viewController: self, isError: true, message: "not allowed")
-                    
-                }
-                
-            }
-                        
-        }
-        
-    }
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        
-        return true
-        
     }
     
     func onionAddress(wallet: WalletStruct) -> String {
@@ -216,6 +113,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             creatingView.addConnectingView(vc: self, description: "loading accounts")
                         
             CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
+                print("wallets = \(wallets)")
                                                 
                 if errorDescription == nil {
                     
@@ -231,15 +129,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             let s = WalletStruct(dictionary: w)
                             
                             if !s.isArchived && w["id"] != nil && w["name"] != nil {
-                                
                                 vc.sortedWallets.append(w)
                                 if s.isActive {
                                     vc.wallet = s
                                 }
-                                
                             }
                                                         
                             if i + 1 == wallets!.count {
+                                print("sorted wallets = \(vc.sortedWallets)")
                                 
                                 if vc.sortedWallets.count == 0 {
                                     vc.creatingView.removeConnectingView()
@@ -250,15 +147,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                     let wstruct = WalletStruct(dictionary: wallet)
                                     
                                     SeedParser.parseWallet(wallet: wstruct) { (known, unknown) in
-                                        
                                         if known != nil && unknown != nil {
                                             vc.sortedWallets[i]["knownSigners"] = known!
                                             vc.sortedWallets[i]["unknownSigners"] = unknown!
-                                            
                                         }
                                         
                                         SeedParser.fetchSeeds(wallet: wstruct) { (words, fingerprints) in
-                                            
                                             if fingerprints != nil {
                                                 vc.sortedWallets[i]["knownFingerprints"] = fingerprints!
                                             }
@@ -296,7 +190,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                                         }
                                                         
                                                     } else {
-                                                        
+                                                        print("we here")
                                                         func reloadNow() {
                                                             DispatchQueue.main.async { [unowned vc = self] in
                                                                 vc.walletTable.reloadData()
@@ -1081,7 +975,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func getWalletBalance(walletStruct: WalletStruct, completion: @escaping () -> Void) {
         print("getWalletBalance")
-        nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
+        nodeLogic?.loadWalletData(wallet: walletStruct) { [unowned vc = self] (success, dictToReturn, errorDesc) in
             
             if success && dictToReturn != nil {
                 
