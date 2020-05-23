@@ -915,55 +915,48 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if !isLoading {
             
-            // MARK: - To enable mainnet accounts just uncomment the following lines of code:
-            
-            DispatchQueue.main.async { [unowned vc = self] in
-
-                vc.performSegue(withIdentifier: "addWallet", sender: vc)
-
-            }
-            
-            // MARK: - And comment the following lines of code:
-            
-            // ---------------------------------------------------
-            
-//            Encryption.getNode { [unowned vc = self] (node, error) in
+//-------------------------------------------------------------------------------
+// MARK: - To enable mainnet accounts just uncomment the following lines of code:
 //
-//                if !error && node != nil {
+//            DispatchQueue.main.async { [unowned vc = self] in
 //
-//                    if node!.network == "mainnet" {
-//
-//                        DispatchQueue.main.async {
-//
-//                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
-//
-//                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { [unowned vc = self] action in }))
-//
-//                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-//
-//                            self.present(alert, animated: true, completion: nil)
-//
-//                        }
-//
-//                    } else {
-//
-//                        DispatchQueue.main.async {
-//
-//                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
-//
-//                        }
-//
-//                    }
-//
-//                } else {
-//
-//                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
-//
-//                }
+//                vc.performSegue(withIdentifier: "addWallet", sender: vc)
 //
 //            }
-            
-            // ---------------------------------------------------
+//-------------------------------------------------------------------------------
+// MARK: - And comment out the following lines of code:
+
+            Encryption.getNode { [unowned vc = self] (node, error) in
+
+                if !error && node != nil {
+
+                    if node!.network == "mainnet" {
+
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
+                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { action in }))
+                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                            vc.present(alert, animated: true, completion: nil)
+                        }
+
+                    } else {
+
+                        DispatchQueue.main.async {
+
+                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
+
+                        }
+
+                    }
+
+                } else {
+
+                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
+
+                }
+
+            }
+//-------------------------------------------------------------------------------
             
         } else {
             
@@ -974,7 +967,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func getWalletBalance(walletStruct: WalletStruct, completion: @escaping () -> Void) {
-        print("getWalletBalance")
         nodeLogic?.loadWalletData(wallet: walletStruct) { [unowned vc = self] (success, dictToReturn, errorDesc) in
             
             if success && dictToReturn != nil {

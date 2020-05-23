@@ -98,12 +98,28 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                         
                     }
                     
+                } else if value.hasPrefix("01") || value.hasPrefix("02") {
+                    connectingView.addConnectingView(vc: self, description: "converting to psbt")
+                    Reducer.makeCommand(walletName: "", command: .converttopsbt, param: "\"\(value)\"") { (object, errorDescription) in
+                        if let psbt = object as? String {
+                            DispatchQueue.main.async { [unowned vc = self] in
+                                vc.connectingView.removeConnectingView()
+                                let alert = UIAlertController(title: "Sign Raw Transaction?", message: "We will attempt to sign this transaction with your nodes current active wallet and then we will attempt to sign it locally. If the transaction is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer as a psbt.", preferredStyle: .actionSheet)
+                                alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
+                                    vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
+                                    vc.signPSBT(psbt: psbt)
+                                }))
+                                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+                                    vc.connectingView.removeConnectingView()
+                                }))
+                                alert.popoverPresentationController?.sourceView = vc.view
+                                vc.present(alert, animated: true, completion: nil)
+                            }
+                        }
+                    }
                 }
-                
             }
-            
         }
-                
     }
     
     @objc func addTester() {
@@ -382,7 +398,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                 
                 DispatchQueue.main.async { [unowned vc = self] in
                     
-                    let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sing it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: .actionSheet)
+                    let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sign it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: .actionSheet)
 
                     alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
                         
@@ -398,10 +414,27 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                     
                 }
                             
+            } else if url.hasPrefix("01") || url.hasPrefix("02") {
+                connectingView.addConnectingView(vc: self, description: "converting to psbt")
+                Reducer.makeCommand(walletName: "", command: .converttopsbt, param: "\"\(url)\"") { (object, errorDescription) in
+                    if let psbt = object as? String {
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.connectingView.removeConnectingView()
+                            let alert = UIAlertController(title: "Sign Raw Transaction?", message: "We will attempt to sign this transaction with your nodes current active wallet and then we will attempt to sign it locally. If the transaction is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer as a psbt.", preferredStyle: .actionSheet)
+                            alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
+                                vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
+                                vc.signPSBT(psbt: psbt)
+                            }))
+                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+                                vc.connectingView.removeConnectingView()
+                            }))
+                            alert.popoverPresentationController?.sourceView = vc.view
+                            vc.present(alert, animated: true, completion: nil)
+                        }
+                    }
+                }
             } else {
-                
                 displayAlert(viewController: self, isError: true, message: "That's not a compatible QR Code!")
-                
             }
             
         }
