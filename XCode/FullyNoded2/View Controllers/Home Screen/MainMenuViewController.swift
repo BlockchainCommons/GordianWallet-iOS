@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, OnionManagerDelegate, UIDocumentPickerDelegate {
     
@@ -78,8 +79,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         torInfoHidden = true
         showNodeInfo = false
         
-        if ud?.object(forKey: "firstTime") == nil {
-            firstTimeHere()
+        if ud?.object(forKey: "appHasReset") == nil {
+            resetApp()
         }
         
         Encryption.getNode { [unowned vc = self] (node, error) in
@@ -98,6 +99,75 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         bootStrapping = true
         addStatusLabel(description: "     Bootstrapping Tor...")
         reloadSections([torCellIndex])
+        
+        if mgr?.state != .started && mgr?.state != .connected && mgr?.state != .refreshing  {
+            mgr?.start(delegate: self)
+        }
+        
+    }
+    
+    private func resetApp() {
+        let domain = Bundle.main.bundleIdentifier!
+        ud?.removePersistentDomain(forName: domain)
+        ud?.synchronize()
+        
+        func deleteAllData(entity: ENTITY){
+
+            let managedContext = CoreDataService.persistentContainer.viewContext
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity.rawValue)
+            fetchRequest.returnsObjectsAsFaults = false
+            
+            do {
+                
+                let stuff = try managedContext.fetch(fetchRequest)
+                
+                for thing in stuff as! [NSManagedObject] {
+                    
+                    managedContext.delete(thing)
+                    
+                }
+                
+                try managedContext.save()
+                                        
+            } catch let error as NSError {
+                
+                print("delete fail--",error)
+                
+            }
+
+        }
+        
+        let entities = [ENTITY.nodes, ENTITY.auth, ENTITY.wallets, ENTITY.seeds, ENTITY.transactions]
+        
+        for entity in entities {
+            
+            deleteAllData(entity: entity)
+            
+        }
+                
+        if KeyChain.remove(key: "userIdentifier") {
+            
+            print("private key deleted")
+            
+        }
+        
+        if KeyChain.remove(key: "acceptedDisclaimer") {
+            
+            print("private key deleted")
+            
+        }
+        
+        if KeyChain.remove(key: "privateKey") {
+            
+            print("private key deleted")
+            
+        }
+        
+        ud?.set(true, forKey: "appHasReset")
+        
+        if ud?.object(forKey: "firstTime") == nil {
+            firstTimeHere()
+        }
     }
     
     @IBAction func uploadFile(_ sender: Any) {
@@ -374,9 +444,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func didAppear() {
-        if mgr?.state != .started && mgr?.state != .connected  {
-            mgr?.start(delegate: self)
-        }
         
         DispatchQueue.main.async {
             Encryption.getNode { [unowned vc = self] (node, error) in

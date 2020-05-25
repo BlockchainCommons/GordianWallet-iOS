@@ -304,6 +304,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.selectionStyle = .none
         
         let balanceLabel = cell.viewWithTag(1) as! UILabel
+        let deviceLabel = cell.viewWithTag(2) as! UILabel
+        let nodeKeyLabel = cell.viewWithTag(3) as! UILabel
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
         let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
@@ -321,6 +323,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let accountLabel = cell.viewWithTag(42) as! UILabel
         let typeLabel = cell.viewWithTag(43) as! UILabel
         
+        deviceLabel.text = UIDevice.current.name
         accountLabel.text = walletStruct.label
         balanceLabel.adjustsFontSizeToFitWidth = true
         balanceLabel.text = "\(walletStruct.lastBalance.avoidNotation) BTC"
@@ -372,8 +375,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
         if walletStruct.knownSigners == 1 {
             
-            seedOnDeviceLabel.text = "1 Seed on \(UIDevice.current.name)"
-            deviceXprv.text = "1 root xprv: \(fingerprint)"
+            seedOnDeviceLabel.text = "1 master seed"
+            deviceXprv.text = "1 root xprv: [\(fingerprint)]"
             deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
             walletTypeLabel.text = "Hot Account"
             walletTypeImage.image = UIImage(systemName: "flame")
@@ -381,8 +384,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         } else {
             
-            seedOnDeviceLabel.text = "\(UIDevice.current.name) is cold"
-            deviceXprv.text = "1 account xpub: \(fingerprint)"
+            seedOnDeviceLabel.text = "Cold"
+            deviceXprv.text = "1 xpub \(descriptorStruct.prefix)"
             deviceSeedImage.image = UIImage(systemName: "eye.fill")
             walletTypeLabel.text = "Cold Account"
             walletTypeImage.image = UIImage(systemName: "snow")
@@ -390,7 +393,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        nodeKeysLabel.text = "Keypool \(walletStruct.index) to \(walletStruct.maxRange)"
+        nodeKeyLabel.text = "1 xpub \(descriptorStruct.prefix)"
+        nodeKeysLabel.text = "1 keypool, keys \(walletStruct.index) to \(walletStruct.maxRange) unused"
         updatedLabel.text = "\(formatDate(date: walletStruct.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: walletStruct.birthdate))"
         walletFileLabel.text = reducedWalletName(name: walletStruct.name!)
@@ -441,6 +445,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.selectionStyle = .none
         
         let balanceLabel = cell.viewWithTag(1) as! UILabel
+        let deviceLabel = cell.viewWithTag(2) as! UILabel
+        let nodesXprv = cell.viewWithTag(3) as! UILabel
         let updatedLabel = cell.viewWithTag(13) as! UILabel
         let createdLabel = cell.viewWithTag(14) as! UILabel
         let rpcOnionLabel = cell.viewWithTag(19) as! UILabel
@@ -463,6 +469,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let accountLabel = cell.viewWithTag(42) as! UILabel
         let primaryKeysNodeSignerImage = cell.viewWithTag(43) as! UIImageView
         
+        deviceLabel.text = UIDevice.current.name
         accountLabel.text = walletStruct.label
         let p = DescriptorParser()
         let str = p.descriptor(walletStruct.descriptor)
@@ -535,24 +542,42 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         if walletStruct.nodeIsSigner != nil {
+            
             if walletStruct.nodeIsSigner! {
                 primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
-                
             } else {
                 primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
-                
             }
             
         } else {
             primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
-            
         }
         
         let descriptorParser = DescriptorParser()
         let descriptorStruct = descriptorParser.descriptor(walletStruct.descriptor)
         let processedFingerprint = process(walletStruct.knownFingerprints ?? [""])
-        var unknownFingerprints = descriptorStruct.fingerprint.replacingOccurrences(of: processedFingerprint + ",", with: "")
-        unknownFingerprints = unknownFingerprints.replacingOccurrences(of: ", " + processedFingerprint, with: "")
+        var unknownFingerprints = descriptorStruct.fingerprint.replacingOccurrences(of: processedFingerprint + ", ", with: "")
+        unknownFingerprints = unknownFingerprints.replacingOccurrences(of: ", [" + processedFingerprint, with: "")
+        
+        nodesXprv.text = "1 keypool, keys \(walletStruct.index) to \(walletStruct.maxRange) unused"
+        
+        if descriptorStruct.keysWithPath.count == 3 {
+            let nodesKey = descriptorStruct.keysWithPath[2]
+            let nodesPath = nodesKey.replacingOccurrences(of: descriptorStruct.multiSigKeys[2], with: "")
+            let arr = nodesPath.split(separator: "]")
+            let xprvPath = "\(arr[0])]"
+            if walletStruct.nodeIsSigner != nil {
+                if walletStruct.nodeIsSigner! {
+                    nodeKeys.text = "1 xprv \(xprvPath)"
+                } else {
+                    nodeKeys.text = "Cold"
+                }
+            } else {
+                nodeKeys.text = "Cold"
+            }
+        } else {
+            nodeKeys.text = "Cold"
+        }
                 
         if walletStruct.knownSigners == str.sigsRequired {
             
@@ -561,7 +586,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 signer = "Seeds"
             }
             
-            seedOnDeviceLabel.text = "\(walletStruct.knownSigners) \(signer) on \(UIDevice.current.name)"
+            seedOnDeviceLabel.text = "\(signer) master seed's"
             walletType.text = "Hot Account"
             walletTypeImage.image = UIImage(systemName: "flame")
             walletTypeImage.tintColor = .systemRed
@@ -570,16 +595,30 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         } else if walletStruct.knownSigners == 0 {
             
-            seedOnDeviceLabel.text = "0 Seed's on \(UIDevice.current.name)"
+            seedOnDeviceLabel.text = "Cold"
             walletType.text = "Cool Account"
             walletTypeImage.image = UIImage(systemName: "cloud.sun")
             walletTypeImage.tintColor = .systemTeal
             deviceSeedImage.image = UIImage(systemName: "eye.fill")
-            deviceXprv.text = "xpub's: \(unknownFingerprints)"
+            
+            if descriptorStruct.keysWithPath.count == 3 {
+                let nodesKey = descriptorStruct.keysWithPath[1]
+                let nodesPath = nodesKey.replacingOccurrences(of: descriptorStruct.multiSigKeys[1], with: "")
+                let arr = nodesPath.split(separator: "]")
+                let xpubPath = "\(arr[0])]"
+                deviceXprv.text = "\(xpubPath)"
+            } else {
+                deviceXprv.text = "xpub's: \(unknownFingerprints)"
+            }
             
         } else if walletStruct.knownSigners < str.sigsRequired {
             
-            seedOnDeviceLabel.text = "\(walletStruct.knownSigners) Seed on \(UIDevice.current.name)"
+            var seeds = "seed's"
+            if walletStruct.knownSigners == 1 {
+                seeds = "seed"
+            }
+            
+            seedOnDeviceLabel.text = "\(walletStruct.knownSigners) master \(seeds)"
             walletType.text = "Warm Account"
             walletTypeImage.image = UIImage(systemName: "sun.min")
             walletTypeImage.tintColor = .systemYellow
@@ -588,9 +627,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        offlineSeedLabel.text = "\(walletStruct.unknownSigners) external seed's"
-        offlineXprv.text = "xprv's: \(unknownFingerprints)"
-        nodeKeys.text = "Keypool \(walletStruct.index) to \(walletStruct.maxRange)"
+        offlineSeedLabel.text = "\(walletStruct.unknownSigners) external master seed's"
+        offlineXprv.text = "root xprv's: \(unknownFingerprints)"
+       
         
         updatedLabel.text = "\(formatDate(date: walletStruct.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: walletStruct.birthdate))"
@@ -617,10 +656,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     private func process(_ fingerprints:[String]) -> String {
-        var processed = fingerprints.description.replacingOccurrences(of: "[", with: "")
-        processed = processed.replacingOccurrences(of: "]", with: "")
-        processed = processed.replacingOccurrences(of: "\"", with: "")
-        return processed
+        var stringToreturn = ""
+        for fingerprint in fingerprints {
+            stringToreturn += "[\(fingerprint)]"
+        }
+        return stringToreturn
     }
         
     private func noWalletCell() -> UITableViewCell {
@@ -695,11 +735,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             case "DEFAULT":
                 
-                return 320
+                return 335
                 
             case "MULTI":
                 
-                return 354
+                return 439
                 
             default:
                 

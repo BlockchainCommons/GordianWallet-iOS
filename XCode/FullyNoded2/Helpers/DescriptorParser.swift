@@ -120,7 +120,7 @@ class DescriptorParser {
                                 let rootPath = arr[0].replacingOccurrences(of: "[", with: "")
                                 
                                 let rootPathArr = rootPath.split(separator: "/")
-                                fingerprints.append("\(rootPathArr[0])")
+                                fingerprints.append("[\(rootPathArr[0])]")
                                 var deriv = "m"
                                 for (i, rootPathItem) in rootPathArr.enumerated() {
                                     
@@ -161,8 +161,8 @@ class DescriptorParser {
                     dict["multiSigKeys"] = keyArray
                     dict["multiSigPaths"] = paths
                     
-                    var processed = fingerprints.description.replacingOccurrences(of: "[", with: "")
-                    processed = processed.replacingOccurrences(of: "]", with: "")
+                    var processed = fingerprints.description.replacingOccurrences(of: "[\"", with: "")
+                    processed = processed.replacingOccurrences(of: "\"]", with: "")
                     processed = processed.replacingOccurrences(of: "\"", with: "")
                     dict["fingerprint"] = processed
                     
@@ -250,6 +250,7 @@ class DescriptorParser {
                 dict["keysWithPath"] = ["[" + "\(arr1[1])"]
                 let arr2 = arr1[1].split(separator: "]")
                 let derivation = arr2[0]
+                dict["prefix"] = "[\(derivation)]"
                 dict["fingerprint"] = "\((derivation.split(separator: "/"))[0])"
                 let extendedKeyWithPath = arr2[1]
                 let arr4 = extendedKeyWithPath.split(separator: "/")

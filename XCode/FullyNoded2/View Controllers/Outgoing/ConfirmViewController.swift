@@ -15,7 +15,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     var txFee = Double()
     var fxRate = Double()
     var txid = ""
-    var psbtDict = ""
+    var psbtDict:NSDictionary!
     var doneBlock: ((Bool) -> Void)?
     let creatingView = ConnectingView()
     var unsignedPsbt = ""
@@ -123,7 +123,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Base64 encoded text", style: .default, handler: { [unowned vc = self] action in
+            alert.addAction(UIAlertAction(title: "base64 encoded text", style: .default, handler: { [unowned vc = self] action in
                 
                 DispatchQueue.main.async {
                     
@@ -139,14 +139,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Plain text", style: .default, handler: { [unowned vc = self] action in
+            alert.addAction(UIAlertAction(title: "plain text", style: .default, handler: { [unowned vc = self] action in
                 
                 DispatchQueue.main.async {
                     
-                    let textToShare = [vc.psbtDict]
+                    let textToShare = ["\(String(describing: vc.psbtDict))"]
                     
-                    let activityViewController = UIActivityViewController(activityItems: textToShare,
-                                                                          applicationActivities: nil)
+                    let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
                     
                     activityViewController.popoverPresentationController?.sourceView = vc.view
                     vc.present(activityViewController, animated: true) {}
@@ -155,12 +154,64 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             }))
             
+            alert.addAction(UIAlertAction(title: "signatures and keys", style: .default, handler: { [unowned vc = self] action in
+                
+                DispatchQueue.main.async {
+                    let inputs = vc.psbtDict["inputs"] as! NSArray
+                    var sigsAndKeys:[[String:String]] = []
+                    for (i, input) in inputs.enumerated() {
+                        let inputDict = input as! NSDictionary
+                        let bip32derivs = inputDict["bip32_derivs"] as! NSArray
+                        let partialSignatures = inputDict["partial_signatures"] as! NSDictionary
+                        var pubkeySigner = ""
+                        var signature = ""
+                        for (key, value) in partialSignatures {
+                            pubkeySigner = key as! String
+                            signature = value as! String
+                        }
+                        for bip32deriv in bip32derivs {
+                            let bip32derivDict = bip32deriv as! NSDictionary
+                            let pubkey = bip32derivDict["pubkey"] as! String
+                            let masterFingerprint = bip32derivDict["master_fingerprint"] as! String
+                            if pubkey == pubkeySigner {
+                                CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+                                    if wallets != nil {
+                                        var signingXpub = ""
+                                        for wallet in wallets! {
+                                            let walletStruct = WalletStruct(dictionary: wallet)
+                                            if walletStruct.type == "MULTI" {
+                                                let descriptorParser = DescriptorParser()
+                                                let descriptorStruct = descriptorParser.descriptor(walletStruct.descriptor)
+                                                let keys = descriptorStruct.keysWithPath
+                                                for key in keys {
+                                                    if key.contains(masterFingerprint) {
+                                                        let arr1 = key.split(separator: "]")
+                                                        let arr2 = "\(arr1[1])".split(separator: "/")
+                                                        signingXpub = "\(arr2[0])"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        let dict = ["xpub":signingXpub, "signature":signature]
+                                        sigsAndKeys.append(dict)
+                                    }
+                                }
+                            }
+                        }
+                        if i + 1 == inputs.count {
+                            DispatchQueue.main.async {
+                                let textToShare = ["\(sigsAndKeys)"]
+                                let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+                                activityViewController.popoverPresentationController?.sourceView = vc.view
+                                vc.present(activityViewController, animated: true) {}
+                            }
+                        }
+                    }
+                }
+            }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                    
             self.present(alert, animated: true, completion: nil)
-            
         }
-        
     }
     
     func convertPSBTtoData(string: String) {
@@ -225,7 +276,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     
                     if let dict = object as? NSDictionary {
                         
-                        vc.psbtDict = "\(dict)"
+                        vc.psbtDict = dict
                         
                         if let txDict = dict["tx"] as? NSDictionary {
                             

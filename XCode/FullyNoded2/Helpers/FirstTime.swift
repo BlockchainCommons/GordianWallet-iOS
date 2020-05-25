@@ -17,6 +17,7 @@ class FirstTime {
         if KeyChain.getData("privateKey") == nil {
             let privateKey = Encryption.privateKey()
             if KeyChain.set(privateKey, forKey: "privateKey") {
+                print("set new private key")
                 let keypair = KeyGen.generate()
                 let pubkeyData = keypair.pubKey.dataUsingUTF8StringEncoding
                 let privkeyData = keypair.privKey.dataUsingUTF8StringEncoding

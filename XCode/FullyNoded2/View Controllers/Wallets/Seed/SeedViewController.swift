@@ -415,7 +415,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             var xpubtext = ""
             for key in descriptorStruct.keysWithPath {
                 xpubtext += key.replacingOccurrences(of: "/0/*", with: "") + "\n\n"
-                
             }
             xpubs = "\(xpubtext.split(separator: ")")[0])"
             cell.textLabel?.text = xpubs

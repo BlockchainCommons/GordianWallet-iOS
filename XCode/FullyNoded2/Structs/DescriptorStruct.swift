@@ -33,6 +33,7 @@ public struct DescriptorStruct: CustomStringConvertible {
     let keysWithPath:[String]
     let isAccount:Bool
     let fingerprint:String
+    let prefix:String
     
     init(dictionary: [String: Any]) {
         format = dictionary["format"] as? String ?? ""
@@ -60,6 +61,7 @@ public struct DescriptorStruct: CustomStringConvertible {
         keysWithPath = dictionary["keysWithPath"] as? [String] ?? [""]
         isAccount = dictionary["isAccount"] as? Bool ?? false
         fingerprint = dictionary["fingerprint"] as? String ?? ""
+        prefix = dictionary["prefix"] as? String ?? ""
     }
     
     public var description: String {
