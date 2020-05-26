@@ -54,7 +54,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidEnterBackground(_ scene: UIScene) {
         /// Force Tor to resign when going into background as it does not  survive on its own.
         let mgr = TorClient.sharedInstance
-        if mgr.state != .stopped {
+        if mgr.state != .stopped && mgr.state != .refreshing {
             mgr.state = .refreshing
             mgr.resign()
         }

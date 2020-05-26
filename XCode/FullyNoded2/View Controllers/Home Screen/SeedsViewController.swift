@@ -99,18 +99,17 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
         if editingStyle == .delete {
-            
             if let id = seedsArray[indexPath.row]["id"] as? UUID {
                 idToDelete = id
                 indPath = indexPath
+                #if DEBUG
+                deleteSeed()
+                #else
                 showAuth()
-    
+                #endif
             }
-            
         }
-        
     }
     
     private func deleteSeed() {

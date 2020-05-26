@@ -541,17 +541,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        if walletStruct.nodeIsSigner != nil {
-            
-            if walletStruct.nodeIsSigner! {
-                primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
-            } else {
-                primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
-            }
-            
-        } else {
-            primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
-        }
+//        if walletStruct.nodeIsSigner != nil {
+//            if walletStruct.nodeIsSigner! {
+//                primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
+//            } else {
+//                primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
+//            }
+//            
+//        } else {
+//            primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
+//        }
         
         let descriptorParser = DescriptorParser()
         let descriptorStruct = descriptorParser.descriptor(walletStruct.descriptor)
@@ -569,24 +568,27 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if walletStruct.nodeIsSigner != nil {
                 if walletStruct.nodeIsSigner! {
                     nodeKeys.text = "1 xprv \(xprvPath)"
+                    primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
                 } else {
                     nodeKeys.text = "Cold"
+                    primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
                 }
             } else {
                 nodeKeys.text = "Cold"
+                primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
             }
         } else {
             nodeKeys.text = "Cold"
+            primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
         }
                 
         if walletStruct.knownSigners == str.sigsRequired {
             
-            var signer = "Seed"
+            var seedText = "seed"
             if walletStruct.knownSigners > 1 {
-                signer = "Seeds"
+                seedText = "seeds"
             }
-            
-            seedOnDeviceLabel.text = "\(signer) master seed's"
+            seedOnDeviceLabel.text = "\(walletStruct.knownSigners) master \(seedText)"
             walletType.text = "Hot Account"
             walletTypeImage.image = UIImage(systemName: "flame")
             walletTypeImage.tintColor = .systemRed
@@ -629,7 +631,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         offlineSeedLabel.text = "\(walletStruct.unknownSigners) external master seed's"
         offlineXprv.text = "root xprv's: \(unknownFingerprints)"
-       
         
         updatedLabel.text = "\(formatDate(date: walletStruct.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: walletStruct.birthdate))"

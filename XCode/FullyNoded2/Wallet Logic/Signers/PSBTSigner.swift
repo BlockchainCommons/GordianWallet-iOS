@@ -57,9 +57,17 @@ class PSBTSigner {
                             if let processedPsbt = dict["psbt"] as? String {
                                 do {
                                     psbtToSign = try PSBT(processedPsbt, chain)
-                                    attemptToSignLocally()
+                                    if xprvsToSignWith.count > 0 {
+                                       attemptToSignLocally()
+                                    } else {
+                                        finalizeWithBitcoind()
+                                    }
                                 } catch {
-                                    attemptToSignLocally()
+                                    if xprvsToSignWith.count > 0 {
+                                       attemptToSignLocally()
+                                    } else {
+                                        finalizeWithBitcoind()
+                                    }
                                 }
                             }
                         } else {
@@ -75,31 +83,22 @@ class PSBTSigner {
         }
         
         func attemptToSignLocally() {
-            
             /// Need to ensure similiar seeds do not sign mutliple times. This can happen if a user adds the same seed multiple times.
             var xprvStrings = [String]()
-            
             for xprv in xprvsToSignWith {
                 xprvStrings.append(xprv.description)
                 
             }
-            
             xprvsToSignWith.removeAll()
             let uniqueXprvs = Array(Set(xprvStrings))
-            
             for uniqueXprv in uniqueXprvs {
-                
                 if let xprv = HDKey(uniqueXprv) {
                     xprvsToSignWith.append(xprv)
-                    
                 }
             }
-            
             if xprvsToSignWith.count > 0 {
-                
                 for (i, key) in xprvsToSignWith.enumerated() {
                     psbtToSign.sign(key)
-                    
                     if i + 1 == xprvsToSignWith.count {
                         /// There is a bug in LibWally-Swift so until that gets fixed we rely on bitcoind to finalize PSBT's for us
                         finalizeWithBitcoind()
@@ -132,7 +131,6 @@ class PSBTSigner {
                         }
                     }
                 }
-                
                 if i + 1 == seedsToSignWith.count {
                     processWithActiveWallet()
                 }
@@ -144,11 +142,15 @@ class PSBTSigner {
             seedsToSignWith.removeAll()
             CoreDataService.retrieveEntity(entityName: .seeds) { (seeds, errorDescription) in
                 if errorDescription == nil && seeds != nil {
-                    for (i, seed) in seeds!.enumerated() {
-                        seedsToSignWith.append(seed)
-                        if i + 1 == seeds!.count {
-                            getKeysToSignWith()
+                    if seeds!.count > 0 {
+                        for (i, seed) in seeds!.enumerated() {
+                            seedsToSignWith.append(seed)
+                            if i + 1 == seeds!.count {
+                                getKeysToSignWith()
+                            }
                         }
+                    } else {
+                        processWithActiveWallet()
                     }
                 }
             }

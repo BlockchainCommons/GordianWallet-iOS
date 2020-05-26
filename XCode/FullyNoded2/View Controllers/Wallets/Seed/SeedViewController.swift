@@ -21,6 +21,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     var infoText = ""
     var barTitle = ""
     var wallet:WalletStruct!
+    var accountSeeds = [String]()
     
     @IBOutlet weak var accountLabel: UILabel!
     @IBOutlet var tableView: UITableView!
@@ -61,9 +62,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         showAlert(vc: self, title: "Coming soon", message: "This button will delete this account in the very near future.")
     }
     
-    
     @IBAction func editLabel(_ sender: Any) {
-        
         let title = "Give your wallet a label"
         let message = "Add a label so you can easily identify your wallets"
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -210,17 +209,61 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     @objc func deleteSeed() {
         DispatchQueue.main.async { [unowned vc = self] in
             let alert = UIAlertController(title: "Delete seed?", message: "Are you sure!? You WILL NOT be able to spend from this wallet and it will be watch-only.", preferredStyle: .actionSheet)
-
             alert.addAction(UIAlertAction(title: "💀 Delete", style: .destructive, handler: { [unowned vc = self] action in
-                
-                showAlert(vc: vc, title: "🛠 Under Construction", message: "The ability to delete seeds here is still a work in progress.")
-
+                vc.deleteSeedNow()
             }))
-            
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
             alert.popoverPresentationController?.sourceView = vc.view
             vc.present(alert, animated: true, completion: nil)
-            
+        }
+    }
+    
+    private func deleteSeedNow() {
+        let spinner = ConnectingView()
+        spinner.addConnectingView(vc: self, description: "deleting seed...")
+        CoreDataService.retrieveEntity(entityName: .seeds) { [unowned vc = self] (seeds, errorDescription) in
+            if seeds != nil {
+                var idsToDelete = [UUID]()
+                for (i, seed) in seeds!.enumerated() {
+                    let seedStruct = SeedStruct(dictionary: seed)
+                    if let encryptedSeed = seedStruct.seed {
+                        Encryption.decryptData(dataToDecrypt: encryptedSeed) { [unowned vc = self] decryptedSeed in
+                            if decryptedSeed != nil {
+                                if let words = String(data: decryptedSeed!, encoding: .utf8) {
+                                    for accountSeed in vc.accountSeeds {
+                                        if accountSeed == words {
+                                            if seedStruct.id != nil {
+                                                idsToDelete.append(seedStruct.id!)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if i + 1 == seeds!.count {
+                        var succeeded = false
+                        for (x, id) in idsToDelete.enumerated() {
+                            CoreDataService.deleteEntity(id: id, entityName: .seeds) { (success, errorDescription) in
+                                if success {
+                                    succeeded = true
+                                } else {
+                                    succeeded = false
+                                }
+                                if x + 1 == idsToDelete.count {
+                                    vc.loadData()
+                                    if succeeded {
+                                        displayAlert(viewController: vc, isError: false, message: "Device's seed deleted")
+                                    } else {
+                                        showAlert(vc: vc, title: "Error", message: "There was an error deleting one of your device's seeds.")
+                                    }
+                                    spinner.removeConnectingView()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -276,8 +319,12 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         SeedParser.fetchSeeds(wallet: wallet) { [unowned vc = self] (seeds, fingerprints) in
             
             var str = ""
+            vc.accountSeeds.removeAll()
+            vc.seed = ""
             
             if seeds != nil {
+                
+                vc.accountSeeds = seeds!
                 
                 for (x, s) in seeds!.enumerated() {
                     

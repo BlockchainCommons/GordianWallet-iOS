@@ -210,7 +210,6 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             let userAddedWords = processed.split(separator: " ")
             var multipleWords = [String]()
             
-            
             if userAddedWords.count > 1 {
                 
                 //user add multiple words
@@ -504,13 +503,10 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             vc.label.text = ""
             vc.addedWords.removeAll()
             vc.justWords = words
-            print("justwords = \(vc.justWords)")
             
             for (i, word) in vc.justWords.enumerated() {
-                
                 vc.addedWords.append("\(i + 1). \(word)\n")
                 vc.updatePlaceHolder(wordNumber: i + 2)
-                
             }
             
             vc.label.textColor = .systemGreen
@@ -540,7 +536,6 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     }
     
     private func addWord(word: String) {
-        print("addWord")
         
         DispatchQueue.main.async { [unowned vc = self] in
             
@@ -548,7 +543,6 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             vc.label.text = ""
             vc.addedWords.removeAll()
             vc.justWords.append(word)
-            print("justwords = \(vc.justWords)")
             
             for (i, word) in vc.justWords.enumerated() {
                 
@@ -701,42 +695,43 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             
             if !recoveringMultiSigWithWordsOnly {
                 DispatchQueue.main.async { [unowned vc = self] in
-                                
                     let alert = UIAlertController(title: "That is a valid recovery phrase", message: "Are you recovering a multi-sig account or single-sig account?", preferredStyle: .actionSheet)
-
                     alert.addAction(UIAlertAction(title: "Single-sig", style: .default, handler: { action in
                         vc.chooseDerivation()
                     }))
-                    
                     alert.addAction(UIAlertAction(title: "Multi-sig", style: .default, handler: { action in
                         vc.recoveringMultiSigWithWordsOnly = true
                         addSeed()
                         seedAddedAddAnother()
                     }))
-                    
                     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
                     alert.popoverPresentationController?.sourceView = self.view
                     vc.present(alert, animated: true, completion: nil)
-                    
                 }
-                
             } else {
                 /// Adding multiple sets of words to recover multi-sig with only words.
                 DispatchQueue.main.async { [unowned vc = self] in
-                    addSeed()
-                                
+                    
                     let alert = UIAlertController(title: "That is a valid recovery phrase", message: "Add another seed phrase or recover this multi-sig account now? When recovering multi-sig accounts with words only we utilize BIP67 by default.", preferredStyle: .actionSheet)
 
                     alert.addAction(UIAlertAction(title: "Add another seed", style: .default, handler: { action in
+                        vc.seedArray.append(vc.justWords.joined(separator: " "))
+                        vc.justWords.removeAll()
+                        vc.addedWords.removeAll()
+                        vc.textField.text = ""
+                        vc.updatePlaceHolder(wordNumber: 1)
                         seedAddedAddAnother()
-                        
                     }))
                     
                     alert.addAction(UIAlertAction(title: "Recover Now", style: .default, handler: { action in
                         DispatchQueue.main.async { [unowned vc = self] in
+                            vc.seedArray.append(vc.justWords.joined(separator: " "))
+                            vc.justWords.removeAll()
+                            vc.addedWords.removeAll()
+                            vc.textField.text = ""
+                            vc.updatePlaceHolder(wordNumber: 1)
                             vc.performSegue(withIdentifier: "segueToNumberOfSigners", sender: vc)
                         }
-                        
                     }))
                     
                     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))

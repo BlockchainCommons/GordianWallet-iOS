@@ -82,8 +82,6 @@ class TorClient {
                 vc.config.dataDirectory = URL(fileURLWithPath: torDir)
                 vc.config.controlSocket = vc.config.dataDirectory?.appendingPathComponent("cp")
                 vc.config.arguments = ["--ignore-missing-torrc"]
-                print("finished private init")
-
             }
 
         }
@@ -371,7 +369,6 @@ class TorClient {
     
     private func clearAuthKeys(completion: @escaping () -> Void) {
         
-        //removes all authkeys
         let fileManager = FileManager.default
         let authPath = self.authDirPath
         
@@ -383,15 +380,18 @@ class TorClient {
                 
                 let url = URL(fileURLWithPath: authPath + "/" + filePath)
                 try fileManager.removeItem(at: url)
+                #if DEBUG
                 print("deleted key")
+                #endif
                 
             }
             
             completion()
             
         } catch {
-            
+            #if DEBUG
             print("error deleting existing keys")
+            #endif
             completion()
             
         }

@@ -108,6 +108,7 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
                         vc.recoveryDict["lastUsed"] = Date()
                         vc.recoveryDict["lastBalance"] = 0.0
                         vc.recoveryDict["isArchived"] = false
+                        vc.recoveryDict["nodeIsSigner"] = false
                         
                         if let path = BIP32Path(pathString) {
                             
@@ -194,6 +195,7 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
                                 vc.recoveryDict["type"] = "MULTI"
                                 vc.recoveryDict["blockheight"] = Int32(1)
                                 vc.recoveryDict["maxRange"] = 2500
+                                vc.recoveryDict["nodeIsSigner"] = false
                                 vc.walletName = Encryption.sha256hash(primaryDescriptor)
                                 vc.recoveryDict["name"] = vc.walletName
                                 
