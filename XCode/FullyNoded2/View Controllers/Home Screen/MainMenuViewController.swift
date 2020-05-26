@@ -78,7 +78,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         infoHidden = true
         torInfoHidden = true
         showNodeInfo = false
-        
+                
         if ud?.object(forKey: "appHasReset") == nil {
             resetApp()
         }

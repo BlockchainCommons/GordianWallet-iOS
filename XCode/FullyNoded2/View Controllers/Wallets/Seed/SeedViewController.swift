@@ -59,7 +59,27 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @IBAction func deletAccount(_ sender: Any) {
-        showAlert(vc: self, title: "Coming soon", message: "This button will delete this account in the very near future.")
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Delete account?", message: "Are you sure!? It will be gone forever!", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "💀 Delete", style: .destructive, handler: { [unowned vc = self] action in
+                vc.deleteAccountNow()
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func deleteAccountNow() {
+        if wallet.id != nil {
+            CoreDataService.deleteEntity(id: wallet.id!, entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
+                if success {
+                    vc.navigationController?.popToRootViewController(animated: true)
+                } else {
+                    showAlert(vc: vc, title: "Error", message: "Ooops, there was an error deleting this account")
+                }
+            }
+        }
     }
     
     @IBAction func editLabel(_ sender: Any) {
@@ -504,9 +524,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        
         return 30
-        
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
