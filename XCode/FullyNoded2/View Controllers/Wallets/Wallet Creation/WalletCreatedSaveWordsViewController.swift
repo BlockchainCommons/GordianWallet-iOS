@@ -42,6 +42,10 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
         birthdateLabel.text = "\(w.blockheight)"
         derivationLabel.text = w.derivation + "/0"
         
+        if w.type == "DEFAULT" {
+            navigationItem.title = "Master Seed"
+        }
+        
     }
     
     @IBAction func saveAction(_ sender: Any) {
@@ -54,7 +58,7 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
             
             if self.w.type == "MULTI" {
                 
-                message = "Once you tap \"Yes, I saved them\" the backup words will be gone forever! If you tap \"Oops, I forgot\" we will show them to you again so you may save them."
+                message = TextBlurbs.warnSeedWordsWillDisappear()
                 
             } else {
                 
@@ -62,11 +66,11 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
                 
             }
             
-            let alert = UIAlertController(title: "Are you sure you saved the recovery items?", message: message, preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Are you sure you saved the master seed?", message: message, preferredStyle: .actionSheet)
             
             alert.view.superview?.subviews[0].isUserInteractionEnabled = false
 
-            alert.addAction(UIAlertAction(title: "Yes, I saved them", style: .default, handler: { [unowned vc = self] action in
+            alert.addAction(UIAlertAction(title: "Yes, I saved it", style: .default, handler: { [unowned vc = self] action in
                                 
                 DispatchQueue.main.async {
                     

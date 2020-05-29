@@ -169,7 +169,7 @@ class MakeRPCCall {
                                 }
                                 
                                 /// These commands are only ever used to fetch balances of inactive wallets on the wallets view table, it is safe to just fetch them
-                            } else if method == .fetchexternalbalances || method == .getexternalwalletinfo || method == .importmulti || method == .rescanblockchain {
+                            } else if method == .fetchexternalbalances || method == .getexternalwalletinfo || method == .importmulti || method == .rescanblockchain || method == .abortrescan {
                                 makeCommand()
                                 
                             } else {

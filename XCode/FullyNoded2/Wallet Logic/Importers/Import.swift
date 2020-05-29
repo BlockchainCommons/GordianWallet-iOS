@@ -172,6 +172,7 @@ class Import {
             walletToImport["blockheight"] = Int32(1)
             walletToImport["lastUsed"] = Date()
             walletToImport["lastBalance"] = 0.0
+            walletToImport["nodeIsSigner"] = false
             
             if descriptorStruct.isSpecter && descriptorStruct.mOfNType == "2 of 3" {
                 walletToImport["type"] = "MULTI"
@@ -247,6 +248,7 @@ class Import {
             walletToImport["lastUsed"] = Date()
             walletToImport["lastBalance"] = 0.0
             walletToImport["label"] = accountMap["label"] as? String ?? ""
+            walletToImport["nodeIsSigner"] = false
             
             if str.isMulti {
                 walletToImport["type"] = "MULTI"
@@ -289,6 +291,7 @@ class Import {
         accountToImport["id"] = UUID()
         accountToImport["type"] = "DEFAULT"
         accountToImport["label"] = "COLDCARD"
+        accountToImport["nodeIsSigner"] = false
         
         func getChangeDescriptor(changeDesc: String) {
             
@@ -389,6 +392,7 @@ class Import {
         accountToImport["id"] = UUID()
         accountToImport["type"] = "MULTI"
         accountToImport["label"] = "COLDCARD"
+        accountToImport["nodeIsSigner"] = false
         
         func getChangeDescriptor(changeDesc: String) {
             

@@ -68,10 +68,8 @@ class Encryption {
     class func getNode(completion: @escaping ((node: NodeStruct?, error: Bool)) -> Void) {
         
         if let key = KeyChain.getData("privateKey") {
-            
             let pk = SymmetricKey(data: key)
             CoreDataService.retrieveEntity(entityName: .nodes) { (nodes, errorDescription) in
-                
                 if errorDescription == nil {
                     
                     if nodes!.count > 0 {

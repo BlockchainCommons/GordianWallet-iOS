@@ -18,6 +18,9 @@ class WalletToolsViewController: UIViewController {
     @IBOutlet var sweepToOutlet: UIButton!
     @IBOutlet var refillOutlet: UIButton!
     @IBOutlet weak var addSignerOutlet: UIButton!
+    @IBOutlet weak var backupInfoOutlet: UIButton!
+    @IBOutlet weak var utxosOutlet: UIButton!
+    @IBOutlet weak var exportKeyOutlet: UIButton!
     
     let creatingView = ConnectingView()
     
@@ -28,6 +31,9 @@ class WalletToolsViewController: UIViewController {
         sweepToOutlet.layer.cornerRadius = 8
         refillOutlet.layer.cornerRadius = 8
         addSignerOutlet.layer.cornerRadius = 8
+        backupInfoOutlet.layer.cornerRadius = 8
+        utxosOutlet.layer.cornerRadius = 8
+        exportKeyOutlet.layer.cornerRadius = 8
         
         if String(data: wallet.seed, encoding: .utf8) != "no seed" {
             
@@ -78,15 +84,29 @@ class WalletToolsViewController: UIViewController {
         
     }
     
-    @IBAction func addSigner(_ sender: Any) {
-        
+    @IBAction func seeBackUpInfo(_ sender: Any) {
         DispatchQueue.main.async { [unowned vc = self] in
-            
+            vc.performSegue(withIdentifier: "exportSeed", sender: vc)
+        }
+    }
+    
+    @IBAction func seeUtxos(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "seeUtxos", sender: vc)
+        }
+    }
+    
+    @IBAction func exportKeys(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "viewKeysSegue", sender: vc)
+        }
+    }
+    
+    @IBAction func addSigner(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
             vc.addSeed = true
             vc.performSegue(withIdentifier: "refillMultisig", sender: vc)
-            
         }
-        
     }
     
     
@@ -350,6 +370,46 @@ class WalletToolsViewController: UIViewController {
         }
         
     }
+    
+    // MARK: - Info Button's
+    
+    @IBAction func rescanInfo(_ sender: Any) {
+        showInfo(title: "Rescan Info", message: TextBlurbs.rescanInfoText())
+    }
+    
+    @IBAction func sweepToInfo(_ sender: Any) {
+        showInfo(title: "Sweep To Info", message: TextBlurbs.sweepToInfoText())
+    }
+    
+    @IBAction func refillKeypoolInfo(_ sender: Any) {
+        showInfo(title: "Refill Keypool Info", message: TextBlurbs.refillKeypoolText())
+    }
+    
+    @IBAction func addSignerInfo(_ sender: Any) {
+        showInfo(title: "Add Signer Info", message: TextBlurbs.addSignerText())
+    }
+    
+    @IBAction func backupInfo(_ sender: Any) {
+        showInfo(title: "Backup Info", message: TextBlurbs.backupInfoText())
+    }
+    
+    @IBAction func viewUtxosInfo(_ sender: Any) {
+        showInfo(title: "UTXO's Info", message: TextBlurbs.viewUtxosText())
+    }
+    
+    @IBAction func exportKeysInfo(_ sender: Any) {
+        showInfo(title: "Export Keys Info", message: TextBlurbs.exportKeysText())
+    }
+    
+    private func showInfo(title: String, message: String) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     
     // MARK: - Navigation
 

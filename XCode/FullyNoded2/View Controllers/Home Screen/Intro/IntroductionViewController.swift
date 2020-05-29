@@ -27,15 +27,7 @@ class IntroductionViewController: UIViewController, UITextViewDelegate, UINaviga
         textView.delegate = self
         hideBackButton()
         
-        textView.text = """
-        Thanks for trying out FullyNoded 2!
-
-        You will be using a state-of-the-art mobile wallet to connect to the Bitcoin network in no time, accessing a full node of your choice.
-
-        But first there are a few things you should know ...
-
-        We appreciate your attention and patience!
-        """
+        textView.text = TextBlurbs.introductionText()
         
         textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["BTCPayServer": donationLinkUrl])
     }

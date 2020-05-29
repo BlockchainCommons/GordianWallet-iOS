@@ -49,9 +49,13 @@ public enum BTC_CLI_COMMAND: String {
     case walletlock
     case walletpassphrasechange
     case abortrescan
+    case converttopsbt
     
     var description: String {
         switch self {
+            
+        case .converttopsbt:
+            return "converttopsbt"
             
         case .getblockcount:
             return "getblockcount"

@@ -27,13 +27,7 @@ class SignInViewController: UIViewController, ASAuthorizationControllerDelegate,
         titleLabel.adjustsFontSizeToFitWidth = true
         textView.delegate = self
         
-        textView.text = """
-        FullyNoded 2 uses the "Sign in with Apple" tool for 2FA (two-factor authentication) purposes. It saves your Apple ID username to the device's Secure Enclave upon a successful sign-in.
-
-        Then, whenever you broadcast a transaction or expose a private key/seed, FullyNoded 2 will prompt you to authenticate again, ensuring that only you can spend your bitcoins. Depending on your device's settings, you will either be prompted with biometrics or manual password entry for your Apple ID.
-
-        Blockchain Commons and Fully Noded 2 never share any data with any third party ever. The only server the app connects to is your specified node, and only using Tor. "Sign in with Apple" is simply a secure way of ensuring no one else can spend your funds.
-        """
+        textView.text = TextBlurbs.twoFactorAuthExplainerText()
         
         textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["Sign in with Apple": signInWithAppleUrl])
     }
@@ -79,6 +73,7 @@ class SignInViewController: UIViewController, ASAuthorizationControllerDelegate,
                 
                 let userIdentifier = appleIDCredential.user
                 if KeyChain.set(userIdentifier.dataUsingUTF8StringEncoding, forKey: "userIdentifier") {
+                    print("userIdentifier set")
                     self.navigationController?.popToRootViewController(animated: true)
                 }                
             }
