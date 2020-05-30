@@ -121,7 +121,8 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     
     private func processRecoveryXpub() {
         
-        let key = textView.text!
+        var key = textView.text!
+        key = key.replacingOccurrences(of: "’", with: "'")
         
         if key.contains("[") && key.contains("]") {
             
@@ -145,7 +146,13 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
                  "m/48'/1'/0'/1'",
                  "m/48'/0'/0'/1'",
                  "m/48'/1'/0'/3'",
-                 "m/48'/0'/0'/3'":
+                 "m/48'/0'/0'/3'",
+                 "m/84'/0'/0'",
+                 "m/84'/1'/0'",
+                 "m/44'/0'/0'",
+                 "m/44'/1'/0'",
+                 "m/49'/0'/0'",
+                 "m/49'/1'/0'":
                 
                 if let _ = HDKey(xpub) {
                     ///Its a valid xpub
@@ -277,6 +284,8 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
             bitcoinCoreDescriptor += ")"
             
         }
+        
+        print("bitcoinCoreDescriptor: \(bitcoinCoreDescriptor)")
         
         Import.importDescriptor(descriptor: bitcoinCoreDescriptor) { [unowned vc = self] wallet in
             
