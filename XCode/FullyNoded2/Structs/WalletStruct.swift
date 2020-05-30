@@ -37,6 +37,8 @@ public struct WalletStruct: CustomStringConvertible {
     let hasRange:Bool
     let knownSigners:Int
     let unknownSigners:Int
+    let nodeIsSigner:Bool?
+    let knownFingerprints:[String]?
     
     init(dictionary: [String: Any]) {
         birthdate = dictionary["birthdate"] as? Int32 ?? 0
@@ -66,6 +68,8 @@ public struct WalletStruct: CustomStringConvertible {
         hasRange = dictionary["hasRange"] as? Bool ?? true
         knownSigners = dictionary["knownSigners"] as? Int ?? 0
         unknownSigners = dictionary["unknownSigners"] as? Int ?? 0
+        nodeIsSigner = dictionary["nodeIsSigner"] as? Bool
+        knownFingerprints = dictionary["knownFingerprints"] as? [String]
         
     }
     

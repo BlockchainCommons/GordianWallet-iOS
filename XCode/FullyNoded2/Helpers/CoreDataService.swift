@@ -13,18 +13,33 @@ class CoreDataService {
     // MARK: - Core Data stack
     static var persistentContainer: NSPersistentCloudKitContainer = {
         let container = NSPersistentCloudKitContainer(name: "FullyNoded2")
+        
+        // get the store description
+        guard let description = container.persistentStoreDescriptions.first else {
+            fatalError("Could not retrieve a persistent store description.")
+        }
+        
+        description.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.com.blockchaincommons.standupios.FullyNoded2")
+        
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
+        
         return container
     }()
+    
+    static var viewContext: NSManagedObjectContext {
+        let viewContext = CoreDataService.persistentContainer.viewContext
+        viewContext.automaticallyMergesChangesFromParent = true
+        return viewContext
+    }
         
     // MARK: - Core Data Saving support
     class func saveContext () {
         DispatchQueue.main.async {
-            let context = CoreDataService.persistentContainer.viewContext
+            let context = CoreDataService.viewContext
             if context.hasChanges {
                 do {
                     try context.save()
@@ -38,7 +53,7 @@ class CoreDataService {
     
     class func saveEntity(dict: [String:Any], entityName: ENTITY, completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         DispatchQueue.main.async {
-            let context = CoreDataService.persistentContainer.viewContext
+            let context = CoreDataService.viewContext
             guard let entity = NSEntityDescription.entity(forEntityName: entityName.rawValue, in: context) else {
                 completion((false, "unable to access \(entityName.rawValue)"))
                 return
@@ -66,10 +81,10 @@ class CoreDataService {
             }
         }
     }
-    
+        
     class func retrieveEntity(entityName: ENTITY, completion: @escaping ((entity: [[String:Any]]?, errorDescription: String?)) -> Void) {
         DispatchQueue.main.async {
-            let context = CoreDataService.persistentContainer.viewContext
+            let context = CoreDataService.viewContext
             var fetchRequest:NSFetchRequest<NSFetchRequestResult>? = NSFetchRequest<NSFetchRequestResult>(entityName: entityName.rawValue)
             fetchRequest?.returnsObjectsAsFaults = false
             fetchRequest?.resultType = .dictionaryResultType
@@ -78,24 +93,21 @@ class CoreDataService {
                     if let results = try context.fetch(fetchRequest!) as? [[String:Any]] {
                         fetchRequest = nil
                         completion((results, nil))
-
                     } else {
                         fetchRequest = nil
                         completion((nil, "error fetching entity"))
-                        
                     }
                 }
             } catch {
                 fetchRequest = nil
                 completion((nil, "Error fetching \(entityName)"))
-
             }
         }
     }
     
     class func updateNode(nodeToUpdate: UUID, newCredentials: [String:Any], completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         DispatchQueue.main.async {
-            let context = CoreDataService.persistentContainer.viewContext
+            let context = CoreDataService.viewContext
             var fetchRequest:NSFetchRequest<NSManagedObject>? = NSFetchRequest<NSManagedObject>(entityName: ENTITY.nodes.rawValue)
             fetchRequest?.returnsObjectsAsFaults = false
             do {
@@ -151,7 +163,7 @@ class CoreDataService {
     
     class func updateEntity(id: UUID, keyToUpdate: String, newValue: Any, entityName: ENTITY, completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         DispatchQueue.main.async {
-            let context = CoreDataService.persistentContainer.viewContext
+            let context = CoreDataService.viewContext
             var fetchRequest:NSFetchRequest<NSManagedObject>? = NSFetchRequest<NSManagedObject>(entityName: entityName.rawValue)
             fetchRequest?.returnsObjectsAsFaults = false
             do {
@@ -202,7 +214,7 @@ class CoreDataService {
     
     class func deleteEntity(id: UUID, entityName: ENTITY, completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         DispatchQueue.main.async {
-            let context = CoreDataService.persistentContainer.viewContext
+            let context = CoreDataService.viewContext
             var fetchRequest:NSFetchRequest<NSManagedObject>? = NSFetchRequest<NSManagedObject>(entityName: entityName.rawValue)
             fetchRequest?.returnsObjectsAsFaults = false
             do {

@@ -46,6 +46,7 @@ class VerifyAddressViewController: UIViewController {
     func configureScanner() {
         
         imageView.isUserInteractionEnabled = true
+        qrScanner.verifying = true
         qrScanner.keepRunning = false
         qrScanner.vc = self
         qrScanner.imageView = imageView

@@ -21,45 +21,119 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     var infoText = ""
     var barTitle = ""
     var wallet:WalletStruct!
+    var accountSeeds = [String]()
+    
+    @IBOutlet weak var accountLabel: UILabel!
     @IBOutlet var tableView: UITableView!
+    @IBOutlet weak var editLabelOutlet: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        editLabelOutlet.alpha = 0
         tableView.alpha = 0
+        accountLabel.alpha = 0
         verified = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
         #if !targetEnvironment(simulator)
-        showAuth()
+        if !verified {
+            showAuth()
+        }
         #else
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
             if wallet != nil && !error {
-                
                 vc.tableView.alpha = 1
                 vc.wallet = wallet!
                 vc.loadData()
                 
             } else {
-                
                 displayAlert(viewController: vc, isError: true, message: "no active wallet")
                 
             }
-            
         }
         #endif
         
     }
     
-    @IBAction func close(_ sender: Any) {
-        
-        DispatchQueue.main.async {
-            
-            self.dismiss(animated: true, completion: nil)
-            
+    @IBAction func deletAccount(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Delete account?", message: "Are you sure!? It will be gone forever!", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "💀 Delete", style: .destructive, handler: { [unowned vc = self] action in
+                vc.deleteAccountNow()
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    private func deleteAccountNow() {
+        if wallet.id != nil {
+            CoreDataService.deleteEntity(id: wallet.id!, entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
+                if success {
+                    vc.navigationController?.popToRootViewController(animated: true)
+                } else {
+                    showAlert(vc: vc, title: "Error", message: "Ooops, there was an error deleting this account")
+                }
+            }
+        }
+    }
+    
+    @IBAction func editLabel(_ sender: Any) {
+        let title = "Give your wallet a label"
+        let message = "Add a label so you can easily identify your wallets"
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = "Add a label"
+            textField.keyboardAppearance = .dark
+        }
+        
+        alert.addAction(UIAlertAction(title: "Save", style: .default) { [unowned vc = self] (alertAction) in
+            let textFields = alert.textFields
+            weak var textField:UITextField?
+            
+            if textFields != nil {
+                
+                if textFields!.count > 0 {
+                    
+                    textField = textFields![0]
+                    
+                    if textField!.text! != "" {
+                        
+                        let newLabel = textField!.text!
+                        
+                        CoreDataService.updateEntity(id: vc.wallet.id!, keyToUpdate: "label", newValue: newLabel, entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
+                            
+                            if success {
+                                
+                                DispatchQueue.main.async {
+                                    
+                                    vc.accountLabel.text = newLabel
+                                    
+                                }
+                                
+                            } else {
+                                
+                                showAlert(vc: vc, title: "Error!", message: "There was a problem saving your wallets label")
+                                
+                            }
+                                                        
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default) { _ in })
+        self.present(alert, animated:true, completion: nil)
         
     }
     
@@ -116,9 +190,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 2:
             itemToDisplay = xpubs
             shareText()
-//        case 3:
-//            itemToDisplay = privateKeyDescriptor
-//            shareText()
 
         default:
             break
@@ -153,6 +224,67 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         }
         
+    }
+    
+    @objc func deleteSeed() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Delete seed?", message: "Are you sure!? You WILL NOT be able to spend from this wallet and it will be watch-only.", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "💀 Delete", style: .destructive, handler: { [unowned vc = self] action in
+                vc.deleteSeedNow()
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func deleteSeedNow() {
+        let spinner = ConnectingView()
+        spinner.addConnectingView(vc: self, description: "deleting seed...")
+        CoreDataService.retrieveEntity(entityName: .seeds) { [unowned vc = self] (seeds, errorDescription) in
+            if seeds != nil {
+                var idsToDelete = [UUID]()
+                for (i, seed) in seeds!.enumerated() {
+                    let seedStruct = SeedStruct(dictionary: seed)
+                    if let encryptedSeed = seedStruct.seed {
+                        Encryption.decryptData(dataToDecrypt: encryptedSeed) { [unowned vc = self] decryptedSeed in
+                            if decryptedSeed != nil {
+                                if let words = String(data: decryptedSeed!, encoding: .utf8) {
+                                    for accountSeed in vc.accountSeeds {
+                                        if accountSeed == words {
+                                            if seedStruct.id != nil {
+                                                idsToDelete.append(seedStruct.id!)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if i + 1 == seeds!.count {
+                        var succeeded = false
+                        for (x, id) in idsToDelete.enumerated() {
+                            CoreDataService.deleteEntity(id: id, entityName: .seeds) { (success, errorDescription) in
+                                if success {
+                                    succeeded = true
+                                } else {
+                                    succeeded = false
+                                }
+                                if x + 1 == idsToDelete.count {
+                                    vc.loadData()
+                                    if succeeded {
+                                        displayAlert(viewController: vc, isError: false, message: "Device's seed deleted")
+                                    } else {
+                                        showAlert(vc: vc, title: "Error", message: "There was an error deleting one of your device's seeds.")
+                                    }
+                                    spinner.removeConnectingView()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func shareText() {
@@ -204,11 +336,15 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         }
         
-        SeedParser.fetchSeeds(wallet: wallet) { [unowned vc = self] seeds in
+        SeedParser.fetchSeeds(wallet: wallet) { [unowned vc = self] (seeds, fingerprints) in
             
             var str = ""
+            vc.accountSeeds.removeAll()
+            vc.seed = ""
             
             if seeds != nil {
+                
+                vc.accountSeeds = seeds!
                 
                 for (x, s) in seeds!.enumerated() {
                     
@@ -265,8 +401,14 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         DispatchQueue.main.async { [unowned vc = self] in
-            
+            vc.accountLabel.text = vc.wallet.label
             vc.tableView.reloadData()
+            
+            UIView.animate(withDuration: 0.2) {
+                vc.editLabelOutlet.alpha = 1
+                vc.accountLabel.alpha = 1
+                vc.tableView.alpha = 1
+            }
             
         }
         
@@ -299,6 +441,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     private func recoveryCell(_ indexPath: IndexPath) -> UITableViewCell {
         
         let recoveryCell = tableView.dequeueReusableCell(withIdentifier: "recoveryCell", for: indexPath)
+        recoveryCell.selectionStyle = .none
         let imageview = recoveryCell.viewWithTag(1) as! UIImageView
         imageview.image = self.recoveryImage
         return recoveryCell
@@ -313,7 +456,13 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.textLabel?.numberOfLines = 0
         cell.textLabel?.textColor = .lightGray
         cell.textLabel?.font = .systemFont(ofSize: 15, weight: .regular)
-        cell.textLabel?.text = seed
+        
+        if seed == "" {
+            cell.textLabel?.text = "⚠︎ No seed on device"
+        } else {
+            cell.textLabel?.text = seed
+        }
+        
         return cell
         
     }
@@ -333,7 +482,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             var xpubtext = ""
             for key in descriptorStruct.keysWithPath {
                 xpubtext += key.replacingOccurrences(of: "/0/*", with: "") + "\n\n"
-                
             }
             xpubs = "\(xpubtext.split(separator: ")")[0])"
             cell.textLabel?.text = xpubs
@@ -376,9 +524,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        
         return 30
-        
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -420,12 +566,24 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         copyButton.frame = CGRect(x: qrButton.frame.minX - 30, y: 0, width: 20, height: 20)
         copyButton.center.y = textLabel.center.y
         
+        let deleteButton = UIButton()
+        let deleteImage = UIImage(systemName: "trash")
+        deleteButton.setImage(deleteImage, for: .normal)
+        deleteButton.tintColor = .systemRed
+        deleteButton.tag = section
+        deleteButton.addTarget(self, action: #selector(deleteSeed), for: .touchUpInside)
+        deleteButton.frame = CGRect(x: copyButton.frame.minX - 30, y: 0, width: 20, height: 20)
+        deleteButton.center.y = textLabel.center.y
+        
         switch section {
             
         case 0:
             textLabel.text = "Account Map (public keys)"
             header.addSubview(textLabel)
             header.addSubview(shareButton)
+            header.addSubview(copyButton)
+            copyButton.frame = CGRect(x: shareButton.frame.minX - 30, y: 0, width: 20, height: 20)
+            copyButton.center.y = shareButton.center.y
             
         case 1:
             textLabel.text = "Seed Words"
@@ -433,6 +591,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             header.addSubview(shareButton)
             header.addSubview(qrButton)
             header.addSubview(copyButton)
+            header.addSubview(deleteButton)
             
         case 2:
             textLabel.text = "Account XPUB's"
@@ -511,7 +670,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     
                 case 0:
                     
-                    label.text = "This \"Account Map\" QR can be used with either FullyNoded 2 to recreate this wallet as watch-only. ENSURE you back it up safely, it is required to recover multi-sig wallets."
+                    label.text = "This \"Account Map\" QR can be used with FullyNoded 2 to recreate this wallet as watch-only. ENSURE you back it up safely, it is required to recover multi-sig wallets."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 50)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 50)
                     
@@ -618,8 +777,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                 if wallet != nil && !error {
                                     
                                     DispatchQueue.main.async { [unowned vc = self] in
-                                        
-                                        vc.tableView.alpha = 1
+                                        vc.verified = true
                                         vc.wallet = wallet!
                                         vc.loadData()
                                         

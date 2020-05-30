@@ -17,7 +17,7 @@ class MultiSigTxBuilder {
             if wallet != nil && !error {
 
                 func signPsbt(psbt: String) {
-
+                    
                     PSBTSigner.sign(psbt: psbt) { (success, incompletePsbt, rawTx) in
 
                         if success {
@@ -40,7 +40,6 @@ class MultiSigTxBuilder {
 
                     }
 
-
                 }
 
                 func createPsbt(changeAddress: String) {
@@ -53,8 +52,12 @@ class MultiSigTxBuilder {
                     let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"changeAddress\": \"\(changeAddress)\"}'', false"
 
                     Reducer.makeCommand(walletName: wallet!.name!, command: .walletcreatefundedpsbt, param: param) { (object, errorDesc) in
-
-                        if let psbtDict = object as? NSDictionary {
+                        
+                        if errorDesc != nil {
+                            
+                            completion((nil, nil, "error creating psbt: \(errorDesc!)"))
+                            
+                        } else if let psbtDict = object as? NSDictionary {
 
                             if let psbt = psbtDict["psbt"] as? String {
 
@@ -96,6 +99,9 @@ class MultiSigTxBuilder {
 
                 getChangeAddress()
 
+            } else {
+                completion((nil, nil, "Error getting active wallet"))
+                
             }
 
         }

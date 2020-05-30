@@ -8,11 +8,14 @@
 
 import UIKit
 import AuthenticationServices
-import LibWally
 
-class ConfirmViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+class ConfirmViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding, UITextFieldDelegate {
     
-    var psbtDict = ""
+    var memo = ""
+    var txFee = Double()
+    var fxRate = Double()
+    var txid = ""
+    var psbtDict:NSDictionary!
     var doneBlock: ((Bool) -> Void)?
     let creatingView = ConnectingView()
     var unsignedPsbt = ""
@@ -31,19 +34,24 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     var sweeping = Bool()
     @IBOutlet var confirmTable: UITableView!
     @IBOutlet var broadcastButton: UIButton!
+    @IBOutlet weak var exportTx: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationController?.delegate = self
+        confirmTable.delegate = self
+        confirmTable.dataSource = self
         
         if unsignedPsbt == "" {
             
+            exportTx.alpha = 1
             creatingView.addConnectingView(vc: self, description: "verifying signed transaction")
             executeNodeCommand(method: .decoderawtransaction, param: "\"\(signedRawTx)\"")
             
         } else {
             
+            exportTx.alpha = 0
             let exportImage = UIImage(systemName: "arrowshape.turn.up.right")!
             broadcastButton.setImage(exportImage, for: .normal)
             broadcastButton.setTitle("  Export PSBT", for: .normal)
@@ -52,6 +60,23 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
         }
         
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self,
+                                                                 action: #selector(dismissKeyboard))
+        
+        view.addGestureRecognizer(tap)
+        
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    @IBAction func exportSignedTx(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let activityViewController = UIActivityViewController(activityItems: [vc.signedRawTx], applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = vc.view
+            vc.present(activityViewController, animated: true) {}
+        }
     }
     
     @IBAction func sendNow(_ sender: Any) {
@@ -98,7 +123,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Base64 encoded text", style: .default, handler: { [unowned vc = self] action in
+            alert.addAction(UIAlertAction(title: "base64 encoded text", style: .default, handler: { [unowned vc = self] action in
                 
                 DispatchQueue.main.async {
                     
@@ -114,14 +139,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             }))
             
-            alert.addAction(UIAlertAction(title: "Plain text", style: .default, handler: { [unowned vc = self] action in
+            alert.addAction(UIAlertAction(title: "plain text", style: .default, handler: { [unowned vc = self] action in
                 
                 DispatchQueue.main.async {
                     
-                    let textToShare = [vc.psbtDict]
+                    let textToShare = ["\(String(describing: vc.psbtDict))"]
                     
-                    let activityViewController = UIActivityViewController(activityItems: textToShare,
-                                                                          applicationActivities: nil)
+                    let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
                     
                     activityViewController.popoverPresentationController?.sourceView = vc.view
                     vc.present(activityViewController, animated: true) {}
@@ -130,286 +154,64 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             }))
             
+            alert.addAction(UIAlertAction(title: "signatures and keys", style: .default, handler: { [unowned vc = self] action in
+                
+                DispatchQueue.main.async {
+                    let inputs = vc.psbtDict["inputs"] as! NSArray
+                    var sigsAndKeys:[[String:String]] = []
+                    for (i, input) in inputs.enumerated() {
+                        let inputDict = input as! NSDictionary
+                        let bip32derivs = inputDict["bip32_derivs"] as! NSArray
+                        let partialSignatures = inputDict["partial_signatures"] as! NSDictionary
+                        var pubkeySigner = ""
+                        var signature = ""
+                        for (key, value) in partialSignatures {
+                            pubkeySigner = key as! String
+                            signature = value as! String
+                        }
+                        for bip32deriv in bip32derivs {
+                            let bip32derivDict = bip32deriv as! NSDictionary
+                            let pubkey = bip32derivDict["pubkey"] as! String
+                            let masterFingerprint = bip32derivDict["master_fingerprint"] as! String
+                            if pubkey == pubkeySigner {
+                                CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+                                    if wallets != nil {
+                                        var signingXpub = ""
+                                        for wallet in wallets! {
+                                            let walletStruct = WalletStruct(dictionary: wallet)
+                                            if walletStruct.type == "MULTI" {
+                                                let descriptorParser = DescriptorParser()
+                                                let descriptorStruct = descriptorParser.descriptor(walletStruct.descriptor)
+                                                let keys = descriptorStruct.keysWithPath
+                                                for key in keys {
+                                                    if key.contains(masterFingerprint) {
+                                                        let arr1 = key.split(separator: "]")
+                                                        let arr2 = "\(arr1[1])".split(separator: "/")
+                                                        signingXpub = "\(arr2[0])"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        let dict = ["xpub":signingXpub, "signature":signature]
+                                        sigsAndKeys.append(dict)
+                                    }
+                                }
+                            }
+                        }
+                        if i + 1 == inputs.count {
+                            DispatchQueue.main.async {
+                                let textToShare = ["\(sigsAndKeys)"]
+                                let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+                                activityViewController.popoverPresentationController?.sourceView = vc.view
+                                vc.present(activityViewController, animated: true) {}
+                            }
+                        }
+                    }
+                }
+            }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                    
             self.present(alert, animated: true, completion: nil)
-            
         }
-        
-    }
-    
-    func stripPSBTdownForSpecter(psbt: String) {
-        
-//        Reducer.makeCommand(walletName: "", command: .decodepsbt, param: "\"\(psbt)\"") { (object, errorDescription) in
-//
-//            if let decodedPsbt = object as? NSDictionary {
-//                let strippedPsbt1: NSMutableDictionary = NSMutableDictionary(dictionary: decodedPsbt)
-//                strippedPsbt1.removeObjects(forKeys: ["fee"])
-//                let inputs = decodedPsbt["inputs"] as! NSArray
-//                let outputs = decodedPsbt["outputs"] as! NSArray
-//                let strippedInputs:NSMutableArray = []
-//                let strippedOutputs:NSMutableArray = []
-//
-//                for (i, input) in inputs.enumerated() {
-//                    let dict = input as! NSDictionary
-//                    let mutable = NSMutableDictionary(dictionary: dict)
-//                    mutable.removeObjects(forKeys: ["witness_script", "bip32_derivs", "witness_utxo"])
-//                    strippedInputs.add(mutable)
-//
-//                    if i + 1 == inputs.count {
-//                        strippedPsbt1.setValue(strippedInputs, forKey: "inputs")
-//
-//                    }
-//                }
-//
-//                for (i, output) in outputs.enumerated() {
-//                    let dict = output as! NSDictionary
-//                    let mutable = NSMutableDictionary(dictionary: dict)
-//                    mutable.removeObjects(forKeys: ["witness_script", "bip32_derivs"])
-//                    strippedOutputs.add(mutable)
-//
-//                    if i + 1 == outputs.count {
-//                        strippedPsbt1.setValue(strippedOutputs, forKey: "outputs")
-//
-//                    }
-//                }
-//
-//
-//
-//            } else {
-//                print("error parsing result")
-//
-//            }
-//
-//        }
-        
-        /*
-         {
-             fee = "2.01e-06";
-             inputs =     (
-                         {
-                     "bip32_derivs" =             (
-                                         {
-                             "master_fingerprint" = 5222e39c;
-                             path = "m/48'/1'/0'/2'/0/2";
-                             pubkey = 02605fda0f9dc0f16b83167f12ddbebe52e0c9df804cb04d0500cfa154b150a8c9;
-                         },
-                                         {
-                             "master_fingerprint" = 82be8e74;
-                             path = "m/48'/1'/0'/2'/0/2";
-                             pubkey = 0286392f732c9eef76d4779604d0b1ec14a10d91ce6a3cec06101e9a839a7147d8;
-                         },
-                                         {
-                             "master_fingerprint" = 81202613;
-                             path = "m/48'/1'/0'/2'/0/2";
-                             pubkey = 03a8c367c69f821ac284b7b2018eeec8e66ac8e2d5516550e78181ddf8b7cdd84d;
-                         }
-                     );
-                     "partial_signatures" =             {
-                         02605fda0f9dc0f16b83167f12ddbebe52e0c9df804cb04d0500cfa154b150a8c9 = 304402207213f46467c8f86de6289aa8daffd6a25d52fbfdc5c26acfaf4e86b63a1a9b4402205be6dc9e8fcd22f42fae7b891c54b38026d0789a903f8ecbbabea70e1af920ad01;
-                     };
-                     "witness_script" =             {
-                         asm = "2 02605fda0f9dc0f16b83167f12ddbebe52e0c9df804cb04d0500cfa154b150a8c9 0286392f732c9eef76d4779604d0b1ec14a10d91ce6a3cec06101e9a839a7147d8 03a8c367c69f821ac284b7b2018eeec8e66ac8e2d5516550e78181ddf8b7cdd84d 3 OP_CHECKMULTISIG";
-                         hex = 522102605fda0f9dc0f16b83167f12ddbebe52e0c9df804cb04d0500cfa154b150a8c9210286392f732c9eef76d4779604d0b1ec14a10d91ce6a3cec06101e9a839a7147d82103a8c367c69f821ac284b7b2018eeec8e66ac8e2d5516550e78181ddf8b7cdd84d53ae;
-                         type = multisig;
-                     };
-                     "witness_utxo" =             {
-                         amount = "0.000111";
-                         scriptPubKey =                 {
-                             address = tb1qxcznacpt4y5pzpqxhueqyp7vsprq0ysyska0sq9sqfez5fv0y0nspmg7rr;
-                             asm = "0 36053ee02ba928110406bf320207cc804607920485baf800b002722a258f23e7";
-                             hex = 002036053ee02ba928110406bf320207cc804607920485baf800b002722a258f23e7;
-                             type = "witness_v0_scripthash";
-                         };
-                     };
-                 }
-             );
-             outputs =     (
-                         {
-                     "bip32_derivs" =             (
-                                         {
-                             "master_fingerprint" = 82be8e74;
-                             path = "m/48'/1'/0'/2'/1/4";
-                             pubkey = 0216af4b360ff03c5d4d93c568446a713d31ba877cf083e2d2d9217ce7578303a7;
-                         },
-                                         {
-                             "master_fingerprint" = 81202613;
-                             path = "m/48'/1'/0'/2'/1/4";
-                             pubkey = 029af5301c82878b63571eba90c9f483b0e4d4d739897e16b846d766fb9b8a339c;
-                         },
-                                         {
-                             "master_fingerprint" = 5222e39c;
-                             path = "m/48'/1'/0'/2'/1/4";
-                             pubkey = 036953a379bd46894488927bd1cc1509ff3dcf1a280bbe901c56c59d8dee03a8f5;
-                         }
-                     );
-                     "witness_script" =             {
-                         asm = "2 0216af4b360ff03c5d4d93c568446a713d31ba877cf083e2d2d9217ce7578303a7 029af5301c82878b63571eba90c9f483b0e4d4d739897e16b846d766fb9b8a339c 036953a379bd46894488927bd1cc1509ff3dcf1a280bbe901c56c59d8dee03a8f5 3 OP_CHECKMULTISIG";
-                         hex = 52210216af4b360ff03c5d4d93c568446a713d31ba877cf083e2d2d9217ce7578303a721029af5301c82878b63571eba90c9f483b0e4d4d739897e16b846d766fb9b8a339c21036953a379bd46894488927bd1cc1509ff3dcf1a280bbe901c56c59d8dee03a8f553ae;
-                         type = multisig;
-                     };
-                 },
-                         {
-                     "bip32_derivs" =             (
-                                         {
-                             "master_fingerprint" = 82be8e74;
-                             path = "m/48'/1'/0'/2'/0/4";
-                             pubkey = 02361b2143b5ad78221320e9259a835aea2c4ed37e7e4ac7fa4ad4e14823e1c71f;
-                         },
-                                         {
-                             "master_fingerprint" = 5222e39c;
-                             path = "m/48'/1'/0'/2'/0/4";
-                             pubkey = 0265361dcdd9591b5be0c6df90f5413fb0dd93fc039ddaf50956a6e2def73db2f7;
-                         },
-                                         {
-                             "master_fingerprint" = 81202613;
-                             path = "m/48'/1'/0'/2'/0/4";
-                             pubkey = 034f1c0d38c14d452f69e0c5c3f1585ce210b61c4bdb12b488eb7bab818af3572b;
-                         }
-                     );
-                     "witness_script" =             {
-                         asm = "2 02361b2143b5ad78221320e9259a835aea2c4ed37e7e4ac7fa4ad4e14823e1c71f 0265361dcdd9591b5be0c6df90f5413fb0dd93fc039ddaf50956a6e2def73db2f7 034f1c0d38c14d452f69e0c5c3f1585ce210b61c4bdb12b488eb7bab818af3572b 3 OP_CHECKMULTISIG";
-                         hex = 522102361b2143b5ad78221320e9259a835aea2c4ed37e7e4ac7fa4ad4e14823e1c71f210265361dcdd9591b5be0c6df90f5413fb0dd93fc039ddaf50956a6e2def73db2f721034f1c0d38c14d452f69e0c5c3f1585ce210b61c4bdb12b488eb7bab818af3572b53ae;
-                         type = multisig;
-                     };
-                 }
-             );
-             tx =     {
-                 hash = 5901935ef956f7bb6c05afbfbd41b0c43c150f1a5a5af3b8bc0e0b7c0f3abd96;
-                 locktime = 0;
-
-                 size = 137;
-                 txid = 5901935ef956f7bb6c05afbfbd41b0c43c150f1a5a5af3b8bc0e0b7c0f3abd96;
-                 version = 2;
-                 vin =         (
-                                 {
-                         scriptSig =                 {
-                             asm = "";
-                             hex = "";
-                         };
-                         sequence = 4294967293;
-                         txid = 7b7bb719a4ea0f4f684e14b48d319e75b5dfaf42d9991136f4addf756de44566;
-                         vout = 1;
-                     }
-                 );
-                 vout =         (
-                                 {
-                         n = 0;
-                         scriptPubKey =                 {
-                             addresses =                     (
-                                 tb1qsyvfsvcj9yv8zxgxwn05huq0fsgvag8ed95p2sc2fz4gn0mqtwlsmrvjuw
-                             );
-                             asm = "0 8118983312291871190674df4bf00f4c10cea0f9696815430a48aa89bf605bbf";
-                             hex = 00208118983312291871190674df4bf00f4c10cea0f9696815430a48aa89bf605bbf;
-                             reqSigs = 1;
-                             type = "witness_v0_scripthash";
-                         };
-                         value = "8.99e-06";
-                     },
-                                 {
-                         n = 1;
-                         scriptPubKey =                 {
-                             addresses =                     (
-                                 tb1qk57prsyctjp323rff4g7h45yj5k6fy9zcx44y9xh8yee0zhgn90sg9dxmj
-                             );
-                             asm = "0 b53c11c0985c831544694d51ebd684952da490a2c1ab5214d73933978ae8995f";
-                             hex = 0020b53c11c0985c831544694d51ebd684952da490a2c1ab5214d73933978ae8995f;
-                             reqSigs = 1;
-                             type = "witness_v0_scripthash";
-                         };
-                         value = "0.0001";
-                     }
-                 );
-                 vsize = 137;
-                 weight = 548;
-             };
-             unknown =     {
-             };
-         }
-         */
-        
-        /*
-         {
-           "tx": {
-             "txid": "58f819ff1944eea4bce5b09f50035aad5048bda69a9529abda2c36b443a52f34",
-             "hash": "58f819ff1944eea4bce5b09f50035aad5048bda69a9529abda2c36b443a52f34",
-             "version": 2,
-             "size": 167,
-             "vsize": 167,
-             "weight": 668,
-             "locktime": 0,
-             "vin": [
-               {
-                 "txid": "fe4455275577bb7a5e24fdca5731e7ae3a293f01b1ac3a2e45063889a0f95f6b",
-                 "vout": 0,
-                 "scriptSig": {
-                   "asm": "",
-                   "hex": ""
-                 },
-                 "sequence": 4294967295
-               },
-               {
-                 "txid": "71db88f6edff287a151f1714729373247371ea2d555cf225e13e209bfa31f285",
-                 "vout": 0,
-                 "scriptSig": {
-                   "asm": "",
-                   "hex": ""
-                 },
-                 "sequence": 4294967295
-               }
-             ],
-             "vout": [
-               {
-                 "value": 0.00200000,
-                 "n": 0,
-                 "scriptPubKey": {
-                   "asm": "OP_HASH160 fe3616aac0334d7876610ec69ed32a02e2cd4955 OP_EQUAL",
-                   "hex": "a914fe3616aac0334d7876610ec69ed32a02e2cd495587",
-                   "reqSigs": 1,
-                   "type": "scripthash",
-                   "addresses": [
-                     "2NGRNR9Tqz8kBeYMQKe94DF9XmCTgWvxBPh"
-                   ]
-                 }
-               },
-               {
-                 "value": 0.00019100,
-                 "n": 1,
-                 "scriptPubKey": {
-                   "asm": "0 d28036491ad91061dc911d3e151bee8ee5954e20bc82f7ab8291e8ab9356046f",
-                   "hex": "0020d28036491ad91061dc911d3e151bee8ee5954e20bc82f7ab8291e8ab9356046f",
-                   "reqSigs": 1,
-                   "type": "witness_v0_scripthash",
-                   "addresses": [
-                     "tb1q62qrvjg6mygxrhy3r5lp2xlw3mje2n3qhjp002uzj852hy6kq3hsllcaxd"
-                   ]
-                 }
-               }
-             ]
-           },
-           "unknown": {
-           },
-           "inputs": [
-             {
-               "partial_signatures": {
-                 "03c4c709396595d11662c9e14e0abc634038db7b196bde1156646affaee89682b1": "3045022100937d430109a2685890e16624b099272b34e9f97ed71bfdafda36d9a10b842dbf022072f69fed542c5a40b56960a499c430cf1f331021e5609ec58a51648cdb1963b101"
-               }
-             },
-             {
-               "partial_signatures": {
-                 "022eaf1053e23f8c5bbb560582e2d877551501e35add4e9b0e9f8197df6c1ac1d4": "3045022100eab8b9b92ed4787d622143f688da6898d4e0868a043a885fabef487a04c0f9e102204d73f42d2545a3443081255b4cd7984190f22610002b2ac63fe0bdb095f2ce0701"
-               }
-             }
-           ],
-           "outputs": [
-             {
-             },
-             {
-             }
-           ]
-         }
-         */
-        
     }
     
     func convertPSBTtoData(string: String) {
@@ -449,23 +251,9 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                                          isError: false,
                                          message: "Transaction sent ✓")
                             
-                            if !vc.sweeping {
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                    
-                                    vc.navigationController?.popToRootViewController(animated: true)
-                                    
-                                }
-                                
-                            } else {
+                            if vc.sweeping {
                                 
                                 NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                    
-                                    vc.navigationController?.popToRootViewController(animated: true)
-                                    
-                                }
                                 
                             }
                             
@@ -488,10 +276,11 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     
                     if let dict = object as? NSDictionary {
                         
-                        vc.psbtDict = "\(dict)"
+                        vc.psbtDict = dict
                         
                         if let txDict = dict["tx"] as? NSDictionary {
                             
+                            vc.txid = txDict["txid"] as! String
                             vc.parseTransaction(tx: txDict)
                             
                         }
@@ -513,6 +302,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     
                     if let dict = object as? NSDictionary {
                         
+                        vc.txid = dict["txid"] as! String
                         vc.parseTransaction(tx: dict)
                         
                     } else {
@@ -718,9 +508,27 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
         } else if index + 1 == inputArray.count {
             
-            let txfee = (self.inputTotal - self.outputTotal).avoidNotation
-            self.miningFee = "\(txfee) btc"
-            loadTableData()
+            txFee = inputTotal - outputTotal
+            let txfeeString = txFee.avoidNotation
+            let fiatConverter = FiatConverter.sharedInstance
+            fiatConverter.getFxRate { [unowned vc = self] exchangeRate in
+                
+                if exchangeRate != nil {
+                    
+                    vc.fxRate = exchangeRate!
+                    let fiatFee = exchangeRate! * vc.txFee
+                    let roundedFiatFee = Double(round(100*fiatFee)/100)
+                    vc.miningFee = "\(txfeeString) btc / $\(roundedFiatFee)"
+                    vc.loadTableData()
+                    
+                } else {
+                    vc.miningFee = "\(txfeeString) btc / error fetching fx rate"
+                    vc.loadTableData()
+                    
+                }
+                
+            }
+            
             
         }
         
@@ -728,13 +536,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     
     func loadTableData() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.confirmTable.reloadData()
+            vc.confirmTable.reloadData()
             
         }
         
-        self.creatingView.removeConnectingView()
+        creatingView.removeConnectingView()
     }
     
     func parsePrevTx(method: BTC_CLI_COMMAND, param: String, vout: Int) {
@@ -815,7 +623,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     
     func numberOfSections(in tableView: UITableView) -> Int {
         
-        return 3
+        return 6
         
     }
     
@@ -823,15 +631,15 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
         switch section {
             
-        case 0:
+        case 2:
             
             return inputArray.count
             
-        case 1:
+        case 3:
             
             return outputArray.count
             
-        case 2:
+        case 4, 5, 0, 1:
             
             return 1
             
@@ -847,11 +655,11 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
         switch indexPath.section {
             
-        case 0, 1:
+        case 2, 3:
             
             return 78
             
-        case 2:
+        case 0, 1, 4, 5:
             
             return 44
             
@@ -868,6 +676,32 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         switch indexPath.section {
             
         case 0:
+            let memoCell = tableView.dequeueReusableCell(withIdentifier: "memoCell", for: indexPath)
+            let textField = memoCell.viewWithTag(1) as! UITextField
+            textField.delegate = self
+            if unsignedPsbt != "" {
+                memoCell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
+            }
+            return memoCell
+            
+        case 1:
+            
+            let txidCell = tableView.dequeueReusableCell(withIdentifier: "miningFeeCell", for: indexPath)
+            
+            if unsignedPsbt != "" {
+            
+                txidCell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
+                
+            }
+            
+            let txidLabel = txidCell.viewWithTag(1) as! UILabel
+            txidLabel.text = txid
+            txidCell.selectionStyle = .none
+            txidLabel.textColor = .lightGray
+            txidLabel.adjustsFontSizeToFitWidth = true
+            return txidCell
+            
+        case 2:
             
             let inputCell = tableView.dequeueReusableCell(withIdentifier: "inputCell", for: indexPath)
             
@@ -876,7 +710,6 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 inputCell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
                 
             } else {
-                
                 
                 
             }
@@ -890,9 +723,12 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             inputAddressLabel.text = (input["address"] as! String)
             inputAddressLabel.adjustsFontSizeToFitWidth = true
             inputCell.selectionStyle = .none
+            inputIndexLabel.textColor = .lightGray
+            inputAmountLabel.textColor = .lightGray
+            inputAddressLabel.textColor = .lightGray
             return inputCell
             
-        case 1:
+        case 3:
             
             let outputCell = tableView.dequeueReusableCell(withIdentifier: "outputCell", for: indexPath)
             
@@ -920,9 +756,9 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 
             } else {
                 
-                outputAddressLabel.textColor = .white
-                outputAmountLabel.textColor = .white
-                outputIndexLabel.textColor = .white
+                outputAddressLabel.textColor = .lightGray
+                outputAmountLabel.textColor = .lightGray
+                outputIndexLabel.textColor = .lightGray
                 changeLabel.alpha = 0
                 
             }
@@ -934,7 +770,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             outputCell.selectionStyle = .none
             return outputCell
             
-        case 2:
+        case 4:
             
             let miningFeeCell = tableView.dequeueReusableCell(withIdentifier: "miningFeeCell", for: indexPath)
             
@@ -945,9 +781,26 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             }
             
             let miningLabel = miningFeeCell.viewWithTag(1) as! UILabel
-            miningLabel.text = self.miningFee
+            miningLabel.text = miningFee
             miningFeeCell.selectionStyle = .none
+            miningLabel.textColor = .lightGray
             return miningFeeCell
+            
+        case 5:
+            
+            let etaCell = tableView.dequeueReusableCell(withIdentifier: "miningFeeCell", for: indexPath)
+            
+            if unsignedPsbt != "" {
+            
+                etaCell.backgroundColor = #colorLiteral(red: 0, green: 0.1354581723, blue: 0.2808335977, alpha: 1)
+                
+            }
+            
+            let etaLabel = etaCell.viewWithTag(1) as! UILabel
+            etaLabel.text = eta()
+            etaLabel.textColor = .lightGray
+            etaCell.selectionStyle = .none
+            return etaCell
             
         default:
             
@@ -957,32 +810,107 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    private func eta() -> String {
+        var eta = ""
+        let ud = UserDefaults.standard
+        let numberOfBlocks = ud.object(forKey: "feeTarget") as? Int ?? 432
+        let seconds = ((numberOfBlocks * 10) * 60)
         
-        var sectionString = ""
-        
-        switch section {
-        case 0:
-            sectionString = "Inputs"
-        case 1:
-            sectionString = "Outputs"
-        case 2:
-            sectionString = "Mining Fee"
-        default:
-            break
+        if seconds < 86400 {
+            
+            if seconds < 3600 {
+                eta = "\(seconds / 60) minutes"
+                
+            } else {
+                eta = "\(seconds / 3600) hours"
+                
+            }
+            
+        } else {
+            eta = "\(seconds / 86400) days"
+            
         }
         
-        return sectionString
+        let todaysDate = Date()
+        let futureDate = Date(timeInterval: Double(seconds), since: todaysDate)
+        eta += " / \(formattedDate(date: futureDate))"
+        
+        return eta
         
     }
     
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    private func formattedDate(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = .current
+        dateFormatter.dateFormat = "yyyy-MMM-dd hh:mm"
+        let strDate = dateFormatter.string(from: date)
+        return strDate
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+                
+        let header = UIView()
+        header.backgroundColor = UIColor.clear
         
-        (view as! UITableViewHeaderFooterView).backgroundView?.backgroundColor = UIColor.clear
-        (view as! UITableViewHeaderFooterView).textLabel?.textAlignment = .left
-        (view as! UITableViewHeaderFooterView).textLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
-        (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.white
-        (view as! UITableViewHeaderFooterView).textLabel?.alpha = 1
+        let textLabel = UILabel()
+        textLabel.textAlignment = .left
+        textLabel.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        textLabel.textColor = .lightGray
+        
+        switch section {
+            
+        case 0:
+            
+            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
+            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 30)
+            textLabel.text = "TRANSACTION MEMO - tap to add"
+            
+        case 1:
+             
+            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 20)
+            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
+            textLabel.text = "TRANSACTION ID"
+            let copyButton = UIButton()
+            let copyImage = UIImage(systemName: "doc.on.doc")!
+            copyButton.tintColor = .systemTeal
+            copyButton.setImage(copyImage, for: .normal)
+            copyButton.addTarget(self, action: #selector(copyTxid), for: .touchUpInside)
+            copyButton.frame = CGRect(x: header.frame.maxX - 60, y: 0, width: 15, height: 18)
+            copyButton.center.y = textLabel.center.y
+            header.addSubview(copyButton)
+                            
+        case 2:
+             
+            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 20)
+            textLabel.text = "INPUTS"
+            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
+                            
+        case 3:
+            
+            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 20)
+            textLabel.text = "OUTPUTS"
+            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
+            
+        case 4:
+            
+            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 20)
+            textLabel.text = "MINING FEE"
+            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
+        
+        case 5:
+            
+            header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 20)
+            textLabel.text = "ESTIMATED TIME TO CONFIRMATION"
+            textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
+                            
+        default:
+            
+            break
+            
+        }
+        
+        header.addSubview(textLabel)
+        return header
         
     }
     
@@ -1052,28 +980,15 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     vc.creatingView.removeConnectingView()
                     vc.navigationItem.title = "Sent ✓"
                     vc.broadcastButton.alpha = 0
+                    vc.saveTx()
                     
                     displayAlert(viewController: vc,
                                  isError: false,
                                  message: "Transaction sent ✓")
                     
-                    if !vc.sweeping {
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            
-                            vc.navigationController?.popToRootViewController(animated: true)
-                            
-                        }
-                        
-                    } else {
+                    if vc.sweeping {
                         
                         NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            
-                            vc.navigationController?.popToRootViewController(animated: true)
-                            
-                        }
                         
                     }
                     
@@ -1096,6 +1011,71 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     
                 }
             }
+        }
+    }
+    
+    @objc func copyTxid() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let pasteBoard = UIPasteboard.general
+            pasteBoard.string = vc.txid
+            displayAlert(viewController: vc, isError: false, message: "Transaction ID copied to clipboard")
+        }
+        
+    }
+    
+    private func xpub(_ descriptor: String) -> String {
+        let descriptorParser = DescriptorParser()
+        let descriptorStruct = descriptorParser.descriptor(descriptor)
+        if descriptorStruct.isMulti {
+            return (descriptorStruct.multiSigKeys).description
+        } else {
+            return descriptorStruct.accountXpub
+        }
+    }
+    
+    private func fingerprint(_ descriptor: String) -> String {
+        let descriptorParser = DescriptorParser()
+        let descriptorStruct = descriptorParser.descriptor(descriptor)
+        return descriptorStruct.fingerprint
+    }
+        
+    private func saveTx() {
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
+            if wallet != nil {
+                var txDict = [String:Any]()
+                txDict["id"] = UUID()
+                txDict["date"] = Date()
+                txDict["txid"] = vc.txid
+                txDict["memo"] = vc.memo
+                txDict["accountLabel"] = wallet!.label
+                txDict["incoming"] = false
+                txDict["outgoing"] = true
+                txDict["descriptor"] = wallet?.descriptor
+                txDict["fxRate"] = vc.fxRate
+                txDict["xpub"] = vc.xpub(wallet!.descriptor)
+                txDict["miningFeeBtc"] = vc.txFee
+                txDict["fingerprint"] = vc.fingerprint(wallet!.descriptor)
+                txDict["btcReceived"] = 0.0
+                txDict["btcSent"] = vc.outputTotal
+                txDict["derivation"] = wallet!.derivation
+                vc.saveTransactionDict(dict: txDict)
+            } else {
+                showAlert(vc: vc, title: "", message: "There was an error saving the transaction locally, when it confirms you can tap the transaction on the home screen to add a memo to it. Let us know about the issue so we can fix it. Thank you.")
+            }
+        }
+    }
+    
+    private func saveTransactionDict(dict: [String:Any]) {
+        CoreDataService.saveEntity(dict: dict, entityName: .transactions) { [unowned vc = self] (success, errorDescription) in
+            if !success {
+                showAlert(vc: vc, title: "", message: "There was an error saving the transaction locally, when it confirms you can tap the transaction on the home screen to add a memo to it. Let us know about the issue so we can fix it. Thank you.")
+            }
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.text != "" {
+            memo = textField.text!
         }
     }
     

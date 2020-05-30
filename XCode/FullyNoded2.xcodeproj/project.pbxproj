@@ -15,8 +15,8 @@
 		D006E34D244054B8007B1A5B /* _launch.png in Resources */ = {isa = PBXBuildFile; fileRef = D006E34C244054B8007B1A5B /* _launch.png */; };
 		D010946A242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0109469242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift */; };
 		D0139F5724208A7A00EF956E /* ConfirmRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */; };
-		D024A7C52454755B00115615 /* LibWally.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D024A7C42454755B00115615 /* LibWally.framework */; };
-		D024A7C9245475CA00115615 /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D024A7C8245475CA00115615 /* Tor.framework */; };
+		D04179EF247629D40096F74D /* segwit_addr.c in Sources */ = {isa = PBXBuildFile; fileRef = D04179EE247629D40096F74D /* segwit_addr.c */; };
+		D04179F2247630470096F74D /* BCB32.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04179F1247630470096F74D /* BCB32.swift */; };
 		D042EFA22457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */; };
 		D047DDF72423464A004BC26D /* SweepToViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF62423464A004BC26D /* SweepToViewController.swift */; };
 		D047DDF9242B2F3F004BC26D /* IntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */; };
@@ -42,7 +42,7 @@
 		D07399DD2461764700860B7E /* XpubConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DC2461764700860B7E /* XpubConverter.swift */; };
 		D07399DF2461796A00860B7E /* Base58.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DE2461796A00860B7E /* Base58.swift */; };
 		D07399E324617A1000860B7E /* base58.c in Sources */ = {isa = PBXBuildFile; fileRef = D07399E224617A1000860B7E /* base58.c */; };
-		D080F49523F120B200CC8D6E /* ImportCustomDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */; };
+		D08A3DF4246D0F6900ADDDC6 /* TextBlurbs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08A3DF3246D0F6900ADDDC6 /* TextBlurbs.swift */; };
 		D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724023F0EDBB00847DC8 /* AppDelegate.swift */; };
 		D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724223F0EDBB00847DC8 /* SceneDelegate.swift */; };
 		D09D724B23F0EDBB00847DC8 /* FullyNoded2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D09D724923F0EDBB00847DC8 /* FullyNoded2.xcdatamodeld */; };
@@ -136,7 +136,8 @@
 		D0D8DC162400D85000110A78 /* LibWallyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D8DC152400D85000110A78 /* LibWallyTests.swift */; };
 		D0DAD51E24546E2200769618 /* LibWally.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DAD51D24546E2200769618 /* LibWally.framework */; };
 		D0DAD52424546E7700769618 /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DAD52324546E7700769618 /* Tor.framework */; };
-		D0F661BB24551EC600AFBC7F /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0F661BA24551EC600AFBC7F /* Tor.framework */; };
+		D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DB944C24723F2900A0E99D /* CloudKit.framework */; };
+		D0DB944F24736C0600A0E99D /* TransactionStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DB944E24736C0600A0E99D /* TransactionStruct.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -178,8 +179,10 @@
 		D006E34C244054B8007B1A5B /* _launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _launch.png; sourceTree = "<group>"; };
 		D0109469242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedSaveWordsViewController.swift; sourceTree = "<group>"; };
 		D0139F5624208A7A00EF956E /* ConfirmRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmRecoveryViewController.swift; sourceTree = "<group>"; };
-		D024A7C42454755B00115615 /* LibWally.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LibWally.framework; path = Carthage/Build/iOS/LibWally.framework; sourceTree = "<group>"; };
-		D024A7C8245475CA00115615 /* Tor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Tor.framework; sourceTree = "<group>"; };
+		D04179EC247629920096F74D /* bc-bech32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "bc-bech32.h"; sourceTree = "<group>"; };
+		D04179ED247629D40096F74D /* segwit_addr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = segwit_addr.h; sourceTree = "<group>"; };
+		D04179EE247629D40096F74D /* segwit_addr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = segwit_addr.c; sourceTree = "<group>"; };
+		D04179F1247630470096F74D /* BCB32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BCB32.swift; sourceTree = "<group>"; };
 		D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedNodesSeedViewController.swift; sourceTree = "<group>"; };
 		D047DDF62423464A004BC26D /* SweepToViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SweepToViewController.swift; sourceTree = "<group>"; };
 		D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionViewController.swift; sourceTree = "<group>"; };
@@ -207,7 +210,7 @@
 		D07399E024617A0F00860B7E /* FullyNoded2-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FullyNoded2-Bridging-Header.h"; sourceTree = "<group>"; };
 		D07399E124617A1000860B7E /* base58.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base58.h; sourceTree = "<group>"; };
 		D07399E224617A1000860B7E /* base58.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = base58.c; sourceTree = "<group>"; };
-		D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCustomDescriptor.swift; sourceTree = "<group>"; };
+		D08A3DF3246D0F6900ADDDC6 /* TextBlurbs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBlurbs.swift; sourceTree = "<group>"; };
 		D09D723D23F0EDBB00847DC8 /* FullyNoded 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FullyNoded 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D09D724023F0EDBB00847DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D09D724223F0EDBB00847DC8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -309,7 +312,8 @@
 		D0D8DC152400D85000110A78 /* LibWallyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibWallyTests.swift; sourceTree = "<group>"; };
 		D0DAD51D24546E2200769618 /* LibWally.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LibWally.framework; path = Carthage/Build/iOS/LibWally.framework; sourceTree = "<group>"; };
 		D0DAD52324546E7700769618 /* Tor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Tor.framework; sourceTree = "<group>"; };
-		D0F661BA24551EC600AFBC7F /* Tor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Tor.framework; path = ../../../../Tor.framework; sourceTree = "<group>"; };
+		D0DB944C24723F2900A0E99D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		D0DB944E24736C0600A0E99D /* TransactionStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionStruct.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -317,11 +321,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */,
 				D0DAD52424546E7700769618 /* Tor.framework in Frameworks */,
 				D0DAD51E24546E2200769618 /* LibWally.framework in Frameworks */,
-				D0F661BB24551EC600AFBC7F /* Tor.framework in Frameworks */,
-				D024A7C9245475CA00115615 /* Tor.framework in Frameworks */,
-				D024A7C52454755B00115615 /* LibWally.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,11 +347,9 @@
 		81676B434392851969DDF649 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D0DB944C24723F2900A0E99D /* CloudKit.framework */,
 				D0DAD51D24546E2200769618 /* LibWally.framework */,
 				D0DAD52324546E7700769618 /* Tor.framework */,
-				D0F661BA24551EC600AFBC7F /* Tor.framework */,
-				D024A7C42454755B00115615 /* LibWally.framework */,
-				D024A7C8245475CA00115615 /* Tor.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -372,6 +372,17 @@
 				D07399DA245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift */,
 			);
 			path = "Wallet Recovery";
+			sourceTree = "<group>";
+		};
+		D04179F024762A460096F74D /* bc-b32 */ = {
+			isa = PBXGroup;
+			children = (
+				D04179EC247629920096F74D /* bc-bech32.h */,
+				D04179ED247629D40096F74D /* segwit_addr.h */,
+				D04179EE247629D40096F74D /* segwit_addr.c */,
+				D04179F1247630470096F74D /* BCB32.swift */,
+			);
+			path = "bc-b32";
 			sourceTree = "<group>";
 		};
 		D07399E42463C89C00860B7E /* Extended Key Converter */ = {
@@ -465,6 +476,7 @@
 				D09D728723F0F3BF00847DC8 /* WalletStruct.swift */,
 				D0A0EAF123F7CF70004F9E15 /* DescriptorStruct.swift */,
 				D00016B4245BBB5C0091F7CF /* SeedStruct.swift */,
+				D0DB944E24736C0600A0E99D /* TransactionStruct.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -652,6 +664,7 @@
 				D07399D6245E6E5600860B7E /* Broadcast.swift */,
 				D07399E024617A0F00860B7E /* FullyNoded2-Bridging-Header.h */,
 				D07399E42463C89C00860B7E /* Extended Key Converter */,
+				D04179F024762A460096F74D /* bc-b32 */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -704,6 +717,7 @@
 				D09D72F523F0F3C000847DC8 /* Alert View */,
 				D09D72F723F0F3C000847DC8 /* Raw Transaction Displayer */,
 				D09D72F923F0F3C000847DC8 /* QR Scanner */,
+				D08A3DF3246D0F6900ADDDC6 /* TextBlurbs.swift */,
 			);
 			path = "Sub Views";
 			sourceTree = "<group>";
@@ -819,7 +833,6 @@
 			children = (
 				D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */,
 				D09D730623F0F3C000847DC8 /* WalletCreator.swift */,
-				D080F49423F120B200CC8D6E /* ImportCustomDescriptor.swift */,
 			);
 			path = Creators;
 			sourceTree = "<group>";
@@ -1030,6 +1043,7 @@
 				D09D732823F0F3C000847DC8 /* VerifyViewController.swift in Sources */,
 				D09D732F23F0F3C000847DC8 /* ScannerViewController.swift in Sources */,
 				D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */,
+				D08A3DF4246D0F6900ADDDC6 /* TextBlurbs.swift in Sources */,
 				D09D731A23F0F3C000847DC8 /* QRDisplayerViewController.swift in Sources */,
 				D0502FEE244D2D4A00213870 /* FiatConverter.swift in Sources */,
 				D09D734523F0F3C000847DC8 /* Encryption.swift in Sources */,
@@ -1038,6 +1052,7 @@
 				D047DE0B242C651F004BC26D /* WalletCreatedWordsViewController.swift in Sources */,
 				D047DDF72423464A004BC26D /* SweepToViewController.swift in Sources */,
 				D0C4E63124173F1B00E49DA5 /* WalletToolsViewController.swift in Sources */,
+				D04179F2247630470096F74D /* BCB32.swift in Sources */,
 				D09D733823F0F3C000847DC8 /* StringExtension.swift in Sources */,
 				D09D736B23F0F3C000847DC8 /* CreateMultisigWallet.swift in Sources */,
 				D0A0EAF223F7CF70004F9E15 /* DescriptorStruct.swift in Sources */,
@@ -1066,6 +1081,7 @@
 				D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */,
 				D047DDFF242B331F004BC26D /* HowToUseFN2ViewController.swift in Sources */,
 				D09D732223F0F3C000847DC8 /* RecoveryViewController.swift in Sources */,
+				D04179EF247629D40096F74D /* segwit_addr.c in Sources */,
 				D09D731023F0F3C000847DC8 /* NodeLogic.swift in Sources */,
 				D09D731F23F0F3C000847DC8 /* WalletsViewController.swift in Sources */,
 				D09D733A23F0F3C000847DC8 /* Entities.swift in Sources */,
@@ -1077,7 +1093,6 @@
 				D047DE07242C478A004BC26D /* WalletCreatedSuccessViewController.swift in Sources */,
 				D09D736823F0F3C000847DC8 /* MultiSigTxBuilder.swift in Sources */,
 				D006E34B243ED2FE007B1A5B /* Keychain.swift in Sources */,
-				D080F49523F120B200CC8D6E /* ImportCustomDescriptor.swift in Sources */,
 				D09D732623F0F3C000847DC8 /* UTXOViewController.swift in Sources */,
 				D09D733C23F0F3C000847DC8 /* CoreDataService.swift in Sources */,
 				D07399DD2461764700860B7E /* XpubConverter.swift in Sources */,
@@ -1091,6 +1106,7 @@
 				D09D736323F0F3C000847DC8 /* ErrorView.swift in Sources */,
 				D09D733323F0F3C000847DC8 /* Utilities.swift in Sources */,
 				D09D731123F0F3C000847DC8 /* ExportKeysViewController.swift in Sources */,
+				D0DB944F24736C0600A0E99D /* TransactionStruct.swift in Sources */,
 				D07399DF2461796A00860B7E /* Base58.swift in Sources */,
 				D047DE03242B340A004BC26D /* LicenseDisclaimerViewController.swift in Sources */,
 				D09D732923F0F3C000847DC8 /* InvoiceViewController.swift in Sources */,
@@ -1178,6 +1194,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1238,6 +1255,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1265,7 +1283,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.9;
+				CURRENT_PROJECT_VERSION = 0.1.30;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1279,7 +1297,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.9;
+				MARKETING_VERSION = 0.1.30;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1297,7 +1315,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.9;
+				CURRENT_PROJECT_VERSION = 0.1.30;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1311,7 +1329,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.9;
+				MARKETING_VERSION = 0.1.30;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1337,6 +1355,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.FullyNoded2Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FullyNoded 2.app/FullyNoded 2";
@@ -1359,6 +1378,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.FullyNoded2Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FullyNoded 2.app/FullyNoded 2";

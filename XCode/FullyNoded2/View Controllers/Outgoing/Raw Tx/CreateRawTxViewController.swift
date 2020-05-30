@@ -10,164 +10,125 @@ import UIKit
 
 class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UINavigationControllerDelegate {
     
-    let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-    var qrCode = UIImage()
     var spendable = Double()
     var rawTxUnsigned = String()
-    var unsignedPsbt = String()
+    var incompletePsbt = String()
     var rawTxSigned = String()
     var amountAvailable = Double()
-    let qrImageView = UIImageView()
-    var stringURL = String()
     var address = String()
     let nextButton = UIButton()
     var amount = String()
-    var blurArray = [UIVisualEffectView]()
     let rawDisplayer = RawDisplayer()
-    var scannerShowing = false
     var isFirstTime = Bool()
     var outputs = [Any]()
     var outputsString = ""
     var recipients = [String]()
     
+    @IBOutlet weak var addOutlet: UIButton!
     @IBOutlet var addressInput: UITextView!
-    @IBOutlet var addOutlet: UIButton!
     @IBOutlet var amountInput: UITextField!
     @IBOutlet var amountLabel: UILabel!
     @IBOutlet var actionOutlet: UIButton!
     @IBOutlet var receivingLabel: UILabel!
     @IBOutlet var outputsTable: UITableView!
-    @IBOutlet var scannerView: UIImageView!
-    @IBOutlet var qrScannerOutlet: UIBarButtonItem!
     @IBOutlet weak var availableBalance: UILabel!
+    @IBOutlet weak var createOutlet: UIButton!
+    @IBOutlet weak var feeSliderOutlet: UISlider!
+    @IBOutlet weak var blockTargetOutlet: UILabel!
+    @IBOutlet weak var scannerButton: UIBarButtonItem!
+    
     
     let creatingView = ConnectingView()
-    let qrScanner = QRScanner()
-    var isTorchOn = Bool()
     var outputArray = [[String:String]]()
     
-    func configureScanner() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        isFirstTime = true
-        scannerView.alpha = 0
-        scannerView.frame = view.frame
-        scannerView.isUserInteractionEnabled = true
+        amountInput.delegate = self
+        addressInput.delegate = self
+        outputsTable.delegate = self
+        outputsTable.dataSource = self
+        navigationController?.delegate = self
+        outputsTable.tableFooterView = UIView(frame: .zero)
+        outputsTable.alpha = 0
+        availableBalance.alpha = 0
+        addTapGesture()
+        addressInput.layer.borderWidth = 1.0
+        addressInput.layer.borderColor = UIColor.darkGray.cgColor
+        addressInput.clipsToBounds = true
+        addressInput.layer.cornerRadius = 4
+        feeSliderOutlet.addTarget(self, action: #selector(setFee), for: .allEvents)
+        feeSliderOutlet.maximumValue = 2 * -1
+        feeSliderOutlet.minimumValue = 432 * -1
+        let ud = UserDefaults.standard
         
-        qrScanner.scanningBip21 = true
-        qrScanner.keepRunning = false
-        qrScanner.vc = self
-        qrScanner.imageView = scannerView
-        qrScanner.textField.alpha = 0
-        qrScanner.downSwipeAction = { self.back() }
-        qrScanner.completion = { self.getQRCode() }
-        qrScanner.didChooseImage = { self.didPickImage() }
-        
-        qrScanner.uploadButton.addTarget(self,
-                                         action: #selector(self.chooseQRCodeFromLibrary),
-                                         for: .touchUpInside)
-        
-        qrScanner.torchButton.addTarget(self,
-                                        action: #selector(toggleTorch),
-                                        for: .touchUpInside)
-        
-        isTorchOn = false
-        
-        qrScanner.closeButton.addTarget(self,
-                                        action: #selector(back),
-                                        for: .touchUpInside)
-        
-    }
-    
-    func addScannerButtons() {
-        
-        self.addBlurView(frame: CGRect(x: self.scannerView.frame.maxX - 80,
-                                       y: self.scannerView.frame.maxY - 80,
-                                       width: 70,
-                                       height: 70), button: self.qrScanner.uploadButton)
-        
-        self.addBlurView(frame: CGRect(x: 10,
-                                       y: self.scannerView.frame.maxY - 80,
-                                       width: 70,
-                                       height: 70), button: self.qrScanner.torchButton)
-        
-    }
-    
-    func updateLeftBarButton(isShowing: Bool){
-        
-        let scannerButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
-        scannerButton.addTarget(self, action: #selector(scanNow(_:)), for: .touchUpInside)
-        scannerButton.tintColor = .white
-
-        if isShowing {
+        if ud.object(forKey: "feeTarget") != nil {
             
-            let pasteImage = UIImage.init(systemName: "doc.append")
-            scannerButton.setImage(pasteImage, for: .normal)
+            let numberOfBlocks = ud.object(forKey: "feeTarget") as! Int
+            feeSliderOutlet.value = Float(numberOfBlocks) * -1
+            updateFeeLabel(label: blockTargetOutlet, numberOfBlocks: numberOfBlocks)
             
         } else {
             
-            let qrImage = UIImage.init(systemName: "qrcode.viewfinder")
-            scannerButton.setImage(qrImage, for: .normal)
+            blockTargetOutlet.text = "Minimum fee set"
+            feeSliderOutlet.value = 432 * -1
             
         }
         
-        let leftButton = UIBarButtonItem(customView: scannerButton)
-        
-        self.navigationItem.setLeftBarButtonItems([leftButton], animated: true)
-        
     }
     
-    @IBAction func scanNow(_ sender: Any) {
+    override func viewDidAppear(_ animated: Bool) {
         
-        print("scanNow")
+        amount = ""
+        outputs.removeAll()
+        outputArray.removeAll()
+        outputsString = ""
+        outputsTable.reloadData()
+        incompletePsbt = ""
+        rawTxSigned = ""
+        outputsTable.alpha = 0
         
-        if scannerShowing {
+        getActiveWalletNow() { (wallet, error) in
             
-            back()
-            
-        } else {
-            
-            scannerShowing = true
-            addressInput.resignFirstResponder()
-            amountInput.resignFirstResponder()
-            
-            if isFirstTime {
+            if wallet != nil {
                 
-                DispatchQueue.main.async {
+                NodeLogic.sharedInstance.loadWalletData(wallet: wallet!) { (success, dictToReturn, errorDesc) in
                     
-                    self.qrScanner.scanQRCode()
-                    self.addScannerButtons()
-                    self.scannerView.addSubview(self.qrScanner.closeButton)
-                    self.isFirstTime = false
-                    
-                    UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
+                    if success && dictToReturn != nil {
+                        let s = HomeStruct(dictionary: dictToReturn!)
+                        let btc = (s.coldBalance).doubleValue
+                        let fiat = s.fiatBalance
                         
-                        vc.scannerView.alpha = 1
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.availableBalance.text = "\(btc) btc / \(fiat) available"
+                            vc.availableBalance.alpha = 1
+                            
+                        }
                         
-                    })
-                                                            
-                }
-                
-            } else {
-                
-                self.qrScanner.startScanner()
-                self.addScannerButtons()
-                
-                DispatchQueue.main.async {
-                    
-                    UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                        
-                        vc.scannerView.alpha = 1
-                        
-                    })
+                    }
                     
                 }
-                
+                                
             }
             
-            self.updateLeftBarButton(isShowing: true)
+        }
+        
+        if amountInput.text != "" && addressInput.text != "" {
+            createOutlet.alpha = 1
+            addOutlet.alpha = 1
+            
+        } else {
+            createOutlet.alpha = 0
+            addOutlet.alpha = 0
             
         }
         
+    }
+    
+    @IBAction func scannerAction(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "scanBip21Segue", sender: vc)
+        }
     }
     
     func addOut() {
@@ -197,10 +158,8 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     @IBAction func addOutput(_ sender: Any) {
-        
         outputsTable.alpha = 1
         addOut()
-        
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -254,7 +213,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             let address = outputArray[indexPath.row]["address"]!
             let amount = outputArray[indexPath.row]["amount"]!
             
-            cell.textLabel?.text = "#\(indexPath.row + 1)\nSending: \(String(describing: amount))\nTo: \(String(describing: address))"
+            cell.textLabel?.text = "Value: \(String(describing: amount))\n\n\(String(describing: address))"
             
         } else {
             
@@ -266,67 +225,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        amountInput.delegate = self
-        addressInput.delegate = self
-        outputsTable.delegate = self
-        outputsTable.dataSource = self
-        navigationController?.delegate = self
-        outputsTable.tableFooterView = UIView(frame: .zero)
-        outputsTable.alpha = 0
-        availableBalance.alpha = 0
-        configureScanner()
-        addTapGesture()
-        scannerView.alpha = 0
-        scannerView.backgroundColor = UIColor.black
-        updateLeftBarButton(isShowing: false)
-        addressInput.layer.borderWidth = 1.0
-        addressInput.layer.borderColor = UIColor.darkGray.cgColor
-        addressInput.clipsToBounds = true
-        addressInput.layer.cornerRadius = 4
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
-        amount = ""
-        //addressInput.text = ""
-        outputs.removeAll()
-        outputArray.removeAll()
-        outputsString = ""
-        outputsTable.reloadData()
-        rawTxSigned = ""
-        outputsTable.alpha = 0
-        
-        getActiveWalletNow() { (wallet, error) in
-            
-            if wallet != nil {
-                
-                NodeLogic.sharedInstance.loadWalletData(wallet: wallet!) { (success, dictToReturn, errorDesc) in
-                    
-                    if success && dictToReturn != nil {
-                        let s = HomeStruct(dictionary: dictToReturn!)
-                        let btc = (s.coldBalance).doubleValue
-                        let fiat = s.fiatBalance
-                        
-                        DispatchQueue.main.async { [unowned vc = self] in
-                            vc.availableBalance.text = "\(btc) btc / \(fiat) available"
-                            vc.availableBalance.alpha = 1
-                            
-                        }
-                        
-                    }
-                    
-                }
-                                
-            }
-            
-        }
-        
-    }
-    
     func addTapGesture() {
         
         let tapGesture = UITapGestureRecognizer(target: self,
@@ -334,13 +232,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         tapGesture.numberOfTapsRequired = 1
         self.view.addGestureRecognizer(tapGesture)
-        
-    }
-    
-    func getQRCode() {
-        
-        let stringURL = qrScanner.stringToReturn
-        processKeys(key: stringURL)
         
     }
     
@@ -377,7 +268,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             vc.outputArray.removeAll()
             vc.outputsString = ""
             vc.outputsTable.reloadData()
-            vc.unsignedPsbt = psbt
+            vc.incompletePsbt = psbt
             vc.performSegue(withIdentifier: "goConfirm", sender: vc)
             
         }
@@ -396,8 +287,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             
             DispatchQueue.main.async { [unowned vc = self] in
                 
-                //self.addressInput.text = ""
-                //self.amountInput.text = ""
                 vc.outputs.removeAll()
                 vc.outputArray.removeAll()
                 vc.outputsString = ""
@@ -438,34 +327,27 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     @objc func tryRaw() {
-        print("tryraw")
         
-        creatingView.addConnectingView(vc: self,
-                                       description: "Creating psbt")
+        creatingView.addConnectingView(vc: self, description: "Creating psbt")
         
         if amountInput.text != "" && addressInput.text != "" && amountInput.text != "0.0" {
-              
-              let dict = ["address":addressInput.text!, "amount":amountInput.text!] as [String : String]
-              
-              outputArray.append(dict)
-              recipients.append(addressInput.text!)
-              
-              DispatchQueue.main.async { [unowned vc = self] in
-                  vc.amountInput.text = ""
-                  vc.addressInput.text = ""
-                  vc.outputsTable.reloadData()
-                  
-              }
-              
-          } else {
-              
-              displayAlert(viewController: self,
-                           isError: true,
-                           message: "You need to fill out a recipient and amount first then tap this button, this button is used for adding multiple recipients aka \"batching\".")
-              
-          }
+            let dict = ["address":addressInput.text!, "amount":amountInput.text!] as [String : String]
             
+            outputArray.append(dict)
+            recipients.append(addressInput.text!)
+            
+        }
         
+        DispatchQueue.main.async { [unowned vc = self] in
+            //vc.amountInput.text = ""
+            //vc.addressInput.text = ""
+            vc.scannerButton.tintColor = .clear
+            vc.createOutlet.alpha = 0
+            vc.addOutlet.alpha = 0
+            vc.outputsTable.reloadData()
+            
+        }
+            
         func convertOutputs() {
             
             for output in outputArray {
@@ -491,7 +373,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
             outputsString = outputs.description
             outputsString = outputsString.replacingOccurrences(of: "[", with: "")
             outputsString = outputsString.replacingOccurrences(of: "]", with: "")
-            self.getRawTx()
+            getRawTx()
             
         }
         
@@ -522,65 +404,10 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
-    func didPickImage() {
-        
-        let qrString = qrScanner.qrString
-        processKeys(key: qrString)
-        
-    }
-    
-    @objc func chooseQRCodeFromLibrary() {
-        
-        qrScanner.chooseQRCodeFromLibrary()
-        
-    }
-    
     @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
         
         amountInput.resignFirstResponder()
         addressInput.resignFirstResponder()
-        
-    }
-    
-    //MARK: User Interface
-    
-    func addBlurView(frame: CGRect, button: UIButton) {
-        
-        button.removeFromSuperview()
-        let blur = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffect.Style.dark))
-        blur.frame = frame
-        blur.clipsToBounds = true
-        blur.layer.cornerRadius = frame.width / 2
-        blur.contentView.addSubview(button)
-        self.scannerView.addSubview(blur)
-        
-    }
-    
-    @objc func back() {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.updateLeftBarButton(isShowing: false)
-            vc.scannerView.alpha = 0
-            vc.scannerShowing = false
-            
-        }
-        
-    }
-    
-    @objc func toggleTorch() {
-        
-        if isTorchOn {
-            
-            qrScanner.toggleTorch(on: false)
-            isTorchOn = false
-            
-        } else {
-            
-            qrScanner.toggleTorch(on: true)
-            isTorchOn = true
-            
-        }
         
     }
     
@@ -615,17 +442,28 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
+    func textViewDidEndEditing(_ textView: UITextView) {
+        
+        if textView == addressInput && addressInput.text != "" {
+            
+            processBIP21(url: addressInput.text!)
+            
+        }
+        
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
         
         textField.resignFirstResponder()
         
-        if textField == addressInput && addressInput.text != "" {
+        if addressInput.text != "" {
             
-            processKeys(key: addressInput.text!)
-            
-        } else if textField == addressInput && addressInput.text == "" {
-            
-            shakeAlert(viewToShake: self.qrScanner.textField)
+            if amountInput.text != "" && amountInput.text != "0.0" && addressInput.text != "" {
+                
+                createOutlet.alpha = 1
+                addOutlet.alpha = 1
+                
+            }
             
         }
         
@@ -638,20 +476,9 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        
-        if isTorchOn {
-            
-            toggleTorch()
-            
-        }
-        
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
         
         amount = ""
-        //addressInput.text = ""
         outputs.removeAll()
         outputArray.removeAll()
         outputsString = ""
@@ -699,10 +526,15 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                         
                     }
                     
+                    if vc.amountInput.text != "" && vc.amountInput.text != "0.0" && vc.addressInput.text != "" {
+                        
+                        vc.createOutlet.alpha = 1
+                        vc.addOutlet.alpha = 1
+                        
+                    }
+                    
                 }
-                
-                vc.back()
-                
+                                                
             }
             
         } else {
@@ -717,12 +549,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         case noCameraAvailable
         case videoInputInitFail
-        
-    }
-    
-    func processKeys(key: String) {
-        
-        self.processBIP21(url: key)
         
     }
     
@@ -790,7 +616,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 DispatchQueue.main.async { [unowned vc = self] in
                     
                     vc.amount = ""
-                    //vc.addressInput.text = ""
                     vc.outputArray.removeAll()
                     vc.outputsTable.reloadData()
                     vc.rawTxSigned = ""
@@ -828,7 +653,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 DispatchQueue.main.async { [unowned vc = self] in
                     
                     vc.amount = ""
-                    //vc.addressInput.text = ""
                     vc.outputArray.removeAll()
                     vc.outputsTable.reloadData()
                     vc.rawTxSigned = ""
@@ -849,30 +673,19 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
-    //MARK: Node Commands
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
-        if textView == addressInput {
+        if editingStyle == .delete {
             
-            if textView.text != "" {
+            outputArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            if outputArray.count == 0 {
+                outputsTable.alpha = 0
                 
-                textView.becomeFirstResponder()
-                
-            } else {
-                
-                if let string = UIPasteboard.general.string {
-                    
-                    textView.becomeFirstResponder()
-                    textView.text = string
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        textView.resignFirstResponder()
-                    }
-                    
-                } else {
-                    
-                    textView.becomeFirstResponder()
+                if amountInput.text == "" && addressInput.text == "" {
+                    createOutlet.alpha = 0
+                    addOutlet.alpha = 0
                     
                 }
                 
@@ -882,39 +695,84 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func updateFeeLabel(label: UILabel, numberOfBlocks: Int) {
         
-        if editingStyle == .delete {
+        let seconds = ((numberOfBlocks * 10) * 60)
+        let ud = UserDefaults.standard
+        
+        func updateFeeSetting() {
             
-            outputArray.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            ud.set(numberOfBlocks, forKey: "feeTarget")
             
         }
         
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        let id = segue.identifier
-        
-        switch id {
+        DispatchQueue.main.async {
             
-        case "goConfirm":
-            
-            if let vc = segue.destination as? ConfirmViewController {
+            if seconds < 86400 {
                 
-                vc.signedRawTx = rawTxSigned
-                vc.recipients = recipients
-                vc.unsignedPsbt = unsignedPsbt
+                if seconds < 3600 {
+                    
+                    DispatchQueue.main.async {
+                        
+                        label.text = "\(seconds / 60) minutes (\(numberOfBlocks) blocks)"
+                        
+                    }
+                    
+                } else {
+                    
+                    DispatchQueue.main.async {
+                        
+                        label.text = "\(seconds / 3600) hours (\(numberOfBlocks) blocks)"
+                        
+                    }
+                    
+                }
+                
+            } else {
+                
+                DispatchQueue.main.async {
+                    
+                    label.text = "\(seconds / 86400) days (\(numberOfBlocks) blocks)"
+                    
+                }
                 
             }
             
-        default:
+            updateFeeSetting()
             
+        }
+            
+    }
+    
+    @objc func setFee(_ sender: UISlider) {
+        
+        let numberOfBlocks = Int(sender.value) * -1
+        updateFeeLabel(label: blockTargetOutlet, numberOfBlocks: numberOfBlocks)
+            
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let id = segue.identifier
+        switch id {
+        case "scanBip21Segue":
+            if let vc = segue.destination as? ScannerViewController {
+                vc.isScanningInvoice = true
+                vc.onScanBip21DoneBlock = { [unowned thisVc = self] result in
+                    thisVc.processBIP21(url: result)
+                }
+            }
+            
+        case "goConfirm":
+            if let vc = segue.destination as? ConfirmViewController {
+                vc.signedRawTx = rawTxSigned
+                vc.recipients = recipients
+                vc.unsignedPsbt = incompletePsbt
+            }
+            
+        default:
             break
             
         }
-        
     }
     
 }

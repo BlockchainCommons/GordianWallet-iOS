@@ -25,38 +25,64 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
         navigationController?.delegate = self
-        let (qr, error) = qrGenerator.getQRCode(textInput: recoveryQr)
-        qrView.image = qr
-        
-        if error {
-            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that sized image")
-            
-        }
-        
         nextOutlet.layer.cornerRadius = 8
         qrView.isUserInteractionEnabled = true
         tapQRGesture = UITapGestureRecognizer(target: self, action: #selector(self.shareQRCode(_:)))
         qrView.addGestureRecognizer(tapQRGesture)
         
         if wallet["type"] as! String == "MULTI" {
-            accountMapLabel.text =
-            """
-            YOU WILL NEED THIS QR TO RECOVER A MULTI-SIG WALLET! Make many copies of it and save it in many physical and digital places!
-
-            It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order to spend from it you will need the seed words too.
-            """
+            accountMapLabel.text = TextBlurbs.accountMapMultiSigCreated()
+            
             
         } else {
-            accountMapLabel.text =
-            """
-            The Account Map QR ***ONLY holds your wallets PUBLIC KEYS***, and can not be used to spend funds!
+            accountMapLabel.text = TextBlurbs.accountMapSingleSigCreated()
             
-            ***In order to spend from it you will NEED the seed words too!***
-            """
         }
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        let (qr, error) = qrGenerator.getQRCode(textInput: recoveryQr)
+        qrView.image = qr
+        
+        if error {
+            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that sized image")
+            
+        } else {
+            addButtons()
+            
+        }
+                
+    }
+    
+    private func addButtons() {
+        
+        let copyButton = UIButton()
+        let copyImage = UIImage(systemName: "doc.on.doc")!
+        copyButton.tintColor = .systemTeal
+        copyButton.setImage(copyImage, for: .normal)
+        copyButton.addTarget(self, action: #selector(copyQR), for: .touchUpInside)
+        copyButton.frame = CGRect(x: qrView.frame.maxX - 25, y: qrView.frame.minY - 30, width: 25, height: 25)
+        view.addSubview(copyButton)
+        
+        let shareButton = UIButton()
+        let shareImage = UIImage(systemName: "arrowshape.turn.up.right")!
+        shareButton.tintColor = .systemTeal
+        shareButton.setImage(shareImage, for: .normal)
+        shareButton.addTarget(self, action: #selector(shareQRCode(_:)), for: .touchUpInside)
+        shareButton.frame = CGRect(x: copyButton.frame.minX - 35, y: qrView.frame.minY - 30, width: 25, height: 25)
+        view.addSubview(shareButton)
+        
+    }
+    
+    @objc func copyQR() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let pasteboard = UIPasteboard.general
+            pasteboard.image = vc.qrView.image
+            displayAlert(viewController: vc, isError: false, message: "QR copied to clipboard")
+        }
     }
     
     @IBAction func nextAction(_ sender: Any) {
@@ -71,7 +97,7 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
     
     @objc func shareQRCode(_ sender: UITapGestureRecognizer) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
             UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
                 
@@ -87,13 +113,13 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
                 
             }
             
-            let objectsToShare = [self.qrView.image!]
+            let objectsToShare = [vc.qrView.image!]
             
             let activityController = UIActivityViewController(activityItems: objectsToShare,
                                                               applicationActivities: nil)
             
-            activityController.popoverPresentationController?.sourceView = self.view
-            self.present(activityController, animated: true) {}
+            activityController.popoverPresentationController?.sourceView = vc.view
+            vc.present(activityController, animated: true) {}
             
         }
         

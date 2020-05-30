@@ -17,13 +17,10 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     let connectingView = ConnectingView()
     var wallet:WalletStruct!
     @IBOutlet var table: UITableView!
-    @IBOutlet var derivationLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
                 
-        derivationLabel.adjustsFontSizeToFitWidth = true
-        derivationLabel.text = ""
         loadActiveWallet()
         
     }
@@ -35,14 +32,6 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             self.dismiss(animated: true, completion: nil)
             
         }
-        
-    }
-    
-    func addExistingDerivationLabel() {
-        
-        let derivation = wallet.derivation
-        derivationLabel.text = labelText(derivation: derivation)
-        derivationLabel.adjustsFontSizeToFitWidth = true
         
     }
     

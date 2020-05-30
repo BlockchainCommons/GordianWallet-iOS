@@ -49,6 +49,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     @IBOutlet weak var customSeedLabel: UILabel!
     @IBOutlet weak var coolInfoOutlet: UIButton!
     @IBOutlet weak var coldInfoOutlet: UIButton!
+    @IBOutlet weak var recoverOutlet: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,6 +57,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         showAdvanced = false
         navigationController?.delegate = self
         recoverWalletOutlet.layer.cornerRadius = 10
+        recoverOutlet.layer.cornerRadius = 8
         hotWalletOutlet.layer.cornerRadius = 8
         warmWalletOutlet.layer.cornerRadius = 8
         coolWalletOutlet.layer.cornerRadius = 8
@@ -126,15 +128,14 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func hotInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Hot self sovereign single signature account", message: " A master seed is held by your device and your node holds a watch-only key set. This is a live account meaning you can spend from it at anytime from your device.", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Hot self sovereign single signature account", message: TextBlurbs.hotWalletInfo(), preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
-        
     }
     
     @IBAction func warmInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Warm self sovereign 2 of 3 multi signature account", message: "One master seed is held by your device, the other two are held offline by you. We derive and import a key set into your node from one of your offline master seeds so that your node can be the second signer for this account. This adds a layer of security and redundancy in case you lost your node, device or offline seed storage. This a warm account as neither your device or your node can spend independently. In order to spend from this account your device will need to be connected to your node!", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Warm self sovereign 2 of 3 multi signature account", message: TextBlurbs.warmWalletInfo(), preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -142,7 +143,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func coolWalletInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Cool self sovereign 2 of 3 multi signature account", message: "You will need to supply an xpub which will represent the devices master key. We will create two offline master seeds for you to backup, they will NOT be saved by the device. One of these master seeds will be used to derive a key set and import it into your node so that your node can be a single signer. Cool accounts are not capable of spending on their own! Cool accounts will build unsigned transactions and allow you to export them as PSBT's to other devices for signing. This is an ideal account type for collaborative multisig. You will always have the option to convert it to a warm account by adding a master seed in the form of BIP39 words to it.", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Cool self sovereign 2 of 3 multi signature account", message: TextBlurbs.coolWalletInfo(), preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -150,7 +151,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func coldWalletInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Cold self sovereign single signature account", message: "Cold accounts are single signature accounts where you will supply a master key xpub which is held by the device. The account will be purely watch-only and you will not be able to spend from it with this device. It will create unsigned transactions that can be exported to offline signers as PSBT's. You will always have the option to make it hot by adding a master seed to it in the form of BIP39 words.", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Cold self sovereign single signature account", message: TextBlurbs.coldWalletInfo(), preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -171,17 +172,13 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
     }
     
-    //addCustomWords
     @IBAction func createCoolWallet(_ sender: Any) {
         customSeedSwitch.isOn = false
         isSingleSig = false
         isMultiSig = true
         DispatchQueue.main.async { [unowned vc = self] in
-            
             vc.performSegue(withIdentifier: "addXpubSegue", sender: vc)
-            
         }
-        
     }
     
     @IBAction func createColdWallet(_ sender: Any) {
@@ -189,9 +186,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         isSingleSig = true
         isMultiSig = false
         DispatchQueue.main.async { [unowned vc = self] in
-            
             vc.performSegue(withIdentifier: "addXpubSegue", sender: vc)
-            
         }
     }
     
@@ -213,7 +208,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 if !error && node != nil {
                     
                     vc.node = node!
-                    vc.creatingView.addConnectingView(vc: self.navigationController!, description: "creating your account")
+                    vc.creatingView.addConnectingView(vc: vc.navigationController!, description: "creating your account")
                     
                     Reducer.makeCommand(walletName: "", command: .getblockcount, param: "") { (object, errorDescription) in
                         
@@ -225,6 +220,13 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             vc.id = UUID()
                             vc.newWallet["id"] = vc.id
                             vc.newWallet["isActive"] = false
+                            CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+                                if wallets != nil {
+                                    if wallets!.count == 0 {
+                                        vc.newWallet["isActive"] = true
+                                    }
+                                }
+                            }
                             vc.newWallet["lastUsed"] = Date()
                             vc.newWallet["lastBalance"] = 0.0
                             vc.newWallet["isArchived"] = false
@@ -251,6 +253,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             } else if vc.isSingleSig {
                                 
                                 vc.newWallet["type"] = "DEFAULT"
+                                vc.newWallet["nodeIsSigner"] = false
                                 
                                 if vc.node.network == "testnet" {
                                     
@@ -294,7 +297,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
         if customSeedSwitch.isOn {
             
-            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: "This feature allows you to add your own BIP39 mnemonic as the device's master seed for the account you are about to create. This feature is only applicable to Hot and Warm accounts.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: TextBlurbs.customSeedInfo(), preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
             alert.popoverPresentationController?.sourceView = self.view
             self.present(alert, animated: true, completion: nil)
@@ -303,17 +306,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
     }
     
-    @IBAction func importAction(_ sender: Any) {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.performSegue(withIdentifier: "goImport", sender: vc)
-            
-        }
-        
-    }
-    
-    @IBAction func recoverAction(_ sender: Any) {
+   @IBAction func recoverAction(_ sender: Any) {
         
         DispatchQueue.main.async { [unowned vc = self] in
             
@@ -350,7 +343,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         if !error {
                             
                             vc.updateStatus(text: "creating primary descriptor")
-                            //vc.newWallet["seed"] = encryptedData!
                             vc.saveSeed(seed: encryptedData!) { success in
                                 
                                 if success {
@@ -386,7 +378,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 if !error {
                     
                     vc.updateStatus(text: "creating primary descriptor")
-                    //vc.newWallet["seed"] = encryptedData!
                     vc.saveSeed(seed: encryptedData!) { success in
                         
                         if success {
@@ -501,7 +492,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         
                         let w = WalletStruct(dictionary: vc.newWallet)
                         
-                        SeedParser.fetchSeeds(wallet: w) { wordSet in
+                        SeedParser.fetchSeeds(wallet: w) { (wordSet, fingerprints) in
                             
                             if wordSet != nil {
                                 
@@ -884,6 +875,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                     if account.xpriv != nil {
                                         
                                         vc.nodesSeed = account.xpriv!
+                                        vc.newWallet["nodeIsSigner"] = true
                                         vc.constructDescriptor(derivation: derivation)
                                         
                                     } else {
@@ -953,14 +945,10 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         case "m/48'/1'/0'/2'":
                                             
             descriptor = "wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/48'/1'/0'/2']\(recoveryKey)/0/*, [\(localFingerprint)/48'/1'/0'/2']\(localKey)/0/*, [\(nodeFingerprint)/48'/1'/0'/2']\(nodeKey)/0/*))"
-
-            changeDescriptor = "wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/48'/1'/0'/2']\(recoveryKey)/1/*, [\(localFingerprint)/48'/1'/0'/2']\(localKey)/1/*, [\(nodeFingerprint)/48'/1'/0'/2']\(nodeKey)/1/*))"
             
         case "m/48'/0'/0'/2'":
 
             descriptor = "wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/48'/0'/0'/2']\(recoveryKey)/0/*, [\(localFingerprint)/48'/0'/0'/2']\(localKey)/0/*, [\(nodeFingerprint)/48'/0'/0'/2']\(nodeKey)/0/*))"
-            
-            changeDescriptor = "wsh(sortedmulti(\(signatures),[\(recoveryFingerprint)/48'/0'/0'/2']\(recoveryKey)/1/*, [\(localFingerprint)/48'/0'/0'/2']\(localKey)/1/*, [\(nodeFingerprint)/48'/0'/0'/2']\(nodeKey)/1/*))"
             
         default:
             
@@ -968,6 +956,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
         }
         
+        changeDescriptor = descriptor.replacingOccurrences(of: "/0/*", with: "/1/*")
         descriptor = descriptor.replacingOccurrences(of: "\"", with: "")
         descriptor = descriptor.replacingOccurrences(of: " ", with: "")
         changeDescriptor = changeDescriptor.replacingOccurrences(of: "\"", with: "")
@@ -1136,129 +1125,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
         }
         
-    }
-    
-    private func processDescriptor(descriptor: String) {
-        
-        let cv = ConnectingView()
-        cv.addConnectingView(vc: self, description: "processing...")
-        
-        if let data = descriptor.data(using: .utf8) {
-            
-            do {
-                
-            let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:Any]
-            
-                if let _ = dict["descriptor"] as? String {
-                    
-                    if let _ = dict["blockheight"] as? Int {
-                        /// It is an Account Map.
-                        Import.importAccountMap(accountMap: dict) { walletDict in
-                            print("importAccountMap")
-                            
-                            if walletDict != nil {
-                                DispatchQueue.main.async { [unowned vc = self] in
-                                    cv.removeConnectingView()
-                                    vc.walletToImport = walletDict!
-                                    vc.walletName = walletDict!["name"] as! String
-                                    vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
-                                    
-                                }
-                            }
-                        }
-                    }
-                } else if let fingerprint = dict["xfp"] as? String {
-                    /// It is a coldcard wallet skeleton file.
-                    cv.removeConnectingView()
-                    DispatchQueue.main.async { [unowned vc = self] in
-                        
-                        let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: "You can choose either Native Segwit (BIP84, bech32 - bc1), Nested Segwit (BIP49, 3) or legacy (BIP44, 1) address types.", preferredStyle: .actionSheet)
-                        
-                        alert.addAction(UIAlertAction(title: "Native Segwit (BIP84, bc1)", style: .default, handler: { action in
-                            cv.addConnectingView(vc: vc, description: "importing...")
-                            let bip84Dict = dict["bip84"] as! NSDictionary
-                            
-                            Import.importColdCard(coldcardDict: bip84Dict, fingerprint: fingerprint) { (walletToImport) in
-                                
-                                if walletToImport != nil {
-                                    DispatchQueue.main.async { [unowned vc = self] in
-                                        cv.removeConnectingView()
-                                        vc.walletName = walletToImport!["name"] as! String
-                                        vc.walletToImport = walletToImport!
-                                        vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
-                                        
-                                    }
-                                }
-                            }
-                            
-                        }))
-                        
-                        alert.addAction(UIAlertAction(title: "Nested Segwit (BIP49, 3)", style: .default, handler: { action in
-                            cv.addConnectingView(vc: vc, description: "importing...")
-                            let bip49Dict = dict["bip49"] as! NSDictionary
-                            
-                            Import.importColdCard(coldcardDict: bip49Dict, fingerprint: fingerprint) { (walletToImport) in
-                                
-                                if walletToImport != nil {
-                                    DispatchQueue.main.async { [unowned vc = self] in
-                                        cv.removeConnectingView()
-                                        vc.walletName = walletToImport!["name"] as! String
-                                        vc.walletToImport = walletToImport!
-                                        vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
-                                        
-                                    }
-                                }
-                            }
-                            
-                            
-                        }))
-                        
-                        alert.addAction(UIAlertAction(title: "Legacy (BIP44, 1)", style: .default, handler: { action in
-                            cv.addConnectingView(vc: vc, description: "importing...")
-                            let bip44Dict = dict["bip44"] as! NSDictionary
-                            
-                            Import.importColdCard(coldcardDict: bip44Dict, fingerprint: fingerprint) { (walletToImport) in
-                                
-                                if walletToImport != nil {
-                                    DispatchQueue.main.async { [unowned vc = self] in
-                                        cv.removeConnectingView()
-                                        vc.walletName = walletToImport!["name"] as! String
-                                        vc.walletToImport = walletToImport!
-                                        vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
-                                        
-                                    }
-                                }
-                            }
-                            
-                        }))
-                        
-                        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                        alert.popoverPresentationController?.sourceView = vc.view
-                        vc.present(alert, animated: true, completion: nil)
-                        
-                    }
-                }
-                
-            } catch {
-                /// It is not an Account Map.
-                Import.importDescriptor(descriptor: descriptor) { [unowned vc = self] walletDict in
-                    
-                    if walletDict != nil {
-                        DispatchQueue.main.async { [unowned vc = self] in
-                            vc.walletToImport = walletDict!
-                            vc.walletName = walletDict!["name"] as! String
-                            vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
-                            
-                        }
-                        
-                    } else {
-                        cv.removeConnectingView()
-                        showAlert(vc: vc, title: "Error", message: "error importing that account")
-                        
-                    }
-                }
-            }
-        }
     }
     
     private func createWalletWithUserSuppliedSeed(dict: [String:String]?) {
@@ -1573,29 +1439,6 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     }                    
                     
                 }
-                
-            }
-            
-        case "goImport":
-            
-            if let vc = segue.destination as? ScannerViewController {
-                
-                vc.isImporting = true
-                vc.onImportDoneBlock = { [unowned thisVc = self] descriptor in
-                    
-                    thisVc.processDescriptor(descriptor: descriptor)
-                    
-                }
-                
-            }
-            
-        case "goConfirmImport":
-            
-            if let vc = segue.destination as? ConfirmRecoveryViewController {
-                
-                vc.walletNameHash = walletName
-                vc.isImporting = true
-                vc.walletDict = walletToImport
                 
             }
             

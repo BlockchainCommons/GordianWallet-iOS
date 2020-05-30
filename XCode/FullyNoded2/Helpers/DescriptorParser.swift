@@ -100,12 +100,12 @@ class DescriptorParser {
                         if i != 0 {
                             keysWithPath.append("\(item)")
                         }
-                        
                         if i + 1 == mofnarray.count {
                             dict["keysWithPath"] = keysWithPath
                         }
                     }
-                                        
+                     
+                    var fingerprints = [String]()
                     var keyArray = [String]()
                     var paths = [String]()
                     var derivationArray = [String]()
@@ -120,6 +120,7 @@ class DescriptorParser {
                                 let rootPath = arr[0].replacingOccurrences(of: "[", with: "")
                                 
                                 let rootPathArr = rootPath.split(separator: "/")
+                                fingerprints.append("[\(rootPathArr[0])]")
                                 var deriv = "m"
                                 for (i, rootPathItem) in rootPathArr.enumerated() {
                                     
@@ -159,6 +160,11 @@ class DescriptorParser {
                     dict["derivationArray"] = derivationArray
                     dict["multiSigKeys"] = keyArray
                     dict["multiSigPaths"] = paths
+                    
+                    var processed = fingerprints.description.replacingOccurrences(of: "[\"", with: "")
+                    processed = processed.replacingOccurrences(of: "\"]", with: "")
+                    processed = processed.replacingOccurrences(of: "\"", with: "")
+                    dict["fingerprint"] = processed
                     
                     for deriv in derivationArray {
 
@@ -244,6 +250,8 @@ class DescriptorParser {
                 dict["keysWithPath"] = ["[" + "\(arr1[1])"]
                 let arr2 = arr1[1].split(separator: "]")
                 let derivation = arr2[0]
+                dict["prefix"] = "[\(derivation)]"
+                dict["fingerprint"] = "\((derivation.split(separator: "/"))[0])"
                 let extendedKeyWithPath = arr2[1]
                 let arr4 = extendedKeyWithPath.split(separator: "/")
                 let extendedKey = arr4[0]

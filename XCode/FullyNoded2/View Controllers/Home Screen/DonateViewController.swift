@@ -12,6 +12,7 @@ class DonateViewController: UIViewController {
     
     @IBOutlet var monthlyOutlet: UIButton!
     @IBOutlet var donateOutlet: UIButton!
+    @IBOutlet weak var textView: UITextView!
     
 
     override func viewDidLoad() {
@@ -20,6 +21,7 @@ class DonateViewController: UIViewController {
         // Do any additional setup after loading the view.
         monthlyOutlet.layer.cornerRadius = 8
         donateOutlet.layer.cornerRadius = 8
+        textView.text = TextBlurbs.supportBlockchainCommons()
         
     }
     

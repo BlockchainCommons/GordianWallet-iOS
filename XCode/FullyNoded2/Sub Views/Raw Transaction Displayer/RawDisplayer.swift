@@ -15,16 +15,31 @@ class RawDisplayer {
     let textView = UITextView()
     var qrView = UIImageView()
     let qrGenerator = QRGenerator()
-    let copiedLabel = UILabel()
     var vc = UIViewController()
     var rawString = ""
-    let impact = UIImpactFeedbackGenerator()
+    let copyButton = UIButton()
+    let shareButton = UIButton()
+    
+    func addButtons() {
+        
+        let copyImage = UIImage(systemName: "doc.on.doc")!
+        copyButton.tintColor = .systemTeal
+        copyButton.setImage(copyImage, for: .normal)
+        copyButton.frame = CGRect(x: qrView.frame.maxX - 25, y: qrView.frame.minY - 30, width: 25, height: 25)
+        vc.view.addSubview(copyButton)
+        
+        let shareImage = UIImage(systemName: "arrowshape.turn.up.right")!
+        shareButton.tintColor = .systemTeal
+        shareButton.setImage(shareImage, for: .normal)
+        shareButton.frame = CGRect(x: copyButton.frame.minX - 35, y: qrView.frame.minY - 30, width: 25, height: 25)
+        vc.view.addSubview(shareButton)
+        
+    }
     
     func addRawDisplay() {
         
         configureQrView()
         configureTextView()
-        configureCopiedLabel()
         
         let (qr, error) = qrGenerator.getQRCode(textInput: rawString)
         qrView.image = qr
@@ -33,107 +48,40 @@ class RawDisplayer {
         }
         
         textView.text = rawString
-        UIPasteboard.general.string = rawString
-        
         vc.view.addSubview(qrView)
         vc.view.addSubview(textView)
-        //vc.view.addSubview(backgroundView)
         
-        UIView.animate(withDuration: 0.2, animations: {
+        UIView.animate(withDuration: 0.4, animations: { [unowned thisClass = self] in
             
-            //self.backgroundView.alpha = 1
+            thisClass.qrView.frame = CGRect(x: 10,
+                                       y: thisClass.y,
+                                       width: thisClass.vc.view.frame.width - 20,
+                                       height: thisClass.vc.view.frame.width - 20)
             
-        }) { _ in
+        }, completion: { _ in
             
-            UIView.animate(withDuration: 0.4, animations: {
+            UIView.animate(withDuration: 0.4, animations: { [unowned thisClass = self] in
                 
-                self.qrView.frame = CGRect(x: 10,
-                                           y: self.y,
-                                           width: self.vc.view.frame.width - 20,
-                                           height:self.vc.view.frame.width - 20)
+                let qrHeight = thisClass.vc.view.frame.width - 20
+                let totalViewHeight = thisClass.vc.view.frame.height
+
+                
+                thisClass.textView.frame = CGRect(x: 10,
+                                             y: thisClass.qrView.frame.maxY,
+                                             width: thisClass.vc.view.frame.width - 20,
+                                             height: totalViewHeight - qrHeight)
                 
             }, completion: { _ in
-                
-                self.impact.impactOccurred()
-                
-                UIView.animate(withDuration: 0.4, animations: {
+                                
+                DispatchQueue.main.async { [unowned thisClass = self] in
                     
-                    let qrHeight = self.vc.view.frame.width - 20
-                    let totalViewHeight = self.vc.view.frame.height
-
+                    thisClass.addButtons()
                     
-                    self.textView.frame = CGRect(x: 10,
-                                                 y: self.qrView.frame.maxY,
-                                                 width: self.vc.view.frame.width - 20,
-                                                 height: totalViewHeight - qrHeight)
-                    
-                }, completion: { _ in
-                    
-                    self.impact.impactOccurred()
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.addCopiedLabel()
-                        
-                    }
-                    
-                })
+                }
                 
             })
             
-        }
-        
-    }
-    
-    func addCopiedLabel() {
-        
-        vc.view.addSubview(copiedLabel)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            
-            UIView.animate(withDuration: 0.3, animations: {
-                
-                self.copiedLabel.frame = CGRect(x: 0,
-                                                y: self.vc.view.frame.maxY - 50,
-                                                width: self.vc.view.frame.width,
-                                                height: 50)
-                
-            })
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
-                
-                UIView.animate(withDuration: 0.3, animations: {
-                    
-                    self.copiedLabel.frame = CGRect(x: 0,
-                                                    y: self.vc.view.frame.maxY + 100,
-                                                    width: self.vc.view.frame.width,
-                                                    height: 50)
-                    
-                }, completion: { _ in
-                    
-                    self.copiedLabel.removeFromSuperview()
-                    
-                })
-                
-            })
-            
-        }
-        
-    }
-    
-    func configureCopiedLabel() {
-        
-        copiedLabel.text = "copied to clipboard ✓"
-        
-        copiedLabel.frame = CGRect(x: 0,
-                                   y: vc.view.frame.maxY + 100,
-                                   width: vc.view.frame.width,
-                                   height: 50)
-        
-        copiedLabel.textColor = UIColor.darkGray
-        copiedLabel.font = UIFont.init(name: "HiraginoSans-W3", size: 17)
-        copiedLabel.backgroundColor = UIColor.black
-        copiedLabel.textAlignment = .center
+        })
         
     }
     

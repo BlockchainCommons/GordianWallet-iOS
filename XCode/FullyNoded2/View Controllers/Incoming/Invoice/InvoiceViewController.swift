@@ -13,36 +13,46 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     let spinner = UIActivityIndicatorView(style: .medium)
     var textToShareViaQRCode = String()
     var addressString = String()
-    var qrView = UIImageView()
-    var qrCode = UIImage()
-    let descriptionLabel = UILabel()
-    var tapQRGesture = UITapGestureRecognizer()
-    var tapAddressGesture = UITapGestureRecognizer()
     var nativeSegwit = Bool()
     var p2shSegwit = Bool()
     var legacy = Bool()
     let connectingView = ConnectingView()
-    let qrGenerator = QRGenerator()
-    let copiedLabel = UILabel()
-    var refreshButton = UIBarButtonItem()
-    var dataRefresher = UIBarButtonItem()
     var initialLoad = Bool()
     var wallet:WalletStruct!
-    var addressOutlet = UILabel()
     
+    @IBOutlet weak var qrButton: UIButton!
+    @IBOutlet weak var copyButton: UIButton!
+    @IBOutlet weak var shareButton: UIButton!
+    @IBOutlet weak var addressOutlet: UILabel!
+    @IBOutlet weak var createOutlet: UIButton!
     @IBOutlet var amountField: UITextField!
     @IBOutlet var labelField: UITextField!
+    @IBOutlet weak var invoiceAddressHeader: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
+        addressOutlet.clipsToBounds = true
+        addressOutlet.layer.cornerRadius = 8
+        createOutlet.layer.cornerRadius = 8
         initialLoad = true
         addressOutlet.isUserInteractionEnabled = true
         addressOutlet.text = ""
         amountField.delegate = self
         labelField.delegate = self
-        self.addressOutlet.alpha = 0
-        configureCopiedLabel()
+        addressOutlet.alpha = 0
+        invoiceAddressHeader.alpha = 0
+        qrButton.alpha = 0
+        shareButton.alpha = 0
+        copyButton.alpha = 0
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self,
+                                                                 action: #selector(dismissKeyboard))
+        
+        view.addGestureRecognizer(tap)
+        addDoneButtonOnKeyboard()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(clearInvoice), name: .didSwitchAccounts, object: nil)
         
         amountField.addTarget(self,
                               action: #selector(textFieldDidChange(_:)),
@@ -52,63 +62,28 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
                              action: #selector(textFieldDidChange(_:)),
                              for: .editingChanged)
         
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self,
-                                                                 action: #selector(dismissKeyboard))
-        
-        view.addGestureRecognizer(tap)
-        addDoneButtonOnKeyboard()
-        
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    @objc func clearInvoice() {
+        addressOutlet.alpha = 0
+        invoiceAddressHeader.alpha = 0
+        qrButton.alpha = 0
+        copyButton.alpha = 0
+        shareButton.alpha = 0
+        createOutlet.alpha = 1
+    }
+    
+    @IBAction func createNow(_ sender: Any) {
         
         load()
         
     }
     
+    
     @IBAction func refresh(_ sender: Any) {
         
         self.load()
                 
-    }
-    
-    @IBAction func close(_ sender: Any) {
-        
-        DispatchQueue.main.async {
-            
-            self.dismiss(animated: true, completion: nil)
-            
-        }
-        
-    }
-    
-    
-    func addNavBarSpinner() {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.spinner.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-            vc.dataRefresher = UIBarButtonItem(customView: vc.spinner)
-            vc.navigationItem.setRightBarButton(vc.dataRefresher, animated: true)
-            vc.spinner.startAnimating()
-            vc.spinner.alpha = 1
-            
-        }
-        
-    }
-    
-    func removeLoader() {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.spinner.stopAnimating()
-            vc.spinner.alpha = 0
-            vc.refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: vc, action: #selector(vc.load))
-            vc.refreshButton.tintColor = UIColor.white.withAlphaComponent(1)
-            vc.navigationItem.setRightBarButton(vc.refreshButton, animated: true)
-                        
-        }
-        
     }
     
     @objc func load() {
@@ -121,8 +96,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
                 
                 vc.wallet = wallet!
                 
-                vc.addNavBarSpinner()
-                
                 if !vc.initialLoad {
                     
                     DispatchQueue.main.async {
@@ -130,14 +103,11 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
                         UIView.animate(withDuration: 0.3, animations: {
                             
                             vc.addressOutlet.alpha = 0
-                            vc.qrView.alpha = 0
                             
                         }) { (_) in
                             
                             vc.addressOutlet.text = ""
-                            vc.qrView.image = nil
                             vc.addressOutlet.alpha = 1
-                            vc.qrView.alpha = 1
                             vc.showAddress()
                             
                         }
@@ -153,7 +123,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             } else if error {
                 
                 vc.connectingView.removeConnectingView()
-                vc.removeLoader()
                 showAlert(vc: vc, title: "Error", message: "No active wallets")
                 
             }
@@ -210,7 +179,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             if !error {
                 
                 vc.connectingView.removeConnectingView()
-                vc.removeLoader()
                 vc.addressString = address!
                 vc.showAddress(address: address!)
                 
@@ -225,159 +193,65 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    func showAddress(address: String) {
+    @IBAction func showQrAction(_ sender: Any) {
         
-        DispatchQueue.main.async {
-            
-            let pasteboard = UIPasteboard.general
-            pasteboard.string = address
-            
-            self.qrCode = self.generateQrCode(key: address)
-            self.qrView.image = self.qrCode
-            self.qrView.isUserInteractionEnabled = true
-            self.qrView.alpha = 0
-            self.qrView.frame = CGRect(x: 32, y: self.amountField.frame.maxY + 20, width: self.view.frame.width - 64, height: self.view.frame.width - 64)
-            self.view.addSubview(self.qrView)
-            
-            self.addressOutlet.frame = CGRect(x: 32, y: self.qrView.frame.maxY + 5, width: self.view.frame.width - 64, height: 20)
-            self.addressOutlet.adjustsFontSizeToFitWidth = true
-            self.addressOutlet.textAlignment = .center
-            self.view.addSubview(self.addressOutlet)
-            
-            self.descriptionLabel.frame = CGRect(x: 10, y: self.tabBarController!.tabBar.frame.minY - 20, width: self.view.frame.width - 20, height: 20)
-            
-            self.descriptionLabel.textAlignment = .center
-            
-            self.descriptionLabel.font = UIFont.init(name: "HelveticaNeue-Light",
-                                                size: 12)
-            
-            self.descriptionLabel.textColor = .lightGray
-            self.descriptionLabel.text = "Tap the QR Code or text to copy/save/share"
-            self.descriptionLabel.adjustsFontSizeToFitWidth = true
-            self.descriptionLabel.alpha = 0
-            self.view.addSubview(self.descriptionLabel)
-            
-            self.tapAddressGesture = UITapGestureRecognizer(target: self,
-                                                       action: #selector(self.shareAddressText(_:)))
-            
-            self.addressOutlet.addGestureRecognizer(self.tapAddressGesture)
-            
-            self.tapQRGesture = UITapGestureRecognizer(target: self,
-                                                  action: #selector(self.shareQRCode(_:)))
-            
-            self.qrView.addGestureRecognizer(self.tapQRGesture)
-            
-            UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                
-                vc.descriptionLabel.alpha = 1
-                vc.qrView.alpha = 1
-                vc.addressOutlet.alpha = 1
-                
-            }) { [unowned vc = self] _ in
-                
-                vc.addressOutlet.text = address
-                vc.addCopiedLabel()
-                
-            }
-            
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "showInvoiceQr", sender: vc)
         }
-        
     }
     
-    func addCopiedLabel() {
-        
-        view.addSubview(copiedLabel)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            
-            UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                
-                if vc.tabBarController != nil {
-                    
-                    vc.copiedLabel.frame = CGRect(x: 0,
-                                                    y: vc.tabBarController!.tabBar.frame.minY - 50,
-                                                    width: vc.view.frame.width,
-                                                    height: 50)
-                    
-                }
-                
-            })
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
-                
-                UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                    
-                    vc.copiedLabel.frame = CGRect(x: 0,
-                                                    y: vc.view.frame.maxY + 100,
-                                                    width: vc.view.frame.width,
-                                                    height: 50)
-                    
-                }, completion: { [unowned vc = self] _ in
-                    
-                    vc.copiedLabel.removeFromSuperview()
-                    
-                })
-                
-            })
-            
-        }
-        
+    
+    @IBAction func copyAction(_ sender: Any) {
+        copyAddress()
     }
     
-    @objc func shareAddressText(_ sender: UITapGestureRecognizer) {
+    @IBAction func shareAddressAction(_ sender: Any) {
         
-        UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            vc.addressOutlet.alpha = 0
-            
-        }) { _ in
-            
-            UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
-                
-                vc.addressOutlet.alpha = 1
-                
-            })
-            
-        }
-        
-        DispatchQueue.main.async {
-            
-            let textToShare = [self.addressString]
+            let textToShare = [vc.addressString]
             
             let activityViewController = UIActivityViewController(activityItems: textToShare,
                                                                   applicationActivities: nil)
             
-            activityViewController.popoverPresentationController?.sourceView = self.view
-            self.present(activityViewController, animated: true) {}
+            activityViewController.popoverPresentationController?.sourceView = vc.view
+            vc.present(activityViewController, animated: true) {}
             
         }
-        
     }
     
-    @objc func shareQRCode(_ sender: UITapGestureRecognizer) {
+    func showAddress(address: String) {
         
-        UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            vc.qrView.alpha = 0
+            vc.updateBIP21Invoice()
+            vc.addressOutlet.adjustsFontSizeToFitWidth = true
+            vc.view.addSubview(vc.addressOutlet)
             
-        }) { _ in
-            
-            UIView.animate(withDuration: 0.2, animations: { [unowned vc = self] in
+            UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
                 
-                vc.qrView.alpha = 1
+                vc.invoiceAddressHeader.alpha = 1
+                vc.qrButton.alpha = 1
+                vc.addressOutlet.alpha = 1
+                vc.copyButton.alpha = 1
+                vc.shareButton.alpha = 1
                 
             }) { [unowned vc = self] _ in
                 
-                let activityController = UIActivityViewController(activityItems: [vc.qrView.image!],
-                                                                  applicationActivities: nil)
-                
-                activityController.popoverPresentationController?.sourceView = vc.view
-                vc.present(activityController, animated: true) {}
+                vc.addressOutlet.text = address
                 
             }
             
         }
         
+    }
+    
+    @objc func copyAddress() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let pasteboard = UIPasteboard.general
+            pasteboard.string = vc.addressString
+            displayAlert(viewController: vc, isError: false, message: "address copied to clipboard")
+        }
     }
     
     func executeNodeCommand(method: BTC_CLI_COMMAND, param: String) {
@@ -390,7 +264,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
                     
                     vc.connectingView.removeConnectingView()
                     vc.initialLoad = false
-                    vc.removeLoader()
                     vc.addressString = address
                     vc.addressOutlet.text = address
                     vc.showAddress(address: address)
@@ -400,7 +273,6 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             } else {
                 
                 vc.connectingView.removeConnectingView()
-                vc.removeLoader()
                 displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                 
             }
@@ -409,57 +281,23 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    @objc func textFieldDidChange(_ textField: UITextField) {
-        
-        updateQRImage()
-        
-    }
-    
-    func generateQrCode(key: String) -> UIImage {
-        
-        let (qr, error) = qrGenerator.getQRCode(textInput: key)
-        
-        if error {
-            showAlert(vc: self, title: "QR Error", message: "That is too much data to fit into that sized image")
-        }
-        
-        return qr
-        
-    }
-    
-    func updateQRImage() {
-        
-        var newImage = UIImage()
-        
-        if self.amountField.text == "" && self.labelField.text == "" {
+    func updateBIP21Invoice() {
+                
+        if amountField.text == "" && labelField.text == "" {
             
-            newImage = self.generateQrCode(key:"bitcoin:\(self.addressString)")
-            textToShareViaQRCode = "bitcoin:\(self.addressString)"
+            textToShareViaQRCode = "bitcoin:\(addressString)"
             
-        } else if self.amountField.text != "" && self.labelField.text != "" {
+        } else if amountField.text != "" && labelField.text != "" {
             
-            newImage = self.generateQrCode(key:"bitcoin:\(self.addressString)?amount=\(self.amountField.text!)&label=\(self.labelField.text!)")
-            textToShareViaQRCode = "bitcoin:\(self.addressString)?amount=\(self.amountField.text!)&label=\(self.labelField.text!)"
+            textToShareViaQRCode = "bitcoin:\(addressString)?amount=\(amountField.text!)&label=\(labelField.text!)"
             
-        } else if self.amountField.text != "" && self.labelField.text == "" {
+        } else if amountField.text != "" && labelField.text == "" {
             
-            newImage = self.generateQrCode(key:"bitcoin:\(self.addressString)?amount=\(self.amountField.text!)")
-            textToShareViaQRCode = "bitcoin:\(self.addressString)?amount=\(self.amountField.text!)"
+            textToShareViaQRCode = "bitcoin:\(addressString)?amount=\(amountField.text!)"
             
-        } else if self.amountField.text == "" && self.labelField.text != "" {
+        } else if amountField.text == "" && labelField.text != "" {
             
-            newImage = self.generateQrCode(key:"bitcoin:\(self.addressString)?label=\(self.labelField.text!)")
-            textToShareViaQRCode = "bitcoin:\(self.addressString)?label=\(self.labelField.text!)"
-            
-        }
-        
-        DispatchQueue.main.async {
-            
-            UIView.transition(with: self.qrView,
-                              duration: 0.75,
-                              options: .transitionCrossDissolve,
-                              animations: { self.qrView.image = newImage },
-                              completion: nil)
+            textToShareViaQRCode = "bitcoin:\(addressString)?label=\(labelField.text!)"
             
         }
         
@@ -467,7 +305,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     
     @objc func doneButtonAction() {
         
-        self.amountField.resignFirstResponder()
+        amountField.resignFirstResponder()
         
     }
     
@@ -509,26 +347,29 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        
+        updateBIP21Invoice()
+        
+    }
+    
     @objc func dismissKeyboard() {
         
         view.endEditing(true)
         
     }
     
-    func configureCopiedLabel() {
-        
-        copiedLabel.text = "copied to clipboard ✓"
-        
-        copiedLabel.frame = CGRect(x: 0,
-                                   y: view.frame.maxY + 100,
-                                   width: view.frame.width,
-                                   height: 50)
-        
-        copiedLabel.textColor = UIColor.darkGray
-        copiedLabel.font = UIFont.init(name: "HiraginoSans-W3", size: 17)
-        copiedLabel.backgroundColor = UIColor.black
-        copiedLabel.textAlignment = .center
-        
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let id = segue.identifier
+        switch id {
+        case "showInvoiceQr":
+            if let vc = segue.destination as? QRViewController {
+                vc.infoText = "BIP21 Invoice"
+                vc.itemToDisplay = textToShareViaQRCode
+            }
+        default:
+            break
+        }
     }
 
 }

@@ -55,6 +55,7 @@ class FiatConverter {
                         } catch {
                             
                             print("JSon processing failed")
+                            completion(nil)
                             
                         }
                         

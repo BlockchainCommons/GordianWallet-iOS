@@ -12,7 +12,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     var doneBlock : ((Bool) -> Void)?
     let ud = UserDefaults.standard
-    var miningFeeText = ""
     @IBOutlet var settingsTable: UITableView!
     
     override func viewDidLoad() {
@@ -36,17 +35,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    
-    @IBAction func close(_ sender: Any) {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.dismiss(animated: true, completion: nil)
-            
-        }
-        
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
         
         doneBlock!(true)
@@ -62,63 +50,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
         
-    }
-    
-    func updateFeeLabel(label: UILabel, numberOfBlocks: Int) {
-        
-        let seconds = ((numberOfBlocks * 10) * 60)
-        
-        func updateFeeSetting() {
-            
-            ud.set(numberOfBlocks, forKey: "feeTarget")
-            
-        }
-        
-        DispatchQueue.main.async {
-            
-            if seconds < 86400 {
-                
-                if seconds < 3600 {
-                    
-                    DispatchQueue.main.async {
-                        
-                        label.text = "Confirmation target \(numberOfBlocks) blocks (\(seconds / 60) minutes)"
-                        
-                    }
-                    
-                } else {
-                    
-                    DispatchQueue.main.async {
-                        
-                        label.text = "Confirmation target \(numberOfBlocks) blocks (\(seconds / 3600) hours)"
-                        
-                    }
-                    
-                }
-                
-            } else {
-                
-                DispatchQueue.main.async {
-                    
-                    label.text = "Confirmation target \(numberOfBlocks) blocks (\(seconds / 86400) days)"
-                    
-                }
-                
-            }
-            
-            updateFeeSetting()
-            
-        }
-            
-    }
-    
-    @objc func setFee(_ sender: UISlider) {
-        
-        let cell = settingsTable.cellForRow(at: IndexPath.init(row: 0, section: 3))
-        let label = cell?.viewWithTag(1) as! UILabel
-        let numberOfBlocks = Int(sender.value) * -1
-        updateFeeLabel(label: label, numberOfBlocks: numberOfBlocks)
-            
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -146,34 +77,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             label.text = "Reset app"
             return settingsCell
             
-        case 3:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "miningFeeCell", for: indexPath)
-            let label = cell.viewWithTag(1) as! UILabel
-            let slider = cell.viewWithTag(2) as! UISlider
-            let thumbnail = cell.viewWithTag(3) as! UIImageView
-            thumbnail.image = UIImage(systemName: "timer")
-            
-            slider.addTarget(self, action: #selector(setFee), for: .allEvents)
-            slider.maximumValue = 2 * -1
-            slider.minimumValue = 432 * -1
-            
-            if ud.object(forKey: "feeTarget") != nil {
-                
-                let numberOfBlocks = ud.object(forKey: "feeTarget") as! Int
-                slider.value = Float(numberOfBlocks) * -1
-                updateFeeLabel(label: label, numberOfBlocks: numberOfBlocks)
-                
-            } else {
-                
-                label.text = "Minimum fee set"
-                slider.value = 432 * -1
-                
-            }
-            
-            label.text = ""
-            
-            return cell
-            
         default:
             let cell = UITableViewCell()
             cell.backgroundColor = UIColor.clear
@@ -185,7 +88,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func numberOfSections(in tableView: UITableView) -> Int {
         
-        return 5
+        return 4
         
     }
     
@@ -257,21 +160,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    func goToSecurityCenter() {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.performSegue(withIdentifier: "security", sender: vc)
-            
-        }
-        
-    }
-    
     func resetApp() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
                         
-            let alert = UIAlertController(title: "Are you sure!?", message: "This will delete ALL your wallets from your device, nodes, auth keys, encryption keys and will completely reset the app!\n\nAfter using this button you should force quit the app and reopen it to prevent weird behavior and possible crashes.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Are you sure!?", message: "This will delete ALL your wallets from your device, nodes, auth keys, encryption keys and will completely wipe the app!\n\nAfter using this button you should force quit the app and reopen it to prevent weird behavior and possible crashes.", preferredStyle: .actionSheet)
 
             alert.addAction(UIAlertAction(title: "Yes, reset now!", style: .destructive, handler: { [unowned vc = self] action in
                 
@@ -309,7 +202,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
 
                 }
                 
-                let entities = [ENTITY.nodes, ENTITY.auth, ENTITY.wallets]
+                let entities = [ENTITY.nodes, ENTITY.auth, ENTITY.wallets, ENTITY.seeds, ENTITY.transactions]
                 
                 for entity in entities {
                     
@@ -317,34 +210,43 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                     
                 }
                 
-                if KeyChain.remove(key: "privateKey"), KeyChain.remove(key: "userIdentifier") {
+                var succes = true
+                
+                if KeyChain.remove(key: "userIdentifier") {
                     
-                    let ft = FirstTime()
-                    ft.firstTimeHere { (success) in
-                        
-                        if success {
-                            
-                            displayAlert(viewController: vc, isError: false, message: "app has been reset")
-                            
-                        } else {
-                            
-                            displayAlert(viewController: vc, isError: true, message: "app reset partially failed, please force quit before using the app")
-                            
-                        }
-                        
-                    }
+                    print("private key deleted")
                     
                 } else {
-                    
-                    displayAlert(viewController: vc, isError: true, message: "app reset partially failed")
-                    
+                    succes = false
                 }
+                
+                if KeyChain.remove(key: "acceptedDisclaimer") {
+                    
+                    print("private key deleted")
+                    
+                } else {
+                    succes = false
+                }
+                
+                if KeyChain.remove(key: "privateKey") {
+                    
+                    print("private key deleted")
+                    
+                } else {
+                    succes = false
+                }
+                
+                if succes {
+                    displayAlert(viewController: vc, isError: false, message: "App has been wiped! Force close it and reopen to use.")
+                } else {
+                    displayAlert(viewController: vc, isError: false, message: "App partially wiped...")
+                }                
                 
             }))
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                    
-            self.present(alert, animated: true, completion: nil)
+            alert.popoverPresentationController?.sourceView = vc.settingsTable
+            vc.present(alert, animated: true, completion: nil)
             
         }
         

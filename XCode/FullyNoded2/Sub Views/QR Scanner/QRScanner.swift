@@ -12,6 +12,7 @@ import AVFoundation
 
 class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    var verifying = Bool()
     var scanningBip21 = Bool()
     var scanningRecovery = Bool()
     var isScanningNode = Bool()
@@ -315,8 +316,21 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
             configureLabel()
             configureDetailLabel()
             configureDontHaveAnodeButton()
+            closeButton.alpha = 0
+            
+        } else if verifying {
+            
+            label.text = "Scan an Address to Verify"
+            labelDetail.text = "If you want to be certain the address you are receiving to is the one you expect you can scan it with this tool to ensure they match."
+            configureLabel()
+            configureDetailLabel()
             
         } else if scanningBip21 {
+            
+            label.text = "Scan an Address or BIP21 Invoice"
+            labelDetail.text = "You can scan a Bitcoin address or a BIP21 invoice."
+            configureLabel()
+            configureDetailLabel()
             
         } else {
             
