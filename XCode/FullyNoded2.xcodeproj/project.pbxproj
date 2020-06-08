@@ -18,6 +18,7 @@
 		D04179EF247629D40096F74D /* segwit_addr.c in Sources */ = {isa = PBXBuildFile; fileRef = D04179EE247629D40096F74D /* segwit_addr.c */; };
 		D04179F2247630470096F74D /* BCB32.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04179F1247630470096F74D /* BCB32.swift */; };
 		D042EFA22457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */; };
+		D0457C19248DEBA40028CC9D /* LockedUtxosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0457C18248DEBA40028CC9D /* LockedUtxosViewController.swift */; };
 		D047DDF72423464A004BC26D /* SweepToViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF62423464A004BC26D /* SweepToViewController.swift */; };
 		D047DDF9242B2F3F004BC26D /* IntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */; };
 		D047DDFB242B324A004BC26D /* WhatIsFN2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDFA242B324A004BC26D /* WhatIsFN2ViewController.swift */; };
@@ -184,6 +185,7 @@
 		D04179EE247629D40096F74D /* segwit_addr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = segwit_addr.c; sourceTree = "<group>"; };
 		D04179F1247630470096F74D /* BCB32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BCB32.swift; sourceTree = "<group>"; };
 		D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedNodesSeedViewController.swift; sourceTree = "<group>"; };
+		D0457C18248DEBA40028CC9D /* LockedUtxosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedUtxosViewController.swift; sourceTree = "<group>"; };
 		D047DDF62423464A004BC26D /* SweepToViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SweepToViewController.swift; sourceTree = "<group>"; };
 		D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionViewController.swift; sourceTree = "<group>"; };
 		D047DDFA242B324A004BC26D /* WhatIsFN2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatIsFN2ViewController.swift; sourceTree = "<group>"; };
@@ -561,6 +563,7 @@
 			children = (
 				D0A0EAED23F584C8004F9E15 /* UtxoInfoViewController.swift */,
 				D09D72A823F0F3C000847DC8 /* UTXOViewController.swift */,
+				D0457C18248DEBA40028CC9D /* LockedUtxosViewController.swift */,
 			);
 			path = "UTXO's";
 			sourceTree = "<group>";
@@ -1075,6 +1078,7 @@
 				D09D734223F0F3C000847DC8 /* QuickConnect.swift in Sources */,
 				D09D735D23F0F3C000847DC8 /* CustomButton.swift in Sources */,
 				D047DE0D242D984E004BC26D /* RefillSingleSig.swift in Sources */,
+				D0457C19248DEBA40028CC9D /* LockedUtxosViewController.swift in Sources */,
 				D09D736523F0F3C000847DC8 /* QRScanner.swift in Sources */,
 				D047DE05242B34BA004BC26D /* SignInViewController.swift in Sources */,
 				D09D732423F0F3C000847DC8 /* CreateRawTxViewController.swift in Sources */,

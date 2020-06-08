@@ -10,35 +10,61 @@ import UIKit
 
 class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    var walletName = ""
     var tapQRGesture = UITapGestureRecognizer()
     var tapTextViewGesture = UITapGestureRecognizer()
     let refresher = UIRefreshControl()
-    var utxoArray = [Any]()
+    var utxoArray = [[String:Any]]()
     var address = ""
     var creatingView = ConnectingView()
     var isFirstTime = Bool()
     var utxo = NSDictionary()
-    
     @IBOutlet var utxoTable: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         utxoTable.delegate = self
         utxoTable.dataSource = self
         utxoTable.tableFooterView = UIView(frame: .zero)
         refresh()
-        
+    }
+    
+    @IBAction func goToLocked(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "segueToLockedUtxos", sender: vc)
+        }
     }
     
     @objc func refresh() {
-        
         addSpinner()
         utxoArray.removeAll()
-        
-        executeNodeCommand(method: .listunspent,
-                           param: "0")
-        
+        loadData()
+    }
+    
+    private func loadData() {
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
+            vc.walletName = wallet!.name!
+            if wallet != nil && !error {
+                vc.getUtxos()
+            }
+        }
+    }
+    
+    private func getUtxos() {
+        utxoArray.removeAll()
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.creatingView.label.text = "getting utxo's..."
+        }
+        Reducer.makeCommand(walletName: walletName, command: .listunspent, param: "0") { [unowned vc = self] (object, errorDesc) in
+            if let resultArray = object as? NSArray {
+                vc.parseUnspent(utxos: resultArray)
+            } else {
+                DispatchQueue.main.async {
+                    vc.removeSpinner()
+                    displayAlert(viewController: vc, isError: true, message: "error fetching utxos")
+                }
+            }
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -53,64 +79,42 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 102
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "utxoCell", for: indexPath)
         
         if utxoArray.count > 0 {
             
-            let dict = utxoArray[indexPath.section] as! NSDictionary
+            let dict = utxoArray[indexPath.section]
             let address = cell.viewWithTag(1) as! UILabel
-            let txId = cell.viewWithTag(2) as! UILabel
             let amount = cell.viewWithTag(4) as! UILabel
-            let vout = cell.viewWithTag(6) as! UILabel
-            let solvable = cell.viewWithTag(7) as! UILabel
             let confs = cell.viewWithTag(8) as! UILabel
-            let safe = cell.viewWithTag(9) as! UILabel
-            let spendable = cell.viewWithTag(10) as! UILabel
             let label = cell.viewWithTag(11) as! UILabel
             let infoButton = cell.viewWithTag(12) as! UIButton
-            txId.adjustsFontSizeToFitWidth = true
+            let lockUtxo = cell.viewWithTag(13) as! UIButton
             
             infoButton.addTarget(self, action: #selector(getInfo(_:)), for: .touchUpInside)
             infoButton.restorationIdentifier = "\(indexPath.section)"
             
+            lockUtxo.addTarget(self, action: #selector(lock(_:)), for: .touchUpInside)
+            lockUtxo.restorationIdentifier = "\(indexPath.section)"
+            
             for (key, value) in dict {
                 
-                let keyString = key as! String
-                
-                switch keyString {
+                switch key {
                     
                 case "address":
                     
                     address.text = "\(value)"
                     
-                case "txid":
-                    
-                    txId.text = "txid: \(value)"
-                    
                 case "amount":
                     
                     let dbl = rounded(number: value as! Double)
                     amount.text = dbl.avoidNotation
-                    
-                case "vout":
-                    
-                    vout.text = "vout #\(value)"
-                    
-                case "solvable":
-                    
-                    if (value as! Int) == 1 {
-                        
-                        solvable.text = "Solvable"
-                        solvable.textColor = .systemBlue
-                        
-                    } else if (value as! Int) == 0 {
-                        
-                        solvable.text = "Not Solvable"
-                        solvable.textColor = .systemRed
-                        
-                    }
                     
                 case "confirmations":
                     
@@ -125,34 +129,6 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     }
                     
                     confs.text = "\(value) confs"
-                    
-                case "safe":
-                    
-                    if (value as! Int) == 1 {
-                        
-                        safe.text = "Safe"
-                        safe.textColor = .systemGreen
-                        
-                    } else if (value as! Int) == 0 {
-                        
-                        safe.text = "Not Safe"
-                        safe.textColor = .systemOrange
-                        
-                    }
-                    
-                case "spendable":
-                    
-                    if (value as! Int) == 1 {
-                        
-                        spendable.text = "Node can spend"
-                        spendable.textColor = .systemGreen
-                        
-                    } else if (value as! Int) == 0 {
-                        
-                        spendable.text = "Node can not spend"
-                        spendable.textColor = .systemBlue
-                        
-                    }
                     
                 case "label":
                     
@@ -172,96 +148,82 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
     }
     
+    @objc func lock(_ sender: UIButton) {
+        if sender.restorationIdentifier != nil {
+            if let index = Int(sender.restorationIdentifier!) {
+                promptToLock(utxoArray[index])
+            }
+        }
+    }
+    
+    private func promptToLock(_ utxo: [String:Any]) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Lock UTXO?", message: "Locking this utxo will make it unspendable, the utxo will become unlocked automatically if your node reboots, you can always manually unlock it by tapping the lock button in the top right corner to see all locked utxo's.", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "lock", style: .default, handler: { [unowned vc = self] action in
+                vc.lockUtxo(utxo)
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func lockUtxo(_ utxo: [String:Any]) {
+        creatingView.addConnectingView(vc: self, description: "locking utxo...")
+        let txid = utxo["txid"] as! String
+        let vout = utxo["vout"] as! Int
+        let param = "false, ''[{\"txid\":\"\(txid)\",\"vout\":\(vout)}]''"
+        Reducer.makeCommand(walletName: walletName, command: .lockunspent, param: param) { [unowned vc = self] (object, errorDescription) in
+            if let _ = object as? Bool {
+                displayAlert(viewController: vc, isError: false, message: "utxo locked")
+                vc.getUtxos()
+            } else {
+                vc.removeSpinner()
+                showAlert(vc: vc, title: "Error", message: "There was an error unlocking your utxo: \(errorDescription ?? "unknown")")
+            }
+        }
+    }
+    
     @objc func getInfo(_ sender: UIButton) {
-     
-        let index = Int(sender.restorationIdentifier!)!
-        utxo = utxoArray[index] as! NSDictionary
-        let impact = UIImpactFeedbackGenerator()
-        
-        DispatchQueue.main.async {
-            
-            impact.impactOccurred()
-            self.performSegue(withIdentifier: "utxoInfo", sender: self)
-            
-        }
-    }
-    
-    func parseUnspent(utxos: NSArray) {
-        
-        if utxos.count > 0 {
-            
-            self.utxoArray = (utxos as NSArray).sortedArray(using: [NSSortDescriptor(key: "confirmations", ascending: true)]) as! [[String:AnyObject]]
-            
-            DispatchQueue.main.async {
-                
-                self.removeSpinner()
-                self.utxoTable.reloadData()
-                
-            }
-            
-        } else {
-            
-            self.removeSpinner()
-            
-            displayAlert(viewController: self,
-                         isError: true,
-                         message: "No UTXO's")
-            
-        }
-        
-    }
-    
-    func executeNodeCommand(method: BTC_CLI_COMMAND, param: String) {
-        
-        getActiveWalletNow { (wallet, error) in
-            
-            if wallet != nil && !error {
-                
-                Reducer.makeCommand(walletName: wallet!.name!, command: method, param: param) { [unowned vc = self] (object, errorDesc) in
-                    
-                    if let resultArray = object as? NSArray {
-                        
-                        vc.parseUnspent(utxos: resultArray)
-                        
-                    } else {
-                        
-                        DispatchQueue.main.async {
-                            
-                            vc.removeSpinner()
-                            displayAlert(viewController: vc, isError: true, message: "error fetching utxos")
-                                                
-                        }
-                        
-                    }
-                    
+        if sender.restorationIdentifier != nil {
+            if let index = Int(sender.restorationIdentifier!) {
+                utxo = utxoArray[index] as NSDictionary
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.performSegue(withIdentifier: "utxoInfo", sender: vc)
                 }
-                
             }
-            
         }
-                
     }
     
-    func removeSpinner() {
-        
-        DispatchQueue.main.async {
-            
-            self.refresher.endRefreshing()
-            self.creatingView.removeConnectingView()
-            
+    private func parseUnspent(utxos: NSArray) {
+        if utxos.count > 0 {
+            utxoArray = (utxos as NSArray).sortedArray(using: [NSSortDescriptor(key: "confirmations", ascending: true)]) as! [[String:AnyObject]]
+            loadTable()
+            removeSpinner()
+        } else {
+            loadTable()
+            removeSpinner()
+            showAlert(vc: self, title: "No unlocked UTXO's", message: "If you have any locked UTXO's you can interact with them by tapping the lock button in the top right corner.")
         }
+    }
+    
+    private func loadTable() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.utxoTable.reloadData()
+        }
+    }
         
+    func removeSpinner() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.refresher.endRefreshing()
+            vc.creatingView.removeConnectingView()
+        }
     }
     
     func addSpinner() {
-        
-        DispatchQueue.main.async {
-            
-            self.creatingView.addConnectingView(vc: self,
-                                                description: "Getting UTXOs")
-            
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.creatingView.addConnectingView(vc: self, description: "Getting UTXOs")
         }
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

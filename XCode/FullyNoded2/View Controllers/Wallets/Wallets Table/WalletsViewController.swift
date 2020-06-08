@@ -113,7 +113,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             creatingView.addConnectingView(vc: self, description: "loading accounts")
                         
             CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
-                print("wallets = \(wallets)")
                                                 
                 if errorDescription == nil {
                     
