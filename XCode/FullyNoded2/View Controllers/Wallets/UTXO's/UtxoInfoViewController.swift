@@ -10,12 +10,11 @@ import UIKit
 
 class UtxoInfoViewController: UIViewController {
     
-    var utxo = NSDictionary()
+    var utxo = [String:Any]()
     @IBOutlet var textView: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         textView.text = "\(utxo)"
     }
     
