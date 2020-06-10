@@ -2195,7 +2195,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="jXp-xP-J4h">
-                                <rect key="frame" x="0.0" y="319" width="375" height="231"/>
+                                <rect key="frame" x="0.0" y="356" width="375" height="194"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="375" id="dAH-4K-TTt"/>
@@ -2305,18 +2305,21 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                     <action selector="tryRawNow:" destination="pUo-bf-sNm" eventType="touchUpInside" id="7lb-nH-UBN"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hCl-Q8-hd5">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="CbZ-8G-6aB">
                                 <rect key="frame" x="16" y="241" width="51" height="31"/>
                                 <color key="onTintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="thumbTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="spendChangeAction:" destination="pUo-bf-sNm" eventType="valueChanged" id="xRt-XJ-2by"/>
+                                </connections>
                             </switch>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Lbs-WQ-4zp">
                                 <rect key="frame" x="16" y="280" width="51" height="31"/>
                                 <color key="onTintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="thumbTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="spendDustAction:" destination="pUo-bf-sNm" eventType="valueChanged" id="6DT-gX-7jv"/>
+                                </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="do not spend change" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fjA-7h-veh">
                                 <rect key="frame" x="73" y="249" width="120" height="15"/>
@@ -2330,6 +2333,18 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lld-wI-YhN">
+                                <rect key="frame" x="16" y="318" width="135" height="30"/>
+                                <state key="normal" title="manual coin control">
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="coinControlAction:" destination="pUo-bf-sNm" eventType="touchUpInside" id="huE-qp-clQ"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hCl-Q8-hd5">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -2351,6 +2366,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="EVv-F0-8a1" firstAttribute="top" secondItem="jXp-xP-J4h" secondAttribute="bottom" constant="29.5" id="9sd-te-3ke"/>
                             <constraint firstItem="Ipy-yo-xxh" firstAttribute="top" secondItem="EVv-F0-8a1" secondAttribute="bottom" id="C8j-Jf-Bvd"/>
                             <constraint firstItem="jXp-xP-J4h" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" id="HMJ-p4-PHt"/>
+                            <constraint firstItem="lld-wI-YhN" firstAttribute="top" secondItem="Lbs-WQ-4zp" secondAttribute="bottom" constant="7" id="JtP-Qg-bup"/>
                             <constraint firstItem="uIC-Eu-XZD" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="LUf-xe-94t"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="vds-w7-arV" secondAttribute="trailing" constant="16" id="Mj4-Xk-115"/>
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" id="OxE-DM-w3a"/>
@@ -2363,6 +2379,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="LiM-LT-3Xz" secondAttribute="trailing" constant="16" id="Y0r-fO-mrB"/>
                             <constraint firstItem="WP2-Zk-iPW" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="ZMe-Mx-WXx"/>
                             <constraint firstItem="n6j-yg-uLt" firstAttribute="leading" secondItem="EVv-F0-8a1" secondAttribute="trailing" constant="8" id="b3p-jQ-kKi"/>
+                            <constraint firstItem="lld-wI-YhN" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="bEy-Sx-rIl"/>
                             <constraint firstItem="CbZ-8G-6aB" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="bGH-4e-Hyf"/>
                             <constraint firstItem="Ipy-yo-xxh" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="hTx-zY-ARt"/>
                             <constraint firstItem="WBT-v4-ipz" firstAttribute="top" secondItem="WP2-Zk-iPW" secondAttribute="bottom" constant="2" id="haY-qi-1oz"/>
@@ -2371,7 +2388,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="fjA-7h-veh" firstAttribute="centerY" secondItem="CbZ-8G-6aB" secondAttribute="centerY" id="lBe-PN-CYL"/>
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="bottom" secondItem="C0H-pw-RSl" secondAttribute="bottom" id="nv9-qL-otg"/>
                             <constraint firstItem="LiM-LT-3Xz" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="oKT-DP-1ye"/>
-                            <constraint firstItem="jXp-xP-J4h" firstAttribute="top" secondItem="Lbs-WQ-4zp" secondAttribute="bottom" constant="8" id="p96-hP-FQU"/>
+                            <constraint firstItem="jXp-xP-J4h" firstAttribute="top" secondItem="lld-wI-YhN" secondAttribute="bottom" constant="8" id="pqO-ZB-Q2P"/>
                             <constraint firstItem="n6j-yg-uLt" firstAttribute="centerY" secondItem="EVv-F0-8a1" secondAttribute="centerY" id="rf9-jE-vqW"/>
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="trailing" secondItem="C0H-pw-RSl" secondAttribute="trailing" id="sCh-Gb-jd7"/>
                             <constraint firstItem="AUX-To-gKI" firstAttribute="centerY" secondItem="Lbs-WQ-4zp" secondAttribute="centerY" id="sa7-iN-feC"/>
@@ -2394,12 +2411,17 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <outlet property="availableBalance" destination="6jp-Ka-1Xg" id="d7g-QE-tRK"/>
                         <outlet property="blockTargetOutlet" destination="LiM-LT-3Xz" id="H95-zb-QWk"/>
                         <outlet property="createOutlet" destination="QCt-8G-YWG" id="Wqp-2w-nlL"/>
+                        <outlet property="doNotSpendChangeLabel" destination="fjA-7h-veh" id="g1h-Vy-UWq"/>
+                        <outlet property="doNotSpendDustLabel" destination="AUX-To-gKI" id="1dM-2B-Abw"/>
                         <outlet property="feeSliderOutlet" destination="Ipy-yo-xxh" id="rHx-JP-mDx"/>
                         <outlet property="outputsTable" destination="jXp-xP-J4h" id="y02-Rq-oD9"/>
                         <outlet property="receivingLabel" destination="uIC-Eu-XZD" id="wYg-jj-lxo"/>
                         <outlet property="scannerButton" destination="ynQ-Sz-wh0" id="7Kg-PV-l2l"/>
+                        <outlet property="spendChangeSwitch" destination="CbZ-8G-6aB" id="k1Q-1Y-k6j"/>
+                        <outlet property="spendDustSwitch" destination="Lbs-WQ-4zp" id="Brs-Gr-SL5"/>
                         <segue destination="xB3-mY-13p" kind="show" identifier="goConfirm" id="cZz-Rg-m7M"/>
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="scanBip21Segue" id="zTj-XW-s3J"/>
+                        <segue destination="qYd-Xi-rqO" kind="show" identifier="segueToCoinControl" id="l1a-Jv-Q1K"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BlL-9x-Sif" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -4130,7 +4152,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="   UTXO's                " image="list.number" catalog="system">
+                                <state key="normal" title="   Coin Control         " image="gamecontroller" catalog="system">
                                     <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -5974,6 +5996,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="vbG-Ex-JNf"/>
         <segue reference="9Ib-wE-7tm"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="uaX-te-aDX"/>
@@ -6010,13 +6033,13 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <image name="eye.fill" catalog="system" width="128" height="78"/>
         <image name="flame" catalog="system" width="109" height="128"/>
         <image name="folder" catalog="system" width="128" height="95"/>
+        <image name="gamecontroller" catalog="system" width="128" height="82"/>
         <image name="gear" catalog="system" width="128" height="119"/>
         <image name="hand.thumbsup" catalog="system" width="128" height="128"/>
         <image name="heart" catalog="system" width="128" height="109"/>
         <image name="house" catalog="system" width="128" height="110"/>
         <image name="info.circle" catalog="system" width="128" height="121"/>
         <image name="key.png" width="90" height="90"/>
-        <image name="list.number" catalog="system" width="128" height="97"/>
         <image name="lock" catalog="system" width="128" height="128"/>
         <image name="lock.circle" catalog="system" width="128" height="121"/>
         <image name="lock.open" catalog="system" width="128" height="112"/>

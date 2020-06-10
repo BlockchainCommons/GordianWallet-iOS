@@ -10,6 +10,7 @@ import UIKit
 
 class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UINavigationControllerDelegate {
     
+    var walletName:String!
     var spendable = Double()
     var rawTxUnsigned = String()
     var incompletePsbt = String()
@@ -36,7 +37,10 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     @IBOutlet weak var feeSliderOutlet: UISlider!
     @IBOutlet weak var blockTargetOutlet: UILabel!
     @IBOutlet weak var scannerButton: UIBarButtonItem!
-    
+    @IBOutlet weak var spendChangeSwitch: UISwitch!
+    @IBOutlet weak var spendDustSwitch: UISwitch!
+    @IBOutlet weak var doNotSpendChangeLabel: UILabel!
+    @IBOutlet weak var doNotSpendDustLabel: UILabel!
     
     let creatingView = ConnectingView()
     var outputArray = [[String:String]]()
@@ -63,22 +67,33 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         let ud = UserDefaults.standard
         
         if ud.object(forKey: "feeTarget") != nil {
-            
             let numberOfBlocks = ud.object(forKey: "feeTarget") as! Int
             feeSliderOutlet.value = Float(numberOfBlocks) * -1
             updateFeeLabel(label: blockTargetOutlet, numberOfBlocks: numberOfBlocks)
-            
         } else {
-            
             blockTargetOutlet.text = "Minimum fee set"
             feeSliderOutlet.value = 432 * -1
-            
+        }
+        
+        let doNotSpendChangeIsOn = ud.object(forKey: "doNotSpendChange") as? Bool ?? false
+        spendChangeSwitch.setOn(doNotSpendChangeIsOn, animated: true)
+        if spendChangeSwitch.isOn {
+            doNotSpendChangeLabel.textColor = .lightGray
+        } else {
+            doNotSpendChangeLabel.textColor = .darkGray
+        }
+        
+        let doNotSpendDustIsOn = ud.object(forKey: "doNotSpendDust") as? Bool ?? false
+        spendDustSwitch.setOn(doNotSpendDustIsOn, animated: true)
+        if spendDustSwitch.isOn {
+            doNotSpendDustLabel.textColor = .lightGray
+        } else {
+            doNotSpendDustLabel.textColor = .darkGray
         }
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        
         amount = ""
         outputs.removeAll()
         outputArray.removeAll()
@@ -87,47 +102,216 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         incompletePsbt = ""
         rawTxSigned = ""
         outputsTable.alpha = 0
-        
-        getActiveWalletNow() { (wallet, error) in
-            
-            if wallet != nil {
-                
-                NodeLogic.sharedInstance.loadWalletData(wallet: wallet!) { (success, dictToReturn, errorDesc) in
-                    
-                    if success && dictToReturn != nil {
-                        let s = HomeStruct(dictionary: dictToReturn!)
-                        let btc = (s.coldBalance).doubleValue
-                        let fiat = s.fiatBalance
-                        
-                        DispatchQueue.main.async { [unowned vc = self] in
-                            vc.availableBalance.text = "\(btc) btc / \(fiat) available"
-                            vc.availableBalance.alpha = 1
-                            
-                        }
-                        
-                    }
-                    
-                }
-                                
-            }
-            
-        }
+        updateAvailableBalance()
         
         if amountInput.text != "" && addressInput.text != "" {
             createOutlet.alpha = 1
             addOutlet.alpha = 1
-            
         } else {
             createOutlet.alpha = 0
             addOutlet.alpha = 0
-            
         }
-        
+    }
+    
+    private func updateAvailableBalance() {
+        getActiveWalletNow() { [unowned vc = self] (wallet, error) in
+            if wallet != nil {
+                vc.walletName = wallet!.name!
+                
+                func getBalance() {
+                    NodeLogic.sharedInstance.loadWalletData(wallet: wallet!) { (success, dictToReturn, errorDesc) in
+                        if success && dictToReturn != nil {
+                            let s = HomeStruct(dictionary: dictToReturn!)
+                            let btc = (s.coldBalance).doubleValue
+                            let fiat = s.fiatBalance
+                            DispatchQueue.main.async { [unowned vc = self] in
+                                vc.availableBalance.text = "\(btc) btc / \(fiat) available"
+                                vc.availableBalance.alpha = 1
+                            }
+                        }
+                    }
+                }
+                
+                if vc.spendChangeSwitch.isOn || vc.spendDustSwitch.isOn {
+                    vc.lockUtxosNow { _ in
+                        vc.creatingView.removeConnectingView()
+                        getBalance()
+                    }
+                } else {
+                    vc.creatingView.removeConnectingView()
+                    getBalance()
+                }
+                
+            }
+        }
+    }
+    
+    @IBAction func spendChangeAction(_ sender: Any) {
+        let ud = UserDefaults.standard
+        ud.set(spendChangeSwitch.isOn, forKey: "doNotSpendChange")
+        if spendChangeSwitch.isOn {
+            creatingView.addConnectingView(vc: self, description: "locking *all* change utxos...")
+            doNotSpendChangeLabel.textColor = .lightGray
+            updateAvailableBalance()
+        } else {
+            doNotSpendChangeLabel.textColor = .darkGray
+            unlockChangeUtxosNow { [unowned vc = self] success in
+                if success {
+                    displayAlert(viewController: vc, isError: false, message: "change utxo's unlocked")
+                    vc.updateAvailableBalance()
+                } else {
+                    showAlert(vc: vc, title: "Error", message: "There was an error unlocking those utxo's and/or syncing our local database...")
+                    vc.updateAvailableBalance()
+                }
+            }
+        }
+    }
+    
+    @IBAction func spendDustAction(_ sender: Any) {
+        let ud = UserDefaults.standard
+        ud.set(spendDustSwitch.isOn, forKey: "doNotSpendDust")
+        if spendDustSwitch.isOn {
+            creatingView.addConnectingView(vc: self, description: "locking *all* dust utxos...")
+            doNotSpendDustLabel.textColor = .lightGray
+            updateAvailableBalance()
+        } else {
+            doNotSpendDustLabel.textColor = .darkGray
+            unlockDustUtxosNow { [unowned vc = self] success in
+                if success {
+                    displayAlert(viewController: vc, isError: false, message: "dust utxo's unlocked")
+                    vc.updateAvailableBalance()
+                } else {
+                    showAlert(vc: vc, title: "Error", message: "There was an error unlocking those utxo's and/or syncing our local database...")
+                    vc.updateAvailableBalance()
+                }
+            }
+        }
     }
     
     @IBAction func scannerAction(_ sender: Any) {
         DispatchQueue.main.async { [unowned vc = self] in
             vc.performSegue(withIdentifier: "scanBip21Segue", sender: vc)
+        }
+    }
+    
+    private func unlockChangeUtxosNow(completion: @escaping ((Bool)) -> Void) {
+        creatingView.addConnectingView(vc: self, description: "unlocking *all* change utxos...")
+        var utxosToUnlock = [[String:Any]]()
+        Reducer.makeCommand(walletName: walletName ?? "", command: .listlockunspent, param: "") { (object, errorDescription) in
+            if let utxos = object as? NSArray {
+                if utxos.count > 0 {
+                    for (i, utxo) in utxos.enumerated() {
+                        let dict = utxo as! [String:Any]
+                        let txid = dict["txid"] as! String
+                        let vout = dict["vout"] as! Int
+                        CoreDataService.retrieveEntity(entityName: .lockedUtxos) { [unowned vc = self] (lockedUtxos, errorDescription) in
+                            if lockedUtxos != nil {
+                                if lockedUtxos!.count > 0 {
+                                    for (x, lockedUtxo) in lockedUtxos!.enumerated() {
+                                        let str = LockedUtxoStruct.init(dictionary: lockedUtxo)
+                                        if vc.isChange(str.desc) && txid == str.txid && vout == str.vout {
+                                            utxosToUnlock.append(dict)
+                                            if i + 1 == utxos.count && x + 1 == lockedUtxos!.count {
+                                                CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
+                                                    completion(success)
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
+                                        completion(success)
+                                    }
+                                }
+                            } else {
+                                CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
+                                    completion(success)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    completion(false)
+                }
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
+    private func unlockDustUtxosNow(completion: @escaping ((Bool)) -> Void) {
+        creatingView.addConnectingView(vc: self, description: "unlocking *all* dust utxos...")
+        var utxosToUnlock = [[String:Any]]()
+        Reducer.makeCommand(walletName: walletName ?? "", command: .listlockunspent, param: "") { (object, errorDescription) in
+            if let utxos = object as? NSArray {
+                if utxos.count > 0 {
+                    for (i, utxo) in utxos.enumerated() {
+                        let dict = utxo as! [String:Any]
+                        let txid = dict["txid"] as! String
+                        let vout = dict["vout"] as! Int
+                        CoreDataService.retrieveEntity(entityName: .lockedUtxos) { (lockedUtxos, errorDescription) in
+                            if lockedUtxos != nil {
+                                if lockedUtxos!.count > 0 {
+                                    for (x, lockedUtxo) in lockedUtxos!.enumerated() {
+                                        let str = LockedUtxoStruct.init(dictionary: lockedUtxo)
+                                        if str.amount < 0.00010000 && txid == str.txid && vout == str.vout {
+                                            utxosToUnlock.append(dict)
+                                        }
+                                        if i + 1 == utxos.count && x + 1 == lockedUtxos!.count {
+                                            CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
+                                                completion(success)
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
+                                        completion(success)
+                                    }
+                                }
+                            } else {
+                                CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
+                                    completion(success)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    completion(false)
+                }
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
+    private func lockUtxosNow(completion: @escaping ((Bool)) -> Void) {
+        var utxosToLock = [[String:Any]]()
+        Reducer.makeCommand(walletName: walletName ?? "", command: .listunspent, param: "0") { (object, errorDescription) in
+            if let utxos = object as? NSArray {
+                for (i, utxo) in utxos.enumerated() {
+                    let dict = utxo as! [String:Any]
+                    let desc = dict["desc"] as! String
+                    let amount = dict["amount"] as! Double
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        if vc.spendChangeSwitch.isOn && vc.isChange(desc) {
+                            utxosToLock.append(dict)
+                        } else if vc.spendDustSwitch.isOn && amount < 0.00010000 {
+                            utxosToLock.append(dict)
+                        }
+                        if i + 1 == utxos.count {
+                            CoinControl.lockUtxos(utxos: utxosToLock, completion: completion)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func isChange(_ desc: String) -> Bool {
+        if desc.contains("/1/") {
+            return true
+        } else {
+            return false
         }
     }
     
@@ -237,6 +421,12 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     
     // MARK: User Actions
     
+    @IBAction func coinControlAction(_ sender: Any) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "segueToCoinControl", sender: vc)
+        }
+    }
+    
     func confirm(raw: String) {
         
         DispatchQueue.main.async { [unowned vc = self] in
@@ -305,25 +495,16 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 getActiveWalletNow { (wallet, error) in
                     
                     if !error && wallet != nil {
-                        
                         vc.tryRaw()
                         
                     } else {
-                        
                         noNodeOrWallet()
-                        
                     }
-                    
                 }
-                
             } else {
-                
                 noNodeOrWallet()
-                
             }
-            
         }
-        
     }
     
     @objc func tryRaw() {

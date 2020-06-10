@@ -19,7 +19,12 @@ class UtxoInfoViewController: UIViewController {
         var text = ""
         for (key, value) in utxo {
             if key != "id" {
-                text += "\(key): \(value)\n\n"
+                if key == "amount" {
+                    text += "\(key): \((value as! Double).avoidNotation)\n\n"
+                } else {
+                    text += "\(key): \(value)\n\n"
+                }
+                
             }
         }
         textView.text = text

@@ -247,7 +247,7 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let label = cell.viewWithTag(11) as! UILabel
             let infoButton = cell.viewWithTag(12) as! UIButton
             infoButton.addTarget(self, action: #selector(getInfo(_:)), for: .touchUpInside)
-            infoButton.restorationIdentifier = "\(indexPath.section)"
+            infoButton.restorationIdentifier = "\(indexPath.row)"
             
             for (key, value) in dict {
                 switch key {
@@ -424,14 +424,22 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     private func updateUtxosToLock() {
         if utxosToLock.count > 0 {
-            var utxos = [String]()
-            for (i, utxoToLock) in utxosToLock.enumerated() {
-                let txid = utxoToLock["txid"] as! String
-                let vout = utxoToLock["vout"] as! Int
-                let dict = "{\"txid\":\"\(txid)\",\"vout\":\(vout)}"
-                utxos.append(dict)
-                if i + 1 == utxosToLock.count {
-                    lockUtxos(process(utxos))
+            DispatchQueue.main.async { [unowned vc = self] in
+                vc.creatingView.label.text = "locking utxo's..."
+            }
+            CoinControl.lockUtxos(utxos: utxosToLock) { [unowned vc = self] success in
+                if success {
+                    displayAlert(viewController: vc, isError: false, message: "utxo's locked")
+                    if vc.utxosToUnlock.count > 0 {
+                        vc.updateUtxosToUnlock()
+                    } else {
+                        vc.cancelEditing()
+                        vc.getUtxos()
+                    }
+                } else {
+                    vc.cancelEditing()
+                    vc.removeSpinner()
+                    showAlert(vc: vc, title: "Error", message: "There was an error locking your utxo's")
                 }
             }
         } else {
@@ -441,18 +449,23 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     private func updateUtxosToUnlock() {
         if utxosToUnlock.count > 0 {
-            var utxos = [String]()
-            for (i, utxoToUnlock) in utxosToUnlock.enumerated() {
-                let txid = utxoToUnlock["txid"] as! String
-                let vout = utxoToUnlock["vout"] as! Int
-                let dict = "{\"txid\":\"\(txid)\",\"vout\":\(vout)}"
-                utxos.append(dict)
-                if i + 1 == utxosToUnlock.count {
-                    unlockUtxos(process(utxos))
+            DispatchQueue.main.async { [unowned vc = self] in
+                vc.creatingView.label.text = "unlocking utxo..."
+            }
+            CoinControl.unlockUtxos(utxos: utxosToUnlock) { [unowned vc = self] success in
+                if success {
+                    displayAlert(viewController: vc, isError: false, message: "utxo's unlocked")
+                    vc.cancelEditing()
+                    vc.getUtxos()
+                } else {
+                    vc.cancelEditing()
+                    vc.removeSpinner()
+                    showAlert(vc: vc, title: "Error", message: "There was an error unlocking your utxo's.")
                 }
             }
         } else {
             cancelEditing()
+            removeSpinner()
         }
     }
     
@@ -462,46 +475,6 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         processedUtxos = processedUtxos.replacingOccurrences(of: "\"[", with: "[")
         processedUtxos = processedUtxos.replacingOccurrences(of: "]\"", with: "]")
         return processedUtxos.replacingOccurrences(of: "\\\"", with: "\"")
-    }
-    
-    private func lockUtxos(_ utxos: String) {
-        DispatchQueue.main.async { [unowned vc = self] in
-            vc.creatingView.label.text = "locking utxo..."
-        }
-        let param = "false, ''\(utxos)''"
-        Reducer.makeCommand(walletName: walletName, command: .lockunspent, param: param) { [unowned vc = self] (object, errorDescription) in
-            if let _ = object as? Bool {
-                displayAlert(viewController: vc, isError: false, message: "utxo's locked")
-                if vc.utxosToUnlock.count > 0 {
-                    vc.updateUtxosToUnlock()
-                } else {
-                    vc.cancelEditing()
-                    vc.getUtxos()
-                }
-            } else {
-                vc.cancelEditing()
-                vc.removeSpinner()
-                showAlert(vc: vc, title: "Error", message: "There was an error locking your utxo: \(errorDescription ?? "unknown")")
-            }
-        }
-    }
-    
-    private func unlockUtxos(_ utxos: String) {
-        DispatchQueue.main.async { [unowned vc = self] in
-            vc.creatingView.label.text = "unlocking utxo..."
-        }
-        let param = "true, ''\(utxos)''"
-        Reducer.makeCommand(walletName: walletName, command: .lockunspent, param: param) { [unowned vc = self] (object, errorDescription) in
-            if let _ = object as? Bool {
-                displayAlert(viewController: vc, isError: false, message: "utxo's unlocked")
-                vc.cancelEditing()
-                vc.getUtxos()
-            } else {
-                vc.cancelEditing()
-                vc.removeSpinner()
-                showAlert(vc: vc, title: "Error", message: "There was an error unlocking your utxo: \(errorDescription ?? "unknown")")
-            }
-        }
     }
     
     @objc func getInfo(_ sender: UIButton) {
