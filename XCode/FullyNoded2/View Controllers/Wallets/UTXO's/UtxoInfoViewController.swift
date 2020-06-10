@@ -15,7 +15,14 @@ class UtxoInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textView.text = "\(utxo)"
+        textView.isEditable = false
+        var text = ""
+        for (key, value) in utxo {
+            if key != "id" {
+                text += "\(key): \(value)\n\n"
+            }
+        }
+        textView.text = text
     }
     
     @IBAction func close(_ sender: Any) {

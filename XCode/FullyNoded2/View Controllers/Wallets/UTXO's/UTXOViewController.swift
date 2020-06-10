@@ -135,9 +135,25 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
+            return unlockedCellHeight()
+        } else {
+            return lockedCellHeight()
+        }
+    }
+    
+    private func unlockedCellHeight() -> CGFloat {
+        if unlockedUtxoArray.count > 0 {
             return 121
         } else {
+            return 47
+        }
+    }
+    
+    private func lockedCellHeight() -> CGFloat {
+        if lockedUtxoArray.count > 0 {
             return 81
+        } else {
+            return 47
         }
     }
     
@@ -303,22 +319,65 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let header = UIView()
         header.backgroundColor = UIColor.clear
         header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 30)
+        
         let textLabel = UILabel()
         textLabel.textAlignment = .left
         textLabel.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
         textLabel.textColor = .systemGray
         textLabel.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+        
+        let unlockAllButton = UIButton()
+        unlockAllButton.setTitle("unlock all", for: .normal)
+        unlockAllButton.setTitleColor(.systemTeal, for: .normal)
+        unlockAllButton.titleLabel?.textAlignment = .right
+        unlockAllButton.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        unlockAllButton.addTarget(self, action: #selector(unlockAll), for: .touchUpInside)
+        unlockAllButton.frame = CGRect(x: header.frame.maxX - 95, y: 0, width: 80, height: 30)
+        
+        let lockAllButton = UIButton()
+        lockAllButton.setTitle("  lock all", for: .normal)
+        lockAllButton.setTitleColor(.systemTeal, for: .normal)
+        lockAllButton.titleLabel?.textAlignment = .right
+        lockAllButton.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+        lockAllButton.addTarget(self, action: #selector(lockAll), for: .touchUpInside)
+        lockAllButton.frame = CGRect(x: header.frame.maxX - 95, y: 0, width: 80, height: 30)
+        
         if section == 0 {
             textLabel.text = "Unlocked"
+            header.addSubview(lockAllButton)
         } else {
             textLabel.text = "Locked"
+            header.addSubview(unlockAllButton)
         }
+        
         header.addSubview(textLabel)
         return header
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 30
+    }
+    
+    @objc func unlockAll() {
+        if lockedUtxoArray.count > 0 {
+            for utxo in lockedUtxoArray {
+                utxosToUnlock.append(utxo)
+            }
+            promptToEdit()
+        } else {
+            showAlert(vc: self, title: "No utxos to lock", message: "")
+        }
+    }
+    
+    @objc func lockAll() {
+        if unlockedUtxoArray.count > 0 {
+            for utxo in unlockedUtxoArray {
+                utxosToLock.append(utxo)
+            }
+            promptToEdit()
+        } else {
+            showAlert(vc: self, title: "No utxos to unlock", message: "")
+        }
     }
     
     @objc func getLockedInfo(_ sender: UIButton) {

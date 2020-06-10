@@ -17,6 +17,7 @@ class LockedUtxosViewController: UIViewController, UINavigationControllerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.delegate = self
+        textView.isEditable = false
         getTransaction()
     }
     
@@ -51,7 +52,14 @@ class LockedUtxosViewController: UIViewController, UINavigationControllerDelegat
                 if let dict = output as? NSDictionary, let txVout = dict["vout"] as? Int {
                     if vout == txVout {
                         DispatchQueue.main.async { [unowned vc = self] in
-                            vc.textView.text = "\(output)"
+                            var text = ""
+                            text = "txid: \(transaction["txid"] as! String)\n\n"
+                            for (key, value) in (output as! NSDictionary) {
+                                if (key as! String) != "category" {
+                                    text += "\(key): \(value)\n\n"
+                                }
+                            }
+                            vc.textView.text = text
                             vc.removeSpinner()
                         }
                     }

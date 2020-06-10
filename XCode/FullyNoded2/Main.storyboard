@@ -2195,7 +2195,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="jXp-xP-J4h">
-                                <rect key="frame" x="0.0" y="241" width="375" height="309"/>
+                                <rect key="frame" x="0.0" y="319" width="375" height="231"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="375" id="dAH-4K-TTt"/>
@@ -2308,21 +2308,45 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hCl-Q8-hd5">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="CbZ-8G-6aB">
+                                <rect key="frame" x="16" y="241" width="51" height="31"/>
+                                <color key="onTintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="thumbTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </switch>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Lbs-WQ-4zp">
+                                <rect key="frame" x="16" y="280" width="51" height="31"/>
+                                <color key="onTintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="thumbTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="do not spend change" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fjA-7h-veh">
+                                <rect key="frame" x="73" y="249" width="120" height="15"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="do not spend dust" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUX-To-gKI">
+                                <rect key="frame" x="73" y="288" width="103" height="15"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="jXp-xP-J4h" firstAttribute="top" secondItem="yUR-gC-Jjg" secondAttribute="bottom" constant="8" id="0mI-FM-4NS"/>
                             <constraint firstItem="yUR-gC-Jjg" firstAttribute="top" secondItem="vds-w7-arV" secondAttribute="bottom" constant="8" id="1XP-wj-Trb"/>
                             <constraint firstItem="yUR-gC-Jjg" firstAttribute="leading" secondItem="vds-w7-arV" secondAttribute="leading" id="1fy-X0-OMg"/>
                             <constraint firstItem="WP2-Zk-iPW" firstAttribute="top" secondItem="6jp-Ka-1Xg" secondAttribute="bottom" constant="5.5" id="1yF-Th-58K"/>
                             <constraint firstItem="vds-w7-arV" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="2BM-5g-VLP"/>
+                            <constraint firstItem="AUX-To-gKI" firstAttribute="leading" secondItem="Lbs-WQ-4zp" secondAttribute="trailing" constant="8" id="2K0-mi-Dn3"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="Ipy-yo-xxh" secondAttribute="trailing" constant="16" id="477-2q-0mw"/>
                             <constraint firstItem="QCt-8G-YWG" firstAttribute="top" secondItem="vds-w7-arV" secondAttribute="bottom" constant="8" id="47t-6O-ya0"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="jXp-xP-J4h" secondAttribute="trailing" id="561-gS-kW0"/>
                             <constraint firstItem="WBT-v4-ipz" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="732-BP-c7w"/>
                             <constraint firstItem="6jp-Ka-1Xg" firstAttribute="top" secondItem="C0H-pw-RSl" secondAttribute="top" constant="9" id="7Kz-bN-YV6"/>
                             <constraint firstItem="EVv-F0-8a1" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="84m-jQ-j6T"/>
+                            <constraint firstItem="Lbs-WQ-4zp" firstAttribute="top" secondItem="CbZ-8G-6aB" secondAttribute="bottom" constant="8" id="8Jc-8r-zUD"/>
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="top" secondItem="DIN-Fg-EH6" secondAttribute="top" id="9aj-Tf-f3P"/>
+                            <constraint firstItem="fjA-7h-veh" firstAttribute="leading" secondItem="CbZ-8G-6aB" secondAttribute="trailing" constant="8" id="9eF-KC-TiJ"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="bottom" secondItem="LiM-LT-3Xz" secondAttribute="bottom" constant="15.5" id="9k9-lL-dVH"/>
                             <constraint firstItem="EVv-F0-8a1" firstAttribute="top" secondItem="jXp-xP-J4h" secondAttribute="bottom" constant="29.5" id="9sd-te-3ke"/>
                             <constraint firstItem="Ipy-yo-xxh" firstAttribute="top" secondItem="EVv-F0-8a1" secondAttribute="bottom" id="C8j-Jf-Bvd"/>
@@ -2333,18 +2357,24 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="QCt-8G-YWG" secondAttribute="trailing" constant="16" id="QBS-V5-A63"/>
                             <constraint firstItem="uIC-Eu-XZD" firstAttribute="top" secondItem="WBT-v4-ipz" secondAttribute="bottom" constant="8" id="S0e-7C-w5o"/>
                             <constraint firstItem="LiM-LT-3Xz" firstAttribute="top" secondItem="Ipy-yo-xxh" secondAttribute="bottom" constant="-1" id="VI2-We-knv"/>
+                            <constraint firstItem="CbZ-8G-6aB" firstAttribute="top" secondItem="yUR-gC-Jjg" secondAttribute="bottom" constant="8" id="WRD-Qq-alr"/>
+                            <constraint firstItem="Lbs-WQ-4zp" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="XgN-GB-afq"/>
                             <constraint firstItem="6jp-Ka-1Xg" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="XmC-VO-PkA"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="LiM-LT-3Xz" secondAttribute="trailing" constant="16" id="Y0r-fO-mrB"/>
                             <constraint firstItem="WP2-Zk-iPW" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="ZMe-Mx-WXx"/>
                             <constraint firstItem="n6j-yg-uLt" firstAttribute="leading" secondItem="EVv-F0-8a1" secondAttribute="trailing" constant="8" id="b3p-jQ-kKi"/>
+                            <constraint firstItem="CbZ-8G-6aB" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="bGH-4e-Hyf"/>
                             <constraint firstItem="Ipy-yo-xxh" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="hTx-zY-ARt"/>
                             <constraint firstItem="WBT-v4-ipz" firstAttribute="top" secondItem="WP2-Zk-iPW" secondAttribute="bottom" constant="2" id="haY-qi-1oz"/>
                             <constraint firstItem="vds-w7-arV" firstAttribute="top" secondItem="uIC-Eu-XZD" secondAttribute="bottom" constant="8" id="icX-cq-YNr"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="WBT-v4-ipz" secondAttribute="trailing" constant="16" id="kBF-FS-0md"/>
+                            <constraint firstItem="fjA-7h-veh" firstAttribute="centerY" secondItem="CbZ-8G-6aB" secondAttribute="centerY" id="lBe-PN-CYL"/>
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="bottom" secondItem="C0H-pw-RSl" secondAttribute="bottom" id="nv9-qL-otg"/>
                             <constraint firstItem="LiM-LT-3Xz" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="oKT-DP-1ye"/>
+                            <constraint firstItem="jXp-xP-J4h" firstAttribute="top" secondItem="Lbs-WQ-4zp" secondAttribute="bottom" constant="8" id="p96-hP-FQU"/>
                             <constraint firstItem="n6j-yg-uLt" firstAttribute="centerY" secondItem="EVv-F0-8a1" secondAttribute="centerY" id="rf9-jE-vqW"/>
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="trailing" secondItem="C0H-pw-RSl" secondAttribute="trailing" id="sCh-Gb-jd7"/>
+                            <constraint firstItem="AUX-To-gKI" firstAttribute="centerY" secondItem="Lbs-WQ-4zp" secondAttribute="centerY" id="sa7-iN-feC"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="C0H-pw-RSl"/>
                     </view>
@@ -4100,7 +4130,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="   View UTXO's       " image="list.number" catalog="system">
+                                <state key="normal" title="   UTXO's                " image="list.number" catalog="system">
                                     <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -4272,11 +4302,11 @@ At a minimum we recommend writing these words down on water proof paper with a p
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="reL-7P-R3q" customClass="RefillMultisigViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZRF-hf-jJd">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In order to refill the keypool for multisig wallets you need to enter your offline recover phrase." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="np9-Jt-mqz">
-                                <rect key="frame" x="16" y="20" width="343" height="80"/>
+                                <rect key="frame" x="16" y="64" width="343" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="ynN-yl-bJb"/>
                                 </constraints>
@@ -4285,19 +4315,19 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 <nil key="highlightedColor"/>
                             </label>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y4A-rC-7g8">
-                                <rect key="frame" x="16" y="150" width="343" height="370"/>
+                                <rect key="frame" x="16" y="194" width="343" height="370"/>
                                 <color key="backgroundColor" red="0.10182027284263961" green="0.10182027284263961" blue="0.10182027284263961" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="370" id="qqO-Om-Ulf"/>
                                 </constraints>
                             </view>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="recovery words" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PUj-6s-7Hk">
-                                <rect key="frame" x="44" y="108" width="287" height="34"/>
+                                <rect key="frame" x="44" y="152" width="287" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Keb-UP-Izd">
-                                <rect key="frame" x="16" y="114" width="20" height="22"/>
+                                <rect key="frame" x="16" y="158" width="20" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="20" id="PbQ-R3-TsB"/>
                                     <constraint firstAttribute="height" constant="22" id="XLm-lW-kxj"/>
@@ -4309,7 +4339,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zu8-9H-CiC">
-                                <rect key="frame" x="339" y="114" width="20" height="22"/>
+                                <rect key="frame" x="339" y="158" width="20" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="20" id="76P-A3-eeA"/>
                                     <constraint firstAttribute="height" constant="22" id="aSZ-zt-yKs"/>
@@ -4321,7 +4351,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z3L-oO-DTP">
-                                <rect key="frame" x="99" y="601" width="177" height="27"/>
+                                <rect key="frame" x="99" y="572" width="177" height="27"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="27" id="DWa-of-avE"/>
                                     <constraint firstAttribute="width" constant="177" id="kJA-SC-WGa"/>
@@ -5946,7 +5976,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
     <inferredMetricsTieBreakers>
         <segue reference="9Ib-wE-7tm"/>
         <segue reference="fBg-S5-BEW"/>
-        <segue reference="pun-AW-DGw"/>
+        <segue reference="uaX-te-aDX"/>
         <segue reference="Kzq-6W-yKR"/>
         <segue reference="fnD-hd-014"/>
         <segue reference="EvJ-Lj-YLy"/>
@@ -5955,7 +5985,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="c5y-jb-z8M"/>
         <segue reference="MTV-lr-E4R"/>
         <segue reference="cZz-Rg-m7M"/>
-        <segue reference="ufe-jz-pkY"/>
+        <segue reference="zTj-XW-s3J"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
