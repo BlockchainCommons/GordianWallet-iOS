@@ -160,7 +160,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                     displayAlert(viewController: vc, isError: false, message: "change utxo's unlocked")
                     vc.updateAvailableBalance()
                 } else {
-                    showAlert(vc: vc, title: "Error", message: "There was an error unlocking those utxo's and/or syncing our local database...")
                     vc.updateAvailableBalance()
                 }
             }
@@ -181,7 +180,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                     displayAlert(viewController: vc, isError: false, message: "dust utxo's unlocked")
                     vc.updateAvailableBalance()
                 } else {
-                    showAlert(vc: vc, title: "Error", message: "There was an error unlocking those utxo's and/or syncing our local database...")
                     vc.updateAvailableBalance()
                 }
             }

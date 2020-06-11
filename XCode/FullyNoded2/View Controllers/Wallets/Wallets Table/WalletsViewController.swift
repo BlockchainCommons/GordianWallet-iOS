@@ -638,15 +638,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         for n in nodes {
             
             let s = NodeStruct(dictionary: n)
-            
-            if s.id == wallet.nodeId {
-                
-                let rpcOnion = s.onionAddress
-                let first10 = String(rpcOnion.prefix(5))
-                let last15 = String(rpcOnion.suffix(15))
-                rpcOnionLabel.text = "\(first10)*****\(last15)"
-                nodeLabel.text = s.label
-                
+        
+            if walletStruct.nodeId != nil {
+                if s.id == walletStruct.nodeId {
+                    
+                    let rpcOnion = s.onionAddress
+                    let first10 = String(rpcOnion.prefix(5))
+                    let last15 = String(rpcOnion.suffix(15))
+                    rpcOnionLabel.text = "\(first10)*****\(last15)"
+                    nodeLabel.text = s.label
+                    
+                }
             }
             
         }
@@ -855,12 +857,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if n != nil {
                     
-                    if wallet.nodeId != n!.id {
-                        
-                        CoreDataService.updateEntity(id: wallet.nodeId, keyToUpdate: "isActive", newValue: true, entityName: .nodes) {_ in }
-                        CoreDataService.updateEntity(id: n!.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) {_ in }
-                        vc.wallet = wallet
-                        
+                    if wallet.nodeId != nil {
+                        if wallet.nodeId! != n!.id {
+                            
+                            CoreDataService.updateEntity(id: wallet.nodeId!, keyToUpdate: "isActive", newValue: true, entityName: .nodes) {_ in }
+                            CoreDataService.updateEntity(id: n!.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) {_ in }
+                            vc.wallet = wallet
+                            
+                        }
                     }
                     
                 }

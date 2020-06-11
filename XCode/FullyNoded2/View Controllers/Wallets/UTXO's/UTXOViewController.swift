@@ -106,15 +106,11 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return sectionZeroCount() + sectionOneCount()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return sectionZeroCount()
-        } else {
-            return sectionOneCount()
-        }
+        return 1
     }
     
     private func sectionZeroCount() -> Int {
@@ -134,7 +130,7 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
+        if indexPath.section < unlockedUtxoArray.count || indexPath.section == 0 {
             return unlockedCellHeight()
         } else {
             return lockedCellHeight()
@@ -151,7 +147,7 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     private func lockedCellHeight() -> CGFloat {
         if lockedUtxoArray.count > 0 {
-            return 81
+            return 121
         } else {
             return 47
         }
@@ -167,14 +163,14 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     private func lockedCell(_ indexPath: IndexPath) -> UITableViewCell {
         if lockedUtxoArray.count > 0 {
-            return lockedUtxoCell(indexPath)
+            return lockedUtxoCell1(indexPath)
         } else {
             return noLockedUtxosCell(indexPath)
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
+        if indexPath.section < unlockedUtxoArray.count || indexPath.section == 0 {
             return unlockedCell(indexPath)
         } else {
             return lockedCell(indexPath)
@@ -190,24 +186,37 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 && unlockedUtxoArray.count > 0 {
-            utxosToLock.append(unlockedUtxoArray[indexPath.row])
-        } else if indexPath.section == 1 && lockedUtxoArray.count > 0 {
-            utxosToUnlock.append(lockedUtxoArray[indexPath.row])
-        } else {
-            showAlert(vc: self, title: "Oops", message: "You can not edit that cell.")
+        if tableView.isEditing {
+            if indexPath.section < unlockedUtxoArray.count && unlockedUtxoArray.count > 0 {
+                utxosToLock.append(unlockedUtxoArray[indexPath.section])
+            } else if indexPath.section >= unlockedUtxoArray.count && lockedUtxoArray.count > 0 && indexPath.section != 0 {
+                if unlockedUtxoArray.count > 0 {
+                    utxosToUnlock.append(lockedUtxoArray[indexPath.section - unlockedUtxoArray.count])
+                } else {
+                    utxosToUnlock.append(lockedUtxoArray[indexPath.section - 1])
+                }
+            } else {
+                showAlert(vc: self, title: "Oops", message: "You can not edit that cell.")
+            }
         }
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 && utxosToLock.count > 0 {
-            let utxo = unlockedUtxoArray[indexPath.row]
-            removeUtxoToLock(utxo)
-        } else if indexPath.section == 1 && utxosToUnlock.count > 0 {
-            let utxo = lockedUtxoArray[indexPath.row]
-            removeUtxoToUnlock(utxo)
-        } else {
-            showAlert(vc: self, title: "Oops", message: "You can not edit that cell.")
+        if tableView.isEditing {
+            if indexPath.section < unlockedUtxoArray.count && utxosToLock.count > 0 {
+                let utxo = unlockedUtxoArray[indexPath.section]
+                removeUtxoToLock(utxo)
+            } else if indexPath.section >= unlockedUtxoArray.count && utxosToUnlock.count > 0 && indexPath.section != 0 {
+                if unlockedUtxoArray.count > 0 {
+                    let utxo = lockedUtxoArray[indexPath.section - unlockedUtxoArray.count]
+                    removeUtxoToUnlock(utxo)
+                } else {
+                    let utxo = lockedUtxoArray[indexPath.section - 1]
+                    removeUtxoToUnlock(utxo)
+                }
+            } else {
+                showAlert(vc: self, title: "Oops", message: "You can not edit that cell.")
+            }
         }
     }
     
@@ -240,14 +249,22 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let cell = utxoTable.dequeueReusableCell(withIdentifier: "unlockedUtxoCell", for: indexPath)
         cell.selectionStyle = .blue
         if unlockedUtxoArray.count > 0 {
-            let dict = unlockedUtxoArray[indexPath.row]
+            let dict = unlockedUtxoArray[indexPath.section]
             let address = cell.viewWithTag(1) as! UILabel
             let amount = cell.viewWithTag(4) as! UILabel
             let confs = cell.viewWithTag(8) as! UILabel
             let label = cell.viewWithTag(11) as! UILabel
             let infoButton = cell.viewWithTag(12) as! UIButton
+            let change = cell.viewWithTag(13) as! UILabel
+            let dust = cell.viewWithTag(14) as! UILabel
+            change.alpha = 0
+            dust.alpha = 0
             infoButton.addTarget(self, action: #selector(getInfo(_:)), for: .touchUpInside)
-            infoButton.restorationIdentifier = "\(indexPath.row)"
+            infoButton.restorationIdentifier = "\(indexPath.section)"
+            
+            if isChange(dict["desc"] as? String ?? "") {
+                change.alpha = 1
+            }
             
             for (key, value) in dict {
                 switch key {
@@ -257,7 +274,9 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 case "amount":
                     let dbl = rounded(number: value as! Double)
                     amount.text = dbl.avoidNotation
-                    
+                    if (dict["amount"] as! Double) < 0.00010000 {
+                        dust.alpha = 1
+                    }
                 case "confirmations":
                     if (value as! Int) == 0 {
                         confs.textColor = .systemRed
@@ -278,20 +297,55 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return cell
     }
     
-    private func lockedUtxoCell(_ indexPath: IndexPath) -> UITableViewCell {
-        let cell = utxoTable.dequeueReusableCell(withIdentifier: "lockedUtxoCell", for: indexPath)
+    private func lockedUtxoCell1(_ indexPath: IndexPath) -> UITableViewCell {
+        let cell = utxoTable.dequeueReusableCell(withIdentifier: "lockedUtxoCell1", for: indexPath)
         cell.selectionStyle = .blue
-        let vout = cell.viewWithTag(1) as! UILabel
-        let txid = cell.viewWithTag(2) as! UILabel
-        let info = cell.viewWithTag(3) as! UIButton
-        info.addTarget(self, action: #selector(getLockedInfo(_:)), for: .touchUpInside)
-        info.restorationIdentifier = "\(indexPath.row)"
-        if lockedUtxoArray[indexPath.row]["vout"] != nil {
-            vout.text = "\(lockedUtxoArray[indexPath.row]["vout"] as! Int)"
-        } else {
-            vout.text = ""
+        
+        if lockedUtxoArray.count > 0 {
+            var section:Int!
+            if unlockedUtxoArray.count > 0 {
+                section = indexPath.section - unlockedUtxoArray.count
+            } else {
+                section = indexPath.section - 1
+            }
+            let dict = lockedUtxoArray[section]
+            let address = cell.viewWithTag(1) as! UILabel
+            let amount = cell.viewWithTag(4) as! UILabel
+            let confs = cell.viewWithTag(8) as! UILabel
+            let label = cell.viewWithTag(11) as! UILabel
+            let infoButton = cell.viewWithTag(12) as! UIButton
+            let change = cell.viewWithTag(13) as! UILabel
+            let dust = cell.viewWithTag(14) as! UILabel
+            change.alpha = 0
+            dust.alpha = 0
+            infoButton.addTarget(self, action: #selector(getInfo(_:)), for: .touchUpInside)
+            infoButton.restorationIdentifier = "\(String(describing: section))"
+            address.text = dict["address"] as? String ?? "?"
+            label.text = dict["label"] as? String ?? "?"
+            if dict["amount"] != nil {
+                amount.text = (dict["amount"] as! Double).avoidNotation
+                if (dict["amount"] as! Double) < 0.00010000 {
+                    dust.alpha = 1
+                }
+            } else {
+                amount.text = "?"
+            }
+            
+            if dict["confs"] != nil {
+                let confirmations = dict["confs"] as! Int
+                if confirmations == 0 {
+                    confs.textColor = .systemRed
+                } else {
+                    confs.textColor = .systemGreen
+                }
+                confs.text = "\(confirmations) confs"
+            } else {
+                confs.text = "?"
+            }
+            if isChange(dict["desc"] as? String ?? "") {
+                change.alpha = 1
+            }
         }
-        txid.text = lockedUtxoArray[indexPath.row]["txid"] as? String ?? ""
         return cell
     }
     
@@ -342,10 +396,17 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         lockAllButton.addTarget(self, action: #selector(lockAll), for: .touchUpInside)
         lockAllButton.frame = CGRect(x: header.frame.maxX - 95, y: 0, width: 80, height: 30)
         
+        var sectionCount:Int!
+        if unlockedUtxoArray.count > 0 {
+            sectionCount = unlockedUtxoArray.count
+        } else {
+            sectionCount = 1
+        }
+        
         if section == 0 {
             textLabel.text = "Unlocked"
             header.addSubview(lockAllButton)
-        } else {
+        } else if section == sectionCount {
             textLabel.text = "Locked"
             header.addSubview(unlockAllButton)
         }
@@ -355,7 +416,25 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
+        if unlockedUtxoArray.count > 0 {
+            if section == 0 {
+                return 30
+            } else if section < unlockedUtxoArray.count {
+                return 5
+            } else if section == unlockedUtxoArray.count {
+                return 30
+            } else {
+                return 5
+            }
+        } else if lockedUtxoArray.count > 0 {
+            if section == 1 || section == 0 {
+                return 30
+            } else {
+                return 5
+            }
+        } else {
+            return 5
+        }
     }
     
     @objc func unlockAll() {
@@ -469,14 +548,6 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    private func process(_ utxos: [String]) -> String {
-        var processedUtxos = (utxos.description).replacingOccurrences(of: "\"{", with: "{")
-        processedUtxos = processedUtxos.replacingOccurrences(of: "}\"", with: "}")
-        processedUtxos = processedUtxos.replacingOccurrences(of: "\"[", with: "[")
-        processedUtxos = processedUtxos.replacingOccurrences(of: "]\"", with: "]")
-        return processedUtxos.replacingOccurrences(of: "\\\"", with: "\"")
-    }
-    
     @objc func getInfo(_ sender: UIButton) {
         if sender.restorationIdentifier != nil {
             if let index = Int(sender.restorationIdentifier!) {
@@ -517,16 +588,34 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     private func buildArray(_ locked: NSArray) {
-        for (i, utxo) in locked.enumerated() {
-            if let lockedUtxo = utxo as? NSDictionary {
-                if let txid = lockedUtxo["txid"] as? String, let vout = lockedUtxo["vout"] as? Int {
-                    let dict = ["txid":txid,"vout":vout,"id":UUID()] as [String : Any]
-                    lockedUtxoArray.append(dict)
-                }
+        var savedLockedUtxos = [[String:Any]]()
+        CoreDataService.retrieveEntity(entityName: .lockedUtxos) { [unowned vc = self] (savedUtxos, errorDescription) in
+            if savedUtxos != nil {
+                savedLockedUtxos = savedUtxos!
             }
-            if i + 1 == locked.count {
-                loadTable()
-                removeSpinner()
+            for (i, utxo) in locked.enumerated() {
+                if let lockedUtxo = utxo as? NSDictionary {
+                    if let txid = lockedUtxo["txid"] as? String, let vout = lockedUtxo["vout"] as? Int {
+                        let fallbackDict = ["txid":txid,"vout":vout,"id":UUID()] as [String : Any]
+                        var notSaved = true
+                        for (x, saved) in savedLockedUtxos.enumerated() {
+                            let lockedStruct = LockedUtxoStruct.init(dictionary: saved)
+                            if lockedStruct.txid == txid && lockedStruct.vout == vout {
+                                notSaved = false
+                                vc.lockedUtxoArray.append(saved)/// we have is stored locally already and can display metadata
+                            }
+                            if x + 1 == savedLockedUtxos.count {
+                                if notSaved {
+                                    vc.lockedUtxoArray.append(fallbackDict)/// we do not have it stored locally and can not display metadata
+                                }
+                                if i + 1 == locked.count {
+                                    vc.loadTable()
+                                    vc.removeSpinner()
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -537,16 +626,24 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
         
-    func removeSpinner() {
+    private func removeSpinner() {
         DispatchQueue.main.async { [unowned vc = self] in
             vc.refresher.endRefreshing()
             vc.creatingView.removeConnectingView()
         }
     }
     
-    func addSpinner() {
+    private func addSpinner() {
         DispatchQueue.main.async { [unowned vc = self] in
             vc.creatingView.addConnectingView(vc: self, description: "Getting UTXOs")
+        }
+    }
+    
+    private func isChange(_ desc: String) -> Bool {
+        if desc.contains("/1/") {
+            return true
+        } else {
+            return false
         }
     }
     

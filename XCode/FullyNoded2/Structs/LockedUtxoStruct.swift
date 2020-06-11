@@ -16,6 +16,7 @@ public struct LockedUtxoStruct: CustomStringConvertible {
     let txid:String
     let vout:Int16
     let address:String
+    let label:String
     
     init(dictionary: [String: Any]) {
         amount = dictionary["amount"] as! Double
@@ -24,6 +25,7 @@ public struct LockedUtxoStruct: CustomStringConvertible {
         txid = dictionary["txid"] as! String
         vout = dictionary["vout"] as! Int16
         address = dictionary["address"] as! String
+        label = dictionary["label"] as? String ?? ""
     }
     
     public var description: String {

@@ -36,7 +36,7 @@ class LockedUtxosViewController: UIViewController, UINavigationControllerDelegat
     private func makeCommand(walletName: String) {
         let txid = utxo["txid"] as! String
         let vout = utxo["vout"] as! Int
-        Reducer.makeCommand(walletName: walletName, command: .gettransaction, param: "\"\(txid)\"") { [unowned vc = self] (object, errorDescription) in
+        Reducer.makeCommand(walletName: walletName, command: .gettransaction, param: "\"\(txid)\", true") { [unowned vc = self] (object, errorDescription) in
             if let transaction = object as? NSDictionary {
                 vc.parseTransaction(transaction: transaction, vout: vout)
             } else {
