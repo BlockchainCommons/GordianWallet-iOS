@@ -228,7 +228,6 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             if i + 1 == utxosToLock.count {
                 utxosToLock.remove(at: indexToRemove)
-                print("utxosToLock: \(utxosToLock)")
             }
         }
     }
