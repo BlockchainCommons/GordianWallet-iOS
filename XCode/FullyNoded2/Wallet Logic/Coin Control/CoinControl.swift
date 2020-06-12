@@ -53,41 +53,47 @@ class CoinControl {
     }
     
     class func unlockUtxos(utxos: [[String:Any]], completion: @escaping ((Bool)) -> Void) {
-        getActiveWalletNow { (wallet, error) in
-            if wallet != nil {
-                let param = "true, ''\(updateUtxos(utxos))''"
-                Reducer.makeCommand(walletName: wallet!.name!, command: .lockunspent, param: param) { (object, _) in
-                    if let success = object as? Bool {
-                        if success {
-                            for utxo in utxos {
-                                CoreDataService.retrieveEntity(entityName: .lockedUtxos) { (lockedUtxos, _) in
-                                    if lockedUtxos != nil {
-                                        if lockedUtxos!.count > 0 {
-                                            for (i, lockedUtxo) in lockedUtxos!.enumerated() {
-                                                let str = LockedUtxoStruct.init(dictionary: lockedUtxo)
-                                                if (utxo["txid"] as! String) == str.txid && (utxo["vout"] as! Int) == str.vout {
-                                                    CoreDataService.deleteEntity(id: str.id, entityName: .lockedUtxos) { _ in}
+        if utxos.count > 0 {
+            getActiveWalletNow { (wallet, error) in
+                if wallet != nil {
+                    let param = "true, ''\(updateUtxos(utxos))''"
+                    Reducer.makeCommand(walletName: wallet!.name!, command: .lockunspent, param: param) { (object, _) in
+                        if let success = object as? Bool {
+                            if success {
+                                for utxo in utxos {
+                                    CoreDataService.retrieveEntity(entityName: .lockedUtxos) { (lockedUtxos, _) in
+                                        if lockedUtxos != nil {
+                                            if lockedUtxos!.count > 0 {
+                                                for (i, lockedUtxo) in lockedUtxos!.enumerated() {
+                                                    let str = LockedUtxoStruct.init(dictionary: lockedUtxo)
+                                                    if (utxo["txid"] as! String) == str.txid && (utxo["vout"] as! Int) == str.vout {
+                                                        CoreDataService.deleteEntity(id: str.id, entityName: .lockedUtxos) { _ in}
+                                                    }
+                                                    if i + 1 == lockedUtxos!.count {
+                                                        completion(success)
+                                                    }
                                                 }
-                                                if i + 1 == lockedUtxos!.count {
-                                                    completion(success)
-                                                }
+                                            } else {
+                                                completion(true)
                                             }
                                         } else {
                                             completion(true)
                                         }
-                                    } else {
-                                        completion(true)
                                     }
                                 }
+                            } else {
+                                completion(false)
                             }
                         } else {
                             completion(false)
                         }
-                    } else {
-                        completion(false)
                     }
+                } else {
+                    completion(false)
                 }
             }
+        } else {
+            completion(false)
         }
     }
     
