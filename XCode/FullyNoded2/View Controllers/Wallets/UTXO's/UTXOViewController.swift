@@ -588,6 +588,7 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     private func buildArray(_ locked: NSArray) {
         var savedLockedUtxos = [[String:Any]]()
+        lockedUtxoArray.removeAll()
         CoreDataService.retrieveEntity(entityName: .lockedUtxos) { [unowned vc = self] (savedUtxos, errorDescription) in
             if savedUtxos != nil {
                 savedLockedUtxos = savedUtxos!

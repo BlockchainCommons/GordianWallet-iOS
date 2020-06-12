@@ -66,7 +66,7 @@ class CoinControl {
                                             for (i, lockedUtxo) in lockedUtxos!.enumerated() {
                                                 let str = LockedUtxoStruct.init(dictionary: lockedUtxo)
                                                 if (utxo["txid"] as! String) == str.txid && (utxo["vout"] as! Int) == str.vout {
-                                                    CoreDataService.deleteEntity(id: str.id, entityName: .lockedUtxos) { _ in }
+                                                    CoreDataService.deleteEntity(id: str.id, entityName: .lockedUtxos) { _ in}
                                                 }
                                                 if i + 1 == lockedUtxos!.count {
                                                     completion(success)
