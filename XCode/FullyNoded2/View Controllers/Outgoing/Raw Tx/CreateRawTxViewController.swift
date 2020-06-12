@@ -142,6 +142,8 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                     getBalance()
                 }
                 
+            } else {
+                vc.creatingView.removeConnectingView()
             }
         }
     }
