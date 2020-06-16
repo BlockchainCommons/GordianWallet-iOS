@@ -113,7 +113,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             creatingView.addConnectingView(vc: self, description: "loading accounts")
                         
             CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
-                print("wallets = \(wallets)")
                                                 
                 if errorDescription == nil {
                     
@@ -639,15 +638,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         for n in nodes {
             
             let s = NodeStruct(dictionary: n)
-            
-            if s.id == wallet.nodeId {
-                
-                let rpcOnion = s.onionAddress
-                let first10 = String(rpcOnion.prefix(5))
-                let last15 = String(rpcOnion.suffix(15))
-                rpcOnionLabel.text = "\(first10)*****\(last15)"
-                nodeLabel.text = s.label
-                
+        
+            if walletStruct.nodeId != nil {
+                if s.id == walletStruct.nodeId {
+                    
+                    let rpcOnion = s.onionAddress
+                    let first10 = String(rpcOnion.prefix(5))
+                    let last15 = String(rpcOnion.suffix(15))
+                    rpcOnionLabel.text = "\(first10)*****\(last15)"
+                    nodeLabel.text = s.label
+                    
+                }
             }
             
         }
@@ -856,12 +857,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if n != nil {
                     
-                    if wallet.nodeId != n!.id {
-                        
-                        CoreDataService.updateEntity(id: wallet.nodeId, keyToUpdate: "isActive", newValue: true, entityName: .nodes) {_ in }
-                        CoreDataService.updateEntity(id: n!.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) {_ in }
-                        vc.wallet = wallet
-                        
+                    if wallet.nodeId != nil {
+                        if wallet.nodeId! != n!.id {
+                            
+                            CoreDataService.updateEntity(id: wallet.nodeId!, keyToUpdate: "isActive", newValue: true, entityName: .nodes) {_ in }
+                            CoreDataService.updateEntity(id: n!.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) {_ in }
+                            vc.wallet = wallet
+                            
+                        }
                     }
                     
                 }
@@ -959,44 +962,44 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
 //-------------------------------------------------------------------------------
 // MARK: - To enable mainnet accounts just uncomment the following lines of code:
 //
-            DispatchQueue.main.async { [unowned vc = self] in
-
-                vc.performSegue(withIdentifier: "addWallet", sender: vc)
-
-            }
+//            DispatchQueue.main.async { [unowned vc = self] in
+//
+//                vc.performSegue(withIdentifier: "addWallet", sender: vc)
+//
+//            }
 //-------------------------------------------------------------------------------
 // MARK: - And comment out the following lines of code:
 
-//            Encryption.getNode { [unowned vc = self] (node, error) in
-//
-//                if !error && node != nil {
-//
-//                    if node!.network == "mainnet" {
-//
-//                        DispatchQueue.main.async {
-//                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
-//                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { action in }))
-//                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-//                            vc.present(alert, animated: true, completion: nil)
-//                        }
-//
-//                    } else {
-//
-//                        DispatchQueue.main.async {
-//
-//                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
-//
-//                        }
-//
-//                    }
-//
-//                } else {
-//
-//                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
-//
-//                }
-//
-//            }
+            Encryption.getNode { [unowned vc = self] (node, error) in
+
+                if !error && node != nil {
+
+                    if node!.network == "mainnet" {
+
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
+                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { action in }))
+                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                            vc.present(alert, animated: true, completion: nil)
+                        }
+
+                    } else {
+
+                        DispatchQueue.main.async {
+
+                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
+
+                        }
+
+                    }
+
+                } else {
+
+                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
+
+                }
+
+            }
 //-------------------------------------------------------------------------------
             
         } else {
@@ -1085,12 +1088,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let first = String(label.prefix(10))
         let last = String(label.suffix(10))
         return "\(first)...\(last)"
-        
     }
     
     override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
         walletTable.reloadData()
-        
     }
     
     private func processDescriptor(descriptor: String) {

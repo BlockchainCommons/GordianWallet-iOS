@@ -18,6 +18,7 @@
 		D04179EF247629D40096F74D /* segwit_addr.c in Sources */ = {isa = PBXBuildFile; fileRef = D04179EE247629D40096F74D /* segwit_addr.c */; };
 		D04179F2247630470096F74D /* BCB32.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04179F1247630470096F74D /* BCB32.swift */; };
 		D042EFA22457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */; };
+		D0457C19248DEBA40028CC9D /* LockedUtxosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0457C18248DEBA40028CC9D /* LockedUtxosViewController.swift */; };
 		D047DDF72423464A004BC26D /* SweepToViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF62423464A004BC26D /* SweepToViewController.swift */; };
 		D047DDF9242B2F3F004BC26D /* IntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */; };
 		D047DDFB242B324A004BC26D /* WhatIsFN2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DDFA242B324A004BC26D /* WhatIsFN2ViewController.swift */; };
@@ -128,6 +129,8 @@
 		D0A0EAF223F7CF70004F9E15 /* DescriptorStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A0EAF123F7CF70004F9E15 /* DescriptorStruct.swift */; };
 		D0A9EB8723F5335A00C84829 /* ChooseWalletFormatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */; };
 		D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B08BE5241888500025AD04 /* DonateViewController.swift */; };
+		D0BFDF572490B6A600EB7846 /* LockedUtxoStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */; };
+		D0BFDF592490BC4400EB7846 /* CoinControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFDF582490BC4400EB7846 /* CoinControl.swift */; };
 		D0C4E63124173F1B00E49DA5 /* WalletToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C4E63024173F1B00E49DA5 /* WalletToolsViewController.swift */; };
 		D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */; };
 		D0D0F5642410CB8F007E0763 /* BIP39Words.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F5632410CB8F007E0763 /* BIP39Words.swift */; };
@@ -184,6 +187,7 @@
 		D04179EE247629D40096F74D /* segwit_addr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = segwit_addr.c; sourceTree = "<group>"; };
 		D04179F1247630470096F74D /* BCB32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BCB32.swift; sourceTree = "<group>"; };
 		D042EFA12457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedNodesSeedViewController.swift; sourceTree = "<group>"; };
+		D0457C18248DEBA40028CC9D /* LockedUtxosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedUtxosViewController.swift; sourceTree = "<group>"; };
 		D047DDF62423464A004BC26D /* SweepToViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SweepToViewController.swift; sourceTree = "<group>"; };
 		D047DDF8242B2F3F004BC26D /* IntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionViewController.swift; sourceTree = "<group>"; };
 		D047DDFA242B324A004BC26D /* WhatIsFN2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatIsFN2ViewController.swift; sourceTree = "<group>"; };
@@ -304,6 +308,8 @@
 		D0A0EAF123F7CF70004F9E15 /* DescriptorStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptorStruct.swift; sourceTree = "<group>"; };
 		D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseWalletFormatViewController.swift; sourceTree = "<group>"; };
 		D0B08BE5241888500025AD04 /* DonateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonateViewController.swift; sourceTree = "<group>"; };
+		D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedUtxoStruct.swift; sourceTree = "<group>"; };
+		D0BFDF582490BC4400EB7846 /* CoinControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinControl.swift; sourceTree = "<group>"; };
 		D0C4E63024173F1B00E49DA5 /* WalletToolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletToolsViewController.swift; sourceTree = "<group>"; };
 		D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRecoverViewController.swift; sourceTree = "<group>"; };
 		D0D0F5632410CB8F007E0763 /* BIP39Words.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BIP39Words.swift; sourceTree = "<group>"; };
@@ -477,6 +483,7 @@
 				D0A0EAF123F7CF70004F9E15 /* DescriptorStruct.swift */,
 				D00016B4245BBB5C0091F7CF /* SeedStruct.swift */,
 				D0DB944E24736C0600A0E99D /* TransactionStruct.swift */,
+				D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -561,6 +568,7 @@
 			children = (
 				D0A0EAED23F584C8004F9E15 /* UtxoInfoViewController.swift */,
 				D09D72A823F0F3C000847DC8 /* UTXOViewController.swift */,
+				D0457C18248DEBA40028CC9D /* LockedUtxosViewController.swift */,
 			);
 			path = "UTXO's";
 			sourceTree = "<group>";
@@ -779,8 +787,17 @@
 				D0CD026C23FA376D009F2E7F /* Signers */,
 				D0109468242EFF52000B3A40 /* Refillers */,
 				D07399E52463EE0000860B7E /* Importers */,
+				D0BFDF5A2490BC4D00EB7846 /* Coin Control */,
 			);
 			path = "Wallet Logic";
+			sourceTree = "<group>";
+		};
+		D0BFDF5A2490BC4D00EB7846 /* Coin Control */ = {
+			isa = PBXGroup;
+			children = (
+				D0BFDF582490BC4400EB7846 /* CoinControl.swift */,
+			);
+			path = "Coin Control";
 			sourceTree = "<group>";
 		};
 		D0CD026923FA3631009F2E7F /* Wallet Tools */ = {
@@ -1031,6 +1048,7 @@
 				D09D734123F0F3C000847DC8 /* KeychainCreator.swift in Sources */,
 				D00016B9245BD89C0091F7CF /* SeedParser.swift in Sources */,
 				D09D734323F0F3C000847DC8 /* MakeRPCCall.swift in Sources */,
+				D0BFDF572490B6A600EB7846 /* LockedUtxoStruct.swift in Sources */,
 				D09D724B23F0EDBB00847DC8 /* FullyNoded2.xcdatamodeld in Sources */,
 				D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */,
 				D09D731223F0F3C000847DC8 /* SeedViewController.swift in Sources */,
@@ -1075,6 +1093,7 @@
 				D09D734223F0F3C000847DC8 /* QuickConnect.swift in Sources */,
 				D09D735D23F0F3C000847DC8 /* CustomButton.swift in Sources */,
 				D047DE0D242D984E004BC26D /* RefillSingleSig.swift in Sources */,
+				D0457C19248DEBA40028CC9D /* LockedUtxosViewController.swift in Sources */,
 				D09D736523F0F3C000847DC8 /* QRScanner.swift in Sources */,
 				D047DE05242B34BA004BC26D /* SignInViewController.swift in Sources */,
 				D09D732423F0F3C000847DC8 /* CreateRawTxViewController.swift in Sources */,
@@ -1105,6 +1124,7 @@
 				D047DE01242B3390004BC26D /* IsFN2SecureViewController.swift in Sources */,
 				D09D736323F0F3C000847DC8 /* ErrorView.swift in Sources */,
 				D09D733323F0F3C000847DC8 /* Utilities.swift in Sources */,
+				D0BFDF592490BC4400EB7846 /* CoinControl.swift in Sources */,
 				D09D731123F0F3C000847DC8 /* ExportKeysViewController.swift in Sources */,
 				D0DB944F24736C0600A0E99D /* TransactionStruct.swift in Sources */,
 				D07399DF2461796A00860B7E /* Base58.swift in Sources */,
@@ -1283,7 +1303,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.30;
+				CURRENT_PROJECT_VERSION = 0.1.39;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1297,7 +1317,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.30;
+				MARKETING_VERSION = 0.1.39;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1315,7 +1335,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.30;
+				CURRENT_PROJECT_VERSION = 0.1.39;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1329,7 +1349,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.30;
+				MARKETING_VERSION = 0.1.39;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

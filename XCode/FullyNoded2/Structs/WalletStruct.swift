@@ -23,7 +23,7 @@ public struct WalletStruct: CustomStringConvertible {
     let index:Int
     let lastUsed:Date
     let lastBalance:Double
-    let nodeId:UUID
+    let nodeId:UUID?
     let walletCreated:Bool
     let keysImported:Bool
     let isArchived:Bool
@@ -54,7 +54,7 @@ public struct WalletStruct: CustomStringConvertible {
         index = dictionary["index"] as? Int ?? 0
         lastUsed = dictionary["lastUsed"] as? Date ?? Date()
         lastBalance = dictionary["lastBalance"] as? Double ?? 0.0
-        nodeId = dictionary["nodeId"] as? UUID ?? UUID()
+        nodeId = dictionary["nodeId"] as? UUID
         walletCreated = dictionary["walletCreated"] as? Bool ?? false
         keysImported = dictionary["keysImported"] as? Bool ?? false
         isArchived = dictionary["isArchived"] as? Bool ?? false

@@ -10,13 +10,24 @@ import UIKit
 
 class UtxoInfoViewController: UIViewController {
     
-    var utxo = NSDictionary()
+    var utxo = [String:Any]()
     @IBOutlet var textView: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        textView.text = "\(utxo)"
+        textView.isEditable = false
+        var text = ""
+        for (key, value) in utxo {
+            if key != "id" {
+                if key == "amount" {
+                    text += "\(key): \((value as! Double).avoidNotation)\n\n"
+                } else {
+                    text += "\(key): \(value)\n\n"
+                }
+                
+            }
+        }
+        textView.text = text
     }
     
     @IBAction func close(_ sender: Any) {

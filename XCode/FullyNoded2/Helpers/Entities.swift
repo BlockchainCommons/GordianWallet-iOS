@@ -12,4 +12,5 @@ public enum ENTITY: String {
     case auth = "Auth"
     case seeds = "Seeds"
     case transactions = "Transactions"
+    case lockedUtxos = "LockedUtxos"
 }

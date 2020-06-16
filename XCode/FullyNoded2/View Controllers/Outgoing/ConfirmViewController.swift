@@ -930,7 +930,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if indexPath.section == 0 || indexPath.section == 1 {
+        if indexPath.section == 1 || indexPath.section == 2 {
             
             let cell = tableView.cellForRow(at: indexPath)!
             let addressLabel = cell.viewWithTag(3) as! UILabel
