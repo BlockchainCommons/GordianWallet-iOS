@@ -67,7 +67,7 @@ class NodeLogic {
                 vc.parseUtxos(wallet: wallet, utxos: utxos, completion: completion)
                 
             } else {
-                completion((false, nil, "returned object is nil"))
+                completion((true, nil, nil))
                 
             }
         }
@@ -79,7 +79,7 @@ class NodeLogic {
                 vc.parseUtxos(wallet: wallet, utxos: utxos, completion: completion)
                 
             } else {
-                completion((false, nil, "returned object is nil"))
+                completion((true, nil, nil))
                 
             }
         }
