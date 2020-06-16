@@ -120,6 +120,7 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 DispatchQueue.main.async { [unowned vc = self] in
                     vc.seedsArray.remove(at: vc.indPath.row)
                     vc.seedsTable.deleteRows(at: [vc.indPath], with: .fade)
+                    NotificationCenter.default.post(name: .seedDeleted, object: nil, userInfo: nil)
                     
                 }
                 

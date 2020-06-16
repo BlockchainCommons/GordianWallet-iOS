@@ -151,6 +151,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         }
         
         func walletSuccessfullyCreated() {
+            NotificationCenter.default.post(name: .didCreateAccount, object: nil, userInfo: nil)
             DispatchQueue.main.async { [unowned vc = self] in
                 let alert = UIAlertController(title: "Account \(importedOrRecovered)!", message: "Your \(importedOrRecovered) account will now show up in \"Accounts\", a blockchain rescan has been initiated", preferredStyle: .actionSheet)
                 alert.addAction(UIAlertAction(title: "Done", style: .cancel, handler: { action in

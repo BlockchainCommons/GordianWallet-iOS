@@ -370,6 +370,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                                 vc.updatePlaceHolder(wordNumber: 1)
                                 
                             }
+                            NotificationCenter.default.post(name: .seedAdded, object: nil, userInfo: nil)
                             
                             showAlert(vc: vc, title: "Seed saved!", message: "You may go back or add another seed.")
                             

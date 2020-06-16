@@ -116,6 +116,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                                     
                                     vc.nodes.remove(at: indexPath.section)
                                     tableView.deleteSections(IndexSet.init(arrayLiteral: indexPath.section), with: .fade)
+                                    NotificationCenter.default.post(name: .nodeSwitched, object: nil, userInfo: nil)
                                     
                                 }
                                 
@@ -381,7 +382,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
             
             if wallets != nil {
                 
-                for wallet in wallets! {
+                for (i, wallet) in wallets!.enumerated() {
                     
                     if wallet["id"] != nil && wallet["isArchived"] != nil && wallet["nodeId"] != nil {
                         let w = WalletStruct(dictionary: wallet)
@@ -407,7 +408,9 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                         }
                         
                     }
-                    
+                    if i + 1 == wallets!.count {
+                        NotificationCenter.default.post(name: .nodeSwitched, object: nil, userInfo: nil)
+                    }
                 }
                 
             }

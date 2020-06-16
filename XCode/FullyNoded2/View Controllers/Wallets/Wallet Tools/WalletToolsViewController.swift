@@ -229,6 +229,7 @@ class WalletToolsViewController: UIViewController {
                             vc.creatingView.removeConnectingView()
                             let progress = (scanning["progress"] as! Double)
                             showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                            NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
                             
                         }
                         
@@ -236,6 +237,7 @@ class WalletToolsViewController: UIViewController {
                         
                         vc.creatingView.removeConnectingView()
                         showAlert(vc: vc, title: "Scan Complete", message: "The wallet is not currently scanning.")
+                        NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
                         
                     } else {
                         
@@ -280,6 +282,7 @@ class WalletToolsViewController: UIViewController {
                             vc.creatingView.removeConnectingView()
                             let progress = (scanning["progress"] as! Double)
                             showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                            NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
                             
                         }
                         
@@ -287,11 +290,13 @@ class WalletToolsViewController: UIViewController {
                         
                         vc.creatingView.removeConnectingView()
                         showAlert(vc: vc, title: "Scan Complete", message: "The wallet is not currently scanning.")
+                        NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
                         
                     } else {
                         
                         vc.creatingView.removeConnectingView()
                         showAlert(vc: vc, title: "Scan Complete", message: "Unable to determine if wallet is rescanning.")
+                        NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
                         
                     }
                     
@@ -323,6 +328,7 @@ class WalletToolsViewController: UIViewController {
                         vc.creatingView.removeConnectingView()
                         let progress = (scanning["progress"] as! Double)
                         showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                        NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
                         
                     }
                     
@@ -330,11 +336,13 @@ class WalletToolsViewController: UIViewController {
                     
                     vc.creatingView.removeConnectingView()
                     showAlert(vc: vc, title: "Scan Complete", message: "Wallet not rescanning.")
+                    NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
                     
                 } else {
                     
                     vc.creatingView.removeConnectingView()
                     showAlert(vc: vc, title: "Error", message: "Unable to determine if wallet is rescanning.")
+                    NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
                     
                 }
                 
@@ -350,18 +358,15 @@ class WalletToolsViewController: UIViewController {
     }
     
     private func abortRescan() {
-        
-        self.creatingView.addConnectingView(vc: self, description: "aborting rescan")
-        
+        creatingView.addConnectingView(vc: self, description: "aborting rescan")
         Reducer.makeCommand(walletName: self.wallet.name!, command: .abortrescan, param: "") { [unowned vc = self] (object, errorDesc) in
             
             if object != nil {
-                
                 vc.creatingView.removeConnectingView()
                 showAlert(vc: vc, title: "Rescan aborted", message: "")
+                NotificationCenter.default.post(name: .didAbortRescan, object: nil, userInfo: nil)
                 
             } else {
-                
                 vc.creatingView.removeConnectingView()
                 showAlert(vc: vc, title: "Error", message: errorDesc ?? "unknown error")
                 
@@ -372,7 +377,6 @@ class WalletToolsViewController: UIViewController {
     }
     
     // MARK: - Info Button's
-    
     @IBAction func rescanInfo(_ sender: Any) {
         showInfo(title: "Rescan Info", message: TextBlurbs.rescanInfoText())
     }
