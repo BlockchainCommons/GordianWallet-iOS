@@ -288,20 +288,24 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         var utxosToLock = [[String:Any]]()
         Reducer.makeCommand(walletName: walletName ?? "", command: .listunspent, param: "0") { (object, errorDescription) in
             if let utxos = object as? NSArray {
-                for (i, utxo) in utxos.enumerated() {
-                    let dict = utxo as! [String:Any]
-                    let desc = dict["desc"] as! String
-                    let amount = dict["amount"] as! Double
-                    DispatchQueue.main.async { [unowned vc = self] in
-                        if vc.spendChangeSwitch.isOn && vc.isChange(desc) {
-                            utxosToLock.append(dict)
-                        } else if vc.spendDustSwitch.isOn && amount < 0.00010000 {
-                            utxosToLock.append(dict)
-                        }
-                        if i + 1 == utxos.count {
-                            CoinControl.lockUtxos(utxos: utxosToLock, completion: completion)
+                if utxos.count > 0 {
+                    for (i, utxo) in utxos.enumerated() {
+                        let dict = utxo as! [String:Any]
+                        let desc = dict["desc"] as! String
+                        let amount = dict["amount"] as! Double
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            if vc.spendChangeSwitch.isOn && vc.isChange(desc) {
+                                utxosToLock.append(dict)
+                            } else if vc.spendDustSwitch.isOn && amount < 0.00010000 {
+                                utxosToLock.append(dict)
+                            }
+                            if i + 1 == utxos.count {
+                                CoinControl.lockUtxos(utxos: utxosToLock, completion: completion)
+                            }
                         }
                     }
+                } else {
+                    completion(true)
                 }
             }
         }
