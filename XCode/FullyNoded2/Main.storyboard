@@ -5235,12 +5235,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                 <view clipsSubviews="YES" tag="23" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pII-Us-N4E">
                                                     <rect key="frame" x="15" y="323" width="315" height="75"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HnI-vK-gV2">
-                                                            <rect key="frame" x="306" y="18.5" width="0.0" height="0.0"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="capslock" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="fM0-H2-WD1">
                                                             <rect key="frame" x="290" y="8.5" width="16" height="21"/>
                                                             <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -5298,7 +5292,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                         <constraint firstItem="fM0-H2-WD1" firstAttribute="top" secondItem="pII-Us-N4E" secondAttribute="top" constant="8" id="4Oz-RU-m9g"/>
                                                         <constraint firstItem="MXd-Cr-eMh" firstAttribute="top" secondItem="kRm-D3-fc5" secondAttribute="bottom" constant="8" id="5oI-AY-dRD"/>
                                                         <constraint firstItem="Z4d-ga-qGm" firstAttribute="top" secondItem="MXd-Cr-eMh" secondAttribute="bottom" constant="4" id="CKl-DL-UXz"/>
-                                                        <constraint firstAttribute="trailing" secondItem="HnI-vK-gV2" secondAttribute="trailing" constant="9" id="JOi-qq-dLo"/>
                                                         <constraint firstItem="Upj-Sb-mG8" firstAttribute="centerY" secondItem="MXd-Cr-eMh" secondAttribute="centerY" id="N5a-Jh-EwX"/>
                                                         <constraint firstAttribute="height" constant="75" id="NLG-CP-m1S"/>
                                                         <constraint firstItem="kRm-D3-fc5" firstAttribute="leading" secondItem="pII-Us-N4E" secondAttribute="leading" constant="8" id="NNq-06-t5Q"/>
@@ -5855,7 +5848,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                             <color key="textColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="utxo label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LPG-PJ-EKW">
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="utxo label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="LPG-PJ-EKW">
                                                             <rect key="frame" x="0.0" y="34.5" width="55" height="14.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="14.5" id="d5C-wa-9vP"/>
@@ -5941,7 +5934,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                             <color key="textColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="utxo label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jS0-qK-Cda">
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="utxo label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="jS0-qK-Cda">
                                                             <rect key="frame" x="0.0" y="34.5" width="55" height="14.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="14.5" id="ExF-1G-Qeb"/>
