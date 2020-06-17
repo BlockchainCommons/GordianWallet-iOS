@@ -2179,7 +2179,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="0.0" borderStyle="roundedRect" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="WBT-v4-ipz">
-                                <rect key="frame" x="16" y="88.5" width="343" height="44"/>
+                                <rect key="frame" x="16" y="93.5" width="343" height="44"/>
                                 <color key="backgroundColor" red="0.078040815890000004" green="0.090017892419999995" blue="0.10251823810000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="EsG-Q0-eOn"/>
@@ -2189,7 +2189,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <textInputTraits key="textInputTraits" keyboardType="decimalPad" keyboardAppearance="alert"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ADDRESS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uIC-Eu-XZD">
-                                <rect key="frame" x="16" y="140.5" width="60.5" height="14.5"/>
+                                <rect key="frame" x="16" y="145.5" width="60.5" height="14.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -2229,13 +2229,13 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AMOUNT" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WP2-Zk-iPW">
-                                <rect key="frame" x="16" y="72" width="57" height="14.5"/>
+                                <rect key="frame" x="16" y="77" width="57" height="14.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="vds-w7-arV">
-                                <rect key="frame" x="16" y="163" width="343" height="44"/>
+                                <rect key="frame" x="16" y="168" width="343" height="44"/>
                                 <color key="backgroundColor" red="0.078040815890000004" green="0.090017892419999995" blue="0.10251823810000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="uFS-nf-Fw3"/>
@@ -2245,13 +2245,13 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.0 btc / $0 available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6jp-Ka-1Xg">
-                                <rect key="frame" x="16" y="53" width="110" height="13.5"/>
+                                <rect key="frame" x="16" y="58" width="110" height="13.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yUR-gC-Jjg">
-                                <rect key="frame" x="16" y="215" width="61" height="18"/>
+                                <rect key="frame" x="16" y="220" width="61" height="18"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="61" id="Yb4-GS-q6C"/>
                                 </constraints>
@@ -2294,7 +2294,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QCt-8G-YWG">
-                                <rect key="frame" x="248" y="215" width="111" height="18"/>
+                                <rect key="frame" x="248" y="220" width="111" height="18"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="18" id="5Zn-4E-RyG"/>
                                     <constraint firstAttribute="width" constant="111" id="9xk-wt-5Ps"/>
@@ -2306,7 +2306,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </connections>
                             </button>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="CbZ-8G-6aB">
-                                <rect key="frame" x="16" y="241" width="51" height="31"/>
+                                <rect key="frame" x="16" y="246" width="51" height="31"/>
                                 <color key="onTintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="thumbTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
@@ -2314,7 +2314,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </connections>
                             </switch>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Lbs-WQ-4zp">
-                                <rect key="frame" x="16" y="280" width="51" height="31"/>
+                                <rect key="frame" x="16" y="285" width="51" height="31"/>
                                 <color key="onTintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="thumbTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
@@ -2322,13 +2322,13 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="do not spend change" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fjA-7h-veh">
-                                <rect key="frame" x="73" y="249" width="120" height="15"/>
+                                <rect key="frame" x="73" y="254" width="120" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="do not spend dust" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUX-To-gKI">
-                                <rect key="frame" x="73" y="288" width="103" height="15"/>
+                                <rect key="frame" x="73" y="293" width="103" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -2340,6 +2340,18 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </state>
                                 <connections>
                                     <action selector="coinControlAction:" destination="pUo-bf-sNm" eventType="touchUpInside" id="huE-qp-clQ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mf6-E6-DmQ">
+                                <rect key="frame" x="336" y="58" width="23" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="23" id="jw3-dM-1on"/>
+                                    <constraint firstAttribute="width" constant="23" id="rt4-9j-ebJ"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="paintbrush" catalog="system"/>
+                                <connections>
+                                    <action selector="sweepButtonAction:" destination="pUo-bf-sNm" eventType="touchUpInside" id="gph-z0-gss"/>
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hCl-Q8-hd5">
@@ -2357,7 +2369,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="QCt-8G-YWG" firstAttribute="top" secondItem="vds-w7-arV" secondAttribute="bottom" constant="8" id="47t-6O-ya0"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="jXp-xP-J4h" secondAttribute="trailing" id="561-gS-kW0"/>
                             <constraint firstItem="WBT-v4-ipz" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="732-BP-c7w"/>
-                            <constraint firstItem="6jp-Ka-1Xg" firstAttribute="top" secondItem="C0H-pw-RSl" secondAttribute="top" constant="9" id="7Kz-bN-YV6"/>
+                            <constraint firstItem="6jp-Ka-1Xg" firstAttribute="top" secondItem="C0H-pw-RSl" secondAttribute="top" constant="14" id="7Kz-bN-YV6"/>
                             <constraint firstItem="EVv-F0-8a1" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="84m-jQ-j6T"/>
                             <constraint firstItem="Lbs-WQ-4zp" firstAttribute="top" secondItem="CbZ-8G-6aB" secondAttribute="bottom" constant="8" id="8Jc-8r-zUD"/>
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="top" secondItem="DIN-Fg-EH6" secondAttribute="top" id="9aj-Tf-f3P"/>
@@ -2366,10 +2378,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="EVv-F0-8a1" firstAttribute="top" secondItem="jXp-xP-J4h" secondAttribute="bottom" constant="29.5" id="9sd-te-3ke"/>
                             <constraint firstItem="Ipy-yo-xxh" firstAttribute="top" secondItem="EVv-F0-8a1" secondAttribute="bottom" id="C8j-Jf-Bvd"/>
                             <constraint firstItem="jXp-xP-J4h" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" id="HMJ-p4-PHt"/>
-                            <constraint firstItem="lld-wI-YhN" firstAttribute="top" secondItem="Lbs-WQ-4zp" secondAttribute="bottom" constant="7" id="JtP-Qg-bup"/>
+                            <constraint firstItem="lld-wI-YhN" firstAttribute="top" secondItem="Lbs-WQ-4zp" secondAttribute="bottom" constant="2" id="JtP-Qg-bup"/>
                             <constraint firstItem="uIC-Eu-XZD" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="LUf-xe-94t"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="vds-w7-arV" secondAttribute="trailing" constant="16" id="Mj4-Xk-115"/>
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" id="OxE-DM-w3a"/>
+                            <constraint firstItem="mf6-E6-DmQ" firstAttribute="top" secondItem="C0H-pw-RSl" secondAttribute="top" constant="14" id="PZ8-bZ-d79"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="QCt-8G-YWG" secondAttribute="trailing" constant="16" id="QBS-V5-A63"/>
                             <constraint firstItem="uIC-Eu-XZD" firstAttribute="top" secondItem="WBT-v4-ipz" secondAttribute="bottom" constant="8" id="S0e-7C-w5o"/>
                             <constraint firstItem="LiM-LT-3Xz" firstAttribute="top" secondItem="Ipy-yo-xxh" secondAttribute="bottom" constant="-1" id="VI2-We-knv"/>
@@ -2377,6 +2390,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="Lbs-WQ-4zp" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="XgN-GB-afq"/>
                             <constraint firstItem="6jp-Ka-1Xg" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="XmC-VO-PkA"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="LiM-LT-3Xz" secondAttribute="trailing" constant="16" id="Y0r-fO-mrB"/>
+                            <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="mf6-E6-DmQ" secondAttribute="trailing" constant="16" id="Y51-HX-iWk"/>
                             <constraint firstItem="WP2-Zk-iPW" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="ZMe-Mx-WXx"/>
                             <constraint firstItem="n6j-yg-uLt" firstAttribute="leading" secondItem="EVv-F0-8a1" secondAttribute="trailing" constant="8" id="b3p-jQ-kKi"/>
                             <constraint firstItem="lld-wI-YhN" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="bEy-Sx-rIl"/>
@@ -2384,7 +2398,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="Ipy-yo-xxh" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="hTx-zY-ARt"/>
                             <constraint firstItem="WBT-v4-ipz" firstAttribute="top" secondItem="WP2-Zk-iPW" secondAttribute="bottom" constant="2" id="haY-qi-1oz"/>
                             <constraint firstItem="vds-w7-arV" firstAttribute="top" secondItem="uIC-Eu-XZD" secondAttribute="bottom" constant="8" id="icX-cq-YNr"/>
-                            <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="WBT-v4-ipz" secondAttribute="trailing" constant="16" id="kBF-FS-0md"/>
+                            <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="WBT-v4-ipz" secondAttribute="trailing" constant="16" id="kQJ-gQ-LC2"/>
                             <constraint firstItem="fjA-7h-veh" firstAttribute="centerY" secondItem="CbZ-8G-6aB" secondAttribute="centerY" id="lBe-PN-CYL"/>
                             <constraint firstItem="hCl-Q8-hd5" firstAttribute="bottom" secondItem="C0H-pw-RSl" secondAttribute="bottom" id="nv9-qL-otg"/>
                             <constraint firstItem="LiM-LT-3Xz" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="oKT-DP-1ye"/>

@@ -141,6 +141,7 @@
 		D0DAD52424546E7700769618 /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DAD52324546E7700769618 /* Tor.framework */; };
 		D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DB944C24723F2900A0E99D /* CloudKit.framework */; };
 		D0DB944F24736C0600A0E99D /* TransactionStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DB944E24736C0600A0E99D /* TransactionStruct.swift */; };
+		D0E7A6DB2499F36000618B9A /* Sweeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E7A6DA2499F36000618B9A /* Sweeper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -320,6 +321,7 @@
 		D0DAD52324546E7700769618 /* Tor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Tor.framework; sourceTree = "<group>"; };
 		D0DB944C24723F2900A0E99D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		D0DB944E24736C0600A0E99D /* TransactionStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionStruct.swift; sourceTree = "<group>"; };
+		D0E7A6DA2499F36000618B9A /* Sweeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sweeper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -859,6 +861,7 @@
 			children = (
 				D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */,
 				D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */,
+				D0E7A6DA2499F36000618B9A /* Sweeper.swift */,
 			);
 			path = "Transaction Builders";
 			sourceTree = "<group>";
@@ -1130,6 +1133,7 @@
 				D07399DF2461796A00860B7E /* Base58.swift in Sources */,
 				D047DE03242B340A004BC26D /* LicenseDisclaimerViewController.swift in Sources */,
 				D09D732923F0F3C000847DC8 /* InvoiceViewController.swift in Sources */,
+				D0E7A6DB2499F36000618B9A /* Sweeper.swift in Sources */,
 				D09D730D23F0F3C000847DC8 /* NodeStruct.swift in Sources */,
 				D09D736923F0F3C000847DC8 /* SingleSigBuilder.swift in Sources */,
 				D09D732A23F0F3C000847DC8 /* TransactionViewController.swift in Sources */,
@@ -1303,7 +1307,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.41;
+				CURRENT_PROJECT_VERSION = 0.1.42;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1317,7 +1321,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.41;
+				MARKETING_VERSION = 0.1.42;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1335,7 +1339,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.41;
+				CURRENT_PROJECT_VERSION = 0.1.42;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1349,7 +1353,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.41;
+				MARKETING_VERSION = 0.1.42;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

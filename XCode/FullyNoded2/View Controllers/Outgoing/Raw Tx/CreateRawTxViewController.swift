@@ -113,6 +113,110 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         }
     }
     
+    private func sweepAction() {
+        print("sweepAction")
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.creatingView.label.text = "sweeping..."
+            Sweeper.sweepTo(receivingAddress: vc.addressInput.text!) { [unowned vc = self] (psbt, errorDesc) in
+                if psbt != nil {
+                    vc.signSweepedPsbt(psbt: psbt!)
+                } else {
+                    vc.creatingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: errorDesc ?? "Unkown sweeping error.")
+                }
+            }
+        }
+    }
+    
+    @IBAction func sweepButtonAction(_ sender: Any) {
+        addressInput.resignFirstResponder()
+        if addressInput.text != "" {
+            checkForLockedUtxos()
+        } else {
+            showAlert(vc: self, title: "Error", message: "You need to enter a recipient address first.")
+        }
+    }
+    
+    private func checkForLockedUtxos() {
+        creatingView.addConnectingView(vc: self, description: "checking for locked utxo's...")
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
+            if wallet != nil {
+                if wallet!.name != nil {
+                    vc.walletName = wallet!.name!
+                    vc.listLockUnspent(walletName: wallet!.name!)
+                } else {
+                    vc.creatingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "No active wallet")
+                }
+            } else {
+                vc.creatingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error", message: "No active wallet")
+            }
+        }
+    }
+    
+    private func listLockUnspent(walletName: String) {
+        Reducer.makeCommand(walletName: walletName, command: .listlockunspent, param: "") { [unowned vc = self] (object, errorDescription) in
+            if let lockedUtxos = object as? NSArray {
+                if lockedUtxos.count > 0 {
+                    vc.creatingView.removeConnectingView()
+                    vc.promptIfUserWantsToSweepLockedUtxos(lockedUtxos: lockedUtxos)
+                } else {
+                    vc.sweepAction()
+                }
+            } else {
+                vc.creatingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error", message: "There was an error looking up your locked utxos.")
+            }
+        }
+    }
+    
+    private func promptIfUserWantsToSweepLockedUtxos(lockedUtxos: NSArray) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "You have locked utxo's, would you like to sweep them too??", message: "", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Sweep all utxo's", style: .default, handler: { [unowned vc = self] action in
+                vc.unlockAllUtxosToSweep(lockedUtxos: lockedUtxos)
+            }))
+            alert.addAction(UIAlertAction(title: "Keep them locked!", style: .default, handler: { [unowned vc = self] action in
+                vc.sweepAction()
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func unlockAllUtxosToSweep(lockedUtxos: NSArray) {
+        creatingView.addConnectingView(vc: self, description: "unlocking all utxo's")
+        if let locked = lockedUtxos as? [[String:Any]] {
+            CoinControl.unlockUtxos(utxos: locked) { [unowned vc = self] success in
+                if success {
+                    vc.sweepAction()
+                } else {
+                    vc.creatingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: "There was an error unlocking your utxos.")
+                }
+            }
+        }
+    }
+    
+    private func signSweepedPsbt(psbt: String) {
+        print("signSweepedPsbt")
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.creatingView.label.text = "signing psbt..."
+        }
+        PSBTSigner.sign(psbt: psbt) { [unowned vc = self] (success, psbt, rawTx) in
+            if psbt != nil {
+                vc.confirmUnsigned(psbt: psbt!)
+            } else if rawTx != nil {
+                vc.confirm(raw: rawTx!)
+            } else {
+                vc.creatingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error", message: "There was an error signing your psbt, no data wa returned.")
+            }
+        }
+    }
+    
     private func updateAvailableBalance() {
         getActiveWalletNow() { [unowned vc = self] (wallet, error) in
             if wallet != nil {
