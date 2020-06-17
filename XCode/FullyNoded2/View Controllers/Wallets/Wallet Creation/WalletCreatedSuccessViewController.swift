@@ -21,6 +21,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
     var recoveryQr = ""
     var isColdcard = Bool()
     var w:WalletStruct!
+    var isOnlyAddingLabel = Bool()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,16 +39,6 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         
         w = WalletStruct(dictionary: wallet)
         
-        if w.type == "MULTI" {
-            
-            textView.text = TextBlurbs.multiSigWalletCreatedSuccess()
-            
-        } else {
-            
-            textView.text = TextBlurbs.singleSigWalletCreatedSuccess()
-            
-        }
-        
         if isColdcard {
             textField.text = "COLDCARD 2 OF 3"
             
@@ -55,7 +46,44 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
             textField.text = ""
             
         }
+        if !isOnlyAddingLabel {
+            if w.type == "MULTI" {
+                
+                textView.text = TextBlurbs.multiSigWalletCreatedSuccess()
+                
+            } else {
+                
+                textView.text = TextBlurbs.singleSigWalletCreatedSuccess()
+                
+            }
+            deactivateAllAccountsAndActivateNewAccount()
+        } else {
+            textView.text = "Please add a label so you can easily differentiate this account from others."
+            nextOutlet.setTitle("Done", for: .normal)
+        }
         
+    }
+    
+    private func deactivateAllAccountsAndActivateNewAccount() {
+        CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
+            if wallets != nil {
+                if wallets!.count > 0 {
+                    for (i, wallet) in wallets!.enumerated() {
+                        let walletStruct = WalletStruct(dictionary: wallet)
+                        if walletStruct.id != vc.w.id! {
+                            CoreDataService.updateEntity(id: walletStruct.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { _ in }
+                        } else {
+                            CoreDataService.updateEntity(id: vc.w.id!, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { _ in }
+                        }
+                        if i + 1 == wallets!.count {
+                            DispatchQueue.main.async {
+                                NotificationCenter.default.post(name: .didCreateAccount, object: nil, userInfo: nil)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     private func hideBackButton() {
@@ -88,10 +116,15 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
                     
                     if success {
                         
-                        DispatchQueue.main.async {
-                            
-                            vc.performSegue(withIdentifier: "toRecoveryQr", sender: vc)
-                            
+                        if vc.isOnlyAddingLabel {
+                            DispatchQueue.main.async {
+                                NotificationCenter.default.post(name: .didUpdateLabel, object: nil, userInfo: nil)
+                                vc.navigationController?.popToRootViewController(animated: true)
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                vc.performSegue(withIdentifier: "toRecoveryQr", sender: vc)
+                            }
                         }
                         
                     } else {

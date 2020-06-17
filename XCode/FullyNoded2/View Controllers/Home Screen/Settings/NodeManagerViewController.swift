@@ -409,7 +409,9 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                         
                     }
                     if i + 1 == wallets!.count {
-                        NotificationCenter.default.post(name: .nodeSwitched, object: nil, userInfo: nil)
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .nodeSwitched, object: nil, userInfo: nil)
+                        }
                     }
                 }
                 

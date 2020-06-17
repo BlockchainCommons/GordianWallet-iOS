@@ -150,10 +150,41 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             }
         }
         
+        func deactivateAllAccountsAndActivateNewAccount() {
+            CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+                if wallets != nil {
+                    if wallets!.count > 0 {
+                        for (i, w) in wallets!.enumerated() {
+                            let walletStruct = WalletStruct(dictionary: w)
+                            if walletStruct.id != wallet.id! {
+                                CoreDataService.updateEntity(id: walletStruct.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { _ in }
+                            } else {
+                                CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { _ in }
+                            }
+                            if i + 1 == wallets!.count {
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .didCreateAccount, object: nil, userInfo: nil)
+                                }
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .didCreateAccount, object: nil, userInfo: nil)
+                        }
+                    }
+                }
+            }
+        }
+        
         func walletSuccessfullyCreated() {
-            NotificationCenter.default.post(name: .didCreateAccount, object: nil, userInfo: nil)
             DispatchQueue.main.async { [unowned vc = self] in
+                deactivateAllAccountsAndActivateNewAccount()
                 let alert = UIAlertController(title: "Account \(importedOrRecovered)!", message: "Your \(importedOrRecovered) account will now show up in \"Accounts\", a blockchain rescan has been initiated", preferredStyle: .actionSheet)
+                alert.addAction(UIAlertAction(title: "Add Label", style: .default, handler: { action in
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        vc.performSegue(withIdentifier: "addLabelToRecoveredAccount", sender: vc)
+                    }
+                }))
                 alert.addAction(UIAlertAction(title: "Done", style: .cancel, handler: { action in
                     DispatchQueue.main.async { [unowned vc = self] in
                         vc.navigationController?.popToRootViewController(animated: true)
@@ -327,6 +358,17 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         let first = String(name.prefix(5))
         let last = String(name.suffix(5))
         return "\(first)*****\(last).dat"
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let id = segue.identifier
+        if id == "addLabelToRecoveredAccount" {
+            if let vc = segue.destination as? WalletCreatedSuccessViewController {
+                vc.isColdcard = false
+                vc.wallet = walletDict
+                vc.isOnlyAddingLabel = true
+            }
+        }
     }
 
 }

@@ -274,6 +274,9 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                                     vc.loadData()
                                     if succeeded {
                                         displayAlert(viewController: vc, isError: false, message: "Device's seed deleted")
+                                        DispatchQueue.main.async {
+                                            NotificationCenter.default.post(name: .seedDeleted, object: nil, userInfo: nil)
+                                        }
                                     } else {
                                         showAlert(vc: vc, title: "Error", message: "There was an error deleting one of your device's seeds.")
                                     }

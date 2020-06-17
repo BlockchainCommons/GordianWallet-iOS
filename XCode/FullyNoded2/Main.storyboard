@@ -3734,11 +3734,12 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <outlet property="walletName" destination="xGr-Cf-ptF" id="Bq1-1o-mM1"/>
                         <outlet property="walletNetwork" destination="2bf-wN-KDI" id="7QL-HG-uUX"/>
                         <outlet property="walletType" destination="211-Vb-3Oy" id="eG2-eJ-x7q"/>
+                        <segue destination="shH-Cs-byi" kind="show" identifier="addLabelToRecoveredAccount" id="2kH-rb-1zK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X0Q-Sq-lne" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2767" y="1475"/>
+            <point key="canvasLocation" x="-2657" y="1521"/>
         </scene>
         <!--Locked UTXO Info-->
         <scene sceneID="MG3-9N-gz0">
@@ -6113,7 +6114,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="igz-Ga-xca"/>
         <segue reference="NHy-Xu-LiC"/>
         <segue reference="c5y-jb-z8M"/>
-        <segue reference="MTV-lr-E4R"/>
+        <segue reference="2kH-rb-1zK"/>
         <segue reference="cZz-Rg-m7M"/>
         <segue reference="zTj-XW-s3J"/>
     </inferredMetricsTieBreakers>

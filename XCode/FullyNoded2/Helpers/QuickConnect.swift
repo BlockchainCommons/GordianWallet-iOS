@@ -161,7 +161,9 @@ class QuickConnect {
                             }
                             
                             if i + 1 == nodes!.count {
-                                NotificationCenter.default.post(name: .nodeSwitched, object: nil, userInfo: nil)
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .nodeSwitched, object: nil, userInfo: nil)
+                                }
                             }
                         }
                         

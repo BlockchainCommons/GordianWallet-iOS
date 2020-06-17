@@ -43,6 +43,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         NotificationCenter.default.addObserver(self, selector: #selector(seedDeleted(_:)), name: .seedDeleted, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(transactionSent(_:)), name: .transactionSent, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(nodeSwitched(_:)), name: .nodeSwitched, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didUpdateLabel(_:)), name: .didUpdateLabel, object: nil)
         refreshLocalDataAndBalanceForActiveAccount()
     }
     
@@ -72,6 +73,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         createWallet()
     }
     
+    @objc func didUpdateLabel(_ notification: Notification) {
+        refreshLocalDataOnly()
+    }
+    
     @objc func didCreateAccount(_ notification: Notification) {
         refreshLocalDataAndBalanceForActiveAccount()
     }
@@ -93,8 +98,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @objc func transactionSent(_ notification: Notification) {
-        print("transactionSent")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [unowned vc = self] in
+        creatingView.addConnectingView(vc: self, description: "refreshing balance...")
+        /// Need to hardcode a delay as doing it immideately after the transaction broadcasts means the transaction may not have propgated across the network that quickly. Keep in mind we use Blockstreams node to broadcast transactions, if we strictly used our own node then of course it would be instant.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [unowned vc = self] in
             vc.refreshActiveWalletData()
         }
     }
@@ -128,11 +134,22 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func refreshLocalDataOnly() {
         creatingView.addConnectingView(vc: self, description: "refreshing local data...")
-        setOnionLabels()
-        setSortedWalletsArray()
-        setKnownUnknownSignersAndFingerprints()
-        walletTable.reloadData()
-        creatingView.removeConnectingView()
+        setOnionLabels() { [unowned vc = self] success in
+            if success {
+                vc.setSortedWalletsArray() { [unowned vc = self] success in
+                    if success {
+                        vc.setKnownUnknownSignersAndFingerprints() { [unowned vc = self] success in
+                            DispatchQueue.main.async {
+                                vc.walletTable.reloadData()
+                                vc.creatingView.removeConnectingView()
+                            }
+                        }
+                    }
+                }
+            } else {
+                vc.creatingView.removeConnectingView()
+            }
+        }
     }
     
     private func refreshActiveWalletData() {
@@ -164,7 +181,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    private func setOnionLabels() {
+    private func setOnionLabels(completion: @escaping ((Bool)) -> Void) {
         CoreDataService.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodes, errorDescription) in
             if errorDescription == nil && nodes != nil {
                 if nodes!.count > 0 {
@@ -180,21 +197,26 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 }
                             }
                         }
+                        if i + 1 == nodes!.count {
+                            completion(true)
+                        }
                     }
                 } else {
+                    completion(false)
                     displayAlert(viewController: vc, isError: true, message: "no nodes! Something is very wrong, you will not be able to use these wallets without a node")
                 }
             }
         }
     }
     
-    private func setSortedWalletsArray() {
+    private func setSortedWalletsArray(completion: @escaping ((Bool)) -> Void) {
         sortedWallets.removeAll()
         CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
             if errorDescription == nil {
                 if wallets!.count == 0 {
                     vc.creatingView.removeConnectingView()
                     vc.isLoading = false
+                    completion(false)
                 } else {
                     for (i, w) in wallets!.enumerated() {
                         let s = WalletStruct(dictionary: w)
@@ -208,11 +230,15 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             if vc.sortedWallets.count == 0 {
                                 vc.creatingView.removeConnectingView()
                                 vc.isLoading = false
+                                completion(false)
+                            } else {
+                                completion(true)
                             }
                         }
                     }
                 }
             } else {
+                completion(false)
                 vc.creatingView.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: errorDescription!)
             }
@@ -227,7 +253,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    private func setKnownUnknownSignersAndFingerprints() {
+    private func setKnownUnknownSignersAndFingerprints(completion: @escaping ((Bool)) -> Void) {
         for (i, wallet) in sortedWallets.enumerated() {
             let wstruct = WalletStruct(dictionary: wallet)
             SeedParser.parseWallet(wallet: wstruct) { [unowned vc = self] (known, unknown) in
@@ -241,6 +267,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                     if i + 1 == vc.sortedWallets.count {
                         vc.sortedWallets = vc.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
+                        completion(true)
                     }
                 }
             }
@@ -250,34 +277,36 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     func refreshLocalDataAndBalanceForActiveAccount() {
         creatingView.addConnectingView(vc: self, description: "loading accounts...")
         sortedWallets.removeAll()
-        setOnionLabels()
-        CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
-            if errorDescription == nil {
-                if wallets!.count == 0 {
-                    vc.creatingView.removeConnectingView()
-                    vc.isLoading = false
-                } else {
-                    for (i, w) in wallets!.enumerated() {
-                        let s = WalletStruct(dictionary: w)
-                        if !s.isArchived && w["id"] != nil && w["name"] != nil {
-                            vc.sortedWallets.append(w)
-                            if s.isActive {
-                                vc.activeWallet = s
+        setOnionLabels() { success in
+            CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
+                if errorDescription == nil {
+                    if wallets!.count == 0 {
+                        vc.creatingView.removeConnectingView()
+                        vc.isLoading = false
+                    } else {
+                        for (i, w) in wallets!.enumerated() {
+                            let s = WalletStruct(dictionary: w)
+                            if !s.isArchived && w["id"] != nil && w["name"] != nil {
+                                vc.sortedWallets.append(w)
+                                if s.isActive {
+                                    vc.activeWallet = s
+                                }
                             }
-                        }
-                        if i + 1 == wallets!.count {
-                            if vc.sortedWallets.count == 0 {
-                                vc.creatingView.removeConnectingView()
-                                vc.isLoading = false
+                            if i + 1 == wallets!.count {
+                                if vc.sortedWallets.count == 0 {
+                                    vc.creatingView.removeConnectingView()
+                                    vc.isLoading = false
+                                }
+                                vc.setKnownUnknownSignersAndFingerprints() { [unowned vc = self] success in
+                                    vc.getAccountBalance()
+                                }
                             }
-                            vc.setKnownUnknownSignersAndFingerprints()
-                            vc.getAccountBalance()
                         }
                     }
+                } else {
+                    vc.creatingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: errorDescription!)
                 }
-            } else {
-                vc.creatingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: errorDescription!)
             }
         }
     }
@@ -953,9 +982,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 UIView.animate(withDuration: 1.5) { [unowned vc = self] in
                     vc.walletTable.alpha = 1
                 }
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .didSwitchAccounts, object: nil, userInfo: nil)
+                }
                 
-                NotificationCenter.default.post(name: .didSwitchAccounts, object: nil, userInfo: nil)
-                                            
             }
             
         }
@@ -1023,7 +1053,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let s = HomeStruct(dictionary: dictToReturn!)
                 let doub = (s.coldBalance).doubleValue
                 vc.sortedWallets[0]["lastBalance"] = doub
-                print("doub = \(doub)")
                 vc.getRescanStatus(walletName: walletStruct.name ?? "") {
                     completion()
                 }
@@ -1040,26 +1069,29 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             Reducer.makeCommand(walletName: walletName, command: .getexternalwalletinfo, param: "") { [unowned vc = self] (object, errorDesc) in
 
                 if let result = object as? NSDictionary {
-
-                    if let scanning = result["scanning"] as? NSDictionary {
-
-                        if let _ = scanning["duration"] as? Int {
-
-                            let progress = (scanning["progress"] as! Double) * 100
-                            vc.sortedWallets[0]["progress"] = "\(Int(progress))"
+                    
+                    if let _ = result["scanning"] as? Bool {
+                        vc.sortedWallets[0]["isRescanning"] = false
+                        completion()
+                        
+                    } else if let dict = result["scanning"] as? NSDictionary {
+                        if let progress = dict["progress"] as? Double {
+                            let progressProcessed = progress * 100
+                            vc.sortedWallets[0]["progress"] = "\(Int(progressProcessed))"
                             vc.sortedWallets[0]["isRescanning"] = true
                             completion()
-
+                            
+                        } else {
+                            vc.sortedWallets[0]["isRescanning"] = false
+                            completion()
                         }
-
-                    } else {
                         
+                    } else {
                         completion()
 
                     }
 
                 } else {
-                    
                     vc.sortedWallets[0]["isRescanning"] = false
                     completion()
 
