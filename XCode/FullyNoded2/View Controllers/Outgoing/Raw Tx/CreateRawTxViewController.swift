@@ -211,22 +211,20 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                                         let str = LockedUtxoStruct.init(dictionary: lockedUtxo)
                                         if vc.isChange(str.desc) && txid == str.txid && vout == str.vout {
                                             utxosToUnlock.append(dict)
-                                            if i + 1 == utxos.count && x + 1 == lockedUtxos!.count {
-                                                CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
-                                                    completion(success)
-                                                }
+                                        }
+                                        if i + 1 == utxos.count && x + 1 == lockedUtxos!.count {
+                                            CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
+                                                completion(success)
                                             }
                                         }
                                     }
                                 } else {
-                                    CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
-                                        completion(success)
-                                    }
+                                    showAlert(vc: vc, title: "Error", message: "We can not unlock change utxo's that were locked outside of FN2.")
+                                    completion(false)
                                 }
                             } else {
-                                CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
-                                    completion(success)
-                                }
+                                showAlert(vc: vc, title: "Error", message: "We can not unlock change utxo's that were locked outside of FN2.")
+                                completion(false)
                             }
                         }
                     }
@@ -249,7 +247,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                         let dict = utxo as! [String:Any]
                         let txid = dict["txid"] as! String
                         let vout = dict["vout"] as! Int
-                        CoreDataService.retrieveEntity(entityName: .lockedUtxos) { (lockedUtxos, errorDescription) in
+                        CoreDataService.retrieveEntity(entityName: .lockedUtxos) { [unowned vc = self] (lockedUtxos, errorDescription) in
                             if lockedUtxos != nil {
                                 if lockedUtxos!.count > 0 {
                                     for (x, lockedUtxo) in lockedUtxos!.enumerated() {
@@ -264,14 +262,12 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                                         }
                                     }
                                 } else {
-                                    CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
-                                        completion(success)
-                                    }
+                                    showAlert(vc: vc, title: "Error", message: "We can not unlock dust utxo's that were locked outside of FN2.")
+                                    completion(false)
                                 }
                             } else {
-                                CoinControl.unlockUtxos(utxos: utxosToUnlock) { success in
-                                    completion(success)
-                                }
+                                showAlert(vc: vc, title: "Error", message: "We can not unlock dust utxo's that were locked outside of FN2.")
+                                completion(false)
                             }
                         }
                     }

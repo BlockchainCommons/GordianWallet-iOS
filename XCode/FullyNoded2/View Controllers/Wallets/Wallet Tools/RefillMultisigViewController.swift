@@ -389,6 +389,9 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                             }
                             
                             showAlert(vc: vc, title: "Success!", message: "Signer added, the device will now be able to sign for this wallet.")
+                            DispatchQueue.main.async {
+                                NotificationCenter.default.post(name: .seedAdded, object: nil, userInfo: nil)
+                            }
                             
                         } else {
                             

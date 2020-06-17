@@ -152,7 +152,7 @@ class QuickConnect {
                     
                     if nodes!.count > 0 {
                         
-                        for node in nodes! {
+                        for (i, node) in nodes!.enumerated() {
                             
                             if node ["id"] as! UUID != newNodeID {
                                 
@@ -160,6 +160,11 @@ class QuickConnect {
                                 
                             }
                             
+                            if i + 1 == nodes!.count {
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .nodeSwitched, object: nil, userInfo: nil)
+                                }
+                            }
                         }
                         
                     }

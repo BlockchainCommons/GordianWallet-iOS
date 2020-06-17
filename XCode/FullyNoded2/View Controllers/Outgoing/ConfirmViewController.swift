@@ -252,9 +252,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                                          message: "Transaction sent ✓")
                             
                             if vc.sweeping {
-                                
-                                NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
-                                
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
+                                }
+                            } else {
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .transactionSent, object: nil, userInfo: nil)
+                                }
                             }
                             
                         }
@@ -364,15 +368,11 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     }
     
     func getInputInfo(index: Int) {
-        
         let dict = inputArray[index]
         let txid = dict["txid"] as! String
         let vout = dict["vout"] as! Int
-        
-        parsePrevTx(method: .getrawtransaction,
-                    param: "\"\(txid)\"",
-                    vout: vout)
-        
+        //parsePrevTx(method: .getrawtransaction, param: "\"\(txid)\"", vout: vout)
+        parsePrevTx(method: .gettransaction, param: "\"\(txid)\", true", vout: vout)
     }
     
     func parseInputs(inputs: NSArray, completion: @escaping () -> Void) {
@@ -562,7 +562,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 } else {
                     
                     vc.creatingView.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: "Error parsing inputs")
+                    displayAlert(viewController: vc, isError: true, message: "Error decoding raw transaction")
                     
                 }
                 
@@ -572,13 +572,12 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
         func getRawTx(walletName: String) {
             
-            Reducer.makeCommand(walletName: walletName, command: .getrawtransaction, param: param) { [unowned vc = self] (object, errorDescription) in
+            Reducer.makeCommand(walletName: walletName, command: .gettransaction, param: param) { [unowned vc = self] (object, errorDescription) in
                 
-                if let rawTransaction = object as? String {
+                //if let rawTransaction = object as? String {
+                if let dict = object as? NSDictionary, let hex = dict["hex"] as? String {
                     
-                    vc.parsePrevTx(method: .decoderawtransaction,
-                                param: "\"\(rawTransaction)\"",
-                                vout: vout)
+                    vc.parsePrevTx(method: .decoderawtransaction, param: "\"\(hex)\"", vout: vout)
                     
                 } else {
                     
@@ -603,7 +602,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                         
                         decodeRaw(walletName: wallet!.name!)
                         
-                    case .getrawtransaction:
+                    case .gettransaction:
                         
                         getRawTx(walletName: wallet!.name!)
                         
@@ -987,9 +986,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                                  message: "Transaction sent ✓")
                     
                     if vc.sweeping {
-                        
-                        NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
-                        
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .didSweep, object: nil, userInfo: nil)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .transactionSent, object: nil, userInfo: nil)
+                        }
                     }
                     
                 }

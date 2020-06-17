@@ -86,6 +86,14 @@ extension Notification.Name {
     public static let didCompleteOnboarding = Notification.Name(rawValue: "didCompleteOnboarding")
     public static let didSweep = Notification.Name(rawValue: "didSweep")
     public static let didSwitchAccounts = Notification.Name(rawValue: "didSwitchAccounts")
+    public static let didCreateAccount = Notification.Name(rawValue: "didCreateAccount")
+    public static let didRescanAccount = Notification.Name(rawValue: "didRescanAccount")
+    public static let didAbortRescan = Notification.Name(rawValue: "didAbortRescan")
+    public static let seedAdded = Notification.Name(rawValue: "seedAdded")
+    public static let seedDeleted = Notification.Name(rawValue: "seedDeleted")
+    public static let transactionSent = Notification.Name(rawValue: "transactionSent")
+    public static let nodeSwitched = Notification.Name(rawValue: "nodeSwitched")
+    public static let didUpdateLabel = Notification.Name(rawValue: "didUpdateLabel")
 }
 
 public extension Int {

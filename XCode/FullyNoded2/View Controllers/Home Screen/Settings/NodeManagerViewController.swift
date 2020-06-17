@@ -116,6 +116,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                                     
                                     vc.nodes.remove(at: indexPath.section)
                                     tableView.deleteSections(IndexSet.init(arrayLiteral: indexPath.section), with: .fade)
+                                    NotificationCenter.default.post(name: .nodeSwitched, object: nil, userInfo: nil)
                                     
                                 }
                                 
@@ -293,37 +294,30 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     @objc func alternate(_ sender: UISwitch) {
-        print("alternate")
-        
-        let restId = sender.restorationIdentifier!
-        let section = Int(restId)!
-        let node = nodes[section]
-        let idToActivate = NodeStruct.init(dictionary: node).id
-        
-       if sender.isOn {
-            
-            //turning on
-            makeActive(nodeToActivate: idToActivate)
-            
-        } else {
-            
-            self.table.reloadSections([section], with: .fade)
-            
-            showAlert(vc: self, title: "Alert", message: "You must always have one active node, if you would like to use a different node simply switch it on and the other nodes will be switched off automatically.")
-            
+        if sender.restorationIdentifier != nil {
+            if let section = Int(sender.restorationIdentifier!) {
+                let node = nodes[section]
+                let idToActivate = NodeStruct.init(dictionary: node).id
+                if sender.isOn {
+                    //turning on
+                    makeActive(nodeToActivate: idToActivate)
+                } else {
+                    table.reloadSections([section], with: .fade)
+                    showAlert(vc: self, title: "Alert", message: "You must always have one active node, if you would like to use a different node simply switch it on and the other nodes will be switched off automatically.")
+                }
+            }
         }
-        
     }
     
     func makeActive(nodeToActivate: UUID) {
         
-        CoreDataService.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodess, errorDescription) in
+        CoreDataService.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodes, errorDescription) in
             
             if errorDescription == nil {
                 
-                if nodess!.count > 0 {
+                if nodes!.count > 0 {
                     
-                    for node in nodess! {
+                    for node in nodes! {
                         
                         let str = NodeStruct.init(dictionary: node)
                         
@@ -360,64 +354,40 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func deactivateOtherNodes(nodeToActivate: UUID) {
-        print("deactivateOtherNodes")
-        
-        CoreDataService.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodess, errorDescription) in
-            
+        CoreDataService.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodes, errorDescription) in
             if errorDescription == nil {
-                
-                if nodess!.count > 0 {
-                    
-                    for (i, node) in nodess!.enumerated() {
-                        
+                if nodes!.count > 0 {
+                    for (i, node) in nodes!.enumerated() {
                         let str = NodeStruct.init(dictionary: node)
-                        
                         if str.id != nodeToActivate {
-                            
                             CoreDataService.updateEntity(id: str.id, keyToUpdate: "isActive", newValue: false, entityName: .nodes) { (success1, errorDescription1) in
-                                
-                                if success1 {
-                                    
-                                    if i + 1 == nodess!.count {
-                                        
-                                        vc.load()
-                                        
-                                    }
-                                    
-                                } else {
-                                    
+                                if !success1 {
                                     displayAlert(viewController: vc, isError: true, message: errorDescription1 ?? "error updating")
-                                    
                                 }
-                                
                             }
-                            
                         }
-                        
+                        if i + 1 == nodes!.count {
+                            vc.load()
+                            vc.deactiveateWallets(nodeToActivateId: nodeToActivate)
+                        }
                     }
-                    
                 }
-                
             }
-            
         }
-        
-        deactiveateWallets()
-        
     }
     
-    private func deactiveateWallets() {
+    private func deactiveateWallets(nodeToActivateId: UUID) {
         
         CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
             
             if wallets != nil {
                 
-                for wallet in wallets! {
+                for (i, wallet) in wallets!.enumerated() {
                     
-                    if wallet["id"] != nil && wallet["isArchived"] != nil {
+                    if wallet["id"] != nil && wallet["isArchived"] != nil && wallet["nodeId"] != nil {
                         let w = WalletStruct(dictionary: wallet)
                         
-                        if !w.isArchived && w.isActive {
+                        if !w.isArchived && w.isActive && w.nodeId! != nodeToActivateId {
                             
                             CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { (success, errorDescription) in
                                 
@@ -438,7 +408,11 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                         }
                         
                     }
-                    
+                    if i + 1 == wallets!.count {
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .nodeSwitched, object: nil, userInfo: nil)
+                        }
+                    }
                 }
                 
             }

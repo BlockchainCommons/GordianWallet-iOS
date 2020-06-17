@@ -40,11 +40,11 @@ class PSBTSigner {
                         }
                     } else {
                         reset()
-                        completion((false, psbtToSign.description, nil))
+                        completion((false, nil, errorDescription))
                     }
                 } else {
                     reset()
-                    completion((false, psbtToSign.description, nil))
+                    completion((false, nil, errorDescription))
                 }
             }
         }
