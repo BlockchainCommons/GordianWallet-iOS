@@ -36,9 +36,7 @@ Once the account is successfully created on your node you will be guided through
 
 Please save the recovery items in order to be able to recover your account! If you do not do this you are at risk of permanently losing your funds. The Account Map QR only contains public keys and is used to recreate your account as watch-only, in order to make it spendable you need to add your seed words to the account.
 
-<img src="../Images/wallet_recovery_QR.PNG" alt="" width="250"/>
-
-<img src="../Images/wallet_recovery_phrase_intro.PNG" alt="" width="250"/> <img src="../Images/wallet_offline_recovery_words.PNG" alt="" width="250"/>
+<img src="../Images/wallet_recovery_QR.PNG" alt="" width="250"/> <img src="../Images/wallet_offline_recovery_words.PNG" alt="" width="250"/>
 
 The final screen in the account created confirmation flow is the offline recovery words. From that screen, you can copy the words to clipboard, export them, or display them in QR code format. *It is extremely important that the recovery words are saved*. It is recommended you write these down on waterproof paper and save them securely in multiple locations. For multi-sig accounts they are required for account recovery and for refilling the keypool.
 
@@ -46,7 +44,7 @@ The final screen in the account created confirmation flow is the offline recover
 
 <img src="../Images/wallets_screen.PNG" alt="" width="250"/> <img src="../Images/seed_export.PNG" alt="" width="250"/> <img src="../Images/utxos.PNG" alt="" width="250"/>
 
-<img src="../Images/export_keys.PNG" alt="" width="250"/> <img src="../Images/verify_addresses.PNG" alt="" width="250"/>
+<img src="../Images/verify_addresses.PNG" alt="" width="250"/>
 
 After creating a account, you will see it on the "accounts" page. Tap it to activate it.
 
