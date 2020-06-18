@@ -44,7 +44,7 @@ The final screen in the account created confirmation flow is the offline recover
 
 ## Accessing an Account
 
-<img src="../Images/wallets_screen.PNG" alt="" width="250"/> <img src="../Images/seed_export.PNG" alt="" width="250"/> <img src="../Images/utxos.jpeg" alt="" width="250"/>
+<img src="../Images/wallets_screen.PNG" alt="" width="250"/> <img src="../Images/seed_export.PNG" alt="" width="250"/> <img src="../Images/utxos.PNG" alt="" width="250"/>
 
 <img src="../Images/export_keys.PNG" alt="" width="250"/> <img src="../Images/verify_addresses.PNG" alt="" width="250"/>
 
