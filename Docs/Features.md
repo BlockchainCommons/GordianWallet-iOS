@@ -42,9 +42,7 @@ The final screen in the account created confirmation flow is the offline recover
 
 <img src="../Images/wallets_screen.PNG" alt="" width="250"/> <img src="../Images/account_tools.PNG" alt="" width="250"/>
 
-<img src="../Images/seed_export.PNG" alt="" width="250"/> <img src="../Images/utxos.PNG" alt="" width="250"/>
-
-<img src="../Images/verify_addresses.PNG" alt="" width="250"/>
+<img src="../Images/seed_export.PNG" alt="" width="250"/> <img src="../Images/utxos.PNG" alt="" width="250"/> <img src="../Images/verify_addresses.PNG" alt="" width="250"/>
 
 After creating a account, you will see it on the "accounts" page. Tap it to activate it. Once you have activated an account you may tap the tool button in the top right corner to see all account tools. From this menu you have access to many powerful tools.
 
@@ -76,7 +74,7 @@ You may expand the cells to show more info about your Tor connection, node stati
 
 You can see all the details associated with your account along with transaction history. You will see ⚠︎ for any unconfirmed balances and their associated transactions. You can tap the refresh buttons to reload individual sections or pull the screen to reload all sections. You may tap each individual transaction to see its data and memo, or retroactively add/edit a memo.
 
-## Recovering a account
+## Recovering an Account
 
 You may either input the seed words, the Account Map QR code or xpub's to recover accounts. In order to make accounts spendable you must add the seed words. The Account Map QR holds your accounts birthdate, account type, label, and derivation scheme to make recreating your account as simple as a scan. We recommend to scan your Account Map QR initially to recreate the account then add your seed words to the account to make it spendable. You may also simply add your seed words if you do not have the Account Map, however you will need to choose the derivation scheme and may or may not need to rescan the blockchain depending on whether you lost your node or not.
 
@@ -86,7 +84,7 @@ Similarly, upon scanning a valid Account Map QR you will also be alerted.
 
 If you had only added words you will be prompted to select single sig or multisig, at that point if you choose multisig you will have the option to add as many seed phrases as you would like to recreate your "m of n" multisig account, same goes for xpub recovery. Once enough seed phrases have been added you can choose a derivation scheme and then the app will derive the first 5 addresses giving you the opportunity to ensure they match what you expect them to. The app will also see if the account still exists on your node or not, if it does it will be able to display a balance for you.
 
-<img src="../Images/wallet_recovery_add_words.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_valid_mnmemonic.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_valid_QR.PNG" alt="" width="250"/> <img src="../Images/confirm_recovery.PNG" alt="" width="250"/>
+<img src="../Images/wallet_recovery_screen.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_add_words.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_valid_QR.PNG" alt="" width="250"/> <img src="../Images/confirm_wallet_recovery.PNG" alt="" width="250"/>
 
 Upon tapping "Confirm" the app will recreate your account on the node and save it to the app, activate it and refresh the "Accounts" view, it will also automatically initiate a rescan so historic balances and transactions will show up.
 
@@ -138,4 +136,4 @@ Upon tapping "Confirm" the app will recreate your account on the node and save i
   - [x] Electrum
   - [x] Specter
   - [x] Bluewallet
-  - [ ] research more wallet providers and which derivation they support. 
+  - [ ] research more wallet providers and which derivation they support.
