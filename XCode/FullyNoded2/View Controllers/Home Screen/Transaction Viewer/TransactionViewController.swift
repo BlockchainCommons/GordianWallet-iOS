@@ -349,7 +349,7 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         let dict = inputArray[index]
         let txid = dict["txid"] as! String
         let vout = dict["vout"] as! Int
-        parsePrevTx(method: .getrawtransaction, param: "\"\(txid)\"", vout: vout)
+        parsePrevTx(method: .gettransaction, param: "\"\(txid)\", true", vout: vout)
     }
     
     func parseInputs(inputs: NSArray, completion: @escaping () -> Void) {
@@ -441,9 +441,10 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         }
         
         func getRawTx() {
-            Reducer.makeCommand(walletName: walletName, command: .getrawtransaction, param: param) { [unowned vc = self] (object, errorDescription) in
-                if let rawTransaction = object as? String {
-                    vc.parsePrevTx(method: .decoderawtransaction, param: "\"\(rawTransaction)\"", vout: vout)
+            Reducer.makeCommand(walletName: walletName, command: .gettransaction, param: param) { [unowned vc = self] (object, errorDescription) in
+                if let dict = object as? NSDictionary {
+                    let hex = dict["hex"] as! String
+                    vc.parsePrevTx(method: .decoderawtransaction, param: "\"\(hex)\"", vout: vout)
                 } else {
                     vc.creatingView.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "Error parsing inputs")
@@ -454,7 +455,7 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         switch method {
         case .decoderawtransaction:
             decodeRaw()
-        case .getrawtransaction:
+        case .gettransaction:
             getRawTx()
         default:
             break
