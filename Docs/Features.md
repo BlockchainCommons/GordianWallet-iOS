@@ -40,34 +40,37 @@ The final screen in the account created confirmation flow is the offline recover
 
 ## Accessing an Account
 
-<img src="../Images/wallets_screen.PNG" alt="" width="250"/> <img src="../Images/seed_export.PNG" alt="" width="250"/> <img src="../Images/utxos.PNG" alt="" width="250"/>
+<img src="../Images/wallets_screen.PNG" alt="" width="250"/> <img src="../Images/account_tools.PNG" alt="" width="250"/>
+
+<img src="../Images/seed_export.PNG" alt="" width="250"/> <img src="../Images/utxos.PNG" alt="" width="250"/>
 
 <img src="../Images/verify_addresses.PNG" alt="" width="250"/>
 
-After creating a account, you will see it on the "accounts" page. Tap it to activate it.
+After creating a account, you will see it on the "accounts" page. Tap it to activate it. Once you have activated an account you may tap the tool button in the top right corner to see all account tools. From this menu you have access to many powerful tools.
 
-* Tap the info button to display and export your device's seed info and the Account Map QR at anytime. You will always be prompted for 2FA whenever you export a seed or a private key.
-* Tap the eyeball to export all the keys associated with the account. These keys will be derived from the device if possible.
-* Tap the verify button to fetch the addresses purely from your node so you may "verify" that the addresses your device derives are the same as the one your node derives. For now LibWally will not derive BIP44/49 multi-sig addresses. These addresses must be fetched from your node. BIP84 multi-sig addresses will be derived locally using LibWally.
-* Tap the list button to see the account's UTXOs. This fetches your account's UTXOs from your node. From your node's perspective the UTXOs are always watch-only, as your node is never holding enough private keys to fully spend one of them. You may tap each utxo to see all the info in JSON format that your node holds for that UTXO.
+* "Rescan blockchain" to get options for rescanning the blockchain. This is useful when recovering or importing accounts. You may rescan from birthdate, from genesis, abort rescan or simply check the scan status.
+* "Sweep to account" allows you to sweep the current account to any other account.
+* "Refill keypool" allows you to add 2500 more receive keys and 2500 more change keys to your node incase you have reached the limit.
+* "Add a signer" allows you to add a signer to your account if it is not spendable. The app will verify that your mnemonic matches one of the accounts xpubs before actually adding it. Once added your account type will update in the UI and if enough signers have been added you will be able to spend from it.
+* "Backup Info" to display and export your device's seed info and the Account Map QR at anytime. You will always be prompted for 2FA whenever you export a seed or a private key.
+* "Coin control" to see the account's UTXOs. This fetches your account's UTXOs from your node and allows you to lock and unlock utxo's to make them (un)spendable.
+* "Addresses and keys" to export all the keys associated with the account. These keys will be derived from the device if possible.
 
 ## Receiving Funds
 
 <img src="../Images/create_invoice.PNG" alt="" width="250"/>
 
-To receive funds, activate the account you want to receive from and then tap the "In" tab. This will fetch a receiving address from your node for your active account. To fetch another one, tap the refresh button in the top right corner. The "amount" and "label" field conform to BIP21: you can add amounts and a label so the spender can simply scan the QR and it will automatically populate the amount field on their end if their software is BIP21 compatible.
+To receive funds, activate the account you want to receive from and then tap the "In" tab and then "create". This will fetch a receiving address from your node for your active account. To fetch another one, tap the "create" button again. The "amount" and "label" field conform to BIP21: you can add amounts and a label so the spender can simply scan the QR and it will automatically populate the amount field on their end if their software is BIP21 compatible.
 
 ## Spending Funds
 
 <img src="../Images/pay_invoice.PNG" alt="" width="250"/> <img src="../Images/confirm_transaction.PNG" alt="" width="250"/>
 
-To send funds, just tap the "Out" tab. From here you can tap the scanner button to scan a BIP21 compatible QR code or an address. You can also tap the + button to add multiple outputs to your transaction (batching). Whenever you are ready to build the transaction just tap "next".
+To send funds, just tap the "Out" tab. From here you can tap the scanner button to scan a BIP21 compatible QR code or an address. You can also tap the + button to add multiple outputs to your transaction (batching). You may sweep to an address or utilize coin control features. Whenever you are ready to build the transaction just tap "next".
 
 ## Viewing Histories, Details, and Other Information
 
-<img src="../Images/home_screen_expanded.PNG" alt="" width="250"/> <img src="../Images/home_screen_balance_transactions.PNG" alt="" width="250"/>
-
-<img src="../Images/transactions.PNG" alt="" width="250"/>
+<img src="../Images/home_screen_expanded.PNG" alt="" width="250"/> <img src="../Images/home_screen_balance_transactions.PNG" alt="" width="250"/> <img src="../Images/transactions.PNG" alt="" width="250"/>
 
 You may expand the cells to show more info about your Tor connection, node statistics, and your account by tapping the expand/collapse buttons on the home screen.
 
@@ -75,11 +78,9 @@ You can see all the details associated with your account along with transaction 
 
 ## Recovering a account
 
-Please see [Recovery.md](./Docs/Recovery.md) for full details of how this works.
+You may either input the seed words, the Account Map QR code or xpub's to recover accounts. In order to make accounts spendable you must add the seed words. The Account Map QR holds your accounts birthdate, account type, label, and derivation scheme to make recreating your account as simple as a scan. We recommend to scan your Account Map QR initially to recreate the account then add your seed words to the account to make it spendable. You may also simply add your seed words if you do not have the Account Map, however you will need to choose the derivation scheme and may or may not need to rescan the blockchain depending on whether you lost your node or not.
 
-You may either input the seed words, the Account Map QR code or xpub's to recover accounts. In order to make accounts spendable you must add the seed words. The Account Map QR is handy as it holds your accounts birthdate, derivation scheme and other useful data to make recreating your account as simple as a scan. We recommend to scan your Account Map QR initially to recreate the account then add your seed words to the account to make it spendable. You may also simply add your seed words if you do not have the Account Map, however you will need to choose the derivation scheme and may or may not need to rescan the blockchain depending on whether you lost your node or not.
-
-You may input the words one at a time or all at once; once the mnemonic is verified to be valid you will get an alert. The app only supports 12 and 24 word seeds.
+You may input the seed words one at a time or all at once; once the mnemonic is verified to be valid you will get an alert. The app only supports 12 and 24 word seeds.
 
 Similarly, upon scanning a valid Account Map QR you will also be alerted.
 
@@ -130,4 +131,3 @@ Upon tapping "Confirm" the app will recreate your account on the node and save i
   - [x] RaspiBlitz
   - [x] Embassy
   - [ ] Wasabi
-  - [ ] CasaHodl
