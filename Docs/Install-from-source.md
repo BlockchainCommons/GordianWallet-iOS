@@ -8,8 +8,8 @@ Install Apple's XCode developer environment, and download the FullyNoded 2 sourc
 
 - [Install Xcode](https://itunes.apple.com/id/app/xcode/id497799835?mt=12)
 - You will need a free Apple developer account: create one [here](https://developer.apple.com/programs/enroll/)
-- In XCode, click "XCode" -> "preferences" -> "Accounts" and add your github account
-- Go to the [repo](https://github.com/BlockchainCommons/FullyNoded-2) for FullyNoded 2 and click `Clone and Download` -> `Open in XCode`
+- In XCode, click "XCode" > "preferences" > "Accounts" and add your github account
+- Go to the [repo](https://github.com/BlockchainCommons/FullyNoded-2) for FullyNoded 2 and click `Clone and Download` > `Open in XCode`
 - Once it opens, go ahead and close it for now and quit XCode
 
 ## 2. Install Brew

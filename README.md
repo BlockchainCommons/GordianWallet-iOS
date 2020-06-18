@@ -39,7 +39,7 @@ When you install FullyNoded 2, you will need to link it to the full node of your
 
 *FullyNoded 2*  has been tested with Blockchain Commons' [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) and with our [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts), which install your own personal bitcoin-core and Tor services.
 
-*FullyNoded2* should also work with any properly configured Bitcoin Core 0.19.0.1 node with a hidden service controlling `rpcport` via localhost, including full node devices such as [Nodl](https://www.nodl.it/) or [RaspiBlitz](https://github.com/rootzoll/raspiblitz), or full nodes installed by other services such as [BTCPayServer](https://btcpayserver.org). These full nodes can be connected by clicking a link or scanning a QR code.
+*FullyNoded2* should also work with any properly configured Bitcoin Core 0.20.0 node with a hidden service controlling `rpcport` via localhost, including full node devices such as [Nodl](https://www.nodl.it/) or [RaspiBlitz](https://github.com/rootzoll/raspiblitz), or full nodes installed by other services such as [BTCPayServer](https://btcpayserver.org). These full nodes can be connected by clicking a link or scanning a QR code.
 
 Please refer to their telegram groups for simple instructions on linking to these servers or services:
 
@@ -110,7 +110,8 @@ The team responsible for designing and developing this app are:
 
 **Christopher Allen, Principal Architect.** Christopher has been working on open web architectures since the early ’90s, with a focus on security, privacy, cryptography, and standards. He is the founder of [Blockchain Commons](https://www.blockchaincommons.com/) and [Rebooting the Web of Trust](https://www.weboftrust.info/) and a member of the [W3 Credentials Community Group](https://w3c-ccg.github.io/). His recent focus is on engines of trust, specifically blockchains, digital assets, smart contracts, smart signatures, and decentralized self-sovereign identity..
 
-**Peter Denton, Project Lead.** Creator of [Fully Noded](https://apps.apple.com/us/app/fully-noded/id1436425586)
+**Peter Denton, Project Lead.** Creator of [Fully Noded](https://apps.apple.com/us/app/fully-noded/id1436425586). Tor and Bitcoin enthusiast who is passionate about building censorship resistant, user empowering Bitcoin software to promote self sovereignty.
+
 
 You can contact them at:
 
