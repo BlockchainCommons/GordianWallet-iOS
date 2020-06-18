@@ -8,7 +8,7 @@ FullyNoded 2 allows for multiple wallet templates, including: legacy, SegWit-com
 
 ## Status — Early Beta
 
-*FullyNoded 2* is currently under active development and in early beta testing phase. It should be used on Bitcoin testnet to gain familiarity with how the wallet works, and most importantly to practice deleting and recovering wallet. For a detailed checklist to test critical functionality please see our [Checklist.md](./Docs/Checklist.md)
+*FullyNoded 2* is currently under active development and in early beta testing phase. It should be used on Bitcoin testnet to gain familiarity with how the wallet works, and most importantly to practice deleting and recovering wallet. For a detailed checklist to test critical functionality please see our [Testing Checklist.md](./Docs/Testing Checklist.md)
 
 ## Installing FullyNoded 2
 
@@ -25,7 +25,7 @@ To help us improve FullyNoded 2, *please*  share crash reports and give us feedb
 
 ### Installing FullyNoded 2 from Testflight
 
-We have a public Testflight link available for beta testing [here](https://testflight.apple.com/join/OQHyL0a8). 
+We have a public Testflight link available for beta testing [here](https://testflight.apple.com/join/OQHyL0a8).
 
 Click through, and you'll be able to install the app immediately (and will be instructed how to install Testflight if you need to do so first).
 
@@ -39,7 +39,7 @@ When you install FullyNoded 2, you will need to link it to the full node of your
 
 *FullyNoded 2*  has been tested with Blockchain Commons' [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) and with our [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts), which install your own personal bitcoin-core and Tor services.
 
-*FullyNoded2* should also work with any properly configured Bitcoin Core 0.19.0.1 node with a hidden service controlling `rpcport` via localhost, including full node devices such as [Nodl](https://www.nodl.it/) or [RaspiBlitz](https://github.com/rootzoll/raspiblitz), or full nodes installed by other services such as [BTCPayServer](https://btcpayserver.org). These full nodes can be connected by clicking a link or scanning a QR code. 
+*FullyNoded2* should also work with any properly configured Bitcoin Core 0.19.0.1 node with a hidden service controlling `rpcport` via localhost, including full node devices such as [Nodl](https://www.nodl.it/) or [RaspiBlitz](https://github.com/rootzoll/raspiblitz), or full nodes installed by other services such as [BTCPayServer](https://btcpayserver.org). These full nodes can be connected by clicking a link or scanning a QR code.
 
 Please refer to their telegram groups for simple instructions on linking to these servers or services:
 
@@ -108,7 +108,7 @@ FullyNoded 2 is a professional mobile wallet that can be used by you for your cr
 
 The team responsible for designing and developing this app are:
 
-**Christopher Allen, Principal Architect.** Christopher has been working on open web architectures since the early ’90s, with a focus on security, privacy, cryptography, and standards. He is the founder of [Blockchain Commons](https://www.blockchaincommons.com/) and [Rebooting the Web of Trust](https://www.weboftrust.info/) and a member of the [W3 Credentials Community Group](https://w3c-ccg.github.io/). His recent focus is on engines of trust, specifically blockchains, digital assets, smart contracts, smart signatures, and decentralized self-sovereign identity.. 
+**Christopher Allen, Principal Architect.** Christopher has been working on open web architectures since the early ’90s, with a focus on security, privacy, cryptography, and standards. He is the founder of [Blockchain Commons](https://www.blockchaincommons.com/) and [Rebooting the Web of Trust](https://www.weboftrust.info/) and a member of the [W3 Credentials Community Group](https://w3c-ccg.github.io/). His recent focus is on engines of trust, specifically blockchains, digital assets, smart contracts, smart signatures, and decentralized self-sovereign identity..
 
 **Peter Denton, Project Lead.** [need a few sentences here]
 
