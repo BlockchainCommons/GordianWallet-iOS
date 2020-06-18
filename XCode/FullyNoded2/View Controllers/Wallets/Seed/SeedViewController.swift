@@ -74,7 +74,10 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         if wallet.id != nil {
             CoreDataService.deleteEntity(id: wallet.id!, entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
                 if success {
-                    vc.navigationController?.popToRootViewController(animated: true)
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .seedDeleted, object: nil, userInfo: nil)
+                        vc.navigationController?.popToRootViewController(animated: true)
+                    }
                 } else {
                     showAlert(vc: vc, title: "Error", message: "Ooops, there was an error deleting this account")
                 }
