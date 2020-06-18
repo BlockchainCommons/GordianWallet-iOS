@@ -117,7 +117,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         refresher = UIRefreshControl()
         refresher.tintColor = UIColor.white
         refresher.attributedTitle = NSAttributedString(string: "refresh data", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-        refresher.addTarget(self, action: #selector(self.reloadActiveWallet), for: UIControl.Event.valueChanged)
+        refresher.addTarget(self, action: #selector(self.refreshLocalDataAndBalanceForActiveAccount), for: UIControl.Event.valueChanged)
         walletTable.addSubview(refresher)
     }
     
@@ -156,6 +156,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         func reloadNow() {
             DispatchQueue.main.async { [unowned vc = self] in
                 vc.walletTable.reloadData()
+                vc.refresher.endRefreshing()
                 vc.creatingView.removeConnectingView()
                 vc.walletTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                 vc.isLoading = false
@@ -174,6 +175,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
             if i + 1 == sortedWallets.count {
                 DispatchQueue.main.async { [unowned vc = self] in
+                    vc.refresher.endRefreshing()
                     vc.creatingView.removeConnectingView()
                     vc.walletTable.reloadData()
                 }
@@ -274,13 +276,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    func refreshLocalDataAndBalanceForActiveAccount() {
+    @objc func refreshLocalDataAndBalanceForActiveAccount() {
         creatingView.addConnectingView(vc: self, description: "loading accounts...")
         sortedWallets.removeAll()
         setOnionLabels() { success in
             CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
                 if errorDescription == nil {
                     if wallets!.count == 0 {
+                        vc.refresher.endRefreshing()
                         vc.creatingView.removeConnectingView()
                         vc.isLoading = false
                     } else {
@@ -295,6 +298,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             if i + 1 == wallets!.count {
                                 if vc.sortedWallets.count == 0 {
                                     vc.creatingView.removeConnectingView()
+                                    vc.refresher.endRefreshing()
                                     vc.isLoading = false
                                 }
                                 vc.setKnownUnknownSignersAndFingerprints() { [unowned vc = self] success in
@@ -304,6 +308,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }
                     }
                 } else {
+                    vc.refresher.endRefreshing()
                     vc.creatingView.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: errorDescription!)
                 }
