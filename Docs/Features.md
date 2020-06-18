@@ -130,4 +130,12 @@ Upon tapping "Confirm" the app will recreate your account on the node and save i
   - [x] BTCPayServer
   - [x] RaspiBlitz
   - [x] Embassy
-  - [ ] Wasabi
+
+- [ ] Compatible Wallets
+  - [x] Samourai
+  - [x] Wasabi
+  - [x] Coldcard
+  - [x] Electrum
+  - [x] Specter
+  - [x] Bluewallet
+  - [ ] research more wallet providers and which derivation they support. 
