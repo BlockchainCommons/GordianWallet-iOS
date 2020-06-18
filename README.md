@@ -21,7 +21,7 @@ To help us improve FullyNoded 2, *please*  share crash reports and give us feedb
 ### Requirements
 
 - iOS 13
-- A Bitcoin Core full node v0.19.0.1 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service. Your node does not need to be an archive node, thus you can save space by being setup as a pruned full node.
+- A Bitcoin Core full node v0.20.0 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service. Your node does not need to be an archive node, thus you can save space by being setup as a pruned full node.
 
 ### Installing FullyNoded 2 from Testflight
 
@@ -110,7 +110,7 @@ The team responsible for designing and developing this app are:
 
 **Christopher Allen, Principal Architect.** Christopher has been working on open web architectures since the early ’90s, with a focus on security, privacy, cryptography, and standards. He is the founder of [Blockchain Commons](https://www.blockchaincommons.com/) and [Rebooting the Web of Trust](https://www.weboftrust.info/) and a member of the [W3 Credentials Community Group](https://w3c-ccg.github.io/). His recent focus is on engines of trust, specifically blockchains, digital assets, smart contracts, smart signatures, and decentralized self-sovereign identity..
 
-**Peter Denton, Project Lead.** [need a few sentences here]
+**Peter Denton, Project Lead.** Creator of [Fully Noded](https://apps.apple.com/us/app/fully-noded/id1436425586)
 
 You can contact them at:
 
@@ -119,7 +119,7 @@ You can contact them at:
 | Christopher Allen | Principal Architect | [@ChristopherA](https://github.com/ChristopherA) | \<ChristopherA@LifeWithAlacrity.com\> | FDFE 14A5 4ECB 30FC 5D22  74EF F8D3 6C91 3574 05ED |
 | Peter Denton      | Project Lead        | [@Fonta1n3](https://github.com/Fonta1n3)                                      | \<fontainedenton@googlemail.com\>     | 3B37 97FA 0AE8 4BE5 B440  6591 8564 01D7 121C 32FC |
 
-You can add your name here by getting involved — the first step is to learn how to contribute from our [CONTRIBUTING.md](./Docs/CONTRIBUTING.md) documentation.
+You can add your name here by getting involved — the first step is to learn how to contribute from our [CONTRIBUTING.md](./CONTRIBUTING.md) documentation.
 
 ## Responsible Disclosure
 

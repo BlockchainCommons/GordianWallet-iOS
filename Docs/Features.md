@@ -1,6 +1,6 @@
 # Using FullyNoded 2
 
-FullyNoded 2 allows you to: add a node; create a wallet; access a wallet; receive funds; spend funds; view additional information; and receover a wallet. Instructions on how to use each feature follow, as does a wishlist of potential future expansions.
+FullyNoded 2 allows you to: add a node; create an account; access accounts; receive funds; spend funds; utilize advanced coin control; export keys; refill your nodes keypool; sweep funds to address; sweep funds to account; recover accounts; import accounts; add signers which are not associated with accounts on the device; sign for any psbt it holds a seed for; Coldcard compatibility; create accounts with xpubs or seed words. Instructions on how to use each feature follow, as does a wishlist of potential future expansions.
 
 For more information on how these features actually function, see ["How It Works"](How-it-works.md).
 
@@ -10,40 +10,56 @@ For more information on how these features actually function, see ["How It Works
 
 When initially starting up FullyNoded 2, a user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or link to a testnet node that we are currently utilizing for development purposes by tapping the "don't have a node?" button.
 
-## Creating a Wallet
+## Creating a account
 
-Once you are connected to a node, you may go to the "Wallets" tab and create either a single-sig or multi-sig wallet:
+Once you are connected to a node, you may go to the "Accounts" tab and create either a Hot or Warm account:
 
-<img src="../Images/choose_wallet_type_screen.PNG" alt="" width="250"/> <img src="../Images/wallet_label_screen.PNG" alt="" width="250"/> 
+<img src="../Images/choose_wallet_type_screen.jpeg" alt="" width="250"/>
 
-Once the wallet is successfully created on your node you will be guided through a confirmation flow. You will first need to give your wallet a label, so that you can easily recognize it. Note that this label is included in the Recovery QR, so if you use the Recovery QR to recover the wallet the label will persist! 
+A Hot account is a single signature, segwit account that adheres to bip84. The seed words are saved to your device and used to sign transactions, the node gets 2500 receive public keys imported into it and 2500 change public keys.
 
-Please save the recovery items in order to be able to recover your wallet! If you do not do this you are at risk of permanently losing your funds. Simple tap the recovery QR to export it and save it. It should not be saved onto your device, as the whole point is that you will need it if you lose your device. We recommend printing it on waterproof paper and saving it in multiple secure locations.
+A Warm account is a 2 of 3, segwit multi-signature account that adheres to bip48. One set of seed words are saved to your device, one seed is used to derive an xprv which is used to derive 2500 receive private keys into your node and 2500 change private keys so that it may be the 2nd signer for the account, with your device being the first signer.
 
-<img src="../Images/wallet_recovery_QR.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_QR_export.PNG" alt="" width="250"/>
+You may expand your account creation options by tapping the expand/collapse button in the top right. Doing so will show more advanced account types and an option to use your own set of seed words to create accounts with.
+
+<img src="../Images/expanded_options_account_creation.PNG" alt="" width="250"/> <img src="../Images/custom_seed.PNG" alt="" width="250"/>
+
+If the custom seed option is toggled on you will be prompted to add it prior to the account being created. That feature is only applicable to Hot and Warm accounts.
+
+Cool account is a 2 of 3 segwit multisig account that adheres to bip48. Your device will only hold xpubs, your node will hold one set of private keys derived from a seed it creates and offers to you for backing up offline. This account type is for advanced users only! The account will not be spendable and external signing software is required to spend from this account type.
+
+Cold account is a single signature segwit account that adheres to bip84. A user supplied account xpub is required along with the master key fingerprint. Again this account type is for advanced users and is not spendable, external offline signing software is required to spend from this account type. You may at anytime add your seed words to the app to make it hot and spendable.
+
+<img src="../Images/wallet_label_screen.PNG" alt="" width="250"/>
+
+Once the account is successfully created on your node you will be guided through a confirmation flow. You will first need to give your account a label, so that you can easily recognize it. Note that this label is included in the Account Map QR, if you use the Account Map QR to recover the account the label will be remembered.
+
+Please save the recovery items in order to be able to recover your account! If you do not do this you are at risk of permanently losing your funds. The Account Map QR only contains public keys and is used to recreate your account as watch-only, in order to make it spendable you need to add your seed words to the account.
+
+<img src="../Images/wallet_recovery_QR.PNG" alt="" width="250"/>
 
 <img src="../Images/wallet_recovery_phrase_intro.PNG" alt="" width="250"/> <img src="../Images/wallet_offline_recovery_words.PNG" alt="" width="250"/>
 
-The final screen in the wallet created confirmation flow is the offline recovery words. From that screen, you can copy the words to clipboard, export them, or display them in QR code format. It is extremely important for multi-sig wallets that the recovery words are saved; for single-sig wallets, that is redundant to the Recovery QR. It is recommended you write these down on waterproof paper and save them securely in multiple locations. For multi-sig wallets they are required for wallet recovery and refilling the keypool. 
+The final screen in the account created confirmation flow is the offline recovery words. From that screen, you can copy the words to clipboard, export them, or display them in QR code format. *It is extremely important that the recovery words are saved*. It is recommended you write these down on waterproof paper and save them securely in multiple locations. For multi-sig accounts they are required for account recovery and for refilling the keypool.
 
-## Accessing a Wallet
+## Accessing an Account
 
-<img src="../Images/wallets_screen.PNG" alt="" width="250"/> <img src="../Images/seed_export.PNG" alt="" width="250"/> <img src="../Images/utxos.jpeg" alt="" width="250"/> 
+<img src="../Images/wallets_screen.PNG" alt="" width="250"/> <img src="../Images/seed_export.PNG" alt="" width="250"/> <img src="../Images/utxos.jpeg" alt="" width="250"/>
 
 <img src="../Images/export_keys.PNG" alt="" width="250"/> <img src="../Images/verify_addresses.PNG" alt="" width="250"/>
 
-After creating a wallet, you will see it on the "Wallets" page. Tap it to activate it. 
+After creating a account, you will see it on the "accounts" page. Tap it to activate it.
 
-* Tap the info button to display and export your device's seed info and the Recovery QR at anytime. You will always be prompted for 2FA whenever you export a seed or a private key. 
-* Tap the eyeball to export all the keys associated with the wallet. These keys will be derived from the device if possible. 
-* Tap the verify button to fetch the addresses purely from your node so you may "verify" that the addresses your device derives are the same as the one your node derives. For now LibWally will not derive BIP44/49 multi-sig addresses. These addresses must be fetched from your node. BIP84 multi-sig addresses will be derived locally using LibWally. 
-* Tap the list button to see the wallet's UTXOs. This fetches your wallet's UTXOs from your node. From your node's perspective the UTXOs are always watch-only, as your node is never holding enough private keys to fully spend one of them. You may tap each utxo to see all the info in JSON format that your node holds for that UTXO.
+* Tap the info button to display and export your device's seed info and the Account Map QR at anytime. You will always be prompted for 2FA whenever you export a seed or a private key.
+* Tap the eyeball to export all the keys associated with the account. These keys will be derived from the device if possible.
+* Tap the verify button to fetch the addresses purely from your node so you may "verify" that the addresses your device derives are the same as the one your node derives. For now LibWally will not derive BIP44/49 multi-sig addresses. These addresses must be fetched from your node. BIP84 multi-sig addresses will be derived locally using LibWally.
+* Tap the list button to see the account's UTXOs. This fetches your account's UTXOs from your node. From your node's perspective the UTXOs are always watch-only, as your node is never holding enough private keys to fully spend one of them. You may tap each utxo to see all the info in JSON format that your node holds for that UTXO.
 
 ## Receiving Funds
 
 <img src="../Images/create_invoice.PNG" alt="" width="250"/>
 
-To receive funds, activate the wallet you want to receive from and then tap the "In" tab. This will fetch a receiving address from your node for your active wallet. To fetch another one, tap the refresh button in the top right corner. The "amount" and "label" field conform to BIP21: you can add amounts and a label so the spender can simply scan the QR and it will automatically populate the amount field on their end if their software is BIP21 compatible.
+To receive funds, activate the account you want to receive from and then tap the "In" tab. This will fetch a receiving address from your node for your active account. To fetch another one, tap the refresh button in the top right corner. The "amount" and "label" field conform to BIP21: you can add amounts and a label so the spender can simply scan the QR and it will automatically populate the amount field on their end if their software is BIP21 compatible.
 
 ## Spending Funds
 
@@ -55,45 +71,37 @@ To send funds, just tap the "Out" tab. From here you can tap the scanner button 
 
 <img src="../Images/home_screen_expanded.PNG" alt="" width="250"/> <img src="../Images/home_screen_balance_transactions.PNG" alt="" width="250"/>
 
-You may expand the cells to show more info about your Tor connection, node statistics, and your wallet by tapping the expand/collapse buttons on the home screen.
+<img src="../Images/transactions.PNG" alt="" width="250"/>
 
-You can see all the details associated with your wallet along with transaction history. You will see an ⚠︎ icon for any unconfirmed balances and their associated transactions. You can tap the refresh buttons to reload individual sections or pull the screen to reload all sections.
+You may expand the cells to show more info about your Tor connection, node statistics, and your account by tapping the expand/collapse buttons on the home screen.
 
-It is worth noting that the three panes in a multi-sig wallet are communicating the wallets derivation scheme and what is held by the device, node, and offline backup. Your device holds the seed so it can sign for any key, but your node holds a very specific range of keys; here we show you the current wallet index and the maximum index range. Whenever your wallet's current index reaches 100 keys from the maximum range imported into your node, you will automatically be notified and prompted to refill the keypool. It should be noted that you can refill the keypool at anytime.
+You can see all the details associated with your account along with transaction history. You will see ⚠︎ for any unconfirmed balances and their associated transactions. You can tap the refresh buttons to reload individual sections or pull the screen to reload all sections. You may tap each individual transaction to see its data and memo, or retroactively add/edit a memo.
 
-## Recovering a Wallet
+## Recovering a account
 
 Please see [Recovery.md](./Docs/Recovery.md) for full details of how this works.
 
-You may either input the offline recovery words or the Recovery QR code to recover wallets.
+You may either input the seed words, the Account Map QR code or xpub's to recover accounts. In order to make accounts spendable you must add the seed words. The Account Map QR is handy as it holds your accounts birthdate, derivation scheme and other useful data to make recreating your account as simple as a scan. We recommend to scan your Account Map QR initially to recreate the account then add your seed words to the account to make it spendable. You may also simply add your seed words if you do not have the Account Map, however you will need to choose the derivation scheme and may or may not need to rescan the blockchain depending on whether you lost your node or not.
 
-You may input the words one at a time or all at once; once the mnemonic is verified to be valid you will get an alert.
+You may input the words one at a time or all at once; once the mnemonic is verified to be valid you will get an alert. The app only supports 12 and 24 word seeds.
 
-Similarly, upon scanning a valid Recovery QR you will also be alerted.
+Similarly, upon scanning a valid Account Map QR you will also be alerted.
 
-The "scan Recovery QR" button will also display that the QR was valid after scanning.
-
-Depending on what you are recovering you may "Tap to Recover" once a valid QR and/or words are added.
+If you had only added words you will be prompted to select single sig or multisig, at that point if you choose multisig you will have the option to add as many seed phrases as you would like to recreate your "m of n" multisig account, same goes for xpub recovery. Once enough seed phrases have been added you can choose a derivation scheme and then the app will derive the first 5 addresses giving you the opportunity to ensure they match what you expect them to. The app will also see if the account still exists on your node or not, if it does it will be able to display a balance for you.
 
 <img src="../Images/wallet_recovery_add_words.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_valid_mnmemonic.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_valid_QR.PNG" alt="" width="250"/> <img src="../Images/confirm_recovery.PNG" alt="" width="250"/>
 
-Upon tapping "Tap to recover" you will be presented with a "Recovery Confirmation" screen.
-
-If you used a Recovery QR *FN2* will be able to display all of the wallet's meta data to you for confirmation. If the wallet still exists on your node, it will also be able to fetch the balance. if you are only using words *FN2* will only be able to fetch the wallet name, addresses, and derivation type.
-
-The important part of this page is that it displays the first five addresses derived from the seed. If you you know what addresses to expectm you can verify that they match here.
-
-Upon tapping "Confirm", the wallet will be added and the node will rescan the blockchain automatically to ensure your balances show up.
+Upon tapping "Confirm" the app will recreate your account on the node and save it to the app, activate it and refresh the "Accounts" view, it will also automatically initiate a rescan so historic balances and transactions will show up.
 
 ## Wishlist
 
-- [ ] Wallet Functions
+- [ ] account Functions
   - [x] Offline PSBT signing
   - [x] Offline raw transaction signing
   - [x] Spend and Receive
   - [x] Segwit
   - [x] Non-custodial
-  - [ ] Coin Control
+  - [x] Coin Control
   - [x] BIP44
   - [x] BIP84
   - [x] BIP49
@@ -101,8 +109,10 @@ Upon tapping "Confirm", the wallet will be added and the node will rescan the bl
   - [x] BIP21
   - [x] Custom mining fee
   - [x] Multisig
-  - [ ] Cold storage
+  - [x] Cold storage
   - [x] Multiwalletrpc
+  - [ ] Privacy minded sweep
+  - [ ] Time locked dead mans switch transactions
 
 - [ ] Security
   - [x] Seed created with Apple's cryptographically secure random number generator
@@ -112,7 +122,6 @@ Upon tapping "Confirm", the wallet will be added and the node will rescan the bl
   - [ ] Passphrase support
   - [ ] Wallet.dat encryption
   - [ ] Disable all networking before importing/exporting seed
-  - [ ] Automated Tor authentication
   - [x] 2FA
 
 - [ ] Compatible Nodes
@@ -123,6 +132,6 @@ Upon tapping "Confirm", the wallet will be added and the node will rescan the bl
   - [x] myNode
   - [x] BTCPayServer
   - [x] RaspiBlitz
+  - [x] Embassy
   - [ ] Wasabi
   - [ ] CasaHodl
-
