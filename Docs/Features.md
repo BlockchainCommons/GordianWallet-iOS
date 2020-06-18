@@ -30,13 +30,11 @@ Cool account is a 2 of 3 segwit multisig account that adheres to bip48. Your dev
 
 Cold account is a single signature segwit account that adheres to bip84. A user supplied account xpub is required along with the master key fingerprint. Again this account type is for advanced users and is not spendable, external offline signing software is required to spend from this account type. You may at anytime add your seed words to the app to make it hot and spendable.
 
-<img src="../Images/wallet_label_screen.PNG" alt="" width="250"/>
+<img src="../Images/wallet_label_screen.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_QR.PNG" alt="" width="250"/> <img src="../Images/wallet_offline_recovery_words.PNG" alt="" width="250"/>
 
 Once the account is successfully created on your node you will be guided through a confirmation flow. You will first need to give your account a label, so that you can easily recognize it. Note that this label is included in the Account Map QR, if you use the Account Map QR to recover the account the label will be remembered.
 
 Please save the recovery items in order to be able to recover your account! If you do not do this you are at risk of permanently losing your funds. The Account Map QR only contains public keys and is used to recreate your account as watch-only, in order to make it spendable you need to add your seed words to the account.
-
-<img src="../Images/wallet_recovery_QR.PNG" alt="" width="250"/> <img src="../Images/wallet_offline_recovery_words.PNG" alt="" width="250"/>
 
 The final screen in the account created confirmation flow is the offline recovery words. From that screen, you can copy the words to clipboard, export them, or display them in QR code format. *It is extremely important that the recovery words are saved*. It is recommended you write these down on waterproof paper and save them securely in multiple locations. For multi-sig accounts they are required for account recovery and for refilling the keypool.
 
