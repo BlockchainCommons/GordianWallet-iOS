@@ -205,7 +205,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 } else {
                     completion(false)
-                    displayAlert(viewController: vc, isError: true, message: "no nodes! Something is very wrong, you will not be able to use these wallets without a node")
                 }
             }
         }
@@ -279,38 +278,49 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     @objc func refreshLocalDataAndBalanceForActiveAccount() {
         creatingView.addConnectingView(vc: self, description: "loading accounts...")
         sortedWallets.removeAll()
+        wallets.removeAll()
+        activeWallet = nil
+        walletTable.reloadData()
         setOnionLabels() { success in
-            CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
-                if errorDescription == nil {
-                    if wallets!.count == 0 {
-                        vc.refresher.endRefreshing()
-                        vc.creatingView.removeConnectingView()
-                        vc.isLoading = false
-                    } else {
-                        for (i, w) in wallets!.enumerated() {
-                            let s = WalletStruct(dictionary: w)
-                            if !s.isArchived && w["id"] != nil && w["name"] != nil {
-                                vc.sortedWallets.append(w)
-                                if s.isActive {
-                                    vc.activeWallet = s
+            if success {
+                CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
+                    if errorDescription == nil {
+                        if wallets!.count == 0 {
+                            vc.refresher.endRefreshing()
+                            vc.creatingView.removeConnectingView()
+                            vc.isLoading = false
+                        } else {
+                            for (i, w) in wallets!.enumerated() {
+                                let s = WalletStruct(dictionary: w)
+                                if !s.isArchived && w["id"] != nil && w["name"] != nil {
+                                    vc.sortedWallets.append(w)
+                                    if s.isActive {
+                                        vc.activeWallet = s
+                                    }
                                 }
-                            }
-                            if i + 1 == wallets!.count {
-                                if vc.sortedWallets.count == 0 {
-                                    vc.creatingView.removeConnectingView()
-                                    vc.refresher.endRefreshing()
-                                    vc.isLoading = false
-                                }
-                                vc.setKnownUnknownSignersAndFingerprints() { [unowned vc = self] success in
-                                    vc.getAccountBalance()
+                                if i + 1 == wallets!.count {
+                                    if vc.sortedWallets.count == 0 {
+                                        vc.creatingView.removeConnectingView()
+                                        vc.refresher.endRefreshing()
+                                        vc.isLoading = false
+                                    }
+                                    vc.setKnownUnknownSignersAndFingerprints() { [unowned vc = self] success in
+                                        vc.getAccountBalance()
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        vc.refresher.endRefreshing()
+                        vc.creatingView.removeConnectingView()
+                        displayAlert(viewController: vc, isError: true, message: errorDescription!)
                     }
-                } else {
+                }
+            } else {
+                DispatchQueue.main.async { [unowned vc = self] in
                     vc.refresher.endRefreshing()
                     vc.creatingView.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: errorDescription!)
+                    displayAlert(viewController: vc, isError: true, message: "No nodes, please add one in order to use the app.")
                 }
             }
         }

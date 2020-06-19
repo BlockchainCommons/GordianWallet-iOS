@@ -6,7 +6,6 @@
 //  Copyright © 2019 BlockchainCommons. All rights reserved.
 //
 import UIKit
-import CoreData
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -166,90 +165,30 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                         
             let alert = UIAlertController(title: "Are you sure!?", message: "This will delete ALL your wallets from your device, nodes, auth keys, encryption keys and will completely wipe the app!\n\nAfter using this button you should force quit the app and reopen it to prevent weird behavior and possible crashes.", preferredStyle: .actionSheet)
 
-            alert.addAction(UIAlertAction(title: "Yes, reset now!", style: .destructive, handler: { [unowned vc = self] action in
-                
-                let ud = UserDefaults.standard
-                var didDelete = true
-                
-                let domain = Bundle.main.bundleIdentifier!
-                ud.removePersistentDomain(forName: domain)
-                ud.synchronize()
-                
-                func deleteAllData(entity: ENTITY){
-
-                    let managedContext = CoreDataService.persistentContainer.viewContext
-                    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity.rawValue)
-                    fetchRequest.returnsObjectsAsFaults = false
-                    
-                    do {
-                        
-                        let stuff = try managedContext.fetch(fetchRequest)
-                        
-                        for thing in stuff as! [NSManagedObject] {
-                            
-                            managedContext.delete(thing)
-                            
+            alert.addAction(UIAlertAction(title: "Yes, reset now!", style: .destructive, handler: { action in
+                var deleted = true
+                let entities = [ENTITY.nodes, ENTITY.wallets, ENTITY.seeds, ENTITY.transactions, ENTITY.lockedUtxos]
+                for (i, entity) in entities.enumerated() {
+                    CoreDataService.deleteAllData(entity: entity) { success in
+                        if i == entities.count + 1 {
+                            if !success {
+                                deleted = false
+                            }
+                            //NotificationCenter.default.post(name: .seedDeleted, object: nil, userInfo: nil)
+                            //NotificationCenter.default.post(name: .didCompleteOnboarding, object: nil, userInfo: nil)
+                            if deleted {
+                                showAlert(vc: vc, title: "Data deleted", message: "App data has been deleted.")
+                            } else {
+                                showAlert(vc: vc, title: "Error", message: "There was an error deleting the apps data.")
+                            }
                         }
-                        
-                        try managedContext.save()
-                                                
-                    } catch let error as NSError {
-                        
-                        print("delete fail--",error)
-                        didDelete = false
-                        
                     }
-
                 }
-                
-                let entities = [ENTITY.nodes, ENTITY.auth, ENTITY.wallets, ENTITY.seeds, ENTITY.transactions]
-                
-                for entity in entities {
-                    
-                    deleteAllData(entity: entity)
-                    
-                }
-                
-                var succes = true
-                
-                if KeyChain.remove(key: "userIdentifier") {
-                    
-                    print("private key deleted")
-                    
-                } else {
-                    succes = false
-                }
-                
-                if KeyChain.remove(key: "acceptedDisclaimer") {
-                    
-                    print("private key deleted")
-                    
-                } else {
-                    succes = false
-                }
-                
-                if KeyChain.remove(key: "privateKey") {
-                    
-                    print("private key deleted")
-                    
-                } else {
-                    succes = false
-                }
-                
-                if succes {
-                    displayAlert(viewController: vc, isError: false, message: "App has been wiped! Force close it and reopen to use.")
-                } else {
-                    displayAlert(viewController: vc, isError: false, message: "App partially wiped...")
-                }                
-                
             }))
-            
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
             alert.popoverPresentationController?.sourceView = vc.settingsTable
             vc.present(alert, animated: true, completion: nil)
-            
         }
-        
     }
     
     func nodeManager() {
