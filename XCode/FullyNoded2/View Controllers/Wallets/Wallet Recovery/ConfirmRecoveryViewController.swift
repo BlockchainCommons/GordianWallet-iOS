@@ -129,6 +129,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     private func importWallet() {
         connectingView.addConnectingView(vc: self, description: "creating account on your node")
         let wallet = WalletStruct(dictionary: walletDict)
+        print("wallet: \(walletDict)")
         var importedOrRecovered = "imported"
         var addToKeypool = false
         var addToInternal = false
@@ -156,14 +157,16 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                     if wallets!.count > 0 {
                         for (i, w) in wallets!.enumerated() {
                             let walletStruct = WalletStruct(dictionary: w)
-                            if walletStruct.id != wallet.id! {
-                                CoreDataService.updateEntity(id: walletStruct.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { _ in }
-                            } else {
-                                CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { _ in }
-                            }
-                            if i + 1 == wallets!.count {
-                                DispatchQueue.main.async {
-                                    NotificationCenter.default.post(name: .didCreateAccount, object: nil, userInfo: nil)
+                            if wallet.id != nil && walletStruct.id != nil {
+                                if walletStruct.id != wallet.id! {
+                                    CoreDataService.updateEntity(id: walletStruct.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { _ in }
+                                } else {
+                                    CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { _ in }
+                                }
+                                if i + 1 == wallets!.count {
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: .didCreateAccount, object: nil, userInfo: nil)
+                                    }
                                 }
                             }
                         }
@@ -180,11 +183,13 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             DispatchQueue.main.async { [unowned vc = self] in
                 deactivateAllAccountsAndActivateNewAccount()
                 let alert = UIAlertController(title: "Account \(importedOrRecovered)!", message: "Your \(importedOrRecovered) account will now show up in \"Accounts\", a blockchain rescan has been initiated", preferredStyle: .actionSheet)
-                alert.addAction(UIAlertAction(title: "Add Label", style: .default, handler: { action in
-                    DispatchQueue.main.async { [unowned vc = self] in
-                        vc.performSegue(withIdentifier: "addLabelToRecoveredAccount", sender: vc)
-                    }
-                }))
+                if wallet.label == "" {
+                    alert.addAction(UIAlertAction(title: "Add Label", style: .default, handler: { action in
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.performSegue(withIdentifier: "addLabelToRecoveredAccount", sender: vc)
+                        }
+                    }))
+                }
                 alert.addAction(UIAlertAction(title: "Done", style: .cancel, handler: { action in
                     DispatchQueue.main.async { [unowned vc = self] in
                         vc.navigationController?.popToRootViewController(animated: true)

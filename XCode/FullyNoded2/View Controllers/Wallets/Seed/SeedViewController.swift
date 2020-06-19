@@ -150,33 +150,47 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         switch section {
             
         case 0:
-            textToCopy = recoveryQr
-            message = "your \"Account Map\" text was copied to your clipboard and will be erased in one minute"
+            message = "your \"Account Map\" was copied to your clipboard"
+            DispatchQueue.main.async { [unowned vc = self] in
+                UIPasteboard.general.image = vc.recoveryImage
+            }
             
         case 1:
             textToCopy = "Devices seed:" + " " + seed + "derivation: \(wallet.derivation)/0" + "blockheight: \(wallet.blockheight)"
             message = "your seed was copied to your clipboard and will be erased in one minute"
+            DispatchQueue.main.async {
+                UIPasteboard.general.string = textToCopy
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+                
+                UIPasteboard.general.string = ""
+                
+            }
             
         case 2:
             textToCopy = "Account xpub's: \(xpubs)"
             message = "your xpub's were copied to your clipboard and will be erased in one minute"
+            DispatchQueue.main.async {
+                UIPasteboard.general.string = textToCopy
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+                
+                UIPasteboard.general.string = ""
+                
+            }
             
         default:
             break
         }
         
-        UIPasteboard.general.string = textToCopy
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
-            
-            UIPasteboard.general.string = ""
-            
-        }
         
         displayAlert(viewController: self, isError: false, message: message)
         
     }
-    
+        
     @objc func handleShareTap(_ sender: UIButton) {
         
         let impact = UIImpactFeedbackGenerator()

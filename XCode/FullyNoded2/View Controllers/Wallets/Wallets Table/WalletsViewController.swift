@@ -99,7 +99,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func transactionSent(_ notification: Notification) {
         creatingView.addConnectingView(vc: self, description: "refreshing balance...")
-        /// Need to hardcode a delay as doing it immideately after the transaction broadcasts means the transaction may not have propgated across the network that quickly. Keep in mind we use Blockstreams node to broadcast transactions, if we strictly used our own node then of course it would be instant.
+        /// Need to hardcode a delay as doing it immedeately after the transaction broadcasts means the transaction may not have propgated across the network that quickly. Keep in mind we use Blockstreams node to broadcast transactions, if we strictly used our own node then of course it would be instant.
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [unowned vc = self] in
             vc.refreshActiveWalletData()
         }
