@@ -178,6 +178,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                 vc.unlockAllUtxosToSweep(lockedUtxos: lockedUtxos)
             }))
             alert.addAction(UIAlertAction(title: "Keep them locked!", style: .default, handler: { [unowned vc = self] action in
+                vc.creatingView.addConnectingView(vc: vc, description: "Sweeping unlocked utxo's...")
                 vc.sweepAction()
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
@@ -201,7 +202,6 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     private func signSweepedPsbt(psbt: String) {
-        print("signSweepedPsbt")
         DispatchQueue.main.async { [unowned vc = self] in
             vc.creatingView.label.text = "signing psbt..."
         }

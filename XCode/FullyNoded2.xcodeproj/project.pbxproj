@@ -38,6 +38,7 @@
 		D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650072441A78E00754ACF /* VerifyKeysViewController.swift */; };
 		D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650092442C58200754ACF /* WordRecoveryViewController.swift */; };
 		D056500C2446BF6E00754ACF /* 1024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D056500B2446BF6D00754ACF /* 1024.jpg */; };
+		D06DD1F2249CE3930013C7F3 /* LibWally.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DAD51D24546E2200769618 /* LibWally.framework */; };
 		D07399D7245E6E5600860B7E /* Broadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399D6245E6E5600860B7E /* Broadcast.swift */; };
 		D07399DB245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DA245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift */; };
 		D07399DD2461764700860B7E /* XpubConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DC2461764700860B7E /* XpubConverter.swift */; };
@@ -137,7 +138,6 @@
 		D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */; };
 		D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FC24306B060085E3CC /* RefillMultiSig.swift */; };
 		D0D8DC162400D85000110A78 /* LibWallyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D8DC152400D85000110A78 /* LibWallyTests.swift */; };
-		D0DAD51E24546E2200769618 /* LibWally.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DAD51D24546E2200769618 /* LibWally.framework */; };
 		D0DAD52424546E7700769618 /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DAD52324546E7700769618 /* Tor.framework */; };
 		D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DB944C24723F2900A0E99D /* CloudKit.framework */; };
 		D0DB944F24736C0600A0E99D /* TransactionStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DB944E24736C0600A0E99D /* TransactionStruct.swift */; };
@@ -330,8 +330,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */,
+				D06DD1F2249CE3930013C7F3 /* LibWally.framework in Frameworks */,
 				D0DAD52424546E7700769618 /* Tor.framework in Frameworks */,
-				D0DAD51E24546E2200769618 /* LibWally.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1307,7 +1307,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.45;
+				CURRENT_PROJECT_VERSION = 0.1.46;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1321,7 +1321,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.45;
+				MARKETING_VERSION = 0.1.46;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1339,7 +1339,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.45;
+				CURRENT_PROJECT_VERSION = 0.1.46;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1353,7 +1353,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.45;
+				MARKETING_VERSION = 0.1.46;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

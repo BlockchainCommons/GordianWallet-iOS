@@ -97,11 +97,34 @@ class PSBTSigner {
                 }
             }
             if xprvsToSignWith.count > 0 {
+                var signableKeys = [String]()
                 for (i, key) in xprvsToSignWith.enumerated() {
-                    psbtToSign.sign(key)
-                    if i + 1 == xprvsToSignWith.count {
-                        /// There is a bug in LibWally-Swift so until that gets fixed we rely on bitcoind to finalize PSBT's for us
-                        finalizeWithBitcoind()
+                    let inputs = psbtToSign.inputs
+                    for (x, input) in inputs.enumerated() {
+                        /// Create an array of child keys that we know can sign our inputs.
+                        if let origins: [PubKey : KeyOrigin] = input.canSign(key) {
+                            for origin in origins {
+                                if let childKey = try? key.derive(origin.value.path) {
+                                    if let privKey = childKey.privKey {
+                                        precondition(privKey.pubKey == origin.key)
+                                        signableKeys.append(privKey.wif)
+                                    }
+                                }
+                            }
+                        }
+                        /// Once the above loops complete we remove an duplicate signing keys from the array then sign the psbt with each unique key.
+                        if i + 1 == xprvsToSignWith.count && x + 1 == inputs.count {
+                            let uniqueSigners = Array(Set(signableKeys))
+                            for (s, signer) in uniqueSigners.enumerated() {
+                                if let signingKey = Key(signer, chain) {
+                                    psbtToSign.sign(signingKey)
+                                    /// Once we completed the signing loop we finalize with our node.
+                                    if s + 1 == uniqueSigners.count {
+                                        finalizeWithBitcoind()
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -175,9 +198,7 @@ class PSBTSigner {
                 }
             }
         }
-        
         getChain()
-        
     }
     
 }
