@@ -30,7 +30,7 @@ Wait for brew to finish.
 
 ```
 cd FullyNoded-2/XCode
-carthage update --platform iOS
+carthage build --platform iOS
 ```
 
 ## 5. Run it!
