@@ -115,14 +115,18 @@ class PSBTSigner {
                         /// Once the above loops complete we remove an duplicate signing keys from the array then sign the psbt with each unique key.
                         if i + 1 == xprvsToSignWith.count && x + 1 == inputs.count {
                             let uniqueSigners = Array(Set(signableKeys))
-                            for (s, signer) in uniqueSigners.enumerated() {
-                                if let signingKey = Key(signer, chain) {
-                                    psbtToSign.sign(signingKey)
-                                    /// Once we completed the signing loop we finalize with our node.
-                                    if s + 1 == uniqueSigners.count {
-                                        finalizeWithBitcoind()
+                            if uniqueSigners.count > 0 {
+                                for (s, signer) in uniqueSigners.enumerated() {
+                                    if let signingKey = Key(signer, chain) {
+                                        psbtToSign.sign(signingKey)
+                                        /// Once we completed the signing loop we finalize with our node.
+                                        if s + 1 == uniqueSigners.count {
+                                            finalizeWithBitcoind()
+                                        }
                                     }
                                 }
+                            } else {
+                                finalizeWithBitcoind()
                             }
                         }
                     }

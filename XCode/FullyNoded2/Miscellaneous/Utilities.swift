@@ -11,7 +11,6 @@ import UIKit
 import LibWally
 
 public extension UITextView {
-
   func addHyperLinksToText(originalText: String, hyperLinks: [String: String]) {
     let style = NSMutableParagraphStyle()
     style.alignment = .left
