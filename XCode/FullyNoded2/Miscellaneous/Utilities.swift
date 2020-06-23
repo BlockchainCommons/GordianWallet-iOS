@@ -93,6 +93,7 @@ extension Notification.Name {
     public static let transactionSent = Notification.Name(rawValue: "transactionSent")
     public static let nodeSwitched = Notification.Name(rawValue: "nodeSwitched")
     public static let didUpdateLabel = Notification.Name(rawValue: "didUpdateLabel")
+    public static let refillKeypool = Notification.Name(rawValue: "refillKeypool")
 }
 
 public extension Int {

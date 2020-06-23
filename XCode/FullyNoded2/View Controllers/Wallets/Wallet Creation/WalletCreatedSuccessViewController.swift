@@ -70,14 +70,16 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
                 if wallets!.count > 0 {
                     for (i, wallet) in wallets!.enumerated() {
                         let walletStruct = WalletStruct(dictionary: wallet)
-                        if walletStruct.id != vc.w.id! {
-                            CoreDataService.updateEntity(id: walletStruct.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { _ in }
-                        } else {
-                            CoreDataService.updateEntity(id: vc.w.id!, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { _ in }
-                        }
-                        if i + 1 == wallets!.count {
-                            DispatchQueue.main.async {
-                                NotificationCenter.default.post(name: .didCreateAccount, object: nil, userInfo: nil)
+                        if walletStruct.id != nil {
+                            if walletStruct.id != vc.w.id! {
+                                CoreDataService.updateEntity(id: walletStruct.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { _ in }
+                            } else {
+                                CoreDataService.updateEntity(id: vc.w.id!, keyToUpdate: "isActive", newValue: true, entityName: .wallets) { _ in }
+                            }
+                            if i + 1 == wallets!.count {
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .didCreateAccount, object: nil, userInfo: nil)
+                                }
                             }
                         }
                     }
