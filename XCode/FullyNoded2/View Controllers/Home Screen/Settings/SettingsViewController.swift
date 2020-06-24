@@ -73,7 +73,12 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             
         case 2:
             thumbnail.image = UIImage(systemName: "exclamationmark.triangle")
-            label.text = "Reset app"
+            label.text = "Delete Core Data"
+            return settingsCell
+            
+        case 3:
+            thumbnail.image = UIImage(systemName: "exclamationmark.triangle")
+            label.text = "Delete Keychain Items"
             return settingsCell
             
         default:
@@ -151,12 +156,36 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         
             resetApp()
             
+        case 3:
+            
+            promptToDeleteKeychain()
+            
         default:
             
             break
             
         }
         
+    }
+    
+    private func promptToDeleteKeychain() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Are you sure!?", message: "After performing this action you need to force quit the app and restart it.", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Yes, delete", style: .destructive, handler: { [unowned vc = self] action in
+                vc.deleteKeychainItems()
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.settingsTable
+            vc.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func deleteKeychainItems() {
+        KeyChain.removeAll()
+        let domain = Bundle.main.bundleIdentifier!
+        UserDefaults.standard.removePersistentDomain(forName: domain)
+        UserDefaults.standard.synchronize()
+        showAlert(vc: self, title: "keychain cleared", message: "You will need to force quit and restart the app for changes to take effect.")
     }
     
     func resetApp() {
@@ -174,8 +203,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                             if !success {
                                 deleted = false
                             }
-                            //NotificationCenter.default.post(name: .seedDeleted, object: nil, userInfo: nil)
-                            //NotificationCenter.default.post(name: .didCompleteOnboarding, object: nil, userInfo: nil)
                             if deleted {
                                 showAlert(vc: vc, title: "Data deleted", message: "App data has been deleted.")
                             } else {

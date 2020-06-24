@@ -101,6 +101,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if mgr?.state != .started && mgr?.state != .connected && mgr?.state != .refreshing  {
             mgr?.start(delegate: self)
         }
+        
+        firstTimeHere()
     }
     
     @IBAction func goToNotificationCenter(_ sender: Any) {
@@ -1619,18 +1621,20 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func checkWalletStatus() {
-        WalletStatus.getStatus(wallet: wallet!) { dict in
-            let status = StatusStruct(dictionary: dict)
-            if status.shouldRefill {
-                DispatchQueue.main.async { [unowned vc = self] in
-                    vc.notificationIcon.image = UIImage(systemName: "exclamationmark.bubble")
-                    let appDelegate = UIApplication.shared.delegate as? AppDelegate
-                    appDelegate?.promptForNotificationPermission()
-                    appDelegate?.scheduleNotification(type: "Refill")
-                }
-            } else {
-                DispatchQueue.main.async { [unowned vc = self] in
-                    vc.notificationIcon.image = UIImage(systemName: "bubble.left")
+        if wallet != nil {
+            WalletStatus.getStatus(wallet: wallet!) { dict in
+                let status = StatusStruct(dictionary: dict)
+                if status.shouldRefill {
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        vc.notificationIcon.image = UIImage(systemName: "exclamationmark.bubble")
+                        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                        appDelegate?.promptForNotificationPermission()
+                        appDelegate?.scheduleNotification(type: "Refill")
+                    }
+                } else {
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        vc.notificationIcon.image = UIImage(systemName: "bubble.left")
+                    }
                 }
             }
         }

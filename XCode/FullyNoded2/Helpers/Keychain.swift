@@ -76,6 +76,14 @@ class KeyChain {
         }
 
     }
+    
+    class func removeAll() {
+        let secItemClasses =  [kSecClassGenericPassword, kSecClassInternetPassword, kSecClassCertificate, kSecClassKey, kSecClassIdentity]
+        for itemClass in secItemClasses {
+            let spec: NSDictionary = [kSecClass: itemClass]
+            SecItemDelete(spec)
+        }
+    }
 
     private func createUniqueID() -> String {
         let uuid: CFUUID = CFUUIDCreate(nil)
@@ -87,13 +95,6 @@ class KeyChain {
 }
 
 extension Data {
-
-//    init<T>(from value: T) {
-//        var value = value
-//        self.init(buffer: UnsafeBufferPointer(start: &value, count: 1))
-//    }
-    
-    // MARK: EXPIRAMENTAL TO TRY AND SILENCE A WARNING
     init<T>(value: T) {
         self = withUnsafePointer(to: value) { (ptr: UnsafePointer<T>) -> Data in
             return Data(buffer: UnsafeBufferPointer(start: ptr, count: 1))
