@@ -46,7 +46,7 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func loadData() {
-        executeNodeCommand(method: .gettransaction, param: "\"\(txid)\", true")
+        getTransaction(param: "\"\(txid)\", true")
     }
     
     private func reloadTable() {
@@ -60,9 +60,8 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func parseTxDict(dict: NSDictionary) {
-        print("dict = \(dict)")
         txDict = dict
-        decodeTx(walletName: walletName, param: "\"\(dict["hex"] as! String)\"")
+        decodeTx(walletName: walletName, param: "\"\(dict["hex"] as! String)\", true")
     }
     
     private func fetchLocalData() {
@@ -78,7 +77,7 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
 
-    func executeNodeCommand(method: BTC_CLI_COMMAND, param: String) {
+    func getTransaction(param: String) {
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             vc.walletName = wallet!.name!
             Reducer.makeCommand(walletName: wallet!.name!, command: .gettransaction, param: param) { [unowned vc = self] (object, errorDescription) in
@@ -178,7 +177,7 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
     private func rbfEnabled(indexPath: IndexPath) -> UITableViewCell {
         let rbfEnabled = transactionTable.dequeueReusableCell(withIdentifier: "standardCell", for: indexPath)
         let label = rbfEnabled.viewWithTag(1) as! UILabel
-        if txDict?["bip125-replaceable"] as! String == "no" {
+        if txDict?["bip125-replaceable"] as? String == "no" {
             label.text = "BIP125 - Not replaceable"
         } else {
             label.text = "BIP125 - Replaceable"
@@ -441,11 +440,11 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         }
         
         func getRawTx() {
-            Reducer.makeCommand(walletName: walletName, command: .gettransaction, param: param) { [unowned vc = self] (object, errorDescription) in
-                if let dict = object as? NSDictionary {
-                    let hex = dict["hex"] as! String
-                    vc.parsePrevTx(method: .decoderawtransaction, param: "\"\(hex)\"", vout: vout)
-                } else {
+            let fetcher = TransactionFetcher.sharedInstance
+            fetcher.fetch(txid: txid) { [unowned vc = self] rawHex in
+                if rawHex != nil {
+                    vc.parsePrevTx(method: .decoderawtransaction, param: "\"\(rawHex!)\"", vout: vout)
+                }  else {
                     vc.creatingView.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "Error parsing inputs")
                 }
