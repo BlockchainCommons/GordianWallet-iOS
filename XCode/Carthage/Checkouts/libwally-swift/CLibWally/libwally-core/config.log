@@ -30,8 +30,8 @@ Kernel configured for up to 4 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3
 Primary memory available: 8.00 gigabytes
-Default processor set: 561 tasks, 2159 threads, 4 processors
-Load average: 4.12, Mach factor: 0.71
+Default processor set: 422 tasks, 1755 threads, 4 processors
+Load average: 2.71, Mach factor: 1.39
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -835,7 +835,7 @@ configure:15142: checking for explicit_bzero
 configure:15142: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -o conftest -O3 -arch arm64 -arch arm64e -arch armv7 -arch armv7s -fembed-bitcode -mios-version-min=10.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.4.sdk  -D_FORTIFY_SOURCE=2  -O3 conftest.c  >&5
 Undefined symbols for architecture arm64:
   "_explicit_bzero", referenced from:
-      _main in conftest-cdcc5d.o
+      _main in conftest-30e931.o
 ld: symbol(s) not found for architecture arm64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:15142: $? = 1
@@ -908,7 +908,7 @@ configure:15142: checking for explicit_memset
 configure:15142: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -o conftest -O3 -arch arm64 -arch arm64e -arch armv7 -arch armv7s -fembed-bitcode -mios-version-min=10.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.4.sdk  -D_FORTIFY_SOURCE=2  -O3 conftest.c  >&5
 Undefined symbols for architecture arm64:
   "_explicit_memset", referenced from:
-      _main in conftest-701974.o
+      _main in conftest-0b2d41.o
 ld: symbol(s) not found for architecture arm64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:15142: $? = 1
