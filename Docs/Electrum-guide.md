@@ -38,7 +38,9 @@ By default FN2 uses the same derivation as Electrum for multisig wallets, just m
 
 ![](../Images/Electrum/9_derivation.png)
 
-### 9. Electrum derives the extended public key for you to export, which is derived from the recovery phrase you just added
+### 9. Electrum derives the extended public key for you to export.
+
+(This is in turn derived from the recovery phrase you just added.)
 
 ![](../Images/Electrum/10_exportVpub.png)
 
