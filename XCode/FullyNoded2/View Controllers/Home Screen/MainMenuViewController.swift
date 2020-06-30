@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CoreData
 
 class MainMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, UINavigationControllerDelegate, OnionManagerDelegate, UIDocumentPickerDelegate {
     
@@ -56,9 +55,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var accountMap = ""
     @IBOutlet var mainMenu: UITableView!
     @IBOutlet var sponsorView: UIView!
+    @IBOutlet weak var notificationIcon: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         showFiat = false
         torConnected = false
         mainMenu.delegate = self
@@ -66,6 +67,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         navigationController?.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(torBootStrapping(_:)), name: .didStartBootstrappingTor, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didCompleteOnboarding(_:)), name: .didCompleteOnboarding, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showIndexWarning), name: .refillKeypool, object: nil)
         sponsorView.alpha = 0
         initialLoad = true
         walletSectionLoaded = false
@@ -79,10 +81,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         torInfoHidden = true
         showNodeInfo = false
                 
-        if ud?.object(forKey: "appHasReset") == nil {
-            resetApp()
-        }
-        
         Encryption.getNode { [unowned vc = self] (node, error) in
             if !error && node != nil {
                 vc.node = node!
@@ -104,69 +102,16 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             mgr?.start(delegate: self)
         }
         
+        firstTimeHere()
     }
     
-    private func resetApp() {
-        let domain = Bundle.main.bundleIdentifier!
-        ud?.removePersistentDomain(forName: domain)
-        ud?.synchronize()
-        
-        func deleteAllData(entity: ENTITY){
-
-            let managedContext = CoreDataService.persistentContainer.viewContext
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity.rawValue)
-            fetchRequest.returnsObjectsAsFaults = false
-            
-            do {
-                
-                let stuff = try managedContext.fetch(fetchRequest)
-                
-                for thing in stuff as! [NSManagedObject] {
-                    
-                    managedContext.delete(thing)
-                    
-                }
-                
-                try managedContext.save()
-                                        
-            } catch let error as NSError {
-                
-                print("delete fail--",error)
-                
-            }
-
-        }
-        
-        let entities = [ENTITY.nodes, ENTITY.auth, ENTITY.wallets, ENTITY.seeds, ENTITY.transactions]
-        
-        for entity in entities {
-            
-            deleteAllData(entity: entity)
-            
-        }
-                
-        if KeyChain.remove(key: "userIdentifier") {
-            
-            print("private key deleted")
-            
-        }
-        
-        if KeyChain.remove(key: "acceptedDisclaimer") {
-            
-            print("private key deleted")
-            
-        }
-        
-        if KeyChain.remove(key: "privateKey") {
-            
-            print("private key deleted")
-            
-        }
-        
-        ud?.set(true, forKey: "appHasReset")
-        
-        if ud?.object(forKey: "firstTime") == nil {
-            firstTimeHere()
+    @IBAction func goToNotificationCenter(_ sender: Any) {
+        goToNotifications()
+    }
+    
+    private func goToNotifications() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.performSegue(withIdentifier: "showNotificationCenter", sender: vc)
         }
     }
     
@@ -420,6 +365,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        if ud?.object(forKey: "feeTarget") ==  nil {
+            ud?.set(432, forKey: "feeTarget")
+        }
         #if DEBUG
         didAppear()
         #else
@@ -488,7 +436,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    private func showIndexWarning() {
+    @objc func showIndexWarning() {
         if wallet != nil {
             var message = ""
             let actionTitle = "Refill keypool"
@@ -508,7 +456,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     singleSig.refill(wallet: vc.wallet) { (success, error) in
                         if success {
                             vc.connectingView.removeConnectingView()
-                            showAlert(vc: vc, title: "Success!", message: "Keypool refilled 🤩")
+                            showAlert(vc: vc, title: "Keypool refilled ✓", message: "We are now refreshing your account data.")
+                            vc.loadWalletData()
                         } else {
                             vc.connectingView.removeConnectingView()
                             showAlert(vc: vc, title: "Error!", message: "There was an error refilling the keypool: \(String(describing: error))")
@@ -1372,6 +1321,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     vc.removeStatusLabel()
                     vc.isRefreshingTorData = false
                     vc.reloadSections([vc.torCellIndex])
+                    DispatchQueue.main.async {
+                        vc.refresher.endRefreshing()
+                    }
                     displayAlert(viewController: vc,
                                  isError: true,
                                  message: errorDesc ?? "error fetching network data")
@@ -1415,12 +1367,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         vc.reloadSections([vc.walletCellIndex, vc.nodeCellIndex, 3])
                     } else {
                         vc.reloadSections([vc.nodeCellIndex])
-                        if vc.wallet.index >= vc.wallet.maxRange - 100 {
-                            vc.showIndexWarning()
-                        }
                     }
                     vc.removeStatusLabel()
                     vc.sponsorThisApp()
+                    vc.checkWalletStatus()
                 }
             } else {
                 vc.nodeSectionLoaded = false
@@ -1670,6 +1620,26 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         showAlert(vc: self, title: "Error", message: "We are having difficulties starting tor...")
     }
     
+    private func checkWalletStatus() {
+        if wallet != nil {
+            WalletStatus.getStatus(wallet: wallet!) { dict in
+                let status = StatusStruct(dictionary: dict)
+                if status.shouldRefill {
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        vc.notificationIcon.image = UIImage(systemName: "exclamationmark.bubble")
+                        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                        appDelegate?.promptForNotificationPermission()
+                        appDelegate?.scheduleNotification(type: "Refill")
+                    }
+                } else {
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        vc.notificationIcon.image = UIImage(systemName: "bubble.left")
+                    }
+                }
+            }
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case "segueToColdcardMusigCreated":
@@ -1724,8 +1694,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if let vc = segue.destination as? RefillMultisigViewController {
                 vc.wallet = self.wallet
                 vc.multiSigRefillDoneBlock = { [unowned thisVc = self] result in
-                    showAlert(vc: thisVc, title: "Success! 🤩", message: "Keypool refilled")
-                    thisVc.didAppear()
+                    showAlert(vc: thisVc, title: "Success", message: "Keypool refilled ✓")
+                    thisVc.loadWalletData()
                 }
             }
             
@@ -1734,6 +1704,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 vc.unsignedPsbt = unsignedPsbt
                 vc.signedRawTx = signedRawTx
             }
+            
+//        case "showNotificationCenter":
+//            if let vc = segue.destination as? NotificationCenterViewController {
+//            }
             
         default:
             break

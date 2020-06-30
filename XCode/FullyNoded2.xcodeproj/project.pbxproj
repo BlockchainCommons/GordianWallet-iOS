@@ -38,6 +38,7 @@
 		D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650072441A78E00754ACF /* VerifyKeysViewController.swift */; };
 		D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650092442C58200754ACF /* WordRecoveryViewController.swift */; };
 		D056500C2446BF6E00754ACF /* 1024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D056500B2446BF6D00754ACF /* 1024.jpg */; };
+		D06DD1F2249CE3930013C7F3 /* LibWally.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DAD51D24546E2200769618 /* LibWally.framework */; };
 		D07399D7245E6E5600860B7E /* Broadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399D6245E6E5600860B7E /* Broadcast.swift */; };
 		D07399DB245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DA245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift */; };
 		D07399DD2461764700860B7E /* XpubConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DC2461764700860B7E /* XpubConverter.swift */; };
@@ -131,16 +132,21 @@
 		D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B08BE5241888500025AD04 /* DonateViewController.swift */; };
 		D0BFDF572490B6A600EB7846 /* LockedUtxoStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */; };
 		D0BFDF592490BC4400EB7846 /* CoinControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFDF582490BC4400EB7846 /* CoinControl.swift */; };
+		D0C20EE924A82B7000C62AA4 /* TransactionFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C20EE824A82B7000C62AA4 /* TransactionFetcher.swift */; };
 		D0C4E63124173F1B00E49DA5 /* WalletToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C4E63024173F1B00E49DA5 /* WalletToolsViewController.swift */; };
 		D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */; };
 		D0D0F5642410CB8F007E0763 /* BIP39Words.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D0F5632410CB8F007E0763 /* BIP39Words.swift */; };
 		D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */; };
 		D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D561FC24306B060085E3CC /* RefillMultiSig.swift */; };
+		D0D5E63924A05D1100F3783C /* NotificationCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D5E63824A05D1100F3783C /* NotificationCenterViewController.swift */; };
+		D0D5E63B24A078B300F3783C /* NotificationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D5E63A24A078B300F3783C /* NotificationDetailViewController.swift */; };
+		D0D5E63D24A07E4600F3783C /* WalletStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D5E63C24A07E4600F3783C /* WalletStatus.swift */; };
+		D0D5E63F24A087C700F3783C /* StatusStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D5E63E24A087C700F3783C /* StatusStruct.swift */; };
 		D0D8DC162400D85000110A78 /* LibWallyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D8DC152400D85000110A78 /* LibWallyTests.swift */; };
-		D0DAD51E24546E2200769618 /* LibWally.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DAD51D24546E2200769618 /* LibWally.framework */; };
 		D0DAD52424546E7700769618 /* Tor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DAD52324546E7700769618 /* Tor.framework */; };
 		D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DB944C24723F2900A0E99D /* CloudKit.framework */; };
 		D0DB944F24736C0600A0E99D /* TransactionStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DB944E24736C0600A0E99D /* TransactionStruct.swift */; };
+		D0E7A6DB2499F36000618B9A /* Sweeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E7A6DA2499F36000618B9A /* Sweeper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -310,16 +316,22 @@
 		D0B08BE5241888500025AD04 /* DonateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonateViewController.swift; sourceTree = "<group>"; };
 		D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedUtxoStruct.swift; sourceTree = "<group>"; };
 		D0BFDF582490BC4400EB7846 /* CoinControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinControl.swift; sourceTree = "<group>"; };
+		D0C20EE824A82B7000C62AA4 /* TransactionFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionFetcher.swift; sourceTree = "<group>"; };
 		D0C4E63024173F1B00E49DA5 /* WalletToolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletToolsViewController.swift; sourceTree = "<group>"; };
 		D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletRecoverViewController.swift; sourceTree = "<group>"; };
 		D0D0F5632410CB8F007E0763 /* BIP39Words.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BIP39Words.swift; sourceTree = "<group>"; };
 		D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillMultisigViewController.swift; sourceTree = "<group>"; };
 		D0D561FC24306B060085E3CC /* RefillMultiSig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillMultiSig.swift; sourceTree = "<group>"; };
+		D0D5E63824A05D1100F3783C /* NotificationCenterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterViewController.swift; sourceTree = "<group>"; };
+		D0D5E63A24A078B300F3783C /* NotificationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDetailViewController.swift; sourceTree = "<group>"; };
+		D0D5E63C24A07E4600F3783C /* WalletStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletStatus.swift; sourceTree = "<group>"; };
+		D0D5E63E24A087C700F3783C /* StatusStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusStruct.swift; sourceTree = "<group>"; };
 		D0D8DC152400D85000110A78 /* LibWallyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibWallyTests.swift; sourceTree = "<group>"; };
 		D0DAD51D24546E2200769618 /* LibWally.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LibWally.framework; path = Carthage/Build/iOS/LibWally.framework; sourceTree = "<group>"; };
 		D0DAD52324546E7700769618 /* Tor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Tor.framework; sourceTree = "<group>"; };
 		D0DB944C24723F2900A0E99D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		D0DB944E24736C0600A0E99D /* TransactionStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionStruct.swift; sourceTree = "<group>"; };
+		D0E7A6DA2499F36000618B9A /* Sweeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sweeper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -328,8 +340,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */,
+				D06DD1F2249CE3930013C7F3 /* LibWally.framework in Frameworks */,
 				D0DAD52424546E7700769618 /* Tor.framework in Frameworks */,
-				D0DAD51E24546E2200769618 /* LibWally.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -484,6 +496,7 @@
 				D00016B4245BBB5C0091F7CF /* SeedStruct.swift */,
 				D0DB944E24736C0600A0E99D /* TransactionStruct.swift */,
 				D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */,
+				D0D5E63E24A087C700F3783C /* StatusStruct.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -600,6 +613,8 @@
 				D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */,
 				D0B08BE5241888500025AD04 /* DonateViewController.swift */,
 				D00016B6245BC49B0091F7CF /* SeedsViewController.swift */,
+				D0D5E63824A05D1100F3783C /* NotificationCenterViewController.swift */,
+				D0D5E63A24A078B300F3783C /* NotificationDetailViewController.swift */,
 			);
 			path = "Home Screen";
 			sourceTree = "<group>";
@@ -673,6 +688,8 @@
 				D07399E024617A0F00860B7E /* FullyNoded2-Bridging-Header.h */,
 				D07399E42463C89C00860B7E /* Extended Key Converter */,
 				D04179F024762A460096F74D /* bc-b32 */,
+				D0D5E63C24A07E4600F3783C /* WalletStatus.swift */,
+				D0C20EE824A82B7000C62AA4 /* TransactionFetcher.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -859,6 +876,7 @@
 			children = (
 				D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */,
 				D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */,
+				D0E7A6DA2499F36000618B9A /* Sweeper.swift */,
 			);
 			path = "Transaction Builders";
 			sourceTree = "<group>";
@@ -1052,10 +1070,13 @@
 				D09D724B23F0EDBB00847DC8 /* FullyNoded2.xcdatamodeld in Sources */,
 				D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */,
 				D09D731223F0F3C000847DC8 /* SeedViewController.swift in Sources */,
+				D0C20EE924A82B7000C62AA4 /* TransactionFetcher.swift in Sources */,
 				D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */,
 				D09D732723F0F3C000847DC8 /* ConfirmViewController.swift in Sources */,
 				D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */,
 				D07399D7245E6E5600860B7E /* Broadcast.swift in Sources */,
+				D0D5E63B24A078B300F3783C /* NotificationDetailViewController.swift in Sources */,
+				D0D5E63F24A087C700F3783C /* StatusStruct.swift in Sources */,
 				D00016B5245BBB5C0091F7CF /* SeedStruct.swift in Sources */,
 				D042EFA22457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift in Sources */,
 				D09D732823F0F3C000847DC8 /* VerifyViewController.swift in Sources */,
@@ -1091,6 +1112,7 @@
 				D09D731823F0F3C000847DC8 /* NodeManagerViewController.swift in Sources */,
 				D09D733E23F0F3C000847DC8 /* MnemonicCreator.swift in Sources */,
 				D09D734223F0F3C000847DC8 /* QuickConnect.swift in Sources */,
+				D0D5E63D24A07E4600F3783C /* WalletStatus.swift in Sources */,
 				D09D735D23F0F3C000847DC8 /* CustomButton.swift in Sources */,
 				D047DE0D242D984E004BC26D /* RefillSingleSig.swift in Sources */,
 				D0457C19248DEBA40028CC9D /* LockedUtxosViewController.swift in Sources */,
@@ -1122,6 +1144,7 @@
 				D047DDFD242B32C3004BC26D /* HowToSupportFN2ViewController.swift in Sources */,
 				D09D733B23F0F3C000847DC8 /* Reducer.swift in Sources */,
 				D047DE01242B3390004BC26D /* IsFN2SecureViewController.swift in Sources */,
+				D0D5E63924A05D1100F3783C /* NotificationCenterViewController.swift in Sources */,
 				D09D736323F0F3C000847DC8 /* ErrorView.swift in Sources */,
 				D09D733323F0F3C000847DC8 /* Utilities.swift in Sources */,
 				D0BFDF592490BC4400EB7846 /* CoinControl.swift in Sources */,
@@ -1130,6 +1153,7 @@
 				D07399DF2461796A00860B7E /* Base58.swift in Sources */,
 				D047DE03242B340A004BC26D /* LicenseDisclaimerViewController.swift in Sources */,
 				D09D732923F0F3C000847DC8 /* InvoiceViewController.swift in Sources */,
+				D0E7A6DB2499F36000618B9A /* Sweeper.swift in Sources */,
 				D09D730D23F0F3C000847DC8 /* NodeStruct.swift in Sources */,
 				D09D736923F0F3C000847DC8 /* SingleSigBuilder.swift in Sources */,
 				D09D732A23F0F3C000847DC8 /* TransactionViewController.swift in Sources */,
@@ -1303,7 +1327,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.41;
+				CURRENT_PROJECT_VERSION = 0.1.53;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1317,7 +1341,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.41;
+				MARKETING_VERSION = 0.1.53;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;
@@ -1335,7 +1359,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = FullyNoded2/FullyNoded2.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.41;
+				CURRENT_PROJECT_VERSION = 0.1.53;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1349,7 +1373,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.41;
+				MARKETING_VERSION = 0.1.53;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "FullyNoded 2";
 				SUPPORTS_MACCATALYST = NO;

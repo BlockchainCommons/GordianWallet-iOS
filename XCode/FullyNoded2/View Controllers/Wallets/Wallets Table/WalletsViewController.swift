@@ -99,7 +99,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func transactionSent(_ notification: Notification) {
         creatingView.addConnectingView(vc: self, description: "refreshing balance...")
-        /// Need to hardcode a delay as doing it immideately after the transaction broadcasts means the transaction may not have propgated across the network that quickly. Keep in mind we use Blockstreams node to broadcast transactions, if we strictly used our own node then of course it would be instant.
+        /// Need to hardcode a delay as doing it immedeately after the transaction broadcasts means the transaction may not have propgated across the network that quickly. Keep in mind we use Blockstreams node to broadcast transactions, if we strictly used our own node then of course it would be instant.
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [unowned vc = self] in
             vc.refreshActiveWalletData()
         }
@@ -117,7 +117,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         refresher = UIRefreshControl()
         refresher.tintColor = UIColor.white
         refresher.attributedTitle = NSAttributedString(string: "refresh data", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-        refresher.addTarget(self, action: #selector(self.reloadActiveWallet), for: UIControl.Event.valueChanged)
+        refresher.addTarget(self, action: #selector(self.refreshLocalDataAndBalanceForActiveAccount), for: UIControl.Event.valueChanged)
         walletTable.addSubview(refresher)
     }
     
@@ -156,6 +156,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         func reloadNow() {
             DispatchQueue.main.async { [unowned vc = self] in
                 vc.walletTable.reloadData()
+                vc.refresher.endRefreshing()
                 vc.creatingView.removeConnectingView()
                 vc.walletTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                 vc.isLoading = false
@@ -174,6 +175,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) {_ in }
             if i + 1 == sortedWallets.count {
                 DispatchQueue.main.async { [unowned vc = self] in
+                    vc.refresher.endRefreshing()
                     vc.creatingView.removeConnectingView()
                     vc.walletTable.reloadData()
                 }
@@ -203,7 +205,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 } else {
                     completion(false)
-                    displayAlert(viewController: vc, isError: true, message: "no nodes! Something is very wrong, you will not be able to use these wallets without a node")
                 }
             }
         }
@@ -274,38 +275,52 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    func refreshLocalDataAndBalanceForActiveAccount() {
+    @objc func refreshLocalDataAndBalanceForActiveAccount() {
         creatingView.addConnectingView(vc: self, description: "loading accounts...")
         sortedWallets.removeAll()
+        wallets.removeAll()
+        activeWallet = nil
+        walletTable.reloadData()
         setOnionLabels() { success in
-            CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
-                if errorDescription == nil {
-                    if wallets!.count == 0 {
-                        vc.creatingView.removeConnectingView()
-                        vc.isLoading = false
-                    } else {
-                        for (i, w) in wallets!.enumerated() {
-                            let s = WalletStruct(dictionary: w)
-                            if !s.isArchived && w["id"] != nil && w["name"] != nil {
-                                vc.sortedWallets.append(w)
-                                if s.isActive {
-                                    vc.activeWallet = s
+            if success {
+                CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
+                    if errorDescription == nil {
+                        if wallets!.count == 0 {
+                            vc.refresher.endRefreshing()
+                            vc.creatingView.removeConnectingView()
+                            vc.isLoading = false
+                        } else {
+                            for (i, w) in wallets!.enumerated() {
+                                let s = WalletStruct(dictionary: w)
+                                if !s.isArchived && w["id"] != nil && w["name"] != nil {
+                                    vc.sortedWallets.append(w)
+                                    if s.isActive {
+                                        vc.activeWallet = s
+                                    }
                                 }
-                            }
-                            if i + 1 == wallets!.count {
-                                if vc.sortedWallets.count == 0 {
-                                    vc.creatingView.removeConnectingView()
-                                    vc.isLoading = false
-                                }
-                                vc.setKnownUnknownSignersAndFingerprints() { [unowned vc = self] success in
-                                    vc.getAccountBalance()
+                                if i + 1 == wallets!.count {
+                                    if vc.sortedWallets.count == 0 {
+                                        vc.creatingView.removeConnectingView()
+                                        vc.refresher.endRefreshing()
+                                        vc.isLoading = false
+                                    }
+                                    vc.setKnownUnknownSignersAndFingerprints() { [unowned vc = self] success in
+                                        vc.getAccountBalance()
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        vc.refresher.endRefreshing()
+                        vc.creatingView.removeConnectingView()
+                        displayAlert(viewController: vc, isError: true, message: errorDescription!)
                     }
-                } else {
+                }
+            } else {
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.refresher.endRefreshing()
                     vc.creatingView.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: errorDescription!)
+                    displayAlert(viewController: vc, isError: true, message: "No nodes, please add one in order to use the app.")
                 }
             }
         }
@@ -999,44 +1014,44 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
 //-------------------------------------------------------------------------------
 // MARK: - To enable mainnet accounts just uncomment the following lines of code:
 //
-            DispatchQueue.main.async { [unowned vc = self] in
-
-                vc.performSegue(withIdentifier: "addWallet", sender: vc)
-
-            }
+//            DispatchQueue.main.async { [unowned vc = self] in
+//
+//                vc.performSegue(withIdentifier: "addWallet", sender: vc)
+//
+//            }
 //-------------------------------------------------------------------------------
 // MARK: - And comment out the following lines of code:
 
-//            Encryption.getNode { [unowned vc = self] (node, error) in
-//
-//                if !error && node != nil {
-//
-//                    if node!.network == "mainnet" {
-//
-//                        DispatchQueue.main.async {
-//                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
-//                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { action in }))
-//                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-//                            vc.present(alert, animated: true, completion: nil)
-//                        }
-//
-//                    } else {
-//
-//                        DispatchQueue.main.async {
-//
-//                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
-//
-//                        }
-//
-//                    }
-//
-//                } else {
-//
-//                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
-//
-//                }
-//
-//            }
+            Encryption.getNode { [unowned vc = self] (node, error) in
+
+                if !error && node != nil {
+
+                    if node!.network == "mainnet" {
+
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
+                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { action in }))
+                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                            vc.present(alert, animated: true, completion: nil)
+                        }
+
+                    } else {
+
+                        DispatchQueue.main.async {
+
+                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
+
+                        }
+
+                    }
+
+                } else {
+
+                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
+
+                }
+
+            }
 //-------------------------------------------------------------------------------
             
         } else {

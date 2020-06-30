@@ -51,6 +51,22 @@ class CoreDataService {
         }
     }
     
+    class func deleteAllData(entity: ENTITY, completion: @escaping ((Bool)) -> Void) {
+        let managedContext = CoreDataService.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity.rawValue)
+        fetchRequest.returnsObjectsAsFaults = false
+        do {
+            let stuff = try managedContext.fetch(fetchRequest)
+            for thing in stuff as! [NSManagedObject] {
+                managedContext.delete(thing)
+            }
+            try managedContext.save()
+            completion(true)
+        } catch {
+            completion(false)
+        }
+    }
+    
     class func saveEntity(dict: [String:Any], entityName: ENTITY, completion: @escaping ((success: Bool, errorDescription: String?)) -> Void) {
         DispatchQueue.main.async {
             let context = CoreDataService.viewContext

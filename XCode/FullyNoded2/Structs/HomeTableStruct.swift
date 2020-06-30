@@ -35,6 +35,7 @@ public struct HomeStruct: CustomStringConvertible {
     let knownSigners:Int
     let unknownSigners:Int
     let fxRate:String
+    let actualFxRate:Double
     
     init(dictionary: [String: Any]) {
         
@@ -63,6 +64,8 @@ public struct HomeStruct: CustomStringConvertible {
         knownSigners = dictionary["knownSigners"] as? Int ?? 0
         unknownSigners = dictionary["unknownSigners"] as? Int ?? 0
         fxRate = dictionary["fxRate"] as? String ?? ""
+        actualFxRate = dictionary["actualFxRate"] as? Double ?? 0.0
+        
         
     }
     

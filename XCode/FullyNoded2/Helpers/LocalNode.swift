@@ -44,53 +44,49 @@ class LocalNode {
         request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
         request.httpBody = "{\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}".data(using: .utf8)
         print("request = {\"jsonrpc\":\"1.0\",\"id\":\"curltest\",\"method\":\"\(method)\",\"params\":[\(formattedParam)]}")
-        let queue = DispatchQueue(label: "com.FullyNoded.torQueue")
-        queue.async {
+        
+        let task = self.session.dataTask(with: request as URLRequest) { (data, response, error) in
             
-            let task = self.session.dataTask(with: request as URLRequest) { (data, response, error) in
+            do {
                 
-                do {
+                if error != nil {
                     
-                    if error != nil {
+                    completion((false, error!.localizedDescription, nil))
+                    
+                } else {
+                    
+                    if let urlContent = data {
                         
-                        completion((false, error!.localizedDescription, nil))
-                        
-                    } else {
-                        
-                        if let urlContent = data {
+                        do {
                             
-                            do {
+                            let json = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
+                            
+                            if let errorCheck = json["error"] as? NSDictionary {
                                 
-                                let json = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
+                                var err = ""
                                 
-                                if let errorCheck = json["error"] as? NSDictionary {
+                                if let errorMessage = errorCheck["message"] as? String {
                                     
-                                    var err = ""
-                                    
-                                    if let errorMessage = errorCheck["message"] as? String {
-                                        
-                                        err = errorMessage
-                                        
-                                    } else {
-                                        
-                                        err = "Uknown error"
-                                        
-                                    }
-                                    
-                                    completion((false, err, nil))
-                                    
+                                    err = errorMessage
                                     
                                 } else {
                                     
-                                    completion((true, nil, (json["result"] as Any)))
+                                    err = "Uknown error"
                                     
                                 }
                                 
-                            } catch {
+                                completion((false, err, nil))
                                 
-                                completion((false, "error processing json", nil))
+                                
+                            } else {
+                                
+                                completion((true, nil, (json["result"] as Any)))
                                 
                             }
+                            
+                        } catch {
+                            
+                            completion((false, "error processing json", nil))
                             
                         }
                         
@@ -100,9 +96,9 @@ class LocalNode {
                 
             }
             
-            task.resume()
-            
         }
+        
+        task.resume()
         
     }
     

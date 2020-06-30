@@ -12,13 +12,13 @@ class TextBlurbs {
     
     class func refillSingleSigWarningMessage(keysRemainging: Int) -> String {
         
-        return "Your node only has \(keysRemainging) more public keys. We need to import more public keys into your node at this point to ensure your node is able to verify this wallets balances and build psbt's for us."
+        return "Your node only has \(keysRemainging) more public keys. We need to import more keys into your node at this point to ensure your node is able to verify this wallets balances and build psbt's for us."
         
     }
     
     class func refillMultiSigWarningMessage(keysRemainging: Int) -> String {
         
-        return "Your node only has \(keysRemainging) more keys left to sign with. In order for your node to be able to continue signing transactions you need to refill the keypool, you will need your offline recovery words."
+        return "Your node only has \(keysRemainging) more keys remaining in its keypool. We need to import more keys into your node at this point to ensure your node is able to verify this wallets balances, build psbt's for us and continue acting as a signer for your multisig transactions."
         
     }
     
@@ -316,5 +316,31 @@ class TextBlurbs {
     class func exportKeysText() -> String {
         
         return "This tool allows you to view and export your addresses, public keys, and scriptpubkey as well displaying the derivation path for each."
+    }
+    
+    //MARK: - Notification Center Detail
+    
+    class func refillNowNotificationText() -> String {
+        
+        return """
+        When your account is created FN2 imports 0 to 2500 receiving keys and 2500 change keys so that your node can watch for transactions, balances, and build psbt's using utxo's those keys are associated with.
+        
+        It is best practice to never reuse keys, therefore once you reach a key index that is 100 or less away from your final key you will be notified that it is time to refill your keypool.
+        
+        You will need to use your node's seed words to refill the keypool for Warm accounts created with FN2. The reason is we do not save your node's seed and need to use it to maintain your node's signing ability.
+        
+        It can take up to 30 seconds to complete the refill process. Upon a successful refil the UI on the "Accounts" view will dynamically update to show the updated range of keys that exist on your node.
+        """
+    }
+    
+    class func refillNotNeededNotificationText() -> String {
+        
+        return """
+        When your account is created FN2 imports 0 to 2500 receiving keys and 2500 change keys so that your node can watch for transactions, balances, and build psbt's using utxo's those keys are associated with.
+        
+        It is best practice to never reuse keys, therefore once you reach a key index that is 100 or less away from your final key you will be notified that it is time to refill your keypool.
+        
+        Currently you are over 100 keys away from needing to refill your keypool, no action is needed, you can refill your keypool at any time via "Accounts" > "Tools" > "Refill keypool".
+        """
     }
 }

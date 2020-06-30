@@ -60,7 +60,7 @@ class CoinControl {
                     Reducer.makeCommand(walletName: wallet!.name!, command: .lockunspent, param: param) { (object, _) in
                         if let success = object as? Bool {
                             if success {
-                                for utxo in utxos {
+                                for (x, utxo) in utxos.enumerated() {
                                     CoreDataService.retrieveEntity(entityName: .lockedUtxos) { (lockedUtxos, _) in
                                         if lockedUtxos != nil {
                                             if lockedUtxos!.count > 0 {
@@ -69,7 +69,7 @@ class CoinControl {
                                                     if (utxo["txid"] as! String) == str.txid && (utxo["vout"] as! Int) == str.vout {
                                                         CoreDataService.deleteEntity(id: str.id, entityName: .lockedUtxos) { _ in}
                                                     }
-                                                    if i + 1 == lockedUtxos!.count {
+                                                    if i + 1 == lockedUtxos!.count && x + 1 == utxos.count {
                                                         completion(success)
                                                     }
                                                 }

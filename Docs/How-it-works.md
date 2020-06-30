@@ -75,7 +75,7 @@ The first section of the extended key, such as `[10c791f9/84'/1'/0']` represents
 
 Notice the final key is an `xprv` and represents the node's designated seed. The order of these keys is highly significant, and it is crucial to note that the order matters very much. For example, when we recover multi-sig wallets, *FN2* knows the order as described above and will swap out the offline seed's `xpub` for an `xprv` and will swap the node's `xprv` for the `xpub`. If these keys are added in the incorrect order, the wallet will create different addresses.
 
-Remember that when we initially create the wallet with `bitcoin-cli createwallet` we tell the node to create the wallet with a blank keypool. 
+Remember that when we initially create the wallet with `bitcoin-cli createwallet` we tell the node to create the wallet with a blank keypool.
 
 After constructing the above BIP84 testnet multi-sig descriptor, *FN2*  will then issue a `bitcoin-cli getdescriptorinfo` command to your node which returns a result such as:
 
@@ -189,3 +189,11 @@ This list of inputs/outputs and the mining fee is then displayed to the user for
 Once the user is happy everything looks good, they can tap `broadcast`, at which point the node will broadcast the transaction.
 
 It is worth noting that *FN2* is fully capable of creating unsigned transactions. If for some reason the node can not sign the transaction or you delete the seed from your device, *FN2* will instead create an unsigned transaction and instead of broadcasting it will display a list of options for formatting the unsigned transaction, to export to a variety of offline signers such as Coldcard, Hermit etc.
+
+## Coin Control
+
+Whenever you lock a utxo the app calls `bitcoin-cli lockunspent` so that your utxo is locked on the bitcoind level. The app keeps a local data store of each utxo you lock so that we can display useful information to you about that utxo after it is locked. The reason for this is that when you make the `bitcoin-cli listlockunspent` it only returns a `txid` and `vout` of the utxo which is not very useful for the average user. We simply store the utxo's metadata (number of confirmations, descriptor, amount, address etc) that is associated with that `txid` and `vout` (at the time of locking) locally so that we may better parse them. For example in order to unlock all change utxos we need to parse the descriptor of the utxo to see if it is a change utxo, to unlock all dust utxos we need to know what amount that utxo holds.
+
+Locking change utxo's parses all unlocked utxo's, fetches the descritpor for each and checks the derivation path of the descriptor to see if it includes the internal path component as per BIP44/84/49/48 e.g. "/1/". If it does we know its change and can lock/unlock it.
+
+If the user has locked utxo's outside of the app there is no way for us to (quickly) parse that utxo. This would not be an issue if we could guarantee a user only holds a small amount of utxo's as we could manually fetch each transaction via the `txid` and `vout`, yet if a user has say more then 10 utxos it can take Tor quite some time to fetch all that data and it quickly becomes impractical from there. For this reason if you have locked utxo's outside of the app you will see "?" marks where the labels would be. To update them you may unlock them and then lock them again with the app.

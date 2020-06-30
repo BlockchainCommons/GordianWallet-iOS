@@ -1,0 +1,2 @@
+[submodule "Carthage/Checkouts/libwally-swift"]
+	url = https://github.com/blockchain/libwally-swift.git

@@ -1,0 +1,11 @@
+{
+  "commitish" : "v0.0.1",
+  "iOS" : [
+    {
+      "hash" : "76c1706a20e4c47e4b90215152d5797648e5c3d0d7008585bd3a30d3fb773b63",
+      "name" : "LibWally",
+      "linking" : "dynamic",
+      "swiftToolchainVersion" : "5.2.2 (swiftlang-1103.0.32.6 clang-1103.0.32.51)"
+    }
+  ]
+}

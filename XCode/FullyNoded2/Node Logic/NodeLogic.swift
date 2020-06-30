@@ -378,6 +378,7 @@ class NodeLogic {
                             if fxRate != nil {
                                 dictToReturn["fiatBalance"] = "$\(Int(amount * fxRate!).withCommas())"
                                 dictToReturn["fxRate"] = "1 btc / $\(fxRate!)"
+                                dictToReturn["actualFxRate"] = fxRate!
                             }
                             complete()
                         }
