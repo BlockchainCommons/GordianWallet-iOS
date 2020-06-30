@@ -8,6 +8,35 @@ Install Apple's XCode developer environment, and download the FullyNoded 2 sourc
 
 - [Install Xcode](https://itunes.apple.com/id/app/xcode/id497799835?mt=12)
 - You will need a free Apple developer account: create one [here](https://developer.apple.com/programs/enroll/)
-- In XCode, click "XCode" > "preferences" > "Accounts" and add your github account
-- Go to the [repo](https://github.com/BlockchainCommons/FullyNoded-2) for FullyNoded 2 and click `Clone and Download` > `Open in XCode`
-- Tap the "play" button in the top left of XCode
+- In Xcode, click "Xcode" > "preferences" > "Accounts" and add your github account
+- In a terminal run `git clone https://github.com/BlockchainCommons/FullyNoded-2.git`
+
+## 2. Install Brew
+
+Run `brew --version` in a terminal, if you get a valid response you have brew installed already, if not:
+
+```
+cd /usr/local
+mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
+```
+Wait for brew to finish.
+
+## 3. Install carthage
+
+`brew install carthage`
+
+## 4. Install gnu-sed
+
+`brew install gnu-sed`
+
+## 4. Build LibWally
+
+- `cd FullyNoded-2/XCode/Carthage/Checkouts/libwally-swift`
+- `./build-libwally.sh -dsc`
+
+## 5. Build Dependencies
+
+- `cd FullyNoded-2/XCode`
+- `carthage build`
+
+
