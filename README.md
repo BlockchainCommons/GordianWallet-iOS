@@ -8,7 +8,7 @@ FullyNoded 2 allows for multiple wallet templates, including: legacy, SegWit-com
 
 ## Status — Early Beta
 
-*FullyNoded 2* is currently under active development and in early beta testing phase. It should be used on Bitcoin testnet to gain familiarity with how the wallet works, and most importantly to practice deleting and recovering wallet. For a detailed checklist to test critical functionality please see our [Testing Checklist.md](./Docs/Testing Checklist.md)
+*FullyNoded 2* is currently under active development and in early beta testing phase. It should be used on Bitcoin testnet to gain familiarity with how the wallet works, and most importantly to practice deleting and recovering a wallet. For a detailed checklist to test critical functionality please see our [Testing Checklist.md](./Docs/Testing-Checklist.md)
 
 ## Installing FullyNoded 2
 
@@ -45,7 +45,7 @@ Please refer to their telegram groups for simple instructions on linking to thes
 
 - [Nodl Telegram](https://t.me/nodl_support)
 - [RaspiBlitz Telegram](https://t.me/raspiblitz)
-- [BTCPayServer](https://t.me/btcpayserver)
+- [BTCPayServer Telegram](https://t.me/btcpayserver)
 
 ## Using FullyNoded 2
 
