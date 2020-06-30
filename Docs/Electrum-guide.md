@@ -89,7 +89,9 @@ FullyNoded 2 works with Bitcoin Core and Bitcoin Core only works with xpubs/tpub
 
 ![](../Images/Electrum/16_converttpub3.png)
 
-### 15. Bypass Electrums encryption (the nice thing about multisig is we don't need passphrases to maintain security)
+### 15. Bypass Electrums encryption
+
+Tthe nice thing about multisig is we don't need passphrases to maintain security.
 
 ![](../Images/Electrum/17_bypassencryption.png)
 
