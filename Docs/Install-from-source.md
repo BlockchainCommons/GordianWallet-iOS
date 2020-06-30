@@ -17,18 +17,29 @@ Run `brew --version` in a terminal, if you get a valid response you have brew in
 - `mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew`
 Wait for brew to finish.
 
-## 3. Get dependencies for Libwally
-- `brew install autoconf automake libtool gnu-sed`
+## 3. Install Carthage
+- `brew install carthage`
 
-## 4. Clone FullyNoded-2
+## 3. Clone FullyNoded-2
 - `git clone https://github.com/BlockchainCommons/FullyNoded-2.git`
 
-## 5. Build Libwally
-- `cd FullyNoded-2/XCode/Carthage/Checkouts/libwally-swift`
-- `./build-libwally.sh -dsc`
-
-## 6. Run FullyNoded-2
+## 4. Build Dependencies
 - `cd FullyNoded-2/XCode`
-- open `FullyNoded2.xcodeproj`
+- `carthage update --platform iOS`
+
+## 5. Edit LibWally.xcodeproj
+**This is a temporary fix while we wait for the next LibWally update.**
+- `cd FullyNoded-2/XCode/Carthage/Checkouts/libwally-swift`
+- open `LibWally.xcodeproj`
+- Navigate to `LibWally/BIP32.swift` and edit line #253 from `var privKey` to `public var privKey`
+- Navigate to  `LibWally/PSBT.swift` and edit line #14 from `let path: BIP32Path` to `public let path: BIP32Path`
+- Save and close Libwally.xcodeproj
+- **Turn off your internet connection to force LibWally to build from source**
+- `cd FullyNoded-2/XCode`
+- `carthage build libwally-swift`
+
+## 6. Open FullyNoded-2
+- `cd FullyNoded-2/XCode`
+- open `FullyNoded2.xcodeproj` and run the project in a simulator or device.
 
 
