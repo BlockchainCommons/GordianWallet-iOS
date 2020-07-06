@@ -11,7 +11,7 @@ import CLibWally
 
 public struct KeyOrigin : Equatable {
     let fingerprint: Data
-    let path: BIP32Path
+    public let path: BIP32Path
 }
 
 func getOrigins (keypaths: wally_keypath_map, network: Network) -> [PubKey: KeyOrigin] {

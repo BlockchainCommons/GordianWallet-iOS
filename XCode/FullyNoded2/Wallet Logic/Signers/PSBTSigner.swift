@@ -81,7 +81,7 @@ class PSBTSigner {
                 }
             }
         }
-        
+                
         func attemptToSignLocally() {
             /// Need to ensure similiar seeds do not sign mutliple times. This can happen if a user adds the same seed multiple times.
             var xprvStrings = [String]()
