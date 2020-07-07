@@ -417,7 +417,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
         }
         
-        KeyFetcher.xpub(seed: encryptedSeed, chain: network, derivation: wallet.derivation) { [unowned vc = self] (xpub, fingerprint, error) in
+        KeyFetcher.xpubNew(seed: encryptedSeed, chain: network, derivation: wallet.derivation) { [unowned vc = self] (xpub, fingerprint, error) in
             
             if xpub != nil && fingerprint != nil {
                 var param = ""
@@ -425,10 +425,10 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 switch wallet.derivation {
                     
                 case "m/84'/1'/0'":
-                    param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/0/*)\""
+                    param = "\"wpkh([\(fingerprint!)]\(xpub!)/0/*)\""
                     
                 case "m/84'/0'/0'":
-                    param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/0/*)\""
+                    param = "\"wpkh([\(fingerprint!)]\(xpub!)/0/*)\""
                     
                 default:
                     break

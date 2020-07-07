@@ -10,6 +10,32 @@ import Foundation
 import LibWally
 
 class KeyFetcher {
+    
+    class func xpubNew(seed: Data, chain: Network, derivation: String, completion: @escaping ((xpub: String?, fingerprint: String?, error: Bool)) -> Void) {
+        Encryption.decryptData(dataToDecrypt: seed) { (seed) in
+            if seed != nil {
+                let words = String(data: seed!, encoding: .utf8)!
+                if let mnemonic = BIP39Mnemonic(words) {
+                    if let masterKey = HDKey((mnemonic.seedHex("")), chain) {
+                        if let path = BIP32Path(derivation) {
+                            do {
+                                let account = try masterKey.derive(path)
+                                completion((account.xpub, account.fingerprint.hexString, false))
+                            } catch {
+                                completion((nil, nil, true))
+                            }
+                        } else {
+                            completion((nil, nil, true))
+                        }
+                    } else {
+                        completion((nil, nil, true))
+                    }
+                }
+            } else {
+                completion((nil, nil, true))
+            }
+        }
+    }
 
     class func xpub(seed: Data, chain: Network, derivation: String, completion: @escaping ((xpub: String?, fingerprint: String?, error: Bool)) -> Void) {
 
