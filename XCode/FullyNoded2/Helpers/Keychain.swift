@@ -9,6 +9,66 @@
 import Foundation
 
 class KeyChain {
+    
+    class func seeds() -> [Data]? {
+        if let seeds = KeyChain.getSeed("seeds") {
+            do {
+                guard let encryptedSeeds = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(seeds) as? [Data] else {
+                    fatalError("Can't get seeds")
+                }
+                return encryptedSeeds
+            } catch {
+                fatalError("Can't encode data: \(error)")
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    class func setSeed(_ data: Data, forKey: String) -> Bool {
+        let query = [
+            kSecClass as String       : kSecClassGenericPassword as String,
+            kSecAttrSynchronizable as String : kCFBooleanFalse!,
+            kSecAttrAccessible as String : kSecAttrAccessibleAfterFirstUnlock,
+            kSecAttrAccount as String : forKey,
+            kSecValueData as String   : data ] as [String : Any]
+
+        SecItemDelete(query as CFDictionary)
+
+        let status = SecItemAdd(query as CFDictionary, nil)
+        
+        if status == noErr {
+            return true
+        } else {
+            if let err = SecCopyErrorMessageString(status, nil) {
+                print("Set failed: \(err)")
+            }
+            return false
+        }
+    }
+    
+    class func getSeed(_ key: String) -> Data? {
+        let query = [
+            kSecClass as String       : kSecClassGenericPassword,
+            kSecAttrAccount as String : key,
+            kSecReturnData as String  : kCFBooleanTrue!,
+            kSecAttrAccessible as String : kSecAttrAccessibleAfterFirstUnlock,
+            kSecAttrSynchronizable as String : kCFBooleanFalse!,
+            kSecMatchLimit as String  : kSecMatchLimitOne ] as [String : Any]
+
+        var dataTypeRef: AnyObject? = nil
+
+        let status: OSStatus = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
+
+        if status == noErr {
+            return dataTypeRef as! Data?
+        } else {
+            if let err = SecCopyErrorMessageString(status, nil) {
+                print("Get failed: \(err)")
+            }
+            return nil
+        }
+    }
 
     class func set(_ data: Data, forKey: String) -> Bool {
         let query = [

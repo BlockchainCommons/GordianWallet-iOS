@@ -11,6 +11,31 @@ import CryptoKit
 
 class Encryption {
     
+    class func decryptedSeeds(completion: @escaping (([String]?)) -> Void) {
+        var decryptedSeeds:[String] = []
+        guard let encryptedSeeds = KeyChain.seeds() else {
+            fatalError("can not get seeds")
+        }
+        if encryptedSeeds.count > 0 {
+            for (i, seed) in encryptedSeeds.enumerated() {
+                Encryption.decryptData(dataToDecrypt: seed) { decryptedSeed in
+                    if decryptedSeed != nil {
+                        if let words = String(data: decryptedSeed!, encoding: .utf8) {
+                            decryptedSeeds.append(words)
+                            if i + 1 == encryptedSeeds.count {
+                                completion((decryptedSeeds))
+                            }
+                        }
+                    } else {
+                        completion((nil))
+                    }
+                }
+            }
+        } else {
+            completion((nil))
+        }
+    }
+    
     class func sha256hash(_ text: String) -> String {
         let digest = SHA256.hash(data: text.dataUsingUTF8StringEncoding)
         return digest.map { String(format: "%02hhx", $0) }.joined()

@@ -11,6 +11,7 @@ import LibWally
 
 class ChooseWalletFormatViewController: UIViewController, UINavigationControllerDelegate {
     
+    var words = ""
     var userSuppliedWords:String?
     var userSuppliedMultiSigXpub = ""
     var userSuppliedMultiSigFingerprint = ""
@@ -326,83 +327,92 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     
     func createSingleSig() {
         print("create single sig")
-        
         if userSuppliedWords == nil {
-            
             updateStatus(text: "creating device's seed")
-            
             KeychainCreator.createKeyChain() { [unowned vc = self] (mnemonic, error) in
-                
                 if !error {
-                    
+                    vc.words = mnemonic!
                     vc.updateStatus(text: "encrypting device's seed")
-                    
                     let dataToEncrypt = mnemonic!.dataUsingUTF8StringEncoding
                     Encryption.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
                         
                         if !error {
-                            
                             vc.updateStatus(text: "creating primary descriptor")
-                            vc.saveSeed(seed: encryptedData!) { success in
-                                
-                                if success {
-                                    vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
-                                    
-                                } else {
+                            if let seeds = KeyChain.seeds() {
+                                var existingEncryptedSeeds = seeds
+                                existingEncryptedSeeds.append(encryptedData!)
+                                do {
+                                    let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: existingEncryptedSeeds, requiringSecureCoding: true)
+                                    if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
+                                        vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
+                                    }
+                                } catch {
                                     vc.creatingView.removeConnectingView()
                                     displayAlert(viewController: vc, isError: true, message: "error saving your seed")
-                                    
                                 }
-                                
+                            } else {
+                                /// Seed has never been added.
+                                do {
+                                    let seedArray:NSArray = [encryptedData!]
+                                    let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: seedArray, requiringSecureCoding: true)
+                                    if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
+                                        vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
+                                    } else {
+                                        vc.creatingView.removeConnectingView()
+                                        displayAlert(viewController: vc, isError: true, message: "error saving your seed")
+                                    }
+                                } catch {
+                                    vc.creatingView.removeConnectingView()
+                                    displayAlert(viewController: vc, isError: true, message: "error saving your seed")
+                                }
                             }
-                            
                         } else {
-                            
                             vc.creatingView.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
                         }
-                        
                     }
-                    
                 }
-                
             }
-            
         } else {
-            
             creatingView.addConnectingView(vc: self, description: "creating single sig account")
-            
             let dataToEncrypt = userSuppliedWords!.dataUsingUTF8StringEncoding
             Encryption.encryptData(dataToEncrypt: dataToEncrypt) { [unowned vc = self] (encryptedData, error) in
-                
                 if !error {
-                    
                     vc.updateStatus(text: "creating primary descriptor")
-                    vc.saveSeed(seed: encryptedData!) { success in
-                        
-                        if success {
-                            vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
-                            
-                        } else {
+                    if let seeds = KeyChain.seeds() {
+                        var existingEncryptedSeeds = seeds
+                        existingEncryptedSeeds.append(encryptedData!)
+                        do {
+                            let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: existingEncryptedSeeds, requiringSecureCoding: true)
+                            if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
+                                vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
+                            }
+                        } catch {
                             vc.creatingView.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: "error saving your seed")
-                            
                         }
-                        
+                    } else {
+                        /// Seed has never been added.
+                        do {
+                            let seedArray:NSArray = [encryptedData!]
+                            let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: seedArray, requiringSecureCoding: true)
+                            if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
+                                vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
+                            } else {
+                                vc.creatingView.removeConnectingView()
+                                displayAlert(viewController: vc, isError: true, message: "error saving your seed")
+                            }
+                        } catch {
+                            vc.creatingView.removeConnectingView()
+                            displayAlert(viewController: vc, isError: true, message: "error saving your seed")
+                        }
                     }
-                    
                 } else {
-                    
                     vc.creatingView.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
                 }
-                
             }
-            
-            
         }
-        
-        
     }
     
     func constructSingleSigPrimaryDescriptor(wallet: WalletStruct, encryptedSeed: Data) {
@@ -417,49 +427,45 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
         }
         
-        KeyFetcher.xpubNew(seed: encryptedSeed, chain: network, derivation: wallet.derivation) { [unowned vc = self] (xpub, fingerprint, error) in
-            
-            if xpub != nil && fingerprint != nil {
-                var param = ""
-                
-                switch wallet.derivation {
-                    
-                case "m/84'/1'/0'":
-                    param = "\"wpkh([\(fingerprint!)]\(xpub!)/0/*)\""
-                    
-                case "m/84'/0'/0'":
-                    param = "\"wpkh([\(fingerprint!)]\(xpub!)/0/*)\""
-                    
-                default:
-                    break
-                    
-                }
-                
-                Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
-                    
-                    if let dict = object as? NSDictionary {
-                        let primaryDescriptor = dict["descriptor"] as! String
-                        vc.newWallet["descriptor"] = primaryDescriptor
-                        vc.newWallet["name"] = Encryption.sha256hash(primaryDescriptor)
-                        vc.updateStatus(text: "creating change descriptor")
-                        let changeDescParam = param.replacingOccurrences(of: "/0/*", with: "/1/*")
-                        vc.constructSingleSigChangeDescriptor(param: changeDescParam)
-                                                        
+        KeyFetcher.accountKeys(seed: encryptedSeed, chain: network, derivation: wallet.derivation) { [unowned vc = self] (xprv, xpub, fingerprint, error) in
+            if xpub != nil && fingerprint != nil && xprv != nil {
+                Encryption.encryptData(dataToEncrypt: xprv!.dataUsingUTF8StringEncoding) { (encryptedData, error) in
+                    if encryptedData != nil {
+                        vc.newWallet["xprv"] = encryptedData!
+                        var param = ""
+                        switch wallet.derivation {
+                        case "m/84'/1'/0'":
+                            param = "\"wpkh([\(fingerprint!)]\(xpub!)/0/*)\""
+                            
+                        case "m/84'/0'/0'":
+                            param = "\"wpkh([\(fingerprint!)]\(xpub!)/0/*)\""
+                            
+                        default:
+                            break
+                        }
+                        Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
+                            if let dict = object as? NSDictionary {
+                                let primaryDescriptor = dict["descriptor"] as! String
+                                vc.newWallet["descriptor"] = primaryDescriptor
+                                vc.newWallet["name"] = Encryption.sha256hash(primaryDescriptor)
+                                vc.updateStatus(text: "creating change descriptor")
+                                let changeDescParam = param.replacingOccurrences(of: "/0/*", with: "/1/*")
+                                vc.constructSingleSigChangeDescriptor(param: changeDescParam)
+                            } else {
+                                vc.creatingView.removeConnectingView()
+                                displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
+                            }
+                        }
                     } else {
                         vc.creatingView.removeConnectingView()
-                        displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
-                        
+                        displayAlert(viewController: vc, isError: true, message: "error encrypting your xprv")
                     }
                 }
-                
             } else {
                 vc.creatingView.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: "error deriving your xpub and fingerprint")
-                
             }
-            
         }
-
     }
     
     func constructSingleSigChangeDescriptor(param: String) {
@@ -487,43 +493,24 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
             
             func save() {
                 CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
-                    
                     if success {
-                        
                         let w = WalletStruct(dictionary: vc.newWallet)
-                        
-                        SeedParser.fetchSeeds(wallet: w) { (wordSet, fingerprints) in
-                            
-                            if wordSet != nil {
-                                
-                                let recoveryQr = ["descriptor":"\(w.descriptor)", "blockheight":w.blockheight,"label":""] as [String : Any]
-                                
-                                if let json = recoveryQr.json() {
-                                    
-                                    DispatchQueue.main.async {
-                                        vc.creatingView.removeConnectingView()
-                                        vc.backUpRecoveryPhrase = "\(wordSet![0])"
-                                        vc.recoveryQr = json
-                                        vc.performSegue(withIdentifier: "walletCreated", sender: vc)
-                                        
-                                    }
-                                    
-                                } else {
-                                    
-                                    vc.creatingView.removeConnectingView()
-                                    displayAlert(viewController: vc, isError: true, message: "error converting to json")
-                                    
-                                }
+                        let recoveryQr = ["descriptor":"\(w.descriptor)", "blockheight":w.blockheight,"label":""] as [String : Any]
+                        if let json = recoveryQr.json() {
+                            DispatchQueue.main.async {
+                                vc.creatingView.removeConnectingView()
+                                vc.backUpRecoveryPhrase = vc.words
+                                vc.recoveryQr = json
+                                vc.performSegue(withIdentifier: "walletCreated", sender: vc)
                             }
+                        } else {
+                            vc.creatingView.removeConnectingView()
+                            displayAlert(viewController: vc, isError: true, message: "error converting to json")
                         }
-                        
                     } else {
-                        
                         vc.creatingView.removeConnectingView()
                         displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving account")
-                        
                     }
-                    
                 }
             }
             

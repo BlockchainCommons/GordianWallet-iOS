@@ -25,102 +25,68 @@ class SeedParser {
             
         }
         
-        guard let bip32path = BIP32Path(wallet.derivation) else {
-            completion((nil, nil))
-            return
-        }
-        
         func checkKeys() {
             var known = 0
             var unknown = xpubs.count
             let unique = Array(Set(derivedXpubs))
-            
             for (i, xpub) in xpubs.enumerated() {
-                
                 for (p, potentialXpub) in unique.enumerated() {
-                    
                     if xpub == potentialXpub {
                         /// It is known
                         known += 1
                         unknown -= 1
-                        
                     }
-                    
                     if i + 1 == xpubs.count && p + 1 == unique.count {
                         completion((known, unknown))
-                        
                     }
-                    
                 }
-                
             }
-            
         }
         
-        CoreDataService.retrieveEntity(entityName: .seeds) { (encryptedSeeds, errorDescription) in
-            
-            if encryptedSeeds != nil {
-                
-                if encryptedSeeds!.count > 0 {
-                    
-                    for (i, seed) in encryptedSeeds!.enumerated() {
-                        
-                        let seedStruct = SeedStruct(dictionary: seed)
-                        
-                        if let encryptedSeed = seedStruct.seed {
-                            
-                            Encryption.decryptData(dataToDecrypt: encryptedSeed) { decryptedSeed in
-                                
-                                if decryptedSeed != nil {
-                                    
-                                    if let words = String(data: decryptedSeed!, encoding: .utf8) {
-                                        
-                                        MnemonicCreator.convert(words: words) { (mnemonic, error) in
-                                            
-                                            if !error {
-                                                
-                                                if let masterKey = HDKey(mnemonic!.seedHex(""), chain) {
-                                                    
-                                                    do {
-                                                        
-                                                        let hdkey = try masterKey.derive(bip32path)
-                                                        let seedsDerivedXpub = hdkey.xpub
-                                                        derivedXpubs.append(seedsDerivedXpub)
-                                                        
-                                                    } catch {
-                                                        
-                                                        
-                                                    }
-                                                    
-                                                }
-                                                
-                                            }
-                                            
-                                        }
-                                        
+        func getSeedsFromMnemonic(bip32Path: BIP32Path) {
+            Encryption.decryptedSeeds { (decryptedSeeds) in
+                if decryptedSeeds != nil {
+                    for (i, seed) in decryptedSeeds!.enumerated() {
+                        if let mnemonic = BIP39Mnemonic(seed) {
+                            if let masterKey = HDKey(mnemonic.seedHex(""), chain) {
+                                do {
+                                    let hdkey = try masterKey.derive(bip32Path)
+                                    let seedsDerivedXpub = hdkey.xpub
+                                    derivedXpubs.append(seedsDerivedXpub)
+                                    if i + 1 == decryptedSeeds!.count {
+                                        checkKeys()
                                     }
+                                } catch {
                                     
                                 }
-                                
                             }
-                            
                         }
-                        
-                        if i + 1 == encryptedSeeds!.count {
-                            checkKeys()
-                            
-                        }
-                        
                     }
-                    
-                } else {
-                    completion((nil,nil))
                 }
-                
-            } else {
-                completion((nil,nil))
             }
-            
+        }
+        if wallet.xprv != nil {
+            Encryption.decryptData(dataToDecrypt: wallet.xprv!) { (decryptedXprv) in
+                if decryptedXprv != nil {
+                    if let xprv = String(bytes: decryptedXprv!, encoding: .utf8) {
+                        if let masterKey = HDKey(xprv) {
+                            let seedsDerivedXpub = masterKey.xpub
+                            derivedXpubs.append(seedsDerivedXpub)
+                            checkKeys()
+                        }
+                    } else {
+                        completion((nil, nil))
+                    }
+                } else {
+                    completion((nil, nil))
+                }
+            }
+        } else {
+            guard let bip32path = BIP32Path(wallet.derivation) else {
+                completion((nil, nil))
+                return
+            }
+            getSeedsFromMnemonic(bip32Path: bip32path)
         }
                 
     }
@@ -217,9 +183,8 @@ class SeedParser {
     }
     
     class func fetchSeeds(wallet: WalletStruct, completion: @escaping ((words: [String]?, fingerprints: [String]?)) -> Void) {
-        
+        var derivation = ""
         var xpubs = [String]()
-        var potentialSeeds = [String]()
         var accountsSeeds = [String]()
         var fingerprints = [String]()
         let descriptorParser = DescriptorParser()
@@ -228,105 +193,88 @@ class SeedParser {
         
         if wallet.type == "MULTI" {
             xpubs = descriptorStruct.multiSigKeys
-            
         } else {
             xpubs.append(descriptorStruct.accountXpub)
-            
         }
         
-        guard let bip32path = BIP32Path(wallet.derivation) else {
-            completion((nil, nil))
-            return
-        }
-        
-        func checkKeys() {
-            let unique = Array(Set(potentialSeeds))
-            
+        func checkMnemonics(seeds: [String], bip32Path: BIP32Path) {
+            let unique = Array(Set(seeds))
             for (i, xpub) in xpubs.enumerated() {
-                
                 for (p, potentialSeed) in unique.enumerated() {
-                    
-                    MnemonicCreator.convert(words: potentialSeed) { (mnemonic, error) in
-                        
-                        if !error {
-                            
-                            if let masterKey = HDKey(mnemonic!.seedHex(""), chain) {
-                                
-                                do {
-                                    
-                                    let hdkey = try masterKey.derive(bip32path)
-                                    
-                                    if xpub == hdkey.xpub {
-                                        accountsSeeds.append(potentialSeed)
-                                        fingerprints.append(masterKey.fingerprint.hexString)
-
-                                    }
-                                    
-                                    if i + 1 == xpubs.count && p + 1 == unique.count {
-                                        completion((accountsSeeds, fingerprints))
-
-                                    }
-                                    
-                                } catch {
-                                    
-                                    
-                                    
+                    if let mnemonic = BIP39Mnemonic(potentialSeed) {
+                        if let masterKey = HDKey(mnemonic.seedHex(""), chain) {
+                            do {
+                                let hdkey = try masterKey.derive(bip32Path)
+                                if xpub == hdkey.xpub {
+                                    accountsSeeds.append(potentialSeed)
+                                    fingerprints.append(masterKey.fingerprint.hexString)
                                 }
+                                if i + 1 == xpubs.count && p + 1 == unique.count {
+                                    completion((accountsSeeds, fingerprints))
+                                }
+                            } catch {
                                 
                             }
-                            
                         }
+                    }
+                }
+            }
+        }
+        
+        func checkXprv(xprv: String, bip32Path: BIP32Path) {
+            for (i, xpub) in xpubs.enumerated() {
+                if let masterKey = HDKey(xprv) {
+                    do {
+                        let hdkey = try masterKey.derive(bip32Path)
+                        if xpub == hdkey.xpub {
+                            fingerprints.append(masterKey.fingerprint.hexString)
+                        }
+                        if i + 1 == xpubs.count {
+                            completion(([xprv], fingerprints))
+                        }
+                    } catch {
                         
                     }
-                    
                 }
+            }
+        }
                 
+        if wallet.xprv != nil {
+            derivation = "0/0"
+            
+            guard let bip32path = BIP32Path(derivation) else {
+                completion((nil, nil))
+                return
             }
             
-        }
-        
-        CoreDataService.retrieveEntity(entityName: .seeds) { (encryptedSeeds, errorDescription) in
-            
-            if encryptedSeeds != nil {
-                
-                if encryptedSeeds!.count > 0 {
-                    
-                    for (i, seed) in encryptedSeeds!.enumerated() {
-                        
-                        let seedStruct = SeedStruct(dictionary: seed)
-                        
-                        if let encryptedSeed = seedStruct.seed {
-                            
-                            Encryption.decryptData(dataToDecrypt: encryptedSeed) { decryptedSeed in
-                                
-                                if decryptedSeed != nil {
-                                    
-                                    if let words = String(data: decryptedSeed!, encoding: .utf8) {
-                                        potentialSeeds.append(words)
-                                        
-                                    }
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                        if i + 1 == encryptedSeeds!.count {
-                            checkKeys()
-                            
-                        }
-                        
+            Encryption.decryptData(dataToDecrypt: wallet.xprv!) { (decryptedXprv) in
+                if decryptedXprv != nil {
+                    if let xprv = String(bytes: decryptedXprv!, encoding: .utf8) {
+                        checkXprv(xprv: xprv, bip32Path: bip32path)
+                    } else {
+                        completion((nil, nil))
                     }
-                    
                 } else {
                     completion((nil, nil))
                 }
-                
             }
             
+        } else {
+            derivation = wallet.derivation
+            
+            guard let bip32path = BIP32Path(derivation) else {
+                completion((nil, nil))
+                return
+            }
+            
+            Encryption.decryptedSeeds { (decryptedSeeds) in
+                if decryptedSeeds != nil {
+                    checkMnemonics(seeds: decryptedSeeds!, bip32Path: bip32path)
+                } else {
+                    completion((nil, nil))
+                }
+            }
         }
-                
     }
     
 }
