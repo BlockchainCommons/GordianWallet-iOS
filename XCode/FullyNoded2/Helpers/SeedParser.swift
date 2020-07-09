@@ -10,85 +10,52 @@ import LibWally
 
 class SeedParser {
     
-    class func parseWallet(wallet: WalletStruct, completion: @escaping ((known: Int?, unknown: Int?)) -> Void) {
+    class func getSigners(wallet: WalletStruct) -> (knownSigners: [String], uknownSigners: [String]) {
+        var knownSigners = [String]()
+        var unknownSigners = [String]()
         var xpubs = [String]()
-        var derivedXpubs = [String]()
+        var unknownXpubs = [String]()
         let descriptorParser = DescriptorParser()
         let descriptorStruct = descriptorParser.descriptor(wallet.descriptor)
-        let chain = network(descriptor: wallet.descriptor)
         
         if wallet.type == "MULTI" {
             xpubs = descriptorStruct.multiSigKeys
-            
         } else {
             xpubs.append(descriptorStruct.accountXpub)
-            
         }
-        
-        func checkKeys() {
-            var known = 0
-            var unknown = xpubs.count
-            let unique = Array(Set(derivedXpubs))
-            for (i, xpub) in xpubs.enumerated() {
-                for (p, potentialXpub) in unique.enumerated() {
-                    if xpub == potentialXpub {
-                        /// It is known
-                        known += 1
-                        unknown -= 1
-                    }
-                    if i + 1 == xpubs.count && p + 1 == unique.count {
-                        completion((known, unknown))
-                    }
-                }
-            }
-        }
-        
-        func getSeedsFromMnemonic(bip32Path: BIP32Path) {
-            Encryption.decryptedSeeds { (decryptedSeeds) in
-                if decryptedSeeds != nil {
-                    for (i, seed) in decryptedSeeds!.enumerated() {
-                        if let mnemonic = BIP39Mnemonic(seed) {
-                            if let masterKey = HDKey(mnemonic.seedHex(""), chain) {
-                                do {
-                                    let hdkey = try masterKey.derive(bip32Path)
-                                    let seedsDerivedXpub = hdkey.xpub
-                                    derivedXpubs.append(seedsDerivedXpub)
-                                    if i + 1 == decryptedSeeds!.count {
-                                        checkKeys()
+        unknownXpubs = xpubs
+                
+        if wallet.xprvs != nil {
+            // we know the wallet can sign, rely on actual xprvs to derive fingerprints
+            for encryptedXprv in wallet.xprvs! {
+                Encryption.decryptData(dataToDecrypt: encryptedXprv) { (decryptedXprv) in
+                    if decryptedXprv != nil {
+                        if let xprvString = String(bytes: decryptedXprv!, encoding: .utf8) {
+                            if let hdKey = HDKey(xprvString) {
+                                for (i, xpub) in xpubs.enumerated() {
+                                    if xpub == hdKey.xpub {
+                                        // Here we can remove xpubs from the unknown array as we know it is known
+                                        unknownXpubs.remove(at: i)
                                     }
-                                } catch {
-                                    
                                 }
+                                let fingerprint = hdKey.fingerprint.hexString
+                                knownSigners.append(fingerprint)
                             }
                         }
                     }
                 }
             }
         }
-        if wallet.xprv != nil {
-            Encryption.decryptData(dataToDecrypt: wallet.xprv!) { (decryptedXprv) in
-                if decryptedXprv != nil {
-                    if let xprv = String(bytes: decryptedXprv!, encoding: .utf8) {
-                        if let masterKey = HDKey(xprv) {
-                            let seedsDerivedXpub = masterKey.xpub
-                            derivedXpubs.append(seedsDerivedXpub)
-                            checkKeys()
-                        }
-                    } else {
-                        completion((nil, nil))
-                    }
-                } else {
-                    completion((nil, nil))
+        
+        for unknowXpub in unknownXpubs {
+            let keysWithPath = descriptorStruct.keysWithPath
+            for (i, keyWithPath) in keysWithPath.enumerated() {
+                if keyWithPath.contains(unknowXpub) {
+                    unknownSigners.append(descriptorStruct.fingerprints[i])
                 }
             }
-        } else {
-            guard let bip32path = BIP32Path(wallet.derivation) else {
-                completion((nil, nil))
-                return
-            }
-            getSeedsFromMnemonic(bip32Path: bip32path)
         }
-                
+        return (knownSigners, unknownSigners)
     }
     
     class func parseSeed(seed: SeedStruct, completion: @escaping (([String]?)) -> Void) {

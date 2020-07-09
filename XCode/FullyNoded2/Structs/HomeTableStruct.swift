@@ -32,8 +32,8 @@ public struct HomeStruct: CustomStringConvertible {
     let unconfirmed:Bool
     let noUtxos:Bool
     let halvingDate:Date
-    let knownSigners:Int
-    let unknownSigners:Int
+    let knownSigners:[String]
+    let unknownSigners:[String]
     let fxRate:String
     let actualFxRate:Double
     
@@ -61,8 +61,8 @@ public struct HomeStruct: CustomStringConvertible {
         noUtxos = dictionary["noUtxos"] as? Bool ?? true
         halvingDate = dictionary["halvingDate"] as? Date ?? Date()
         fiatBalance = dictionary["fiatBalance"] as? String ?? "$0"
-        knownSigners = dictionary["knownSigners"] as? Int ?? 0
-        unknownSigners = dictionary["unknownSigners"] as? Int ?? 0
+        knownSigners = dictionary["knownSigners"] as? [String] ?? [""]
+        unknownSigners = dictionary["unknownSigners"] as? [String] ?? [""]
         fxRate = dictionary["fxRate"] as? String ?? ""
         actualFxRate = dictionary["actualFxRate"] as? Double ?? 0.0
         

@@ -34,6 +34,7 @@ public struct DescriptorStruct: CustomStringConvertible {
     let isAccount:Bool
     let fingerprint:String
     let prefix:String
+    let fingerprints:[String]
     
     init(dictionary: [String: Any]) {
         format = dictionary["format"] as? String ?? ""
@@ -62,6 +63,7 @@ public struct DescriptorStruct: CustomStringConvertible {
         isAccount = dictionary["isAccount"] as? Bool ?? false
         fingerprint = dictionary["fingerprint"] as? String ?? ""
         prefix = dictionary["prefix"] as? String ?? ""
+        fingerprints = dictionary["fingerprints"] as? [String] ?? [""]
     }
     
     public var description: String {

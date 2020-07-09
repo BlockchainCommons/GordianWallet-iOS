@@ -35,8 +35,8 @@ public struct WalletStruct: CustomStringConvertible {
     let lastUpdated:Date
     let maxRange:Int
     let hasRange:Bool
-    let knownSigners:Int
-    let unknownSigners:Int
+    let knownSigners:[String]
+    let unknownSigners:[String]
     let nodeIsSigner:Bool?
     let knownFingerprints:[String]?
     let fingerprint:String
@@ -68,8 +68,8 @@ public struct WalletStruct: CustomStringConvertible {
         lastUpdated = dictionary["lastUpdated"] as? Date ?? Date()
         maxRange = dictionary["maxRange"] as? Int ?? 0
         hasRange = dictionary["hasRange"] as? Bool ?? true
-        knownSigners = dictionary["knownSigners"] as? Int ?? 0
-        unknownSigners = dictionary["unknownSigners"] as? Int ?? 0
+        knownSigners = dictionary["knownSigners"] as? [String] ?? [""]
+        unknownSigners = dictionary["unknownSigners"] as? [String] ?? [""]
         nodeIsSigner = dictionary["nodeIsSigner"] as? Bool
         knownFingerprints = dictionary["knownFingerprints"] as? [String]
         fingerprint = dictionary["fingerprint"] as? String ?? ""

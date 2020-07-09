@@ -165,6 +165,7 @@ class DescriptorParser {
                     processed = processed.replacingOccurrences(of: "\"]", with: "")
                     processed = processed.replacingOccurrences(of: "\"", with: "")
                     dict["fingerprint"] = processed
+                    dict["fingerprints"] = fingerprints
                     
                     for deriv in derivationArray {
 

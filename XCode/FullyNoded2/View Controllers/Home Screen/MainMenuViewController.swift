@@ -607,19 +607,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if str.isMulti {
             walletTypeLabel.text = "\(str.mOfNType) Multi Signature - \(format)"
-            if walletInfo.knownSigners >= str.sigsRequired {
+            if walletInfo.knownSigners.count >= str.sigsRequired {
                 accountTypeIcon.image = UIImage(systemName: "flame")
                 accountTypeIcon.tintColor = .systemRed
-            } else if walletInfo.knownSigners == 0 {
+            } else if walletInfo.knownSigners.count == 0 {
                 accountTypeIcon.image = UIImage(systemName: "cloud.sun")
                 accountTypeIcon.tintColor = .systemTeal
-            } else if wallet.knownSigners < str.sigsRequired {
+            } else if wallet.knownSigners.count < str.sigsRequired {
                 accountTypeIcon.image = UIImage(systemName: "sun.min")
                 accountTypeIcon.tintColor = .systemYellow
             }
         } else {
             walletTypeLabel.text = "Single Signature - \(format)"
-            if walletInfo.knownSigners > 0 {
+            if walletInfo.knownSigners.count > 0 {
                 accountTypeIcon.image = UIImage(systemName: "flame")
                 accountTypeIcon.tintColor = .systemRed
             } else {

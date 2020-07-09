@@ -257,21 +257,29 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func setKnownUnknownSignersAndFingerprints(completion: @escaping ((Bool)) -> Void) {
         for (i, wallet) in sortedWallets.enumerated() {
             let wstruct = WalletStruct(dictionary: wallet)
-            SeedParser.parseWallet(wallet: wstruct) { [unowned vc = self] (known, unknown) in
-                if known != nil && unknown != nil {
-                    vc.sortedWallets[i]["knownSigners"] = known!
-                    vc.sortedWallets[i]["unknownSigners"] = unknown!
-                }
-                SeedParser.fetchSeeds(wallet: wstruct) { (words, fingerprints) in
-                    if fingerprints != nil {
-                        vc.sortedWallets[i]["knownFingerprints"] = fingerprints!
-                    }
-                    if i + 1 == vc.sortedWallets.count {
-                        vc.sortedWallets = vc.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
-                        completion(true)
-                    }
-                }
+            let dicts = SeedParser.getSigners(wallet: wstruct)
+            sortedWallets[i]["knownSigners"] = dicts.knownSigners
+            sortedWallets[i]["unknownSigners"] = dicts.uknownSigners
+            if i + 1 == sortedWallets.count {
+                sortedWallets = sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
+                completion(true)
             }
+            
+//            SeedParser.parseWallet(wallet: wstruct) { [unowned vc = self] (known, unknown) in
+//                if known != nil && unknown != nil {
+//                    vc.sortedWallets[i]["knownSigners"] = known!
+//                    vc.sortedWallets[i]["unknownSigners"] = unknown!
+//                }
+//                SeedParser.fetchSeeds(wallet: wstruct) { (words, fingerprints) in
+//                    if fingerprints != nil {
+//                        vc.sortedWallets[i]["knownFingerprints"] = fingerprints!
+//                    }
+//                    if i + 1 == vc.sortedWallets.count {
+//                        vc.sortedWallets = vc.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
+//                        completion(true)
+//                    }
+//                }
+//            }
         }
     }
     
@@ -420,31 +428,23 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        let descriptorParser = DescriptorParser()
-        let descriptorStruct = descriptorParser.descriptor(walletStruct.descriptor)
-        let fingerprint = descriptorStruct.fingerprint
-                
-        if walletStruct.knownSigners == 1 {
-            
-            seedOnDeviceLabel.text = "1 master seed"
-            deviceXprv.text = "1 root xprv: [\(fingerprint)]"
+        if walletStruct.knownSigners.count == 1 {
+            seedOnDeviceLabel.text = "1 account xprv"
+            deviceXprv.text = process(walletStruct.knownSigners)
             deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
             walletTypeLabel.text = "Hot Account"
             walletTypeImage.image = UIImage(systemName: "flame")
             walletTypeImage.tintColor = .systemRed
-            
         } else {
-            
             seedOnDeviceLabel.text = "Cold"
-            deviceXprv.text = "1 xpub \(descriptorStruct.prefix)"
+            deviceXprv.text = "1 account xpub \(walletStruct.derivation)"
             deviceSeedImage.image = UIImage(systemName: "eye.fill")
             walletTypeLabel.text = "Cold Account"
             walletTypeImage.image = UIImage(systemName: "snow")
             walletTypeImage.tintColor = .white
-            
         }
         
-        nodeKeyLabel.text = "1 xpub \(descriptorStruct.prefix)"
+        nodeKeyLabel.text = "1 account xpub \(walletStruct.derivation)"
         nodeKeysLabel.text = "1 keypool, keys \(walletStruct.index) to \(walletStruct.maxRange) unused"
         updatedLabel.text = "\(formatDate(date: walletStruct.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: walletStruct.birthdate))"
@@ -592,23 +592,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-//        if walletStruct.nodeIsSigner != nil {
-//            if walletStruct.nodeIsSigner! {
-//                primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
-//            } else {
-//                primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
-//            }
-//            
-//        } else {
-//            primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
-//        }
-        
         let descriptorParser = DescriptorParser()
         let descriptorStruct = descriptorParser.descriptor(walletStruct.descriptor)
-        let processedFingerprint = process(walletStruct.knownFingerprints ?? [""])
-        var unknownFingerprints = descriptorStruct.fingerprint.replacingOccurrences(of: processedFingerprint + ", ", with: "")
-        unknownFingerprints = unknownFingerprints.replacingOccurrences(of: ", [" + processedFingerprint, with: "")
-        
         nodesXprv.text = "1 keypool, keys \(walletStruct.index) to \(walletStruct.maxRange) unused"
         
         if descriptorStruct.keysWithPath.count == 3 {
@@ -633,20 +618,20 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
         }
                 
-        if walletStruct.knownSigners == str.sigsRequired {
+        if walletStruct.knownSigners.count == str.sigsRequired {
             
-            var seedText = "seed"
-            if walletStruct.knownSigners > 1 {
-                seedText = "seeds"
+            var seedText = "xprv"
+            if walletStruct.knownSigners.count > 1 {
+                seedText = "xprvs"
             }
-            seedOnDeviceLabel.text = "\(walletStruct.knownSigners) master \(seedText)"
+            seedOnDeviceLabel.text = "\(walletStruct.knownSigners.count) account \(seedText)"
             walletType.text = "Hot Account"
             walletTypeImage.image = UIImage(systemName: "flame")
             walletTypeImage.tintColor = .systemRed
             deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
-            deviceXprv.text = "root xprv's: \(processedFingerprint)"
+            deviceXprv.text = process(walletStruct.knownSigners)
             
-        } else if walletStruct.knownSigners == 0 {
+        } else if walletStruct.knownSigners.count == 0 {
             
             seedOnDeviceLabel.text = "Cold"
             walletType.text = "Cool Account"
@@ -655,33 +640,33 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             deviceSeedImage.image = UIImage(systemName: "eye.fill")
             
             if descriptorStruct.keysWithPath.count == 3 {
-                let nodesKey = descriptorStruct.keysWithPath[1]
-                let nodesPath = nodesKey.replacingOccurrences(of: descriptorStruct.multiSigKeys[1], with: "")
-                let arr = nodesPath.split(separator: "]")
-                let xpubPath = "\(arr[0])]"
-                deviceXprv.text = "\(xpubPath)"
+//                let nodesKey = descriptorStruct.keysWithPath[1]
+//                let nodesPath = nodesKey.replacingOccurrences(of: descriptorStruct.multiSigKeys[1], with: "")
+//                let arr = nodesPath.split(separator: "]")
+//                let xpubPath = "\(arr[0])]"
+                deviceXprv.text = process(walletStruct.knownSigners)
             } else {
-                deviceXprv.text = "xpub's: \(unknownFingerprints)"
+                deviceXprv.text = "xpub's: \(walletStruct.derivation)"
             }
             
-        } else if walletStruct.knownSigners < str.sigsRequired {
+        } else if walletStruct.knownSigners.count < str.sigsRequired {
             
-            var seeds = "seed's"
-            if walletStruct.knownSigners == 1 {
-                seeds = "seed"
+            var seeds = "xprvs"
+            if walletStruct.knownSigners.count == 1 {
+                seeds = "xprv"
             }
             
-            seedOnDeviceLabel.text = "\(walletStruct.knownSigners) master \(seeds)"
+            seedOnDeviceLabel.text = "\(walletStruct.knownSigners.count) account \(seeds)"
             walletType.text = "Warm Account"
             walletTypeImage.image = UIImage(systemName: "sun.min")
             walletTypeImage.tintColor = .systemYellow
             deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
-            deviceXprv.text = "root xprv: \(processedFingerprint)"
+            deviceXprv.text = process(walletStruct.knownSigners)
             
         }
         
-        offlineSeedLabel.text = "\(walletStruct.unknownSigners) external master seed's"
-        offlineXprv.text = "root xprv's: \(unknownFingerprints)"
+        offlineSeedLabel.text = "\(walletStruct.unknownSigners.count) external master seed's"
+        offlineXprv.text = process(walletStruct.unknownSigners)
         
         updatedLabel.text = "\(formatDate(date: walletStruct.lastUpdated))"
         createdLabel.text = "\(getDate(unixTime: walletStruct.birthdate))"
@@ -710,10 +695,9 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     private func process(_ fingerprints:[String]) -> String {
-        var stringToreturn = ""
-        for fingerprint in fingerprints {
-            stringToreturn += "[\(fingerprint)]"
-        }
+        var stringToreturn = (fingerprints.description).replacingOccurrences(of: "[", with: "")
+        stringToreturn = stringToreturn.replacingOccurrences(of: "]", with: "")
+        stringToreturn = stringToreturn.replacingOccurrences(of: "\"", with: "")
         return stringToreturn
     }
         
