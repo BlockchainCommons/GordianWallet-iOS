@@ -49,7 +49,7 @@ class MultiSigTxBuilder {
                     outputsString = outputsString.replacingOccurrences(of: "[", with: "")
                     outputsString = outputsString.replacingOccurrences(of: "]", with: "")
 
-                    let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"changeAddress\": \"\(changeAddress)\"}'', false"
+                    let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"changeAddress\": \"\(changeAddress)\"}'', true"
 
                     Reducer.makeCommand(walletName: wallet!.name!, command: .walletcreatefundedpsbt, param: param) { (object, errorDesc) in
                         

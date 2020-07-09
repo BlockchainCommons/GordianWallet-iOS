@@ -325,120 +325,81 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
     }
     
-    func createSingleSig() {
-        print("create single sig")
-        if userSuppliedWords == nil {
-            updateStatus(text: "creating device's seed")
-            KeychainCreator.createKeyChain() { [unowned vc = self] (mnemonic, error) in
-                if !error {
-                    vc.words = mnemonic!
-                    vc.updateStatus(text: "encrypting device's seed")
-                    let dataToEncrypt = mnemonic!.dataUsingUTF8StringEncoding
-                    Encryption.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
-                        
-                        if !error {
-                            vc.updateStatus(text: "creating primary descriptor")
-                            if let seeds = KeyChain.seeds() {
-                                var existingEncryptedSeeds = seeds
-                                existingEncryptedSeeds.append(encryptedData!)
-                                do {
-                                    let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: existingEncryptedSeeds, requiringSecureCoding: true)
-                                    if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
-                                        vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
-                                    }
-                                } catch {
-                                    vc.creatingView.removeConnectingView()
-                                    displayAlert(viewController: vc, isError: true, message: "error saving your seed")
-                                }
-                            } else {
-                                /// Seed has never been added.
-                                do {
-                                    let seedArray:NSArray = [encryptedData!]
-                                    let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: seedArray, requiringSecureCoding: true)
-                                    if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
-                                        vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
-                                    } else {
-                                        vc.creatingView.removeConnectingView()
-                                        displayAlert(viewController: vc, isError: true, message: "error saving your seed")
-                                    }
-                                } catch {
-                                    vc.creatingView.removeConnectingView()
-                                    displayAlert(viewController: vc, isError: true, message: "error saving your seed")
-                                }
-                            }
+    private func createSingleSigSeed() {
+        updateStatus(text: "creating device's seed")
+        KeychainCreator.createKeyChain() { [unowned vc = self] (mnemonic, error) in
+            if !error {
+                vc.words = mnemonic!
+                vc.updateStatus(text: "encrypting device's seed")
+                let dataToEncrypt = mnemonic!.dataUsingUTF8StringEncoding
+                Encryption.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
+                    if !error {
+                        vc.updateStatus(text: "creating primary descriptor")
+                        if vc.saveSeed(seed: encryptedData!) {
+                            vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
                         } else {
-                            vc.creatingView.removeConnectingView()
-                            displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
-                        }
-                    }
-                }
-            }
-        } else {
-            creatingView.addConnectingView(vc: self, description: "creating single sig account")
-            let dataToEncrypt = userSuppliedWords!.dataUsingUTF8StringEncoding
-            Encryption.encryptData(dataToEncrypt: dataToEncrypt) { [unowned vc = self] (encryptedData, error) in
-                if !error {
-                    vc.updateStatus(text: "creating primary descriptor")
-                    if let seeds = KeyChain.seeds() {
-                        var existingEncryptedSeeds = seeds
-                        existingEncryptedSeeds.append(encryptedData!)
-                        do {
-                            let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: existingEncryptedSeeds, requiringSecureCoding: true)
-                            if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
-                                vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
-                            }
-                        } catch {
                             vc.creatingView.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: "error saving your seed")
                         }
                     } else {
-                        /// Seed has never been added.
-                        do {
-                            let seedArray:NSArray = [encryptedData!]
-                            let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: seedArray, requiringSecureCoding: true)
-                            if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
-                                vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
-                            } else {
-                                vc.creatingView.removeConnectingView()
-                                displayAlert(viewController: vc, isError: true, message: "error saving your seed")
-                            }
-                        } catch {
-                            vc.creatingView.removeConnectingView()
-                            displayAlert(viewController: vc, isError: true, message: "error saving your seed")
-                        }
+                        vc.creatingView.removeConnectingView()
+                        displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
                     }
-                } else {
-                    vc.creatingView.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
                 }
             }
+        }
+    }
+    
+    private func encryptSaveUserSuppliedSingleSigSeed() {
+        creatingView.addConnectingView(vc: self, description: "creating single sig account")
+        let dataToEncrypt = userSuppliedWords!.dataUsingUTF8StringEncoding
+        Encryption.encryptData(dataToEncrypt: dataToEncrypt) { [unowned vc = self] (encryptedData, error) in
+            if !error {
+                vc.updateStatus(text: "creating primary descriptor")
+                if vc.saveSeed(seed: encryptedData!) {
+                    vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
+                } else {
+                    vc.creatingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: "error saving your seed")
+                }
+            } else {
+                vc.creatingView.removeConnectingView()
+                displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
+            }
+        }
+    }
+    
+    func createSingleSig() {
+        print("create single sig")
+        if userSuppliedWords == nil {
+            createSingleSigSeed()
+        } else {
+            encryptSaveUserSuppliedSingleSigSeed()
         }
     }
     
     func constructSingleSigPrimaryDescriptor(wallet: WalletStruct, encryptedSeed: Data) {
         /// Need to get the xpub
         var network:Network!
-        
         if wallet.derivation.contains("/1'/") {
             network = .testnet
-            
         } else {
             network = .mainnet
-            
         }
         
         KeyFetcher.accountKeys(seed: encryptedSeed, chain: network, derivation: wallet.derivation) { [unowned vc = self] (xprv, xpub, fingerprint, error) in
             if xpub != nil && fingerprint != nil && xprv != nil {
                 Encryption.encryptData(dataToEncrypt: xprv!.dataUsingUTF8StringEncoding) { (encryptedData, error) in
                     if encryptedData != nil {
-                        vc.newWallet["xprv"] = encryptedData!
+                        vc.newWallet["xprvs"] = [encryptedData!]
+                        vc.newWallet["fingerprint"] = fingerprint!
                         var param = ""
                         switch wallet.derivation {
                         case "m/84'/1'/0'":
-                            param = "\"wpkh([\(fingerprint!)]\(xpub!)/0/*)\""
+                            param = "\"wpkh([\(fingerprint!)/84'/1'/0']\(xpub!)/0/*)\""
                             
                         case "m/84'/0'/0'":
-                            param = "\"wpkh([\(fingerprint!)]\(xpub!)/0/*)\""
+                            param = "\"wpkh([\(fingerprint!)/84'/0'/0']\(xpub!)/0/*)\""
                             
                         default:
                             break
@@ -677,9 +638,16 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                 vc.publickeys.append(account.xpub)
                                                 
                                                 if account.xpriv != nil {
-                                                    
                                                     vc.localXprv = account.xpriv!
-                                                    vc.createNodesKey()
+                                                    Encryption.encryptData(dataToEncrypt: vc.localXprv.dataUsingUTF8StringEncoding) { (encryptedData, error) in
+                                                        if encryptedData != nil {
+                                                            vc.newWallet["xprvs"] = [encryptedData!]
+                                                            vc.createNodesKey()
+                                                        } else {
+                                                            vc.creatingView.removeConnectingView()
+                                                            displayAlert(viewController: vc, isError: true, message: "failed encrypting device xpriv")
+                                                        }
+                                                    }
                                                     
                                                 } else {
                                                     
@@ -1067,23 +1035,14 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                         }
                                         
                                         if vc.localSeed != nil {
-                                            //vc.newWallet["seed"] = vc.localSeed
-                                            vc.saveSeed(seed: vc.localSeed!) { success in
-                                                
-                                                if success {
-                                                    create()
-                                                    
-                                                } else {
-                                                    vc.creatingView.removeConnectingView()
-                                                    displayAlert(viewController: vc, isError: true, message: "error saving your seed")
-                                                    
-                                                }
-                                                
+                                            if vc.saveSeed(seed: vc.localSeed!) {
+                                                create()
+                                            } else {
+                                                vc.creatingView.removeConnectingView()
+                                                displayAlert(viewController: vc, isError: true, message: "error saving your seed")
                                             }
-                                            
                                         } else {
                                             create()
-                                            
                                         }
                                         
                                     }
@@ -1229,7 +1188,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
                 if encryptedData != nil {
                 
-                    vc.newWallet["xprv"] = encryptedData
+                    vc.newWallet["xprvs"] = [encryptedData]
                     vc.createCustomSingleSigPrimaryDescriptor(dict: dict)
                     
                 }
@@ -1387,14 +1346,8 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
     }
     
-    private func saveSeed(seed: Data, completion: @escaping ((Bool)) -> Void) {
-        let dict = ["seed":seed,"id":UUID()] as [String : Any]
-        
-        CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDescription) in
-            completion((success))
-            
-        }
-    
+    private func saveSeed(seed: Data) -> Bool {
+        return KeyChain.saveNewSeed(encryptedSeed: seed)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -1842,54 +1842,6 @@ Blockchain Commons and Fully Noded 2 never share any data with any third party e
             </objects>
             <point key="canvasLocation" x="-9711" y="-1263"/>
         </scene>
-        <!--Seeds-->
-        <scene sceneID="vKB-66-bdF">
-            <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="VJd-Zg-l3G" customClass="SeedsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="cYk-BM-UNZ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="AMy-2q-Zq7">
-                                <rect key="frame" x="0.0" y="44" width="375" height="574"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="seedCell" id="rmQ-0i-MOA">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="43.5"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rmQ-0i-MOA" id="j7I-Az-DBJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="VJd-Zg-l3G" id="6V1-cs-JmT"/>
-                                    <outlet property="delegate" destination="VJd-Zg-l3G" id="7fT-oB-GSl"/>
-                                </connections>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="AMy-2q-Zq7" firstAttribute="leading" secondItem="Rga-dx-ugh" secondAttribute="leading" id="3Gh-k1-EZP"/>
-                            <constraint firstItem="AMy-2q-Zq7" firstAttribute="trailing" secondItem="Rga-dx-ugh" secondAttribute="trailing" id="COw-v2-YHs"/>
-                            <constraint firstItem="AMy-2q-Zq7" firstAttribute="bottom" secondItem="Rga-dx-ugh" secondAttribute="bottom" id="isv-tk-mfe"/>
-                            <constraint firstItem="AMy-2q-Zq7" firstAttribute="top" secondItem="Rga-dx-ugh" secondAttribute="top" id="rSC-PI-X6c"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="Rga-dx-ugh"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Seeds" id="OHg-dv-23m"/>
-                    <connections>
-                        <outlet property="seedsTable" destination="AMy-2q-Zq7" id="60g-eJ-PfT"/>
-                        <segue destination="kR7-Mg-fhs" kind="show" identifier="addSeedSegue" id="622-Us-Cp3"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zXZ-R8-egb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-8983" y="1235"/>
-        </scene>
         <!--Donate View Controller-->
         <scene sceneID="7jc-m3-rrH">
             <objects>
@@ -2976,18 +2928,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <viewLayoutGuide key="safeArea" id="Cze-jj-bFe"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="Settings" id="n34-O3-Fyo"/>
-                    <navigationItem key="navigationItem" title="Settings" id="YNb-Gd-Hqq">
-                        <barButtonItem key="rightBarButtonItem" image="bitcoinsign.square" catalog="system" id="MWv-RR-Py5">
-                            <connections>
-                                <action selector="goToSeeds:" destination="AS8-ke-Yxh" id="Qmu-Vk-32R"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Settings" id="YNb-Gd-Hqq"/>
                     <connections>
                         <outlet property="settingsTable" destination="hcp-eG-lok" id="xPg-8r-KBs"/>
                         <segue destination="FI5-Kv-Y72" kind="show" identifier="goToAuth" id="FYa-hr-w4j"/>
                         <segue destination="DOn-IQ-sOy" kind="show" identifier="nodeManager" id="SNM-Ay-Yq0"/>
-                        <segue destination="VJd-Zg-l3G" kind="show" identifier="segueToSeeds" id="XT4-bS-sLg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k6b-ep-z2U" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3954,7 +3899,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="hJx-IG-ppE">
-                                <rect key="frame" x="16" y="20" width="343" height="586"/>
+                                <rect key="frame" x="16" y="20" width="343" height="537"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -4274,233 +4219,220 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dSZ-4Z-lCQ">
-                                <rect key="frame" x="16" y="64" width="309" height="37"/>
-                                <color key="backgroundColor" red="0.10209787436548223" green="0.10209787436548223" blue="0.10209787436548223" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="xdc-2w-K4m">
+                                <rect key="frame" x="87.5" y="71" width="200" height="368"/>
+                                <subviews>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dSZ-4Z-lCQ">
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="44"/>
+                                        <color key="backgroundColor" red="0.10209787436548223" green="0.10209787436548223" blue="0.10209787436548223" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="cAw-Ii-ZaQ"/>
+                                            <constraint firstAttribute="height" constant="44" id="eVN-9X-WWV"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="  Rescan blockchain" image="dot.radiowaves.left.and.right" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="rescanNow:" destination="51a-bL-HRe" eventType="touchUpInside" id="QSk-q2-LpR"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DL0-Ou-l95">
+                                        <rect key="frame" x="0.0" y="54" width="200" height="44"/>
+                                        <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="bSg-nR-twr"/>
+                                            <constraint firstAttribute="width" constant="200" id="bv0-2P-XBa"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="  Sweep to wallet    " image="paintbrush" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="sweepToAction:" destination="51a-bL-HRe" eventType="touchUpInside" id="0Gm-oP-hMt"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xJG-pY-hmO">
+                                        <rect key="frame" x="0.0" y="108" width="200" height="44"/>
+                                        <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="BYq-Ui-12X"/>
+                                            <constraint firstAttribute="height" constant="44" id="kAB-GD-M2y"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="  Refill keypool        " image="arrow.2.circlepath" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="refillKeypool:" destination="51a-bL-HRe" eventType="touchUpInside" id="Wo2-2I-9Ed"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMQ-qJ-Jfy">
+                                        <rect key="frame" x="0.0" y="162" width="200" height="44"/>
+                                        <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="Ryy-IF-Ggz"/>
+                                            <constraint firstAttribute="height" constant="44" id="wZl-SG-A7M"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="  Backup info          " image="rectangle.and.paperclip" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="seeBackUpInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="6rP-uT-r06"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QDP-TM-BUv">
+                                        <rect key="frame" x="0.0" y="216" width="200" height="44"/>
+                                        <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="b9X-aM-lmK"/>
+                                            <constraint firstAttribute="height" constant="44" id="tao-ai-22p"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="  Addresses &amp; keys" image="eye" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="exportKeys:" destination="51a-bL-HRe" eventType="touchUpInside" id="WkH-qo-5GP"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MLI-ix-0aj">
+                                        <rect key="frame" x="0.0" y="270" width="200" height="44"/>
+                                        <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="YT5-Z2-qiq"/>
+                                            <constraint firstAttribute="height" constant="44" id="yCE-ft-W0s"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="   Coin Control         " image="gamecontroller" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="seeUtxos:" destination="51a-bL-HRe" eventType="touchUpInside" id="io9-Mf-sn6"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uqd-eM-Y70">
+                                        <rect key="frame" x="0.0" y="324" width="200" height="44"/>
+                                        <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="KlT-MX-Phw"/>
+                                            <constraint firstAttribute="height" constant="44" id="tw8-Gh-fY1"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="   Add a signer        " image="plus.square" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="addSigner:" destination="51a-bL-HRe" eventType="touchUpInside" id="UfQ-Bf-zBO"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="sZl-i1-bhN"/>
+                                    <constraint firstAttribute="height" constant="368" id="C1k-gI-SkP"/>
+                                    <constraint firstAttribute="width" constant="200" id="iqg-n6-4it"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Rescan blockchain" image="dot.radiowaves.left.and.right" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="rescanNow:" destination="51a-bL-HRe" eventType="touchUpInside" id="QSk-q2-LpR"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DL0-Ou-l95">
-                                <rect key="frame" x="16" y="109" width="309" height="37"/>
-                                <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="IeK-2j-xdB">
+                                <rect key="frame" x="320" y="71" width="20" height="368"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ysa-0L-8iM">
+                                        <rect key="frame" x="0.0" y="0.0" width="20" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="Ur1-eo-xLo"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="info.circle" catalog="system"/>
+                                        <connections>
+                                            <action selector="rescanInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="UCR-2R-wDy"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="036-RE-54L">
+                                        <rect key="frame" x="0.0" y="54" width="20" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="K4I-ZO-JDF"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="info.circle" catalog="system"/>
+                                        <connections>
+                                            <action selector="sweepToInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="ff1-WV-aLw"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MKB-dp-lSZ">
+                                        <rect key="frame" x="0.0" y="108" width="20" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="j0E-J7-mSP"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="info.circle" catalog="system"/>
+                                        <connections>
+                                            <action selector="refillKeypoolInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="i7a-7J-sZw"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zDd-KK-SWq">
+                                        <rect key="frame" x="0.0" y="162" width="20" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="AOy-c7-tfM"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="info.circle" catalog="system"/>
+                                        <connections>
+                                            <action selector="backupInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="vbN-If-iIZ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vff-2p-Xl7">
+                                        <rect key="frame" x="0.0" y="216" width="20" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="0Sl-VR-t1x"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="info.circle" catalog="system"/>
+                                        <connections>
+                                            <action selector="viewUtxosInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="Jus-e9-jPC"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lD5-YD-8u9">
+                                        <rect key="frame" x="0.0" y="270" width="20" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="HpL-az-Oqj"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="info.circle" catalog="system"/>
+                                        <connections>
+                                            <action selector="exportKeysInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="PGe-xY-EpX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DUB-0n-F9k">
+                                        <rect key="frame" x="0.0" y="324" width="20" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="ufI-vF-CT9"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" image="info.circle" catalog="system"/>
+                                        <connections>
+                                            <action selector="addSignerInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="3gP-V5-4u4"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="NsP-2V-kPK"/>
+                                    <constraint firstAttribute="height" constant="368" id="FLs-hg-JCE"/>
+                                    <constraint firstAttribute="width" constant="20" id="x23-Jf-xDA"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Sweep to wallet    " image="paintbrush" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="sweepToAction:" destination="51a-bL-HRe" eventType="touchUpInside" id="0Gm-oP-hMt"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xJG-pY-hmO">
-                                <rect key="frame" x="16" y="154" width="309" height="37"/>
-                                <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="BFJ-ad-Jo1"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Refill keypool        " image="arrow.2.circlepath" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="refillKeypool:" destination="51a-bL-HRe" eventType="touchUpInside" id="Wo2-2I-9Ed"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uqd-eM-Y70">
-                                <rect key="frame" x="16" y="199" width="309" height="37"/>
-                                <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="Bti-1g-zvv"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="   Add a signer        " image="plus.square" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="addSigner:" destination="51a-bL-HRe" eventType="touchUpInside" id="UfQ-Bf-zBO"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMQ-qJ-Jfy">
-                                <rect key="frame" x="16" y="244" width="308" height="37"/>
-                                <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="b7y-uC-J9w"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Backup info          " image="rectangle.and.paperclip" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="seeBackUpInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="6rP-uT-r06"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MLI-ix-0aj">
-                                <rect key="frame" x="16" y="289" width="309" height="37"/>
-                                <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="iKV-tE-lUR"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="   Coin Control         " image="gamecontroller" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="seeUtxos:" destination="51a-bL-HRe" eventType="touchUpInside" id="io9-Mf-sn6"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QDP-TM-BUv">
-                                <rect key="frame" x="16" y="334" width="308" height="37"/>
-                                <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="KY3-lD-3du"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Addresses &amp; keys" image="eye" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="exportKeys:" destination="51a-bL-HRe" eventType="touchUpInside" id="WkH-qo-5GP"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ysa-0L-8iM">
-                                <rect key="frame" x="339" y="71.5" width="20" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="20" id="7PK-uS-sMO"/>
-                                    <constraint firstAttribute="height" constant="22" id="9RP-iM-p49"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="info.circle" catalog="system"/>
-                                <connections>
-                                    <action selector="rescanInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="UCR-2R-wDy"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="036-RE-54L">
-                                <rect key="frame" x="339" y="116.5" width="20" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="hX7-VZ-EEd"/>
-                                    <constraint firstAttribute="width" constant="20" id="uax-wa-Vg0"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="info.circle" catalog="system"/>
-                                <connections>
-                                    <action selector="sweepToInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="ff1-WV-aLw"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MKB-dp-lSZ">
-                                <rect key="frame" x="339" y="161.5" width="20" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="20" id="30R-0e-Afg"/>
-                                    <constraint firstAttribute="height" constant="22" id="OL6-tT-XAo"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="info.circle" catalog="system"/>
-                                <connections>
-                                    <action selector="refillKeypoolInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="i7a-7J-sZw"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DUB-0n-F9k">
-                                <rect key="frame" x="339" y="206.5" width="20" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="aGk-u1-ZZd"/>
-                                    <constraint firstAttribute="width" constant="20" id="r2M-Fs-PpT"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="info.circle" catalog="system"/>
-                                <connections>
-                                    <action selector="addSignerInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="3gP-V5-4u4"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zDd-KK-SWq">
-                                <rect key="frame" x="339" y="251.5" width="20" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="6Jg-MT-L70"/>
-                                    <constraint firstAttribute="width" constant="20" id="egZ-QV-Kd4"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="info.circle" catalog="system"/>
-                                <connections>
-                                    <action selector="backupInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="vbN-If-iIZ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vff-2p-Xl7">
-                                <rect key="frame" x="339" y="296.5" width="20" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="m1X-Jq-Wty"/>
-                                    <constraint firstAttribute="width" constant="20" id="ny8-5E-dJ2"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="info.circle" catalog="system"/>
-                                <connections>
-                                    <action selector="viewUtxosInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="Jus-e9-jPC"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lD5-YD-8u9">
-                                <rect key="frame" x="339" y="341.5" width="20" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="20" id="ote-p5-fYe"/>
-                                    <constraint firstAttribute="height" constant="22" id="sQ2-rE-xcZ"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="info.circle" catalog="system"/>
-                                <connections>
-                                    <action selector="exportKeysInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="PGe-xY-EpX"/>
-                                </connections>
-                            </button>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="QDP-TM-BUv" firstAttribute="top" secondItem="MLI-ix-0aj" secondAttribute="bottom" constant="8" id="2W5-zA-fKc"/>
-                            <constraint firstItem="MKB-dp-lSZ" firstAttribute="leading" secondItem="xJG-pY-hmO" secondAttribute="trailing" constant="14" id="2nc-cc-4h5"/>
-                            <constraint firstItem="v75-Xo-dcA" firstAttribute="trailing" secondItem="lD5-YD-8u9" secondAttribute="trailing" constant="16" id="30w-Lr-SQ8"/>
-                            <constraint firstItem="DL0-Ou-l95" firstAttribute="top" secondItem="dSZ-4Z-lCQ" secondAttribute="bottom" constant="8" id="33r-q3-ihj"/>
-                            <constraint firstItem="DUB-0n-F9k" firstAttribute="centerY" secondItem="uqd-eM-Y70" secondAttribute="centerY" id="3db-rv-LRc"/>
-                            <constraint firstItem="v75-Xo-dcA" firstAttribute="trailing" secondItem="Vff-2p-Xl7" secondAttribute="trailing" constant="16" id="5s7-EM-XLV"/>
-                            <constraint firstItem="QDP-TM-BUv" firstAttribute="leading" secondItem="v75-Xo-dcA" secondAttribute="leading" constant="16" id="5wd-fe-EbO"/>
-                            <constraint firstItem="MLI-ix-0aj" firstAttribute="leading" secondItem="v75-Xo-dcA" secondAttribute="leading" constant="16" id="64g-NT-XY4"/>
-                            <constraint firstItem="Ysa-0L-8iM" firstAttribute="centerY" secondItem="dSZ-4Z-lCQ" secondAttribute="centerY" id="8u0-0T-SQp"/>
-                            <constraint firstItem="qMQ-qJ-Jfy" firstAttribute="top" secondItem="uqd-eM-Y70" secondAttribute="bottom" constant="8" id="CBK-gr-Ycx"/>
-                            <constraint firstItem="dSZ-4Z-lCQ" firstAttribute="leading" secondItem="v75-Xo-dcA" secondAttribute="leading" constant="16" id="CoT-JG-pCK"/>
-                            <constraint firstItem="v75-Xo-dcA" firstAttribute="trailing" secondItem="036-RE-54L" secondAttribute="trailing" constant="16" id="DEi-l4-EJ7"/>
-                            <constraint firstItem="v75-Xo-dcA" firstAttribute="trailing" secondItem="MKB-dp-lSZ" secondAttribute="trailing" constant="16" id="DcJ-yf-GHT"/>
-                            <constraint firstItem="DUB-0n-F9k" firstAttribute="leading" secondItem="uqd-eM-Y70" secondAttribute="trailing" constant="14" id="DfG-gD-M6h"/>
-                            <constraint firstItem="qMQ-qJ-Jfy" firstAttribute="leading" secondItem="v75-Xo-dcA" secondAttribute="leading" constant="16" id="FXc-BV-Y94"/>
-                            <constraint firstItem="MLI-ix-0aj" firstAttribute="top" secondItem="qMQ-qJ-Jfy" secondAttribute="bottom" constant="8" id="I5j-qa-EFU"/>
-                            <constraint firstItem="xJG-pY-hmO" firstAttribute="leading" secondItem="v75-Xo-dcA" secondAttribute="leading" constant="16" id="I9z-qD-pQT"/>
-                            <constraint firstItem="xJG-pY-hmO" firstAttribute="top" secondItem="DL0-Ou-l95" secondAttribute="bottom" constant="8" id="NgC-Pa-CAs"/>
-                            <constraint firstItem="MKB-dp-lSZ" firstAttribute="centerY" secondItem="xJG-pY-hmO" secondAttribute="centerY" id="Ve9-ar-oDl"/>
-                            <constraint firstItem="uqd-eM-Y70" firstAttribute="leading" secondItem="v75-Xo-dcA" secondAttribute="leading" constant="16" id="VeS-Vh-1GG"/>
-                            <constraint firstItem="Vff-2p-Xl7" firstAttribute="leading" secondItem="MLI-ix-0aj" secondAttribute="trailing" constant="14" id="W9j-1P-HqA"/>
-                            <constraint firstItem="lD5-YD-8u9" firstAttribute="leading" secondItem="QDP-TM-BUv" secondAttribute="trailing" constant="15" id="WWZ-bj-45q"/>
-                            <constraint firstItem="zDd-KK-SWq" firstAttribute="centerY" secondItem="qMQ-qJ-Jfy" secondAttribute="centerY" id="Wt9-Fj-u4A"/>
-                            <constraint firstItem="DL0-Ou-l95" firstAttribute="leading" secondItem="v75-Xo-dcA" secondAttribute="leading" constant="16" id="Yz6-t1-hi7"/>
-                            <constraint firstItem="v75-Xo-dcA" firstAttribute="trailing" secondItem="DUB-0n-F9k" secondAttribute="trailing" constant="16" id="a1H-ZV-jvk"/>
-                            <constraint firstItem="036-RE-54L" firstAttribute="leading" secondItem="DL0-Ou-l95" secondAttribute="trailing" constant="14" id="h6y-ZA-Mdu"/>
-                            <constraint firstItem="v75-Xo-dcA" firstAttribute="trailing" secondItem="Ysa-0L-8iM" secondAttribute="trailing" constant="16" id="hhP-2j-H10"/>
-                            <constraint firstItem="Ysa-0L-8iM" firstAttribute="leading" secondItem="dSZ-4Z-lCQ" secondAttribute="trailing" constant="14" id="isO-Km-ius"/>
-                            <constraint firstItem="dSZ-4Z-lCQ" firstAttribute="top" secondItem="v75-Xo-dcA" secondAttribute="top" constant="20" id="lfx-2l-QGs"/>
-                            <constraint firstItem="Vff-2p-Xl7" firstAttribute="centerY" secondItem="MLI-ix-0aj" secondAttribute="centerY" id="mGd-Qi-aAV"/>
-                            <constraint firstItem="v75-Xo-dcA" firstAttribute="trailing" secondItem="zDd-KK-SWq" secondAttribute="trailing" constant="16" id="mv2-bl-P91"/>
-                            <constraint firstItem="036-RE-54L" firstAttribute="centerY" secondItem="DL0-Ou-l95" secondAttribute="centerY" id="rZA-hJ-YZp"/>
-                            <constraint firstItem="lD5-YD-8u9" firstAttribute="centerY" secondItem="QDP-TM-BUv" secondAttribute="centerY" id="xhq-bs-j3w"/>
-                            <constraint firstItem="zDd-KK-SWq" firstAttribute="leading" secondItem="qMQ-qJ-Jfy" secondAttribute="trailing" constant="15" id="yDK-ar-QgI"/>
-                            <constraint firstItem="uqd-eM-Y70" firstAttribute="top" secondItem="xJG-pY-hmO" secondAttribute="bottom" constant="8" id="zcz-Lg-40x"/>
+                            <constraint firstItem="IeK-2j-xdB" firstAttribute="leading" secondItem="xdc-2w-K4m" secondAttribute="trailing" constant="32.5" id="6sB-uQ-HIs"/>
+                            <constraint firstItem="xdc-2w-K4m" firstAttribute="centerX" secondItem="gv9-ry-GoN" secondAttribute="centerX" id="KAS-1E-3GG"/>
+                            <constraint firstItem="xdc-2w-K4m" firstAttribute="top" secondItem="v75-Xo-dcA" secondAttribute="top" constant="27" id="lNy-3o-qak"/>
+                            <constraint firstItem="IeK-2j-xdB" firstAttribute="top" secondItem="v75-Xo-dcA" secondAttribute="top" constant="27" id="xYr-29-gYp"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="v75-Xo-dcA"/>
                     </view>
@@ -4529,11 +4461,11 @@ At a minimum we recommend writing these words down on water proof paper with a p
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="reL-7P-R3q" customClass="RefillMultisigViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZRF-hf-jJd">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In order to refill the keypool for multisig wallets you need to enter your offline recover phrase." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="np9-Jt-mqz">
-                                <rect key="frame" x="16" y="20" width="343" height="80"/>
+                                <rect key="frame" x="16" y="64" width="343" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="ynN-yl-bJb"/>
                                 </constraints>
@@ -4542,19 +4474,19 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 <nil key="highlightedColor"/>
                             </label>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y4A-rC-7g8">
-                                <rect key="frame" x="16" y="150" width="343" height="370"/>
+                                <rect key="frame" x="16" y="194" width="343" height="370"/>
                                 <color key="backgroundColor" red="0.10182027284263961" green="0.10182027284263961" blue="0.10182027284263961" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="370" id="qqO-Om-Ulf"/>
                                 </constraints>
                             </view>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="recovery words" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PUj-6s-7Hk">
-                                <rect key="frame" x="44" y="108" width="287" height="34"/>
+                                <rect key="frame" x="44" y="152" width="287" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Keb-UP-Izd">
-                                <rect key="frame" x="16" y="114" width="20" height="22"/>
+                                <rect key="frame" x="16" y="158" width="20" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="20" id="PbQ-R3-TsB"/>
                                     <constraint firstAttribute="height" constant="22" id="XLm-lW-kxj"/>
@@ -4566,7 +4498,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zu8-9H-CiC">
-                                <rect key="frame" x="339" y="114" width="20" height="22"/>
+                                <rect key="frame" x="339" y="158" width="20" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="20" id="76P-A3-eeA"/>
                                     <constraint firstAttribute="height" constant="22" id="aSZ-zt-yKs"/>
@@ -4578,7 +4510,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z3L-oO-DTP">
-                                <rect key="frame" x="99" y="601" width="177" height="27"/>
+                                <rect key="frame" x="99" y="572" width="177" height="27"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="27" id="DWa-of-avE"/>
                                     <constraint firstAttribute="width" constant="177" id="kJA-SC-WGa"/>
@@ -5988,7 +5920,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ZNf-rw-HgU">
-                                <rect key="frame" x="16" y="20" width="343" height="583"/>
+                                <rect key="frame" x="16" y="20" width="343" height="534"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -6022,7 +5954,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="102" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="CFb-Jk-h9Z">
-                                <rect key="frame" x="0.0" y="69" width="375" height="598"/>
+                                <rect key="frame" x="0.0" y="69" width="375" height="549"/>
                                 <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
@@ -6301,10 +6233,10 @@ At a minimum we recommend writing these words down on water proof paper with a p
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="l1a-Jv-Q1K"/>
+        <segue reference="vbG-Ex-JNf"/>
         <segue reference="9Ib-wE-7tm"/>
         <segue reference="fBg-S5-BEW"/>
-        <segue reference="pun-AW-DGw"/>
+        <segue reference="uaX-te-aDX"/>
         <segue reference="Kzq-6W-yKR"/>
         <segue reference="fnD-hd-014"/>
         <segue reference="EvJ-Lj-YLy"/>

@@ -17,11 +17,12 @@ class KeyFetcher {
                 let words = String(data: seed!, encoding: .utf8)!
                 if let mnemonic = BIP39Mnemonic(words) {
                     if let masterKey = HDKey((mnemonic.seedHex("")), chain) {
+                        let fingerprint = masterKey.fingerprint.hexString
                         if let path = BIP32Path(derivation) {
                             do {
                                 let account = try masterKey.derive(path)
                                 if let xprv = account.xpriv {
-                                    completion((xprv, account.xpub, account.fingerprint.hexString, false))
+                                    completion((xprv, account.xpub, fingerprint, false))
                                 }
                             } catch {
                                 completion((nil, nil, nil, true))

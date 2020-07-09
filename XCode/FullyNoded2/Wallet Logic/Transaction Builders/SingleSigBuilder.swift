@@ -38,7 +38,7 @@ class SingleSigBuilder {
 
                 }
 
-                let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"change_type\": \"\(changeType)\"}'', false"
+                let param = "''[]'', ''{\(outputsString)}'', 0, ''{\"includeWatching\": true, \"replaceable\": true, \"conf_target\": \(feeTarget), \"change_type\": \"\(changeType)\"}'', true"
 
                 Reducer.makeCommand(walletName: w!.name!, command: .walletcreatefundedpsbt, param: param) { (object, errorDesc) in
 

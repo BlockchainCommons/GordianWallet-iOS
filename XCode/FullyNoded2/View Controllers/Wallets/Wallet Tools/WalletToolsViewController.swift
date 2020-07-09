@@ -35,7 +35,7 @@ class WalletToolsViewController: UIViewController {
         utxosOutlet.layer.cornerRadius = 8
         exportKeyOutlet.layer.cornerRadius = 8
         
-        if String(data: wallet.seed, encoding: .utf8) != "no seed" {
+        if wallet.type == "DEFAULT" && wallet.xprv != nil {
             
             addSignerOutlet.alpha = 0
             

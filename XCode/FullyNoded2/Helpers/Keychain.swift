@@ -25,6 +25,36 @@ class KeyChain {
         }
     }
     
+    class func saveNewSeed(encryptedSeed: Data) -> Bool {
+        if let seeds = KeyChain.seeds() {
+            var existingEncryptedSeeds = seeds
+            existingEncryptedSeeds.append(encryptedSeed)
+            do {
+                let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: existingEncryptedSeeds, requiringSecureCoding: true)
+                if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
+                    return true
+                } else {
+                    return false
+                }
+            } catch {
+                return false
+            }
+        } else {
+            /// Seed has never been added.
+            do {
+                let seedArray:NSArray = [encryptedSeed]
+                let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: seedArray, requiringSecureCoding: true)
+                if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
+                    return true
+                } else {
+                    return false
+                }
+            } catch {
+                return false
+            }
+        }
+    }
+    
     class func setSeed(_ data: Data, forKey: String) -> Bool {
         let query = [
             kSecClass as String       : kSecClassGenericPassword as String,

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D00016B3245ABFFA0091F7CF /* Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B2245ABFFA0091F7CF /* Import.swift */; };
 		D00016B5245BBB5C0091F7CF /* SeedStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B4245BBB5C0091F7CF /* SeedStruct.swift */; };
-		D00016B7245BC49B0091F7CF /* SeedsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B6245BC49B0091F7CF /* SeedsViewController.swift */; };
 		D00016B9245BD89C0091F7CF /* SeedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B8245BD89C0091F7CF /* SeedParser.swift */; };
 		D006E34B243ED2FE007B1A5B /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = D006E34A243ED2FE007B1A5B /* Keychain.swift */; };
 		D006E34D244054B8007B1A5B /* _launch.png in Resources */ = {isa = PBXBuildFile; fileRef = D006E34C244054B8007B1A5B /* _launch.png */; };
@@ -182,7 +181,6 @@
 /* Begin PBXFileReference section */
 		D00016B2245ABFFA0091F7CF /* Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Import.swift; sourceTree = "<group>"; };
 		D00016B4245BBB5C0091F7CF /* SeedStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedStruct.swift; sourceTree = "<group>"; };
-		D00016B6245BC49B0091F7CF /* SeedsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedsViewController.swift; sourceTree = "<group>"; };
 		D00016B8245BD89C0091F7CF /* SeedParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedParser.swift; sourceTree = "<group>"; };
 		D006E34A243ED2FE007B1A5B /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		D006E34C244054B8007B1A5B /* _launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _launch.png; sourceTree = "<group>"; };
@@ -612,7 +610,6 @@
 				D09D72B423F0F3C000847DC8 /* MainMenuViewController.swift */,
 				D09D72B523F0F3C000847DC8 /* ScannerViewController.swift */,
 				D0B08BE5241888500025AD04 /* DonateViewController.swift */,
-				D00016B6245BC49B0091F7CF /* SeedsViewController.swift */,
 				D0D5E63824A05D1100F3783C /* NotificationCenterViewController.swift */,
 				D0D5E63A24A078B300F3783C /* NotificationDetailViewController.swift */,
 			);
@@ -1167,7 +1164,6 @@
 				D09D732E23F0F3C000847DC8 /* MainMenuViewController.swift in Sources */,
 				D07399DB245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift in Sources */,
 				D09D732323F0F3C000847DC8 /* SettingsViewController.swift in Sources */,
-				D00016B7245BC49B0091F7CF /* SeedsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,7 +13,7 @@ class PSBTSigner {
     
     class func sign(psbt: String, completion: @escaping ((success: Bool, psbt: String?, rawTx: String?)) -> Void) {
         
-        var seedsToSignWith = [[String:Any]]()
+        var seedsToSignWith = [Data]()
         var xprvsToSignWith = [HDKey]()
         var psbtToSign:PSBT!
         var chain:Network!
@@ -57,17 +57,9 @@ class PSBTSigner {
                             if let processedPsbt = dict["psbt"] as? String {
                                 do {
                                     psbtToSign = try PSBT(processedPsbt, chain)
-                                    if xprvsToSignWith.count > 0 {
-                                       attemptToSignLocally()
-                                    } else {
-                                        finalizeWithBitcoind()
-                                    }
+                                    attemptToSignLocallyWithActiveWalletXprv()
                                 } catch {
-                                    if xprvsToSignWith.count > 0 {
-                                       attemptToSignLocally()
-                                    } else {
-                                        finalizeWithBitcoind()
-                                    }
+                                    attemptToSignLocallyWithActiveWalletXprv()
                                 }
                             }
                         } else {
@@ -81,74 +73,44 @@ class PSBTSigner {
                 }
             }
         }
-                
-        func attemptToSignLocally() {
-            /// Need to ensure similiar seeds do not sign mutliple times. This can happen if a user adds the same seed multiple times.
-            var xprvStrings = [String]()
-            for xprv in xprvsToSignWith {
-                xprvStrings.append(xprv.description)
-                
-            }
-            xprvsToSignWith.removeAll()
-            let uniqueXprvs = Array(Set(xprvStrings))
-            for uniqueXprv in uniqueXprvs {
-                if let xprv = HDKey(uniqueXprv) {
-                    xprvsToSignWith.append(xprv)
-                }
-            }
-            if xprvsToSignWith.count > 0 {
-                var signableKeys = [String]()
-                for (i, key) in xprvsToSignWith.enumerated() {
-                    let inputs = psbtToSign.inputs
-                    for (x, input) in inputs.enumerated() {
-                        /// Create an array of child keys that we know can sign our inputs.
-                        if let origins: [PubKey : KeyOrigin] = input.canSign(key) {
-                            for origin in origins {
-                                if let childKey = try? key.derive(origin.value.path) {
-                                    if let privKey = childKey.privKey {
-                                        precondition(privKey.pubKey == origin.key)
-                                        signableKeys.append(privKey.wif)
-                                    }
-                                }
-                            }
-                        }
-                        /// Once the above loops complete we remove an duplicate signing keys from the array then sign the psbt with each unique key.
-                        if i + 1 == xprvsToSignWith.count && x + 1 == inputs.count {
-                            let uniqueSigners = Array(Set(signableKeys))
-                            if uniqueSigners.count > 0 {
-                                for (s, signer) in uniqueSigners.enumerated() {
-                                    if let signingKey = Key(signer, chain) {
-                                        psbtToSign.sign(signingKey)
-                                        /// Once we completed the signing loop we finalize with our node.
-                                        if s + 1 == uniqueSigners.count {
-                                            finalizeWithBitcoind()
-                                        }
-                                    }
-                                }
-                            } else {
-                                finalizeWithBitcoind()
-                            }
-                        }
-                    }
-                }
-            }
-        }
         
-        /// Fetch keys to sign with
-        func getKeysToSignWith() {
-            xprvsToSignWith.removeAll()
-            for (i, seed) in seedsToSignWith.enumerated() {
-                let seedStruct = SeedStruct(dictionary: seed)
-                if seedStruct.seed != nil {
-                    Encryption.decryptData(dataToDecrypt: seedStruct.seed!) { (seed) in
-                        if seed != nil {
-                            if let words = String(data: seed!, encoding: .utf8) {
-                                MnemonicCreator.convert(words: words) { (mnemonic, error) in
-                                    if !error {
-                                        if let masterKey = HDKey(mnemonic!.seedHex(""), chain) {
-                                            if let xprv = masterKey.xpriv {
-                                                if let hdkey = HDKey(xprv) {
-                                                    xprvsToSignWith.append(hdkey)
+        func attemptToSignLocallyWithActiveWalletXprv() {
+            getActiveWalletNow { (wallet, error) in
+                if wallet != nil {
+                    if wallet?.xprvs != nil {
+                        let encryptedXprvs = wallet!.xprvs!
+                        var signableKeys = [String]()
+                        for (x, encryptedXprv) in encryptedXprvs.enumerated() {
+                            Encryption.decryptData(dataToDecrypt: encryptedXprv) { (decryptedXprv) in
+                                if decryptedXprv != nil {
+                                    if let xprv = String(bytes: decryptedXprv!, encoding: .utf8) {
+                                        if let key = HDKey(xprv) {
+                                            let inputs = psbtToSign.inputs
+                                            for (i, input) in inputs.enumerated() {
+                                                /// Create an array of child keys that we know can sign our inputs.
+                                                if let origins = input.origins {
+                                                    for origin in origins {
+                                                        if let path = BIP32Path((origin.value.path.description).replacingOccurrences(of: wallet!.derivation + "/", with: "")) {
+                                                            if let childKey = try? key.derive(path) {
+                                                                if let privKey = childKey.privKey {
+                                                                    if privKey.pubKey == origin.key {
+                                                                        signableKeys.append(privKey.wif)
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                if i + 1 == inputs.count && x + 1 == encryptedXprvs.count {
+                                                    let uniqueSigners = Array(Set(signableKeys))
+                                                    for (w, wif) in uniqueSigners.enumerated() {
+                                                        if let key = Key(wif, chain) {
+                                                            psbtToSign.sign(key)
+                                                        }
+                                                        if w + 1 == uniqueSigners.count {
+                                                            finalizeWithBitcoind()
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -156,33 +118,13 @@ class PSBTSigner {
                                 }
                             }
                         }
+                    } else {
+                        finalizeWithBitcoind()
                     }
-                }
-                if i + 1 == seedsToSignWith.count {
-                    processWithActiveWallet()
                 }
             }
         }
         
-        /// Fetch wallets on the same network
-        func getSeeds() {
-            seedsToSignWith.removeAll()
-            CoreDataService.retrieveEntity(entityName: .seeds) { (seeds, errorDescription) in
-                if errorDescription == nil && seeds != nil {
-                    if seeds!.count > 0 {
-                        for (i, seed) in seeds!.enumerated() {
-                            seedsToSignWith.append(seed)
-                            if i + 1 == seeds!.count {
-                                getKeysToSignWith()
-                            }
-                        }
-                    } else {
-                        processWithActiveWallet()
-                    }
-                }
-            }
-        }
-                
         /// Can only sign for one network so we get the active nodes network
         func getChain() {
             Encryption.getNode { (node, error) in
@@ -194,10 +136,9 @@ class PSBTSigner {
                     }
                     do {
                         psbtToSign = try PSBT(psbt, chain)
-                        getSeeds()
+                        processWithActiveWallet()
                     } catch {
                         completion((false, nil, nil))
-                        
                     }
                 }
             }

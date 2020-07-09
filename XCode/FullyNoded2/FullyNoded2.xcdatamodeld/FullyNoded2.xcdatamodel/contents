@@ -52,6 +52,7 @@
         <attribute name="changeDescriptor" optional="YES" attributeType="String"/>
         <attribute name="derivation" optional="YES" attributeType="String"/>
         <attribute name="descriptor" optional="YES" attributeType="String"/>
+        <attribute name="fingerprint" optional="YES" attributeType="String"/>
         <attribute name="hasRange" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="identity" optional="YES" attributeType="Binary"/>
@@ -70,6 +71,7 @@
         <attribute name="seed" optional="YES" attributeType="Binary"/>
         <attribute name="type" optional="YES" attributeType="String"/>
         <attribute name="xprv" optional="YES" attributeType="Binary"/>
+        <attribute name="xprvs" optional="YES" attributeType="Transformable"/>
     </entity>
     <elements>
         <element name="Auth" positionX="-63" positionY="-18" width="128" height="73"/>
@@ -77,6 +79,6 @@
         <element name="Nodes" positionX="-54" positionY="-9" width="128" height="148"/>
         <element name="Seeds" positionX="-45" positionY="135" width="128" height="103"/>
         <element name="Transactions" positionX="-45" positionY="135" width="128" height="268"/>
-        <element name="Wallets" positionX="-36" positionY="9" width="128" height="388"/>
+        <element name="Wallets" positionX="-36" positionY="9" width="128" height="418"/>
     </elements>
 </model>

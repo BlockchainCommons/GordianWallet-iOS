@@ -364,47 +364,46 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    private func addSeedNow() {
+    private func addSeedNow(xprv: String) {
         
         func add() {
-            
             let words = justWords.joined(separator: " ")
             let unencryptedData = words.dataUsingUTF8StringEncoding
             Encryption.encryptData(dataToEncrypt: unencryptedData) { [unowned vc = self] (encryptedSeed, error) in
-                
                 if encryptedSeed != nil {
-                    
-                    //CoreDataService.updateEntity(id: vc.wallet.id!, keyToUpdate: "seed", newValue: encryptedSeed!, entityName: .wallets) { (success, errorDescription) in
-                    let dict = ["seed":encryptedSeed!, "id":UUID()] as [String:Any]
-                    CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDescription) in
-                        
-                        vc.connectingView.removeConnectingView()
-                        
-                        if success {
-                            
-                            DispatchQueue.main.async { [unowned vc = self] in
-                                vc.updatePlaceHolder(wordNumber: 1)
-                                vc.label.text = ""
-                                
+                    if KeyChain.saveNewSeed(encryptedSeed: encryptedSeed!) {
+                        var xprvs:[Data] = []
+                        Encryption.encryptData(dataToEncrypt: xprv.dataUsingUTF8StringEncoding) { [unowned vc = self] (encryptedXprv, error) in
+                            if encryptedXprv != nil {
+                                if vc.wallet.xprvs != nil {
+                                    xprvs = vc.wallet.xprvs!
+                                }
+                                xprvs.append(encryptedXprv!)
+                                CoreDataService.updateEntity(id: vc.wallet.id!, keyToUpdate: "xprvs", newValue: xprvs, entityName: .wallets) { (success, errorDesc) in
+                                    if success {
+                                        DispatchQueue.main.async { [unowned vc = self] in
+                                            vc.updatePlaceHolder(wordNumber: 1)
+                                            vc.label.text = ""
+                                            NotificationCenter.default.post(name: .seedAdded, object: nil, userInfo: nil)
+                                        }
+                                        showAlert(vc: vc, title: "Success!", message: "Signer added, the device will now be able to sign for this wallet.")
+                                        vc.connectingView.removeConnectingView()
+                                    } else {
+                                        showAlert(vc: vc, title: "Error", message: "We had an error saving your seed")
+                                        vc.connectingView.removeConnectingView()
+                                    }
+                                }
+                            } else {
+                                showAlert(vc: vc, title: "Error", message: "We had an error saving your seed")
+                                vc.connectingView.removeConnectingView()
                             }
-                            
-                            showAlert(vc: vc, title: "Success!", message: "Signer added, the device will now be able to sign for this wallet.")
-                            DispatchQueue.main.async {
-                                NotificationCenter.default.post(name: .seedAdded, object: nil, userInfo: nil)
-                            }
-                            
-                        } else {
-                            
-                            showAlert(vc: vc, title: "Error", message: "We had an error saving your seed: \(errorDescription ?? "unknown error")")
-                            
                         }
-                        
+                    } else {
+                        showAlert(vc: vc, title: "Error", message: "We had an error saving your seed")
+                        vc.connectingView.removeConnectingView()
                     }
-                    
                 }
-                
             }
-            
         }
         
         DispatchQueue.main.async { [unowned vc = self] in
@@ -500,7 +499,11 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                                             DispatchQueue.main.async {
                                                 vc.connectingView.removeConnectingView()
                                             }
-                                            vc.addSeedNow()
+                                            if let xprv = hdKey.xpriv {
+                                                vc.addSeedNow(xprv: xprv)
+                                            } else {
+                                                showAlert(vc: vc, title: "Error", message: "There was an error deriving your xprv.")
+                                            }
                                             
                                         }
                                         
