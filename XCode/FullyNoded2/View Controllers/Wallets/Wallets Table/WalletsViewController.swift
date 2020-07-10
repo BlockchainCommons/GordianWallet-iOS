@@ -593,15 +593,15 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     nodeKeys.text = "1 xprv \(xprvPath)"
                     primaryKeysNodeSignerImage.image = UIImage(imageLiteralResourceName: "Signature")
                 } else {
-                    nodeKeys.text = "Cold"
+                    nodeKeys.text = "3 xpub's \(walletStruct.derivation)"
                     primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
                 }
             } else {
-                nodeKeys.text = "Cold"
+                nodeKeys.text = "3 xpub's \(walletStruct.derivation)"
                 primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
             }
         } else {
-            nodeKeys.text = "Cold"
+            nodeKeys.text = "\(descriptorStruct.keysWithPath.count) xpub's \(walletStruct.derivation)"
             primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
         }
                 
