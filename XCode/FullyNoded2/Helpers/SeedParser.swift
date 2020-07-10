@@ -24,7 +24,6 @@ class SeedParser {
             xpubs.append(descriptorStruct.accountXpub)
         }
         unknownXpubs = xpubs
-                
         if wallet.xprvs != nil {
             // we know the wallet can sign, rely on actual xprvs to derive fingerprints
             for (x, encryptedXprv) in wallet.xprvs!.enumerated() {
@@ -35,9 +34,6 @@ class SeedParser {
                                 for (i, xpub) in xpubs.enumerated() {
                                     if xpub == hdKey.xpub {
                                         // Here we can remove xpubs from the unknown array as we know it is known
-                                        if unknownXpubs.count > i {
-                                            unknownXpubs.remove(at: i)
-                                        }
                                         let fingerprint = hdKey.fingerprint.hexString
                                         knownSigners.append(fingerprint)
                                     }
@@ -49,7 +45,7 @@ class SeedParser {
                                                     unknownSigners.append(descriptorStruct.fingerprints[k])
                                                 }
                                                 if k + 1 == keysWithPath.count && u + 1 == unknownXpubs.count {
-                                                    completion((unknownSigners, knownSigners))
+                                                    completion((knownSigners, unknownSigners))
                                                 }
                                             }
                                         }

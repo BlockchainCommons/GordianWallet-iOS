@@ -605,7 +605,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             primaryKeysNodeSignerImage.image = UIImage(systemName: "eye.fill")
         }
                 
-        if walletStruct.knownSigners.count == str.sigsRequired {
+        if walletStruct.knownSigners.count >= str.sigsRequired {
             
             var seedText = "xprv"
             if walletStruct.knownSigners.count > 1 {
@@ -627,10 +627,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             deviceSeedImage.image = UIImage(systemName: "eye.fill")
             
             if descriptorStruct.keysWithPath.count == 3 {
-//                let nodesKey = descriptorStruct.keysWithPath[1]
-//                let nodesPath = nodesKey.replacingOccurrences(of: descriptorStruct.multiSigKeys[1], with: "")
-//                let arr = nodesPath.split(separator: "]")
-//                let xpubPath = "\(arr[0])]"
                 deviceXprv.text = process(walletStruct.knownSigners)
             } else {
                 deviceXprv.text = "xpub's: \(walletStruct.derivation)"

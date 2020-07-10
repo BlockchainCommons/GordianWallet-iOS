@@ -2108,11 +2108,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tBq-5k-T1U">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0zB-Cx-vSF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                         </subviews>
@@ -5413,8 +5413,8 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                                 <constraint firstAttribute="height" constant="15" id="P8j-x5-obM"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" tag="27" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="External Signers" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kRm-D3-fc5">
-                                                            <rect key="frame" x="8" y="8" width="106" height="16"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="27" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="External Seeds" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kRm-D3-fc5">
+                                                            <rect key="frame" x="8" y="8" width="97" height="16"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="16" id="vNG-tg-gXq"/>
                                                             </constraints>
@@ -6240,12 +6240,12 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="Kzq-6W-yKR"/>
         <segue reference="7qw-Ys-xsH"/>
         <segue reference="EvJ-Lj-YLy"/>
-        <segue reference="mqi-NU-Y0K"/>
+        <segue reference="igz-Ga-xca"/>
         <segue reference="G4m-Sr-i7G"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="MTV-lr-E4R"/>
         <segue reference="Xe1-Me-c8c"/>
-        <segue reference="zkr-zY-rLG"/>
+        <segue reference="ufe-jz-pkY"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
