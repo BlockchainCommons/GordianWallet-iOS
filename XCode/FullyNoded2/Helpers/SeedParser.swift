@@ -11,8 +11,8 @@ import LibWally
 class SeedParser {
     
     class func getSigners(wallet: WalletStruct, completion: @escaping ((knownSigners: [String], uknownSigners: [String])) -> Void) {
-        var knownSigners = [String]()
-        var unknownSigners = [String]()
+        var knownSigners:[String] = []
+        var unknownSigners:[String] = []
         var xpubs = [String]()
         var unknownXpubs = [String]()
         let descriptorParser = DescriptorParser()
@@ -23,6 +23,7 @@ class SeedParser {
         } else {
             xpubs.append(descriptorStruct.accountXpub)
         }
+        // We know the device never is supposed to hold the seed for long so we can assume all master seeds are not known
         unknownXpubs = xpubs
         if wallet.xprvs != nil {
             // we know the wallet can sign, rely on actual xprvs to derive fingerprints
@@ -33,7 +34,6 @@ class SeedParser {
                             if let hdKey = HDKey(xprvString) {
                                 for (i, xpub) in xpubs.enumerated() {
                                     if xpub == hdKey.xpub {
-                                        // Here we can remove xpubs from the unknown array as we know it is known
                                         let fingerprint = hdKey.fingerprint.hexString
                                         knownSigners.append(fingerprint)
                                     }
@@ -58,7 +58,7 @@ class SeedParser {
             }
         } else {
             unknownSigners = descriptorStruct.fingerprints
-            completion(([""], unknownSigners))
+            completion(([], unknownSigners))
         }
     }
     

@@ -255,9 +255,9 @@ class NodeLogic {
         var amount = 0.0
         var dictToReturn = [String:Any]()
         
-        SeedParser.getSigners(wallet: wallet) { (knownSigners, uknownSigners) in
+        SeedParser.getSigners(wallet: wallet) { (knownSigners, unkownSigners) in
             dictToReturn["knownSigners"] = knownSigners
-            dictToReturn["unknownSigners"] = uknownSigners
+            dictToReturn["unknownSigners"] = unkownSigners
             dictToReturn["noUtxos"] = false
             
             if utxos.count == 0 {

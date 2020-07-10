@@ -617,22 +617,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             walletTypeImage.tintColor = .systemRed
             deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
             deviceXprv.text = process(walletStruct.knownSigners)
-            
-        } else if walletStruct.knownSigners.count == 0 {
-            
-            seedOnDeviceLabel.text = "Cold"
-            walletType.text = "Cool Account"
-            walletTypeImage.image = UIImage(systemName: "cloud.sun")
-            walletTypeImage.tintColor = .systemTeal
-            deviceSeedImage.image = UIImage(systemName: "eye.fill")
-            
-            if descriptorStruct.keysWithPath.count == 3 {
-                deviceXprv.text = process(walletStruct.knownSigners)
-            } else {
-                deviceXprv.text = "xpub's: \(walletStruct.derivation)"
-            }
-            
-        } else if walletStruct.knownSigners.count < str.sigsRequired {
+                        
+        } else if walletStruct.knownSigners.count < str.sigsRequired && walletStruct.knownSigners.count > 0 {
             
             var seeds = "xprvs"
             if walletStruct.knownSigners.count == 1 {
@@ -645,6 +631,15 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             walletTypeImage.tintColor = .systemYellow
             deviceSeedImage.image = UIImage(imageLiteralResourceName: "Signature")
             deviceXprv.text = process(walletStruct.knownSigners)
+            
+        } else if walletStruct.knownSigners.count == 0 {
+            
+            seedOnDeviceLabel.text = "Cold"
+            walletType.text = "Cold Account"
+            walletTypeImage.image = UIImage(systemName: "snow")
+            walletTypeImage.tintColor = .systemTeal
+            deviceSeedImage.image = UIImage(systemName: "eye.fill")
+            deviceXprv.text = "\(descriptorStruct.keysWithPath.count) xpub's: \(walletStruct.derivation)"
             
         }
         

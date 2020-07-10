@@ -610,10 +610,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             if walletInfo.knownSigners.count >= str.sigsRequired {
                 accountTypeIcon.image = UIImage(systemName: "flame")
                 accountTypeIcon.tintColor = .systemRed
-            } else if walletInfo.knownSigners.count == 0 {
-                accountTypeIcon.image = UIImage(systemName: "cloud.sun")
+            } else if walletInfo.unknownSigners.count == str.multiSigKeys.count {
+                accountTypeIcon.image = UIImage(systemName: "snow")
                 accountTypeIcon.tintColor = .systemTeal
-            } else if wallet.knownSigners.count < str.sigsRequired {
+            } else if walletInfo.knownSigners.count > 0 && walletInfo.knownSigners.count < str.sigsRequired {
                 accountTypeIcon.image = UIImage(systemName: "sun.min")
                 accountTypeIcon.tintColor = .systemYellow
             }
