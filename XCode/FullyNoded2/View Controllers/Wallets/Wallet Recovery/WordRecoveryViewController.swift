@@ -335,7 +335,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     
     private func validWordsAdded() {
         
-        if !addingSeed && !addingIndpendentSeed {
+        //if !addingSeed && !addingIndpendentSeed {
             
             DispatchQueue.main.async { [unowned vc = self] in
                 
@@ -344,75 +344,76 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 
             }
             
-        } else if addingIndpendentSeed {
+//        } else if addingIndpendentSeed {
+//
+//            DispatchQueue.main.async { [unowned vc = self] in
+//                vc.textField.resignFirstResponder()
+//
+//            }
+//
+//            let unencryptedSeed = (justWords.joined(separator: " ")).dataUsingUTF8StringEncoding
+//
+//            Encryption.encryptData(dataToEncrypt: unencryptedSeed) { [unowned vc = self] (encryptedSeed, error) in
+//
+//                if encryptedSeed != nil {
+//
+//
+//                    let dict = ["seed":encryptedSeed!,"id":UUID()] as [String:Any]
+//                    CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDesc) in
+//
+//                        if success {
+//
+//                            DispatchQueue.main.async { [unowned vc = self] in
+//                                vc.textField.text = ""
+//                                vc.label.text = ""
+//                                vc.justWords.removeAll()
+//                                vc.addedWords.removeAll()
+//                                vc.updatePlaceHolder(wordNumber: 1)
+//                                NotificationCenter.default.post(name: .seedAdded, object: nil, userInfo: nil)
+//                            }
+//
+//                            showAlert(vc: vc, title: "Seed saved!", message: "You may go back or add another seed.")
+//
+//                        } else {
+//
+//                           showAlert(vc: vc, title: "Error", message: "We had an error saving that seed.")
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            }
+                
+        //} else {
             
-            DispatchQueue.main.async { [unowned vc = self] in
-                vc.textField.resignFirstResponder()
-                
-            }
+//            DispatchQueue.main.async { [unowned vc = self] in
+//
+//                if vc.justWords.count == 12 {
+//
+//                    let alert = UIAlertController(title: "That is a valid BIP39 mnemonic", message: "You may now create your wallet", preferredStyle: .actionSheet)
+//
+//                    alert.addAction(UIAlertAction(title: "Create wallet", style: .default, handler: { action in
+//
+//                        DispatchQueue.main.async { [unowned vc = self] in
+//
+//                            vc.onSeedDoneBlock!(vc.justWords.joined(separator: " "))
+//                            vc.navigationController!.popViewController(animated: true)
+//
+//                        }
+//
+//                    }))
+//
+//                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+//                    alert.popoverPresentationController?.sourceView = self.view
+//                    vc.present(alert, animated: true, completion: nil)
+//
+//                }
+//
+//            }
             
-            let unencryptedSeed = (justWords.joined(separator: " ")).dataUsingUTF8StringEncoding
-            
-            Encryption.encryptData(dataToEncrypt: unencryptedSeed) { [unowned vc = self] (encryptedSeed, error) in
-                
-                if encryptedSeed != nil {
-                    
-                    let dict = ["seed":encryptedSeed!,"id":UUID()] as [String:Any]
-                    CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDesc) in
-                        
-                        if success {
-                            
-                            DispatchQueue.main.async { [unowned vc = self] in
-                                vc.textField.text = ""
-                                vc.label.text = ""
-                                vc.justWords.removeAll()
-                                vc.addedWords.removeAll()
-                                vc.updatePlaceHolder(wordNumber: 1)
-                                NotificationCenter.default.post(name: .seedAdded, object: nil, userInfo: nil)
-                            }
-                            
-                            showAlert(vc: vc, title: "Seed saved!", message: "You may go back or add another seed.")
-                            
-                        } else {
-                            
-                           showAlert(vc: vc, title: "Error", message: "We had an error saving that seed.")
-                            
-                        }
-                        
-                    }
-                    
-                }
-                
-            }
-                
-        } else {
-            
-            DispatchQueue.main.async { [unowned vc = self] in
-                
-                if vc.justWords.count == 12 {
-                    
-                    let alert = UIAlertController(title: "That is a valid BIP39 mnemonic", message: "You may now create your wallet", preferredStyle: .actionSheet)
-
-                    alert.addAction(UIAlertAction(title: "Create wallet", style: .default, handler: { action in
-                        
-                        DispatchQueue.main.async { [unowned vc = self] in
-                            
-                            vc.onSeedDoneBlock!(vc.justWords.joined(separator: " "))
-                            vc.navigationController!.popViewController(animated: true)
-                            
-                        }
-                        
-                    }))
-                    
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                    alert.popoverPresentationController?.sourceView = self.view
-                    vc.present(alert, animated: true, completion: nil)
-                    
-                }
-                
-            }
-            
-        }
+        //}
         
     }
     
@@ -763,82 +764,96 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 
                 do {
                     
-                    let xpub = try mk.derive(BIP32Path(vc.derivation!)!).xpub
-                    
-                    switch vc.derivation {
-                        
-                    case "m/84'/1'/0'":
-                        param = "\"wpkh([\(fingerprint)/84'/1'/0']\(xpub)/0/*)\""
-                        
-                    case "m/84'/0'/0'":
-                        param = "\"wpkh([\(fingerprint)/84'/0'/0']\(xpub)/0/*)\""
-                        
-                    case "m/44'/1'/0'":
-                        param = "\"pkh([\(fingerprint)/44'/1'/0']\(xpub)/0/*)\""
-                         
-                    case "m/44'/0'/0'":
-                        param = "\"pkh([\(fingerprint)/44'/0'/0']\(xpub)/0/*)\""
-                        
-                    case "m/49'/1'/0'":
-                        param = "\"sh(wpkh([\(fingerprint)/49'/1'/0']\(xpub)/0/*))\""
-                        
-                    case "m/49'/0'/0'":
-                        param = "\"sh(wpkh([\(fingerprint)/49'/0'/0']\(xpub)/0/*))\""
-                        
-                    default:
-                        
-                        break
-                        
-                    }
-                    
-                    let changeDesc = param.replacingOccurrences(of: "/0/*", with: "/1/*")
-                    
-                    Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
-                        
-                        if let dict = object as? NSDictionary {
-                            
-                            let desc = dict["descriptor"] as! String
-                            vc.walletNameHash = Encryption.sha256hash(desc)
-                            vc.recoveryDict["descriptor"] = desc
-                            vc.recoveryDict["type"] = "DEFAULT"
-                            vc.recoveryDict["id"] = UUID()
-                            vc.recoveryDict["blockheight"] = Int32(0)
-                            vc.recoveryDict["maxRange"] = 2500
-                            CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
-                                if wallets != nil {
-                                    if wallets!.count == 0 {
-                                        vc.recoveryDict["isActive"] = true
-                                    } else {
-                                        vc.recoveryDict["isActive"] = false
-                                    }
-                                }
-                            }
-                            vc.recoveryDict["lastUsed"] = Date()
-                            vc.recoveryDict["isArchived"] = false
-                            vc.recoveryDict["birthdate"] = keyBirthday()
-                            vc.recoveryDict["name"] = vc.walletNameHash
-                            vc.recoveryDict["nodeIsSigner"] = false
-                            
-                            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: changeDesc) { [unowned vc = self] (object, errorDescription) in
-                                
-                                if let dict = object as? NSDictionary {
-                                    let changedescriptor = dict["descriptor"] as! String
-                                    vc.recoveryDict["changeDescriptor"] = changedescriptor
-                                    vc.cv.removeConnectingView()
-                                    vc.confirm()
+                    if let xprv = try mk.derive(BIP32Path(vc.derivation!)!).xpriv {
+                        Encryption.encryptData(dataToEncrypt: xprv.dataUsingUTF8StringEncoding) { (encryptedData, error) in
+                            if encryptedData != nil {
+                                vc.recoveryDict["xprvs"] = [encryptedData!]
+                                do {
+                                    let xpub = try mk.derive(BIP32Path(vc.derivation!)!).xpub
                                     
-                                } else {
-                                    vc.cv.removeConnectingView()
-                                    displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
+                                    switch vc.derivation {
+                                        
+                                    case "m/84'/1'/0'":
+                                        param = "\"wpkh([\(fingerprint)/84'/1'/0']\(xpub)/0/*)\""
+                                        
+                                    case "m/84'/0'/0'":
+                                        param = "\"wpkh([\(fingerprint)/84'/0'/0']\(xpub)/0/*)\""
+                                        
+                                    case "m/44'/1'/0'":
+                                        param = "\"pkh([\(fingerprint)/44'/1'/0']\(xpub)/0/*)\""
+                                         
+                                    case "m/44'/0'/0'":
+                                        param = "\"pkh([\(fingerprint)/44'/0'/0']\(xpub)/0/*)\""
+                                        
+                                    case "m/49'/1'/0'":
+                                        param = "\"sh(wpkh([\(fingerprint)/49'/1'/0']\(xpub)/0/*))\""
+                                        
+                                    case "m/49'/0'/0'":
+                                        param = "\"sh(wpkh([\(fingerprint)/49'/0'/0']\(xpub)/0/*))\""
+                                        
+                                    default:
+                                        
+                                        break
+                                        
+                                    }
+                                    
+                                    let changeDesc = param.replacingOccurrences(of: "/0/*", with: "/1/*")
+                                    
+                                    Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
+                                        
+                                        if let dict = object as? NSDictionary {
+                                            
+                                            let desc = dict["descriptor"] as! String
+                                            vc.walletNameHash = Encryption.sha256hash(desc)
+                                            vc.recoveryDict["descriptor"] = desc
+                                            vc.recoveryDict["type"] = "DEFAULT"
+                                            vc.recoveryDict["id"] = UUID()
+                                            vc.recoveryDict["blockheight"] = Int32(0)
+                                            vc.recoveryDict["maxRange"] = 2500
+                                            CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+                                                if wallets != nil {
+                                                    if wallets!.count == 0 {
+                                                        vc.recoveryDict["isActive"] = true
+                                                    } else {
+                                                        vc.recoveryDict["isActive"] = false
+                                                    }
+                                                }
+                                            }
+                                            vc.recoveryDict["lastUsed"] = Date()
+                                            vc.recoveryDict["isArchived"] = false
+                                            vc.recoveryDict["birthdate"] = keyBirthday()
+                                            vc.recoveryDict["name"] = vc.walletNameHash
+                                            vc.recoveryDict["nodeIsSigner"] = false
+                                            
+                                            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: changeDesc) { [unowned vc = self] (object, errorDescription) in
+                                                
+                                                if let dict = object as? NSDictionary {
+                                                    let changedescriptor = dict["descriptor"] as! String
+                                                    vc.recoveryDict["changeDescriptor"] = changedescriptor
+                                                    vc.cv.removeConnectingView()
+                                                    vc.confirm()
+                                                    
+                                                } else {
+                                                    vc.cv.removeConnectingView()
+                                                    displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
+                                                }
+                                            }
+                                            
+                                        } else {
+                                            vc.cv.removeConnectingView()
+                                            displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
+                                            
+                                        }
+                                    }
+                                } catch {
+                                    
                                 }
+                                
                             }
-                            
-                        } else {
-                            vc.cv.removeConnectingView()
-                            displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
-                            
                         }
                     }
+                    
+                    
                                         
                 } catch {
                     vc.cv.removeConnectingView()
