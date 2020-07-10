@@ -720,6 +720,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                         vc.justWords.removeAll()
                         vc.addedWords.removeAll()
                         vc.textField.text = ""
+                        vc.label.text = ""
                         vc.updatePlaceHolder(wordNumber: 1)
                         seedAddedAddAnother()
                     }))

@@ -17,6 +17,7 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
     var seedArray = [String]()
     var recoveryDict = [String:Any]()
     var requiredSigs = Int()
+    var network:Network!
     @IBOutlet weak var picker: UIPickerView!
     
     override func viewDidLoad() {
@@ -29,7 +30,6 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
-        
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -88,87 +88,56 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
     }
     
     private func buildWallet() {
-        
         func getKeys(network: Network) {
-            
             for (i, seed) in seedArray.enumerated() {
-                
-                MnemonicCreator.convert(words: seed) { [unowned vc = self] (mnemonic, error) in
-                    
-                    if mnemonic != nil {
-                        var pathString = "m/48'/0'/0'/2'"
-                        
-                        if network == .testnet {
-                            pathString = "m/48'/1'/0'/2'"
-                        }
-                        
-                        vc.recoveryDict["derivation"] = pathString
-                        vc.recoveryDict["id"] = UUID()
-                        vc.recoveryDict["isActive"] = false
-                        vc.recoveryDict["lastUsed"] = Date()
-                        vc.recoveryDict["lastBalance"] = 0.0
-                        vc.recoveryDict["isArchived"] = false
-                        vc.recoveryDict["nodeIsSigner"] = false
-                        
-                        if let path = BIP32Path(pathString) {
-                            
-                            let seed = mnemonic!.seedHex("")
-                            
-                            if let mk = HDKey(seed, network) {
-                                let fingerprint = mk.fingerprint.hexString
-                                
-                                do {
-                                    
-                                    let account = try mk.derive(path)
-                                    let pathWithFingerprint = pathString.replacingOccurrences(of: "m", with: fingerprint)
-                                    
-                                    
-                                    if i + 1 == vc.seedArray.count {
-                                        let key = "[\(pathWithFingerprint)]\(account.xpub)/0/*"
-                                        vc.keys += key
-                                        vc.buildDescriptors()
-                                        
-                                    } else {
-                                        let key = "[\(pathWithFingerprint)]\(account.xpub)/0/*,"
-                                        vc.keys += key
-                                        
-                                    }
-                                    
-                                } catch {
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
+                if let mnemonic = BIP39Mnemonic(seed) {
+                    var pathString = "m/48'/0'/0'/2'"
+                    if network == .testnet {
+                        pathString = "m/48'/1'/0'/2'"
                     }
-                    
+                    if let path = BIP32Path(pathString) {
+                        let seed = mnemonic.seedHex("")
+                        if let mk = HDKey(seed, network) {
+                            let fingerprint = mk.fingerprint.hexString
+                            do {
+                                let account = try mk.derive(path)
+                                let pathWithFingerprint = pathString.replacingOccurrences(of: "m", with: fingerprint)
+                                if i + 1 == seedArray.count {
+                                    recoveryDict["derivation"] = pathString
+                                    recoveryDict["id"] = UUID()
+                                    recoveryDict["isActive"] = false
+                                    recoveryDict["lastUsed"] = Date()
+                                    recoveryDict["lastBalance"] = 0.0
+                                    recoveryDict["isArchived"] = false
+                                    recoveryDict["nodeIsSigner"] = false
+                                    let key = "[\(pathWithFingerprint)]\(account.xpub)/0/*"
+                                    keys += key
+                                    buildDescriptors()
+                                } else {
+                                    let key = "[\(pathWithFingerprint)]\(account.xpub)/0/*,"
+                                    keys += key
+                                }
+                            } catch {
+                                showAlert(vc: self, title: "Error", message: "error setting up your multisig descriptor key array")
+                            }
+                        }
+                    }
                 }
-                
             }
-            
         }
         
         Encryption.getNode { [unowned vc = self] (node, error) in
-            
             if node != nil {
                 vc.recoveryDict["nodeId"] = node!.id
                 let chain = node!.network
-                var network = Network.mainnet
-                
+                vc.network = Network.mainnet
                 if chain == "testnet" {
-                    network = .testnet
-                    
+                    vc.network = .testnet
                 }
-                
-                getKeys(network: network)
-                
+                getKeys(network: vc.network)
             } else {
                 showAlert(vc: vc, title: "No node!", message: "You need to have an active node in order to recover.")
-                
             }
-            
         }
     }
     
@@ -177,45 +146,45 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
         creatingView.addConnectingView(vc: self, description: "processing your descriptors...")
         let primaryDesc = "wsh(sortedmulti(\(requiredSigs),\(keys)))"
         let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
-        
         Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(primaryDesc)\"") { [unowned vc = self] (object, errorDescription) in
-            
             if let dict = object as? NSDictionary {
-                
                 if let primaryDescriptor = dict["descriptor"] as? String {
                     vc.recoveryDict["descriptor"] = primaryDescriptor
-                    
                     Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") { [unowned vc = self] (object, errorDescription) in
-                        
                         if let dict = object as? NSDictionary {
-                            
                             if let changeDescriptor = dict["descriptor"] as? String {
-                                vc.recoveryDict["changeDescriptor"] = changeDescriptor
-                                vc.recoveryDict["birthdate"] = keyBirthday()
-                                vc.recoveryDict["type"] = "MULTI"
-                                vc.recoveryDict["blockheight"] = Int32(1)
-                                vc.recoveryDict["maxRange"] = 2500
-                                vc.recoveryDict["nodeIsSigner"] = false
-                                vc.walletName = Encryption.sha256hash(primaryDescriptor)
-                                vc.recoveryDict["name"] = vc.walletName
-                                
+                                var encryptedXprvs:[Data] = []
                                 for (i, seed) in vc.seedArray.enumerated() {
-                                    let seedData = seed.dataUsingUTF8StringEncoding
-                                    
-                                    Encryption.encryptData(dataToEncrypt: seedData) { (encryptedData, error) in
-                                        
-                                        if encryptedData != nil {
-                                            let dict = ["seed":encryptedData!,"id":UUID(), "birthdate": Date()] as [String : Any]
-                                            
-                                            CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDescription) in
-                                                
-                                                if success {
-                                                    
-                                                    if i + 1 == vc.seedArray.count {
-                                                        DispatchQueue.main.async { [unowned vc = self] in
-                                                            vc.performSegue(withIdentifier: "segueConfirmMultiSigFromWords", sender: vc)
-                                                            
+                                    if let mnemonic = BIP39Mnemonic(seed) {
+                                        if let derivation = vc.recoveryDict["derivation"] as? String {
+                                            let seed = mnemonic.seedHex("")
+                                            if let mk = HDKey(seed, vc.network) {
+                                                if let path = BIP32Path(derivation) {
+                                                    do {
+                                                        if let xprv = try mk.derive(path).xpriv {
+                                                            Encryption.encryptData(dataToEncrypt: xprv.dataUsingUTF8StringEncoding) { [unowned vc = self] (encryptedData, error) in
+                                                                if encryptedData != nil {
+                                                                    encryptedXprvs.append(encryptedData!)
+                                                                    if i + 1 == vc.seedArray.count {
+                                                                        vc.recoveryDict["xprvs"] = encryptedXprvs
+                                                                        vc.recoveryDict["changeDescriptor"] = changeDescriptor
+                                                                        vc.recoveryDict["birthdate"] = keyBirthday()
+                                                                        vc.recoveryDict["type"] = "MULTI"
+                                                                        vc.recoveryDict["blockheight"] = Int32(1)
+                                                                        vc.recoveryDict["maxRange"] = 2500
+                                                                        vc.recoveryDict["nodeIsSigner"] = false
+                                                                        vc.walletName = Encryption.sha256hash(primaryDescriptor)
+                                                                        vc.recoveryDict["name"] = vc.walletName
+                                                                        DispatchQueue.main.async { [unowned vc = self] in
+                                                                            vc.performSegue(withIdentifier: "segueConfirmMultiSigFromWords", sender: vc)
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
                                                         }
+                                                    } catch {
+                                                        creatingView.removeConnectingView()
+                                                        showAlert(vc: vc, title: "Error", message: "error encrypting your xprv")
                                                     }
                                                 }
                                             }
@@ -223,19 +192,15 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
                                     }
                                 }
                             }
-                            
                         } else {
                             creatingView.removeConnectingView()
                             showAlert(vc: vc, title: "Error", message: "error getting primary descriptor: \(errorDescription ?? "unknown")")
-                            
                         }
                     }
                 }
-                
             } else {
                 creatingView.removeConnectingView()
                 showAlert(vc: vc, title: "Error", message: "error getting primary descriptor: \(errorDescription ?? "unknown")")
-                
             }
         }
     }
@@ -249,7 +214,6 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
             
             if xpub.contains("/48'/1'/0'/2'") || xpub.contains("/48'/0'/0'/2'") {
                 prefix = "wsh(sortedmulti(\(requiredSigs),"
-                
                 
             } else if xpub.contains("/48'/1'/0'/1'") || xpub.contains("/48'/0'/0'/1'") {
                 prefix = "sh(sortedmulti(\(requiredSigs),"

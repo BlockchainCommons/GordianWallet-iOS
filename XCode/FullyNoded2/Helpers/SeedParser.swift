@@ -10,7 +10,7 @@ import LibWally
 
 class SeedParser {
     
-    class func getSigners(wallet: WalletStruct) -> (knownSigners: [String], uknownSigners: [String]) {
+    class func getSigners(wallet: WalletStruct, completion: @escaping ((knownSigners: [String], uknownSigners: [String])) -> Void) {
         var knownSigners = [String]()
         var unknownSigners = [String]()
         var xpubs = [String]()
@@ -27,7 +27,7 @@ class SeedParser {
                 
         if wallet.xprvs != nil {
             // we know the wallet can sign, rely on actual xprvs to derive fingerprints
-            for encryptedXprv in wallet.xprvs! {
+            for (x, encryptedXprv) in wallet.xprvs!.enumerated() {
                 Encryption.decryptData(dataToDecrypt: encryptedXprv) { (decryptedXprv) in
                     if decryptedXprv != nil {
                         if let xprvString = String(bytes: decryptedXprv!, encoding: .utf8) {
@@ -35,27 +35,35 @@ class SeedParser {
                                 for (i, xpub) in xpubs.enumerated() {
                                     if xpub == hdKey.xpub {
                                         // Here we can remove xpubs from the unknown array as we know it is known
-                                        unknownXpubs.remove(at: i)
+                                        if unknownXpubs.count > i {
+                                            unknownXpubs.remove(at: i)
+                                        }
+                                        let fingerprint = hdKey.fingerprint.hexString
+                                        knownSigners.append(fingerprint)
+                                    }
+                                    if i + 1 == xpubs.count && x + 1 == wallet.xprvs!.count {
+                                        for (u, unknowXpub) in unknownXpubs.enumerated() {
+                                            let keysWithPath = descriptorStruct.keysWithPath
+                                            for (k, keyWithPath) in keysWithPath.enumerated() {
+                                                if keyWithPath.contains(unknowXpub) {
+                                                    unknownSigners.append(descriptorStruct.fingerprints[k])
+                                                }
+                                                if k + 1 == keysWithPath.count && u + 1 == unknownXpubs.count {
+                                                    completion((unknownSigners, knownSigners))
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                                let fingerprint = hdKey.fingerprint.hexString
-                                knownSigners.append(fingerprint)
                             }
                         }
                     }
                 }
             }
+        } else {
+            unknownSigners = descriptorStruct.fingerprints
+            completion(([""], unknownSigners))
         }
-        
-        for unknowXpub in unknownXpubs {
-            let keysWithPath = descriptorStruct.keysWithPath
-            for (i, keyWithPath) in keysWithPath.enumerated() {
-                if keyWithPath.contains(unknowXpub) {
-                    unknownSigners.append(descriptorStruct.fingerprints[i])
-                }
-            }
-        }
-        return (knownSigners, unknownSigners)
     }
     
     class func parseSeed(seed: SeedStruct, completion: @escaping (([String]?)) -> Void) {

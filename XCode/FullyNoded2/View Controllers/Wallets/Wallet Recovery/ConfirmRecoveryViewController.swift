@@ -129,7 +129,6 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     private func importWallet() {
         connectingView.addConnectingView(vc: self, description: "creating account on your node")
         let wallet = WalletStruct(dictionary: walletDict)
-        print("wallet: \(walletDict)")
         var importedOrRecovered = "imported"
         var addToKeypool = false
         var addToInternal = false

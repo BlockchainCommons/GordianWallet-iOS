@@ -257,29 +257,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func setKnownUnknownSignersAndFingerprints(completion: @escaping ((Bool)) -> Void) {
         for (i, wallet) in sortedWallets.enumerated() {
             let wstruct = WalletStruct(dictionary: wallet)
-            let dicts = SeedParser.getSigners(wallet: wstruct)
-            sortedWallets[i]["knownSigners"] = dicts.knownSigners
-            sortedWallets[i]["unknownSigners"] = dicts.uknownSigners
-            if i + 1 == sortedWallets.count {
-                sortedWallets = sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
-                completion(true)
+            SeedParser.getSigners(wallet: wstruct) { [unowned vc = self] (knownSigners, uknownSigners) in
+                vc.sortedWallets[i]["knownSigners"] = knownSigners
+                print("knownSigners: \(knownSigners)")
+                vc.sortedWallets[i]["unknownSigners"] = uknownSigners
+                print("uknownSigners: \(uknownSigners)")
+                if i + 1 == vc.sortedWallets.count {
+                    vc.sortedWallets = vc.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
+                    completion(true)
+                }
             }
-            
-//            SeedParser.parseWallet(wallet: wstruct) { [unowned vc = self] (known, unknown) in
-//                if known != nil && unknown != nil {
-//                    vc.sortedWallets[i]["knownSigners"] = known!
-//                    vc.sortedWallets[i]["unknownSigners"] = unknown!
-//                }
-//                SeedParser.fetchSeeds(wallet: wstruct) { (words, fingerprints) in
-//                    if fingerprints != nil {
-//                        vc.sortedWallets[i]["knownFingerprints"] = fingerprints!
-//                    }
-//                    if i + 1 == vc.sortedWallets.count {
-//                        vc.sortedWallets = vc.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
-//                        completion(true)
-//                    }
-//                }
-//            }
         }
     }
     
