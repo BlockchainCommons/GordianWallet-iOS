@@ -22,59 +22,40 @@ class Import {
         let descriptorStruct = descriptorParser.descriptor(descriptor)
         
         func getChangeDescriptor(changeDesc: String) {
-            
             Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") { (object, errorDescription) in
-                
                 if let dict = object as? NSDictionary {
                     let changeDescriptor = dict["descriptor"] as! String
                     walletToImport["changeDescriptor"] = changeDescriptor
                     completion(walletToImport)
-                    
                 } else {
                     completion(nil)
-                    
                 }
             }
         }
         
         func getDescriptors(primaryDesc: String, changeDesc: String) {
-            
             Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(primaryDesc)\"") { (object, errorDescription) in
-                
                 if let dict = object as? NSDictionary {
-                    if let hasprivatekeys = dict["hasprivatekeys"] as? Bool {
-                        if hasprivatekeys {
-                            
-                        }
-                        let descriptor = dict["descriptor"] as! String
-                        let walletName = Encryption.sha256hash(descriptor)
-                        walletToImport["descriptor"] = descriptor
-                        walletToImport["name"] = walletName
-                        getChangeDescriptor(changeDesc: changeDesc)
-                    } else {
-                        completion(nil)
-                    }
+                    let descriptor = dict["descriptor"] as! String
+                    let walletName = Encryption.sha256hash(descriptor)
+                    walletToImport["descriptor"] = descriptor
+                    walletToImport["name"] = walletName
+                    getChangeDescriptor(changeDesc: changeDesc)
                 } else {
                     completion(nil)
-                    
                 }
             }
-            
         }
         
         func importSpecterWallet() {
-            /// TODO: Support any type of m of n from Specter. Need to puzzle UI first.
+            /// TODO: Support any type of m of n from Specter.
             let arr = descriptor.split(separator: "&")
-            
             if arr.count > 0 {
                 let label = "\(arr[0])"
                 var primaryDesc = "\(arr[1])"
-                
                 if primaryDesc.contains(",") {
                     let arr1 = primaryDesc.split(separator: ",")
-                    
                     if arr1.count == 4 {
-                        
                         if !(arr1[1]).contains("/0/*") && !(arr1[2]).contains("/0/*") && (arr1[3]).contains("))") {
                             let key1 = "\(arr1[1])/0/*"
                             let key2 = "\(arr1[2])/0/*"
@@ -85,86 +66,58 @@ class Import {
                             let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
                             walletToImport["label"] = label
                             getDescriptors(primaryDesc: primaryDesc, changeDesc: changeDesc)
-                            
                         } else {
                             completion(nil)
-                            
                         }
-                        
                     } else {
                         completion(nil)
-                        
                     }
-                    
                 } else {
                     completion(nil)
-                    
                 }
-                
             } else {
                 completion(nil)
-                
             }
-            
         }
         
         func importBitcoinCoreDescriptor() {
             /// First parse the descriptor to see if it is an account or not. If it is an account we manipulate it.
-            
             if descriptorStruct.isAccount {
-                
                 if descriptor.contains("/0/*") {
                     /// No need to add the child keys, just get the change descriptor and send it off.
                     let changeDesc = descriptor.replacingOccurrences(of: "/0/*", with: "/1/*")
                     getDescriptors(primaryDesc: descriptor, changeDesc: changeDesc)
-                    
                 } else {
                     /// No child keys added, since it is account and HD we can add it.
                     if descriptorStruct.isMulti {
                         var primaryDesc = ""
                         let keys = descriptorStruct.multiSigKeys
-                        
                         for (i, key) in keys.enumerated() {
-                            
                             if i == 0 {
                                primaryDesc = descriptor.replacingOccurrences(of: key, with: key + "/0/*")
-                                
                             } else {
                                 primaryDesc = primaryDesc.replacingOccurrences(of: key, with: key + "/0/*")
-                                
                             }
-                            
                         }
-                                                
                         let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
                         getDescriptors(primaryDesc: primaryDesc, changeDesc: changeDesc)
-                        
                     } else {
                         var key = ""
-                        
                         if descriptorStruct.accountXprv != "" {
                             key = descriptorStruct.accountXprv
-                            
                         } else if descriptorStruct.accountXpub != "" {
                             key = descriptorStruct.accountXpub
-                            
                         }
-                        
                         let primaryDesc = descriptor.replacingOccurrences(of: key, with: key + "/0/*")
                         let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
                         getDescriptors(primaryDesc: primaryDesc, changeDesc: changeDesc)
-                        
                     }
-                    
                 }
-                
             } else {
                 /// It is non standard, we use the same descriptor for receiving and change.
                 print("importing a non standard descriptor!")
                 getDescriptors(primaryDesc: descriptor, changeDesc: descriptor)
-                
             }
-            
         }
         
         func process(node: NodeStruct) {
@@ -206,42 +159,30 @@ class Import {
                         }
                     }
                 }
-                
             }
             
             if descriptorStruct.isSpecter && descriptorStruct.mOfNType == "2 of 3" {
                 walletToImport["type"] = "MULTI"
                 importSpecterWallet()
-                
             } else if descriptorStruct.isHD {
-                
                 if descriptorStruct.isMulti {
                     walletToImport["type"] = "MULTI"
-                    
                 } else {
                     walletToImport["type"] = "DEFAULT"
-                    
                 }
-                
                 /// Here we will need to process the descriptor.
                 importBitcoinCoreDescriptor()
-                
             } else {
                 print("descriptor type is not supported...")
                 completion(nil)
-                
             }
-            
         }
         
         Encryption.getNode { (n, error) in
-            
             if n != nil {
                 process(node: n!)
-                
             } else {
                 completion(nil)
-                
             }
         }
     }
@@ -250,17 +191,13 @@ class Import {
         var walletToImport = [String:Any]()
         
         func getChangeDescriptor(changeDesc: String) {
-            
             Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") { (object, errorDescription) in
-                
                 if let dict = object as? NSDictionary {
                     let changeDescriptor = dict["descriptor"] as! String
                     walletToImport["changeDescriptor"] = changeDescriptor
                     completion(walletToImport)
-                    
                 } else {
                     completion(nil)
-                    
                 }
             }
         }
@@ -284,37 +221,27 @@ class Import {
             walletToImport["lastBalance"] = 0.0
             walletToImport["label"] = accountMap["label"] as? String ?? ""
             walletToImport["nodeIsSigner"] = false
-            
             if str.isMulti {
                 walletToImport["type"] = "MULTI"
-                
             } else {
                 walletToImport["type"] = "DEFAULT"
-                
             }
-            
             var changeDescriptor = descriptor.replacingOccurrences(of: "/0/*", with: "/1/*")
             let arr = changeDescriptor.split(separator: "#")
             changeDescriptor = "\(arr[0])"
             getChangeDescriptor(changeDesc: changeDescriptor)
-            
         }
         
         Encryption.getNode { (n, error) in
-            
             if n != nil {
                 process(node: n!)
-                
             } else {
                 completion(nil)
-                
             }
         }
-        
     }
     
     class func importColdCard(coldcardDict: NSDictionary, fingerprint: String, completion: @escaping (([String:Any]?)) -> Void) {
-        
         var accountToImport = [String:Any]()
         accountToImport["birthdate"] = keyBirthday()
         accountToImport["isArchived"] = false
@@ -329,35 +256,27 @@ class Import {
         accountToImport["nodeIsSigner"] = false
         
         func getChangeDescriptor(changeDesc: String) {
-            
             Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") { (object, errorDescription) in
-                
                 if let dict = object as? NSDictionary {
                     let changeDescriptor = dict["descriptor"] as! String
                     accountToImport["changeDescriptor"] = changeDescriptor
                     completion(accountToImport)
-                    
                 } else {
                     completion(nil)
-                    
                 }
             }
         }
         
         func getDescriptors(primaryDesc: String, changeDesc: String) {
-            
             Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(primaryDesc)\"") { (object, errorDescription) in
-                
                 if let dict = object as? NSDictionary {
                     let descriptor = dict["descriptor"] as! String
                     let walletName = Encryption.sha256hash(descriptor)
                     accountToImport["descriptor"] = descriptor
                     accountToImport["name"] = walletName
                     getChangeDescriptor(changeDesc: changeDesc)
-                    
                 } else {
                     completion(nil)
-                    
                 }
             }
         }
@@ -368,7 +287,6 @@ class Import {
             accountToImport["derivation"] = derivation
             let name = coldcardDict["name"] as! String
             var prefix = ""
-            
             /// Only working for single-sig now.
             switch name {
             case "p2pkh": prefix = "pkh("
@@ -377,35 +295,26 @@ class Import {
             default:
                 break
             }
-            
             let path = derivation.replacingOccurrences(of: "m", with: fingerprint)
             var primDesc = prefix + "[\(path)]\(xpub)/0/*"
             
             if prefix == "sh(wpkh(" {
                 primDesc += "))"
-                
             } else {
                 primDesc += ")"
-                
             }
-            
             let changeDesc = primDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
             getDescriptors(primaryDesc: primDesc, changeDesc: changeDesc)
-    
         }
         
         Encryption.getNode { (n, error) in
-            
             if n != nil {
                 accountToImport["nodeId"] = n!.id
                 process()
-                
             } else {
                 completion(nil)
-                
             }
         }
-        
     }
     
     class func importColdCardMultiSig(coldcardDict: [String:Any], completion: @escaping ((coldcardWallet: [String:Any]?, offlineWords: String?, deviceWords: String?)) -> Void) {
@@ -430,80 +339,60 @@ class Import {
         accountToImport["nodeIsSigner"] = false
         
         func getChangeDescriptor(changeDesc: String) {
-            
             Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") { (object, errorDescription) in
-                
                 if let dict = object as? NSDictionary {
                     let changeDescriptor = dict["descriptor"] as! String
                     accountToImport["changeDescriptor"] = changeDescriptor
                     completion((accountToImport, offlineWords, deviceWords))
-                    
                 } else {
                     completion((nil,nil,nil))
-                    
                 }
             }
         }
         
         func getDescriptors(primaryDesc: String, changeDesc: String) {
-            
             Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(primaryDesc)\"") { (object, errorDescription) in
-                
                 if let dict = object as? NSDictionary {
                     let descriptor = dict["descriptor"] as! String
                     let walletName = Encryption.sha256hash(descriptor)
                     accountToImport["descriptor"] = descriptor
                     accountToImport["name"] = walletName
                     getChangeDescriptor(changeDesc: changeDesc)
-                    
                 } else {
                     completion((nil,nil,nil))
-                    
                 }
             }
         }
         
         func getDeviceXpub(mnemonic: BIP39Mnemonic) {
             let seed = mnemonic.seedHex("")
-            
             if let masterKey = HDKey(seed, chain) {
                 let fingerprint = masterKey.fingerprint.hexString
-                
                 do {
                     let xpub = try masterKey.derive(path).xpub
                     let path1 = (path.description).replacingOccurrences(of: "m", with: fingerprint)
                     deviceKey = "[\(path1)]\(xpub)/0/*"
-                    
                 } catch {
                     completion((nil,nil,nil))
-                    
                 }
-                
             } else {
                 completion((nil,nil,nil))
-                
             }
         }
         
         func getNodeXpub(mnemonic: BIP39Mnemonic) {
             let seed = mnemonic.seedHex("")
-            
             if let masterKey = HDKey(seed, chain) {
                 let fingerprint = masterKey.fingerprint.hexString
-                
                 do {
                     let xpub = try masterKey.derive(path).xpub
                     let path1 = (path.description).replacingOccurrences(of: "m", with: fingerprint)
                     nodeKey = "[\(path1)]\(xpub)/0/*"
-                    
                 } catch {
                     completion((nil,nil,nil))
-                    
                 }
-                
             } else {
                 completion((nil,nil,nil))
-                
             }
         }
         
@@ -514,14 +403,10 @@ class Import {
             let derivation = coldcardDict["p2wsh_deriv"] as! String
             path = BIP32Path(derivation)
             accountToImport["derivation"] = derivation
-            
             KeychainCreator.createKeyChain() { (device_words, error) in
-                
                 if device_words != nil {
                     deviceWords = device_words!
-                    
                     KeychainCreator.createKeyChain() { (offline_words, error) in
-                        
                         if offline_words != nil {
                             offlineWords = offline_words!
                             let deviceMnemonic = BIP39Mnemonic(device_words!)
@@ -529,45 +414,30 @@ class Import {
                             getDeviceXpub(mnemonic: deviceMnemonic!)
                             getNodeXpub(mnemonic: offlineMnemonic!)
                             let path1 = (path.description).replacingOccurrences(of: "m", with: fingerprint)
-                            
                             if xpub != nil {
                                 coldCardKey = "[\(path1)]\(xpub!)/0/*"
                                 let primDesc = "wsh(sortedmulti(2,\(coldCardKey),\(deviceKey),\(nodeKey)))"
                                 let changeDesc = primDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
                                 getDescriptors(primaryDesc: primDesc, changeDesc: changeDesc)
-                                
                             }
-                            
                         }
-                        
                     }
-                    
                 }
             }
-    
         }
-        
         Encryption.getNode { (n, error) in
-            
             if n != nil {
-                
                 if n!.network == "testnet" {
                     chain = .testnet
-                    
                 } else {
                     chain = .mainnet
-                    
                 }
-                
                 accountToImport["nodeId"] = n!.id
                 process()
-                
             } else {
                 completion((nil,nil,nil))
-                
             }
         }
-        
     }
     
 }
