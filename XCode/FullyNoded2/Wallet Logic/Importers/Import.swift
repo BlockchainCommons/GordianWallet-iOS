@@ -42,12 +42,18 @@ class Import {
             Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(primaryDesc)\"") { (object, errorDescription) in
                 
                 if let dict = object as? NSDictionary {
-                    let descriptor = dict["descriptor"] as! String
-                    let walletName = Encryption.sha256hash(descriptor)
-                    walletToImport["descriptor"] = descriptor
-                    walletToImport["name"] = walletName
-                    getChangeDescriptor(changeDesc: changeDesc)
-                    
+                    if let hasprivatekeys = dict["hasprivatekeys"] as? Bool {
+                        if hasprivatekeys {
+                            
+                        }
+                        let descriptor = dict["descriptor"] as! String
+                        let walletName = Encryption.sha256hash(descriptor)
+                        walletToImport["descriptor"] = descriptor
+                        walletToImport["name"] = walletName
+                        getChangeDescriptor(changeDesc: changeDesc)
+                    } else {
+                        completion(nil)
+                    }
                 } else {
                     completion(nil)
                     
@@ -173,12 +179,41 @@ class Import {
             walletToImport["lastUsed"] = Date()
             walletToImport["lastBalance"] = 0.0
             walletToImport["nodeIsSigner"] = false
+            if descriptorStruct.isHot {
+                if descriptorStruct.isMulti {
+                    var xprvs:[Data] = []
+                    for (i, key) in descriptorStruct.multiSigKeys.enumerated() {
+                        if key.hasPrefix("xprv") || key.hasPrefix("tprv") {
+                            Encryption.encryptData(dataToEncrypt: key.dataUsingUTF8StringEncoding) { (encryptedData, error) in
+                                if encryptedData != nil {
+                                    xprvs.append(encryptedData!)
+                                } else {
+                                    completion(nil)
+                                }
+                            }
+                        }
+                        if i + 1 == descriptorStruct.multiSigKeys.count {
+                            walletToImport["xprvs"] = xprvs
+                        }
+                    }
+                } else {
+                    let xprv = descriptorStruct.accountXprv
+                    Encryption.encryptData(dataToEncrypt: xprv.dataUsingUTF8StringEncoding) { (encryptedData, error) in
+                        if encryptedData != nil {
+                            walletToImport["xprvs"] = [encryptedData!]
+                        } else {
+                            completion(nil)
+                        }
+                    }
+                }
+                
+            }
             
             if descriptorStruct.isSpecter && descriptorStruct.mOfNType == "2 of 3" {
                 walletToImport["type"] = "MULTI"
                 importSpecterWallet()
                 
-            } else if descriptorStruct.isHD && !descriptorStruct.isHot {
+            } else if descriptorStruct.isHD {
                 
                 if descriptorStruct.isMulti {
                     walletToImport["type"] = "MULTI"

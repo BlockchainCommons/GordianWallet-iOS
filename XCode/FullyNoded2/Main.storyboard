@@ -2108,11 +2108,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tBq-5k-T1U">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0zB-Cx-vSF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                         </subviews>
@@ -4071,7 +4071,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                     <constraint firstAttribute="height" constant="58" id="Wpm-ma-zrj"/>
                                 </constraints>
                                 <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title=" Enter xpubs manually  " image="pencil.and.ellipsis.rectangle" catalog="system">
+                                <state key="normal" title=" Enter keys manually  " image="pencil.and.ellipsis.rectangle" catalog="system">
                                     <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -6240,12 +6240,12 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="Kzq-6W-yKR"/>
         <segue reference="7qw-Ys-xsH"/>
         <segue reference="EvJ-Lj-YLy"/>
-        <segue reference="igz-Ga-xca"/>
-        <segue reference="G4m-Sr-i7G"/>
+        <segue reference="mqi-NU-Y0K"/>
+        <segue reference="NHy-Xu-LiC"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="MTV-lr-E4R"/>
         <segue reference="Xe1-Me-c8c"/>
-        <segue reference="ufe-jz-pkY"/>
+        <segue reference="zkr-zY-rLG"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
