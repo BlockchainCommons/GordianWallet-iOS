@@ -163,14 +163,13 @@ class TextBlurbs {
     
     // MARK: - Account recovery and creating accounts with user supplied xpubs
     
-    class func invalidXpubWarning() -> String {
-        
+    class func invalidExtendedKeyWarning() -> String {
         return "That is not a valid xpub or tpub"
     }
     
-    class func onlyXpubsHereWarning() -> String {
+    class func onlyExtendedKeysHereWarning() -> String {
         
-        return "This option is only for creating watch-only wallets with user supplied xpub's. If you would like to supply a seed tap the \"add BIP39 words\" button below."
+        return "This option is only for creating watch-only wallets with user supplied extended keys. If you would like to supply a seed tap the \"add BIP39 words\" button below."
     }
     
     class func invalidPathWarning() -> String {
@@ -178,7 +177,7 @@ class TextBlurbs {
         return "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4..."
     }
     
-    class func invalidXpubWithPathWarning() -> String {
+    class func invalidExtendedKeyWithPathWarning() -> String {
         
         return "You need to paste in an xpub with is path and master key fingerprint in the following format:\n\n[UTYR63H/84'/0'/0']xpub7dk20b5bs4..."
     }

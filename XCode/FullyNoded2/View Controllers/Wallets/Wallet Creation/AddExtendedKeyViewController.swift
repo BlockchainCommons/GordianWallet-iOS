@@ -65,7 +65,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
                                 vc.navigationController!.popViewController(animated: true)
                             }
                         } else {
-                            showAlert(vc: self, title: "Invalid xpub!", message: TextBlurbs.invalidXpubWarning())
+                            showAlert(vc: self, title: "Invalid extended key!", message: TextBlurbs.invalidExtendedKeyWarning())
                         }
                     }
                     
@@ -77,7 +77,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
                         checkKey(key: textView.text)
                     }
                 } else {
-                    showAlert(vc: self, title: "Only extended keys allowed here", message: TextBlurbs.onlyXpubsHereWarning())
+                    showAlert(vc: self, title: "Only extended keys allowed here", message: TextBlurbs.onlyExtendedKeysHereWarning())
                 }
             }
         } else if textView.text != "" && isRecovering {
@@ -145,7 +145,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
                     return false
                 }
             } else {
-                showAlert(vc: self, title: "Invalid xpub", message: TextBlurbs.invalidXpubWithPathWarning())
+                showAlert(vc: self, title: "Invalid xpub", message: TextBlurbs.invalidExtendedKeyWithPathWarning())
                 return false
             }
         default:
