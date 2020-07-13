@@ -50,6 +50,8 @@ class MakeRPCCall {
                     if method == .importmulti {
                         timeout = 100.0
                         
+                    } else if method == .rescanblockchain {
+                        timeout = 30.0
                     }
                     
                     request.timeoutInterval = timeout

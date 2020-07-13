@@ -277,70 +277,97 @@ class WalletToolsViewController: UIViewController {
         
         self.creatingView.addConnectingView(vc: self, description: "initiating rescan")
         
-        Reducer.makeCommand(walletName: self.wallet.name!, command: .rescanblockchain, param: "") { [unowned vc = self] (object, errorDesc) in
-            if errorDesc != nil {
-                vc.creatingView.removeConnectingView()
-                if errorDesc!.contains("Wallet is currently rescanning") {
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
+        func rescanNow(param: String) {
+            Reducer.makeCommand(walletName: self.wallet.name!, command: .rescanblockchain, param: param) { [unowned vc = self] (object, errorDesc) in
+                if errorDesc != nil {
+                    vc.creatingView.removeConnectingView()
+                    if errorDesc!.contains("Wallet is currently rescanning") {
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
+                        }
                     }
-                }
-                showAlert(vc: vc, title: "Error", message: errorDesc!)
-            } else {
-                DispatchQueue.main.async {
-                    
-                    vc.creatingView.label.text = "confirming rescan status"
-                    
-                }
-                
-                Reducer.makeCommand(walletName: vc.wallet.name!, command: .getwalletinfo, param: "") { (object, errorDesc) in
-                    
-                    if let result = object as? NSDictionary {
+                    showAlert(vc: vc, title: "Error", message: errorDesc!)
+                } else {
+                    DispatchQueue.main.async {
                         
-                        if let scanning = result["scanning"] as? NSDictionary {
+                        vc.creatingView.label.text = "confirming rescan status"
+                        
+                    }
+                    
+                    Reducer.makeCommand(walletName: vc.wallet.name!, command: .getwalletinfo, param: "") { (object, errorDesc) in
+                        
+                        if let result = object as? NSDictionary {
                             
-                            if let _ = scanning["duration"] as? Int {
+                            if let scanning = result["scanning"] as? NSDictionary {
+                                
+                                if let _ = scanning["duration"] as? Int {
+                                    
+                                    vc.creatingView.removeConnectingView()
+                                    let progress = (scanning["progress"] as! Double)
+                                    showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
+                                    }
+                                    
+                                }
+                                
+                            } else if (result["scanning"] as? Int) == 0 {
                                 
                                 vc.creatingView.removeConnectingView()
-                                let progress = (scanning["progress"] as! Double)
-                                showAlert(vc: vc, title: "Rescanning", message: "Wallet is rescanning with current progress: \((progress * 100).rounded())%")
+                                showAlert(vc: vc, title: "Scan Complete", message: "The wallet is not currently scanning.")
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
+                                }
+                                
+                            } else {
+                                
+                                vc.creatingView.removeConnectingView()
+                                showAlert(vc: vc, title: "Scan Complete", message: "Unable to determine if wallet is rescanning.")
                                 DispatchQueue.main.async {
                                     NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
                                 }
                                 
                             }
                             
-                        } else if (result["scanning"] as? Int) == 0 {
-                            
-                            vc.creatingView.removeConnectingView()
-                            showAlert(vc: vc, title: "Scan Complete", message: "The wallet is not currently scanning.")
-                            DispatchQueue.main.async {
-                                NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
-                            }
-                            
                         } else {
                             
                             vc.creatingView.removeConnectingView()
-                            showAlert(vc: vc, title: "Scan Complete", message: "Unable to determine if wallet is rescanning.")
-                            DispatchQueue.main.async {
-                                NotificationCenter.default.post(name: .didRescanAccount, object: nil, userInfo: nil)
-                            }
+                            showAlert(vc: vc, title: "Error", message: errorDesc ?? "unknown error")
                             
                         }
-                        
-                    } else {
-                        
-                        vc.creatingView.removeConnectingView()
-                        showAlert(vc: vc, title: "Error", message: errorDesc ?? "unknown error")
                         
                     }
                     
                 }
-
+                
             }
-    
+            
         }
         
+        Reducer.makeCommand(walletName: self.wallet.name!, command: .getblockchaininfo, param: "") { [unowned vc = self] (object, errorDescription) in
+            if let dict = object as? NSDictionary {
+                if let pruned = dict["pruned"] as? Bool {
+                    if pruned {
+                        if let pruneHeight = dict["pruneheight"] as? Int {
+                            Reducer.makeCommand(walletName: self.wallet.name!, command: .rescanblockchain, param: "\(pruneHeight)") { (response, errorMessage) in
+                                rescanNow(param: "\(pruneHeight)")
+                            }
+                        } else {
+                            vc.creatingView.removeConnectingView()
+                            showAlert(vc: vc, title: "Error", message: errorDescription ?? "unknown error")
+                        }
+                    } else {
+                        rescanNow(param: "")
+                    }
+                } else {
+                    vc.creatingView.removeConnectingView()
+                    showAlert(vc: vc, title: "Error", message: errorDescription ?? "unknown error")
+                }
+            } else {
+                vc.creatingView.removeConnectingView()
+                showAlert(vc: vc, title: "Error", message: errorDescription ?? "unknown error")
+            }
+        }
     }
     
     private func checkScanStatus() {

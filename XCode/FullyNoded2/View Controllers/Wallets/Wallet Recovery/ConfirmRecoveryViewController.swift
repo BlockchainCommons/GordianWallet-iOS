@@ -199,11 +199,44 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             }
         }
         
-        func rescan() {
-            updateLabel(text: "Initiating a rescan")
-            Reducer.makeCommand(walletName: wallet.name ?? walletNameHash, command: .rescanblockchain, param: "\(wallet.blockheight)") { [unowned vc = self] (object, errorDescription) in
+        func rescanFrom(param: String) {
+            Reducer.makeCommand(walletName: wallet.name ?? walletNameHash, command: .rescanblockchain, param: param) { [unowned vc = self] (object, errorDescription) in
                 vc.connectingView.removeConnectingView()
                 walletSuccessfullyCreated()
+            }
+        }
+        
+        func rescan() {
+            updateLabel(text: "Initiating a rescan")
+            Reducer.makeCommand(walletName: wallet.name ?? walletNameHash, command: .getblockchaininfo, param: "") { [unowned vc = self] (object, errorDescription) in
+                if let dict = object as? NSDictionary {
+                    if let pruned = dict["pruned"] as? Bool {
+                        if pruned {
+                            if let pruneHeight = dict["pruneheight"] as? Int {
+                                if wallet.blockheight == 0 {
+                                    showAlert(vc: vc, title: "Pruned Node", message: "We have initiated a rescan from your pruned node's blockheight \(pruneHeight) as that is as far back as we can go, if you have transactions that precede this blockheight they will not show up unless you reindex your node.")
+                                    rescanFrom(param: "\(pruneHeight)")
+                                } else if pruneHeight > wallet.blockheight {
+                                    showAlert(vc: vc, title: "Reindex required!", message: "Your pruned node can not rescan beyond its prune height, in order to rescan to the block where this wallet was born a full blockchain reindex is required. We have initiated a rescan from block \(pruneHeight).")
+                                    rescanFrom(param: "\(pruneHeight)")
+                                } else {
+                                    rescanFrom(param: "\(wallet.blockheight)")
+                                }
+                            } else {
+                                showError(message: errorDescription ?? "unknown error")
+                            }
+                        } else {
+                            Reducer.makeCommand(walletName: wallet.name ?? vc.walletNameHash, command: .rescanblockchain, param: "\(wallet.blockheight)") { [unowned vc = self] (object, errorDescription) in
+                                vc.connectingView.removeConnectingView()
+                                walletSuccessfullyCreated()
+                            }
+                        }
+                    } else {
+                        showError(message: errorDescription ?? "unknown error")
+                    }
+                } else {
+                    showError(message: errorDescription ?? "unknown error")
+                }
             }
         }
         
