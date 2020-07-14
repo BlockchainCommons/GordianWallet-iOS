@@ -14,7 +14,8 @@ class Encryption {
     class func decryptedSeeds(completion: @escaping (([String]?)) -> Void) {
         var decryptedSeeds:[String] = []
         guard let encryptedSeeds = KeyChain.seeds() else {
-            fatalError("can not get seeds")
+            completion(nil)
+            return
         }
         if encryptedSeeds.count > 0 {
             for (i, seed) in encryptedSeeds.enumerated() {
