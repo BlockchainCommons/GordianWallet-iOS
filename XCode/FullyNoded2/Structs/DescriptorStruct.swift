@@ -28,7 +28,6 @@ public struct DescriptorStruct: CustomStringConvertible {
     let accountXprv:String
     let derivation:String
     let derivationArray:[String]
-    let isSpecter:Bool
     let isHD:Bool
     let keysWithPath:[String]
     let isAccount:Bool
@@ -57,7 +56,6 @@ public struct DescriptorStruct: CustomStringConvertible {
         accountXprv = dictionary["accountXprv"] as? String ?? ""
         derivation = dictionary["derivation"] as? String ?? ""
         derivationArray = dictionary["derivationArray"] as? [String] ?? [""]
-        isSpecter = dictionary["isSpecter"] as? Bool ?? false
         isHD = dictionary["isHD"] as? Bool ?? false
         keysWithPath = dictionary["keysWithPath"] as? [String] ?? [""]
         isAccount = dictionary["isAccount"] as? Bool ?? false
