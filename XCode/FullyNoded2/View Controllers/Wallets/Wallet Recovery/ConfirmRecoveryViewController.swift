@@ -122,7 +122,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     
     @IBAction func cancelAction(_ sender: Any) {
         DispatchQueue.main.async { [unowned vc = self] in
-            vc.dismiss(animated: true) {}
+            vc.navigationController?.popToRootViewController(animated: true)
         }
     }
     
