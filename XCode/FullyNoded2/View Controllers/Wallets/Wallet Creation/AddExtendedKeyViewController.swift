@@ -40,7 +40,8 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
             formatLabel.alpha = 0
             textField.alpha = 1
             fingerprintLabel.alpha = 1
-            xpubLabel.text = "xpub:"
+            xpubLabel.text = " account xpub (m/48'/0'/0'/2'):"
+            showAlert(vc: self, title: "Important!", message: "Your xpub **must** be derived using this path m/48'/0'/0'/2' otherwise you may not be able to spend from this wallet even if you add the seed words which were used to derive this xpub!")
         }
         textView.delegate = self
         nextOutlet.layer.cornerRadius = 8
@@ -53,31 +54,40 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     }
         
     private func createDescriptors() {
-        if textView.text != "" && textField.text != "" {
+        
+        func checkKey(key: String, fp: String?) {
+            if let hdkey = HDKey(key) {
+                var dict:[String:String]!
+                if fp != nil {
+                    dict = ["key":key, "fingerprint":fp!]
+                } else {
+                    dict = ["key":key, "fingerprint":hdkey.fingerprint.hexString]
+                }
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.onDoneBlock!((dict))
+                    vc.navigationController!.popViewController(animated: true)
+                }
+            } else {
+                showAlert(vc: self, title: "Invalid extended key!", message: TextBlurbs.invalidExtendedKeyWarning())
+            }
+        }
+        
+        if textView.text != "" {
             if !isRecovering {
-                if textField.text!.count == 8 {
-                    
-                    func checkKey(key: String) {
-                        if let _ = HDKey(key) {
-                            let dict = ["key":key, "fingerprint":textField.text!]
-                            DispatchQueue.main.async { [unowned vc = self] in
-                                vc.onDoneBlock!((dict))
-                                vc.navigationController!.popViewController(animated: true)
+                if textField.text != "" {
+                    if textField.text!.count == 8 {
+                        if !textView.text.hasPrefix("tpub") && !textView.text.hasPrefix("xpub") {
+                            if let convertedKey = XpubConverter.convert(extendedKey: textView.text) {
+                                checkKey(key: convertedKey, fp: textField.text!)
                             }
                         } else {
-                            showAlert(vc: self, title: "Invalid extended key!", message: TextBlurbs.invalidExtendedKeyWarning())
-                        }
-                    }
-                    
-                    if !textView.text.hasPrefix("tpub") && !textView.text.hasPrefix("xpub") {
-                        if let convertedKey = XpubConverter.convert(extendedKey: textView.text) {
-                            checkKey(key: convertedKey)
+                            checkKey(key: textView.text, fp: textField.text!)
                         }
                     } else {
-                        checkKey(key: textView.text)
+                        showAlert(vc: self, title: "Invalid fingerprint", message: "Fingerprints need to be 8 characters long and valid hex")
                     }
                 } else {
-                    showAlert(vc: self, title: "Only extended keys allowed here", message: TextBlurbs.onlyExtendedKeysHereWarning())
+                    checkKey(key: textView.text, fp: nil)
                 }
             }
         } else if textView.text != "" && isRecovering {

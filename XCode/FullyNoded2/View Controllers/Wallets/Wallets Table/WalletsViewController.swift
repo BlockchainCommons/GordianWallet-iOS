@@ -634,9 +634,22 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         } else if walletStruct.knownSigners.count == 0 {
             
-            seedOnDeviceLabel.text = "Cold"
-            walletType.text = "Cold Account"
-            walletTypeImage.image = UIImage(systemName: "snow")
+            if walletStruct.nodeIsSigner != nil {
+                if walletStruct.nodeIsSigner! {
+                    seedOnDeviceLabel.text = "Cool"
+                    walletType.text = "Cool Account"
+                    walletTypeImage.image = UIImage(systemName: "cloud.sun")
+                } else {
+                    seedOnDeviceLabel.text = "Cold"
+                    walletType.text = "Cold Account"
+                    walletTypeImage.image = UIImage(systemName: "snow")
+                }
+            } else {
+                seedOnDeviceLabel.text = "Cold"
+                walletType.text = "Cold Account"
+                walletTypeImage.image = UIImage(systemName: "snow")
+            }
+            
             walletTypeImage.tintColor = .systemTeal
             deviceSeedImage.image = UIImage(systemName: "eye.fill")
             deviceXprv.text = "\(descriptorStruct.keysWithPath.count) xpub's: \(walletStruct.derivation)"

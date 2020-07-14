@@ -607,15 +607,42 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         if str.isMulti {
             walletTypeLabel.text = "\(str.mOfNType) Multi Signature - \(format)"
-            if walletInfo.knownSigners.count >= str.sigsRequired {
-                accountTypeIcon.image = UIImage(systemName: "flame")
-                accountTypeIcon.tintColor = .systemRed
-            } else if walletInfo.unknownSigners.count == str.multiSigKeys.count {
-                accountTypeIcon.image = UIImage(systemName: "snow")
-                accountTypeIcon.tintColor = .systemTeal
-            } else if walletInfo.knownSigners.count > 0 && walletInfo.knownSigners.count < str.sigsRequired {
-                accountTypeIcon.image = UIImage(systemName: "sun.min")
-                accountTypeIcon.tintColor = .systemYellow
+            
+            if wallet.nodeIsSigner != nil {
+                if wallet.nodeIsSigner! {
+                    if walletInfo.knownSigners.count >= str.sigsRequired {
+                        accountTypeIcon.image = UIImage(systemName: "flame")
+                        accountTypeIcon.tintColor = .systemRed
+                    } else if walletInfo.knownSigners.count == 0 {
+                        accountTypeIcon.image = UIImage(systemName: "cloud.sun")
+                        accountTypeIcon.tintColor = .systemTeal
+                    } else if walletInfo.knownSigners.count > 0 && walletInfo.knownSigners.count < str.sigsRequired {
+                        accountTypeIcon.image = UIImage(systemName: "sun.min")
+                        accountTypeIcon.tintColor = .systemYellow
+                    }
+                } else {
+                    if walletInfo.knownSigners.count >= str.sigsRequired {
+                        accountTypeIcon.image = UIImage(systemName: "flame")
+                        accountTypeIcon.tintColor = .systemRed
+                    } else if walletInfo.knownSigners.count == 0 {
+                        accountTypeIcon.image = UIImage(systemName: "snow")
+                        accountTypeIcon.tintColor = .systemTeal
+                    } else if walletInfo.knownSigners.count > 0 && walletInfo.knownSigners.count < str.sigsRequired {
+                        accountTypeIcon.image = UIImage(systemName: "sun.min")
+                        accountTypeIcon.tintColor = .systemYellow
+                    }
+                }
+            } else {
+                if walletInfo.knownSigners.count >= str.sigsRequired {
+                    accountTypeIcon.image = UIImage(systemName: "flame")
+                    accountTypeIcon.tintColor = .systemRed
+                } else if walletInfo.knownSigners.count == 0 {
+                    accountTypeIcon.image = UIImage(systemName: "snow")
+                    accountTypeIcon.tintColor = .systemTeal
+                } else if walletInfo.knownSigners.count > 0 && walletInfo.knownSigners.count < str.sigsRequired {
+                    accountTypeIcon.image = UIImage(systemName: "sun.min")
+                    accountTypeIcon.tintColor = .systemYellow
+                }
             }
         } else {
             walletTypeLabel.text = "Single Signature - \(format)"
