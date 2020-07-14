@@ -27,6 +27,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     var name = ""
     var isRecoveringMulti = false
     var cointType = "0"
+    var isCool = Bool()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,8 +41,14 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
             formatLabel.alpha = 0
             textField.alpha = 1
             fingerprintLabel.alpha = 1
-            xpubLabel.text = " account xpub (m/48'/0'/0'/2'):"
-            showAlert(vc: self, title: "Important!", message: "Your xpub **must** be derived using this path m/48'/0'/0'/2' otherwise you may not be able to spend from this wallet even if you add the seed words which were used to derive this xpub!")
+            if isCool {
+                xpubLabel.text = " account xpub (m/48'/0'/0'/2'):"
+                showAlert(vc: self, title: "Important!", message: "Your xpub *must* be derived from your seed using this path m/48'/0'/0'/2' (for mainnet, if on testnet m/48'/1'/0'/2') otherwise you may not be able to spend from this wallet even if you add the seed words which were used to derive this xpub!")
+            } else {
+                xpubLabel.text = " account xpub (m/84'/0'/0'):"
+                showAlert(vc: self, title: "Important!", message: "Your xpub *must* be derived from your seed using this path m/84'/0'/0' (for mainnet, if on testnet m/84'/1'/0') otherwise you may not be able to spend from this wallet even if you add the seed words which were used to derive this xpub!")
+            }
+            
         }
         textView.delegate = self
         nextOutlet.layer.cornerRadius = 8

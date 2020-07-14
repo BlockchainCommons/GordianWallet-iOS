@@ -11,6 +11,7 @@ import LibWally
 
 class ChooseWalletFormatViewController: UIViewController, UINavigationControllerDelegate {
     
+    var isCool = Bool()
     var words = ""
     var userSuppliedWords:String?
     var userSuppliedMultiSigXpub = ""
@@ -177,6 +178,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         customSeedSwitch.isOn = false
         isSingleSig = false
         isMultiSig = true
+        isCool = true
         DispatchQueue.main.async { [unowned vc = self] in
             vc.performSegue(withIdentifier: "addXpubSegue", sender: vc)
         }
@@ -186,6 +188,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         customSeedSwitch.isOn = false
         isSingleSig = true
         isMultiSig = false
+        isCool = false
         DispatchQueue.main.async { [unowned vc = self] in
             vc.performSegue(withIdentifier: "addXpubSegue", sender: vc)
         }
@@ -1385,7 +1388,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         case "addXpubSegue":
             
             if let vc = segue.destination as? AddExtendedKeyViewController {
-                
+                vc.isCool = isCool
                 vc.onDoneBlock = { [unowned thisVc = self] dict in
                     
                     thisVc.createWalletWithUserSuppliedSeed(dict: dict)
