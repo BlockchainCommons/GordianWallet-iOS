@@ -375,10 +375,16 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             onScanBip21DoneBlock!(url)
             self.dismiss(animated: true, completion: nil)
             
-        } else if isImporting || isRecovering {
+        } else if isRecovering {
             
             onImportDoneBlock!(url)
             self.navigationController?.popViewController(animated: true)
+            
+        } else if isImporting {
+            
+            self.dismiss(animated: true) { [unowned vc = self] in
+                vc.onImportDoneBlock!(url)
+            }
             
         } else {
             

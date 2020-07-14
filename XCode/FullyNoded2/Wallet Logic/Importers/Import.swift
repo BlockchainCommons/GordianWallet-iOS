@@ -6,11 +6,6 @@
 //  Copyright © 2020 Blockchain Commons, LLC. All rights reserved.
 //
 
-///     An example descriptor from Specter, we need to convert it to HD and create the change descriptor:
-///     Key_123&wsh(sortedmulti(2,[fe23bc9a/48h/1h/0h/2h]tpubDEzBBGMH87CU5rCdo7gSaByN6SVvJW7c4WDkMuC6mKS8bcqpaVD3FCoiAEefcGhC4TwRCtACZnmnTZbPUk4cbx6dsLnHG8CyG8jz2Gr6j2z,
-///     [e120e47b/48h/1h/0h/2h]tpubDEvTHKHDhi8rQyogJNsnoNsbF8hMefbAzXFCT8CuJiZtxeZM7vUHcH65qpsp7teB2hJPQMKpLV9QcEJkNy3fvnvR6zckoN1E3fFywzfmcBA,
-///     [f0578536/48h/1h/0h/2h]tpubDE5GYE61m5mx2WrgtFe1kSAeAHT5Npoy5C2TpQTQGLTQkRkmsWMoA5PSP5XAkt4DBLgKY386iyGDjJKT5fVrRgShJ5CSEdd66UUc4icA8rw))
-
 import Foundation
 import LibWally
 
@@ -46,39 +41,6 @@ class Import {
                 }
             }
         }
-        
-//        func importSpecterWallet() {
-//            /// TODO: Support any type of m of n from Specter.
-//            let arr = descriptor.split(separator: "&")
-//            if arr.count > 0 {
-//                let label = "\(arr[0])"
-//                var primaryDesc = "\(arr[1])"
-//                if primaryDesc.contains(",") {
-//                    let arr1 = primaryDesc.split(separator: ",")
-//                    if arr1.count == 4 {
-//                        if !(arr1[1]).contains("/0/*") && !(arr1[2]).contains("/0/*") && (arr1[3]).contains("))") {
-//                            let key1 = "\(arr1[1])/0/*"
-//                            let key2 = "\(arr1[2])/0/*"
-//                            let key3 = "\(arr1[3])".replacingOccurrences(of: "))", with: "/0/*))")
-//                            primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[1])", with: key1)
-//                            primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[2])", with: key2)
-//                            primaryDesc = primaryDesc.replacingOccurrences(of: "\(arr1[3])", with: key3)
-//                            let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
-//                            walletToImport["label"] = label
-//                            getDescriptors(primaryDesc: primaryDesc, changeDesc: changeDesc)
-//                        } else {
-//                            completion(nil)
-//                        }
-//                    } else {
-//                        completion(nil)
-//                    }
-//                } else {
-//                    completion(nil)
-//                }
-//            } else {
-//                completion(nil)
-//            }
-//        }
         
         func importBitcoinCoreDescriptor() {
             /// First parse the descriptor to see if it is an account or not. If it is an account we manipulate it.
