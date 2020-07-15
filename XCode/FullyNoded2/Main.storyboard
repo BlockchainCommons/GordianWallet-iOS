@@ -4438,6 +4438,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                     </view>
                     <navigationItem key="navigationItem" title="Tools" id="m1L-kq-wZ8"/>
                     <connections>
+                        <outlet property="addSignerInfoOutlet" destination="DUB-0n-F9k" id="V9Q-eY-caK"/>
                         <outlet property="addSignerOutlet" destination="uqd-eM-Y70" id="gJ5-CB-BBP"/>
                         <outlet property="backupInfoOutlet" destination="qMQ-qJ-Jfy" id="og8-01-0c9"/>
                         <outlet property="exportKeyOutlet" destination="QDP-TM-BUv" id="4CQ-ea-G1v"/>

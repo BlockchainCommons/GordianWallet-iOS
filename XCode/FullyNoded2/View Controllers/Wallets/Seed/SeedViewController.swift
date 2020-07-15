@@ -8,9 +8,11 @@
 
 import UIKit
 import AuthenticationServices
+import LibWally
 
 class SeedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
+    var xprivs = ""
     var xpubs = ""
     var verified = Bool()
     let qrGenerator = QRGenerator()
@@ -245,8 +247,8 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @objc func deleteSeed() {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Delete seed?", message: "Are you sure!? You WILL NOT be able to spend from this wallet and it will be watch-only.", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "💀 Delete", style: .destructive, handler: { [unowned vc = self] action in
+            let alert = UIAlertController(title: "Delete seed words?", message: "Make sure you have them backed up so that you can always recover this account with this app or others. If you are using these seed words for more then one account it is important to know they will be deleted from ALL accounts. You will still be able to spend using this account as we store your account xprv and use that for signing transactions, we only save seed words to give you a chance to back them up. If you want to make the account cold then you also need to delete the xprvs.", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [unowned vc = self] action in
                 vc.deleteSeedNow()
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
@@ -258,47 +260,46 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     private func deleteSeedNow() {
         let spinner = ConnectingView()
         spinner.addConnectingView(vc: self, description: "deleting seed...")
-        CoreDataService.retrieveEntity(entityName: .seeds) { [unowned vc = self] (seeds, errorDescription) in
-            if seeds != nil {
-                var idsToDelete = [UUID]()
-                for (i, seed) in seeds!.enumerated() {
-                    let seedStruct = SeedStruct(dictionary: seed)
-                    if let encryptedSeed = seedStruct.seed {
-                        Encryption.decryptData(dataToDecrypt: encryptedSeed) { [unowned vc = self] decryptedSeed in
-                            if decryptedSeed != nil {
-                                if let words = String(data: decryptedSeed!, encoding: .utf8) {
-                                    for accountSeed in vc.accountSeeds {
-                                        if accountSeed == words {
-                                            if seedStruct.id != nil {
-                                                idsToDelete.append(seedStruct.id!)
-                                            }
-                                        }
+                
+        if let encryptedSeeds = KeyChain.seeds() {
+            var decryptedSeeds:[String] = []
+            
+            func removeSeeds() {
+                var newSeeds:[String] = []
+                for (i, seed) in decryptedSeeds.enumerated() {
+                    for (a, accountSeed) in accountSeeds.enumerated() {
+                        if accountSeed != seed {
+                            newSeeds.append(seed)
+                        }
+                        if i + 1 == decryptedSeeds.count && a + 1 == accountSeeds.count {
+                            decryptedSeeds = []
+                            KeyChain.overWriteExistingSeeds(unencryptedSeeds: newSeeds) { [unowned vc = self] (success) in
+                                if success {
+                                    vc.loadData()
+                                    showAlert(vc: vc, title: "Success ✓", message: "Seed has been removed")
+                                    spinner.removeConnectingView()
+                                    newSeeds = []
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: .seedDeleted, object: nil, userInfo: nil)
                                     }
+                                } else {
+                                    showAlert(vc: vc, title: "Error", message: "There was an error removing your seed")
+                                    spinner.removeConnectingView()
+                                    newSeeds = []
                                 }
                             }
                         }
                     }
-                    if i + 1 == seeds!.count {
-                        var succeeded = false
-                        for (x, id) in idsToDelete.enumerated() {
-                            CoreDataService.deleteEntity(id: id, entityName: .seeds) { (success, errorDescription) in
-                                if success {
-                                    succeeded = true
-                                } else {
-                                    succeeded = false
-                                }
-                                if x + 1 == idsToDelete.count {
-                                    vc.loadData()
-                                    if succeeded {
-                                        displayAlert(viewController: vc, isError: false, message: "Device's seed deleted")
-                                        DispatchQueue.main.async {
-                                            NotificationCenter.default.post(name: .seedDeleted, object: nil, userInfo: nil)
-                                        }
-                                    } else {
-                                        showAlert(vc: vc, title: "Error", message: "There was an error deleting one of your device's seeds.")
-                                    }
-                                    spinner.removeConnectingView()
-                                }
+                }
+            }
+            
+            for (i, encryptedSeed) in encryptedSeeds.enumerated() {
+                Encryption.decryptData(dataToDecrypt: encryptedSeed) { decryptedSeed in
+                    if decryptedSeed != nil {
+                        if let words = String(data: decryptedSeed!, encoding: .utf8) {
+                            decryptedSeeds.append(words)
+                            if i + 1 == encryptedSeeds.count {
+                                removeSeeds()
                             }
                         }
                     }
@@ -308,38 +309,26 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func shareText() {
-        
-        DispatchQueue.main.async {
-            
-            let textToShare = [self.itemToDisplay]
-            
-            let activityViewController = UIActivityViewController(activityItems: textToShare,
-                                                                  applicationActivities: nil)
-            
-            activityViewController.popoverPresentationController?.sourceView = self.view
-            self.present(activityViewController, animated: true) {}
-            
+        DispatchQueue.main.async { [unowned vc = self] in
+            let textToShare = [vc.itemToDisplay]
+            let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = vc.view
+            vc.present(activityViewController, animated: true) {}
         }
-        
     }
     
     func shareImage() {
-        
-        DispatchQueue.main.async {
-            
-            let imageToShare = [self.recoveryImage]
-            
-            let activityViewController = UIActivityViewController(activityItems: imageToShare,
-                                                                  applicationActivities: nil)
-            
-            activityViewController.popoverPresentationController?.sourceView = self.view
-            self.present(activityViewController, animated: true) {}
-            
+        DispatchQueue.main.async { [unowned vc = self] in
+            let imageToShare = [vc.recoveryImage]
+            let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = vc.view
+            vc.present(activityViewController, animated: true) {}
         }
-        
     }
     
     func loadData() {
+        
+        xprvs()
         
         let recoveryQr = ["descriptor":"\(wallet.descriptor)", "blockheight":wallet.blockheight, "label": wallet.label] as [String : Any]
         
@@ -454,7 +443,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func numberOfSections(in tableView: UITableView) -> Int {
                 
-        return 3
+        return 4
         
     }
         
@@ -512,6 +501,58 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
+    private func decryptedValue(data: Data) -> String? {
+        var stringToReturn:String?
+        Encryption.decryptData(dataToDecrypt: data) { (decryptedValue) in
+            if decryptedValue != nil {
+                if let xprv = String(bytes: decryptedValue!, encoding: .utf8) {
+                    stringToReturn = xprv
+                }
+            }
+        }
+        return stringToReturn
+    }
+    
+    private func xprvs() {
+        xprivs = ""
+        if wallet != nil {
+            if wallet.xprvs != nil {
+                for encryptedXprv in wallet.xprvs! {
+                    if let xprv = decryptedValue(data: encryptedXprv) {
+                        let descriptorParser = DescriptorParser()
+                        let descriptorStruct = descriptorParser.descriptor(wallet.descriptor)
+                        let keysWithPath = descriptorStruct.keysWithPath
+                        for xpubWithPath in keysWithPath {
+                            let arr = xpubWithPath.split(separator: "]")
+                            let arr2 = "\(arr[1])".split(separator: ")")
+                            let xpub = "\(arr2[0])".replacingOccurrences(of: "/0/*", with: "")
+                            if let hdkey = HDKey(xprv) {
+                                if xpub == hdkey.xpub {
+                                    xprivs += "\(arr[0])]" + xprv + "\n\n"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func xprvsCell(_ indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell()
+        cell.backgroundColor = #colorLiteral(red: 0.0507061556, green: 0.05862525851, blue: 0.0711022839, alpha: 1)
+        cell.selectionStyle = .none
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.textColor = .lightGray
+        cell.textLabel?.font = .systemFont(ofSize: 15, weight: .regular)
+        if xprivs == "" {
+            cell.textLabel?.text = "No xprvs on device ⚠︎"
+        } else {
+            cell.textLabel?.text = xprivs
+        }
+        return cell
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = UITableViewCell()
@@ -534,6 +575,10 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 2:
             
             return xpubsCell(indexPath)
+            
+        case 3:
+            
+            return xprvsCell(indexPath)
             
         default:
             
@@ -591,7 +636,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         deleteButton.setImage(deleteImage, for: .normal)
         deleteButton.tintColor = .systemRed
         deleteButton.tag = section
-        deleteButton.addTarget(self, action: #selector(deleteSeed), for: .touchUpInside)
         deleteButton.frame = CGRect(x: copyButton.frame.minX - 30, y: 0, width: 20, height: 20)
         deleteButton.center.y = textLabel.center.y
         
@@ -611,14 +655,24 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             header.addSubview(shareButton)
             header.addSubview(qrButton)
             header.addSubview(copyButton)
+            deleteButton.addTarget(self, action: #selector(deleteSeed), for: .touchUpInside)
             header.addSubview(deleteButton)
             
         case 2:
-            textLabel.text = "Account XPUB's"
+            textLabel.text = "Account xpubs"
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(qrButton)
             header.addSubview(copyButton)
+            
+        case 3:
+            textLabel.text = "Account xprvs"
+            header.addSubview(textLabel)
+            header.addSubview(shareButton)
+            header.addSubview(qrButton)
+            header.addSubview(copyButton)
+            deleteButton.addTarget(self, action: #selector(deleteXprvs), for: .touchUpInside)
+            header.addSubview(deleteButton)
             
         default:
             
@@ -696,13 +750,19 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     
                 case 1:
                     
-                    label.text = "This BIP39 mnemonic represents one of three seeds associated with your multisig wallet, this is the only seed held on this device for this wallet. You may use this seed to derive all the private keys needed for signing one of the two required signatures for spending from your StandUp multisig wallet. You should back this up in multiple places, because it is a multisig wallet an attacker can not do anything with this seed alone."
+                    label.text = "These BIP39 mnemonics represent the seeds associated with your account. These seed words are only stored for the explicit purpose of allowing you to back them up, once you have backed them up please delete them here. The seed words are not used for any other purpose. No passphrase is used. Seed words are always encrypted and never backed up to the iCloud."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 130)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 130)
                     
                 case 2:
                     
-                    label.text = "The account xpub's along with their fingerprint's and paths. Your Account Map already holds all the xpub's but we export them here so you may use them in other wallets."
+                    label.text = "The account xpubs along with their fingerprint's and paths. Your Account Map already holds all the xpubs but we export them here so you may use them in other wallets."
+                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
+                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
+                    
+                case 3:
+                
+                    label.text = "The account xprvs along with their master key fingerprint's and paths. These xprvs are encrypted and stored on your device. We use them to sign your psbts. They will get backed up to the iCoud if you have iCloud enabled. If you want to make the device cold (not spendable) you can delete them here."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
                     
@@ -717,21 +777,26 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 switch section {
                     
                 case 0:
-                
                     label.text = "This \"Wallet Import QR\" can be used with either FullyNoded 2 or StandUp.app to recreate this wallet as watch-only. ENSURE you back it up safely."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 50)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 50)
                     
-                case 1: label.text = "You can recover this account with BIP39 compatible wallets and tools, by default there is no passphrase associated with the seed words created by Fully Noded 2."
+                case 1:
+                    label.text = "These BIP39 mnemonics represent the seeds associated with your account. These seed words are only stored for the explicit purpose of allowing you to back them up, once you have backed them up please delete them here. The seed words are not used for any other purpose. No passphrase is used. Seed words are always encrypted and never backed up to the iCloud."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
                     
-                case 2: label.text = "The account xpub's along with their fingerprint's and paths. Your Account Map already holds all the xpub's but if you want we export them here so you may use them in other wallets."
+                case 2:
+                    label.text = "The account xpubs along with their fingerprint's and paths. Your Account Map already holds all the xpubs but if you want we export them here so you may use them in other wallets."
+                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
+                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
+                    
+                case 3:
+                    label.text = "The account xprvs along with their master key fingerprints and paths. These xprvs are encrypted and stored on your device. We use them to sign your psbts. They will get backed up to the iCoud if you have iCloud enabled. If you want to make the device cold (not spendable) you can delete them here."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
                     
                 default:
-                    
                     label.text = ""
                     
                 }
@@ -748,6 +813,41 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         return footerView
         
+    }
+    
+    @objc func deleteXprvs() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Delete xprvs?", message: "Are you sure!? They will be gone forever! You will no longer be able to sign transactions with this device for this account! YOU WILL NOT BE ABLE TO SPEND YOUR BITCOIN with the app alone.", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "💀 Delete", style: .destructive, handler: { [unowned vc = self] action in
+                vc.deleteXprvsNow()
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func deleteXprvsNow() {
+        if wallet != nil {
+            if wallet.id != nil {
+                CoreDataService.updateEntity(id: wallet.id!, keyToUpdate: "xprvs", newValue: [], entityName: .wallets) { [unowned vc = self] (success, errorDescription) in
+                    if success {
+                        getActiveWalletNow { (wallet, error) in
+                            if wallet != nil {
+                                vc.wallet = wallet!
+                                vc.loadData()
+                                showAlert(vc: vc, title: "xprvs deleted!", message: "The device will no longer be able to sign transactions for this account!")
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .seedDeleted, object: nil, userInfo: nil)
+                                }
+                            }
+                        }
+                    } else {
+                        showAlert(vc: vc, title: "Error", message: "There was an error deleting your xprvs")
+                    }
+                }
+            }
+        }
     }
     
     func goToQRDisplayer() {

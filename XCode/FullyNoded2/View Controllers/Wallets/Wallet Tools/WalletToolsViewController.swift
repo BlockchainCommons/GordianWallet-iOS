@@ -21,12 +21,12 @@ class WalletToolsViewController: UIViewController {
     @IBOutlet weak var backupInfoOutlet: UIButton!
     @IBOutlet weak var utxosOutlet: UIButton!
     @IBOutlet weak var exportKeyOutlet: UIButton!
+    @IBOutlet weak var addSignerInfoOutlet: UIButton!
     
     let creatingView = ConnectingView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         rescanOutlet.layer.cornerRadius = 8
         sweepToOutlet.layer.cornerRadius = 8
         refillOutlet.layer.cornerRadius = 8
@@ -34,13 +34,10 @@ class WalletToolsViewController: UIViewController {
         backupInfoOutlet.layer.cornerRadius = 8
         utxosOutlet.layer.cornerRadius = 8
         exportKeyOutlet.layer.cornerRadius = 8
-        
         if wallet.type == "DEFAULT" && wallet.xprvs != nil {
-            
             addSignerOutlet.alpha = 0
-            
+            addSignerInfoOutlet.alpha = 0
         }
-        
     }
     
     private func refillMultisig() {

@@ -27,25 +27,27 @@ class SeedParser {
         unknownXpubs = xpubs
         if wallet.xprvs != nil {
             // we know the wallet can sign, rely on actual xprvs to derive fingerprints
-            for (x, encryptedXprv) in wallet.xprvs!.enumerated() {
-                Encryption.decryptData(dataToDecrypt: encryptedXprv) { (decryptedXprv) in
-                    if decryptedXprv != nil {
-                        if let xprvString = String(bytes: decryptedXprv!, encoding: .utf8) {
-                            if let hdKey = HDKey(xprvString) {
-                                for (i, xpub) in xpubs.enumerated() {
-                                    if xpub == hdKey.xpub {
-                                        let fingerprint = hdKey.fingerprint.hexString
-                                        knownSigners.append(fingerprint)
-                                    }
-                                    if i + 1 == xpubs.count && x + 1 == wallet.xprvs!.count {
-                                        for (u, unknowXpub) in unknownXpubs.enumerated() {
-                                            let keysWithPath = descriptorStruct.keysWithPath
-                                            for (k, keyWithPath) in keysWithPath.enumerated() {
-                                                if keyWithPath.contains(unknowXpub) {
-                                                    unknownSigners.append(descriptorStruct.fingerprints[k])
-                                                }
-                                                if k + 1 == keysWithPath.count && u + 1 == unknownXpubs.count {
-                                                    completion((knownSigners, unknownSigners))
+            if wallet.xprvs!.count > 0 {
+                for (x, encryptedXprv) in wallet.xprvs!.enumerated() {
+                    Encryption.decryptData(dataToDecrypt: encryptedXprv) { (decryptedXprv) in
+                        if decryptedXprv != nil {
+                            if let xprvString = String(bytes: decryptedXprv!, encoding: .utf8) {
+                                if let hdKey = HDKey(xprvString) {
+                                    for (i, xpub) in xpubs.enumerated() {
+                                        if xpub == hdKey.xpub {
+                                            let fingerprint = hdKey.fingerprint.hexString
+                                            knownSigners.append(fingerprint)
+                                        }
+                                        if i + 1 == xpubs.count && x + 1 == wallet.xprvs!.count {
+                                            for (u, unknowXpub) in unknownXpubs.enumerated() {
+                                                let keysWithPath = descriptorStruct.keysWithPath
+                                                for (k, keyWithPath) in keysWithPath.enumerated() {
+                                                    if keyWithPath.contains(unknowXpub) {
+                                                        unknownSigners.append(descriptorStruct.fingerprints[k])
+                                                    }
+                                                    if k + 1 == keysWithPath.count && u + 1 == unknownXpubs.count {
+                                                        completion((knownSigners, unknownSigners))
+                                                    }
                                                 }
                                             }
                                         }
@@ -55,6 +57,9 @@ class SeedParser {
                         }
                     }
                 }
+            } else {
+                unknownSigners = descriptorStruct.fingerprints
+                completion(([], unknownSigners))
             }
         } else {
             unknownSigners = descriptorStruct.fingerprints

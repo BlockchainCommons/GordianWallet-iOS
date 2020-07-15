@@ -25,6 +25,31 @@ class KeyChain {
         }
     }
     
+    class func overWriteExistingSeeds(unencryptedSeeds: [String], completion: @escaping ((Bool)) -> Void) {
+        var encrpytedSeeds:[Data] = []
+        for (i, unencryptedSeed) in unencryptedSeeds.enumerated() {
+            Encryption.encryptData(dataToEncrypt: unencryptedSeed.dataUsingUTF8StringEncoding) { (encryptedData, error) in
+                if encryptedData != nil {
+                    encrpytedSeeds.append(encryptedData!)
+                    if i + 1 == unencryptedSeeds.count {
+                        do {
+                            let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: encrpytedSeeds, requiringSecureCoding: true)
+                            if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
+                                completion(true)
+                            } else {
+                                completion(false)
+                            }
+                        } catch {
+                            completion(false)
+                        }
+                    }
+                } else {
+                    completion(false)
+                }
+            }
+        }
+    }
+    
     class func saveNewSeed(encryptedSeed: Data) -> Bool {
         if let seeds = KeyChain.seeds() {
             var existingEncryptedSeeds = seeds
