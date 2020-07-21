@@ -1752,10 +1752,6 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 vc.signedRawTx = signedRawTx
             }
             
-//        case "showNotificationCenter":
-//            if let vc = segue.destination as? NotificationCenterViewController {
-//            }
-            
         default:
             break
         }

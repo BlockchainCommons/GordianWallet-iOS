@@ -146,6 +146,8 @@
 		D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DB944C24723F2900A0E99D /* CloudKit.framework */; };
 		D0DB944F24736C0600A0E99D /* TransactionStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DB944E24736C0600A0E99D /* TransactionStruct.swift */; };
 		D0E7A6DB2499F36000618B9A /* Sweeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E7A6DA2499F36000618B9A /* Sweeper.swift */; };
+		D0F029BF24C66B7800FED673 /* AddressScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F029BE24C66B7800FED673 /* AddressScanner.swift */; };
+		D0F029C124C67ECF00FED673 /* CheckSubAccounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F029C024C67ECF00FED673 /* CheckSubAccounts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -330,6 +332,8 @@
 		D0DB944C24723F2900A0E99D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		D0DB944E24736C0600A0E99D /* TransactionStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionStruct.swift; sourceTree = "<group>"; };
 		D0E7A6DA2499F36000618B9A /* Sweeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sweeper.swift; sourceTree = "<group>"; };
+		D0F029BE24C66B7800FED673 /* AddressScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressScanner.swift; sourceTree = "<group>"; };
+		D0F029C024C67ECF00FED673 /* CheckSubAccounts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckSubAccounts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -687,6 +691,8 @@
 				D04179F024762A460096F74D /* bc-b32 */,
 				D0D5E63C24A07E4600F3783C /* WalletStatus.swift */,
 				D0C20EE824A82B7000C62AA4 /* TransactionFetcher.swift */,
+				D0F029BE24C66B7800FED673 /* AddressScanner.swift */,
+				D0F029C024C67ECF00FED673 /* CheckSubAccounts.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1128,6 +1134,7 @@
 				D09D736023F0F3C000847DC8 /* KeyPad.swift in Sources */,
 				D047DE09242C5906004BC26D /* WalletCreatedQRViewController.swift in Sources */,
 				D09DCF6823F1072A008F5B9F /* KeyGen.swift in Sources */,
+				D0F029BF24C66B7800FED673 /* AddressScanner.swift in Sources */,
 				D047DE07242C478A004BC26D /* WalletCreatedSuccessViewController.swift in Sources */,
 				D09D736823F0F3C000847DC8 /* MultiSigTxBuilder.swift in Sources */,
 				D006E34B243ED2FE007B1A5B /* Keychain.swift in Sources */,
@@ -1158,6 +1165,7 @@
 				D0502FF024500DE000213870 /* AddExtendedKeyViewController.swift in Sources */,
 				D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */,
 				D047DDFB242B324A004BC26D /* WhatIsFN2ViewController.swift in Sources */,
+				D0F029C124C67ECF00FED673 /* CheckSubAccounts.swift in Sources */,
 				D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */,
 				D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */,
 				D09D735E23F0F3C000847DC8 /* QRGenerator.swift in Sources */,

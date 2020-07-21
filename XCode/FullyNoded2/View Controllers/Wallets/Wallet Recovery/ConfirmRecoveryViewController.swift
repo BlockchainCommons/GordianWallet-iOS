@@ -32,6 +32,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet var addressTable: UITableView!
     @IBOutlet var cancelOutlet: UIButton!
     @IBOutlet var confirmOutlet: UIButton!
+    @IBOutlet weak var scanSubAccountsOutlet: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,7 +63,17 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             walletDerivation.text = descriptorStruct.derivation + "/0"
         }
         
+        if words == nil {
+            scanSubAccountsOutlet.alpha = 0
+        } else {
+            scanSubAccountsOutlet.alpha = 1
+        }
+        
         loadAddresses()
+    }
+    
+    @IBAction func scanSubAccountsAction(_ sender: Any) {
+        scanSubAccounts()
     }
     
     private func removeLoader() {
@@ -100,6 +111,62 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 vc.connectingView.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: "Error fetching addresses for that wallet")
             }
+        }
+    }
+    
+    private func scanSubAccounts() {
+        if words != nil {
+            connectingView.addConnectingView(vc: self, description: "scanning subaccounts, this can take a minute...")
+            var accountLessPath = ""
+            var cointType = "0"
+            let derivation = walletDict["derivation"] as! String
+            if derivation.contains("/1'/") {
+                // its testnet
+                cointType = "1"
+            }
+            if derivation.contains("84") {
+                accountLessPath = "m/84'/\(cointType)'"
+            } else if derivation.contains("49") {
+                accountLessPath = "m/49'/\(cointType)'"
+            } else if derivation.contains("44") {
+                accountLessPath = "m/44'/\(cointType)'"
+            }
+            CheckSubAccounts.check(words: words!, derivation: accountLessPath) { [unowned vc = self] (subAccounts) in
+                if subAccounts != nil {
+                    var subAccountsWithHistory:[[String:Any]] = []
+                    for (i, subAccount) in subAccounts!.enumerated() {
+                        let hasHistory = subAccount["hasHistory"] as! Bool
+                        if hasHistory {
+                            subAccountsWithHistory.append(subAccount)
+                        }
+                        if i + 1 == subAccounts!.count {
+                            vc.connectingView.removeConnectingView()
+                            if subAccountsWithHistory.count > 0 {
+                                var derivs = ""
+                                for sub in subAccountsWithHistory {
+                                    let path = sub["derivation"] as! String
+                                    derivs += path + " "
+                                }
+                                vc.promptToRecoverSubAccounts(accounts: derivs)
+                            } else {
+                               showAlert(vc: vc, title: "No sub account history detected", message: "Only the first 5 addresses for sub accounts 0 - 10 are scanned for history.")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func promptToRecoverSubAccounts(accounts: String) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Transaction history detected on sub accounts!", message: "We detected transaction history on sub accounts: \(accounts)", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
+                
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
         }
     }
     
