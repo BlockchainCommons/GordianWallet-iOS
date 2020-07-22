@@ -30,6 +30,9 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     var onSeedDoneBlock: ((String) -> Void)?
     var addingSeed = Bool()
     var addingIndpendentSeed = Bool()
+    var index = 0
+    var processedPrimaryDescriptors:[String] = []
+    var processedChangeDescriptors:[String] = []
     
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var wordView: UIView!
@@ -151,7 +154,9 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                         }
                         
                         vc.recoveryDict["derivation"] = vc.derivation
-                        vc.buildDescriptor()
+                        vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+                        let (primDescriptors, changeDescriptors) = vc.descriptors()
+                        vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
                         
                     }))
                     
@@ -167,7 +172,9 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                         }
                         
                         vc.recoveryDict["derivation"] = vc.derivation
-                        vc.buildDescriptor()
+                        vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+                        let (primDescriptors, changeDescriptors) = vc.descriptors()
+                        vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
                         
                     }))
                     
@@ -183,7 +190,9 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                         }
                         
                         vc.recoveryDict["derivation"] = vc.derivation
-                        vc.buildDescriptor()
+                        vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+                        let (primDescriptors, changeDescriptors) = vc.descriptors()
+                        vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
                         
                     }))
                     
@@ -606,7 +615,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 if !error && mnemonic != nil {
                     
                     let seed = mnemonic!.seedHex()
-                    if let mk = HDKey(seed, network(descriptor: desc)) {
+                    if let mk = HDKey(seed, vc.network()) {
                         
                         if let path = BIP32Path(derivation) {
                             
@@ -745,127 +754,238 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         }
     }
     
-    private func buildDescriptor() {
-        
-        cv.addConnectingView(vc: self, description: "building your wallets descriptor")
-        MnemonicCreator.convert(words: words!) { [unowned vc = self] (mnemonic, error) in
-            
-            if !error && mnemonic != nil {
-                
-                var network:Network!
-                if vc.derivation!.contains("1") {
-                    network = .testnet
-                } else {
-                    network = .mainnet
-                }
-                
-                let mk = HDKey(mnemonic!.seedHex(), network)!
-                let fingerprint = mk.fingerprint.hexString
-                var param = ""
-                
+    private func mnemonic() -> BIP39Mnemonic? {
+        if words != nil {
+            return BIP39Mnemonic(words!)
+        } else {
+            return nil
+        }
+    }
+    
+    private func masterKey(mnemonic: BIP39Mnemonic) -> HDKey? {
+        return HDKey(mnemonic.seedHex(""), network())
+    }
+    
+    private func path(deriv: String) -> BIP32Path? {
+        return BIP32Path(deriv)
+    }
+    
+    private func network() -> Network {
+        if derivation!.contains("1") {
+            return .testnet
+        } else {
+            return .mainnet
+        }
+    }
+    
+    private func fingerprint(key: HDKey) -> String {
+        return key.fingerprint.hexString
+    }
+    
+    private func xpub(path: BIP32Path) -> String? {
+        if mnemonic() != nil {
+            if let mk = masterKey(mnemonic: mnemonic()!) {
                 do {
-                    
-                    if let xprv = try mk.derive(BIP32Path(vc.derivation!)!).xpriv {
-                        Encryption.encryptData(dataToEncrypt: xprv.dataUsingUTF8StringEncoding) { (encryptedData, error) in
-                            if encryptedData != nil {
-                                vc.recoveryDict["xprvs"] = [encryptedData!]
-                                do {
-                                    let xpub = try mk.derive(BIP32Path(vc.derivation!)!).xpub
+                    return try mk.derive(path).xpub
+                } catch {
+                    return nil
+                }
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    private func xprv(path: BIP32Path) -> String? {
+        if mnemonic() != nil {
+            if let mk = masterKey(mnemonic: mnemonic()!) {
+                do {
+                    return try mk.derive(path).xpriv
+                } catch {
+                    return nil
+                }
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    private func accountlessPath() -> String {
+        var accountLessPath = ""
+        if derivation != nil {
+            let arr = derivation!.split(separator: "/")
+            for (i, item) in arr.enumerated() {
+                if i < 3 {
+                    accountLessPath += item + "/"
+                }
+            }
+        }
+        return accountLessPath
+    }
+    
+    private func descriptors() -> (primaryDescriptors: [String], changeDescriptors: [String]) {
+        var primDescs:[String] = []
+        var changeDescs:[String] = []
+        if words != nil {
+            if let mnemonic = mnemonic() {
+                if let mk = masterKey(mnemonic: mnemonic) {
+                    for i in 0...9 {
+                        if let path = path(deriv: accountlessPath() + "\(i)'") {
+                            let pathWithFingerprint = (path.description).replacingOccurrences(of: "m", with: fingerprint(key: mk))
+                            if let xpub = xpub(path: path) {
+                                var primDesc = ""
+                                switch self.derivation {
+                                case "m/84'/1'/0'":
+                                    primDesc = "\"wpkh([\(pathWithFingerprint)]\(xpub)/0/*)\""
                                     
-                                    switch vc.derivation {
-                                        
-                                    case "m/84'/1'/0'":
-                                        param = "\"wpkh([\(fingerprint)/84'/1'/0']\(xpub)/0/*)\""
-                                        
-                                    case "m/84'/0'/0'":
-                                        param = "\"wpkh([\(fingerprint)/84'/0'/0']\(xpub)/0/*)\""
-                                        
-                                    case "m/44'/1'/0'":
-                                        param = "\"pkh([\(fingerprint)/44'/1'/0']\(xpub)/0/*)\""
-                                         
-                                    case "m/44'/0'/0'":
-                                        param = "\"pkh([\(fingerprint)/44'/0'/0']\(xpub)/0/*)\""
-                                        
-                                    case "m/49'/1'/0'":
-                                        param = "\"sh(wpkh([\(fingerprint)/49'/1'/0']\(xpub)/0/*))\""
-                                        
-                                    case "m/49'/0'/0'":
-                                        param = "\"sh(wpkh([\(fingerprint)/49'/0'/0']\(xpub)/0/*))\""
-                                        
-                                    default:
-                                        
-                                        break
-                                        
-                                    }
+                                case "m/84'/0'/0'":
+                                    primDesc = "\"wpkh([\(pathWithFingerprint)]\(xpub)/0/*)\""
                                     
-                                    let changeDesc = param.replacingOccurrences(of: "/0/*", with: "/1/*")
+                                case "m/44'/1'/0'":
+                                    primDesc = "\"pkh([\(pathWithFingerprint)]\(xpub)/0/*)\""
+                                     
+                                case "m/44'/0'/0'":
+                                    primDesc = "\"pkh([\(pathWithFingerprint)]\(xpub)/0/*)\""
                                     
-                                    Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
-                                        
-                                        if let dict = object as? NSDictionary {
-                                            
-                                            let desc = dict["descriptor"] as! String
-                                            vc.walletNameHash = Encryption.sha256hash(desc)
-                                            vc.recoveryDict["descriptor"] = desc
-                                            vc.recoveryDict["type"] = "DEFAULT"
-                                            vc.recoveryDict["id"] = UUID()
-                                            vc.recoveryDict["blockheight"] = Int32(0)
-                                            vc.recoveryDict["maxRange"] = 2500
-                                            CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
-                                                if wallets != nil {
-                                                    if wallets!.count == 0 {
-                                                        vc.recoveryDict["isActive"] = true
-                                                    } else {
-                                                        vc.recoveryDict["isActive"] = false
-                                                    }
-                                                }
-                                            }
-                                            vc.recoveryDict["lastUsed"] = Date()
-                                            vc.recoveryDict["isArchived"] = false
-                                            vc.recoveryDict["birthdate"] = keyBirthday()
-                                            vc.recoveryDict["name"] = vc.walletNameHash
-                                            vc.recoveryDict["nodeIsSigner"] = false
-                                            
-                                            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: changeDesc) { [unowned vc = self] (object, errorDescription) in
-                                                
-                                                if let dict = object as? NSDictionary {
-                                                    let changedescriptor = dict["descriptor"] as! String
-                                                    vc.recoveryDict["changeDescriptor"] = changedescriptor
-                                                    vc.cv.removeConnectingView()
-                                                    vc.confirm()
-                                                    
-                                                } else {
-                                                    vc.cv.removeConnectingView()
-                                                    displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
-                                                }
-                                            }
-                                            
-                                        } else {
-                                            vc.cv.removeConnectingView()
-                                            displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
-                                            
-                                        }
-                                    }
-                                } catch {
+                                case "m/49'/1'/0'":
+                                    primDesc = "\"sh(wpkh([\(pathWithFingerprint)]\(xpub)/0/*))\""
+                                    
+                                case "m/49'/0'/0'":
+                                    primDesc = "\"sh(wpkh([\(pathWithFingerprint)]\(xpub)/0/*))\""
+                                    
+                                default:
+                                    break
                                     
                                 }
-                                
+                                primDescs.append(primDesc)
+                                changeDescs.append(primDesc.replacingOccurrences(of: "/0/*", with: "/1/*"))
                             }
                         }
                     }
-                    
-                    
-                                        
-                } catch {
-                    vc.cv.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: "error constructing descriptor")
-                    
                 }
-                
+            }
+        }
+        return (primDescs, changeDescs)
+    }
+    
+    private func setXprvs(completion: @escaping ((Bool)) -> Void) {
+        if words != nil {
+            var encryptedXprvs:[Data] = []
+            for i in 0...9 {
+                if let path = path(deriv: accountlessPath() + "\(i)'") {
+                    if let xprv = xprv(path: path) {
+                        Encryption.encryptData(dataToEncrypt: xprv.dataUsingUTF8StringEncoding) { [unowned vc = self] (encryptedData, error) in
+                            if encryptedData != nil {
+                                encryptedXprvs.append(encryptedData!)
+                                if i == 9 {
+                                    vc.recoveryDict["xprvs"] = encryptedXprvs
+                                    completion(true)
+                                }
+                            } else {
+                                completion(false)
+                            }
+                        }
+                    } else {
+                        completion(false)
+                    }
+                } else {
+                    completion(false)
+                }
+            }
+        } else {
+            completion(false)
+        }
+    }
+    
+    private func getDescriptorInfo(desc: String, completion: @escaping ((descriptor: String?, errorMessage: String?)) -> Void) {
+        Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\(desc)") { (object, errorDescription) in
+            if let dict = object as? NSDictionary {
+                if let descriptor = dict["descriptor"] as? String {
+                    completion((descriptor, nil))
+                } else {
+                    completion((nil, errorDescription ?? "unknown"))
+                }
             } else {
-                vc.cv.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "error deriving mnemonic")
-                
+                completion((nil, errorDescription ?? "unknown"))
+            }
+        }
+    }
+    
+    private func buildChangeDescriptors(_ descriptors: [String]) {
+        if index < descriptors.count {
+            getDescriptorInfo(desc: descriptors[index]) { [unowned vc = self] (descriptor, errorMessage) in
+                if descriptor != nil {
+                    vc.processedPrimaryDescriptors.append(descriptor!)
+                    vc.index += 1
+                    vc.buildChangeDescriptors(descriptors)
+                } else {
+                    showAlert(vc: vc, title: "Error", message: "Error getting descriptor info: \(errorMessage ?? "unknown")")
+                    vc.cv.removeConnectingView()
+                }
+            }
+        } else {
+            setWalletDict()
+        }
+    }
+    
+    private func buildPrimDescriptors(_ descriptors: [String], _ changeDescriptors: [String]) {
+        if index < descriptors.count {
+            getDescriptorInfo(desc: descriptors[index]) { [unowned vc = self] (descriptor, errorMessage) in
+                if descriptor != nil {
+                    vc.processedPrimaryDescriptors.append(descriptor!)
+                    vc.index += 1
+                    vc.buildPrimDescriptors(descriptors, changeDescriptors)
+                } else {
+                    showAlert(vc: vc, title: "Error", message: "Error getting descriptor info: \(errorMessage ?? "unknown")")
+                    vc.cv.removeConnectingView()
+                }
+            }
+        } else {
+            index = 0
+            buildChangeDescriptors(changeDescriptors)
+        }
+    }
+    
+    private func setWalletDict() {
+        for desc in processedPrimaryDescriptors {
+            if desc.contains("/84'/1'/0'") || desc.contains("/84'/0'/0'") || desc.contains("/44'/1'/0'") || desc.contains("/44'/0'/0'") || desc.contains("/49'/1'/0'") || desc.contains("/49'/0'/0'") {
+                if desc.contains("/0/*") {
+                    walletNameHash = Encryption.sha256hash(desc)
+                    recoveryDict["descriptor"] = desc
+                    recoveryDict["name"] = walletNameHash
+                } else if desc.contains("/1/*") {
+                    recoveryDict["changeDescriptor"] = desc
+                }
+            }
+        }
+        recoveryDict["type"] = "DEFAULT"
+        recoveryDict["id"] = UUID()
+        recoveryDict["blockheight"] = Int32(0)
+        recoveryDict["maxRange"] = 2500
+        recoveryDict["lastUsed"] = Date()
+        recoveryDict["isArchived"] = false
+        recoveryDict["birthdate"] = keyBirthday()
+        recoveryDict["nodeIsSigner"] = false
+        CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
+            if wallets != nil {
+                if wallets!.count == 0 {
+                    vc.recoveryDict["isActive"] = true
+                } else {
+                    vc.recoveryDict["isActive"] = false
+                }
+                vc.setXprvs { (success) in
+                    if success {
+                        vc.cv.removeConnectingView()
+                        vc.confirm()
+                    } else {
+                        vc.cv.removeConnectingView()
+                        showAlert(vc: vc, title: "Error", message: "There was an error encrypting your xprvs.")
+                    }
+                }
             }
         }
     }

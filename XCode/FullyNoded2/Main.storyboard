@@ -3854,18 +3854,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                     <constraint firstAttribute="height" constant="173.5" id="jEW-k6-nVE"/>
                                 </constraints>
                             </stackView>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wXH-he-dgM">
-                                <rect key="frame" x="16" y="447" width="343" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="yDb-mr-Of7"/>
-                                </constraints>
-                                <state key="normal" title="scan sub accounts">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="scanSubAccountsAction:" destination="0g2-8e-jCH" eventType="touchUpInside" id="sHC-Dp-fiM"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -3879,10 +3867,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                             <constraint firstItem="sub-Ov-1Pl" firstAttribute="trailing" secondItem="y2N-4Q-lq5" secondAttribute="trailing" constant="16" id="Mrk-8U-Y5D"/>
                             <constraint firstItem="uws-zj-QbN" firstAttribute="leading" secondItem="sub-Ov-1Pl" secondAttribute="leading" constant="16" id="eBx-UY-hPu"/>
                             <constraint firstItem="FuR-Cy-7AE" firstAttribute="centerX" secondItem="Vhf-Xe-5bf" secondAttribute="centerX" id="fkY-4D-Sux"/>
-                            <constraint firstItem="wXH-he-dgM" firstAttribute="leading" secondItem="sub-Ov-1Pl" secondAttribute="leading" constant="16" id="kZt-Zo-j9g"/>
-                            <constraint firstItem="wXH-he-dgM" firstAttribute="top" secondItem="HVr-hb-f5B" secondAttribute="bottom" constant="7.5" id="nDc-Vx-jbB"/>
                             <constraint firstItem="HVr-hb-f5B" firstAttribute="leading" secondItem="sub-Ov-1Pl" secondAttribute="leading" constant="16" id="ud7-cC-nZe"/>
-                            <constraint firstItem="sub-Ov-1Pl" firstAttribute="trailing" secondItem="wXH-he-dgM" secondAttribute="trailing" constant="16" id="z4I-ip-OXA"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="sub-Ov-1Pl"/>
                     </view>
@@ -3891,7 +3876,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <outlet property="addressTable" destination="y2N-4Q-lq5" id="PgN-cR-ujz"/>
                         <outlet property="cancelOutlet" destination="fih-k0-Pmh" id="6Le-Ty-HRh"/>
                         <outlet property="confirmOutlet" destination="M9f-Ni-Flb" id="31p-3P-lCZ"/>
-                        <outlet property="scanSubAccountsOutlet" destination="wXH-he-dgM" id="qvv-Cy-4fI"/>
                         <outlet property="walletBalance" destination="ie5-2q-REh" id="kHc-JA-hpi"/>
                         <outlet property="walletBirthdate" destination="BVM-Af-EFN" id="mCW-ww-TID"/>
                         <outlet property="walletDerivation" destination="7Sq-h9-uwT" id="ggZ-ZF-ycS"/>
