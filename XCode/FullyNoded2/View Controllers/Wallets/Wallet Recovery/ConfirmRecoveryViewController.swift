@@ -170,6 +170,10 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
+    private func importSubAccounts() {
+        
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         addresses.count
     }
