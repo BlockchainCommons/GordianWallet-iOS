@@ -919,7 +919,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         if index < descriptors.count {
             getDescriptorInfo(desc: descriptors[index]) { [unowned vc = self] (descriptor, errorMessage) in
                 if descriptor != nil {
-                    vc.processedPrimaryDescriptors.append(descriptor!)
+                    vc.processedChangeDescriptors.append(descriptor!)
                     vc.index += 1
                     vc.buildChangeDescriptors(descriptors)
                 } else {
@@ -1003,6 +1003,8 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 vc.walletDict = self.recoveryDict
                 vc.words = self.words
                 vc.derivation = self.derivation
+                vc.changeDescriptors = processedChangeDescriptors
+                vc.primaryDescriptors = processedPrimaryDescriptors
             }
             
         default:
