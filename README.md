@@ -1,6 +1,8 @@
-# Gordian Wallet
+# Gordian Wallet - iOS
 
-Gordian Wallet is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to the full node of your choice, including: a bitcoind installed using either Bitcoin Standup [MacOS](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) or [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts); a full-node box such as [Nodl](https://www.nodl.it/) or [Rasbiblitz](https://github.com/rootzoll/raspiblitz); or a full-node service such as [BTCpay](https://btcpayserver.org/]). Gordian Wallet is a self-sovereign wallet, and self-sovereignty means that you get to decide.
+*(Was known as FullyNoded-2, updates to rename still in progress)*
+
+**_Gordian Wallet - iOS_** is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to the full node of your choice, including: a bitcoind installed using either Bitcoin Standup [MacOS](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) or [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts); a full-node box such as [Nodl](https://www.nodl.it/) or [Rasbiblitz](https://github.com/rootzoll/raspiblitz); or a full-node service such as [BTCpay](https://btcpayserver.org/]). Gordian Wallet is a self-sovereign wallet, and self-sovereignty means that you get to decide.
 
 Gordian Wallet allows for multiple wallet templates, including: legacy, SegWit-compatible, and SegWit-native hot wallets using a single signature (seed on iOS device); a warm wallet using multisig (seed on iOS device, keys on full node, offline seed, etc.); or a number of cold wallet templates that leverage PSBTs (Partially Signed Bitcoin Transactions), such as cold offline seeds, third-party collaborative custody services, and various air-gapped hardware solutions using QR codes. Gordian Wallet can potentially support almost anything that can be described by a [bitcoind descriptor](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md).
 
