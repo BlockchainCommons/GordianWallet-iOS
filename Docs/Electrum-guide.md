@@ -1,14 +1,14 @@
 # Electrum guide
 
-## This is a guide for creating a 2 of 3 multisig wallet with FullyNoded 2 and Electrum, building and signing the psbt with Electrum, then exporting the psbt to FullyNoded 2 for signing and broadcasting
+## This is a guide for creating a 2 of 3 multisig wallet with Gordian Wallet and Electrum, building and signing the psbt with Electrum, then exporting the psbt to Gordian Wallet for signing and broadcasting
 
-### 1. Create a multisig wallet in FN2 by selecting "multisig" -> "create wallet"
+### 1. Create a multisig wallet in Gordian Wallet by selecting "multisig" -> "create wallet"
 
-<img src="../Images/Electrum/1_fn2_create_wallet.PNG" alt="" width="250"/> <img src="../Images/Electrum/2_fn2_walletcreated.PNG" alt="" width="250"/>
+<img src="../Images/Electrum/1_Gordian Wallet_create_wallet.PNG" alt="" width="250"/> <img src="../Images/Electrum/2_Gordian Wallet_walletcreated.PNG" alt="" width="250"/>
 
 ### 2. Save your recovery words, you will need them
 
-<img src="../Images/Electrum/3_fn2_backupwords.PNG" alt="" width="250"/>
+<img src="../Images/Electrum/3_Gordian Wallet_backupwords.PNG" alt="" width="250"/>
 
 ### 3. Open Electrum and create a new mutlisig wallet
 
@@ -18,7 +18,7 @@
 
 ![](../Images/Electrum/5_mofn.png)
 
-### 5. Import your own seed (the recovery phrase from FN2)
+### 5. Import your own seed (the recovery phrase from Gordian Wallet)
 
 ![](../Images/Electrum/6_seed.png)
 
@@ -26,11 +26,11 @@
 
 ![](../Images/Electrum/7_bip39seed.png)
 
-### 7. Add the recovery phrase from FN2
+### 7. Add the recovery phrase from Gordian Wallet
 
 ![](../Images/Electrum/8_addseed.png)
 
-### 8. Confirm derivation - by default FN2 uses the same derivation as Electrum for multisig wallets, just make sure you select `native segwit multisig (p2wsh)`, this is also the default multisig address format used by FN2 (bech32)
+### 8. Confirm derivation - by default Gordian Wallet uses the same derivation as Electrum for multisig wallets, just make sure you select `native segwit multisig (p2wsh)`, this is also the default multisig address format used by Gordian Wallet (bech32)
 
 ![](../Images/Electrum/9_derivation.png)
 
@@ -42,11 +42,11 @@
 
 ![](../Images/Electrum/11_enter_cosigner2.png)
 
-### 11. Come back to FN2 and export your 1st public key descriptor which holds all the xpubs you need. You can get this by going to the wallets tab, enabling the Electrum wallet, and tapping the "info" button to export the devices seed and public key descriptors.
+### 11. Come back to Gordian Wallet and export your 1st public key descriptor which holds all the xpubs you need. You can get this by going to the wallets tab, enabling the Electrum wallet, and tapping the "info" button to export the devices seed and public key descriptors.
 
-<img src="../Images/Electrum/12_fn2_getxpubs.PNG" alt="" width="250"/>
+<img src="../Images/Electrum/12_Gordian Wallet_getxpubs.PNG" alt="" width="250"/>
 
-When you export a public key descriptor from FN2 you will get two descriptors, the first one represents your primary addresses and the second descriptor represents your change addresses. The first one is what we need and will look like this:
+When you export a public key descriptor from Gordian Wallet you will get two descriptors, the first one represents your primary addresses and the second descriptor represents your change addresses. The first one is what we need and will look like this:
 
 ```
 wsh(sortedmulti(2,[82be8e74/48'/1'/0'/2']tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR/0/*,[5222e39c/48'/1'/0'/2']tpubDEQznV4Xs6BP1A1HXzogRsUiFxDsyaqLzphZmjmwrrERz9aHszb2juQzYBx9xuXymba5kkQvR76m218JiXM1DsLcgPryGCDs5P1geHoxVrx/0/*,[81202613/48'/1'/0'/2']tpubDEcrpYzpqTJyhy5bzsojvL8VMrcFf4DVU7q43fuq6JhhNyxCqLzhppiUsMHAXUJv4XTnmAiezNAzdfTdg2FFefbzNh8YzN6Wv2zEYwcCC22/0/*))#czsstq8d
@@ -54,7 +54,7 @@ wsh(sortedmulti(2,[82be8e74/48'/1'/0'/2']tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn
 
 It gives you 3 xpubs (tpubs for testnet):
 
-**FullyNoded 2 works with Bitcoin Core and Bitcoin Core only works with xpubs/tpubs. Therefore you will need to use [this tool](https://jlopp.github.io/xpub-converter/) to convert your xpubs to the format Electrum accepts.**
+**Gordian Wallet works with Bitcoin Core and Bitcoin Core only works with xpubs/tpubs. Therefore you will need to use [this tool](https://jlopp.github.io/xpub-converter/) to convert your xpubs to the format Electrum accepts.**
 
 xpub #1 always represents your offline recovery keys - this is the one we already imported into Electrum via the offline recovery words. `tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR`
 
@@ -91,19 +91,19 @@ Here's what it means (you do not *need* to know this but it is useful to underst
 
 ![](../Images/Electrum/18_exportaddresses.png)
 
-### 17. Open FN2 and go to the Electrum wallet in the wallets tab, tap the eye button to export your multisig keys. 
+### 17. Open Gordian Wallet and go to the Electrum wallet in the wallets tab, tap the eye button to export your multisig keys. 
 
 **Confirm the addresses match what Electrum produced! If they do not then something went wrong! Most likely you selected the wrong derivation type, added the incorrect xpub or converted the xpub to the incorrect format. This does work so try again and be careful to follow the instruction.**
 
 Here we can see the addresses match what Electrum exported 🤩
 
-<img src="../Images/Electrum/19_fn2exportkeys.PNG" alt="" width="250"/>
+<img src="../Images/Electrum/19_Gordian Walletexportkeys.PNG" alt="" width="250"/>
 
 ### 18. Now the good part, use Electrum to receive some testnet bitcoins.
 
 ![](../Images/Electrum/20_receive.png)
 
-### 19. Confirm you received them - you can do this in both FN2 and Electrum
+### 19. Confirm you received them - you can do this in both Gordian Wallet and Electrum
 
 ![](../Images/Electrum/21_transactionhistory.png)
 
@@ -119,9 +119,9 @@ Here we can see the addresses match what Electrum exported 🤩
 
 ![](../Images/Electrum/25_export2.png)
 
-### 22. Open FN2
+### 22. Open Gordian Wallet
 
-<img src="../Images/Electrum/26_openfn2.PNG" alt="" width="250"/>
+<img src="../Images/Electrum/26_openGordian Wallet.PNG" alt="" width="250"/>
 
 ### 23. Tap the folder icon in top left and tap the .psbt file you exported
 
@@ -131,11 +131,11 @@ Here we can see the addresses match what Electrum exported 🤩
 
 <img src="../Images/Electrum/28_tapsign.PNG" alt="" width="250"/>
 
-### 25. FN2 will first pass it to your node for processing and signing, then FN2 will sign it locally with the seed that is on the device. It actually loops through all the seeds on your device and signs it if it can. Your current active node in FN2 must be on the same network as the transaction your trying to sign or it will fail.
+### 25. Gordian Wallet will first pass it to your node for processing and signing, then Gordian Wallet will sign it locally with the seed that is on the device. It actually loops through all the seeds on your device and signs it if it can. Your current active node in Gordian Wallet must be on the same network as the transaction your trying to sign or it will fail.
 
 <img src="../Images/Electrum/29_signing.PNG" alt="" width="250"/>
 
-### 26. At this point the psbt may still need more signatures or may be fully signed. If it is complete FN2 finalizes the psbt, converts it to a signed raw transaction and parses each input and output and displays the fee for you to confirm before broadcasting. If it is incomplete it will allow you to export the updated psbt as raw data file like the one we imported or as base64 so that you can pass the psbt to another signer.
+### 26. At this point the psbt may still need more signatures or may be fully signed. If it is complete Gordian Wallet finalizes the psbt, converts it to a signed raw transaction and parses each input and output and displays the fee for you to confirm before broadcasting. If it is incomplete it will allow you to export the updated psbt as raw data file like the one we imported or as base64 so that you can pass the psbt to another signer.
 
 <img src="../Images/Electrum/30_verifyingsignedtx.PNG" alt="" width="250"/>
 
@@ -143,7 +143,7 @@ Here we can see the addresses match what Electrum exported 🤩
 
 <img src="../Images/Electrum/31_broadcast.PNG" alt="" width="250"/>
 
-### 28. Open Electrum and you will see the transaction in your history and of course also in FN2 🤯
+### 28. Open Electrum and you will see the transaction in your history and of course also in Gordian Wallet 🤯
 
 ![](../Images/Electrum/32_seetxinelectrum.png)
 
