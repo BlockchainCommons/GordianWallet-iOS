@@ -8,6 +8,7 @@ For more information on how these features actually function, see ["How It Works
 
 <img src="../Images/scanQuickConnect.PNG" alt="Gordian Wallet app Home Screen" width="250"/>
 
+
 When initially starting up Gordian Wallet, a user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or link to a testnet node that we are currently utilizing for development purposes by tapping the "don't have a node?" button.
 
 ## Creating a account
@@ -16,27 +17,27 @@ Once you are connected to a node, you may go to the "Accounts" tab and create ei
 
 <img src="../Images/choose_wallet_type_screen.jpeg" alt="" width="250"/>
 
-A Hot account is a single signature, segwit account that adheres to bip84. The seed words are saved to your device and used to sign transactions, the node gets 2500 receive public keys imported into it and 2500 change public keys.
+A *Hot account* is a single-signature segwit account that adheres to BIP84. The seed words are saved to your device and used to sign transactions; the node gets 2500 receive public keys imported into it and 2500 change public keys.
 
-A Warm account is a 2 of 3, segwit multi-signature account that adheres to bip48. One set of seed words are saved to your device, one seed is used to derive an xprv which is used to derive 2500 receive private keys into your node and 2500 change private keys so that it may be the 2nd signer for the account, with your device being the first signer.
+A *Warm account* is a 2-of-3 segwit multi-signature account that adheres to BIP48. One set of seed words is saved to your device and one seed is used to derive an xprv that is used to derive 2500 receive private keys into your node and 2500 change private keys so that it may be the second signer for the account, with your device being the first signer.
 
-You may expand your account creation options by tapping the expand/collapse button in the top right. Doing so will show more advanced account types and an option to use your own set of seed words to create accounts with.
+You may expand your account creation options by tapping the expand/collapse button in the top right. Doing so will show more advanced account types and an option to use your own set of seed words to create accounts.
 
 <img src="../Images/expanded_options_account_creation.PNG" alt="" width="250"/> <img src="../Images/custom_seed.PNG" alt="" width="250"/>
 
-If the custom seed option is toggled on you will be prompted to add it prior to the account being created. That feature is only applicable to Hot and Warm accounts.
+If the custom seed option is toggled on, you will be prompted to add it prior to the account being created. That feature is only applicable to Hot and Warm accounts.
 
-Cool account is a 2 of 3 segwit multisig account that adheres to bip48. Your device will only hold xpubs, your node will hold one set of private keys derived from a seed it creates and offers to you for backing up offline. This account type is for advanced users only! The account will not be spendable and external signing software is required to spend from this account type.
+A *Cool account* is a 2-of-3 segwit multisig account that adheres to BIP48. Your device will only hold xpubs, your node will hold one set of private keys derived from a seed it creates and offers to you for backing up offline. This account type is for advanced users only! The account will not be spendable; external signing software is required to spend from this account type.
 
-Cold account is a single signature segwit account that adheres to bip84. A user supplied account xpub is required along with the master key fingerprint. Again this account type is for advanced users and is not spendable, external offline signing software is required to spend from this account type. You may at anytime add your seed words to the app to make it hot and spendable.
+A *Cold* account is a single-signature segwit account that adheres to BIP84. A user supplied account xpub is required along with the master key fingerprint. Again, this account type is for advanced users and is not spendable; external offline signing software is required to spend from this account type. You may at anytime add your seed words to the app to make it hot and spendable.
 
 <img src="../Images/wallet_label_screen.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_QR.PNG" alt="" width="250"/> <img src="../Images/wallet_offline_recovery_words.PNG" alt="" width="250"/>
 
-Once the account is successfully created on your node you will be guided through a confirmation flow. You will first need to give your account a label, so that you can easily recognize it. Note that this label is included in the Account Map QR, if you use the Account Map QR to recover the account the label will be remembered.
+Once the account is successfully created on your node you will be guided through a confirmation flow. You will first need to give your account a label, so that you can easily recognize it. Note that this label is included in the Account Map QR: if you use the Account Map QR to recover the account the label will be remembered.
 
-Please save the recovery items in order to be able to recover your account! If you do not do this you are at risk of permanently losing your funds. The Account Map QR only contains public keys and is used to recreate your account as watch-only, in order to make it spendable you need to add your seed words to the account.
+Please save the recovery items in order to be able to recover your account! If you do not do this, you are at risk of permanently losing your funds. The Account Map QR only contains public keys and is used to recreate your account as watch-only, in order to make it spendable you need to add your seed words to the account.
 
-The final screen in the account created confirmation flow is the offline recovery words. From that screen, you can copy the words to clipboard, export them, or display them in QR code format. *It is extremely important that the recovery words are saved*. It is recommended you write these down on waterproof paper and save them securely in multiple locations. For multi-sig accounts they are required for account recovery and for refilling the keypool.
+The final screen in the account-created confirmation flow is the offline recovery words. From that screen, you can copy the words to clipboard, export them, or display them in QR code format. *It is extremely important that the recovery words are saved*. It is recommended you write these down on waterproof paper and save them securely in multiple locations. For multi-sig accounts they are required for account recovery and for refilling the keypool.
 
 ## Accessing an Account
 
@@ -46,10 +47,10 @@ The final screen in the account created confirmation flow is the offline recover
 
 After creating a account, you will see it on the "accounts" page. Tap it to activate it. Once you have activated an account you may tap the tool button in the top right corner to see all account tools. From this menu you have access to many powerful tools.
 
-* "Rescan blockchain" to get options for rescanning the blockchain. This is useful when recovering or importing accounts. You may rescan from birthdate, from genesis, abort rescan or simply check the scan status.
-* "Sweep to account" allows you to sweep the current account to any other account.
-* "Refill keypool" allows you to add 2500 more receive keys and 2500 more change keys to your node incase you have reached the limit.
-* "Add a signer" allows you to add a signer to your account if it is not spendable. The app will verify that your mnemonic matches one of the accounts xpubs before actually adding it. Once added your account type will update in the UI and if enough signers have been added you will be able to spend from it.
+* "Rescan blockchain" to get options for rescanning the blockchain. This is useful when recovering or importing accounts. You may rescan from birthdate or from genesis. You may abort the rescan or simply check the scan status.
+* "Sweep to account" to sweep the current account to any other account.
+* "Refill keypool" to add 2500 more receive keys and 2500 more change keys to your node, in case you have reached the previous limit.
+* "Add a signer" to add a signer to your account if it is not spendable. The app will verify that your mnemonic matches one of the accounts xpubs before actually adding it. Once added your account type will update in the UI and if enough signers have been added you will be able to spend from it.
 * "Backup Info" to display and export your device's seed info and the Account Map QR at anytime. You will always be prompted for 2FA whenever you export a seed or a private key.
 * "Coin control" to see the account's UTXOs. This fetches your account's UTXOs from your node and allows you to lock and unlock utxo's to make them (un)spendable.
 * "Addresses and keys" to export all the keys associated with the account. These keys will be derived from the device if possible.
@@ -58,7 +59,7 @@ After creating a account, you will see it on the "accounts" page. Tap it to acti
 
 <img src="../Images/create_invoice.PNG" alt="" width="250"/>
 
-To receive funds, activate the account you want to receive from and then tap the "In" tab and then "create". This will fetch a receiving address from your node for your active account. To fetch another one, tap the "create" button again. The "amount" and "label" field conform to BIP21: you can add amounts and a label so the spender can simply scan the QR and it will automatically populate the amount field on their end if their software is BIP21 compatible.
+To receive funds, activate the account you want to receive from and then tap the "In" tab and then "create". This will fetch a receiving address from your node for your active account. To fetch another one, tap the "create" button again. The "amount" and "label" field conform to BIP21: you can add amounts and a label so the spender can simply scan the QR. It will automatically populate the amount field on their end if their software is BIP21 compatible.
 
 ## Spending Funds
 
@@ -72,21 +73,21 @@ To send funds, just tap the "Out" tab. From here you can tap the scanner button 
 
 You may expand the cells to show more info about your Tor connection, node statistics, and your account by tapping the expand/collapse buttons on the home screen.
 
-You can see all the details associated with your account along with transaction history. You will see ⚠︎ for any unconfirmed balances and their associated transactions. You can tap the refresh buttons to reload individual sections or pull the screen to reload all sections. You may tap each individual transaction to see its data and memo, or retroactively add/edit a memo.
+You can see all the details associated with your account along with transaction history. You will see ⚠︎ for any unconfirmed balances and their associated transactions. You can tap the refresh buttons to reload individual sections or pull the screen down to reload all sections. You may tap each individual transaction to see its data and memo, or retroactively add/edit a memo.
 
 ## Recovering an Account
 
-You may either input the seed words, the Account Map QR code or xpub's to recover accounts. In order to make accounts spendable you must add the seed words. The Account Map QR holds your accounts birthdate, account type, label, and derivation scheme to make recreating your account as simple as a scan. We recommend to scan your Account Map QR initially to recreate the account then add your seed words to the account to make it spendable. You may also simply add your seed words if you do not have the Account Map, however you will need to choose the derivation scheme and may or may not need to rescan the blockchain depending on whether you lost your node or not.
+You may either input the seed words, the Account Map QR code, or xpubs to recover accounts. In order to make accounts spendable you must add the seed words. The Account Map QR holds your account's birthdate, account type, label, and derivation scheme to make recreating your account as simple as a scan. We recommend you scan your Account Map QR initially to recreate the account, and then add your seed words to the account to make it spendable. You may also simply add your seed words if you do not have the Account Map, however you will need to choose the derivation scheme and may or may not need to rescan the blockchain depending on whether you lost your node or not.
 
-You may input the seed words one at a time or all at once; once the mnemonic is verified to be valid you will get an alert. The app only supports 12 and 24 word seeds.
+You may input the seed words one at a time or all at once; once the mnemonic is verified to be valid, you will get an alert. The app only supports 12 and 24 word seeds.
 
-Similarly, upon scanning a valid Account Map QR you will also be alerted.
+Similarly, upon scanning a valid Account Map QR, you will also be alerted.
 
-If you had only added words you will be prompted to select single sig or multisig, at that point if you choose multisig you will have the option to add as many seed phrases as you would like to recreate your "m of n" multisig account, same goes for xpub recovery. Once enough seed phrases have been added you can choose a derivation scheme and then the app will derive the first 5 addresses giving you the opportunity to ensure they match what you expect them to. The app will also see if the account still exists on your node or not, if it does it will be able to display a balance for you.
+If you had only added words you will be prompted to select single-signature or multisig. At that point if you choose multisig you will have the option to add as many seed phrases as you would like to recreate your "m of n" multisig account. The same is true for xpub recovery. Once enough seed phrases have been added, you can choose a derivation scheme, and then the app will derive the first 5 addresses giving you the opportunity to ensure they match what you expect them to. The app will also see if the account still exists on your node or not. If it does it will be able to display a balance for you.
 
 <img src="../Images/wallet_recovery_screen.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_add_words.PNG" alt="" width="250"/> <img src="../Images/wallet_recovery_valid_QR.PNG" alt="" width="250"/> <img src="../Images/confirm_wallet_recovery.PNG" alt="" width="250"/>
 
-Upon tapping "Confirm" the app will recreate your account on the node and save it to the app, activate it and refresh the "Accounts" view, it will also automatically initiate a rescan so historic balances and transactions will show up.
+Upon tapping "Confirm", the app will recreate your account on the node and save it to the app, activate it, and refresh the "Accounts" view. It will also automatically initiate a rescan so historic balances and transactions will show up.
 
 ## Wishlist
 

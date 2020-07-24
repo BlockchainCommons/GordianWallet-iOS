@@ -1,20 +1,24 @@
 # Electrum guide
 
+
 ## This is a guide for creating a 2 of 3 multisig wallet with Gordian Wallet and Electrum, building and signing the psbt with Electrum, then exporting the psbt to Gordian Wallet for signing and broadcasting
+
 
 ### 1. Create a multisig wallet in Gordian Wallet by selecting "multisig" -> "create wallet"
 
 <img src="../Images/Electrum/1_GordianWallet_create_wallet.PNG" alt="" width="250"/> <img src="../Images/Electrum/2_GordianWallet_walletcreated.PNG" alt="" width="250"/>
 
-### 2. Save your recovery words, you will need them
+### 2. Save your recovery words
+
+You will need them!
 
 <img src="../Images/Electrum/3_GordianWallet_backupwords.PNG" alt="" width="250"/>
 
-### 3. Open Electrum and create a new mutlisig wallet
+### 3. Open Electrum and create a new multisig wallet
 
 ![](../Images/Electrum/4_create_wallet.png)
 
-### 4. Choose a 2 of 3
+### 4. Choose a 2-of-3
 
 ![](../Images/Electrum/5_mofn.png)
 
@@ -22,7 +26,7 @@
 
 ![](../Images/Electrum/6_seed.png)
 
-### 6. Its a BIP39 seed so you need to tap "options" and select "BIP39"
+### 6. It's a BIP39 seed, so you need to tap "options" and select "BIP39"
 
 ![](../Images/Electrum/7_bip39seed.png)
 
@@ -30,11 +34,15 @@
 
 ![](../Images/Electrum/8_addseed.png)
 
-### 8. Confirm derivation - by default Gordian Wallet uses the same derivation as Electrum for multisig wallets, just make sure you select `native segwit multisig (p2wsh)`, this is also the default multisig address format used by Gordian Wallet (bech32)
+### 8. Confirm derivation
+
+By default Gordian Wallet uses the same derivation as Electrum for multisig wallets, just make sure you select `native segwit multisig (p2wsh)`, this is also the default multisig address format used by Gordian Wallet (bech32)
 
 ![](../Images/Electrum/9_derivation.png)
 
-### 9. Electrum derives the extended public key for you to export which is derived from the recovery phrase you just added
+### 9. Electrum derives the extended public key for you to export.
+
+(This is in turn derived from the recovery phrase you just added.)
 
 ![](../Images/Electrum/10_exportVpub.png)
 
@@ -42,7 +50,11 @@
 
 ![](../Images/Electrum/11_enter_cosigner2.png)
 
+
 ### 11. Come back to Gordian Wallet and export your 1st public key descriptor which holds all the xpubs you need. You can get this by going to the wallets tab, enabling the Electrum wallet, and tapping the "info" button to export the devices seed and public key descriptors.
+
+You can get this by going to the wallets tab, enabling the Electrum wallet, and tapping the "info" button to export the device's seed and public key descriptors.
+
 
 <img src="../Images/Electrum/12_GordianWallet_getxpubs.PNG" alt="" width="250"/>
 
@@ -56,26 +68,26 @@ It gives you 3 xpubs (tpubs for testnet):
 
 **Gordian Wallet works with Bitcoin Core and Bitcoin Core only works with xpubs/tpubs. Therefore you will need to use [this tool](https://jlopp.github.io/xpub-converter/) to convert your xpubs to the format Electrum accepts.**
 
-xpub #1 always represents your offline recovery keys - this is the one we already imported into Electrum via the offline recovery words. `tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR`
-
-xpub #2 always represents your devices keys and will be the one we add into Electrum next. `tpubDDxd7u6V76WHV6CRy3KSsJoXiioVwubYDubysMkvkYuCTFPwWfUwcnC7yh1mNkMd13Ssh8Fu7UiSJRoELuKW58zrVBd1YRGfHkcF2s9DHz3`
-
-xpub #3  always represents your nodes keys and will be the final key we add as a cosigner into Electrum. `tpubDFW7MhUGfWLHXafXcca9ow5jUkLukcxawpG7V6BzXgtsxHdkUKuSy5eXwrDZ7zr5jLHRmYnJoHv4GGAYY4HGK53x9BL2tDeePw4QNdkk6Gw`
+* xpub #1 always represents your offline recovery keys. This is the one we already imported into Electrum via the offline recovery words. `tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR`
+* xpub #2 always represents your device's keys and will be the one we add into Electrum next. `tpubDDxd7u6V76WHV6CRy3KSsJoXiioVwubYDubysMkvkYuCTFPwWfUwcnC7yh1mNkMd13Ssh8Fu7UiSJRoELuKW58zrVBd1YRGfHkcF2s9DHz3`
+* xpub #3  always represents your node's keys and will be the final key we add as a cosigner into Electrum. `tpubDFW7MhUGfWLHXafXcca9ow5jUkLukcxawpG7V6BzXgtsxHdkUKuSy5eXwrDZ7zr5jLHRmYnJoHv4GGAYY4HGK53x9BL2tDeePw4QNdkk6Gw`
 
 Here's what it means (you do not *need* to know this but it is useful to understand):
 
-- `wsh`: witness script hash. multisig sig bech32 address type, aka p2wsh (pay to witness script hash). It tells your node that this is a bech32 multisig address type.
-- `sortedmulti`: This means the descriptor is describing a BIP67 multisig wallet which means the order of the public keys does not matter as they will always be derived lexicographically. Electrum, Coldcard and Specter all support BIP67.
-- `2`: Represents the number of signatures required, it is folllowed by the xpubs, the number of xpubs denote the number of possible cosigners, in this case its a 2 of 3.
-- `[48214714/48'/1'/0'/2']`: The xpubs derivation. You can think of the xpub as representing this derivation path.
-- `/0/*` represents the addresses that the descriptor would import, in this case its the primary addesses. The `0` means the addresses will be primary receiving addresses, if this was a change descriptor it would be a `1`. The `*` just means it can import any range of keys making it HD and actually represents the index of the address to be derived.
-- `#9650s8vz`: The descriptors checksum.
+- `wsh`: witness script hash: multisig sig bech32 address type, aka p2wsh (pay to witness script hash). It tells your node that this is a bech32 multisig address type.
+- `sortedmulti`: This means the descriptor is describing a BIP67 multisig wallet, which means the order of the public keys does not matter as they will always be derived lexicographically. Electrum, Coldcard, and Specter all support BIP67.
+- `2`: Represents the number of signatures required, it is folllowed by the xpubs. The number of xpubs denote the number of possible cosigners, in this case it's a 2-of-3.
+- `[48214714/48'/1'/0'/2']`: The xpub's derivation. You can think of the xpub as representing this derivation path.
+- `/0/*` represents the addresses that the descriptor would import, in this case it's the primary addesses. The `0` means the addresses will be primary receiving addresses; if this was a change descriptor it would be a `1`. The `*` just means it can import any range of keys making it HD and actually represents the index of the address to be derived.
+- `#9650s8vz`: The descriptor's checksum.
 
 ### 13. Take your #2 tpub from the primary descriptor and convert it to a Vpub (for testnet)
 
+FullyNoded 2 works with Bitcoin Core and Bitcoin Core only works with xpubs/tpubs. Therefore you will need to use [this tool](https://jlopp.github.io/xpub-converter/) to convert your xpubs to the format Electrum accepts.
+
 ![](../Images/Electrum/13_converttpub2.png)
 
-### 14. Paste it in to Electrum, tap next, repeat the process for the third and final xpup/tpub
+### 14. Paste the vpub in to Electrum, tap next, repeat the process for the third and final xpup/tpub
 
 ![](../Images/Electrum/14_pastekey2.png)
 
@@ -83,17 +95,19 @@ Here's what it means (you do not *need* to know this but it is useful to underst
 
 ![](../Images/Electrum/16_converttpub3.png)
 
-### 15. Bypass Electrums encryption (the nice thing about multisig is we don't need passphrases to maintain security)
+### 15. Bypass Electrums encryption
+
+Tthe nice thing about multisig is we don't need passphrases to maintain security.
 
 ![](../Images/Electrum/17_bypassencryption.png)
 
-### 16. In Electrum export your addesses by tapping "view" -> "addresses" 
+### 16. In Electrum, export your addesses by tapping "view" -> "addresses" 
 
 ![](../Images/Electrum/18_exportaddresses.png)
 
 ### 17. Open Gordian Wallet and go to the Electrum wallet in the wallets tab, tap the eye button to export your multisig keys. 
 
-**Confirm the addresses match what Electrum produced! If they do not then something went wrong! Most likely you selected the wrong derivation type, added the incorrect xpub or converted the xpub to the incorrect format. This does work so try again and be careful to follow the instruction.**
+**Confirm the addresses match what Electrum produced! If they do not then something went wrong! Most likely you selected the wrong derivation type, added the incorrect xpub, or converted the xpub to the incorrect format. This procedure does work, so try again and be careful to follow the instruction.**
 
 Here we can see the addresses match what Electrum exported 🤩
 
@@ -113,7 +127,7 @@ Here we can see the addresses match what Electrum exported 🤩
 
 ![](../Images/Electrum/23_confirmsend.png)
 
-⚠️ **The following functionality is only available on Electrum if you build the master branch from source. Hopefully it will be avilable for download soon. You can still create the multisig wallets on Electrum but you won't be able to easily pass PSBT's from Electrum to any third party app.** ⚠️
+⚠️ **The following functionality is only available on Electrum if you build the master branch from source. Hopefully it will be avilable for download soon. You can still create the multisig wallets on Electrum, but you won't be able to easily pass PSBTs from Electrum to any third party app.** ⚠️
 
 ### 21. Export the PSBT by clicking "export" in the bottom left -> "export to file". Take that file and send it to your iPhone, saving it in the "Files" app on your iPhone.
 

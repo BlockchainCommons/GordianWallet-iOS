@@ -1,12 +1,13 @@
-# Specter guide
+# Specter Guide
 
 ## This is a guide for creating a 2 of 3 multisig wallet with Specter and Gordian Wallet.  It will show you how to add devices to Specter, create a multisig wallet and build an unsigned PSBT with Specter, scanning the Specter PSBT QR code to sign it with Gordian Wallet and broadcast with your node over Tor. 
 
-## It also shows you how to import a 2 of 3 multisig wallet from Specter simply by scanning the wallet import QR code Specter exports. 
+It also shows you how to import a 2-of-3 multisig wallet from Specter simply by scanning the wallet import QR code that Specter exports. 
 
-## This guide is meant as a general usage example to show what is possible. Considering you can use Trezor, Coldcard, Electrum and Specter DIY as signers too you can see that this set up makes collaborative multisig easier then ever.
+This guide is meant as a general usage example to show what is possible. Considering you can use Trezor, Coldcard, Electrum, and Specter DIY as signers too, you can see that this setup makes collaborative multisig easier then ever.
 
-## This guide was made using the same 2 of 3 setup that was used in the Electrum guide to illustrate how it can be used across platforms.
+This guide was made using the same 2 of 3 setup that was used in the [Electrum guide](Electrum-guide.md) to illustrate how it can be used across platforms.
+
 
 ### 1. Add device #1 to Specter - You can think of devices as signers, in this case we will add the three xpubs from a Gordian Wallet multisig wallet.
 
@@ -21,7 +22,9 @@
 The original descriptor:
 
 ```
-wsh(sortedmulti(2,[82be8e74/48'/1'/0'/2']tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR/0/*,[5222e39c/48'/1'/0'/2']tpubDEQznV4Xs6BP1A1HXzogRsUiFxDsyaqLzphZmjmwrrERz9aHszb2juQzYBx9xuXymba5kkQvR76m218JiXM1DsLcgPryGCDs5P1geHoxVrx/0/*,[81202613/48'/1'/0'/2']tpubDEcrpYzpqTJyhy5bzsojvL8VMrcFf4DVU7q43fuq6JhhNyxCqLzhppiUsMHAXUJv4XTnmAiezNAzdfTdg2FFefbzNh8YzN6Wv2zEYwcCC22/0/*))#czsstq8d
+wsh(sortedmulti(2,[82be8e74/48'/1'/0'/2']tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR/0/*,
+[5222e39c/48'/1'/0'/2']tpubDEQznV4Xs6BP1A1HXzogRsUiFxDsyaqLzphZmjmwrrERz9aHszb2juQzYBx9xuXymba5kkQvR76m218JiXM1DsLcgPryGCDs5P1geHoxVrx/0/*,
+[81202613/48'/1'/0'/2']tpubDEcrpYzpqTJyhy5bzsojvL8VMrcFf4DVU7q43fuq6JhhNyxCqLzhppiUsMHAXUJv4XTnmAiezNAzdfTdg2FFefbzNh8YzN6Wv2zEYwcCC22/0/*))#czsstq8d
 ```
 
 Remove the following sections:
@@ -35,26 +38,32 @@ We need to do this because Gordian Wallet works directly with Bitcoin Core and w
 The descriptor will now look like:
 
 ```
-[82be8e74/48'/1'/0'/2']tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR,[5222e39c/48'/1'/0'/2']tpubDEQznV4Xs6BP1A1HXzogRsUiFxDsyaqLzphZmjmwrrERz9aHszb2juQzYBx9xuXymba5kkQvR76m218JiXM1DsLcgPryGCDs5P1geHoxVrx,[81202613/48'/1'/0'/2']tpubDEcrpYzpqTJyhy5bzsojvL8VMrcFf4DVU7q43fuq6JhhNyxCqLzhppiUsMHAXUJv4XTnmAiezNAzdfTdg2FFefbzNh8YzN6Wv2zEYwcCC22
+[82be8e74/48'/1'/0'/2']tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR,
+[5222e39c/48'/1'/0'/2']tpubDEQznV4Xs6BP1A1HXzogRsUiFxDsyaqLzphZmjmwrrERz9aHszb2juQzYBx9xuXymba5kkQvR76m218JiXM1DsLcgPryGCDs5P1geHoxVrx,
+[81202613/48'/1'/0'/2']tpubDEcrpYzpqTJyhy5bzsojvL8VMrcFf4DVU7q43fuq6JhhNyxCqLzhppiUsMHAXUJv4XTnmAiezNAzdfTdg2FFefbzNh8YzN6Wv2zEYwcCC22
 ```
 
-It has been stripped down to only the derivation paths and xpubs. Now we have three xpubs that can be directly added to Specter as "devices".
+It has been stripped down to only the derivation paths and xpubs. Now, we have three xpubs that can be directly added to Specter as "devices".
 
 When you create the multisig in Gordian Wallet the xpubs represent three "devices" or "signers"
 
-#### 1. The first xpub is derived from your offline seed, this seed is supposed to be stored offline and only used for recovery. It represents the "emergency signer" which you would use to recover your wallet incase you lost one of your other seeds:
+1. The first xpub is derived from your offline seed, this seed is supposed to be stored offline and only used for recovery. It represents the "emergency signer" which you would use to recover your wallet incase you lost one of your other seeds:
 
 `[82be8e74/48'/1'/0'/2']tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR`
 
-#### 2. The second xpub is derived from your devices seed, so it represents your device as a signer:
+2. The second xpub is derived from your devices seed, so it represents your device as a signer:
 
 `[5222e39c/48'/1'/0'/2']tpubDEQznV4Xs6BP1A1HXzogRsUiFxDsyaqLzphZmjmwrrERz9aHszb2juQzYBx9xuXymba5kkQvR76m218JiXM1DsLcgPryGCDs5P1geHoxVrx`
 
+
 #### 3. The third xpub is derived from your nodes seed (which as far as Gordian Wallet is concerned is deleted forever once the keys are imported into your node). You can think of this xpub as representing your node as a signer:
+
 
 `[81202613/48'/1'/0'/2']tpubDEcrpYzpqTJyhy5bzsojvL8VMrcFf4DVU7q43fuq6JhhNyxCqLzhppiUsMHAXUJv4XTnmAiezNAzdfTdg2FFefbzNh8YzN6Wv2zEYwcCC22`
 
-### 4. Now that we have our three xpubs formatted correctly for Specter we can add each one as an independent "device" into Specter. Just paste the xpub descriptor as they are listed above.
+### 4. Now that we have our three xpubs formatted correctly for Specter, we can add each one as an independent "device" into Specter
+
+Just paste the xpub descriptor as they are listed above.
 
 ![](../Images/Specter/2_pastexpub.png)
 
@@ -62,7 +71,7 @@ When you create the multisig in Gordian Wallet the xpubs represent three "device
 
 ![](../Images/Specter/4_addthird.png)
 
-### 5. Now that we have our devices added to Specter we can create a watch-only multisig wallet.
+### 5. Now that we have our devices added to Specter we can create a watch-only multisig wallet
 
 ![](../Images/Specter/5_createwallet.png)
 
@@ -70,7 +79,9 @@ When you create the multisig in Gordian Wallet the xpubs represent three "device
 
 ![](../Images/Specter/6_makeit2of3.png)
 
-### 7. Now you can select the keys you want each device to use, since each device only holds one key its a simple decision.
+### 7. Now you can select the keys you want each device to use
+
+Since each device only holds one key it's a simple decision.
 
 ![](../Images/Specter/7_selectkeys.png)
 
@@ -99,6 +110,9 @@ They do! 🤩
 ![](../Images/Specter/14_createpsbt.png)
 
 ### 12. Scan the PSBT QR code with Gordian Wallet to sign it and broadcast it, if Gordian Wallet can not sign for all of the required signatures to spend the PSBT then it will simply sign what it can and export the PSBT in a few different formats for you to pass on to other signers. If it can sign for all the required signatures it will finalize the PSBT which converts it into a signed raw transaction, verifying each input and output for your confirmation, allowing you to broadcast it with your node over Tor.
+
+* If FullyNoded 2 can not sign for all of the required signatures to spend the PSBT then it will simply sign what it can and export the PSBT in a few different formats for you to pass on to other signers. 
+* If it can sign for all the required signatures it will finalize the PSBT which converts it into a signed raw transaction, verifying each input and output for your confirmation, allowing you to broadcast it with your node over Tor.
 
 <img src="../Images/Specter/15_scanpsbtwithGordianWallet.PNG" alt="" width="250"/> <img src="../Images/Specter/16_broadcast.PNG" alt="" width="250"/>
 

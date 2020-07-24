@@ -15,7 +15,7 @@ Install Apple's XCode developer environment, and download the Gordian Wallet sou
 Run `brew --version` in a terminal, if you get a valid response you have brew installed already, if not:
 - `cd /usr/local`
 - `mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew`
-Wait for brew to finish.
+- Wait for brew to finish
 
 ## 3. Install Dependencies
 - `brew install carthage automake autoconf libtool gnu-sed`
@@ -38,8 +38,10 @@ Wait for brew to finish.
 - `cd Gordian-Wallet/XCode`
 - `carthage build libwally-swift`
 
+
 ## 6. Open Gordian-Wallet
 - `cd Gordian-Wallet/XCode`
 - open `GordianWallet.xcodeproj` and run the project in a simulator or device.
+
 
 

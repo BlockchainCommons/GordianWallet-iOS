@@ -45,7 +45,7 @@ Please refer to their telegram groups for simple instructions on linking to thes
 
 - [Nodl Telegram](https://t.me/nodl_support)
 - [RaspiBlitz Telegram](https://t.me/raspiblitz)
-- [BTCPayServer](https://t.me/btcpayserver)
+- [BTCPayServer Telegram](https://t.me/btcpayserver)
 
 ## Using Gordian Wallet
 
