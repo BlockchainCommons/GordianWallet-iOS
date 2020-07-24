@@ -4,11 +4,11 @@
 
 ### 1. Create a multisig wallet in Gordian Wallet by selecting "multisig" -> "create wallet"
 
-<img src="../Images/Electrum/1_Gordian Wallet_create_wallet.PNG" alt="" width="250"/> <img src="../Images/Electrum/2_Gordian Wallet_walletcreated.PNG" alt="" width="250"/>
+<img src="../Images/Electrum/1_GordianWallet_create_wallet.PNG" alt="" width="250"/> <img src="../Images/Electrum/2_GordianWallet_walletcreated.PNG" alt="" width="250"/>
 
 ### 2. Save your recovery words, you will need them
 
-<img src="../Images/Electrum/3_Gordian Wallet_backupwords.PNG" alt="" width="250"/>
+<img src="../Images/Electrum/3_GordianWallet_backupwords.PNG" alt="" width="250"/>
 
 ### 3. Open Electrum and create a new mutlisig wallet
 
@@ -44,7 +44,7 @@
 
 ### 11. Come back to Gordian Wallet and export your 1st public key descriptor which holds all the xpubs you need. You can get this by going to the wallets tab, enabling the Electrum wallet, and tapping the "info" button to export the devices seed and public key descriptors.
 
-<img src="../Images/Electrum/12_Gordian Wallet_getxpubs.PNG" alt="" width="250"/>
+<img src="../Images/Electrum/12_GordianWallet_getxpubs.PNG" alt="" width="250"/>
 
 When you export a public key descriptor from Gordian Wallet you will get two descriptors, the first one represents your primary addresses and the second descriptor represents your change addresses. The first one is what we need and will look like this:
 
@@ -97,7 +97,7 @@ Here's what it means (you do not *need* to know this but it is useful to underst
 
 Here we can see the addresses match what Electrum exported 🤩
 
-<img src="../Images/Electrum/19_Gordian Walletexportkeys.PNG" alt="" width="250"/>
+<img src="../Images/Electrum/19_GordianWalletexportkeys.PNG" alt="" width="250"/>
 
 ### 18. Now the good part, use Electrum to receive some testnet bitcoins.
 
@@ -121,7 +121,7 @@ Here we can see the addresses match what Electrum exported 🤩
 
 ### 22. Open Gordian Wallet
 
-<img src="../Images/Electrum/26_openGordian Wallet.PNG" alt="" width="250"/>
+<img src="../Images/Electrum/26_openGordianWallet.PNG" alt="" width="250"/>
 
 ### 23. Tap the folder icon in top left and tap the .psbt file you exported
 
