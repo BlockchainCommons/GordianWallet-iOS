@@ -1,14 +1,15 @@
-# Using FullyNoded 2
+# Using Gordian Wallet
 
-FullyNoded 2 allows you to: add a node; create an account; access accounts; receive funds; spend funds; utilize advanced coin control; export keys; refill your node's keypool; sweep funds to address; sweep funds to account; recover accounts; import accounts; add signers that are not associated with accounts on the device; sign for any PSBT that FN2 holds a seed for; ensure Coldcard compatibility; and create accounts with xpubs or seed words. Instructions on how to use the basic features follow, as does a wishlist of potential future expansions.
+Gordian Wallet allows you to: add a node; create an account; access accounts; receive funds; spend funds; utilize advanced coin control; export keys; refill your nodes keypool; sweep funds to address; sweep funds to account; recover accounts; import accounts; add signers which are not associated with accounts on the device; sign for any psbt it holds a seed for; Coldcard compatibility; create accounts with xpubs or seed words. Instructions on how to use the basic features follow, as does a wishlist of potential future expansions.
 
 For more information on how these features actually function, see ["How It Works"](How-it-works.md).
 
 ## Adding a Node
 
-<img src="../Images/scanQuickConnect.PNG" alt="FullyNoded 2 app Home Screen" width="250"/>
+<img src="../Images/scanQuickConnect.PNG" alt="Gordian Wallet app Home Screen" width="250"/>
 
-When initially starting up FullyNoded 2, a user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup). You may also link to a testnet node that Blockchain Commons is currently maintaining for development purposes by tapping the "don't have a node?" button.
+
+When initially starting up Gordian Wallet, a user may choose to connect to their own node by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or link to a testnet node that we are currently utilizing for development purposes by tapping the "don't have a node?" button.
 
 ## Creating a account
 

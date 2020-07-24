@@ -250,7 +250,7 @@ public struct HDKey {
         return PubKey(Data(pub_key), self.network, compressed: true)!
     }
     
-    var privKey: Key? {
+    public var privKey: Key? {
         if self.isNeutered {
            return nil
         }
