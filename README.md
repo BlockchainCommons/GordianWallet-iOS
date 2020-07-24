@@ -1,45 +1,45 @@
-# Bitcoin-Standup-Remote
+# Gordian Wallet
 
-Bitcoin-Standup-Remote is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to the full node of your choice, including: a bitcoind installed using either Bitcoin Standup [MacOS](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) or [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts); a full-node box such as [Nodl](https://www.nodl.it/) or [Rasbiblitz](https://github.com/rootzoll/raspiblitz); or a full-node service such as [BTCpay](https://btcpayserver.org/]). Bitcoin-Standup-Remote is a self-sovereign wallet, and self-sovereignty means that you get to decide.
+Gordian Wallet is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to the full node of your choice, including: a bitcoind installed using either Bitcoin Standup [MacOS](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) or [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts); a full-node box such as [Nodl](https://www.nodl.it/) or [Rasbiblitz](https://github.com/rootzoll/raspiblitz); or a full-node service such as [BTCpay](https://btcpayserver.org/]). Gordian Wallet is a self-sovereign wallet, and self-sovereignty means that you get to decide.
 
-Bitcoin-Standup-Remote allows for multiple wallet templates, including: legacy, SegWit-compatible, and SegWit-native hot wallets using a single signature (seed on iOS device); a warm wallet using multisig (seed on iOS device, keys on full node, offline seed, etc.); or a number of cold wallet templates that leverage PSBTs (Partially Signed Bitcoin Transactions), such as cold offline seeds, third-party collaborative custody services, and various air-gapped hardware solutions using QR codes. Bitcoin-Standup-Remote can potentially support almost anything that can be described by a [bitcoind descriptor](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md).
+Gordian Wallet allows for multiple wallet templates, including: legacy, SegWit-compatible, and SegWit-native hot wallets using a single signature (seed on iOS device); a warm wallet using multisig (seed on iOS device, keys on full node, offline seed, etc.); or a number of cold wallet templates that leverage PSBTs (Partially Signed Bitcoin Transactions), such as cold offline seeds, third-party collaborative custody services, and various air-gapped hardware solutions using QR codes. Gordian Wallet can potentially support almost anything that can be described by a [bitcoind descriptor](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md).
 
-<img src="./Images/home_screen_collapsed.PNG" alt="Bitcoin-Standup-Remote app Home Screen" width="250"/> <img src="./Images/home_screen_expanded.PNG" alt="Bitcoin-Standup-Remote app Home Screen" width="250"/>
+<img src="./Images/home_screen_collapsed.PNG" alt="Gordian Wallet app Home Screen" width="250"/> <img src="./Images/home_screen_expanded.PNG" alt="Gordian Wallet app Home Screen" width="250"/>
 
 ## Status — Early Beta
 
-*Bitcoin-Standup-Remote* is currently under active development and in early beta testing phase. It should be used on Bitcoin testnet to gain familiarity with how the wallet works, and most importantly to practice deleting and recovering wallet. For a detailed checklist to test critical functionality please see our [Testing Checklist.md](./Docs/Testing Checklist.md)
+*Gordian Wallet* is currently under active development and in early beta testing phase. It should be used on Bitcoin testnet to gain familiarity with how the wallet works, and most importantly to practice deleting and recovering wallet. For a detailed checklist to test critical functionality please see our [Testing Checklist.md](./Docs/Testing Checklist.md)
 
-## Installing Bitcoin-Standup-Remote
+## Installing Gordian Wallet
 
-Bitcoin-Standup-Remote can be easily installed using Testflight, but if you prefer you can also install from source.
+Gordian Wallet can be easily installed using Testflight, but if you prefer you can also install from source.
 
 Please only use the app on testnet!
 
-To help us improve Bitcoin-Standup-Remote, *please*  share crash reports and give us feedback. Want a feature added? Tell us about it.
+To help us improve Gordian Wallet, *please*  share crash reports and give us feedback. Want a feature added? Tell us about it.
 
 ### Requirements
 
 - iOS 13
 - A Bitcoin Core full node v0.20.0 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service. Your node does not need to be an archive node, thus you can save space by being setup as a pruned full node.
 
-### Installing Bitcoin-Standup-Remote from Testflight
+### Installing Gordian Wallet from Testflight
 
 We have a public Testflight link available for beta testing [here](https://testflight.apple.com/join/OQHyL0a8).
 
 Click through, and you'll be able to install the app immediately (and will be instructed how to install Testflight if you need to do so first).
 
-### Installing Bitcoin-Standup-Remote from Source
+### Installing Gordian Wallet from Source
 
 Full instruction on installing from source are available [here](Docs/Install-from-source.md).
 
 ### Linking to a Full Node
 
-When you install Bitcoin-Standup-Remote, you will need to link it to the full node of your choice.
+When you install Gordian Wallet, you will need to link it to the full node of your choice.
 
-*Bitcoin-Standup-Remote*  has been tested with Blockchain Commons' [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) and with our [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts), which install your own personal bitcoin-core and Tor services.
+*Gordian Wallet*  has been tested with Blockchain Commons' [MacOS StandUp.app](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) and with our [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts), which install your own personal bitcoin-core and Tor services.
 
-*FullyNoded2* should also work with any properly configured Bitcoin Core 0.20.0 node with a hidden service controlling `rpcport` via localhost, including full node devices such as [Nodl](https://www.nodl.it/) or [RaspiBlitz](https://github.com/rootzoll/raspiblitz), or full nodes installed by other services such as [BTCPayServer](https://btcpayserver.org). These full nodes can be connected by clicking a link or scanning a QR code.
+*Gordian Wallet* should also work with any properly configured Bitcoin Core 0.20.0 node with a hidden service controlling `rpcport` via localhost, including full node devices such as [Nodl](https://www.nodl.it/) or [RaspiBlitz](https://github.com/rootzoll/raspiblitz), or full nodes installed by other services such as [BTCPayServer](https://btcpayserver.org). These full nodes can be connected by clicking a link or scanning a QR code.
 
 Please refer to their telegram groups for simple instructions on linking to these servers or services:
 
@@ -47,23 +47,23 @@ Please refer to their telegram groups for simple instructions on linking to thes
 - [RaspiBlitz Telegram](https://t.me/raspiblitz)
 - [BTCPayServer](https://t.me/btcpayserver)
 
-## Using Bitcoin-Standup-Remote
+## Using Gordian Wallet
 
-Please see our [features](Docs/Features.md) document for full information on how to use Bitcoin-Standup-Remote once it's installed.
+Please see our [features](Docs/Features.md) document for full information on how to use Gordian Wallet once it's installed.
 
 Afterward, you may also want to read about [how it all works](Docs/How-it-works.md).
 
-## The Philosophy Behind Bitcoin-Standup-Remote
+## The Philosophy Behind Gordian Wallet
 
-Bitcoin-Standup-Remote is a professional mobile wallet built using the most up-to-date technologies for Bitcoin. It's focused on three goals that together demonstrate some of the best practices for modern mobile-wallet design:
+Gordian Wallet is a professional mobile wallet built using the most up-to-date technologies for Bitcoin. It's focused on three goals that together demonstrate some of the best practices for modern mobile-wallet design:
 
-1. **Self-sovereign Interactions.** Classic mobile wallets usually talked to a full node chosen by the wallet developer and owned/controlled by someone else. Bitcoin-Standup-Remote instead allows you to choose a full node, either one created using a setup process such as #BitcoinStandup and run by yourself, or a service offered by a provider that you select: self-sovereign means you get to decide. (You can use Blockchain Commons' full-node server for beta testing, but you should migrate to a protected server for real money transactions.)
+1. **Self-sovereign Interactions.** Classic mobile wallets usually talked to a full node chosen by the wallet developer and owned/controlled by someone else. Gordian Wallet instead allows you to choose a full node, either one created using a setup process such as #BitcoinStandup and run by yourself, or a service offered by a provider that you select: self-sovereign means you get to decide. (You can use Blockchain Commons' full-node server for beta testing, but you should migrate to a protected server for real money transactions.)
 
-2. **Protected Communications.** All of the communications in Bitcoin-Standup-Remote are protected by the latest version of Tor, which provides two-way authentication of both the server and your wallet. Unlike traditional use of the soon to be deprecated SPV protocol, which reveals that you're accessing the Bitcoin network, Tor simply shows that you're engaging in private onion communications. It's safer when you're in a hostile state, and it's safer in your local coffee shop.
+2. **Protected Communications.** All of the communications in Gordian Wallet are protected by the latest version of Tor, which provides two-way authentication of both the server and your wallet. Unlike traditional use of the soon to be deprecated SPV protocol, which reveals that you're accessing the Bitcoin network, Tor simply shows that you're engaging in private onion communications. It's safer when you're in a hostile state, and it's safer in your local coffee shop.
 
-3. **Multi-sig Protections.** Finally, Bitcoin-Standup-Remote ensures that your private keys are protected from the most common adversary: loss. Its 2-of-3 multi-sig system leaves one key on the server, one on your mobile wallet, and one in safe off-line storage. If you lose your phone or your server, you can still rebuild from the other two. (The Blockchain Commons #SmartCustody system talks more about how to protect off-line keys.)
+3. **Multi-sig Protections.** Finally, Gordian Wallet ensures that your private keys are protected from the most common adversary: loss. Its 2-of-3 multi-sig system leaves one key on the server, one on your mobile wallet, and one in safe off-line storage. If you lose your phone or your server, you can still rebuild from the other two. (The Blockchain Commons #SmartCustody system talks more about how to protect off-line keys.)
 
-Bitcoin-Standup-Remote is intended for a sophisticated power user. It's a leading-edge platform that experiments with modern Bitcoin technologies to create a powerful new architecture with features not found in other mobile wallets. It's intended as a professional wallet for your use and also as a demonstration of functionality that other companies can integrate into their own apps as an open source reference implementation of functionality.
+Gordian Wallet is intended for a sophisticated power user. It's a leading-edge platform that experiments with modern Bitcoin technologies to create a powerful new architecture with features not found in other mobile wallets. It's intended as a professional wallet for your use and also as a demonstration of functionality that other companies can integrate into their own apps as an open source reference implementation of functionality.
 
 Even more cutting-edge technology is planned for the future, including collaborative custody models, airgapped technologies such as Blockchain Commons' #LetheKit for offline signing using QR codes, and methodologies for social-key recovery.
 
@@ -88,9 +88,9 @@ This table below also establishes provenance (repository of origin, permalink, a
 
 ## Financial Support
 
-*Bitcoin-Standup-Remote* is a project of [Blockchain Commons](https://www.blockchaincommons.com/). We are proudly a "not-for-profit" social benefit corporation committed to open source & open development. Our work is funded entirely by donations and collaborative partnerships with people like you. Every contribution will be spent on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web.
+*Gordian Wallet* is a project of [Blockchain Commons](https://www.blockchaincommons.com/). We are proudly a "not-for-profit" social benefit corporation committed to open source & open development. Our work is funded entirely by donations and collaborative partnerships with people like you. Every contribution will be spent on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web.
 
-To financially support further development of *Bitcoin-Standup-Remote* and other projects, please consider becoming a Patron of Blockchain Commons through ongoing monthly patronage as a [GitHub Sponsor](https://github.com/sponsors/BlockchainCommons). You can also support Blockchain Commons with bitcoins at our [BTCPay Server](https://btcpay.blockchaincommons.com/).
+To financially support further development of *Gordian Wallet* and other projects, please consider becoming a Patron of Blockchain Commons through ongoing monthly patronage as a [GitHub Sponsor](https://github.com/sponsors/BlockchainCommons). You can also support Blockchain Commons with bitcoins at our [BTCPay Server](https://btcpay.blockchaincommons.com/).
 
 ## Contributing
 
@@ -104,7 +104,7 @@ If your company requires support to use our projects, please feel free to contac
 
 ### Credits
 
-Bitcoin-Standup-Remote is a professional mobile wallet that can be used by you for your cryptocurrency needs, but it's also an example that shows the latest in wallet technology and that can be used to inspire your own wallet designs, per the license above.
+Gordian Wallet is a professional mobile wallet that can be used by you for your cryptocurrency needs, but it's also an example that shows the latest in wallet technology and that can be used to inspire your own wallet designs, per the license above.
 
 The team responsible for designing and developing this app are:
 
