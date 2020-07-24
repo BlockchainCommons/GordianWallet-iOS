@@ -11,7 +11,7 @@
   "commitish" : "v0.0.1",
   "iOS" : [
     {
-      "hash" : "d85941386495ca42d176112ce566bb8a75cd475168fa35d31ca528a773640e0f",
+      "hash" : "01777038145f71a79af4b36ccd26f430c40cc49ec07d2b1221472ed02c12aecd",
       "name" : "LibWally",
       "linking" : "dynamic",
       "swiftToolchainVersion" : "5.2.2 (swiftlang-1103.0.32.6 clang-1103.0.32.51)"
