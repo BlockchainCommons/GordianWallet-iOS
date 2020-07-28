@@ -388,6 +388,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if ud?.object(forKey: "feeTarget") ==  nil {
             ud?.set(432, forKey: "feeTarget")
         }
+        getActiveWalletNow { [unowned vc = self] (wallet, error) in
+            if wallet != nil {
+                vc.wallet = wallet!
+            }
+        }
         #if DEBUG
         didAppear()
         #else

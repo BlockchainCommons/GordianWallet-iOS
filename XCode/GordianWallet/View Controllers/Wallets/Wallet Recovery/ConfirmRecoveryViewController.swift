@@ -18,6 +18,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     var walletDict = [String:Any]()
     var derivation:String?
     var confirmedDoneBlock: ((Bool) -> Void)?
+    var updateDerivationBlock:(([String:String]) -> Void)?
     var addresses = [String]()
     var descriptorStruct:DescriptorStruct!
     var isImporting = Bool()
@@ -82,7 +83,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                     vc.addresses.append(address as! String)
                 }
                 vc.walletDict["name"] = vc.walletNameHash
-                vc.removeLoader()
+                vc.updateLabel(text: "fetching account balance from node...")
                 let wallet = WalletStruct(dictionary: vc.walletDict)
                 vc.nodeLogic?.loadExternalWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
                     if success && dictToReturn != nil {
@@ -92,9 +93,12 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                         DispatchQueue.main.async {
                             vc.walletBalance.text = "\(doub)"
                         }
+                        vc.removeLoader()
                     } else {
                         DispatchQueue.main.async {
-                            vc.walletBalance.text = "error fetching balance"
+                            vc.walletBalance.text = "account does not exist on node"
+                            vc.updateLabel(text: "scanning for transaction history...")
+                            vc.scanPaths()
                         }
                     }
                 }
@@ -102,6 +106,59 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 vc.connectingView.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: "Error fetching addresses for that wallet")
             }
+        }
+    }
+    
+    private func scanPaths() {
+        if words != nil {
+            var cointType = "0"
+            let derivation = walletDict["derivation"] as! String
+            if derivation.contains("/1'/") {
+                // its testnet
+                cointType = "1"
+            }
+            CheckSubAccounts.check(derivation: derivation, words: words!, coinType: cointType) { [unowned vc = self] (paths) in
+                if paths != nil {
+                    var pathsWithHistory:[[String:Any]] = []
+                    for (i, path) in paths!.enumerated() {
+                        let hasHistory = path["hasHistory"] as! Bool
+                        if hasHistory {
+                            pathsWithHistory.append(path)
+                        }
+                        if i + 1 == paths!.count {
+                            if pathsWithHistory.count > 0 {
+                                var derivs = ""
+                                for sub in pathsWithHistory {
+                                    let path = sub["derivation"] as! String
+                                    derivs += path + " "
+                                }
+                                vc.promptToRecoverOtherPaths(paths: derivs)
+                            }
+                            vc.removeLoader()
+                        }
+                    }
+                } else {
+                    vc.removeLoader()
+                }
+            }
+        } else {
+            removeLoader()
+        }
+    }
+
+     private func promptToRecoverOtherPaths(paths: String) {
+        DispatchQueue.main.async { [unowned vc = self] in
+            let alert = UIAlertController(title: "Transaction history detected!", message: "We detected transaction history on derivations: \(paths), would you like to recover this account instead?", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [unowned vc = self] action in
+                let dict = ["words":vc.words!,"derivation":paths]
+                DispatchQueue.main.async {
+                    vc.updateDerivationBlock!((dict))
+                    vc.navigationController?.popViewController(animated: true)
+                }
+             }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -431,7 +488,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             if addToInternal {
                 params = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
             } else {
-                params = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Gordion\", \"keypool\": \(addToKeypool), \"internal\": \(addToInternal) }]"
+                params = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Gordian\", \"keypool\": \(addToKeypool), \"internal\": \(addToInternal) }]"
             }
             importDescriptor(param: params, desc: descriptor) { [unowned vc = self] (success, errorMessage) in
                 if success {
@@ -465,7 +522,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             if addToInternal {
                 params = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
             } else {
-                params = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Gordion\", \"keypool\": \(addToKeypool), \"internal\": \(addToInternal) }]"
+                params = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Gordian\", \"keypool\": \(addToKeypool), \"internal\": \(addToInternal) }]"
             }
             importDescriptor(param: params, desc: descriptor) { [unowned vc = self] (success, errorMessage) in
                 if success {

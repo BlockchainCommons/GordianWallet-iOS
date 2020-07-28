@@ -210,8 +210,6 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     }
     
     private func processTextfieldInput() {
-        print("processTextfieldInput")
-        
         if textField.text != "" {
             
             //check if user pasted more then one word
@@ -1005,6 +1003,27 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 vc.derivation = self.derivation
                 vc.changeDescriptors = processedChangeDescriptors
                 vc.primaryDescriptors = processedPrimaryDescriptors
+                vc.updateDerivationBlock = { [unowned thisVc = self] dict in
+                    thisVc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+                    if let wrds = dict["words"], let der = dict["derivation"] {
+                        Encryption.getNode { (node, error) in
+                            if node != nil {
+                                thisVc.index = 0
+                                thisVc.recoveryDict = [:]
+                                thisVc.recoveryDict["nodeId"] = node!.id
+                                thisVc.walletNameHash = ""
+                                thisVc.processedChangeDescriptors.removeAll()
+                                thisVc.processedPrimaryDescriptors.removeAll()
+                                thisVc.words = wrds
+                                thisVc.derivation = der.replacingOccurrences(of: "/0/0", with: "")
+                                thisVc.derivation = thisVc.derivation!.condenseWhitespace()
+                                thisVc.recoveryDict["derivation"] = thisVc.derivation
+                                let (primDescriptors, changeDescriptors) = thisVc.descriptors()
+                                thisVc.buildPrimDescriptors(primDescriptors, changeDescriptors)
+                            }
+                        }
+                    }
+                }
             }
             
         default:

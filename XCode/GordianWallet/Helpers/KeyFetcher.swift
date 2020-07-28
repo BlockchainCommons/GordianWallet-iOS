@@ -296,5 +296,40 @@ class KeyFetcher {
             }
         }
     }
+    
+    class func fetchAddresses(words: String, derivation: String, completion: @escaping (([String]?)) -> Void) {
+        var addresses:[String] = []
+        if let bip39mnemonic = BIP39Mnemonic(words) {
+            let seed = bip39mnemonic.seedHex("")
+            var addressType:AddressType!
+            if let mk = HDKey(seed, .testnet) {
+                if derivation.contains("49") {
+                    addressType = .payToScriptHashPayToWitnessPubKeyHash
+                } else if derivation.contains("44") {
+                    addressType = .payToPubKeyHash
+                } else if derivation.contains("84") {
+                    addressType = .payToWitnessPubKeyHash
+                } else {
+                    completion(nil)
+                }
+                if let path = BIP32Path(derivation) {
+                    do {
+                        let key = try mk.derive(path)
+                        let address = key.address(addressType)
+                        addresses.append(address.description)
+                        completion(addresses)
+                    } catch {
+                        completion(nil)
+                    }
+                } else {
+                    completion(nil)
+                }
+            } else {
+                completion(nil)
+            }
+        } else {
+            completion(nil)
+        }
+    }
 
 }

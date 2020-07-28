@@ -31,7 +31,7 @@
         <!--Public Keys & Addresses-->
         <scene sceneID="ldE-LN-HUc">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="jX1-Is-hS7" customClass="ExportKeysViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="jX1-Is-hS7" customClass="ExportKeysViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Zzb-On-WiQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -356,7 +356,7 @@
         <!--Authenticate-->
         <scene sceneID="uhr-cc-fch">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="FI5-Kv-Y72" customClass="AuthenticateViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="FI5-Kv-Y72" customClass="AuthenticateViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xx3-cn-bLQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -372,7 +372,7 @@
         <!--Home-->
         <scene sceneID="erx-5N-Kcy">
             <objects>
-                <viewController storyboardIdentifier="MainMenu" extendedLayoutIncludesOpaqueBars="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XmP-lK-cua" customClass="MainMenuViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainMenu" extendedLayoutIncludesOpaqueBars="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XmP-lK-cua" customClass="MainMenuViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Xal-ei-X51">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1057,7 +1057,7 @@
         <!--Notification Center View Controller-->
         <scene sceneID="LYy-PL-AbR">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Jrh-wd-oba" customClass="NotificationCenterViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Jrh-wd-oba" customClass="NotificationCenterViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="F9S-Uk-itD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1155,7 +1155,7 @@
         <!--Notification Detail View Controller-->
         <scene sceneID="nA0-8m-dJp">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="44j-JA-eKl" customClass="NotificationDetailViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="44j-JA-eKl" customClass="NotificationDetailViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="svN-4f-zp7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1237,7 +1237,7 @@
         <!--Introduction View Controller-->
         <scene sceneID="xwq-yX-n8x">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="I2N-Ql-8qz" customClass="IntroductionViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="I2N-Ql-8qz" customClass="IntroductionViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="brz-ev-3wV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1318,7 +1318,7 @@ We appreciate your attention and patience!</string>
         <!--What IsFN2 View Controller-->
         <scene sceneID="WHW-Pc-Ddb">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="bbG-OT-g8S" customClass="WhatIsFN2ViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="bbG-OT-g8S" customClass="WhatIsFN2ViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oTR-K6-o1V">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1411,7 +1411,7 @@ For more information regarding wallet recovery please see our Recovery.md file.<
         <!--How To SupportFN2 View Controller-->
         <scene sceneID="zot-p1-6np">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="2py-0n-Ew1" customClass="HowToSupportFN2ViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="2py-0n-Ew1" customClass="HowToSupportFN2ViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gvZ-RO-lUM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1490,7 +1490,7 @@ If you find this project useful, and would like to learn more about Blockchain C
         <!--How To UseFN2 View Controller-->
         <scene sceneID="qpf-OM-Fdc">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="2h3-RM-OBN" customClass="HowToUseFN2ViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="2h3-RM-OBN" customClass="HowToUseFN2ViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="30J-zW-bYp">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1567,7 +1567,7 @@ The app will then do all the hard work for you. Using FullyNoded 2 is straightfo
         <!--IsFN2 Secure View Controller-->
         <scene sceneID="MMT-Gw-vBb">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="HFs-mJ-jw5" customClass="IsFN2SecureViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="HFs-mJ-jw5" customClass="IsFN2SecureViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="uyg-gE-hOL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1646,7 +1646,7 @@ FullyNoded 2 utilizes the latest generation of hidden services and allows you to
         <!--License Disclaimer View Controller-->
         <scene sceneID="GsQ-g5-4MW">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Ll8-ZN-VE5" customClass="LicenseDisclaimerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Ll8-ZN-VE5" customClass="LicenseDisclaimerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tnV-vd-CtN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1744,7 +1744,7 @@ The use of FullyNoded 2 is under the "BSD 2-Clause Plus Patent License" (https:/
         <!--Sign In View Controller-->
         <scene sceneID="lI8-y0-g1b">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Z5o-kT-X3Z" customClass="SignInViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Z5o-kT-X3Z" customClass="SignInViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jWO-gu-MiD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1845,7 +1845,7 @@ Blockchain Commons and Fully Noded 2 never share any data with any third party e
         <!--Donate View Controller-->
         <scene sceneID="7jc-m3-rrH">
             <objects>
-                <viewController id="NHv-UH-1lX" customClass="DonateViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="NHv-UH-1lX" customClass="DonateViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="P8x-W2-8Ap">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1957,7 +1957,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
         <!--Transaction-->
         <scene sceneID="VqF-ym-nmL">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="MkV-nj-qUL" customClass="TransactionViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="MkV-nj-qUL" customClass="TransactionViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gzX-0t-QhJ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2106,7 +2106,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
         <!--Scanner View Controller-->
         <scene sceneID="S5B-qY-ww0">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tBq-5k-T1U">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2160,7 +2160,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
         <!--Invoice-->
         <scene sceneID="aU3-2L-A1l">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" id="Xxg-Pp-vvN" customClass="InvoiceViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="Xxg-Pp-vvN" customClass="InvoiceViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eUN-hK-8St">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2315,7 +2315,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
         <!--Build Transaction-->
         <scene sceneID="nPC-E2-jSN">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" id="pUo-bf-sNm" customClass="CreateRawTxViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" id="pUo-bf-sNm" customClass="CreateRawTxViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DIN-Fg-EH6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2587,7 +2587,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
         <!--Confirm-->
         <scene sceneID="cYH-Od-C1K">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="xB3-mY-13p" customClass="ConfirmViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="xB3-mY-13p" customClass="ConfirmViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="T5K-PU-RA6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2794,7 +2794,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
         <!--Verify-->
         <scene sceneID="i2z-D9-ciK">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="J96-pV-r6d" customClass="VerifyViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="J96-pV-r6d" customClass="VerifyViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XGu-4Z-bs0">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2828,7 +2828,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
         <!--Settings-->
         <scene sceneID="Ajv-p7-tUm">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="AS8-ke-Yxh" customClass="SettingsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="AS8-ke-Yxh" customClass="SettingsViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="A3f-zZ-K5e">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2942,7 +2942,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
         <!--Backup Info-->
         <scene sceneID="whf-ed-7JK">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="lq5-Pd-gqW" customClass="SeedViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="lq5-Pd-gqW" customClass="SeedViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GDk-pd-kDa">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3069,7 +3069,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
         <!--Wallet Created Success View Controller-->
         <scene sceneID="kKT-Sa-QMY">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="shH-Cs-byi" customClass="WalletCreatedSuccessViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="shH-Cs-byi" customClass="WalletCreatedSuccessViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vnd-UJ-Nms">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3156,7 +3156,7 @@ You should make mutliple backups of each and store them in seperate locations.</
         <!--Account Map QR-->
         <scene sceneID="zcX-u3-cQY">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="M6J-Vn-XJt" customClass="WalletCreatedQRViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="M6J-Vn-XJt" customClass="WalletCreatedQRViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9i8-aS-4OV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3224,7 +3224,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
         <!--Node's Seed-->
         <scene sceneID="2Mt-d4-dcm">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Ko8-An-eKd" customClass="WalletCreatedNodesSeedViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Ko8-An-eKd" customClass="WalletCreatedNodesSeedViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="PGI-D8-S3B">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3381,7 +3381,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
         <!--Offline Seed-->
         <scene sceneID="Mbu-zT-oG5">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="pka-dK-9G9" customClass="WalletCreatedSaveWordsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="pka-dK-9G9" customClass="WalletCreatedSaveWordsViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="OOS-O4-V6n">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3534,7 +3534,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
         <!--Seed Words-->
         <scene sceneID="PTw-4b-9Ka">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="94S-m3-HcE" customClass="WalletCreatedWordsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="94S-m3-HcE" customClass="WalletCreatedWordsViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rIJ-HM-PbH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3593,7 +3593,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Choose Number Of Signers View Controller-->
         <scene sceneID="3oC-l5-4EA">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="1BI-xh-FzJ" customClass="ChooseNumberOfSignersViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="1BI-xh-FzJ" customClass="ChooseNumberOfSignersViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="S7c-n6-Cfw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3635,7 +3635,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Confirm-->
         <scene sceneID="ksL-eU-VG9">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="0g2-8e-jCH" customClass="ConfirmRecoveryViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="0g2-8e-jCH" customClass="ConfirmRecoveryViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Vhf-Xe-5bf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3893,7 +3893,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Locked UTXO Info-->
         <scene sceneID="MG3-9N-gz0">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="IhZ-EY-NJ5" customClass="LockedUtxosViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="IhZ-EY-NJ5" customClass="LockedUtxosViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Tnt-2b-ReQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3927,7 +3927,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Export-->
         <scene sceneID="txy-Zb-nWB">
             <objects>
-                <viewController id="aWn-Fx-ACR" customClass="QRViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="aWn-Fx-ACR" customClass="QRViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0ft-op-zNI">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3970,7 +3970,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Node Manager-->
         <scene sceneID="xYz-bt-Lyj">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="DOn-IQ-sOy" customClass="NodeManagerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="DOn-IQ-sOy" customClass="NodeManagerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VaW-dM-vZL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4044,7 +4044,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Recovery-->
         <scene sceneID="k9E-E2-70I">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Elr-wf-cyI" customClass="WalletRecoverViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="Elr-wf-cyI" customClass="WalletRecoverViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JxN-8Z-mkw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4127,7 +4127,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Seed Words-->
         <scene sceneID="zAi-gs-cRc">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="kR7-Mg-fhs" customClass="WordRecoveryViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="kR7-Mg-fhs" customClass="WordRecoveryViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="PCf-Oj-I0Q">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4198,7 +4198,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Displayer View Controller-->
         <scene sceneID="2P1-G0-q27">
             <objects>
-                <viewController id="WYx-vx-5xJ" customClass="QRDisplayerViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="WYx-vx-5xJ" customClass="QRDisplayerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Nlx-Rv-vA1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4214,7 +4214,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Tools-->
         <scene sceneID="s4f-Br-O6C">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="51a-bL-HRe" customClass="WalletToolsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="51a-bL-HRe" customClass="WalletToolsViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gv9-ry-GoN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4460,7 +4460,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Refill Keypool-->
         <scene sceneID="GrC-rC-yST">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="reL-7P-R3q" customClass="RefillMultisigViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="reL-7P-R3q" customClass="RefillMultisigViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZRF-hf-jJd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4560,7 +4560,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Sweep to-->
         <scene sceneID="pAe-Ty-iWF">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="dWg-DF-dx5" customClass="SweepToViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="dWg-DF-dx5" customClass="SweepToViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="OjN-Hs-8o0">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -4777,7 +4777,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Accounts-->
         <scene sceneID="xPx-UU-NTd">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" modalPresentationStyle="fullScreen" id="3uQ-0D-YgM" customClass="WalletsViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" modalPresentationStyle="fullScreen" id="3uQ-0D-YgM" customClass="WalletsViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xno-0v-9NB">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5571,7 +5571,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Create Account-->
         <scene sceneID="lEx-cV-voz">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="20O-ZD-xtI" customClass="ChooseWalletFormatViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="20O-ZD-xtI" customClass="ChooseWalletFormatViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3Xx-cw-zsB">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5778,7 +5778,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Add xpub-->
         <scene sceneID="JBr-sN-uMP">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="QV1-we-EJN" customClass="AddExtendedKeyViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="QV1-we-EJN" customClass="AddExtendedKeyViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ULy-HG-wOq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5915,7 +5915,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--UTXO Info-->
         <scene sceneID="gUA-vw-Rw5">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="w66-ss-9Kp" customClass="UtxoInfoViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="w66-ss-9Kp" customClass="UtxoInfoViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Trb-Ca-aYc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -5949,7 +5949,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--UTXO's-->
         <scene sceneID="WAZ-Eh-cw6">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="qYd-Xi-rqO" customClass="UTXOViewController" customModule="FullyNoded_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="qYd-Xi-rqO" customClass="UTXOViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Mo7-j4-oZL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -6245,7 +6245,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="NHy-Xu-LiC"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="2kH-rb-1zK"/>
-        <segue reference="Xe1-Me-c8c"/>
+        <segue reference="OVL-GL-HPC"/>
         <segue reference="zkr-zY-rLG"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
