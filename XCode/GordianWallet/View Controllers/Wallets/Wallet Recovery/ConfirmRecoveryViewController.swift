@@ -66,6 +66,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             walletDerivation.text = descriptorStruct.derivation + "/0"
         }
         loadAddresses()
+        print("words: \(words)")
     }
     
     private func removeLoader() {
@@ -249,10 +250,8 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                     if pruned {
                         if let pruneHeight = dict["pruneheight"] as? Int {
                             if wallet.blockheight == 0 {
-                                showAlert(vc: vc, title: "Pruned Node", message: "We have initiated a rescan from your pruned node's blockheight \(pruneHeight) as that is as far back as we can go, if you have transactions that precede this blockheight they will not show up unless you reindex your node.")
                                 vc.rescanFrom(param: "\(pruneHeight)", wallet: wallet)
                             } else if pruneHeight > wallet.blockheight {
-                                showAlert(vc: vc, title: "Reindex required!", message: "Your pruned node can not rescan beyond its prune height, in order to rescan to the block where this wallet was born a full blockchain reindex is required. We have initiated a rescan from block \(pruneHeight).")
                                 vc.rescanFrom(param: "\(pruneHeight)", wallet: wallet)
                             } else {
                                 vc.rescanFrom(param: "\(wallet.blockheight)", wallet: wallet)
@@ -299,12 +298,33 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     func parseWalletCreateError(wallet: WalletStruct, errorDescription: String?) {
         if errorDescription != nil {
             if errorDescription!.contains("already exists") {
-                saveWallet(wallet: wallet)
+                encryptSeed(wallet: wallet)
             } else {
                 showError(message: "Import error, error creating wallet: \(errorDescription!)")
             }
         } else {
             showError(message: "Import error: error creating wallet")
+        }
+    }
+    
+    func saveSeed(encryptedSeed: Data, wallet: WalletStruct) {
+        if KeyChain.saveNewSeed(encryptedSeed: encryptedSeed) {
+            importedOrRecovered = "recovered"
+            words = nil
+            saveWallet(wallet: wallet)
+        } else {
+            showError(message: "Error saving your seed.")
+        }
+    }
+    
+    func encryptSeed(wallet: WalletStruct) {
+        let unencryptedSeed = words!.dataUsingUTF8StringEncoding
+        Encryption.encryptData(dataToEncrypt: unencryptedSeed) { [unowned vc = self] (encryptedSeed, error) in
+            if encryptedSeed != nil {
+                vc.saveSeed(encryptedSeed: encryptedSeed!, wallet: wallet)
+            } else {
+                vc.showError(message: "Error encrypting your seed.")
+            }
         }
     }
     
@@ -320,34 +340,9 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
         let primaryDescParams = "[{ \"desc\": \"\(wallet.descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Godion\", \"keypool\": \(addToKeypool), \"internal\": false }]"
         let changeDescParams = "[{ \"desc\": \"\(wallet.changeDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"keypool\": \(addToKeypool), \"internal\": \(addToInternal) }]"
         
-        
-        func saveSeed(seedDict: [String:Any]) {
-            CoreDataService.saveEntity(dict: seedDict, entityName: .seeds) { [unowned vc = self] (success, errorDesc) in
-                if success {
-                    vc.importedOrRecovered = "recovered"
-                    vc.words = nil
-                    vc.saveWallet(wallet: wallet)
-                } else {
-                    vc.showError(message: "Error saving your seed.")
-                }
-            }
-        }
-        
-        func encryptSeed() {
-            let unencryptedSeed = words!.dataUsingUTF8StringEncoding
-            Encryption.encryptData(dataToEncrypt: unencryptedSeed) { [unowned vc = self] (encryptedSeed, error) in
-                if encryptedSeed != nil {
-                    let dict = ["seed":encryptedSeed!,"id":UUID()] as [String:Any]
-                    saveSeed(seedDict: dict)
-                } else {
-                    vc.showError(message: "Error encrypting your seed.")
-                }
-            }
-        }
-        
         func filter() {
             if words != nil {
-                encryptSeed()
+                encryptSeed(wallet: wallet)
             } else {
                 saveWallet(wallet: wallet)
             }
@@ -475,7 +470,16 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             let descriptor = primaryDescriptors[index]
             var addToKeypool = false
             var addToInternal = false
-            if descriptor.contains("/84'/1'/0'") || descriptor.contains("/84'/0'/0'") || descriptor.contains("/44'/1'/0'") || descriptor.contains("/44'/0'/0'") || descriptor.contains("/49'/1'/0'") || descriptor.contains("/49'/0'/0'") {
+//            if descriptor.contains("/84'/1'/0'") || descriptor.contains("/84'/0'/0'") || descriptor.contains("/44'/1'/0'") || descriptor.contains("/44'/0'/0'") || descriptor.contains("/49'/1'/0'") || descriptor.contains("/49'/0'/0'") {
+//                if descriptor.contains("/0/*") {
+//                    addToKeypool = true
+//                    addToInternal = false
+//                } else if descriptor.contains("/1/*") {
+//                    addToKeypool = true
+//                    addToInternal = true
+//                }
+//            }
+            if wallet.type == "DEFAULT" {
                 if descriptor.contains("/0/*") {
                     addToKeypool = true
                     addToInternal = false
@@ -484,6 +488,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                     addToInternal = true
                 }
             }
+            
             var params = ""
             if addToInternal {
                 params = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
@@ -509,7 +514,16 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             let descriptor = changeDescriptors[index]
             var addToKeypool = false
             var addToInternal = false
-            if descriptor.contains("/84'/1'/0'") || descriptor.contains("/84'/0'/0'") || descriptor.contains("/44'/1'/0'") || descriptor.contains("/44'/0'/0'") || descriptor.contains("/49'/1'/0'") || descriptor.contains("/49'/0'/0'") {
+//            if descriptor.contains("/84'/1'/0'") || descriptor.contains("/84'/0'/0'") || descriptor.contains("/44'/1'/0'") || descriptor.contains("/44'/0'/0'") || descriptor.contains("/49'/1'/0'") || descriptor.contains("/49'/0'/0'") {
+//                if descriptor.contains("/0/*") {
+//                    addToKeypool = true
+//                    addToInternal = false
+//                } else if descriptor.contains("/1/*") {
+//                    addToKeypool = true
+//                    addToInternal = true
+//                }
+//            }
+            if wallet.type == "DEFAULT" {
                 if descriptor.contains("/0/*") {
                     addToKeypool = true
                     addToInternal = false
@@ -534,7 +548,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             }
         } else {
             // finished here...
-            saveWallet(wallet: wallet)
+            encryptSeed(wallet: wallet)
         }
     }
     

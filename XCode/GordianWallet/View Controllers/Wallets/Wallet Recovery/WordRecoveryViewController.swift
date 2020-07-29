@@ -29,11 +29,13 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     var onWordsDoneBlock: ((Bool) -> Void)?
     var onSeedDoneBlock: ((String) -> Void)?
     var addingSeed = Bool()
-    var addingIndpendentSeed = Bool()
     var index = 0
     var processedPrimaryDescriptors:[String] = []
     var processedChangeDescriptors:[String] = []
+    var derivationFieldEditing = false
+    var network:Network!
     
+    @IBOutlet weak var derivationField: UITextField!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var wordView: UIView!
     
@@ -41,6 +43,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         super.viewDidLoad()
         
         navigationController?.delegate = self
+        derivationField.delegate = self
         textField.delegate = self
         tap.addTarget(self, action: #selector(handleTap))
         view.addGestureRecognizer(tap)
@@ -48,31 +51,56 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         bip39Words = Bip39Words.validWords
         updatePlaceHolder(wordNumber: 1)
         
-        if addingSeed || addingIndpendentSeed {
-            
-            navigationItem.title = "Add BIP39 Phrase"
-            
+        if addingSeed {
+            navigationItem.title = "Add BIP39 words"
+        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
+        tapGesture.numberOfTapsRequired = 1
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+        hideKeyboards()
+    }
+    
+    func hideKeyboards() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.derivationField.resignFirstResponder()
+            vc.textField.resignFirstResponder()
+        }
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+           if derivationFieldEditing {
+               if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+                   if self.view.frame.origin.y == 0 {
+                       self.view.frame.origin.y -= keyboardSize.height
+                   }
+               }
+           }
+       }
+       
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if derivationFieldEditing {
+            if self.view.frame.origin.y != 0 {
+                self.view.frame.origin.y = 0
+            }
         }
     }
     
     private func updatePlaceHolder(wordNumber: Int) {
-        
         DispatchQueue.main.async { [unowned vc = self] in
-            
             vc.textField.attributedPlaceholder = NSAttributedString(string: "add word #\(wordNumber)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
-            
         }
-        
     }
     
     @objc func handleTap() {
-        
         DispatchQueue.main.async { [unowned vc = self] in
-            
             vc.textField.resignFirstResponder()
-            
         }
-        
     }
     
     @IBAction func removeWordAction(_ sender: Any) {
@@ -125,83 +153,104 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             
             if !error && node != nil {
                 
-                DispatchQueue.main.async {
-                    
-                    let network = node!.network
-                    vc.recoveryDict["nodeId"] = node!.id
-                    var chain = ""
-                    
-                    let alert = UIAlertController(title: "Choose a derivation", message: "When only using words to recover you need to let us know which derivation scheme you want to utilize, if you are not sure you can recover the wallet three times, once for each derivation.", preferredStyle: .actionSheet)
-                    
-                    switch network {
-                    case "testnet":
-                        chain = "1'"
-                    case "mainnet":
-                        chain = "0'"
-                    default:
-                        break
+                    DispatchQueue.main.async {
+                        var chain = ""
+                        switch node!.network {
+                        case "testnet":
+                            chain = "1'"
+                            vc.network = .testnet
+                        case "mainnet":
+                            chain = "0'"
+                            vc.network = .mainnet
+                        default:
+                            break
+                        }
+                        vc.recoveryDict["nodeId"] = node!.id
+                        if vc.derivationField.text == "" {
+                            let alert = UIAlertController(title: "Choose a derivation", message: "When only using words to recover you need to let us know which derivation scheme you want to utilize, if you are not sure you can recover the wallet three times, once for each derivation.", preferredStyle: .actionSheet)
+                            
+                            
+                            
+                            alert.addAction(UIAlertAction(title: "Segwit - BIP84 - m/84'/\(chain)/0'/0", style: .default, handler: { action in
+                                
+                                vc.derivation = "m/84'/\(chain)/0'"
+                                vc.recoveryDict["derivation"] = vc.derivation
+                                vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+                                let (primDescriptors, changeDescriptors) = vc.descriptors()
+                                vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
+                                
+                            }))
+                            
+                            alert.addAction(UIAlertAction(title: "Legacy - BIP44 - m/44'/\(chain)/0'/0", style: .default, handler: { action in
+                                
+                                vc.derivation = "m/44'/\(chain)/0'"
+                                vc.recoveryDict["derivation"] = vc.derivation
+                                vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+                                let (primDescriptors, changeDescriptors) = vc.descriptors()
+                                vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
+                                
+                            }))
+                            
+                            alert.addAction(UIAlertAction(title: "Nested Segwit - BIP49 - m/49'/\(chain)/0'/0", style: .default, handler: { action in
+                                
+                                vc.derivation = "m/49'/\(chain)/0'"
+                                vc.recoveryDict["derivation"] = vc.derivation
+                                vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+                                let (primDescriptors, changeDescriptors) = vc.descriptors()
+                                vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
+                                
+                            }))
+                            
+                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                            alert.popoverPresentationController?.sourceView = vc.view
+                            vc.present(alert, animated: true, completion: nil)
+                            
+                        } else {
+                            
+                            let alert = UIAlertController(title: "Choose an address format", message: "When recovering a custom derivation path you need to let us know which address format to utilize.", preferredStyle: .actionSheet)
+                            
+                            alert.addAction(UIAlertAction(title: "Segwit - bc1", style: .default, handler: { action in
+                                
+                                vc.recoveryDict["derivation"] = vc.derivation
+                                vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+                                let (primDescriptors, changeDescriptors) = vc.customDescriptors(prefix: "wpkh")
+                                vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
+                                
+                            }))
+                            
+                            alert.addAction(UIAlertAction(title: "Legacy - 1", style: .default, handler: { action in
+                                
+                                vc.recoveryDict["derivation"] = vc.derivation
+                                vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+                                let (primDescriptors, changeDescriptors) = vc.customDescriptors(prefix: "pkh")
+                                vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
+                                
+                            }))
+                            
+                            alert.addAction(UIAlertAction(title: "Nested Segwit - 3", style: .default, handler: { action in
+                                
+                                vc.recoveryDict["derivation"] = vc.derivation
+                                vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+                                let (primDescriptors, changeDescriptors) = vc.customDescriptors(prefix: "sh(wpkh")
+                                vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
+                                
+                            }))
+                            
+                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                            
+                            alert.popoverPresentationController?.sourceView = vc.view
+                            vc.present(alert, animated: true, completion: nil)
+                        }
+                        
+                        
+                        
                     }
-                    
-                    alert.addAction(UIAlertAction(title: "Segwit - BIP84 - m/84'/\(chain)/0'/0", style: .default, handler: { action in
-                        
-                        switch network {
-                        case "testnet":
-                            vc.derivation = "m/84'/1'/0'"
-                        case "mainnet":
-                            vc.derivation = "m/84'/0'/0'"
-                        default:
-                            break
-                        }
-                        
-                        vc.recoveryDict["derivation"] = vc.derivation
-                        vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
-                        let (primDescriptors, changeDescriptors) = vc.descriptors()
-                        vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
-                        
-                    }))
-                    
-                    alert.addAction(UIAlertAction(title: "Legacy - BIP44 - m/44'/\(chain)/0'/0", style: .default, handler: { action in
-                        
-                        switch network {
-                        case "testnet":
-                            vc.derivation = "m/44'/1'/0'"
-                        case "mainnet":
-                            vc.derivation = "m/44'/0'/0'"
-                        default:
-                            break
-                        }
-                        
-                        vc.recoveryDict["derivation"] = vc.derivation
-                        vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
-                        let (primDescriptors, changeDescriptors) = vc.descriptors()
-                        vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
-                        
-                    }))
-                    
-                    alert.addAction(UIAlertAction(title: "Nested Segwit - BIP49 - m/49'/\(chain)/0'/0", style: .default, handler: { action in
-                        
-                        switch network {
-                        case "testnet":
-                            vc.derivation = "m/49'/1'/0'"
-                        case "mainnet":
-                            vc.derivation = "m/49'/0'/0'"
-                        default:
-                            break
-                        }
-                        
-                        vc.recoveryDict["derivation"] = vc.derivation
-                        vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
-                        let (primDescriptors, changeDescriptors) = vc.descriptors()
-                        vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
-                        
-                    }))
-                    
-                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                    
-                    alert.popoverPresentationController?.sourceView = vc.view
-                    vc.present(alert, animated: true, completion: nil)
-                    
-                }
+//                } else {
+//                    vc.recoveryDict["derivation"] = vc.derivation
+//                    vc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+//                    let (primDescriptors, changeDescriptors) = vc.descriptors()
+//                    vc.buildPrimDescriptors(primDescriptors, changeDescriptors)
+//                }
                 
             }
             
@@ -341,110 +390,61 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     }
     
     private func validWordsAdded() {
-        
-        //if !addingSeed && !addingIndpendentSeed {
-            
-            DispatchQueue.main.async { [unowned vc = self] in
-                
-                vc.textField.resignFirstResponder()
-                vc.verify()
-                
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.textField.resignFirstResponder()
+            vc.verify()
+        }
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField == derivationField {
+            derivationFieldEditing = true
+        }
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == derivationField {
+            derivationFieldEditing = false
+            if derivationField.text != "" {
+                if derivationField.text!.hasPrefix("m") {
+                    if let path = BIP32Path(derivationField.text!) {
+                        self.derivation = path.description
+                    } else {
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.derivationField.text = ""
+                        }
+                        showAlert(vc: self, title: "Invalid derivation", message: "")
+                    }
+                } else {
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        vc.derivationField.text = ""
+                    }
+                    showAlert(vc: self, title: "Invalid derivation", message: "Custom derivation paths needs to start with an m, an example would be: \"m/0'/0'\", if you do not have a good understanding of what this implies then leave the custom derivation field blank to utilize the defaults.")
+                }
             }
-            
-//        } else if addingIndpendentSeed {
-//
-//            DispatchQueue.main.async { [unowned vc = self] in
-//                vc.textField.resignFirstResponder()
-//
-//            }
-//
-//            let unencryptedSeed = (justWords.joined(separator: " ")).dataUsingUTF8StringEncoding
-//
-//            Encryption.encryptData(dataToEncrypt: unencryptedSeed) { [unowned vc = self] (encryptedSeed, error) in
-//
-//                if encryptedSeed != nil {
-//
-//
-//                    let dict = ["seed":encryptedSeed!,"id":UUID()] as [String:Any]
-//                    CoreDataService.saveEntity(dict: dict, entityName: .seeds) { (success, errorDesc) in
-//
-//                        if success {
-//
-//                            DispatchQueue.main.async { [unowned vc = self] in
-//                                vc.textField.text = ""
-//                                vc.label.text = ""
-//                                vc.justWords.removeAll()
-//                                vc.addedWords.removeAll()
-//                                vc.updatePlaceHolder(wordNumber: 1)
-//                                NotificationCenter.default.post(name: .seedAdded, object: nil, userInfo: nil)
-//                            }
-//
-//                            showAlert(vc: vc, title: "Seed saved!", message: "You may go back or add another seed.")
-//
-//                        } else {
-//
-//                           showAlert(vc: vc, title: "Error", message: "We had an error saving that seed.")
-//
-//                        }
-//
-//                    }
-//
-//                }
-//
-//            }
-                
-        //} else {
-            
-//            DispatchQueue.main.async { [unowned vc = self] in
-//
-//                if vc.justWords.count == 12 {
-//
-//                    let alert = UIAlertController(title: "That is a valid BIP39 mnemonic", message: "You may now create your wallet", preferredStyle: .actionSheet)
-//
-//                    alert.addAction(UIAlertAction(title: "Create wallet", style: .default, handler: { action in
-//
-//                        DispatchQueue.main.async { [unowned vc = self] in
-//
-//                            vc.onSeedDoneBlock!(vc.justWords.joined(separator: " "))
-//                            vc.navigationController!.popViewController(animated: true)
-//
-//                        }
-//
-//                    }))
-//
-//                    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-//                    alert.popoverPresentationController?.sourceView = self.view
-//                    vc.present(alert, animated: true, completion: nil)
-//
-//                }
-//
-//            }
-            
-        //}
-        
+        }
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        var subString = (textField.text!.capitalized as NSString).replacingCharacters(in: range, with: string)
-        subString = formatSubstring(subString: subString)
-        
-        if subString.count == 0 {
-            
-            resetValues()
-            
-        } else {
-            
-            searchAutocompleteEntriesWIthSubstring(substring: subString)
-            
+        if textField != derivationField {
+            var subString = (textField.text!.capitalized as NSString).replacingCharacters(in: range, with: string)
+            subString = formatSubstring(subString: subString)
+            if subString.count == 0 {
+                resetValues()
+            } else {
+                searchAutocompleteEntriesWIthSubstring(substring: subString)
+            }
         }
-        
         return true
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        processTextfieldInput()
+        if textField == derivationField {
+            derivationField.endEditing(true)
+        } else {
+            processTextfieldInput()
+        }
         return true
     }
     
@@ -613,7 +613,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 if !error && mnemonic != nil {
                     
                     let seed = mnemonic!.seedHex()
-                    if let mk = HDKey(seed, vc.network()) {
+                    if let mk = HDKey(seed, vc.network) {
                         
                         if let path = BIP32Path(derivation) {
                             
@@ -761,19 +761,11 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     }
     
     private func masterKey(mnemonic: BIP39Mnemonic) -> HDKey? {
-        return HDKey(mnemonic.seedHex(""), network())
+        return HDKey(mnemonic.seedHex(""), network)
     }
     
     private func path(deriv: String) -> BIP32Path? {
         return BIP32Path(deriv)
-    }
-    
-    private func network() -> Network {
-        if derivation!.contains("1") {
-            return .testnet
-        } else {
-            return .mainnet
-        }
     }
     
     private func fingerprint(key: HDKey) -> String {
@@ -825,6 +817,39 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         return accountLessPath
     }
     
+    private func customDescriptors(prefix: String) -> (primaryDescriptors: [String], changeDescriptors: [String]) {
+        var primDescs:[String] = []
+        var changeDescs:[String] = []
+        if words != nil {
+            if let mnemonic = mnemonic() {
+                if let mk = masterKey(mnemonic: mnemonic) {
+                    if let path = path(deriv: self.derivationField.text!) {
+                        let pathWithFingerprint = (path.description).replacingOccurrences(of: "m", with: fingerprint(key: mk))
+                        if let xpub = xpub(path: path) {
+                            var primDesc = ""
+                            switch prefix {
+                            case "wpkh":
+                                primDesc = "\"wpkh([\(pathWithFingerprint)]\(xpub)/0/*)\""
+                                
+                            case "pkh":
+                                primDesc = "\"pkh([\(pathWithFingerprint)]\(xpub)/0/*)\""
+                                
+                            case "sh(wpkh":
+                                primDesc = "\"sh(wpkh([\(pathWithFingerprint)]\(xpub)/0/*))\""
+                                 
+                            default:
+                                break
+                            }
+                            primDescs.append(primDesc)
+                            changeDescs.append(primDesc.replacingOccurrences(of: "/0/*", with: "/1/*"))
+                        }
+                    }
+                }
+            }
+        }
+        return (primDescs, changeDescs)
+    }
+    
     private func descriptors() -> (primaryDescriptors: [String], changeDescriptors: [String]) {
         var primDescs:[String] = []
         var changeDescs:[String] = []
@@ -856,7 +881,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                                     primDesc = "\"sh(wpkh([\(pathWithFingerprint)]\(xpub)/0/*))\""
                                     
                                 default:
-                                    break
+                                    primDesc = "\"wpkh([\(pathWithFingerprint)]\(xpub)/0/*)\""
                                     
                                 }
                                 primDescs.append(primDesc)
@@ -868,6 +893,31 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             }
         }
         return (primDescs, changeDescs)
+    }
+    
+    private func setCustomXprvs(completion: @escaping ((Bool)) -> Void) {
+        if words != nil {
+            var encryptedXprvs:[Data] = []
+            if let path = path(deriv: derivationField.text!) {
+                if let xprv = xprv(path: path) {
+                    Encryption.encryptData(dataToEncrypt: xprv.dataUsingUTF8StringEncoding) { [unowned vc = self] (encryptedData, error) in
+                        if encryptedData != nil {
+                            encryptedXprvs.append(encryptedData!)
+                            vc.recoveryDict["xprvs"] = encryptedXprvs
+                            completion(true)
+                        } else {
+                            completion(false)
+                        }
+                    }
+                } else {
+                    completion(false)
+                }
+            } else {
+                completion(false)
+            }
+        } else {
+            completion(false)
+        }
     }
     
     private func setXprvs(completion: @escaping ((Bool)) -> Void) {
@@ -949,39 +999,71 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     }
     
     private func setWalletDict() {
-        for desc in processedPrimaryDescriptors {
-            if desc.contains("/84'/1'/0'") || desc.contains("/84'/0'/0'") || desc.contains("/44'/1'/0'") || desc.contains("/44'/0'/0'") || desc.contains("/49'/1'/0'") || desc.contains("/49'/0'/0'") {
-                if desc.contains("/0/*") {
-                    walletNameHash = Encryption.sha256hash(desc)
-                    recoveryDict["descriptor"] = desc
-                    recoveryDict["name"] = walletNameHash
-                } else if desc.contains("/1/*") {
-                    recoveryDict["changeDescriptor"] = desc
-                }
-            }
-        }
-        recoveryDict["type"] = "DEFAULT"
-        recoveryDict["id"] = UUID()
-        recoveryDict["blockheight"] = Int32(0)
-        recoveryDict["maxRange"] = 2500
-        recoveryDict["lastUsed"] = Date()
-        recoveryDict["isArchived"] = false
-        recoveryDict["birthdate"] = keyBirthday()
-        recoveryDict["nodeIsSigner"] = false
+        
         CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
+            
             if wallets != nil {
+                
                 if wallets!.count == 0 {
                     vc.recoveryDict["isActive"] = true
                 } else {
                     vc.recoveryDict["isActive"] = false
                 }
-                vc.setXprvs { (success) in
-                    if success {
-                        vc.cv.removeConnectingView()
-                        vc.confirm()
-                    } else {
-                        vc.cv.removeConnectingView()
-                        showAlert(vc: vc, title: "Error", message: "There was an error encrypting your xprvs.")
+                
+                vc.recoveryDict["type"] = "DEFAULT"
+                vc.recoveryDict["id"] = UUID()
+                vc.recoveryDict["blockheight"] = Int32(0)
+                vc.recoveryDict["maxRange"] = 2500
+                vc.recoveryDict["lastUsed"] = Date()
+                vc.recoveryDict["isArchived"] = false
+                vc.recoveryDict["birthdate"] = keyBirthday()
+                vc.recoveryDict["nodeIsSigner"] = false
+                
+                for desc in vc.processedPrimaryDescriptors {
+                    
+                    DispatchQueue.main.async { [unowned vc = self] in
+                        if vc.derivationField.text != "" {
+                            
+                            if desc.contains("/0/*") {
+                                vc.walletNameHash = Encryption.sha256hash(desc)
+                                vc.recoveryDict["descriptor"] = desc
+                                vc.recoveryDict["name"] = vc.walletNameHash
+                            } else if desc.contains("/1/*") {
+                                vc.recoveryDict["changeDescriptor"] = desc
+                            }
+                            
+                            vc.setCustomXprvs { (success) in
+                                if success {
+                                    vc.cv.removeConnectingView()
+                                    vc.confirm()
+                                } else {
+                                    vc.cv.removeConnectingView()
+                                    showAlert(vc: vc, title: "Error", message: "There was an error encrypting your xprvs.")
+                                }
+                            }
+                            
+                        } else {
+                            
+                            if desc.contains("/84'/1'/0'") || desc.contains("/84'/0'/0'") || desc.contains("/44'/1'/0'") || desc.contains("/44'/0'/0'") || desc.contains("/49'/1'/0'") || desc.contains("/49'/0'/0'") {
+                                if desc.contains("/0/*") {
+                                    vc.walletNameHash = Encryption.sha256hash(desc)
+                                    vc.recoveryDict["descriptor"] = desc
+                                    vc.recoveryDict["name"] = vc.walletNameHash
+                                } else if desc.contains("/1/*") {
+                                    vc.recoveryDict["changeDescriptor"] = desc
+                                }
+                            }
+                            
+                            vc.setXprvs { (success) in
+                                if success {
+                                    vc.cv.removeConnectingView()
+                                    vc.confirm()
+                                } else {
+                                    vc.cv.removeConnectingView()
+                                    showAlert(vc: vc, title: "Error", message: "There was an error encrypting your xprvs.")
+                                }
+                            }
+                        }
                     }
                 }
             }

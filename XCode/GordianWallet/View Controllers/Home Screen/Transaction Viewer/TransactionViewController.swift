@@ -130,20 +130,24 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func inputsCell(indexPath: IndexPath) -> UITableViewCell {
-        let inputCell = transactionTable.dequeueReusableCell(withIdentifier: "inputsOutputsCell", for: indexPath)
-        let inputIndexLabel = inputCell.viewWithTag(1) as! UILabel
-        let inputAmountLabel = inputCell.viewWithTag(2) as! UILabel
-        let inputAddressLabel = inputCell.viewWithTag(3) as! UILabel
-        let input = inputTableArray[indexPath.row]
-        inputIndexLabel.text = "Input #\(input["index"] as! Int)"
-        inputAmountLabel.text = "\((input["amount"] as! String)) btc"
-        inputAddressLabel.text = (input["address"] as! String)
-        inputAddressLabel.adjustsFontSizeToFitWidth = true
-        inputCell.selectionStyle = .none
-        inputIndexLabel.textColor = .lightGray
-        inputAmountLabel.textColor = .lightGray
-        inputAddressLabel.textColor = .lightGray
-        return inputCell
+        if inputTableArray.count > 0 {
+            let inputCell = transactionTable.dequeueReusableCell(withIdentifier: "inputsOutputsCell", for: indexPath)
+            let inputIndexLabel = inputCell.viewWithTag(1) as! UILabel
+            let inputAmountLabel = inputCell.viewWithTag(2) as! UILabel
+            let inputAddressLabel = inputCell.viewWithTag(3) as! UILabel
+            let input = inputTableArray[indexPath.row]
+            inputIndexLabel.text = "Input #\(input["index"] as! Int)"
+            inputAmountLabel.text = "\((input["amount"] as! String)) btc"
+            inputAddressLabel.text = (input["address"] as! String)
+            inputAddressLabel.adjustsFontSizeToFitWidth = true
+            inputCell.selectionStyle = .none
+            inputIndexLabel.textColor = .lightGray
+            inputAmountLabel.textColor = .lightGray
+            inputAddressLabel.textColor = .lightGray
+            return inputCell
+        } else {
+            return UITableViewCell()
+        }
     }
     
     private func outputsCell(indexPath: IndexPath) -> UITableViewCell {

@@ -4163,28 +4163,57 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </connections>
                             </button>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ir0-SX-h8D">
-                                <rect key="frame" x="16" y="119" width="343" height="477"/>
+                                <rect key="frame" x="16" y="119" width="343" height="377"/>
                                 <color key="backgroundColor" red="0.06801593996529115" green="0.089767907349853029" blue="0.098156708180203167" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="custom derivations are optional and for expert users only, leave it blank to stick with the defaults (recommended)." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="08W-8g-1NG">
+                                <rect key="frame" x="16" y="575" width="343" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="m82-hX-dXM"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Custom derivation: (optional)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ocn-cO-Dth">
+                                <rect key="frame" x="16" y="504" width="222" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="optional" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dUC-de-xB5">
+                                <rect key="frame" x="16" y="533" width="343" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="ocn-cO-Dth" firstAttribute="top" secondItem="Ir0-SX-h8D" secondAttribute="bottom" constant="8" id="1ng-LH-XHU"/>
+                            <constraint firstItem="08W-8g-1NG" firstAttribute="top" secondItem="dUC-de-xB5" secondAttribute="bottom" constant="8" id="4lx-z2-VyZ"/>
                             <constraint firstItem="Gyn-mg-Z8d" firstAttribute="centerY" secondItem="1n6-iJ-uNl" secondAttribute="centerY" id="9Z3-HC-hg6"/>
                             <constraint firstItem="gfM-eP-RM3" firstAttribute="trailing" secondItem="Ir0-SX-h8D" secondAttribute="trailing" constant="16" id="A1h-UH-Hdv"/>
                             <constraint firstItem="Ir0-SX-h8D" firstAttribute="top" secondItem="Gyn-mg-Z8d" secondAttribute="bottom" constant="21" id="A4u-jD-rmB"/>
-                            <constraint firstItem="gfM-eP-RM3" firstAttribute="bottom" secondItem="Ir0-SX-h8D" secondAttribute="bottom" constant="22" id="bL8-t7-qyO"/>
+                            <constraint firstItem="gfM-eP-RM3" firstAttribute="trailing" secondItem="08W-8g-1NG" secondAttribute="trailing" constant="16" id="MAP-Wc-c3e"/>
+                            <constraint firstItem="ocn-cO-Dth" firstAttribute="leading" secondItem="gfM-eP-RM3" secondAttribute="leading" constant="16" id="dnQ-88-FdN"/>
+                            <constraint firstItem="dUC-de-xB5" firstAttribute="leading" secondItem="gfM-eP-RM3" secondAttribute="leading" constant="16" id="dqk-31-S2Z"/>
                             <constraint firstItem="gfM-eP-RM3" firstAttribute="trailing" secondItem="ftm-bz-o4y" secondAttribute="trailing" constant="16" id="g5N-nw-jv1"/>
                             <constraint firstItem="1n6-iJ-uNl" firstAttribute="leading" secondItem="gfM-eP-RM3" secondAttribute="leading" constant="16" id="h0c-Bb-ugj"/>
                             <constraint firstItem="ftm-bz-o4y" firstAttribute="leading" secondItem="Gyn-mg-Z8d" secondAttribute="trailing" constant="14" id="hkY-UQ-Lc2"/>
                             <constraint firstItem="Gyn-mg-Z8d" firstAttribute="leading" secondItem="1n6-iJ-uNl" secondAttribute="trailing" constant="13" id="jL0-s0-n8K"/>
+                            <constraint firstItem="gfM-eP-RM3" firstAttribute="trailing" secondItem="dUC-de-xB5" secondAttribute="trailing" constant="16" id="kYU-Q7-QqW"/>
                             <constraint firstItem="Ir0-SX-h8D" firstAttribute="leading" secondItem="gfM-eP-RM3" secondAttribute="leading" constant="16" id="oHL-HZ-gvA"/>
                             <constraint firstItem="Gyn-mg-Z8d" firstAttribute="top" secondItem="gfM-eP-RM3" secondAttribute="top" constant="20" id="pQo-Ug-KXj"/>
+                            <constraint firstItem="08W-8g-1NG" firstAttribute="leading" secondItem="gfM-eP-RM3" secondAttribute="leading" constant="16" id="rXh-Yc-NuO"/>
                             <constraint firstItem="ftm-bz-o4y" firstAttribute="centerY" secondItem="1n6-iJ-uNl" secondAttribute="centerY" id="tC8-ia-lJ6"/>
+                            <constraint firstItem="gfM-eP-RM3" firstAttribute="bottom" secondItem="08W-8g-1NG" secondAttribute="bottom" constant="8" id="yoh-4s-Tij"/>
+                            <constraint firstItem="dUC-de-xB5" firstAttribute="top" secondItem="ocn-cO-Dth" secondAttribute="bottom" constant="8" id="zuI-Gh-fU4"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gfM-eP-RM3"/>
                     </view>
                     <navigationItem key="navigationItem" title="Seed Words" id="3Du-fY-hLc"/>
                     <connections>
+                        <outlet property="derivationField" destination="dUC-de-xB5" id="1UC-9T-YbT"/>
                         <outlet property="textField" destination="Gyn-mg-Z8d" id="ykG-0f-liV"/>
                         <outlet property="wordView" destination="Ir0-SX-h8D" id="MbA-iZ-B10"/>
                         <segue destination="0g2-8e-jCH" kind="show" identifier="confirmFromWords" id="9aM-UA-Kws"/>
@@ -4193,7 +4222,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gR4-VF-d5h" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3546" y="1828"/>
+            <point key="canvasLocation" x="-3546.4000000000001" y="1827.4362818590705"/>
         </scene>
         <!--Displayer View Controller-->
         <scene sceneID="2P1-G0-q27">
@@ -6241,8 +6270,8 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="Kzq-6W-yKR"/>
         <segue reference="7qw-Ys-xsH"/>
         <segue reference="EvJ-Lj-YLy"/>
-        <segue reference="ONV-Bz-eml"/>
-        <segue reference="NHy-Xu-LiC"/>
+        <segue reference="9aM-UA-Kws"/>
+        <segue reference="G4m-Sr-i7G"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="2kH-rb-1zK"/>
         <segue reference="OVL-GL-HPC"/>

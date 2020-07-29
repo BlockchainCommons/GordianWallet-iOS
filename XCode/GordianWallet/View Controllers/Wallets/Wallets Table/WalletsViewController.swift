@@ -259,9 +259,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let wstruct = WalletStruct(dictionary: wallet)
             SeedParser.getSigners(wallet: wstruct) { [unowned vc = self] (knownSigners, uknownSigners) in
                 vc.sortedWallets[i]["knownSigners"] = knownSigners
-                print("knownSigners: \(knownSigners)")
                 vc.sortedWallets[i]["unknownSigners"] = uknownSigners
-                print("uknownSigners: \(uknownSigners)")
                 if i + 1 == vc.sortedWallets.count {
                     vc.sortedWallets = vc.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
                     completion(true)
@@ -405,12 +403,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let derivation = walletStruct.derivation
         
-        if derivation.contains("1") {
-            
+        if walletStruct.descriptor.contains("tpub") {
             balanceLabel.textColor = .systemOrange
             
         } else {
-            
             balanceLabel.textColor = .systemGreen
             
         }
