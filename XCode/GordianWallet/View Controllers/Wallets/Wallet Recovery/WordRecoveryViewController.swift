@@ -1089,7 +1089,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 vc.changeDescriptors = processedChangeDescriptors
                 vc.primaryDescriptors = processedPrimaryDescriptors
                 vc.updateDerivationBlock = { [unowned thisVc = self] dict in
-                    thisVc.cv.addConnectingView(vc: self, description: "building your wallets descriptors, this can take a minute..")
+                    thisVc.cv.addConnectingView(vc: self, description: "building your account descriptors, this can take a minute..")
                     if let wrds = dict["words"], let der = dict["derivation"] {
                         Encryption.getNode { (node, error) in
                             if node != nil {

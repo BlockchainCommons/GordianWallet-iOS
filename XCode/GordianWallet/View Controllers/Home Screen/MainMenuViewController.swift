@@ -63,6 +63,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         showFiat = false
         torConnected = false
         mainMenu.delegate = self
+        mainMenu.alpha = 0
         tabBarController?.delegate = self
         navigationController?.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(torBootStrapping(_:)), name: .didStartBootstrappingTor, object: nil)
@@ -1670,6 +1671,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func torConnFinished() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            vc.mainMenu.alpha = 1
+        }
         bootStrapping = false
         torConnected = true
         reloadSections([torCellIndex])

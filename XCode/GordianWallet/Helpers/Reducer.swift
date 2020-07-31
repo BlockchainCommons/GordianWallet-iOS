@@ -22,7 +22,7 @@ class Reducer {
         func torCommand() {
             
             let torRPC = MakeRPCCall.sharedInstance
-            torRPC.executeRPCCommand(walletName: walletName, method: command, param: param) { (success, objectToReturn, errorDesc) in
+            torRPC.executeRPCCommand(walletName: walletName, method: command, param: param) { (success, objectToReturn, errorDesccription) in
                 
                 if success && objectToReturn != nil {
                     
@@ -30,9 +30,9 @@ class Reducer {
                     
                 } else {
                     
-                    if errorDesc != nil {
+                    if errorDesccription != nil {
                         
-                        if errorDesc!.contains("Requested wallet does not exist or is not loaded") {
+                        if errorDesccription!.contains("Requested wallet does not exist or is not loaded") {
                             
                             torRPC.executeRPCCommand(walletName: walletName, method: .loadwallet, param: "\"\(walletName)\"") { (success, objectToReturn, errorDesc) in
                                 
@@ -62,13 +62,13 @@ class Reducer {
                             
                         } else {
                             
-                            completion((nil, errorDesc!))
+                            completion((nil, errorDesccription!))
                             
                         }
                         
                     } else {
                         
-                        completion((nil, errorDesc!))
+                        completion((nil, errorDesccription!))
                         
                     }
                     

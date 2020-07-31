@@ -66,7 +66,6 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             walletDerivation.text = descriptorStruct.derivation + "/0"
         }
         loadAddresses()
-        print("words: \(words)")
     }
     
     private func removeLoader() {
@@ -119,6 +118,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                 cointType = "1"
             }
             CheckSubAccounts.check(derivation: derivation, words: words!, coinType: cointType) { [unowned vc = self] (paths) in
+                print("check sub accounts")
                 if paths != nil {
                     var pathsWithHistory:[[String:Any]] = []
                     for (i, path) in paths!.enumerated() {
@@ -318,13 +318,18 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func encryptSeed(wallet: WalletStruct) {
-        let unencryptedSeed = words!.dataUsingUTF8StringEncoding
-        Encryption.encryptData(dataToEncrypt: unencryptedSeed) { [unowned vc = self] (encryptedSeed, error) in
-            if encryptedSeed != nil {
-                vc.saveSeed(encryptedSeed: encryptedSeed!, wallet: wallet)
-            } else {
-                vc.showError(message: "Error encrypting your seed.")
+        if words != nil {
+            let unencryptedSeed = words!.dataUsingUTF8StringEncoding
+            Encryption.encryptData(dataToEncrypt: unencryptedSeed) { [unowned vc = self] (encryptedSeed, error) in
+                if encryptedSeed != nil {
+                    vc.saveSeed(encryptedSeed: encryptedSeed!, wallet: wallet)
+                } else {
+                    vc.showError(message: "Error encrypting your seed.")
+                }
             }
+        } else {
+            importedOrRecovered = "imported"
+            saveWallet(wallet: wallet)
         }
     }
     
@@ -470,31 +475,30 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             let descriptor = primaryDescriptors[index]
             var addToKeypool = false
             var addToInternal = false
-//            if descriptor.contains("/84'/1'/0'") || descriptor.contains("/84'/0'/0'") || descriptor.contains("/44'/1'/0'") || descriptor.contains("/44'/0'/0'") || descriptor.contains("/49'/1'/0'") || descriptor.contains("/49'/0'/0'") {
-//                if descriptor.contains("/0/*") {
-//                    addToKeypool = true
-//                    addToInternal = false
-//                } else if descriptor.contains("/1/*") {
-//                    addToKeypool = true
-//                    addToInternal = true
-//                }
-//            }
-            if wallet.type == "DEFAULT" {
-                if descriptor.contains("/0/*") {
-                    addToKeypool = true
-                    addToInternal = false
-                } else if descriptor.contains("/1/*") {
-                    addToKeypool = true
-                    addToInternal = true
+            
+            if index == 0 {
+                if wallet.type == "DEFAULT" {
+                    if descriptor.contains("/0/*") {
+                        addToKeypool = true
+                        addToInternal = false
+                    } else {
+                        addToKeypool = false
+                        addToInternal = false
+                    }
                 }
+            } else {
+                addToKeypool = false
+                addToInternal = false
             }
             
             var params = ""
+            
             if addToInternal {
-                params = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
+                params = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"keypool\": \(addToKeypool), \"internal\": \(addToInternal) }]"
             } else {
                 params = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Gordian\", \"keypool\": \(addToKeypool), \"internal\": \(addToInternal) }]"
             }
+            
             importDescriptor(param: params, desc: descriptor) { [unowned vc = self] (success, errorMessage) in
                 if success {
                     vc.importPrimDescriptors(index: index + 1, wallet: wallet)
@@ -503,6 +507,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                     showAlert(vc: vc, title: "Error importing", message: errorMessage ?? "unknown error")
                 }
             }
+            
         } else {
             importChangeDescriptors(index: 0, wallet: wallet)
         }
@@ -514,24 +519,22 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             let descriptor = changeDescriptors[index]
             var addToKeypool = false
             var addToInternal = false
-//            if descriptor.contains("/84'/1'/0'") || descriptor.contains("/84'/0'/0'") || descriptor.contains("/44'/1'/0'") || descriptor.contains("/44'/0'/0'") || descriptor.contains("/49'/1'/0'") || descriptor.contains("/49'/0'/0'") {
-//                if descriptor.contains("/0/*") {
-//                    addToKeypool = true
-//                    addToInternal = false
-//                } else if descriptor.contains("/1/*") {
-//                    addToKeypool = true
-//                    addToInternal = true
-//                }
-//            }
-            if wallet.type == "DEFAULT" {
-                if descriptor.contains("/0/*") {
-                    addToKeypool = true
-                    addToInternal = false
-                } else if descriptor.contains("/1/*") {
-                    addToKeypool = true
-                    addToInternal = true
+            
+            if index == 0 {
+                if wallet.type == "DEFAULT" {
+                    if descriptor.contains("/1/*") {
+                        addToKeypool = true
+                        addToInternal = true
+                    } else {
+                        addToKeypool = false
+                        addToInternal = false
+                    }
                 }
+            } else {
+                addToKeypool = false
+                addToInternal = false
             }
+            
             var params = ""
             if addToInternal {
                 params = "[{ \"desc\": \"\(descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"keypool\": true, \"internal\": true }]"
