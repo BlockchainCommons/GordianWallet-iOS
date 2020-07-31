@@ -1019,7 +1019,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 vc.recoveryDict["birthdate"] = keyBirthday()
                 vc.recoveryDict["nodeIsSigner"] = false
                 
-                for desc in vc.processedPrimaryDescriptors {
+                for (i, desc) in vc.processedPrimaryDescriptors.enumerated() {
                     
                     DispatchQueue.main.async { [unowned vc = self] in
                         if vc.derivationField.text != "" {
@@ -1031,14 +1031,15 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                             } else if desc.contains("/1/*") {
                                 vc.recoveryDict["changeDescriptor"] = desc
                             }
-                            
-                            vc.setCustomXprvs { (success) in
-                                if success {
-                                    vc.cv.removeConnectingView()
-                                    vc.confirm()
-                                } else {
-                                    vc.cv.removeConnectingView()
-                                    showAlert(vc: vc, title: "Error", message: "There was an error encrypting your xprvs.")
+                            if i + 1 == vc.processedPrimaryDescriptors.count {
+                                vc.setCustomXprvs { (success) in
+                                    if success {
+                                        vc.cv.removeConnectingView()
+                                        vc.confirm()
+                                    } else {
+                                        vc.cv.removeConnectingView()
+                                        showAlert(vc: vc, title: "Error", message: "There was an error encrypting your xprvs.")
+                                    }
                                 }
                             }
                             
@@ -1054,13 +1055,15 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                                 }
                             }
                             
-                            vc.setXprvs { (success) in
-                                if success {
-                                    vc.cv.removeConnectingView()
-                                    vc.confirm()
-                                } else {
-                                    vc.cv.removeConnectingView()
-                                    showAlert(vc: vc, title: "Error", message: "There was an error encrypting your xprvs.")
+                            if i + 1 == vc.processedPrimaryDescriptors.count {
+                                vc.setXprvs { (success) in
+                                    if success {
+                                        vc.cv.removeConnectingView()
+                                        vc.confirm()
+                                    } else {
+                                        vc.cv.removeConnectingView()
+                                        showAlert(vc: vc, title: "Error", message: "There was an error encrypting your xprvs.")
+                                    }
                                 }
                             }
                         }

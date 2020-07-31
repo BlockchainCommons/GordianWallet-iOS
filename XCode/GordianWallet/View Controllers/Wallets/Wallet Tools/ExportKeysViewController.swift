@@ -614,21 +614,27 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     private func fetchKeysFromXpub(xpub: HDKey) {
-
         let derivation = wallet.derivation
         var addressType:AddressType!
+        
         if derivation.contains("84") {
-
             addressType = .payToWitnessPubKeyHash
-
         } else if derivation.contains("44") {
-
             addressType = .payToPubKeyHash
-
         } else if derivation.contains("49") {
-
             addressType = .payToScriptHashPayToWitnessPubKeyHash
-
+        } else {
+            // To cover custom derivs
+            let descriptor = wallet.descriptor
+            let descriptorParser = DescriptorParser()
+            let descriptorStruct = descriptorParser.descriptor(descriptor)
+            if descriptorStruct.isP2PKH {
+                addressType = .payToPubKeyHash
+            } else if descriptorStruct.isP2SHP2WPKH {
+                addressType = .payToScriptHashPayToWitnessPubKeyHash
+            } else if descriptorStruct.isP2WPKH {
+                addressType = .payToScriptHashPayToWitnessPubKeyHash
+            }
         }
 
         for i in 0 ... 999 {

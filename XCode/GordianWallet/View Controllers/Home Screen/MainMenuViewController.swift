@@ -999,7 +999,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     private func torsCell(_ indexPath: IndexPath) -> UITableViewCell {
         self.torCellIndex = indexPath.section
         if !torConnected {
-            return descriptionCell(description: "⚠︎ Tor not connected")
+            return descriptionCell(description: "⚠︎ Connection to node failed")
         } else {
             
             if node != nil {
@@ -1303,6 +1303,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         existingWalletName = wallet.name!
         nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
             if success && dictToReturn != nil {
+                vc.torConnected = true
                 /// we update the wallets database in NodeLogic, so we need to refresh the wallet struct here
                 getActiveWalletNow { (w, error) in
                     if w != nil {
@@ -1331,6 +1332,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         isRefreshingWalletData = true
         nodeLogic?.loadWalletData(wallet: wallet) { [unowned vc = self] (success, dictToReturn, errorDesc) in
             if success && dictToReturn != nil {
+                vc.torConnected = true
                 /// we update the wallets database in NodeLogic, so we need to refresh the wallet struct here
                 getActiveWalletNow { (w, error) in
                     if w != nil {
@@ -1357,6 +1359,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             updateLabel(text: "     Getting network info from your node...")
             nodeLogic?.loadTorData { [unowned vc = self] (success, dictToReturn, errorDesc) in
                 if success && dictToReturn != nil {
+                    vc.torConnected = true
                     vc.torInfo = HomeStruct(dictionary: dictToReturn!)
                     vc.torSectionLoaded = true
                     vc.isRefreshingTorData = false
@@ -1388,6 +1391,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if node != nil {
             nodeLogic?.loadTorData { [unowned vc = self] (success, dictToReturn, errorDesc) in
                 if success && dictToReturn != nil {
+                    vc.torConnected = true
                     vc.torInfo = HomeStruct(dictionary: dictToReturn!)
                     vc.torSectionLoaded = true
                     vc.isRefreshingTorData = false
@@ -1411,6 +1415,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         updateLabel(text: "     Getting Full Node data...")
         nodeLogic?.loadNodeData(node: node) { [unowned vc = self] (success, dictToReturn, errorDesc) in
             if success && dictToReturn != nil {
+                vc.torConnected = true
                 vc.nodeInfo = HomeStruct(dictionary: dictToReturn!)
                 vc.nodeSectionLoaded = true
                 vc.isRefreshingNodeData = false
@@ -1438,6 +1443,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         isRefreshingNodeData = true
         nodeLogic?.loadNodeData(node: node) { [unowned vc = self] (success, dictToReturn, errorDesc) in
             if success && dictToReturn != nil {
+                vc.torConnected = true
                 vc.nodeInfo = HomeStruct(dictionary: dictToReturn!)
                 vc.nodeSectionLoaded = true
                 vc.isRefreshingNodeData = false
@@ -1456,6 +1462,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         nodeLogic?.loadTransactionData(wallet: wallet) { [unowned vc = self] (success, transactions, errorDesc) in
             if success && transactions != nil {
                 DispatchQueue.main.async {
+                    vc.torConnected = true
                     vc.transactionArray = transactions!.reversed()
                     vc.transactionsSectionLoaded = true
                     vc.mainMenu.reloadData()
@@ -1474,6 +1481,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     private func refreshTransactions(_ sender: UIButton) {
         nodeLogic?.loadTransactionData(wallet: wallet) { [unowned vc = self] (success, transactions, errorDesc) in
             if success && transactions != nil {
+                vc.torConnected = true
                 vc.transactionArray.removeAll()
                 vc.transactionArray = transactions!.reversed()
                 vc.transactionsSectionLoaded = true
