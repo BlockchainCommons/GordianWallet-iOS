@@ -259,9 +259,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let wstruct = WalletStruct(dictionary: wallet)
             SeedParser.getSigners(wallet: wstruct) { [unowned vc = self] (knownSigners, uknownSigners) in
                 vc.sortedWallets[i]["knownSigners"] = knownSigners
-                print("knownSigners: \(knownSigners)")
                 vc.sortedWallets[i]["unknownSigners"] = uknownSigners
-                print("uknownSigners: \(uknownSigners)")
                 if i + 1 == vc.sortedWallets.count {
                     vc.sortedWallets = vc.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
                     completion(true)
@@ -405,12 +403,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         let derivation = walletStruct.derivation
         
-        if derivation.contains("1") {
-            
+        if walletStruct.descriptor.contains("tpub") {
             balanceLabel.textColor = .systemOrange
             
         } else {
-            
             balanceLabel.textColor = .systemGreen
             
         }
@@ -989,44 +985,44 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
 //-------------------------------------------------------------------------------
 // MARK: - To enable mainnet accounts just uncomment the following lines of code:
 //
-//            DispatchQueue.main.async { [unowned vc = self] in
-//
-//                vc.performSegue(withIdentifier: "addWallet", sender: vc)
-//
-//            }
+            DispatchQueue.main.async { [unowned vc = self] in
+
+                vc.performSegue(withIdentifier: "addWallet", sender: vc)
+
+            }
 //-------------------------------------------------------------------------------
 // MARK: - And comment out the following lines of code:
 
-            Encryption.getNode { [unowned vc = self] (node, error) in
-
-                if !error && node != nil {
-
-                    if node!.network == "mainnet" {
-
-                        DispatchQueue.main.async {
-                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
-                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { action in }))
-                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                            vc.present(alert, animated: true, completion: nil)
-                        }
-
-                    } else {
-
-                        DispatchQueue.main.async {
-
-                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
-
-                        }
-
-                    }
-
-                } else {
-
-                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
-
-                }
-
-            }
+//            Encryption.getNode { [unowned vc = self] (node, error) in
+//
+//                if !error && node != nil {
+//
+//                    if node!.network == "mainnet" {
+//
+//                        DispatchQueue.main.async {
+//                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
+//                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { action in }))
+//                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+//                            vc.present(alert, animated: true, completion: nil)
+//                        }
+//
+//                    } else {
+//
+//                        DispatchQueue.main.async {
+//
+//                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
+//
+//                        }
+//
+//                    }
+//
+//                } else {
+//
+//                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
+//
+//                }
+//
+//            }
 //-------------------------------------------------------------------------------
             
         } else {

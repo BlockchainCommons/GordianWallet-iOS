@@ -215,40 +215,18 @@ class SeedParser {
             }
         }
                 
-        if wallet.xprv != nil {
-            derivation = "0/0"
-            
-            guard let bip32path = BIP32Path(derivation) else {
+        derivation = wallet.derivation
+        
+        guard let bip32path = BIP32Path(derivation) else {
+            completion((nil, nil))
+            return
+        }
+        
+        Encryption.decryptedSeeds { (decryptedSeeds) in
+            if decryptedSeeds != nil {
+                checkMnemonics(seeds: decryptedSeeds!, bip32Path: bip32path)
+            } else {
                 completion((nil, nil))
-                return
-            }
-            
-            Encryption.decryptData(dataToDecrypt: wallet.xprv!) { (decryptedXprv) in
-                if decryptedXprv != nil {
-                    if let xprv = String(bytes: decryptedXprv!, encoding: .utf8) {
-                        checkXprv(xprv: xprv, bip32Path: bip32path)
-                    } else {
-                        completion((nil, nil))
-                    }
-                } else {
-                    completion((nil, nil))
-                }
-            }
-            
-        } else {
-            derivation = wallet.derivation
-            
-            guard let bip32path = BIP32Path(derivation) else {
-                completion((nil, nil))
-                return
-            }
-            
-            Encryption.decryptedSeeds { (decryptedSeeds) in
-                if decryptedSeeds != nil {
-                    checkMnemonics(seeds: decryptedSeeds!, bip32Path: bip32path)
-                } else {
-                    completion((nil, nil))
-                }
             }
         }
     }
