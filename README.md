@@ -2,11 +2,11 @@
 
 *(Previously known as FullyNoded-2)*
 
-**_GordianWallet-iOS_** is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to the full node of your choice, including: a bitcoind installed using either [GordianNode-macOS](https://github.com/BlockchainCommons/GordianNode-macOS) or another Bitcoin Standup program such as [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts); a full-node box such as [Nodl](https://www.nodl.it/) or [Rasbiblitz](https://github.com/rootzoll/raspiblitz); or a full-node service such as [BTCpay](https://btcpayserver.org/]). *GordianWallet* is a self-sovereign wallet, and self-sovereignty means that you get to decide.
+**_GordianWallet-iOS_** is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to the full node of your choice, including: a bitcoind installed using either [GordianServer-macOS](https://github.com/BlockchainCommons/GordianServer-macOS) or another Bitcoin Standup program such as [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts); a full-node box such as [Nodl](https://www.nodl.it/) or [Rasbiblitz](https://github.com/rootzoll/raspiblitz); or a full-node service such as [BTCpay](https://btcpayserver.org/]). *GordianWallet* is a self-sovereign wallet, and self-sovereignty means that you get to decide.
 
 *GordianWallet* allows for multiple wallet templates, including: legacy, SegWit-compatible, and SegWit-native hot wallets using a single signature (seed on iOS device); a warm wallet using multisig (seed on iOS device, keys on full node, offline seed, etc.); or a number of cold wallet templates that leverage PSBTs (Partially Signed Bitcoin Transactions), such as cold offline seeds, third-party collaborative custody services, and various air-gapped hardware solutions using QR codes. *GordianWallet* can potentially support almost anything that can be described by a [bitcoind descriptor](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md).
 
-*GordianWallet-iOS* is part of the [GordianSystem](https://github.com/BlockchainCommons/GordianSystem).
+*GordianWallet-iOS* is part of the [Gordian system](https://github.com/BlockchainCommons/Gordian).
 
 <img src="./Images/home_screen_collapsed.PNG" alt="Gordian Wallet app Home Screen" width="250"/> <img src="./Images/home_screen_expanded.PNG" alt="Gordian Wallet app Home Screen" width="250"/>
 
@@ -25,7 +25,7 @@ To help us improve *GordianWallet*, *please*  share crash reports and give us fe
 ### Requirements
 
 - iOS 13
-- A Bitcoin Core full node v0.20.0 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service, such as a [GordianNode-macOS](https://github.com/BlockchainCommons/GordianNode-macOS) or one created by the Bitcoin Standup [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts). Your node does not need to be an archive node, thus you can save space by being setup as a pruned full node.
+- A Bitcoin Core full node v0.20.0 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service, such as a [GordianServer-macOS](https://github.com/BlockchainCommons/GordianServer-macOS) or one created by the Bitcoin Standup [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts). Your node does not need to be an archive node, thus you can save space by being setup as a pruned full node.
 
 ### Installing GordianWallet from Testflight
 
@@ -41,7 +41,7 @@ Full instruction on installing from source are available [here](Docs/Install-fro
 
 When you install *GordianWallet*, you will need to link it to the full node of your choice.
 
-*Gordian Wallet*  has been tested with [GordianNode-macOS](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) and with our Bitcoin Standup [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts), which install your own personal bitcoin-core and Tor services.
+*Gordian Wallet*  has been tested with [GordianServer-macOS](https://github.com/BlockchainCommons/Bitcoin-StandUp-MacOS) and with our Bitcoin Standup [Linux scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts), which install your own personal bitcoin-core and Tor services.
 
 *GordianWallet* should also work with any properly configured Bitcoin Core 0.20.0 node with a hidden service controlling `rpcport` via localhost, including full node devices such as [Nodl](https://www.nodl.it/) or [RaspiBlitz](https://github.com/rootzoll/raspiblitz), or full nodes installed by other services such as [BTCPayServer](https://btcpayserver.org). These full nodes can be connected by clicking a link or scanning a QR code.
 

@@ -9,7 +9,7 @@ For more information on how these features actually function, see ["How It Works
 <img src="../Images/scanQuickConnect.PNG" alt="Gordian Wallet app Home Screen" width="250"/>
 
 
-When initially starting up *GordianWallet*, a user may choose to connect to their own node (such as [GordianNode](https://github.com/BlockchainCommons/GordianNode-macOS)) by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or link to a testnet node that we are currently utilizing for development purposes by tapping the "don't have a node?" button.
+When initially starting up *GordianWallet*, a user may choose to connect to their own node (such as [GordianServer](https://github.com/BlockchainCommons/GordianServer-macOS)) by scanning a [QuickConnect QR](https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup) or link to a testnet node that we are currently utilizing for development purposes by tapping the "don't have a node?" button.
 
 ## Creating a account
 
