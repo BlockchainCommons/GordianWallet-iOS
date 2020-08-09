@@ -10,6 +10,36 @@ import Foundation
 import UIKit
 import LibWally
 
+extension String {
+    func condenseWhitespace() -> String {
+        let components = self.components(separatedBy: .whitespacesAndNewlines)
+        return components.filter { !$0.isEmpty }.joined(separator: " ")
+    }
+}
+
+extension String {
+    var utf8: Data {
+        return data(using: .utf8)!
+    }
+}
+
+extension Data {
+    static func random(_ len: Int) -> Data {
+        let values = (0 ..< len).map { _ in UInt8.random(in: 0 ... 255) }
+        return Data(values)
+    }
+
+    var utf8: String {
+        String(data: self, encoding: .utf8)!
+    }
+
+    var bytes: [UInt8] {
+        var b: [UInt8] = []
+        b.append(contentsOf: self)
+        return b
+    }
+}
+
 public extension UITextView {
   func addHyperLinksToText(originalText: String, hyperLinks: [String: String]) {
     let style = NSMutableParagraphStyle()

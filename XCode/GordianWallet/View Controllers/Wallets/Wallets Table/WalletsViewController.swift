@@ -26,6 +26,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var nodes = [[String:Any]]()
     var recoveryPhrase = ""
     var descriptor = ""
+    var urToRecover = ""
     @IBOutlet var walletTable: UITableView!
     
     override func viewDidLoad() {
@@ -1115,7 +1116,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let cv = ConnectingView()
         cv.addConnectingView(vc: self, description: "processing...")
         
-        if let data = descriptor.data(using: .utf8) {
+        if descriptor.hasPrefix("ur:crypto-seed/") {
+            cv.removeConnectingView()
+            if let _ = URHelper.urToEntropy(urString: descriptor).data {
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.urToRecover = descriptor
+                    vc.performSegue(withIdentifier: "segueToUrRecovery", sender: vc)
+                }
+            } else {
+                showAlert(vc: self, title: "Oops", message: "That does not look like a valid crypto-seed UR")
+            }
+        } else if let data = descriptor.data(using: .utf8) {
             
             do {
                 
@@ -1242,6 +1253,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         switch id {
             
+        case "segueToUrRecovery":
+            if let vc = segue.destination as? WordRecoveryViewController {
+                vc.urToRecover = urToRecover
+            }
+            
         case "goConfirmImport":
             if let vc = segue.destination as? ConfirmRecoveryViewController {
                 vc.walletNameHash = walletName
@@ -1249,16 +1265,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             
         case "goImport":
-        
         if let vc = segue.destination as? ScannerViewController {
-            
             vc.isImporting = true
             vc.onImportDoneBlock = { [unowned thisVc = self] descriptor in
-                
                 thisVc.processDescriptor(descriptor: descriptor)
-                
             }
-            
         }
             
         case "goToTools":
