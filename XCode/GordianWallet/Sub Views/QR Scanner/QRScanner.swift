@@ -302,7 +302,7 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
         } else if isImporting {
             
             label.text = "Import an Account"
-            labelDetail.text = "You may scan an \"Account Map\", Bitcoin Core Descriptor, Specter \"Wallet Import\" QR, or Coldcard skeleton json"
+            labelDetail.text = "You may scan an \"Account Map\", Bitcoin Core Descriptor, Specter \"Wallet Import\" QR, Coldcard skeleton json, or a crypto-seed UR"
             configureLabel()
             configureDetailLabel()
             closeButton.alpha = 0
