@@ -48,4 +48,33 @@ class URHelper {
             return (nil, nil)
         }
     }
+    
+    class func urToHdkey(urString: String) -> (isMaster: Bool?, keyData: String?, chainCode: String?) {
+        do {
+            let ur = try URDecoder.decode(urString)
+            let decodedCbor = try CBOR.decode(ur.cbor.bytes)
+            guard case let CBOR.map(dict) = decodedCbor! else { return (nil, nil, nil) }
+            var isMaster:Bool?
+            var keyData:String?
+            var chainCode:String?
+            for (key, value) in dict {
+                switch key {
+                case 1:
+                    guard case let CBOR.boolean(b) = value else { fallthrough }
+                    isMaster = b
+                case 3:
+                    guard case let CBOR.byteString(bs) = value else { fallthrough }
+                    keyData = Data(bs).hexString
+                case 4:
+                    guard case let CBOR.byteString(bs) = value else { fallthrough }
+                    chainCode = Data(bs).hexString
+                default:
+                    break
+                }
+            }
+            return (isMaster, keyData, chainCode)
+        } catch {
+            return (nil, nil, nil)
+        }
+    }
 }
