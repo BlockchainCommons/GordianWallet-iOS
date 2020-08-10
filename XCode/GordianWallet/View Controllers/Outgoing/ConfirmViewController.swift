@@ -32,6 +32,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     var recipients = [String]()
     var addressToVerify = ""
     var sweeping = Bool()
+    var alertStyle = UIAlertController.Style.actionSheet
     @IBOutlet var confirmTable: UITableView!
     @IBOutlet var broadcastButton: UIButton!
     @IBOutlet weak var exportTx: UIButton!
@@ -44,13 +45,11 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         confirmTable.dataSource = self
         
         if unsignedPsbt == "" {
-            
             exportTx.alpha = 1
             creatingView.addConnectingView(vc: self, description: "verifying signed transaction")
             executeNodeCommand(method: .decoderawtransaction, param: "\"\(signedRawTx)\"")
             
         } else {
-            
             exportTx.alpha = 0
             let exportImage = UIImage(systemName: "arrowshape.turn.up.right")!
             broadcastButton.setImage(exportImage, for: .normal)
@@ -64,6 +63,10 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                                                                  action: #selector(dismissKeyboard))
         
         view.addGestureRecognizer(tap)
+        
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+          alertStyle = UIAlertController.Style.alert
+        }
         
     }
     
@@ -83,9 +86,9 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
         if unsignedPsbt == "" {
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [unowned vc = self] in
                             
-                let alert = UIAlertController(title: "Broadcast transaction?", message: "We use blockstream's esplora Tor V3 api to broadcast your transactions for improved privacy. Once you broadcast there is no going back!", preferredStyle: .actionSheet)
+                let alert = UIAlertController(title: "Broadcast transaction?", message: "We use blockstream's esplora Tor V3 api to broadcast your transactions for improved privacy. Once you broadcast there is no going back!", preferredStyle: vc.alertStyle)
 
                 alert.addAction(UIAlertAction(title: "Yes, broadcast now", style: .default, handler: { [unowned vc = self] action in
                     
@@ -113,9 +116,9 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     
     func showPsbtOptions() {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
                         
-            let alert = UIAlertController(title: "Export as:", message: "", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Export as:", message: "", preferredStyle: vc.alertStyle)
             
             alert.addAction(UIAlertAction(title: ".psbt data file", style: .default, handler: { [unowned vc = self] action in
                 
@@ -998,9 +1001,9 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                 }
             } else {
                 
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [unowned vc = self] in
                                 
-                    let alert = UIAlertController(title: "There was an error broadcasting your transaction with blockstream's node.", message: "Broadcast the transaction with your node?", preferredStyle: .actionSheet)
+                    let alert = UIAlertController(title: "There was an error broadcasting your transaction with blockstream's node.", message: "Broadcast the transaction with your node?", preferredStyle: vc.alertStyle)
 
                     alert.addAction(UIAlertAction(title: "Yes, broadcast now", style: .default, handler: { [unowned vc = self] action in
                         

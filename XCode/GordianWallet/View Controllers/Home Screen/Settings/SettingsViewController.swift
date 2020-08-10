@@ -11,13 +11,15 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     var doneBlock : ((Bool) -> Void)?
     let ud = UserDefaults.standard
+    var alertStyle = UIAlertController.Style.actionSheet
     @IBOutlet var settingsTable: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         settingsTable.delegate = self
-        
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+          alertStyle = UIAlertController.Style.alert
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -170,7 +172,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func promptToDeleteKeychain() {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Are you sure!?", message: "After performing this action you need to force quit the app and restart it.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Are you sure!?", message: "After performing this action you need to force quit the app and restart it.", preferredStyle: vc.alertStyle)
             alert.addAction(UIAlertAction(title: "Yes, delete", style: .destructive, handler: { [unowned vc = self] action in
                 vc.deleteKeychainItems()
             }))
@@ -192,7 +194,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         
         DispatchQueue.main.async { [unowned vc = self] in
                         
-            let alert = UIAlertController(title: "Are you sure!?", message: "This will delete ALL your wallets from your device, nodes, auth keys, encryption keys and will completely wipe the app!\n\nAfter using this button you should force quit the app and reopen it to prevent weird behavior and possible crashes.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Are you sure!?", message: "This will delete ALL your wallets from your device, nodes, auth keys, encryption keys and will completely wipe the app!\n\nAfter using this button you should force quit the app and reopen it to prevent weird behavior and possible crashes.", preferredStyle: vc.alertStyle)
 
             alert.addAction(UIAlertAction(title: "Yes, reset now!", style: .destructive, handler: { action in
                 var deleted = true

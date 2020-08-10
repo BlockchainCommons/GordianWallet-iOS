@@ -181,7 +181,11 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                     }
                     vc.recoveryDict["nodeId"] = node!.id
                     if vc.derivationField.text == "" {
-                        let alert = UIAlertController(title: "Choose a derivation", message: "When only using words to recover you need to let us know which derivation scheme you want to utilize, if you are not sure you can recover the wallet three times, once for each derivation.", preferredStyle: .actionSheet)
+                        var alertStyle = UIAlertController.Style.actionSheet
+                        if (UIDevice.current.userInterfaceIdiom == .pad) {
+                          alertStyle = UIAlertController.Style.alert
+                        }
+                        let alert = UIAlertController(title: "Choose a derivation", message: "When only using words to recover you need to let us know which derivation scheme you want to utilize, if you are not sure you can recover the wallet three times, once for each derivation.", preferredStyle: alertStyle)
                         
                         
                         
@@ -220,8 +224,12 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                         vc.present(alert, animated: true, completion: nil)
                         
                     } else {
+                        var alertStyle = UIAlertController.Style.actionSheet
+                        if (UIDevice.current.userInterfaceIdiom == .pad) {
+                          alertStyle = UIAlertController.Style.alert
+                        }
                         
-                        let alert = UIAlertController(title: "Choose an address format", message: "When recovering a custom derivation path you need to let us know which address format to utilize.", preferredStyle: .actionSheet)
+                        let alert = UIAlertController(title: "Choose an address format", message: "When recovering a custom derivation path you need to let us know which address format to utilize.", preferredStyle: alertStyle)
                         
                         alert.addAction(UIAlertAction(title: "Segwit - bc1", style: .default, handler: { action in
                             
@@ -650,8 +658,13 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                                 if xpub == backupXpub {
                                     
                                     DispatchQueue.main.async { [unowned vc = self] in
+                                        
+                                        var alertStyle = UIAlertController.Style.actionSheet
+                                        if (UIDevice.current.userInterfaceIdiom == .pad) {
+                                          alertStyle = UIAlertController.Style.alert
+                                        }
                                                     
-                                        let alert = UIAlertController(title: "Recovery words match your wallets xpub!", message: "You may now go to the next step", preferredStyle: .actionSheet)
+                                        let alert = UIAlertController(title: "Recovery words match your wallets xpub!", message: "You may now go to the next step", preferredStyle: alertStyle)
 
                                         alert.addAction(UIAlertAction(title: "Next", style: .default, handler: { action in
                                             
@@ -719,7 +732,11 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             
             func seedAddedAddAnother() {
                 DispatchQueue.main.async { [unowned vc = self] in
-                    let alert = UIAlertController(title: "Seed added, you may now add another.", message: "", preferredStyle: .actionSheet)
+                    var alertStyle = UIAlertController.Style.actionSheet
+                    if (UIDevice.current.userInterfaceIdiom == .pad) {
+                      alertStyle = UIAlertController.Style.alert
+                    }
+                    let alert = UIAlertController(title: "Seed added, you may now add another.", message: "", preferredStyle: alertStyle)
                     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
                     alert.popoverPresentationController?.sourceView = self.view
                     vc.present(alert, animated: true, completion: nil)
@@ -728,7 +745,11 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             
             if !recoveringMultiSigWithWordsOnly {
                 DispatchQueue.main.async { [unowned vc = self] in
-                    let alert = UIAlertController(title: "That is a valid recovery phrase", message: "Are you recovering a multi-sig account or single-sig account?", preferredStyle: .actionSheet)
+                    var alertStyle = UIAlertController.Style.actionSheet
+                    if (UIDevice.current.userInterfaceIdiom == .pad) {
+                      alertStyle = UIAlertController.Style.alert
+                    }
+                    let alert = UIAlertController(title: "That is a valid recovery phrase", message: "Are you recovering a multi-sig account or single-sig account?", preferredStyle: alertStyle)
                     alert.addAction(UIAlertAction(title: "Single-sig", style: .default, handler: { action in
                         vc.chooseDerivation()
                     }))
@@ -744,8 +765,12 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             } else {
                 /// Adding multiple sets of words to recover multi-sig with only words.
                 DispatchQueue.main.async { [unowned vc = self] in
+                    var alertStyle = UIAlertController.Style.actionSheet
+                    if (UIDevice.current.userInterfaceIdiom == .pad) {
+                      alertStyle = UIAlertController.Style.alert
+                    }
                     
-                    let alert = UIAlertController(title: "That is a valid recovery phrase", message: "Add another seed phrase or recover this multi-sig account now? When recovering multi-sig accounts with words only we utilize BIP67 by default.", preferredStyle: .actionSheet)
+                    let alert = UIAlertController(title: "That is a valid recovery phrase", message: "Add another seed phrase or recover this multi-sig account now? When recovering multi-sig accounts with words only we utilize BIP67 by default.", preferredStyle: alertStyle)
 
                     alert.addAction(UIAlertAction(title: "Add another seed", style: .default, handler: { action in
                         vc.seedArray.append(vc.justWords.joined(separator: " "))

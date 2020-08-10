@@ -62,7 +62,11 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBAction func deletAccount(_ sender: Any) {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Delete account?", message: "Are you sure!? It will be gone forever!", preferredStyle: .actionSheet)
+            var alertStyle = UIAlertController.Style.actionSheet
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
+            let alert = UIAlertController(title: "Delete account?", message: "Are you sure!? It will be gone forever!", preferredStyle: alertStyle)
             alert.addAction(UIAlertAction(title: "💀 Delete", style: .destructive, handler: { [unowned vc = self] action in
                 vc.deleteAccountNow()
             }))
@@ -247,7 +251,11 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @objc func deleteSeed() {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Delete seed words?", message: "Make sure you have them backed up so that you can always recover this account with this app or others. If you are using these seed words for more then one account it is important to know they will be deleted from ALL accounts. You will still be able to spend using this account as we store your account xprv and use that for signing transactions, we only save seed words to give you a chance to back them up. If you want to make the account cold then you also need to delete the xprvs.", preferredStyle: .actionSheet)
+            var alertStyle = UIAlertController.Style.actionSheet
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
+            let alert = UIAlertController(title: "Delete seed words?", message: "Make sure you have them backed up so that you can always recover this account with this app or others. If you are using these seed words for more then one account it is important to know they will be deleted from ALL accounts. You will still be able to spend using this account as we store your account xprv and use that for signing transactions, we only save seed words to give you a chance to back them up. If you want to make the account cold then you also need to delete the xprvs.", preferredStyle: alertStyle)
             alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [unowned vc = self] action in
                 vc.deleteSeedNow()
             }))
@@ -330,7 +338,9 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         xprvs()
         
-        let recoveryQr = ["descriptor":"\(wallet.descriptor)", "blockheight":wallet.blockheight, "label": wallet.label] as [String : Any]
+        let arr = wallet.descriptor.split(separator: "#")
+        let plainDesc = "\(arr[0])".replacingOccurrences(of: "'", with: "h")
+        let recoveryQr = ["descriptor":"\(plainDesc)", "blockheight":wallet.blockheight, "label": wallet.label] as [String : Any]
         
         if let json = recoveryQr.json() {
             
@@ -817,7 +827,11 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @objc func deleteXprvs() {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Delete xprvs?", message: "Are you sure!? They will be gone forever! You will no longer be able to sign transactions with this device for this account! YOU WILL NOT BE ABLE TO SPEND YOUR BITCOIN with the app alone.", preferredStyle: .actionSheet)
+            var alertStyle = UIAlertController.Style.actionSheet
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
+            let alert = UIAlertController(title: "Delete xprvs?", message: "Are you sure!? They will be gone forever! You will no longer be able to sign transactions with this device for this account! YOU WILL NOT BE ABLE TO SPEND YOUR BITCOIN with the app alone.", preferredStyle: alertStyle)
             alert.addAction(UIAlertAction(title: "💀 Delete", style: .destructive, handler: { [unowned vc = self] action in
                 vc.deleteXprvsNow()
             }))

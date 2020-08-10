@@ -17,7 +17,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     var walletName = ""
     var recoveryDict = [String:Any]()
     var onQrDoneBlock: ((Bool) -> Void)?
-    
+    var alertStyle = UIAlertController.Style.actionSheet
     
     @IBOutlet weak var seedWordsOutlet: UIButton!
     @IBOutlet weak var xpubsOutlet: UIButton!
@@ -28,6 +28,9 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         scanButton.layer.cornerRadius = 8
         seedWordsOutlet.layer.cornerRadius = 8
         xpubsOutlet.layer.cornerRadius = 8
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+          alertStyle = UIAlertController.Style.alert
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -56,7 +59,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                                 if let _ = dict["descriptor"] as? String {
                                     if let _ = dict["blockheight"] as? Int {
                                         DispatchQueue.main.async { [unowned vc = self] in
-                                            let alert = UIAlertController(title: "There is a valid Account Map QR image on your clipboard", message: "Would you like to upload this image as a Account Map QR?", preferredStyle: .actionSheet)
+                                            let alert = UIAlertController(title: "There is a valid Account Map QR image on your clipboard", message: "Would you like to upload this image as a Account Map QR?", preferredStyle: vc.alertStyle)
                                             alert.addAction(UIAlertAction(title: "Upload Account Map QR", style: .default, handler: { action in
                                                 vc.processImport(importItem: qrCodeLink)
                                             }))
@@ -84,7 +87,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                                 if let _ = dict["descriptor"] as? String {
                                     if let _ = dict["blockheight"] as? Int {
                                         DispatchQueue.main.async { [unowned vc = self] in
-                                            let alert = UIAlertController(title: "There is a valid Account Map text on your clipboard", message: "Would you like to upload this text as a Account Map QR?", preferredStyle: .actionSheet)
+                                            let alert = UIAlertController(title: "There is a valid Account Map text on your clipboard", message: "Would you like to upload this text as a Account Map QR?", preferredStyle: vc.alertStyle)
                                             alert.addAction(UIAlertAction(title: "Upload Account Map QR text", style: .default, handler: { action in
                                                 vc.processImport(importItem: value)
                                             }))

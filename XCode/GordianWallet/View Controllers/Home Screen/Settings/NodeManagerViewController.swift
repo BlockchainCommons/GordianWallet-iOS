@@ -162,8 +162,12 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     private func refreshCredentials(node: NodeStruct!) {
         
         DispatchQueue.main.async {
+            var alertStyle = UIAlertController.Style.actionSheet
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
             
-            let alert = UIAlertController(title: "Choose an option", message: "You may update the nodes credentials which is useful if you have changed your hidden service url or rpc credentials. Or you may share the node with trusted others.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Choose an option", message: "You may update the nodes credentials which is useful if you have changed your hidden service url or rpc credentials. Or you may share the node with trusted others.", preferredStyle: alertStyle)
 
             alert.addAction(UIAlertAction(title: "Update this node", style: .default, handler: { [unowned vc = self] action in
                 

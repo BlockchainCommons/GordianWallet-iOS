@@ -1001,7 +1001,11 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
 //                    if node!.network == "mainnet" {
 //
 //                        DispatchQueue.main.async {
-//                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
+//            var alertStyle = UIAlertController.Style.actionSheet
+//            if (UIDevice.current.userInterfaceIdiom == .pad) {
+//              alertStyle = UIAlertController.Style.alert
+//            }
+//                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: alertStyle)
 //                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { action in }))
 //                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
 //                            vc.present(alert, animated: true, completion: nil)
@@ -1154,8 +1158,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     /// It is a coldcard wallet skeleton file.
                     cv.removeConnectingView()
                     DispatchQueue.main.async { [unowned vc = self] in
+                        var alertStyle = UIAlertController.Style.actionSheet
+                        if (UIDevice.current.userInterfaceIdiom == .pad) {
+                          alertStyle = UIAlertController.Style.alert
+                        }
                         
-                        let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: TextBlurbs.chooseColdcardDerivationToImport(), preferredStyle: .actionSheet)
+                        let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: TextBlurbs.chooseColdcardDerivationToImport(), preferredStyle: alertStyle)
                         
                         alert.addAction(UIAlertAction(title: "Native Segwit (BIP84, bc1)", style: .default, handler: { action in
                             cv.addConnectingView(vc: vc, description: "importing...")

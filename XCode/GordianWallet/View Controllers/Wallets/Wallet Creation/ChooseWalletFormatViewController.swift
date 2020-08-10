@@ -41,6 +41,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     let creatingView = ConnectingView()
     var recoverDoneBlock : ((Bool) -> Void)?
     let advancedButton = UIButton()
+    var alertStyle = UIAlertController.Style.actionSheet
     
     @IBOutlet var recoverWalletOutlet: UIButton!
     @IBOutlet weak var customSeedSwitch: UISwitch!
@@ -73,6 +74,9 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         coldWalletOutlet.alpha = 0
         showAdvancedOptions()
         
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+          alertStyle = UIAlertController.Style.alert
+        }
     }
     
     private func showAdvancedOptions() {
@@ -130,14 +134,15 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func hotInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Hot self sovereign single signature account", message: TextBlurbs.hotWalletInfo(), preferredStyle: .actionSheet)
+        
+        let alert = UIAlertController(title: "Hot self sovereign single signature account", message: TextBlurbs.hotWalletInfo(), preferredStyle: alertStyle)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
     }
     
     @IBAction func warmInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Warm self sovereign 2 of 3 multi signature account", message: TextBlurbs.warmWalletInfo(), preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Warm self sovereign 2 of 3 multi signature account", message: TextBlurbs.warmWalletInfo(), preferredStyle: alertStyle)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -145,7 +150,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func coolWalletInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Cool self sovereign 2 of 3 multi signature account", message: TextBlurbs.coolWalletInfo(), preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Cool self sovereign 2 of 3 multi signature account", message: TextBlurbs.coolWalletInfo(), preferredStyle: alertStyle)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -153,7 +158,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func coldWalletInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Cold self sovereign single signature account", message: TextBlurbs.coldWalletInfo(), preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Cold self sovereign single signature account", message: TextBlurbs.coldWalletInfo(), preferredStyle: alertStyle)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -301,7 +306,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
         if customSeedSwitch.isOn {
             
-            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: TextBlurbs.customSeedInfo(), preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: TextBlurbs.customSeedInfo(), preferredStyle: alertStyle)
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
             alert.popoverPresentationController?.sourceView = self.view
             self.present(alert, animated: true, completion: nil)
@@ -459,7 +464,9 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
                     if success {
                         let w = WalletStruct(dictionary: vc.newWallet)
-                        let recoveryQr = ["descriptor":"\(w.descriptor)", "blockheight":w.blockheight,"label":""] as [String : Any]
+                        let arr = w.descriptor.split(separator: "#")
+                        let plainDesc = "\(arr[0])".replacingOccurrences(of: "'", with: "h")
+                        let recoveryQr = ["descriptor":"\(plainDesc)", "blockheight":w.blockheight,"label":""] as [String : Any]
                         if let json = recoveryQr.json() {
                             DispatchQueue.main.async {
                                 vc.creatingView.removeConnectingView()
@@ -973,8 +980,9 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                             vc.creatingView.removeConnectingView()
                                                             
                                                             DispatchQueue.main.async {
-                                                                
-                                                                let recoveryQr = ["descriptor":"\(wallet.descriptor)", "blockheight":wallet.blockheight, "label":""] as [String : Any]
+                                                                let arr = wallet.descriptor.split(separator: "#")
+                                                                let plainDesc = "\(arr[0])".replacingOccurrences(of: "'", with: "h")
+                                                                let recoveryQr = ["descriptor":"\(plainDesc)", "blockheight":wallet.blockheight, "label":""] as [String : Any]
                                                                 
                                                                 if let json = recoveryQr.json() {
                                                                     
@@ -1291,7 +1299,9 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     if success {
                         
                         let w = WalletStruct(dictionary: vc.newWallet)
-                        let recoveryQr = ["descriptor":w.descriptor, "blockheight":w.blockheight,"label":""] as [String : Any]
+                        let arr = w.descriptor.split(separator: "#")
+                        let plainDesc = "\(arr[0])".replacingOccurrences(of: "'", with: "h")
+                        let recoveryQr = ["descriptor":plainDesc, "blockheight":w.blockheight,"label":""] as [String : Any]
                         
                         if let json = recoveryQr.json() {
                             

@@ -407,8 +407,12 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         }
         
         DispatchQueue.main.async { [unowned vc = self] in
+            var alertStyle = UIAlertController.Style.actionSheet
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
             
-            let alert = UIAlertController(title: "That mnemonic matches one of your wallets xpubs", message: "Would you like to add it as a signer?", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "That mnemonic matches one of your wallets xpubs", message: "Would you like to add it as a signer?", preferredStyle: alertStyle)
             
             alert.addAction(UIAlertAction(title: "Add signer", style: .default, handler: { action in
                 

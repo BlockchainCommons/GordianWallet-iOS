@@ -53,6 +53,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var signedRawTx = ""
     var walletNameHash = ""
     var accountMap = ""
+    var alertStyle = UIAlertController.Style.actionSheet
     @IBOutlet var mainMenu: UITableView!
     @IBOutlet var sponsorView: UIView!
     @IBOutlet weak var notificationIcon: UIBarButtonItem!
@@ -105,6 +106,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         firstTimeHere()
         checkIfoutdated()
+        
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+          alertStyle = UIAlertController.Style.alert
+        }
     }
     
     private func checkIfoutdated() {
@@ -138,7 +143,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBAction func uploadFile(_ sender: Any) {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Upload a file?", message: TextBlurbs.uploadAFileMessage(), preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Upload a file?", message: TextBlurbs.uploadAFileMessage(), preferredStyle: vc.alertStyle)
             
             alert.addAction(UIAlertAction(title: "Upload", style: .default, handler: { [unowned vc = self] action in
                 let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.item"], in: .import)
@@ -200,7 +205,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: TextBlurbs.chooseColdcardDerivationToImport(), preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: TextBlurbs.chooseColdcardDerivationToImport(), preferredStyle: vc.alertStyle)
             
             alert.addAction(UIAlertAction(title: "Native Segwit (BIP84, bc1)", style: .default, handler: { action in
                 importSingleSigColdCard(derivation: "bip84")
@@ -290,7 +295,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Create a 2 of 3 multi-sig wallet with your Coldcard?", message: "", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Create a 2 of 3 multi-sig wallet with your Coldcard?", message: "", preferredStyle: vc.alertStyle)
             
             alert.addAction(UIAlertAction(title: "Create", style: .default, handler: { action in
                 vc.connectingView.addConnectingView(vc: vc, description: "creating...")
@@ -305,7 +310,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func signPsbtAlert(psbt: String) {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Sign PSBT?", message: TextBlurbs.signPsbtMessage(), preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Sign PSBT?", message: TextBlurbs.signPsbtMessage(), preferredStyle: vc.alertStyle)
             
             alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
                 vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
@@ -492,7 +497,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
             DispatchQueue.main.async { [unowned vc = self] in
-                let alert = UIAlertController(title: "Warning!", message: message, preferredStyle: .actionSheet)
+                let alert = UIAlertController(title: "Warning!", message: message, preferredStyle: vc.alertStyle)
                 
                 alert.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { action in
                     alertAction()
