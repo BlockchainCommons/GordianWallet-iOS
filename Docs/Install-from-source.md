@@ -25,21 +25,9 @@ Run `brew --version` in a terminal, if you get a valid response you have brew in
 
 ## 4. Build Dependencies
 - `cd Gordian-Wallet/XCode`
-- `carthage update --platform iOS`
+- `carthage bootstrap --platform iOS`
 
-## 5. Edit LibWally.xcodeproj
-**This is a temporary fix while we wait for the next LibWally update.**
-- `cd Gordian-Wallet/XCode/Carthage/Checkouts/libwally-swift`
-- open `LibWally.xcodeproj`
-- Navigate to `LibWally/BIP32.swift` and edit line #253 from `var privKey` to `public var privKey`
-- Navigate to  `LibWally/PSBT.swift` and edit line #14 from `let path: BIP32Path` to `public let path: BIP32Path`
-- Save and close Libwally.xcodeproj
-- **Turn off your internet connection to force LibWally to build from source**
-- `cd Gordian-Wallet/XCode`
-- `carthage build libwally-swift`
-
-
-## 6. Open Gordian-Wallet
+## 5. Open Gordian-Wallet
 - `cd Gordian-Wallet/XCode`
 - open `GordianWallet.xcodeproj` and run the project in a simulator or device.
 
