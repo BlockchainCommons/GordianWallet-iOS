@@ -5592,6 +5592,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="goImport" id="ufe-jz-pkY"/>
                         <segue destination="0g2-8e-jCH" kind="show" identifier="goConfirmImport" id="igz-Ga-xca"/>
                         <segue destination="kR7-Mg-fhs" kind="show" identifier="segueToUrRecovery" id="sfT-Xz-gNf"/>
+                        <segue destination="20O-ZD-xtI" kind="show" identifier="segueToCreateUrSuppliedKey" id="AOL-nc-Scs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GpR-E8-6UF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -6266,6 +6267,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
     <inferredMetricsTieBreakers>
         <segue reference="vbG-Ex-JNf"/>
         <segue reference="WN6-Y9-PN0"/>
+        <segue reference="AOL-nc-Scs"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="uaX-te-aDX"/>
         <segue reference="Kzq-6W-yKR"/>

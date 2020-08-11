@@ -27,6 +27,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var recoveryPhrase = ""
     var descriptor = ""
     var urToRecover = ""
+    var xprv = ""
     @IBOutlet var walletTable: UITableView!
     
     override func viewDidLoad() {
@@ -1133,8 +1134,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     let checksum = Encryption.checksum(Data(data))
                     base58String += checksum
                     if let rawData = Data(base58String) {
-                        let xprv = Base58.encode([UInt8](rawData))
-                        print("xprv: \(xprv)")
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.xprv = Base58.encode([UInt8](rawData))
+                            vc.performSegue(withIdentifier: "segueToCreateUrSuppliedKey", sender: vc)
+                        }
                     }
                 }
             }
@@ -1282,10 +1285,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         let id = segue.identifier
-        
         switch id {
+        case "segueToCreateUrSuppliedKey":
+            if let vc = segue.destination as? ChooseWalletFormatViewController {
+                vc.rootKeyFromUr = xprv
+                vc.walletDoneBlock = { [unowned thisVc = self] result in
+                    showAlert(vc: thisVc, title: "Success!", message: "Wallet created successfully!")
+                    thisVc.isLoading = true
+                    thisVc.refreshLocalDataAndBalanceForActiveAccount()
+                }
+            }
             
         case "segueToUrRecovery":
             if let vc = segue.destination as? WordRecoveryViewController {
@@ -1307,58 +1317,38 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
             
         case "goToTools":
-            
             if let vc = segue.destination as? WalletToolsViewController {
-                
                 vc.wallet = self.activeWallet
-                
                 vc.sweepDoneBlock = { [unowned thisVc = self] result in
-                    
                     thisVc.refreshLocalDataAndBalanceForActiveAccount()
                     showAlert(vc: thisVc, title: "Wallet Sweeped! 🤩", message: "We are refreshing your balances now.")
-                    
                 }
                 
                 vc.refillDoneBlock = { [unowned thisVc = self] result in
-                    
                     thisVc.refreshLocalDataAndBalanceForActiveAccount()
                     showAlert(vc: thisVc, title: "Success!", message: "Keypool refilled 🤩")
-                    
                 }
-                
             }
             
         case "addWallet":
-            
             if let vc = segue.destination as? ChooseWalletFormatViewController {
-                
                 vc.walletDoneBlock = { [unowned thisVc = self] result in
-                    
                     showAlert(vc: thisVc, title: "Success!", message: "Wallet created successfully!")
                     thisVc.isLoading = true
                     thisVc.refreshLocalDataAndBalanceForActiveAccount()
-                    
                 }
                 
                 vc.recoverDoneBlock = { [unowned thisVc = self] result in
-                    
                     DispatchQueue.main.async {
-                        
                         thisVc.isLoading = true
                         thisVc.refreshLocalDataAndBalanceForActiveAccount()
-                        
                         showAlert(vc: thisVc, title: "Success!", message: "Wallet recovered 🤩!\n\nYour node is now rescanning the blockchain, balances may not show until the rescan completes.")
-                        
                     }
-                    
                 }
-                
             }
             
         default:
-            
             break
-            
         }
         
     }
