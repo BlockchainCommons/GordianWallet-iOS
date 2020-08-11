@@ -1,10 +1,10 @@
 # Electrum guide
 
 
-## This is a guide for creating a 2 of 3 multisig wallet with Gordian Wallet and Electrum, building and signing the psbt with Electrum, then exporting the psbt to Gordian Wallet for signing and broadcasting
+## This is a guide for creating a 2 of 3 multisig wallet with GordianWallet and Electrum, building and signing the psbt with Electrum, then exporting the psbt to GordianWallet for signing and broadcasting
 
 
-### 1. Create a multisig wallet in Gordian Wallet by selecting "multisig" -> "create wallet"
+### 1. Create a multisig wallet in GordianWallet by selecting "multisig" -> "create wallet"
 
 <img src="../Images/Electrum/1_GordianWallet_create_wallet.PNG" alt="" width="250"/> <img src="../Images/Electrum/2_GordianWallet_walletcreated.PNG" alt="" width="250"/>
 
@@ -22,7 +22,7 @@ You will need them!
 
 ![](../Images/Electrum/5_mofn.png)
 
-### 5. Import your own seed (the recovery phrase from Gordian Wallet)
+### 5. Import your own seed (the recovery phrase from GordianWallet)
 
 ![](../Images/Electrum/6_seed.png)
 
@@ -30,13 +30,13 @@ You will need them!
 
 ![](../Images/Electrum/7_bip39seed.png)
 
-### 7. Add the recovery phrase from Gordian Wallet
+### 7. Add the recovery phrase from GordianWallet
 
 ![](../Images/Electrum/8_addseed.png)
 
 ### 8. Confirm derivation
 
-By default Gordian Wallet uses the same derivation as Electrum for multisig wallets, just make sure you select `native segwit multisig (p2wsh)`, this is also the default multisig address format used by Gordian Wallet (bech32)
+By default *GordianWallet* uses the same derivation as Electrum for multisig wallets, just make sure you select `native segwit multisig (p2wsh)`, this is also the default multisig address format used by *GordianWallet* (bech32)
 
 ![](../Images/Electrum/9_derivation.png)
 
@@ -51,14 +51,14 @@ By default Gordian Wallet uses the same derivation as Electrum for multisig wall
 ![](../Images/Electrum/11_enter_cosigner2.png)
 
 
-### 11. Come back to Gordian Wallet and export your 1st public key descriptor which holds all the xpubs you need. You can get this by going to the wallets tab, enabling the Electrum wallet, and tapping the "info" button to export the devices seed and public key descriptors.
+### 11. Come back to *GordianWallet* and export your 1st public key descriptor which holds all the xpubs you need. You can get this by going to the wallets tab, enabling the Electrum wallet, and tapping the "info" button to export the devices seed and public key descriptors.
 
 You can get this by going to the wallets tab, enabling the Electrum wallet, and tapping the "info" button to export the device's seed and public key descriptors.
 
 
 <img src="../Images/Electrum/12_GordianWallet_getxpubs.PNG" alt="" width="250"/>
 
-When you export a public key descriptor from Gordian Wallet you will get two descriptors, the first one represents your primary addresses and the second descriptor represents your change addresses. The first one is what we need and will look like this:
+When you export a public key descriptor from *GordianWallet* you will get two descriptors, the first one represents your primary addresses and the second descriptor represents your change addresses. The first one is what we need and will look like this:
 
 ```
 wsh(sortedmulti(2,[82be8e74/48'/1'/0'/2']tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR/0/*,[5222e39c/48'/1'/0'/2']tpubDEQznV4Xs6BP1A1HXzogRsUiFxDsyaqLzphZmjmwrrERz9aHszb2juQzYBx9xuXymba5kkQvR76m218JiXM1DsLcgPryGCDs5P1geHoxVrx/0/*,[81202613/48'/1'/0'/2']tpubDEcrpYzpqTJyhy5bzsojvL8VMrcFf4DVU7q43fuq6JhhNyxCqLzhppiUsMHAXUJv4XTnmAiezNAzdfTdg2FFefbzNh8YzN6Wv2zEYwcCC22/0/*))#czsstq8d
@@ -66,7 +66,7 @@ wsh(sortedmulti(2,[82be8e74/48'/1'/0'/2']tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn
 
 It gives you 3 xpubs (tpubs for testnet):
 
-**Gordian Wallet works with Bitcoin Core and Bitcoin Core only works with xpubs/tpubs. Therefore you will need to use [this tool](https://jlopp.github.io/xpub-converter/) to convert your xpubs to the format Electrum accepts.**
+**GordianWallet works with Bitcoin Core and Bitcoin Core only works with xpubs/tpubs. Therefore you will need to use [this tool](https://jlopp.github.io/xpub-converter/) to convert your xpubs to the format Electrum accepts.**
 
 * xpub #1 always represents your offline recovery keys. This is the one we already imported into Electrum via the offline recovery words. `tpubDEYij9WndcWU4ApaSz68RitBMrZRTfShsXn4qw1izEaFScR5dnP4dz1CzgmfT5iTrNeZJhMXieg2BzhCFNxrWtvaTerBio3VbFoSDixs4yR`
 * xpub #2 always represents your device's keys and will be the one we add into Electrum next. `tpubDDxd7u6V76WHV6CRy3KSsJoXiioVwubYDubysMkvkYuCTFPwWfUwcnC7yh1mNkMd13Ssh8Fu7UiSJRoELuKW58zrVBd1YRGfHkcF2s9DHz3`
@@ -83,7 +83,7 @@ Here's what it means (you do not *need* to know this but it is useful to underst
 
 ### 13. Take your #2 tpub from the primary descriptor and convert it to a Vpub (for testnet)
 
-FullyNoded 2 works with Bitcoin Core and Bitcoin Core only works with xpubs/tpubs. Therefore you will need to use [this tool](https://jlopp.github.io/xpub-converter/) to convert your xpubs to the format Electrum accepts.
+*GordianWallet* works with Bitcoin Core and Bitcoin Core only works with xpubs/tpubs. Therefore you will need to use [this tool](https://jlopp.github.io/xpub-converter/) to convert your xpubs to the format Electrum accepts.
 
 ![](../Images/Electrum/13_converttpub2.png)
 
@@ -105,7 +105,7 @@ Tthe nice thing about multisig is we don't need passphrases to maintain security
 
 ![](../Images/Electrum/18_exportaddresses.png)
 
-### 17. Open Gordian Wallet and go to the Electrum wallet in the wallets tab, tap the eye button to export your multisig keys. 
+### 17. Open GordianWallet and go to the Electrum wallet in the wallets tab, tap the eye button to export your multisig keys. 
 
 **Confirm the addresses match what Electrum produced! If they do not then something went wrong! Most likely you selected the wrong derivation type, added the incorrect xpub, or converted the xpub to the incorrect format. This procedure does work, so try again and be careful to follow the instruction.**
 
@@ -117,7 +117,7 @@ Here we can see the addresses match what Electrum exported 🤩
 
 ![](../Images/Electrum/20_receive.png)
 
-### 19. Confirm you received them - you can do this in both Gordian Wallet and Electrum
+### 19. Confirm you received them - you can do this in both GordianWallet and Electrum
 
 ![](../Images/Electrum/21_transactionhistory.png)
 
@@ -133,7 +133,7 @@ Here we can see the addresses match what Electrum exported 🤩
 
 ![](../Images/Electrum/25_export2.png)
 
-### 22. Open Gordian Wallet
+### 22. Open GordianWallet
 
 <img src="../Images/Electrum/26_openGordianWallet.PNG" alt="" width="250"/>
 
@@ -145,11 +145,11 @@ Here we can see the addresses match what Electrum exported 🤩
 
 <img src="../Images/Electrum/28_tapsign.PNG" alt="" width="250"/>
 
-### 25. Gordian Wallet will first pass it to your node for processing and signing, then Gordian Wallet will sign it locally with the seed that is on the device. It actually loops through all the seeds on your device and signs it if it can. Your current active node in Gordian Wallet must be on the same network as the transaction your trying to sign or it will fail.
+### 25. GordianWallet will first pass it to your node for processing and signing, then GordianWallet will sign it locally with the seed that is on the device. It actually loops through all the seeds on your device and signs it if it can. Your current active node in GordianWallet must be on the same network as the transaction your trying to sign or it will fail.
 
 <img src="../Images/Electrum/29_signing.PNG" alt="" width="250"/>
 
-### 26. At this point the psbt may still need more signatures or may be fully signed. If it is complete Gordian Wallet finalizes the psbt, converts it to a signed raw transaction and parses each input and output and displays the fee for you to confirm before broadcasting. If it is incomplete it will allow you to export the updated psbt as raw data file like the one we imported or as base64 so that you can pass the psbt to another signer.
+### 26. At this point the psbt may still need more signatures or may be fully signed. If it is complete GordianWallet finalizes the psbt, converts it to a signed raw transaction and parses each input and output and displays the fee for you to confirm before broadcasting. If it is incomplete it will allow you to export the updated psbt as raw data file like the one we imported or as base64 so that you can pass the psbt to another signer.
 
 <img src="../Images/Electrum/30_verifyingsignedtx.PNG" alt="" width="250"/>
 
@@ -157,7 +157,7 @@ Here we can see the addresses match what Electrum exported 🤩
 
 <img src="../Images/Electrum/31_broadcast.PNG" alt="" width="250"/>
 
-### 28. Open Electrum and you will see the transaction in your history and of course also in Gordian Wallet 🤯
+### 28. Open Electrum and you will see the transaction in your history and of course also in GordianWallet 🤯
 
 ![](../Images/Electrum/32_seetxinelectrum.png)
 

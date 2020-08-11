@@ -1,6 +1,6 @@
-# Installing Gordian Wallet from Source
+# Installing GordianWallet from Source
 
-You can build the Gordian Wallet by installing a number of tools on your local Macintosh.
+You can build the *GordianWallet* by installing a number of tools on your local Macintosh.
 
 ## 1. Install XCode
 
@@ -20,15 +20,12 @@ Run `brew --version` in a terminal, if you get a valid response you have brew in
 ## 3. Install Dependencies
 - `brew install carthage automake autoconf libtool gnu-sed`
 
-## 3. Clone Gordian-Wallet
-- `git clone https://github.com/BlockchainCommons/Gordian-Wallet.git`
-
-## 4. Build Dependencies
+## 4. Install GordianWallet
+- `git clone https://github.com/BlockchainCommons/GordianWallet-iOS.git`
 - `cd Gordian-Wallet/XCode`
 - `carthage bootstrap --platform iOS`
 
-## 5. Open Gordian-Wallet
-- `cd Gordian-Wallet/XCode`
+## 5. Open GordianWallet
 - open `GordianWallet.xcodeproj` and run the project in a simulator or device.
 
 
