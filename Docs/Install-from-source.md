@@ -21,12 +21,17 @@ Run `brew --version` in a terminal, if you get a valid response you have brew in
 - `brew install carthage automake autoconf libtool gnu-sed`
 
 ## 4. Install GordianWallet
-- `git clone https://github.com/BlockchainCommons/GordianWallet-iOS.git`
-- `cd Gordian-Wallet/XCode`
-- `carthage bootstrap --platform iOS`
+- `git clone https://github.com/Fonta1n3/GordianWallet-iOS.git --recurse-submodules`
+- `cd Gordian-Wallet-iOS/XCode`
+- `carthage build --platform iOS`
 
 ## 5. Open GordianWallet
 - open `GordianWallet.xcodeproj` and run the project in a simulator or device.
+
+## 6. Troubleshooting
+Carthage should build everything automatically, if for some reason it does not you may need to manually compile libwally-core:
+- `cd Gordian-Wallet-iOS/XCode/Carthage/Checkouts/libwally-swift`
+- `./build-libwally.sh -dsc`
 
 
 
