@@ -23,7 +23,7 @@ Run `brew --version` in a terminal, if you get a valid response you have brew in
 ## 4. Install GordianWallet
 - `git clone https://github.com/BlockchainCommons/GordianWallet-iOS.git`
 - `cd Gordian-Wallet/XCode`
-- `carthage bootstrap --platform iOS --use-submodules`
+- `carthage bootstrap --platform iOS`
 
 ## 5. Open GordianWallet
 - open `GordianWallet.xcodeproj` and run the project in a simulator or device.
