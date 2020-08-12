@@ -46,6 +46,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var nodes = [[String:Any]]()
     var transactionArray = [[String:Any]]()
     var coldcard = [String:Any]()
+    let localeConfig = LocaleConfig()
     var deviceWords = ""
     var offlineWords = ""
     var tx = ""
@@ -95,6 +96,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         }
+        
+        print(localeConfig.getNewLocale())
         
         bootStrapping = true
         addStatusLabel(description: "     Bootstrapping Tor...")

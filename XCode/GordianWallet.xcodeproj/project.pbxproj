@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C608C88C24E3D95300721CCB /* LocaleConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608C88B24E3D95300721CCB /* LocaleConfig.swift */; };
+		C608C88E24E4023700721CCB /* PriceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608C88D24E4023700721CCB /* PriceViewController.swift */; };
 		D00016B3245ABFFA0091F7CF /* Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B2245ABFFA0091F7CF /* Import.swift */; };
 		D00016B5245BBB5C0091F7CF /* SeedStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B4245BBB5C0091F7CF /* SeedStruct.swift */; };
 		D00016B9245BD89C0091F7CF /* SeedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B8245BD89C0091F7CF /* SeedParser.swift */; };
@@ -183,6 +185,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C608C88B24E3D95300721CCB /* LocaleConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaleConfig.swift; sourceTree = "<group>"; };
+		C608C88D24E4023700721CCB /* PriceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceViewController.swift; sourceTree = "<group>"; };
 		D00016B2245ABFFA0091F7CF /* Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Import.swift; sourceTree = "<group>"; };
 		D00016B4245BBB5C0091F7CF /* SeedStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedStruct.swift; sourceTree = "<group>"; };
 		D00016B8245BD89C0091F7CF /* SeedParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedParser.swift; sourceTree = "<group>"; };
@@ -538,6 +542,7 @@
 			isa = PBXGroup;
 			children = (
 				D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */,
+				C608C88D24E4023700721CCB /* PriceViewController.swift */,
 				D09D72A123F0F3BF00847DC8 /* SettingsViewController.swift */,
 			);
 			path = Settings;
@@ -677,6 +682,7 @@
 				D09D72C923F0F3C000847DC8 /* FirstTime.swift */,
 				D09D72CA23F0F3C000847DC8 /* MnemonicCreator.swift */,
 				D09D72CB23F0F3C000847DC8 /* KeyFetcher.swift */,
+				C608C88B24E3D95300721CCB /* LocaleConfig.swift */,
 				D09D72CC23F0F3C000847DC8 /* Commands.swift */,
 				D09D72CD23F0F3C000847DC8 /* KeychainCreator.swift */,
 				D09D72CE23F0F3C000847DC8 /* QuickConnect.swift */,
@@ -1151,6 +1157,7 @@
 				D09D736823F0F3C000847DC8 /* MultiSigTxBuilder.swift in Sources */,
 				D006E34B243ED2FE007B1A5B /* Keychain.swift in Sources */,
 				D09D732623F0F3C000847DC8 /* UTXOViewController.swift in Sources */,
+				C608C88C24E3D95300721CCB /* LocaleConfig.swift in Sources */,
 				D09D733C23F0F3C000847DC8 /* CoreDataService.swift in Sources */,
 				D07399DD2461764700860B7E /* XpubConverter.swift in Sources */,
 				D09D736423F0F3C000847DC8 /* RawDisplayer.swift in Sources */,
@@ -1159,6 +1166,7 @@
 				D047DDF9242B2F3F004BC26D /* IntroductionViewController.swift in Sources */,
 				D047DDFD242B32C3004BC26D /* HowToSupportFN2ViewController.swift in Sources */,
 				D09D733B23F0F3C000847DC8 /* Reducer.swift in Sources */,
+				C608C88E24E4023700721CCB /* PriceViewController.swift in Sources */,
 				D047DE01242B3390004BC26D /* IsFN2SecureViewController.swift in Sources */,
 				D0D5E63924A05D1100F3783C /* NotificationCenterViewController.swift in Sources */,
 				D09D736323F0F3C000847DC8 /* ErrorView.swift in Sources */,

@@ -9,16 +9,20 @@
 import Foundation
 
 class FiatConverter {
-        
-    // MARK: TODO Find an onion api that returns bitcoin price data, not so easy... Using ExcludeExitNodes or OnionTrafficOnly prevents the below method from working.
     
     static let sharedInstance = FiatConverter()
     private init() {}
     
     func getFxRate(completion: @escaping ((Double?)) -> Void) {
         
+        UserDefaults.standard.set("http://km3danfmt7aiqylbq5lhyn53zhv2hhbmkr6q5pjc64juiyuxuhcsjwyd.onion/now/", forKey: "spotbitURL")
+        UserDefaults.standard.set("AUD", forKey: "currentCurrency")
+        UserDefaults.standard.set("binance", forKey: "currentExchange")
+        
+        let spotbitURL = UserDefaults.standard.string(forKey: "spotbitURL")! + UserDefaults.standard.string(forKey: "currentCurrency")! + "/" + UserDefaults.standard.string(forKey: "currentExchange")!
+        
         let torClient = TorClient.sharedInstance
-        let url = NSURL(string: "http://km3danfmt7aiqylbq5lhyn53zhv2hhbmkr6q5pjc64juiyuxuhcsjwyd.onion/now/AUD/binance")
+        let url = NSURL(string: spotbitURL)
         
         let task = torClient.session.dataTask(with: url! as URL) { (data, response, error) -> Void in
             
