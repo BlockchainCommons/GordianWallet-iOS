@@ -475,7 +475,11 @@ class UTXOViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     private func promptToEdit() {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: vc.alertTitle(), message: "⚠︎ Locking utxo's makes them temporarily unspendable ⚠︎\n\n⚠︎ All utxo's will become unlocked automatically if your node reboots! ⚠︎", preferredStyle: .actionSheet)
+            var alertStyle = UIAlertController.Style.actionSheet
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
+            let alert = UIAlertController(title: vc.alertTitle(), message: "⚠︎ Locking utxo's makes them temporarily unspendable ⚠︎\n\n⚠︎ All utxo's will become unlocked automatically if your node reboots! ⚠︎", preferredStyle: alertStyle)
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [unowned vc = self] action in
                 vc.creatingView.addConnectingView(vc: self, description: "")
                 vc.updateUtxosToLock()

@@ -34,7 +34,7 @@ class TransactionFetcher {
                 
                 var request = URLRequest(url: url)
                 request.httpMethod = "GET"
-                request.setValue("text/plain", forHTTPHeaderField: "Content-Type")                
+                request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
                 let task = vc.torClient.session.dataTask(with: request as URLRequest) { (data, response, error) in
                     
                     if error != nil {

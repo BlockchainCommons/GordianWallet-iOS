@@ -352,10 +352,11 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         let dict = inputArray[index]
         let txid = dict["txid"] as! String
         let vout = dict["vout"] as! Int
-        parsePrevTx(method: .gettransaction, param: "\"\(txid)\", true", vout: vout)
+        parsePrevTx(method: .gettransaction, item: txid, vout: vout)
     }
     
     func parseInputs(inputs: NSArray, completion: @escaping () -> Void) {
+        print("inputs: \(inputs)")
         for (index, i) in inputs.enumerated() {
             let input = i as! NSDictionary
             let txid = input["txid"] as! String
@@ -428,9 +429,10 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
-    func parsePrevTx(method: BTC_CLI_COMMAND, param: String, vout: Int) {
+    func parsePrevTx(method: BTC_CLI_COMMAND, item: String, vout: Int) {
         
         func decodeRaw() {
+            let param = "\(item), true"
             Reducer.makeCommand(walletName: walletName, command: .decoderawtransaction, param: param) { [unowned vc = self] (object, errorDescription) in
                 if let txDict = object as? NSDictionary {
                     if let outputs = txDict["vout"] as? NSArray {
@@ -445,9 +447,9 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
         
         func getRawTx() {
             let fetcher = TransactionFetcher.sharedInstance
-            fetcher.fetch(txid: txid) { [unowned vc = self] rawHex in
+            fetcher.fetch(txid: item) { [unowned vc = self] rawHex in
                 if rawHex != nil {
-                    vc.parsePrevTx(method: .decoderawtransaction, param: "\"\(rawHex!)\"", vout: vout)
+                    vc.parsePrevTx(method: .decoderawtransaction, item: "\"\(rawHex!)\"", vout: vout)
                 }  else {
                     vc.creatingView.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "Error parsing inputs")
@@ -517,7 +519,6 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func saveNewTx(memo: String) {
-        print("saveNewTx")
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             if wallet != nil {
                 var dict = [String:Any]()
@@ -548,7 +549,6 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     private func updateTx(memo: String) {
-        print("updateTx")
         CoreDataService.retrieveEntity(entityName: .transactions) { [unowned vc = self] (transactions, errorDescription) in
             if transactions != nil {
                 if transactions!.count > 0 {

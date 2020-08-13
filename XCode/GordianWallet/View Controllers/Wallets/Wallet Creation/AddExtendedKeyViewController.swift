@@ -28,6 +28,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     var isRecoveringMulti = false
     var cointType = "0"
     var isCool = Bool()
+    var alertStyle = UIAlertController.Style.actionSheet
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +59,9 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
         textView.layer.cornerRadius = 4
         tap.addTarget(self, action: #selector(handleTap))
         view.addGestureRecognizer(tap)
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+          alertStyle = UIAlertController.Style.alert
+        }
     }
         
     private func createDescriptors() {
@@ -194,7 +198,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     
     private func addAnotherExtendedKey() {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "You may add another xpub", message: "", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "You may add another xpub", message: "", preferredStyle: vc.alertStyle)
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
             alert.popoverPresentationController?.sourceView = self.view
             vc.present(alert, animated: true, completion: nil)
@@ -203,7 +207,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     
     private func recoveringSingleOrMulti() {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "That is a valid extended key", message: "Are you recovering a multi-sig account or single-sig account?", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "That is a valid extended key", message: "Are you recovering a multi-sig account or single-sig account?", preferredStyle: vc.alertStyle)
             alert.addAction(UIAlertAction(title: "Single-sig", style: .default, handler: { action in
                 if vc.isPathless {
                     vc.chooseDerivation()
@@ -226,7 +230,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     
     private func addMoreExtendedKeys() {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Add another xpub?", message: "", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Add another xpub?", message: "", preferredStyle: vc.alertStyle)
             alert.addAction(UIAlertAction(title: "Add more", style: .default, handler: { action in
                 vc.textView.text = ""
                 vc.addAnotherExtendedKey()
@@ -262,7 +266,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
         }
         
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Select a derivation to recover", message: "", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Select a derivation to recover", message: "", preferredStyle: vc.alertStyle)
             alert.addAction(UIAlertAction(title: "Segwit - BIP84", style: .default, handler: { action in
                 addPath(deriv: "84")
             }))

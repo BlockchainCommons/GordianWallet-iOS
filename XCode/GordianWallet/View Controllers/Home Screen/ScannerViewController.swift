@@ -29,15 +29,17 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     var isTorchOn = Bool()
     let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     let connectingView = ConnectingView()
+    var alertStyle = UIAlertController.Style.actionSheet
     @IBOutlet var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         navigationController?.delegate = self
         configureScanner()
         scanNow()
-        
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+          alertStyle = UIAlertController.Style.alert
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -58,7 +60,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                 
                 DispatchQueue.main.async { [unowned vc = self] in
                                 
-                    let alert = UIAlertController(title: "There is a QuickConnect uri on your clipboard", message: "Would you like to add this node?", preferredStyle: .actionSheet)
+                    let alert = UIAlertController(title: "There is a QuickConnect uri on your clipboard", message: "Would you like to add this node?", preferredStyle: vc.alertStyle)
 
                     alert.addAction(UIAlertAction(title: "Add Node", style: .default, handler: { action in
                         
@@ -84,7 +86,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                     
                     DispatchQueue.main.async { [unowned vc = self] in
                                     
-                        let alert = UIAlertController(title: "There is a QuickConnect uri on your clipboard", message: "Would you like to add this node?", preferredStyle: .actionSheet)
+                        let alert = UIAlertController(title: "There is a QuickConnect uri on your clipboard", message: "Would you like to add this node?", preferredStyle: vc.alertStyle)
 
                         alert.addAction(UIAlertAction(title: "Add Node", style: .default, handler: { action in
                             
@@ -104,7 +106,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                         if let psbt = object as? String {
                             DispatchQueue.main.async { [unowned vc = self] in
                                 vc.connectingView.removeConnectingView()
-                                let alert = UIAlertController(title: "Sign Raw Transaction?", message: "We will attempt to sign this transaction with your nodes current active wallet and then we will attempt to sign it locally. If the transaction is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer as a psbt.", preferredStyle: .actionSheet)
+                                let alert = UIAlertController(title: "Sign Raw Transaction?", message: "We will attempt to sign this transaction with your nodes current active wallet and then we will attempt to sign it locally. If the transaction is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer as a psbt.", preferredStyle: vc.alertStyle)
                                 alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
                                     vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
                                     vc.signPSBT(psbt: psbt)
@@ -126,20 +128,20 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         
         if scanningNode {
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [unowned vc = self] in
                 
-                let alert = UIAlertController(title: "Connect to our testing node?", message: "We have a testnet node you can borrow for testing purposes only, just tap \"Add Testing Node\" to use it. This is a great way to get comfortable with the app and gain an idea of how it works.", preferredStyle: .actionSheet)
+                let alert = UIAlertController(title: "Connect to our testing node?", message: "We have a testnet node you can borrow for testing purposes only, just tap \"Add Testing Node\" to use it. This is a great way to get comfortable with the app and gain an idea of how it works.", preferredStyle: vc.alertStyle)
 
-                alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { action in
+                alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { [unowned vc = self] action in
                     
-                    self.addnode()
+                    vc.addnode()
 
                 }))
                 
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
                         
-                alert.popoverPresentationController?.sourceView = self.view
-                self.present(alert, animated: true, completion: nil)
+                alert.popoverPresentationController?.sourceView = vc.view
+                vc.present(alert, animated: true, completion: nil)
                 
             }
             
@@ -156,7 +158,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         
         DispatchQueue.main.async { [unowned vc = self] in
             
-            let alert = UIAlertController(title: "Warning", message: "We may periodically delete testnet wallets from our testing node. Please make sure you save your recovery info when creating wallets so you can easily recover.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Warning", message: "We may periodically delete testnet wallets from our testing node. Please make sure you save your recovery info when creating wallets so you can easily recover.", preferredStyle: vc.alertStyle)
 
             alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { [unowned vc = self] action in
                 
@@ -404,7 +406,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                 
                 DispatchQueue.main.async { [unowned vc = self] in
                     
-                    let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sign it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: .actionSheet)
+                    let alert = UIAlertController(title: "Sign PSBT?", message: "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sign it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer.", preferredStyle: vc.alertStyle)
 
                     alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
                         
@@ -426,7 +428,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                     if let psbt = object as? String {
                         DispatchQueue.main.async { [unowned vc = self] in
                             vc.connectingView.removeConnectingView()
-                            let alert = UIAlertController(title: "Sign Raw Transaction?", message: "We will attempt to sign this transaction with your nodes current active wallet and then we will attempt to sign it locally. If the transaction is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer as a psbt.", preferredStyle: .actionSheet)
+                            let alert = UIAlertController(title: "Sign Raw Transaction?", message: "We will attempt to sign this transaction with your nodes current active wallet and then we will attempt to sign it locally. If the transaction is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer as a psbt.", preferredStyle: vc.alertStyle)
                             alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
                                 vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
                                 vc.signPSBT(psbt: psbt)

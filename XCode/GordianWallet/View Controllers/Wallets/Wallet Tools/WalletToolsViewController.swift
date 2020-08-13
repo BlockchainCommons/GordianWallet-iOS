@@ -110,8 +110,12 @@ class WalletToolsViewController: UIViewController {
     @IBAction func refillKeypool(_ sender: Any) {
         
         DispatchQueue.main.async {
-                        
-            let alert = UIAlertController(title: "Refill Keypool", message: "", preferredStyle: .actionSheet)
+            var alertStyle = UIAlertController.Style.actionSheet
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
+            
+            let alert = UIAlertController(title: "Refill Keypool", message: "", preferredStyle: alertStyle)
 
             alert.addAction(UIAlertAction(title: "Refill Now", style: .default, handler: { [unowned vc = self] action in
                 
@@ -158,7 +162,12 @@ class WalletToolsViewController: UIViewController {
         
         DispatchQueue.main.async {
             
-            let alert = UIAlertController(title: "Rescan the blockchain?", message: "This button will start a blockchain rescan for your current wallet. This is useful if you imported the wallet and do not see balances yet. If you recovered a wallet then the app will automatically rescan the blockchain for you.", preferredStyle: .actionSheet)
+            var alertStyle = UIAlertController.Style.actionSheet
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
+            
+            let alert = UIAlertController(title: "Rescan the blockchain?", message: "This button will start a blockchain rescan for your current wallet. This is useful if you imported the wallet and do not see balances yet. If you recovered a wallet then the app will automatically rescan the blockchain for you.", preferredStyle: alertStyle)
             
             alert.addAction(UIAlertAction(title: "Rescan from birthdate", style: .default, handler: { [unowned vc = self] action in
                 
@@ -467,7 +476,11 @@ class WalletToolsViewController: UIViewController {
     
     private func showInfo(title: String, message: String) {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+            var alertStyle = UIAlertController.Style.actionSheet
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
+            let alert = UIAlertController(title: title, message: message, preferredStyle: alertStyle)
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
             alert.popoverPresentationController?.sourceView = vc.view
             vc.present(alert, animated: true, completion: nil)

@@ -38,9 +38,11 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     var backUpRecoveryPhrase = ""
     var walletDoneBlock : ((Bool) -> Void)?
     var multiSigDoneBlock : (((success: Bool, recoveryPhrase: String, descriptor: String)) -> Void)?
-    let creatingView = ConnectingView()
+    let spinner = ConnectingView()
     var recoverDoneBlock : ((Bool) -> Void)?
     let advancedButton = UIButton()
+    var alertStyle = UIAlertController.Style.actionSheet
+    var rootKeyFromUr:String?
     
     @IBOutlet var recoverWalletOutlet: UIButton!
     @IBOutlet weak var customSeedSwitch: UISwitch!
@@ -73,6 +75,14 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         coldWalletOutlet.alpha = 0
         showAdvancedOptions()
         
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+          alertStyle = UIAlertController.Style.alert
+        }
+        
+        if rootKeyFromUr != nil {
+            isSingleSig = true
+            createNow(rootKey: rootKeyFromUr)
+        }
     }
     
     private func showAdvancedOptions() {
@@ -130,14 +140,15 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func hotInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Hot self sovereign single signature account", message: TextBlurbs.hotWalletInfo(), preferredStyle: .actionSheet)
+        
+        let alert = UIAlertController(title: "Hot self sovereign single signature account", message: TextBlurbs.hotWalletInfo(), preferredStyle: alertStyle)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
     }
     
     @IBAction func warmInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Warm self sovereign 2 of 3 multi signature account", message: TextBlurbs.warmWalletInfo(), preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Warm self sovereign 2 of 3 multi signature account", message: TextBlurbs.warmWalletInfo(), preferredStyle: alertStyle)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -145,7 +156,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func coolWalletInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Cool self sovereign 2 of 3 multi signature account", message: TextBlurbs.coolWalletInfo(), preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Cool self sovereign 2 of 3 multi signature account", message: TextBlurbs.coolWalletInfo(), preferredStyle: alertStyle)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -153,7 +164,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     @IBAction func coldWalletInfo(_ sender: Any) {
-        let alert = UIAlertController(title: "Cold self sovereign single signature account", message: TextBlurbs.coldWalletInfo(), preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Cold self sovereign single signature account", message: TextBlurbs.coldWalletInfo(), preferredStyle: alertStyle)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
         alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
@@ -163,14 +174,14 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     @IBAction func createHotWallet(_ sender: Any) {
         isSingleSig = true
         isMultiSig = false
-        createNow()
+        createNow(rootKey: nil)
                 
     }
     
     @IBAction func createWarmWallet(_ sender: Any) {
         isMultiSig = true
         isSingleSig = false
-        createNow()
+        createNow(rootKey: nil)
         
     }
     
@@ -195,7 +206,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     }
     
     
-    private func createNow() {
+    private func createNow(rootKey: String?) {
         
         if customSeedSwitch.isOn {
             
@@ -212,7 +223,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 if !error && node != nil {
                     
                     vc.node = node!
-                    vc.creatingView.addConnectingView(vc: vc.navigationController!, description: "creating your account")
+                    vc.spinner.addConnectingView(vc: vc.navigationController!, description: "creating your account")
                     
                     Reducer.makeCommand(walletName: "", command: .getblockcount, param: "") { (object, errorDescription) in
                         
@@ -271,13 +282,13 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                     
                                 }
                                 
-                                vc.createSingleSig()
+                                vc.createSingleSig(rootKey: rootKey)
                                 
                             }
                             
                         } else {
                             
-                            vc.creatingView.removeConnectingView()
+                            vc.spinner.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: "error fetching blockheight: \(errorDescription ?? "unknown error")")
                             
                         }
@@ -286,7 +297,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     
                 } else {
                     
-                    vc.creatingView.removeConnectingView()
+                    vc.spinner.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "no active node")
                     
                 }
@@ -301,7 +312,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
         if customSeedSwitch.isOn {
             
-            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: TextBlurbs.customSeedInfo(), preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "⚠︎ Advanced feature! ⚠︎", message: TextBlurbs.customSeedInfo(), preferredStyle: alertStyle)
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { action in }))
             alert.popoverPresentationController?.sourceView = self.view
             self.present(alert, animated: true, completion: nil)
@@ -322,39 +333,92 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     
     private func updateStatus(text: String) {
         DispatchQueue.main.async { [unowned vc = self] in
-            vc.creatingView.label.text = text
-            
+            vc.spinner.label.text = text
         }
-        
     }
     
-    private func createSingleSigSeed() {
-        updateStatus(text: "creating device's seed")
-        KeychainCreator.createKeyChain() { [unowned vc = self] (mnemonic, error) in
-            if !error {
-                vc.words = mnemonic!
-                vc.updateStatus(text: "encrypting device's seed")
-                let dataToEncrypt = mnemonic!.dataUsingUTF8StringEncoding
-                Encryption.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
-                    if !error {
-                        vc.updateStatus(text: "creating primary descriptor")
-                        if vc.saveSeed(seed: encryptedData!) {
-                            vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
+    private func createSingleSigSeed(rootKey: String?) {
+        let wallet = WalletStruct(dictionary: newWallet)
+        if rootKey == nil {
+            updateStatus(text: "creating device's seed")
+            KeychainCreator.createKeyChain() { [unowned vc = self] (mnemonic, error) in
+                if !error {
+                    vc.words = mnemonic!
+                    vc.updateStatus(text: "encrypting device's seed")
+                    let dataToEncrypt = mnemonic!.dataUsingUTF8StringEncoding
+                    Encryption.encryptData(dataToEncrypt: dataToEncrypt) { (encryptedData, error) in
+                        if !error {
+                            vc.updateStatus(text: "creating primary descriptor")
+                            if vc.saveSeed(seed: encryptedData!) {
+                                vc.constructSingleSigPrimaryDescriptor(wallet: wallet, encryptedSeed: encryptedData!)
+                            } else {
+                                vc.spinner.removeConnectingView()
+                                displayAlert(viewController: vc, isError: true, message: "error saving your seed")
+                            }
                         } else {
-                            vc.creatingView.removeConnectingView()
-                            displayAlert(viewController: vc, isError: true, message: "error saving your seed")
+                            vc.spinner.removeConnectingView()
+                            displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
                         }
-                    } else {
-                        vc.creatingView.removeConnectingView()
-                        displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
                     }
                 }
+            }
+        } else {
+            if let hdkey = HDKey(rootKey!) {
+                if let bip32 = BIP32Path(wallet.derivation) {
+                    do {
+                        let accountXprv = try hdkey.derive(bip32)
+                        Encryption.encryptData(dataToEncrypt: accountXprv.description.dataUsingUTF8StringEncoding) { [unowned vc = self] (encryptedData, error) in
+                            if encryptedData != nil {
+                                let fingerprint = hdkey.fingerprint.hexString
+                                let accountXpub = accountXprv.xpub
+                                vc.newWallet["xprvs"] = [encryptedData!]
+                                vc.newWallet["fingerprint"] = fingerprint
+                                var param = ""
+                                switch wallet.derivation {
+                                case "m/84'/1'/0'":
+                                    param = "\"wpkh([\(fingerprint)/84'/1'/0']\(accountXpub)/0/*)\""
+                                    
+                                case "m/84'/0'/0'":
+                                    param = "\"wpkh([\(fingerprint)/84'/0'/0']\(accountXpub)/0/*)\""
+                                    
+                                default:
+                                    break
+                                }
+                                Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: param) { [unowned vc = self] (object, errorDesc) in
+                                    if let dict = object as? NSDictionary {
+                                        let primaryDescriptor = dict["descriptor"] as! String
+                                        vc.newWallet["descriptor"] = primaryDescriptor
+                                        vc.newWallet["name"] = Encryption.sha256hash(primaryDescriptor)
+                                        vc.updateStatus(text: "creating change descriptor")
+                                        let changeDescParam = param.replacingOccurrences(of: "/0/*", with: "/1/*")
+                                        vc.constructSingleSigChangeDescriptor(param: changeDescParam)
+                                    } else {
+                                        vc.spinner.removeConnectingView()
+                                        displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
+                                    }
+                                }
+                            } else {
+                                vc.spinner.removeConnectingView()
+                                displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
+                            }
+                        }
+                    } catch {
+                        self.spinner.removeConnectingView()
+                        displayAlert(viewController: self, isError: true, message: "error deriving account keys")
+                    }
+                } else {
+                    self.spinner.removeConnectingView()
+                    displayAlert(viewController: self, isError: true, message: "error converting derivation string to bip32 path")
+                }
+            } else {
+                self.spinner.removeConnectingView()
+                displayAlert(viewController: self, isError: true, message: "error converting xprv to hdkey")
             }
         }
     }
     
     private func encryptSaveUserSuppliedSingleSigSeed() {
-        creatingView.addConnectingView(vc: self, description: "creating single sig account")
+        spinner.addConnectingView(vc: self, description: "creating single sig account")
         let dataToEncrypt = userSuppliedWords!.dataUsingUTF8StringEncoding
         Encryption.encryptData(dataToEncrypt: dataToEncrypt) { [unowned vc = self] (encryptedData, error) in
             if !error {
@@ -362,20 +426,20 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 if vc.saveSeed(seed: encryptedData!) {
                     vc.constructSingleSigPrimaryDescriptor(wallet: WalletStruct(dictionary: vc.newWallet), encryptedSeed: encryptedData!)
                 } else {
-                    vc.creatingView.removeConnectingView()
+                    vc.spinner.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "error saving your seed")
                 }
             } else {
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: "error encrypting your seed")
             }
         }
     }
     
-    func createSingleSig() {
+    func createSingleSig(rootKey: String?) {
         print("create single sig")
         if userSuppliedWords == nil {
-            createSingleSigSeed()
+            createSingleSigSeed(rootKey: rootKey)
         } else {
             encryptSaveUserSuppliedSingleSigSeed()
         }
@@ -416,17 +480,17 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 let changeDescParam = param.replacingOccurrences(of: "/0/*", with: "/1/*")
                                 vc.constructSingleSigChangeDescriptor(param: changeDescParam)
                             } else {
-                                vc.creatingView.removeConnectingView()
+                                vc.spinner.removeConnectingView()
                                 displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                             }
                         }
                     } else {
-                        vc.creatingView.removeConnectingView()
+                        vc.spinner.removeConnectingView()
                         displayAlert(viewController: vc, isError: true, message: "error encrypting your xprv")
                     }
                 }
             } else {
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: "error deriving your xpub and fingerprint")
             }
         }
@@ -443,7 +507,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 vc.createSingleSigWallet()
                                                 
             } else {
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                 
             }
@@ -459,20 +523,22 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 CoreDataService.saveEntity(dict: vc.newWallet, entityName: .wallets) { (success, errorDescription) in
                     if success {
                         let w = WalletStruct(dictionary: vc.newWallet)
-                        let recoveryQr = ["descriptor":"\(w.descriptor)", "blockheight":w.blockheight,"label":""] as [String : Any]
+                        let arr = w.descriptor.split(separator: "#")
+                        let plainDesc = "\(arr[0])".replacingOccurrences(of: "'", with: "h")
+                        let recoveryQr = ["descriptor":"\(plainDesc)", "blockheight":w.blockheight,"label":""] as [String : Any]
                         if let json = recoveryQr.json() {
                             DispatchQueue.main.async {
-                                vc.creatingView.removeConnectingView()
+                                vc.spinner.removeConnectingView()
                                 vc.backUpRecoveryPhrase = vc.words
                                 vc.recoveryQr = json
                                 vc.performSegue(withIdentifier: "walletCreated", sender: vc)
                             }
                         } else {
-                            vc.creatingView.removeConnectingView()
+                            vc.spinner.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: "error converting to json")
                         }
                     } else {
-                        vc.creatingView.removeConnectingView()
+                        vc.spinner.removeConnectingView()
                         displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving account")
                     }
                 }
@@ -493,14 +559,14 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         
                     } else {
                         
-                        vc.creatingView.removeConnectingView()
+                        vc.spinner.removeConnectingView()
                         displayAlert(viewController: vc, isError: true, message: "There was an error creating your account: \(errorDescription!)")
                         
                     }
                     
                 } else {
                  
-                    vc.creatingView.removeConnectingView()
+                    vc.spinner.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "There was an error creating your account")
                     
                 }
@@ -561,28 +627,28 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                     
                                 } catch {
                                     
-                                    vc.creatingView.removeConnectingView()
+                                    vc.spinner.removeConnectingView()
                                     displayAlert(viewController: vc, isError: true, message: "failed deriving xpub")
                                     
                                 }
                                 
                             } else {
                                 
-                                vc.creatingView.removeConnectingView()
+                                vc.spinner.removeConnectingView()
                                 displayAlert(viewController: vc, isError: true, message: "failed initiating bip32 path")
                                 
                             }
                             
                         } else {
                             
-                            vc.creatingView.removeConnectingView()
+                            vc.spinner.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: "failed creating masterkey")
                             
                         }
                         
                     } else {
                         
-                        vc.creatingView.removeConnectingView()
+                        vc.spinner.removeConnectingView()
                         displayAlert(viewController: vc, isError: true, message: "error getting xpub from your recovery key")
                         
                     }
@@ -591,7 +657,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
             } else {
                 
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: "error creating your recovery key")
                 
             }
@@ -647,42 +713,42 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                             vc.newWallet["xprvs"] = [encryptedData!]
                                                             vc.createNodesKey()
                                                         } else {
-                                                            vc.creatingView.removeConnectingView()
+                                                            vc.spinner.removeConnectingView()
                                                             displayAlert(viewController: vc, isError: true, message: "failed encrypting device xpriv")
                                                         }
                                                     }
                                                     
                                                 } else {
                                                     
-                                                    vc.creatingView.removeConnectingView()
+                                                    vc.spinner.removeConnectingView()
                                                     displayAlert(viewController: vc, isError: true, message: "failed deriving local xpriv")
                                                     
                                                 }
                                                 
                                             } catch {
                                                 
-                                                vc.creatingView.removeConnectingView()
+                                                vc.spinner.removeConnectingView()
                                                 displayAlert(viewController: vc, isError: true, message: "failed deriving xpub")
                                                 
                                             }
                                             
                                         } else {
                                             
-                                            vc.creatingView.removeConnectingView()
+                                            vc.spinner.removeConnectingView()
                                             displayAlert(viewController: vc, isError: true, message: "failed initiating bip32 path")
                                             
                                         }
                                         
                                     } else {
                                         
-                                        vc.creatingView.removeConnectingView()
+                                        vc.spinner.removeConnectingView()
                                         displayAlert(viewController: vc, isError: true, message: "failed creating masterkey")
                                         
                                     }
                                     
                                 } else {
                                     
-                                    vc.creatingView.removeConnectingView()
+                                    vc.spinner.removeConnectingView()
                                     displayAlert(viewController: vc, isError: true, message: "error converting your words to BIP39 mnmemonic")
                                     
                                 }
@@ -691,7 +757,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             
                         } else {
                             
-                            vc.creatingView.removeConnectingView()
+                            vc.spinner.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: "error encrypting data")
                             
                         }
@@ -701,7 +767,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     
                 } else {
                     
-                    vc.creatingView.removeConnectingView()
+                    vc.spinner.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "error creating your recovery key")
                     
                 }
@@ -751,35 +817,35 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                             
                                         } else {
                                             
-                                            vc.creatingView.removeConnectingView()
+                                            vc.spinner.removeConnectingView()
                                             displayAlert(viewController: vc, isError: true, message: "failed deriving local xpriv")
                                             
                                         }
                                         
                                     } catch {
                                         
-                                        vc.creatingView.removeConnectingView()
+                                        vc.spinner.removeConnectingView()
                                         displayAlert(viewController: vc, isError: true, message: "failed deriving xpub")
                                         
                                     }
                                     
                                 } else {
                                     
-                                    vc.creatingView.removeConnectingView()
+                                    vc.spinner.removeConnectingView()
                                     displayAlert(viewController: vc, isError: true, message: "failed initiating bip32 path")
                                     
                                 }
                                 
                             } else {
                                 
-                                vc.creatingView.removeConnectingView()
+                                vc.spinner.removeConnectingView()
                                 displayAlert(viewController: vc, isError: true, message: "failed creating masterkey")
                                 
                             }
                             
                         } else {
                             
-                            vc.creatingView.removeConnectingView()
+                            vc.spinner.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: "error converting your words to BIP39 mnmemonic")
                             
                         }
@@ -838,7 +904,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                         
                                     } else {
                                         
-                                        vc.creatingView.removeConnectingView()
+                                        vc.spinner.removeConnectingView()
                                         displayAlert(viewController: vc, isError: true, message: "failed deriving node's xprv")
                                         
                                     }
@@ -846,28 +912,28 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                     
                                 } catch {
                                     
-                                    vc.creatingView.removeConnectingView()
+                                    vc.spinner.removeConnectingView()
                                     displayAlert(viewController: vc, isError: true, message: "failed deriving xpub")
                                     
                                 }
                                 
                             } else {
                                 
-                                vc.creatingView.removeConnectingView()
+                                vc.spinner.removeConnectingView()
                                 displayAlert(viewController: vc, isError: true, message: "failed initiating bip32 path")
                                 
                             }
                             
                         } else {
                             
-                            vc.creatingView.removeConnectingView()
+                            vc.spinner.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: "failed creating masterkey")
                             
                         }
                         
                     } else {
                         
-                        vc.creatingView.removeConnectingView()
+                        vc.spinner.removeConnectingView()
                         displayAlert(viewController: vc, isError: true, message: "error converting your words to BIP39 mnmemonic")
                         
                     }
@@ -876,7 +942,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
             } else {
                 
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: "error encrypting data")
                 
             }
@@ -927,7 +993,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
         
         DispatchQueue.main.async {
             
-            self.creatingView.label.text = "creating your accounts descriptors"
+            self.spinner.label.text = "creating your accounts descriptors"
             
         }
         
@@ -943,7 +1009,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         
                         DispatchQueue.main.async {
                             
-                            vc.creatingView.label.text = "importing your descriptors to your node"
+                            vc.spinner.label.text = "importing your descriptors to your node"
                             
                         }
                         
@@ -970,11 +1036,12 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                         
                                                         if success {
                                                             
-                                                            vc.creatingView.removeConnectingView()
+                                                            vc.spinner.removeConnectingView()
                                                             
                                                             DispatchQueue.main.async {
-                                                                
-                                                                let recoveryQr = ["descriptor":"\(wallet.descriptor)", "blockheight":wallet.blockheight, "label":""] as [String : Any]
+                                                                let arr = wallet.descriptor.split(separator: "#")
+                                                                let plainDesc = "\(arr[0])".replacingOccurrences(of: "'", with: "h")
+                                                                let recoveryQr = ["descriptor":"\(plainDesc)", "blockheight":wallet.blockheight, "label":""] as [String : Any]
                                                                 
                                                                 if let json = recoveryQr.json() {
                                                                     
@@ -992,7 +1059,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                             
                                                         } else {
                                                             
-                                                            vc.creatingView.removeConnectingView()
+                                                            vc.spinner.removeConnectingView()
                                                             displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving account")
                                                             
                                                         }
@@ -1003,7 +1070,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                     
                                                     DispatchQueue.main.async {
                                                         
-                                                        vc.creatingView.label.text = "saving your account to your device"
+                                                        vc.spinner.label.text = "saving your account to your device"
                                                         
                                                     }
                                                     
@@ -1019,14 +1086,14 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                             
                                                         } else {
                                                             
-                                                            vc.creatingView.removeConnectingView()
+                                                            vc.spinner.removeConnectingView()
                                                             displayAlert(viewController: vc, isError: true, message: "error creating account: \(error!)")
                                                             
                                                         }
                                                         
                                                     } else {
                                                         
-                                                        vc.creatingView.removeConnectingView()
+                                                        vc.spinner.removeConnectingView()
                                                         displayAlert(viewController: vc, isError: true, message: "error creating account")
                                                         
                                                     }
@@ -1041,7 +1108,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                             if vc.saveSeed(seed: vc.localSeed!) {
                                                 create()
                                             } else {
-                                                vc.creatingView.removeConnectingView()
+                                                vc.spinner.removeConnectingView()
                                                 displayAlert(viewController: vc, isError: true, message: "error saving your seed")
                                             }
                                         } else {
@@ -1056,7 +1123,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             
                         } else {
                             
-                            vc.creatingView.removeConnectingView()
+                            vc.spinner.removeConnectingView()
                             showAlert(vc: vc, title: "Error", message: "error getting descriptor info: \(errorDesc ?? "unknown error"))")
                             
                         }
@@ -1067,7 +1134,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
             } else {
                 
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
                 showAlert(vc: vc, title: "Error", message: "error getting descriptor info: \(errorDesc ?? "unknown error"))")
                 
             }
@@ -1078,7 +1145,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
     
     private func createWalletWithUserSuppliedSeed(dict: [String:String]?) {
         
-        creatingView.addConnectingView(vc: self.navigationController!, description: "creating your account")
+        spinner.addConnectingView(vc: self.navigationController!, description: "creating your account")
         
         Encryption.getNode { [unowned vc = self] (node, error) in
             
@@ -1087,9 +1154,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 vc.node = node!
                 
                 Reducer.makeCommand(walletName: "", command: .getblockcount, param: "") { (object, errorDescription) in
-                    
                     if let blockheight = object as? Int {
-                        
                         vc.newWallet["blockheight"] = Int32(blockheight)
                         vc.newWallet["maxRange"] = 2500
                         vc.newWallet["birthdate"] = keyBirthday()
@@ -1150,7 +1215,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 
                             } else if vc.userSuppliedWords != nil {
                                 
-                                vc.createSingleSig()
+                                vc.createSingleSig(rootKey: nil)
                                 
                             }
                             
@@ -1158,7 +1223,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         
                     } else {
                         
-                        vc.creatingView.removeConnectingView()
+                        vc.spinner.removeConnectingView()
                         displayAlert(viewController: vc, isError: true, message: "error fetching blockheight: \(errorDescription ?? "unknown error")")
                         
                     }
@@ -1167,7 +1232,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 
             } else {
                 
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: "no active node")
                 
             }
@@ -1246,7 +1311,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                 
             } else {
                 
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                 
             }
@@ -1271,7 +1336,7 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                                 
             } else {
                 
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: errorDesc ?? "unknown error")
                 
             }
@@ -1291,12 +1356,14 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                     if success {
                         
                         let w = WalletStruct(dictionary: vc.newWallet)
-                        let recoveryQr = ["descriptor":w.descriptor, "blockheight":w.blockheight,"label":""] as [String : Any]
+                        let arr = w.descriptor.split(separator: "#")
+                        let plainDesc = "\(arr[0])".replacingOccurrences(of: "'", with: "h")
+                        let recoveryQr = ["descriptor":plainDesc, "blockheight":w.blockheight,"label":""] as [String : Any]
                         
                         if let json = recoveryQr.json() {
                             
                             DispatchQueue.main.async {
-                                vc.creatingView.removeConnectingView()
+                                vc.spinner.removeConnectingView()
                                 vc.backUpRecoveryPhrase = ""
                                 vc.recoveryQr = json
                                 vc.performSegue(withIdentifier: "walletCreated", sender: vc)
@@ -1305,14 +1372,14 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             
                         } else {
                             
-                            vc.creatingView.removeConnectingView()
+                            vc.spinner.removeConnectingView()
                             displayAlert(viewController: vc, isError: true, message: "error converting to json")
                             
                         }
                         
                     } else {
                         
-                        vc.creatingView.removeConnectingView()
+                        vc.spinner.removeConnectingView()
                         displayAlert(viewController: vc, isError: true, message: errorDescription ?? "error saving account")
                         
                     }
@@ -1333,12 +1400,12 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                         save()
                         
                     } else {
-                        vc.creatingView.removeConnectingView()
+                        vc.spinner.removeConnectingView()
                         displayAlert(viewController: vc, isError: true, message: "There was an error creating your account: \(errorDescription!)")
                     }
                     
                 } else {
-                    vc.creatingView.removeConnectingView()
+                    vc.spinner.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "There was an error creating your account")
                     
                 }

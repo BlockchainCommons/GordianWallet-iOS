@@ -18,14 +18,17 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
     var recoveryDict = [String:Any]()
     var requiredSigs = Int()
     var network:Network!
+    var alertStyle = UIAlertController.Style.actionSheet
     @IBOutlet weak var picker: UIPickerView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         navigationController?.delegate = self
         picker.delegate = self
         picker.dataSource = self
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+          alertStyle = UIAlertController.Style.alert
+        }
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -50,7 +53,7 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
         if xpubArray.count == 0 {
             DispatchQueue.main.async { [unowned vc = self] in
                 
-                let alert = UIAlertController(title: "Recover \(vc.requiredSigs) of \(vc.seedArray.count) now?", message: "", preferredStyle: .actionSheet)
+                let alert = UIAlertController(title: "Recover \(vc.requiredSigs) of \(vc.seedArray.count) now?", message: "", preferredStyle: vc.alertStyle)
                 alert.addAction(UIAlertAction(title: "Recover now", style: .default, handler: { action in
                     vc.buildWallet()
                     
@@ -65,7 +68,7 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
         } else {
             DispatchQueue.main.async { [unowned vc = self] in
                 
-                let alert = UIAlertController(title: "Recover \(vc.requiredSigs) of \(vc.xpubArray.count) now?", message: "", preferredStyle: .actionSheet)
+                let alert = UIAlertController(title: "Recover \(vc.requiredSigs) of \(vc.xpubArray.count) now?", message: "", preferredStyle: vc.alertStyle)
                 alert.addAction(UIAlertAction(title: "Recover now", style: .default, handler: { action in
                     vc.buildDescriptorFromXpubs()
                     

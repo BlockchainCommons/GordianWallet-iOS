@@ -22,10 +22,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var activeWallet:WalletStruct!
     var sortedWallets = [[String:Any]]()
     let dateFormatter = DateFormatter()
-    let creatingView = ConnectingView()
+    let spinner = ConnectingView()
     var nodes = [[String:Any]]()
     var recoveryPhrase = ""
     var descriptor = ""
+    var urToRecover = ""
+    var xprv = ""
     @IBOutlet var walletTable: UITableView!
     
     override func viewDidLoad() {
@@ -98,7 +100,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @objc func transactionSent(_ notification: Notification) {
-        creatingView.addConnectingView(vc: self, description: "refreshing balance...")
+        spinner.addConnectingView(vc: self, description: "refreshing balance...")
         /// Need to hardcode a delay as doing it immedeately after the transaction broadcasts means the transaction may not have propgated across the network that quickly. Keep in mind we use Blockstreams node to broadcast transactions, if we strictly used our own node then of course it would be instant.
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [unowned vc = self] in
             vc.refreshActiveWalletData()
@@ -133,7 +135,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func refreshLocalDataOnly() {
-        creatingView.addConnectingView(vc: self, description: "refreshing local data...")
+        spinner.addConnectingView(vc: self, description: "refreshing local data...")
         setOnionLabels() { [unowned vc = self] success in
             if success {
                 vc.setSortedWalletsArray() { [unowned vc = self] success in
@@ -141,13 +143,13 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         vc.setKnownUnknownSignersAndFingerprints() { [unowned vc = self] success in
                             DispatchQueue.main.async {
                                 vc.walletTable.reloadData()
-                                vc.creatingView.removeConnectingView()
+                                vc.spinner.removeConnectingView()
                             }
                         }
                     }
                 }
             } else {
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
             }
         }
     }
@@ -157,7 +159,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             DispatchQueue.main.async { [unowned vc = self] in
                 vc.walletTable.reloadData()
                 vc.refresher.endRefreshing()
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
                 vc.walletTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                 vc.isLoading = false
             }
@@ -176,7 +178,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if i + 1 == sortedWallets.count {
                 DispatchQueue.main.async { [unowned vc = self] in
                     vc.refresher.endRefreshing()
-                    vc.creatingView.removeConnectingView()
+                    vc.spinner.removeConnectingView()
                     vc.walletTable.reloadData()
                 }
             }
@@ -215,7 +217,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
             if errorDescription == nil {
                 if wallets!.count == 0 {
-                    vc.creatingView.removeConnectingView()
+                    vc.spinner.removeConnectingView()
                     vc.isLoading = false
                     completion(false)
                 } else {
@@ -229,7 +231,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }
                         if i + 1 == wallets!.count {
                             if vc.sortedWallets.count == 0 {
-                                vc.creatingView.removeConnectingView()
+                                vc.spinner.removeConnectingView()
                                 vc.isLoading = false
                                 completion(false)
                             } else {
@@ -240,7 +242,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
             } else {
                 completion(false)
-                vc.creatingView.removeConnectingView()
+                vc.spinner.removeConnectingView()
                 displayAlert(viewController: vc, isError: true, message: errorDescription!)
             }
         }
@@ -269,7 +271,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @objc func refreshLocalDataAndBalanceForActiveAccount() {
-        creatingView.addConnectingView(vc: self, description: "loading accounts...")
+        spinner.addConnectingView(vc: self, description: "loading accounts...")
         sortedWallets.removeAll()
         wallets.removeAll()
         activeWallet = nil
@@ -280,7 +282,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     if errorDescription == nil {
                         if wallets!.count == 0 {
                             vc.refresher.endRefreshing()
-                            vc.creatingView.removeConnectingView()
+                            vc.spinner.removeConnectingView()
                             vc.isLoading = false
                         } else {
                             for (i, w) in wallets!.enumerated() {
@@ -293,7 +295,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 }
                                 if i + 1 == wallets!.count {
                                     if vc.sortedWallets.count == 0 {
-                                        vc.creatingView.removeConnectingView()
+                                        vc.spinner.removeConnectingView()
                                         vc.refresher.endRefreshing()
                                         vc.isLoading = false
                                     }
@@ -305,14 +307,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }
                     } else {
                         vc.refresher.endRefreshing()
-                        vc.creatingView.removeConnectingView()
+                        vc.spinner.removeConnectingView()
                         displayAlert(viewController: vc, isError: true, message: errorDescription!)
                     }
                 }
             } else {
                 DispatchQueue.main.async { [unowned vc = self] in
                     vc.refresher.endRefreshing()
-                    vc.creatingView.removeConnectingView()
+                    vc.spinner.removeConnectingView()
                     displayAlert(viewController: vc, isError: true, message: "No nodes, please add one in order to use the app.")
                 }
             }
@@ -803,7 +805,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             isLoading = true
 
             DispatchQueue.main.async { [unowned vc = self] in
-                vc.creatingView.addConnectingView(vc: vc, description: "refreshing wallet data...")
+                vc.spinner.addConnectingView(vc: vc, description: "refreshing wallet data...")
             }
 
             let walletStruct = WalletStruct(dictionary: self.sortedWallets[index])
@@ -823,7 +825,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         DispatchQueue.main.async { [unowned vc = self] in
                             vc.walletTable.reloadData()
                             vc.isLoading = false
-                            vc.creatingView.removeConnectingView()
+                            vc.spinner.removeConnectingView()
                             vc.refresher.endRefreshing()
                         }
                     }
@@ -834,7 +836,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         vc.walletTable.reloadSections(IndexSet(arrayLiteral: 0), with: .fade)
                         vc.isLoading = false
                         vc.refreshLocalDataAndBalanceForActiveAccount()
-                        vc.creatingView.removeConnectingView()
+                        vc.spinner.removeConnectingView()
                         vc.refresher.endRefreshing()
                         showAlert(vc: self, title: "Error", message: errorDesc ?? "error updating balance")
                     }
@@ -994,34 +996,38 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
 // MARK: - And comment out the following lines of code:
 
 //            Encryption.getNode { [unowned vc = self] (node, error) in
-//
+//                
 //                if !error && node != nil {
-//
+//                    
 //                    if node!.network == "mainnet" {
-//
+//                        
 //                        DispatchQueue.main.async {
-//                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: .actionSheet)
+//                            var alertStyle = UIAlertController.Style.actionSheet
+//                            if (UIDevice.current.userInterfaceIdiom == .pad) {
+//                                alertStyle = UIAlertController.Style.alert
+//                            }
+//                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: alertStyle)
 //                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { action in }))
 //                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
 //                            vc.present(alert, animated: true, completion: nil)
 //                        }
-//
+//                        
 //                    } else {
-//
+//                        
 //                        DispatchQueue.main.async {
-//
+//                            
 //                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
-//
+//                            
 //                        }
-//
+//                        
 //                    }
-//
+//                    
 //                } else {
-//
+//                    
 //                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
-//
+//                    
 //                }
-//
+//                
 //            }
 //-------------------------------------------------------------------------------
             
@@ -1110,12 +1116,50 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         walletTable.reloadData()
     }
     
-    private func processDescriptor(descriptor: String) {
+    private func processUrHdkey(urString: String) {
+        //"ur:crypto-hdkey/otadykaxhdclaevswfdmjpfswpwkahcywspsmndwmusoskprbbehetchsnpfcybbmwrhchspfxjeecaahdcxlnfszolyrtdlgmhfcnzectvwcmkbpsftgonbgauefsehgrqzdmvodizoweemtlaybakiylat"
+        Encryption.getNode { (node, error) in
+            guard node != nil else { return }
+            var prefix = "0488ade4"
+            if node!.network == "testnet" {
+                prefix = "04358394"
+            }
+            let (isMaster, keyData, chainCode) = URHelper.urToHdkey(urString: urString)
+            guard isMaster != nil else { return }
+            guard keyData != nil else { return }
+            guard chainCode != nil else { return }
+            if isMaster! {
+                var base58String = "\(prefix)000000000000000000\(chainCode!)\(keyData!)"
+                if let data = Data(base58String) {
+                    let checksum = Encryption.checksum(Data(data))
+                    base58String += checksum
+                    if let rawData = Data(base58String) {
+                        DispatchQueue.main.async { [unowned vc = self] in
+                            vc.xprv = Base58.encode([UInt8](rawData))
+                            vc.performSegue(withIdentifier: "segueToCreateUrSuppliedKey", sender: vc)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func processDescriptor(item: String) {
+        spinner.addConnectingView(vc: self, description: "processing...")
         
-        let cv = ConnectingView()
-        cv.addConnectingView(vc: self, description: "processing...")
-        
-        if let data = descriptor.data(using: .utf8) {
+        if item.hasPrefix("ur:crypto-hdkey/") {
+            processUrHdkey(urString: item)
+        } else if item.hasPrefix("ur:crypto-seed/") {
+            spinner.removeConnectingView()
+            if let _ = URHelper.urToEntropy(urString: item).data {
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.urToRecover = item
+                    vc.performSegue(withIdentifier: "segueToUrRecovery", sender: vc)
+                }
+            } else {
+                showAlert(vc: self, title: "Oops", message: "That does not look like a valid crypto-seed UR")
+            }
+        } else if let data = item.data(using: .utf8) {
             
             do {
                 
@@ -1130,7 +1174,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             
                             if walletDict != nil {
                                 DispatchQueue.main.async { [unowned vc = self] in
-                                    cv.removeConnectingView()
+                                    vc.spinner.removeConnectingView()
                                     vc.walletToImport = walletDict!
                                     vc.walletName = walletDict!["name"] as! String
                                     vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
@@ -1141,20 +1185,24 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                 } else if let fingerprint = dict["xfp"] as? String {
                     /// It is a coldcard wallet skeleton file.
-                    cv.removeConnectingView()
+                    spinner.removeConnectingView()
                     DispatchQueue.main.async { [unowned vc = self] in
+                        var alertStyle = UIAlertController.Style.actionSheet
+                        if (UIDevice.current.userInterfaceIdiom == .pad) {
+                          alertStyle = UIAlertController.Style.alert
+                        }
                         
-                        let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: TextBlurbs.chooseColdcardDerivationToImport(), preferredStyle: .actionSheet)
+                        let alert = UIAlertController(title: "Import Coldcard Single-sig account?", message: TextBlurbs.chooseColdcardDerivationToImport(), preferredStyle: alertStyle)
                         
                         alert.addAction(UIAlertAction(title: "Native Segwit (BIP84, bc1)", style: .default, handler: { action in
-                            cv.addConnectingView(vc: vc, description: "importing...")
+                            vc.spinner.addConnectingView(vc: vc, description: "importing...")
                             let bip84Dict = dict["bip84"] as! NSDictionary
                             
                             Import.importColdCard(coldcardDict: bip84Dict, fingerprint: fingerprint) { (walletToImport) in
                                 
                                 if walletToImport != nil {
                                     DispatchQueue.main.async { [unowned vc = self] in
-                                        cv.removeConnectingView()
+                                        vc.spinner.removeConnectingView()
                                         vc.walletName = walletToImport!["name"] as! String
                                         vc.walletToImport = walletToImport!
                                         vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
@@ -1166,14 +1214,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }))
                         
                         alert.addAction(UIAlertAction(title: "Nested Segwit (BIP49, 3)", style: .default, handler: { action in
-                            cv.addConnectingView(vc: vc, description: "importing...")
+                            vc.spinner.addConnectingView(vc: vc, description: "importing...")
                             let bip49Dict = dict["bip49"] as! NSDictionary
                             
                             Import.importColdCard(coldcardDict: bip49Dict, fingerprint: fingerprint) { (walletToImport) in
                                 
                                 if walletToImport != nil {
                                     DispatchQueue.main.async { [unowned vc = self] in
-                                        cv.removeConnectingView()
+                                        vc.spinner.removeConnectingView()
                                         vc.walletName = walletToImport!["name"] as! String
                                         vc.walletToImport = walletToImport!
                                         vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
@@ -1186,14 +1234,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }))
                         
                         alert.addAction(UIAlertAction(title: "Legacy (BIP44, 1)", style: .default, handler: { action in
-                            cv.addConnectingView(vc: vc, description: "importing...")
+                            vc.spinner.addConnectingView(vc: vc, description: "importing...")
                             let bip44Dict = dict["bip44"] as! NSDictionary
                             
                             Import.importColdCard(coldcardDict: bip44Dict, fingerprint: fingerprint) { (walletToImport) in
                                 
                                 if walletToImport != nil {
                                     DispatchQueue.main.async { [unowned vc = self] in
-                                        cv.removeConnectingView()
+                                        vc.spinner.removeConnectingView()
                                         vc.walletName = walletToImport!["name"] as! String
                                         vc.walletToImport = walletToImport!
                                         vc.performSegue(withIdentifier: "goConfirmImport", sender: vc)
@@ -1213,7 +1261,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
             } catch {
                 /// It is not an Account Map.
-                Import.importDescriptor(descriptor: descriptor) { [unowned vc = self] walletDict in
+                Import.importDescriptor(descriptor: item) { [unowned vc = self] walletDict in
                     
                     if walletDict != nil {
                         DispatchQueue.main.async { [unowned vc = self] in
@@ -1224,7 +1272,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }
                         
                     } else {
-                        cv.removeConnectingView()
+                        vc.spinner.removeConnectingView()
                         showAlert(vc: vc, title: "Error", message: "error importing that account")
                         
                     }
@@ -1237,10 +1285,22 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         let id = segue.identifier
-        
         switch id {
+        case "segueToCreateUrSuppliedKey":
+            if let vc = segue.destination as? ChooseWalletFormatViewController {
+                vc.rootKeyFromUr = xprv
+                vc.walletDoneBlock = { [unowned thisVc = self] result in
+                    showAlert(vc: thisVc, title: "Success!", message: "Wallet created successfully!")
+                    thisVc.isLoading = true
+                    thisVc.refreshLocalDataAndBalanceForActiveAccount()
+                }
+            }
+            
+        case "segueToUrRecovery":
+            if let vc = segue.destination as? WordRecoveryViewController {
+                vc.urToRecover = urToRecover
+            }
             
         case "goConfirmImport":
             if let vc = segue.destination as? ConfirmRecoveryViewController {
@@ -1249,71 +1309,46 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             
         case "goImport":
-        
         if let vc = segue.destination as? ScannerViewController {
-            
             vc.isImporting = true
-            vc.onImportDoneBlock = { [unowned thisVc = self] descriptor in
-                
-                thisVc.processDescriptor(descriptor: descriptor)
-                
+            vc.onImportDoneBlock = { [unowned thisVc = self] item in
+                thisVc.processDescriptor(item: item.lowercased())
             }
-            
         }
             
         case "goToTools":
-            
             if let vc = segue.destination as? WalletToolsViewController {
-                
                 vc.wallet = self.activeWallet
-                
                 vc.sweepDoneBlock = { [unowned thisVc = self] result in
-                    
                     thisVc.refreshLocalDataAndBalanceForActiveAccount()
                     showAlert(vc: thisVc, title: "Wallet Sweeped! 🤩", message: "We are refreshing your balances now.")
-                    
                 }
                 
                 vc.refillDoneBlock = { [unowned thisVc = self] result in
-                    
                     thisVc.refreshLocalDataAndBalanceForActiveAccount()
                     showAlert(vc: thisVc, title: "Success!", message: "Keypool refilled 🤩")
-                    
                 }
-                
             }
             
         case "addWallet":
-            
             if let vc = segue.destination as? ChooseWalletFormatViewController {
-                
                 vc.walletDoneBlock = { [unowned thisVc = self] result in
-                    
                     showAlert(vc: thisVc, title: "Success!", message: "Wallet created successfully!")
                     thisVc.isLoading = true
                     thisVc.refreshLocalDataAndBalanceForActiveAccount()
-                    
                 }
                 
                 vc.recoverDoneBlock = { [unowned thisVc = self] result in
-                    
                     DispatchQueue.main.async {
-                        
                         thisVc.isLoading = true
                         thisVc.refreshLocalDataAndBalanceForActiveAccount()
-                        
                         showAlert(vc: thisVc, title: "Success!", message: "Wallet recovered 🤩!\n\nYour node is now rescanning the blockchain, balances may not show until the rescan completes.")
-                        
                     }
-                    
                 }
-                
             }
             
         default:
-            
             break
-            
         }
         
     }

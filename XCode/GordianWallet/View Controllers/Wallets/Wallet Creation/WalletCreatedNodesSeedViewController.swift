@@ -21,6 +21,7 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
     var nodeWords = ""
     var nodesMnemonic = ""
     var recoverPhrase = ""
+    var alertStyle = UIAlertController.Style.actionSheet
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,17 +52,21 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
         nodesMnemonic += "Birthblock: \(w.blockheight)"
         birthdateLabel.text = "\(w.blockheight)"
         derivationLabel.text = w.derivation + "/0"
+        
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+          alertStyle = UIAlertController.Style.alert
+        }
     }
     
     @IBAction func saveAction(_ sender: Any) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            self.textView.alpha = 0
+            vc.textView.alpha = 0
             
             let message = "Once you tap \"Yes, I saved them\" the backup words will be gone forever! If you tap \"Oops, I forgot\" we will show them to you again so you may save them."
             
-            let alert = UIAlertController(title: "Are you sure you saved the seed?", message: message, preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Are you sure you saved the seed?", message: message, preferredStyle: vc.alertStyle)
             
             alert.view.superview?.subviews[0].isUserInteractionEnabled = false
 
@@ -95,8 +100,8 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
                 
             }))
             
-            alert.popoverPresentationController?.sourceView = self.view
-            self.present(alert, animated: true, completion: nil)
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
             
         }
     }
@@ -117,10 +122,9 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
     
     @IBAction func exportQr(_ sender: Any) {
         
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned vc = self] in
             
-            let alert = UIAlertController(title: "Choose an option", message: "You can either export the QR or simply display it for scanning.", preferredStyle: .actionSheet)
-            
+            let alert = UIAlertController(title: "Choose an option", message: "You can either export the QR or simply display it for scanning.", preferredStyle: vc.alertStyle)
 
             alert.addAction(UIAlertAction(title: "Export", style: .default, handler: { [unowned vc = self] action in
                                 
@@ -140,8 +144,8 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
             
-            alert.popoverPresentationController?.sourceView = self.view
-            self.present(alert, animated: true, completion: nil)
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
             
         }
         

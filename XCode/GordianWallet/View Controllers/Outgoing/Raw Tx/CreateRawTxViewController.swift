@@ -173,7 +173,11 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     
     private func promptIfUserWantsToSweepLockedUtxos(lockedUtxos: NSArray) {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "You have locked utxo's, would you like to sweep them too??", message: "", preferredStyle: .actionSheet)
+            var alertStyle = UIAlertController.Style.actionSheet
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
+            let alert = UIAlertController(title: "You have locked utxo's, would you like to sweep them too??", message: "", preferredStyle: alertStyle)
             alert.addAction(UIAlertAction(title: "Sweep all utxo's", style: .default, handler: { [unowned vc = self] action in
                 vc.unlockAllUtxosToSweep(lockedUtxos: lockedUtxos)
             }))

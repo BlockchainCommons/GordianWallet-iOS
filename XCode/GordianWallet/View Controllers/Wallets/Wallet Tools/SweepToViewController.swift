@@ -240,8 +240,12 @@ class SweepToViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func confirm(wallet: WalletStruct) {
 
         DispatchQueue.main.async { [unowned vc = self] in
+            var alertStyle = UIAlertController.Style.actionSheet
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
 
-            let alert = UIAlertController(title: "Sweep funds to the selected wallet?", message: "Tapping yes means the current active wallet will be emptied and all funds sent to the selected wallet.", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Sweep funds to the selected wallet?", message: "Tapping yes means the current active wallet will be emptied and all funds sent to the selected wallet.", preferredStyle: alertStyle)
 
             alert.addAction(UIAlertAction(title: "Yes, sweep now", style: .default, handler: { [unowned vc = self] action in
 

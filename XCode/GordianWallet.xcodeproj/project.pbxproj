@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -131,6 +131,8 @@
 		D0A1C9A024CFA7240052FFE7 /* CheckSubAccounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A1C99F24CFA7240052FFE7 /* CheckSubAccounts.swift */; };
 		D0A9EB8723F5335A00C84829 /* ChooseWalletFormatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */; };
 		D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B08BE5241888500025AD04 /* DonateViewController.swift */; };
+		D0B3649D24DE2FFB0008A22F /* URKit in Frameworks */ = {isa = PBXBuildFile; productRef = D0B3649C24DE2FFB0008A22F /* URKit */; };
+		D0B3649F24DF805A0008A22F /* UniformResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B3649E24DF805A0008A22F /* UniformResource.swift */; };
 		D0BFDF572490B6A600EB7846 /* LockedUtxoStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */; };
 		D0BFDF592490BC4400EB7846 /* CoinControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFDF582490BC4400EB7846 /* CoinControl.swift */; };
 		D0C20EE924A82B7000C62AA4 /* TransactionFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C20EE824A82B7000C62AA4 /* TransactionFetcher.swift */; };
@@ -316,6 +318,7 @@
 		D0A1C99F24CFA7240052FFE7 /* CheckSubAccounts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckSubAccounts.swift; sourceTree = "<group>"; };
 		D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseWalletFormatViewController.swift; sourceTree = "<group>"; };
 		D0B08BE5241888500025AD04 /* DonateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonateViewController.swift; sourceTree = "<group>"; };
+		D0B3649E24DF805A0008A22F /* UniformResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniformResource.swift; sourceTree = "<group>"; };
 		D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedUtxoStruct.swift; sourceTree = "<group>"; };
 		D0BFDF582490BC4400EB7846 /* CoinControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinControl.swift; sourceTree = "<group>"; };
 		D0C20EE824A82B7000C62AA4 /* TransactionFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionFetcher.swift; sourceTree = "<group>"; };
@@ -341,6 +344,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0B3649D24DE2FFB0008A22F /* URKit in Frameworks */,
 				D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */,
 				D06DD1F2249CE3930013C7F3 /* LibWally.framework in Frameworks */,
 				D0DAD52424546E7700769618 /* Tor.framework in Frameworks */,
@@ -693,6 +697,7 @@
 				D0C20EE824A82B7000C62AA4 /* TransactionFetcher.swift */,
 				D0A1C99D24CFA6CB0052FFE7 /* AddressScanner.swift */,
 				D0A1C99F24CFA7240052FFE7 /* CheckSubAccounts.swift */,
+				D0B3649E24DF805A0008A22F /* UniformResource.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -902,6 +907,9 @@
 			dependencies = (
 			);
 			name = GordianWallet;
+			packageProductDependencies = (
+				D0B3649C24DE2FFB0008A22F /* URKit */,
+			);
 			productName = FullyNoded2;
 			productReference = D09D723D23F0EDBB00847DC8 /* Gordian Wallet.app */;
 			productType = "com.apple.product-type.application";
@@ -975,6 +983,9 @@
 				Base,
 			);
 			mainGroup = D09D723423F0EDBB00847DC8;
+			packageReferences = (
+				D0B3649B24DE2FFB0008A22F /* XCRemoteSwiftPackageReference "URKit" */,
+			);
 			productRefGroup = D09D723E23F0EDBB00847DC8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1115,6 +1126,7 @@
 				D09D731823F0F3C000847DC8 /* NodeManagerViewController.swift in Sources */,
 				D09D733E23F0F3C000847DC8 /* MnemonicCreator.swift in Sources */,
 				D09D734223F0F3C000847DC8 /* QuickConnect.swift in Sources */,
+				D0B3649F24DF805A0008A22F /* UniformResource.swift in Sources */,
 				D0D5E63D24A07E4600F3783C /* WalletStatus.swift in Sources */,
 				D09D735D23F0F3C000847DC8 /* CustomButton.swift in Sources */,
 				D047DE0D242D984E004BC26D /* RefillSingleSig.swift in Sources */,
@@ -1331,7 +1343,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = GordianWallet/GordianWallet.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.66;
+				CURRENT_PROJECT_VERSION = 0.1.72;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1345,7 +1357,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.66;
+				MARKETING_VERSION = 0.1.72;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "Gordian Wallet";
 				SUPPORTS_MACCATALYST = NO;
@@ -1363,7 +1375,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = GordianWallet/GordianWallet.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.66;
+				CURRENT_PROJECT_VERSION = 0.1.72;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1377,7 +1389,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.66;
+				MARKETING_VERSION = 0.1.72;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "Gordian Wallet";
 				SUPPORTS_MACCATALYST = NO;
@@ -1513,6 +1525,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D0B3649B24DE2FFB0008A22F /* XCRemoteSwiftPackageReference "URKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/BlockchainCommons/URKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D0B3649C24DE2FFB0008A22F /* URKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0B3649B24DE2FFB0008A22F /* XCRemoteSwiftPackageReference "URKit" */;
+			productName = URKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		D09D724923F0EDBB00847DC8 /* GordianWallet.xcdatamodeld */ = {

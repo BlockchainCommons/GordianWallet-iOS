@@ -25,6 +25,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     var primaryDescriptors:[String] = []
     var changeDescriptors:[String] = []
     var importedOrRecovered = "imported"
+    var alertStyle = UIAlertController.Style.actionSheet
     
     @IBOutlet var walletLabel: UILabel!
     @IBOutlet var walletName: UILabel!
@@ -66,6 +67,10 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             walletDerivation.text = descriptorStruct.derivation + "/0"
         }
         loadAddresses()
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+          alertStyle = UIAlertController.Style.alert
+        }
+        
     }
     
     private func removeLoader() {
@@ -149,7 +154,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
 
      private func promptToRecoverOtherPaths(paths: String) {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Transaction history detected!", message: "We detected transaction history on derivations: \(paths), would you like to recover this account instead?", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Transaction history detected!", message: "We detected transaction history on derivations: \(paths), would you like to recover this account instead?", preferredStyle: vc.alertStyle)
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [unowned vc = self] action in
                 let dict = ["words":vc.words!,"derivation":paths]
                 DispatchQueue.main.async {
@@ -217,7 +222,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     func walletSuccessfullyCreated(wallet: WalletStruct) {
         DispatchQueue.main.async { [unowned vc = self] in
             vc.deactivateAllAccountsAndActivateNewAccount(wallet: wallet)
-            let alert = UIAlertController(title: "Account \(vc.importedOrRecovered)!", message: "Your \(vc.importedOrRecovered) account will now show up in \"Accounts\", a blockchain rescan has been initiated", preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: "Account \(vc.importedOrRecovered)!", message: "Your \(vc.importedOrRecovered) account will now show up in \"Accounts\", a blockchain rescan has been initiated", preferredStyle: vc.alertStyle)
             if wallet.label == "" {
                 alert.addAction(UIAlertAction(title: "Add Label", style: .default, handler: { action in
                     DispatchQueue.main.async { [unowned vc = self] in
@@ -342,7 +347,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             addToKeypool = true
             addToInternal = true
         }
-        let primaryDescParams = "[{ \"desc\": \"\(wallet.descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Godion\", \"keypool\": \(addToKeypool), \"internal\": false }]"
+        let primaryDescParams = "[{ \"desc\": \"\(wallet.descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Gordian\", \"keypool\": \(addToKeypool), \"internal\": false }]"
         let changeDescParams = "[{ \"desc\": \"\(wallet.changeDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"keypool\": \(addToKeypool), \"internal\": \(addToInternal) }]"
         
         func filter() {

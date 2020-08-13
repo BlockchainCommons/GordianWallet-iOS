@@ -32,8 +32,11 @@ class RecoveryViewController: UIViewController {
         } else {
             
             DispatchQueue.main.async {
-                            
-                let alert = UIAlertController(title: "Security Alert!", message: "Your device is taking a screen recording, for security we can not display your recovery kit, please stop the recording.", preferredStyle: .actionSheet)
+                            var alertStyle = UIAlertController.Style.actionSheet
+                            if (UIDevice.current.userInterfaceIdiom == .pad) {
+                              alertStyle = UIAlertController.Style.alert
+                            }
+                let alert = UIAlertController(title: "Security Alert!", message: "Your device is taking a screen recording, for security we can not display your recovery kit, please stop the recording.", preferredStyle: alertStyle)
 
                 alert.addAction(UIAlertAction(title: "I stopped it", style: .default, handler: { [unowned vc = self] action in
                     

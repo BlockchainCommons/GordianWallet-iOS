@@ -162,33 +162,40 @@ class Import {
         }
         
         func process(node: NodeStruct) {
-            let descriptor = accountMap["descriptor"] as! String
-            let p = DescriptorParser()
-            let str = p.descriptor(descriptor)
-            let walletName = Encryption.sha256hash(descriptor)
-            walletToImport["derivation"] = str.derivation
-            walletToImport["name"] = walletName
-            walletToImport["descriptor"] = descriptor
-            walletToImport["nodeId"] = node.id
-            walletToImport["birthdate"] = keyBirthday()
-            walletToImport["id"] = UUID()
-            walletToImport["isArchived"] = false
-            walletToImport["maxRange"] = 2500
-            walletToImport["index"] = 0
-            walletToImport["blockheight"] = accountMap["blockheight"] as! Int32
-            walletToImport["lastUsed"] = Date()
-            walletToImport["lastBalance"] = 0.0
-            walletToImport["label"] = accountMap["label"] as? String ?? ""
-            walletToImport["nodeIsSigner"] = false
-            if str.isMulti {
-                walletToImport["type"] = "MULTI"
-            } else {
-                walletToImport["type"] = "DEFAULT"
+            let plainDescriptor = accountMap["descriptor"] as! String
+            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(plainDescriptor)\"") { (object, errorDescription) in
+                if let dict = object as? NSDictionary {
+                    let descriptor = dict["descriptor"] as! String
+                    let p = DescriptorParser()
+                    let str = p.descriptor(descriptor)
+                    let walletName = Encryption.sha256hash(descriptor)
+                    walletToImport["derivation"] = str.derivation
+                    walletToImport["name"] = walletName
+                    walletToImport["descriptor"] = descriptor
+                    walletToImport["nodeId"] = node.id
+                    walletToImport["birthdate"] = keyBirthday()
+                    walletToImport["id"] = UUID()
+                    walletToImport["isArchived"] = false
+                    walletToImport["maxRange"] = 2500
+                    walletToImport["index"] = 0
+                    walletToImport["blockheight"] = accountMap["blockheight"] as! Int32
+                    walletToImport["lastUsed"] = Date()
+                    walletToImport["lastBalance"] = 0.0
+                    walletToImport["label"] = accountMap["label"] as? String ?? ""
+                    walletToImport["nodeIsSigner"] = false
+                    if str.isMulti {
+                        walletToImport["type"] = "MULTI"
+                    } else {
+                        walletToImport["type"] = "DEFAULT"
+                    }
+                    var changeDescriptor = descriptor.replacingOccurrences(of: "/0/*", with: "/1/*")
+                    let arr = changeDescriptor.split(separator: "#")
+                    changeDescriptor = "\(arr[0])"
+                    getChangeDescriptor(changeDesc: changeDescriptor)
+                } else {
+                    completion(nil)
+                }
             }
-            var changeDescriptor = descriptor.replacingOccurrences(of: "/0/*", with: "/1/*")
-            let arr = changeDescriptor.split(separator: "#")
-            changeDescriptor = "\(arr[0])"
-            getChangeDescriptor(changeDesc: changeDescriptor)
         }
         
         Encryption.getNode { (n, error) in
