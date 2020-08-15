@@ -100,7 +100,7 @@ class PriceViewController: UIViewController, UITableViewDelegate, UITableViewDat
             
         }
         
-        self.navigationItem.setRightBarButtonItems([editButton], animated: true)
+        self.navigationItem.setRightBarButtonItems([addButton, editButton], animated: true)
         
     }
     

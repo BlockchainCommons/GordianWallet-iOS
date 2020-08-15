@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C608C88C24E3D95300721CCB /* LocaleConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608C88B24E3D95300721CCB /* LocaleConfig.swift */; };
 		C608C88E24E4023700721CCB /* PriceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608C88D24E4023700721CCB /* PriceViewController.swift */; };
+		C6E8C9EB24E75BDB00C0AEF8 /* PriceServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8C9EA24E75BDB00C0AEF8 /* PriceServer.swift */; };
 		D00016B3245ABFFA0091F7CF /* Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B2245ABFFA0091F7CF /* Import.swift */; };
 		D00016B5245BBB5C0091F7CF /* SeedStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B4245BBB5C0091F7CF /* SeedStruct.swift */; };
 		D00016B9245BD89C0091F7CF /* SeedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B8245BD89C0091F7CF /* SeedParser.swift */; };
@@ -187,6 +188,7 @@
 /* Begin PBXFileReference section */
 		C608C88B24E3D95300721CCB /* LocaleConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaleConfig.swift; sourceTree = "<group>"; };
 		C608C88D24E4023700721CCB /* PriceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceViewController.swift; sourceTree = "<group>"; };
+		C6E8C9EA24E75BDB00C0AEF8 /* PriceServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceServer.swift; sourceTree = "<group>"; };
 		D00016B2245ABFFA0091F7CF /* Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Import.swift; sourceTree = "<group>"; };
 		D00016B4245BBB5C0091F7CF /* SeedStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedStruct.swift; sourceTree = "<group>"; };
 		D00016B8245BD89C0091F7CF /* SeedParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedParser.swift; sourceTree = "<group>"; };
@@ -683,6 +685,7 @@
 				D09D72CA23F0F3C000847DC8 /* MnemonicCreator.swift */,
 				D09D72CB23F0F3C000847DC8 /* KeyFetcher.swift */,
 				C608C88B24E3D95300721CCB /* LocaleConfig.swift */,
+				C6E8C9EA24E75BDB00C0AEF8 /* PriceServer.swift */,
 				D09D72CC23F0F3C000847DC8 /* Commands.swift */,
 				D09D72CD23F0F3C000847DC8 /* KeychainCreator.swift */,
 				D09D72CE23F0F3C000847DC8 /* QuickConnect.swift */,
@@ -1132,6 +1135,7 @@
 				D09D731823F0F3C000847DC8 /* NodeManagerViewController.swift in Sources */,
 				D09D733E23F0F3C000847DC8 /* MnemonicCreator.swift in Sources */,
 				D09D734223F0F3C000847DC8 /* QuickConnect.swift in Sources */,
+				C6E8C9EB24E75BDB00C0AEF8 /* PriceServer.swift in Sources */,
 				D0B3649F24DF805A0008A22F /* UniformResource.swift in Sources */,
 				D0D5E63D24A07E4600F3783C /* WalletStatus.swift in Sources */,
 				D09D735D23F0F3C000847DC8 /* CustomButton.swift in Sources */,
