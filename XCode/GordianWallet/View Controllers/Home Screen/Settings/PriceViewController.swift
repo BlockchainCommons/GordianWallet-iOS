@@ -14,61 +14,118 @@ class PriceViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var editButton = UIBarButtonItem()
     var addButton = UIBarButtonItem()
     
-    var servers: [String] = ["km3danfmt7aiqylbq5lhyn53zhv2hhbmkr6q5pjc64juiyuxuhcsjwyd.onion"]
+    let priceServer = PriceServer()
+    let localeConfig = LocaleConfig()
     let cellReuseIdentifier = "cell"
-    var selectedRow = 0
+    var selectedRow: Int = 0
+    var selectedRowC: Int = 0
+    var selectedRowE: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Register the table view cell class and its reuse id
+        selectedRow = priceServer.getCurrentServerIndex()
+        selectedRowC = localeConfig.getSavedIndex()
+        selectedRowE = priceServer.getSavedExchangeIndex()
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         tableView.delegate = self
         tableView.dataSource = self
         editButton = UIBarButtonItem.init(barButtonSystemItem: .edit, target: self, action: #selector(editNodes))
         addButton = UIBarButtonItem.init(barButtonSystemItem: .add, target: self, action: #selector(addNode))
-        self.navigationItem.setRightBarButtonItems([addButton, editButton], animated: true)
+        if priceServer.getServers().count == 1 {
+            self.navigationItem.setRightBarButtonItems([addButton], animated: true)
+        } else {
+            self.navigationItem.setRightBarButtonItems([addButton, editButton], animated: true)
+        }
     }
     
+   func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.servers.count
+        if section == 0 {
+            return self.priceServer.getServers().count
+        } else if section == 1 {
+            return self.localeConfig.getCurrencyList().count
+        } else {
+            return self.priceServer.getExchangeList().count
+        }
     }
     
-    // create a cell for each table view row
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        // create a new cell if needed or reuse an old one
         let cell:UITableViewCell = (self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell?)!
         
-        // set the text from the data model
-        cell.textLabel?.text = self.servers[indexPath.row]
+        if indexPath.section == 0 {
+            cell.textLabel?.text = self.priceServer.getServers()[indexPath.row]
+        } else if indexPath.section == 1 {
+            cell.textLabel?.text = self.localeConfig.getCurrencyList()[indexPath.row]
+        } else {
+            cell.textLabel?.text = self.priceServer.getExchangeList()[indexPath.row]
+        }
         
-        //cell.selectionStyle = .none
         
         return cell
     }
     
-    // method to run when table view cell is tapped
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.section == 0 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return "Server"
+        } else if section == 1 {
+            return "Currency"
+        } else {
+            return "Exchange"
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("You tapped cell number \(indexPath.row).")
-        //if let cell = tableView.cellForRow(at: indexPath) {
-        //    cell.accessoryType = .checkmark
-        //
-        //}
-        //DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-        //    tableView.deselectRow(at: indexPath, animated: true)
-        //}
-        selectedRow = indexPath.row
-        for cell in tableView.visibleCells { //Why not using didDeselectRowAt? Because the default selected row(like row 0)'s checkmark will NOT be removed when clicking another row at very beginning.
-            cell.accessoryType = .none
+        if indexPath.section == 0 {
+            priceServer.setCurrentServer(server: priceServer.getServers()[indexPath.row], index: indexPath.row)
+            selectedRow = indexPath.row
+            print(self.priceServer.getServers())
+        } else if indexPath.section == 1 {
+            let selectedValue = localeConfig.getCurrencyList()[indexPath.row]
+            localeConfig.changeLocale(newLocale: selectedValue)
+            selectedRowC = indexPath.row
+            selectedRowE = priceServer.getSavedExchangeIndex()
+            tableView.reloadData()
+        } else {
+            let selectedValue = priceServer.getExchangeList()[indexPath.row]
+            selectedRowE = indexPath.row
+            priceServer.changeExchange(newExchange: selectedValue)
+        }
+        print(self.priceServer.createSpotBitURL())
+        if let unwrappedIndexes = tableView.indexPathsForVisibleRows {
+            for cellIndex in unwrappedIndexes {
+                if cellIndex.section == indexPath.section {
+                    if let unwrappedCell = tableView.cellForRow(at: cellIndex) {
+                        unwrappedCell.accessoryType = .none
+                    }
+                }
+            }
         }
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.accessoryType = indexPath.row == selectedRow ? .checkmark : .none
+        if indexPath.section == 0 {
+            cell.accessoryType = indexPath.row == selectedRow ? .checkmark : .none
+        } else if indexPath.section == 1 {
+            cell.accessoryType = indexPath.row == selectedRowC ? .checkmark : .none
+        } else {
+            cell.accessoryType = indexPath.row == selectedRowE ? .checkmark : .none
+        }
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -78,11 +135,18 @@ class PriceViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            servers.remove(at: indexPath.row)
+        if (editingStyle == .delete) && (priceServer.getServers().count > 1) {
+            priceServer.removeServerByIndex(index: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            if priceServer.getCurrentServerIndex() == indexPath.row {
+                selectedRow = 0
+                priceServer.setCurrentServer(server: priceServer.getServers()[0], index: 0)
+                tableView.reloadData()
+            }
+            print(self.priceServer.getServers())
+            print(self.priceServer.createSpotBitURL())
         } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+            
         }
     }
     
@@ -100,29 +164,39 @@ class PriceViewController: UIViewController, UITableViewDelegate, UITableViewDat
             
         }
         
-        self.navigationItem.setRightBarButtonItems([addButton, editButton], animated: true)
+        if priceServer.getServers().count == 1 {
+            self.navigationItem.setRightBarButtonItems([addButton], animated: true)
+        } else {
+            self.navigationItem.setRightBarButtonItems([addButton, editButton], animated: true)
+        }
         
     }
     
     @objc func addNode() {
         
-        let alert = UIAlertController(title: "Some Title", message: "Enter a text", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Enter Spotbit server", message: "Format: spotbitaddress.onion without http://", preferredStyle: .alert)
 
-        //2. Add the text field. You can configure it however you need.
         alert.addTextField { (textField) in
-            textField.text = "Some default text"
+            textField.text = ""
         }
 
-        // 3. Grab the value from the text field, and print it when the user clicks OK.
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
-            let textField = alert?.textFields![0] // Force unwrapping because we know it exists.
+            let textField = alert?.textFields![0]
             let valu = "0"
             print("Text field: \(textField?.text ?? valu)")
+            self.priceServer.addServer(server: (textField?.text)!)
+            self.tableView.reloadData()
+            print(self.priceServer.getServers())
+            print(self.priceServer.createSpotBitURL())
+            if self.priceServer.getServers().count == 1 {
+                self.navigationItem.setRightBarButtonItems([self.addButton], animated: true)
+            } else {
+                self.navigationItem.setRightBarButtonItems([self.addButton, self.editButton], animated: true)
+            }
         }))
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 
-        // 4. Present the alert.
         self.present(alert, animated: true, completion: nil)
         
     }

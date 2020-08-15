@@ -13,14 +13,24 @@ class PriceServer {
     
     let localeConfig = LocaleConfig()
     
-    let defaultServerString: String = "km3danfmt7aiqylbq5lhyn53zhv2hhbmkr6q5pjc64juiyuxuhcsjwyd.onion"
+    let defaultServerString: String = "h6zwwkcivy2hjys6xpinlnz2f74dsmvltzsd4xb42vinhlcaoe7fdeqd.onion"
     let defaultServerIndex: Int = 0
-    let defaultServers: [String] = ["km3danfmt7aiqylbq5lhyn53zhv2hhbmkr6q5pjc64juiyuxuhcsjwyd.onion"]
-    let exchangeList: [String] = ["acx","anxpro","aofex","bcex","bequant","bibox","bigone","binance","bit2c","bitbank","bitbay","bitfinex","bitflyer","bitforex","bithumb","bitkk","bitmart","bitmax","bitstamp","bittrex","bitz","bl3p","bleutrade","braziliex","btcalpha","btcbox","btcmarkets","btctradeua","btcturk","buda","bw","bybit","bytetrade","cex","chilebit","coinbase","coincheck","coinegg","coinex","coinfalcon","coinfloor","coingi","coinmarketcap","coinmate","coinone","coinspot","coolcoin","coss","crex24","currencycom","deribit","digifinex","dsx","eterbase","exmo","exx","fcoin","fcoinjp","flowbtc","foxbit","ftx","fybse","gateio","gemini","hbtc","hitbtc","hollaex","huobipro","ice3x","idex","independentreserve","indodax","itbit","kraken","kucoin","kuna","lakebtc","latoken","lbank","liquid","livecoin","luno","lykke","mercado","mixcoins","oceanex","okcoin","okex","paymium","poloniex","probit","qtrade","rightbtc","southxchange","stex","stronghold","surbitcoin","therock","tidebit","tidex","upbit","vbtc","wavesexchange","whitebit","xbtce","yobit","zaif","zb"]
-    let defaultExchange: String = "coinbase"
+    let defaultServers: [String] = ["h6zwwkcivy2hjys6xpinlnz2f74dsmvltzsd4xb42vinhlcaoe7fdeqd.onion"]
+    let exchangeList: [String] = ["binance", "bitfinex", "coinbasepro", "kraken"]
+    let defaultExchange: String = "coinbasepro"
+    let localeToExchange: [String:[String]] = [
+        "USD": ["Average", "coinbasepro", "okcoin", "bitfinex", "kraken", "bitstamp"],
+        "GBP": ["Average", "coinbasepro", "coinsbank", "bitstamp", "kraken", "bitstamp"],
+        "EUR": ["Average", "kraken", "coinbasepro", "bitstamp", "bitfinex", "indoex"],
+        "JPY": ["Average", "bitflyer", "liquid", "coincheck", "bitbank", "zaif"]
+    ]
     
     func getServers() -> [String] {
         return UserDefaults.standard.stringArray(forKey: "priceServers") ?? defaultServers
+    }
+    
+    func getDefaultExchange() -> String {
+        return localeToExchange[localeConfig.getSavedLocale()]?[0] ?? defaultExchange
     }
     
     func onStartup() -> Void {
@@ -32,7 +42,7 @@ class PriceServer {
             UserDefaults.standard.set(defaultServerIndex, forKey: "currentServerIndex")
         }
         if UserDefaults.standard.string(forKey: "currentExchange") == nil {
-            UserDefaults.standard.set(defaultExchange, forKey: "currentExchange")
+            UserDefaults.standard.set(self.getDefaultExchange(), forKey: "currentExchange")
         }
     }
     
@@ -53,31 +63,28 @@ class PriceServer {
         return UserDefaults.standard.integer(forKey: "currentServerIndex")
     }
     
-    func addServer(server: String) -> [String] {
+    func addServer(server: String) -> Void {
         var currentServers = self.getServers()
         currentServers.append(server)
         self.changeServers(newServers: currentServers)
-        return self.getServers()
     }
     
-    func removeServerByString(server: String) -> [String] {
+    func removeServerByString(server: String) -> Void {
         var currentServers = self.getServers()
         if let index = currentServers.firstIndex(of: server) {
             currentServers.remove(at: index)
             self.changeServers(newServers: currentServers)
         }
-        return self.getServers()
     }
     
-    func removeServerByIndex(index: Int) -> [String] {
+    func removeServerByIndex(index: Int) -> Void {
         var currentServers = self.getServers()
         currentServers.remove(at: index)
         self.changeServers(newServers: currentServers)
-        return self.getServers()
     }
     
     func getCurrentExchange() -> String {
-        return UserDefaults.standard.string(forKey: "currentExchange") ?? defaultExchange
+        return UserDefaults.standard.string(forKey: "currentExchange") ?? self.getDefaultExchange()
     }
     
     func changeExchange(newExchange: String) -> Void {
@@ -85,10 +92,23 @@ class PriceServer {
     }
     
     func getExchangeList() -> [String] {
-        return exchangeList
+        return localeToExchange[localeConfig.getSavedLocale()] ?? exchangeList
     }
     
     func createSpotBitURL() -> String {
-        return "http://" + self.getCurrentServerString() + "/now/" + localeConfig.getSavedLocale() + "/" + self.getCurrentExchange()
+        if self.getCurrentExchange() == "Average" {
+            return "http://" + self.getCurrentServerString() + "/now/" + localeConfig.getSavedLocale()
+        } else {
+            return "http://" + self.getCurrentServerString() + "/now/" + localeConfig.getSavedLocale() + "/" + self.getCurrentExchange().lowercased()
+        }
+    }
+    
+    func getSavedExchangeIndex() -> Int {
+        if self.getExchangeList().firstIndex(of: self.getCurrentExchange()) == nil {
+            self.changeExchange(newExchange: self.getExchangeList()[0])
+            return self.getExchangeList().firstIndex(of: self.getCurrentExchange()) ?? 0
+        } else {
+            return self.getExchangeList().firstIndex(of: self.getCurrentExchange()) ?? 0
+        }
     }
 }

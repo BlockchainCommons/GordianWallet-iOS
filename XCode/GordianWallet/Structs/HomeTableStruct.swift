@@ -60,7 +60,7 @@ public struct HomeStruct: CustomStringConvertible {
         unconfirmed = dictionary["unconfirmed"] as? Bool ?? false
         noUtxos = dictionary["noUtxos"] as? Bool ?? true
         halvingDate = dictionary["halvingDate"] as? Date ?? Date()
-        fiatBalance = dictionary["fiatBalance"] as? String ?? "$0"
+        fiatBalance = dictionary["fiatBalance"] as? String ?? LocaleConfig().currencySymbol() + "0"
         knownSigners = dictionary["knownSigners"] as? [String] ?? [""]
         unknownSigners = dictionary["unknownSigners"] as? [String] ?? [""]
         fxRate = dictionary["fxRate"] as? String ?? ""
