@@ -273,7 +273,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func showupAlertE() {
-        let ac = UIAlertController(title: "Durrency", message: "\n\n\n\n\n\n\n\n\n\n", preferredStyle: .alert)
+        let ac = UIAlertController(title: "Exchanges", message: "\n\n\n\n\n\n\n\n\n\n", preferredStyle: .alert)
         let defaultIndex = priceServer.getExchangeList().firstIndex(of: priceServer.getCurrentExchange()) ?? 0
         pickerViewE.selectRow(defaultIndex, inComponent: 0, animated: true)
         ac.view.addSubview(pickerViewE)
