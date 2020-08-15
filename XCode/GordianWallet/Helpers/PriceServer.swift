@@ -53,27 +53,24 @@ class PriceServer {
         return UserDefaults.standard.integer(forKey: "currentServerIndex")
     }
     
-    func addServer(server: String) -> [String] {
+    func addServer(server: String) -> Void {
         var currentServers = self.getServers()
         currentServers.append(server)
         self.changeServers(newServers: currentServers)
-        return self.getServers()
     }
     
-    func removeServerByString(server: String) -> [String] {
+    func removeServerByString(server: String) -> Void {
         var currentServers = self.getServers()
         if let index = currentServers.firstIndex(of: server) {
             currentServers.remove(at: index)
             self.changeServers(newServers: currentServers)
         }
-        return self.getServers()
     }
     
-    func removeServerByIndex(index: Int) -> [String] {
+    func removeServerByIndex(index: Int) -> Void {
         var currentServers = self.getServers()
         currentServers.remove(at: index)
         self.changeServers(newServers: currentServers)
-        return self.getServers()
     }
     
     func getCurrentExchange() -> String {
