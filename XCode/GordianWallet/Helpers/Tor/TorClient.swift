@@ -52,7 +52,10 @@ class TorClient {
         // For some reason tor.framework is not incredibly reliable at setting the session config, so we do it manually for stability.
         sessionConfiguration.connectionProxyDictionary = [kCFProxyTypeKey: kCFProxyTypeSOCKS, kCFStreamPropertySOCKSProxyHost: "localhost", kCFStreamPropertySOCKSProxyPort: 29050]
         session = URLSession(configuration: sessionConfiguration)
+        #if targetEnvironment(macCatalyst)
+        #else
         session.configuration.urlCache = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
+        #endif
 
         clearAuthKeys { [unowned vc = self] in
 
