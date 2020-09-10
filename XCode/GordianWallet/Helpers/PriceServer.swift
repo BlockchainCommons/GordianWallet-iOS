@@ -13,10 +13,10 @@ class PriceServer {
     
     let localeConfig = LocaleConfig()
     
-    let defaultServerString: String = "km3danfmt7aiqylbq5lhyn53zhv2hhbmkr6q5pjc64juiyuxuhcsjwyd.onion"
+    let defaultServerString: String = "h6zwwkcivy2hjys6xpinlnz2f74dsmvltzsd4xb42vinhlcaoe7fdeqd.onion"
     let defaultServerIndex: Int = 0
-    let defaultServers: [String] = ["km3danfmt7aiqylbq5lhyn53zhv2hhbmkr6q5pjc64juiyuxuhcsjwyd.onion"]
-    let exchangeList: [String] = ["acx","anxpro","aofex","bcex","bequant","bibox","bigone","binance","bit2c","bitbank","bitbay","bitfinex","bitflyer","bitforex","bithumb","bitkk","bitmart","bitmax","bitstamp","bittrex","bitz","bl3p","bleutrade","braziliex","btcalpha","btcbox","btcmarkets","btctradeua","btcturk","buda","bw","bybit","bytetrade","cex","chilebit","coinbase","coincheck","coinegg","coinex","coinfalcon","coinfloor","coingi","coinmarketcap","coinmate","coinone","coinspot","coolcoin","coss","crex24","currencycom","deribit","digifinex","dsx","eterbase","exmo","exx","fcoin","fcoinjp","flowbtc","foxbit","ftx","fybse","gateio","gemini","hbtc","hitbtc","hollaex","huobipro","ice3x","idex","independentreserve","indodax","itbit","kraken","kucoin","kuna","lakebtc","latoken","lbank","liquid","livecoin","luno","lykke","mercado","mixcoins","oceanex","okcoin","okex","paymium","poloniex","probit","qtrade","rightbtc","southxchange","stex","stronghold","surbitcoin","therock","tidebit","tidex","upbit","vbtc","wavesexchange","whitebit","xbtce","yobit","zaif","zb"]
+    let defaultServers: [String] = ["h6zwwkcivy2hjys6xpinlnz2f74dsmvltzsd4xb42vinhlcaoe7fdeqd.onion"]
+    let exchangeList: [String] = ["acx","aofex","bequant","bibox","bigone","binance","bitbank","bitbay","bitfinex","bitflyer","bitforex","bithumb","bitkk","bitmax","bitstamp","bittrex","bitz","bl3p","bleutrade","braziliex","btcalpha","btcbox","btcmarkets","btctradeua","bw","bybit","bytetrade","cex","chilebit","coinbase","coincheck","coinegg","coinex","coinfalcon","coinfloor","coinmate","coinone","crex24","currencycom","digifinex","dsx","eterbase","exmo","exx","foxbit","ftx","gateio","gemini","hbtc","hitbtc","hollaex","huobipro","ice3x","independentreserve","indodax","itbit","kraken","kucoin","lakebtc","latoken","lbank","liquid","livecoin","luno","lykke","mercado","oceanex","okcoin","okex","paymium","poloniex","probit","southxchange","stex","surbitcoin","therock","tidebit","tidex","upbit","vbtc","wavesexchange","whitebit","yobit","zaif","zb"]
     let defaultExchange: String = "coinbase"
     
     func getServers() -> [String] {

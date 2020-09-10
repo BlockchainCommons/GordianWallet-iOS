@@ -42,9 +42,10 @@ class LocaleConfig {
         "IN": "INR",
         "CN": "CNY",
         "KR": "KRW",
-        "JP": "JPY"
+        "JP": "JPY",
+        "ID": "IDR"
     ]
-    let currencyList: [String] = ["USD", "CAD", "BRL", "ARS", "GBP", "EUR", "TRY", "ZAR", "INR", "CNY", "KRW", "JPY", "AUD"]
+    let currencyList: [String] = ["USD","GBP","JPY","AUD","USDT","BRL","EUR","KRW","ZAR","TRY","USDC","INR","CAD","IDR"]
     let currencySymbolDict: [String: String] = [
         "USD": "$",
         "CAD": "C$",
@@ -58,7 +59,8 @@ class LocaleConfig {
         "CNY": "¥",
         "KRW": "₩",
         "JPY": "¥",
-        "AUD": "A$"
+        "AUD": "A$",
+        "IDR": "Rp"
     ]
     let defaultLocale: String = "US"
     let defaultCurrency: String = "USD"

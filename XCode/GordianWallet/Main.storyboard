@@ -3925,7 +3925,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
             </objects>
             <point key="canvasLocation" x="-1924" y="1810.344827586207"/>
         </scene>
-<<<<<<< HEAD
         <!--Export-->
         <scene sceneID="txy-Zb-nWB">
             <objects>
@@ -4000,8 +3999,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
             </objects>
             <point key="canvasLocation" x="-8922" y="1235"/>
         </scene>
-=======
->>>>>>> 7bb1e330e9777a8d0450d19539428f22f8ce3f6a
         <!--Node Manager-->
         <scene sceneID="xYz-bt-Lyj">
             <objects>
@@ -6338,11 +6335,8 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="AOL-nc-Scs"/>
         <segue reference="msh-B5-XLl"/>
         <segue reference="uaX-te-aDX"/>
-<<<<<<< HEAD
         <segue reference="dWo-28-ynr"/>
-=======
         <segue reference="prj-l9-xjw"/>
->>>>>>> 7bb1e330e9777a8d0450d19539428f22f8ce3f6a
         <segue reference="sfT-Xz-gNf"/>
         <segue reference="igz-Ga-xca"/>
         <segue reference="G4m-Sr-i7G"/>
