@@ -36,7 +36,7 @@ class CreateMultiSigWallet {
                                 
                                 let hotDescriptor = "\(array[0])" + "#" + checksum
                                 
-                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Gordian\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
+                                var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
                                 params = params.replacingOccurrences(of: nodeXpub, with: nodeXprv)
                                 Reducer.makeCommand(walletName: wallet.name!, command: .importmulti, param: params) { (object, errorDesc) in
                                     
@@ -133,7 +133,7 @@ class CreateMultiSigWallet {
                                         let array = updatedDescriptor.split(separator: "#")
                                         let hotDescriptor = "\(array[0])" + "#" + checksum
                                         
-                                        var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Gordian\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
+                                        var params = "[{ \"desc\": \"\(hotDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
                                         params = params.replacingOccurrences(of: nodeXpub, with: nodeXprv)
                                         importMulti(param: params)
                                         
@@ -163,7 +163,7 @@ class CreateMultiSigWallet {
         let walletName = Encryption.sha256hash(primDesc)
         
         func importChange() {
-            let params = "[{ \"desc\": \"\(changeDesc)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Gordian\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
+            let params = "[{ \"desc\": \"\(changeDesc)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
             Reducer.makeCommand(walletName: walletName, command: .importmulti, param: params) { (object, errorDesc) in
                 
                 if object != nil {
@@ -218,7 +218,7 @@ class CreateMultiSigWallet {
                 Reducer.makeCommand(walletName: walletName, command: .createwallet, param: param) { (object, errorDesc) in
                     
                     if object != nil {
-                        let params = "[{ \"desc\": \"\(primDesc)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Gordian\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
+                        let params = "[{ \"desc\": \"\(primDesc)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"StandUp\", \"keypool\": false, \"internal\": false }], {\"rescan\": false}"
                         importMulti(param: params)
                         
                     } else {

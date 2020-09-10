@@ -20,6 +20,8 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     var recoveryImage = UIImage()
     var seed = ""
     var itemToDisplay = ""
+    var infoText = ""
+    var barTitle = ""
     var wallet:WalletStruct!
     var accountSeeds = [String]()
     
@@ -225,19 +227,22 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         switch section {
             
         case 1:
+            
             itemToDisplay = seed
+            infoText = "Your BIP39 seed phrase which can be imported into BIP39 compatible wallets, by default Fully Noded does not create a passphrase for your seed words."
+            barTitle = "BIP39 Mnemonic"
             goToQRDisplayer()
             
         case 2:
+
             itemToDisplay = xpubs
-            goToQRDisplayer()
-            
-        case 3:
-            itemToDisplay = xprivs
+            infoText = "Your account xpub's along with fingerprints and derivation paths."
+            barTitle = "Account XPUB's"
             goToQRDisplayer()
 
             
         default:
+            
             break
             
         }
@@ -316,7 +321,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             let textToShare = [vc.itemToDisplay]
             let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = vc.view
-            activityViewController.popoverPresentationController?.sourceRect = vc.view.bounds
             vc.present(activityViewController, animated: true) {}
         }
     }
@@ -326,7 +330,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             let imageToShare = [vc.recoveryImage]
             let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = vc.view
-            activityViewController.popoverPresentationController?.sourceRect = vc.view.bounds
             vc.present(activityViewController, animated: true) {}
         }
     }
@@ -959,9 +962,11 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         case "showQR":
             
-            if let vc = segue.destination as? QRDisplayerViewController {
+            if let vc = segue.destination as? QRViewController {
                 
-                vc.address = itemToDisplay
+                vc.itemToDisplay = itemToDisplay
+                vc.barTitle = barTitle
+                vc.infoText = infoText
                 
             }
             

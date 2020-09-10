@@ -2305,7 +2305,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <outlet property="labelField" destination="vqa-Nl-Pcv" id="5Oe-5Q-2WN"/>
                         <outlet property="qrButton" destination="ZtA-OV-s8T" id="PHX-Bs-hfv"/>
                         <outlet property="shareButton" destination="38K-xd-PQp" id="IQF-NK-WvA"/>
-                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="showInvoiceQr" id="B11-cw-c8e"/>
+                        <segue destination="aWn-Fx-ACR" kind="presentation" identifier="showInvoiceQr" id="Q0b-Zn-K45"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e3g-lC-Q3f" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2994,10 +2994,9 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ni3-IN-Mpq">
-                                                    <rect key="frame" x="15" y="22.5" width="315" height="300"/>
+                                                    <rect key="frame" x="15" y="11" width="315" height="323"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="300" id="5fj-mL-w0N"/>
-                                                        <constraint firstAttribute="height" constant="300" id="mYQ-oi-5Pu"/>
+                                                        <constraint firstAttribute="width" secondItem="ni3-IN-Mpq" secondAttribute="height" multiplier="315:323" id="KkJ-9I-koY"/>
                                                     </constraints>
                                                 </imageView>
                                             </subviews>
@@ -3061,7 +3060,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <outlet property="accountLabel" destination="ZWX-60-MMn" id="rDR-v6-wgB"/>
                         <outlet property="editLabelOutlet" destination="gIC-40-Ern" id="vfq-Q1-ySo"/>
                         <outlet property="tableView" destination="NOC-aP-rCn" id="EJQ-4i-ZGa"/>
-                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="showQR" id="prj-l9-xjw"/>
+                        <segue destination="aWn-Fx-ACR" kind="presentation" identifier="showQR" id="EvJ-Lj-YLy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cfw-Yo-wGu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3192,8 +3191,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Xql-p6-Jpw">
                                 <rect key="frame" x="24.5" y="196" width="326" height="326"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="326" id="Ptc-3A-7r3"/>
-                                    <constraint firstAttribute="width" constant="326" id="flX-jq-0ZX"/>
+                                    <constraint firstAttribute="width" secondItem="Xql-p6-Jpw" secondAttribute="height" multiplier="1:1" id="Q0O-u6-Mqr"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -3202,7 +3200,9 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
                             <constraint firstItem="Xql-p6-Jpw" firstAttribute="centerX" secondItem="9i8-aS-4OV" secondAttribute="centerX" id="1y0-3D-4UT"/>
                             <constraint firstItem="BhL-og-eCq" firstAttribute="bottom" secondItem="9dU-ye-Td9" secondAttribute="bottom" constant="20" id="BNF-jN-Vvf"/>
                             <constraint firstItem="3e6-6s-1Ti" firstAttribute="top" secondItem="BhL-og-eCq" secondAttribute="top" id="CU1-EI-rBF"/>
+                            <constraint firstItem="BhL-og-eCq" firstAttribute="trailing" secondItem="Xql-p6-Jpw" secondAttribute="trailing" constant="24.5" id="FPH-YI-i9B"/>
                             <constraint firstItem="BhL-og-eCq" firstAttribute="trailing" secondItem="3e6-6s-1Ti" secondAttribute="trailing" constant="16" id="Jqw-KH-UBg"/>
+                            <constraint firstItem="Xql-p6-Jpw" firstAttribute="leading" secondItem="BhL-og-eCq" secondAttribute="leading" constant="24.5" id="Knm-vf-tlG"/>
                             <constraint firstItem="BhL-og-eCq" firstAttribute="bottom" secondItem="9dU-ye-Td9" secondAttribute="bottom" constant="20" id="cys-4o-eNd"/>
                             <constraint firstItem="Xql-p6-Jpw" firstAttribute="top" secondItem="3e6-6s-1Ti" secondAttribute="bottom" constant="8" id="iD3-Nq-lKq"/>
                             <constraint firstItem="9dU-ye-Td9" firstAttribute="centerX" secondItem="9i8-aS-4OV" secondAttribute="centerX" id="jkC-hu-VaL"/>
@@ -4259,51 +4259,18 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <!--Displayer View Controller-->
         <scene sceneID="2P1-G0-q27">
             <objects>
-                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="WYx-vx-5xJ" customClass="QRDisplayerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="WYx-vx-5xJ" customClass="QRDisplayerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Nlx-Rv-vA1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QuE-Kt-X26">
-                                <rect key="frame" x="37.5" y="92" width="300" height="300"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="efo-O0-g9K"/>
-                                    <constraint firstAttribute="height" constant="300" id="rNO-4u-u0X"/>
-                                </constraints>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GDj-zH-I5k">
-                                <rect key="frame" x="310" y="20" width="49" height="38"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="49" id="OZh-Dc-oBm"/>
-                                    <constraint firstAttribute="height" constant="38" id="zHf-Xo-HuC"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="xmark.circle" catalog="system">
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
-                                </state>
-                                <connections>
-                                    <action selector="closeAction:" destination="WYx-vx-5xJ" eventType="touchUpInside" id="by3-dW-rsu"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="QuE-Kt-X26" firstAttribute="top" secondItem="Mbb-B1-62W" secondAttribute="top" constant="92" id="Txw-Si-4Zm"/>
-                            <constraint firstItem="GDj-zH-I5k" firstAttribute="top" secondItem="Mbb-B1-62W" secondAttribute="top" constant="20" id="bbc-sQ-ow9"/>
-                            <constraint firstItem="QuE-Kt-X26" firstAttribute="centerX" secondItem="Nlx-Rv-vA1" secondAttribute="centerX" id="ex3-sb-g4x"/>
-                            <constraint firstItem="Mbb-B1-62W" firstAttribute="trailing" secondItem="GDj-zH-I5k" secondAttribute="trailing" constant="16" id="jhs-6F-UbE"/>
-                        </constraints>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="Mbb-B1-62W"/>
                     </view>
                     <navigationItem key="navigationItem" id="kfz-v0-Ezr"/>
-                    <connections>
-                        <outlet property="imageView" destination="QuE-Kt-X26" id="qh6-W1-aLP"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qiS-au-xqh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5258.3999999999996" y="1100.5997001499252"/>
+            <point key="canvasLocation" x="-5258" y="1101"/>
         </scene>
         <!--Tools-->
         <scene sceneID="s4f-Br-O6C">
@@ -6335,12 +6302,9 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="AOL-nc-Scs"/>
         <segue reference="msh-B5-XLl"/>
         <segue reference="uaX-te-aDX"/>
-<<<<<<< HEAD
         <segue reference="dWo-28-ynr"/>
-=======
-        <segue reference="prj-l9-xjw"/>
->>>>>>> 7bb1e330e9777a8d0450d19539428f22f8ce3f6a
         <segue reference="sfT-Xz-gNf"/>
+        <segue reference="EvJ-Lj-YLy"/>
         <segue reference="igz-Ga-xca"/>
         <segue reference="G4m-Sr-i7G"/>
         <segue reference="c5y-jb-z8M"/>
@@ -6403,7 +6367,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <image name="timer" catalog="system" width="128" height="121"/>
         <image name="wrench" catalog="system" width="128" height="120"/>
         <image name="x.circle" catalog="system" width="128" height="121"/>
-        <image name="xmark.circle" catalog="system" width="128" height="121"/>
         <image name="xmark.circle.fill" catalog="system" width="128" height="121"/>
     </resources>
 </document>

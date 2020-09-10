@@ -53,13 +53,23 @@ class RawDisplayer {
         
         UIView.animate(withDuration: 0.4, animations: { [unowned thisClass = self] in
             
-            thisClass.qrView.frame = CGRect(x: thisClass.vc.view.center.x - 150, y: thisClass.vc.view.center.y - 150, width: 300, height: 300)
+            thisClass.qrView.frame = CGRect(x: 10,
+                                       y: thisClass.y,
+                                       width: thisClass.vc.view.frame.width - 20,
+                                       height: thisClass.vc.view.frame.width - 20)
             
         }, completion: { _ in
             
             UIView.animate(withDuration: 0.4, animations: { [unowned thisClass = self] in
                 
-                thisClass.textView.frame = CGRect(x: 10, y: thisClass.vc.view.center.y + 170, width: thisClass.vc.view.frame.width - 20, height: 200)
+                let qrHeight = thisClass.vc.view.frame.width - 20
+                let totalViewHeight = thisClass.vc.view.frame.height
+
+                
+                thisClass.textView.frame = CGRect(x: 10,
+                                             y: thisClass.qrView.frame.maxY,
+                                             width: thisClass.vc.view.frame.width - 20,
+                                             height: totalViewHeight - qrHeight)
                 
             }, completion: { _ in
                                 
@@ -76,11 +86,18 @@ class RawDisplayer {
     }
     
     func configureQrView() {
+        
         qrView.isUserInteractionEnabled = true
-        qrView.frame = CGRect(x: vc.view.center.x - 150, y: vc.view.frame.maxY + 200, width: 300, height: 300)
+        
+        qrView.frame = CGRect(x: 10,
+                              y: vc.view.frame.maxY + 200,
+                              width: vc.view.frame.width - 20,
+                              height: vc.view.frame.width - 20)
+        
     }
     
     func configureTextView() {
+        
         textView.textColor = UIColor.white
         textView.backgroundColor = UIColor.clear
         textView.textAlignment = .natural
@@ -88,8 +105,15 @@ class RawDisplayer {
         textView.adjustsFontForContentSizeCategory = true
         textView.isUserInteractionEnabled = true
         textView.isEditable = false
-        textView.textAlignment = .center
-        textView.frame = CGRect(x: 10, y: vc.view.frame.maxY + 170, width: vc.view.frame.width - 20, height: 200)
+        
+        let qrHeight = vc.view.frame.width - 20
+        let totalViewHeight = vc.view.frame.height
+        
+        textView.frame = CGRect(x: 10,
+                                y: vc.view.frame.maxY + 170,
+                                width: vc.view.frame.width - 20,
+                                height: totalViewHeight - qrHeight)
+        
     }
     
 }

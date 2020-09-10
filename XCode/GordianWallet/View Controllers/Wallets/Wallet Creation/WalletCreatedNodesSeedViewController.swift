@@ -157,9 +157,10 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
             
             let textToShare = [vc.nodesMnemonic]
             
-            let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+            let activityViewController = UIActivityViewController(activityItems: textToShare,
+                                                                  applicationActivities: nil)
+            
             activityViewController.popoverPresentationController?.sourceView = vc.view
-            activityViewController.popoverPresentationController?.sourceRect = vc.view.bounds
             vc.present(activityViewController, animated: true) {}
             
         }
@@ -174,9 +175,10 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
             let image = qrGen.getQRCode(textInput: vc.nodesMnemonic).qr
             let objectsToShare = [image]
             
-            let activityController = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            let activityController = UIActivityViewController(activityItems: objectsToShare,
+                                                              applicationActivities: nil)
+            
             activityController.popoverPresentationController?.sourceView = vc.view
-            activityController.popoverPresentationController?.sourceRect = vc.view.bounds
             vc.present(activityController, animated: true) {}
             
         }

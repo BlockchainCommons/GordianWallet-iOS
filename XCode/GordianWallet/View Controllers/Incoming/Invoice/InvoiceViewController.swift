@@ -211,9 +211,10 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             
             let textToShare = [vc.addressString]
             
-            let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+            let activityViewController = UIActivityViewController(activityItems: textToShare,
+                                                                  applicationActivities: nil)
+            
             activityViewController.popoverPresentationController?.sourceView = vc.view
-            activityViewController.popoverPresentationController?.sourceRect = self.view.bounds
             vc.present(activityViewController, animated: true) {}
             
         }
@@ -362,8 +363,9 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         let id = segue.identifier
         switch id {
         case "showInvoiceQr":
-            if let vc = segue.destination as? QRDisplayerViewController {
-                vc.address = textToShareViaQRCode
+            if let vc = segue.destination as? QRViewController {
+                vc.infoText = "BIP21 Invoice"
+                vc.itemToDisplay = textToShareViaQRCode
             }
         default:
             break

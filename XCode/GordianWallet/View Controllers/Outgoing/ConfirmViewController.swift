@@ -79,7 +79,6 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         DispatchQueue.main.async { [unowned vc = self] in
             let activityViewController = UIActivityViewController(activityItems: [vc.signedRawTx], applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = vc.view
-            activityViewController.popoverPresentationController?.sourceRect = vc.view.bounds
             vc.present(activityViewController, animated: true) {}
         }
     }
