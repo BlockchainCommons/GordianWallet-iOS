@@ -163,10 +163,9 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
             
             let textToShare = [self.mnemonic]
             
-            let activityViewController = UIActivityViewController(activityItems: textToShare,
-                                                                  applicationActivities: nil)
-            
+            let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = self.view
+            activityViewController.popoverPresentationController?.sourceRect = self.view.bounds
             self.present(activityViewController, animated: true) {}
             
         }
@@ -181,10 +180,9 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
             let image = qrGen.getQRCode(textInput: vc.mnemonic).qr
             let objectsToShare = [image]
             
-            let activityController = UIActivityViewController(activityItems: objectsToShare,
-                                                              applicationActivities: nil)
-            
+            let activityController = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
             activityController.popoverPresentationController?.sourceView = vc.view
+            activityController.popoverPresentationController?.sourceRect = self.view.bounds
             vc.present(activityController, animated: true) {}
             
         }
