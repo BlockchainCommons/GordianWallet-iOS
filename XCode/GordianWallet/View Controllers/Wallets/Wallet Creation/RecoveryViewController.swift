@@ -132,11 +132,9 @@ class RecoveryViewController: UIViewController {
             }
             
             let objectsToShare = [self.imageView.image]
-            
-            let activityController = UIActivityViewController(activityItems: objectsToShare as [Any],
-                                                              applicationActivities: nil)
-            
+            let activityController = UIActivityViewController(activityItems: objectsToShare as [Any], applicationActivities: nil)
             activityController.popoverPresentationController?.sourceView = self.view
+            activityController.popoverPresentationController?.sourceRect = self.view.bounds
             self.present(activityController, animated: true) {}
             
         }

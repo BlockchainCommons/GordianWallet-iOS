@@ -171,10 +171,9 @@ class AuthenticateViewController: UIViewController, UINavigationControllerDelega
                             
             let textToShare = [vc.pubkey]
             
-            let activityViewController = UIActivityViewController(activityItems: textToShare,
-                                                                  applicationActivities: nil)
-            
+            let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = vc.view
+            activityViewController.popoverPresentationController?.sourceRect = vc.view.bounds
             vc.present(activityViewController, animated: true) {}
             
         }
@@ -202,10 +201,9 @@ class AuthenticateViewController: UIViewController, UINavigationControllerDelega
             let qrImage = vc.qrGenerator.getQRCode(textInput: vc.displayer.rawString).qr
             let objectsToShare = [qrImage]
             
-            let activityController = UIActivityViewController(activityItems: objectsToShare,
-                                                              applicationActivities: nil)
-            
+            let activityController = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
             activityController.popoverPresentationController?.sourceView = vc.view
+            activityController.popoverPresentationController?.sourceRect = vc.view.bounds
             vc.present(activityController, animated: true) {}
             
         }
