@@ -3925,49 +3925,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
             </objects>
             <point key="canvasLocation" x="-1924" y="1810.344827586207"/>
         </scene>
-        <!--Export-->
-        <scene sceneID="txy-Zb-nWB">
-            <objects>
-                <viewController id="aWn-Fx-ACR" customClass="QRViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="0ft-op-zNI">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This is your private key descriptor you can use with an importmulti command to recover your wallet with Bitcoin Core." lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8rZ-1E-YUG">
-                                <rect key="frame" x="16" y="5" width="343" height="61"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Srs-UQ-mxz">
-                                <rect key="frame" x="16" y="74" width="343" height="343"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="343" id="Aq9-XC-IZK"/>
-                                    <constraint firstAttribute="height" constant="343" id="ufh-rf-9Rg"/>
-                                </constraints>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="Srs-UQ-mxz" firstAttribute="leading" secondItem="eRR-dj-rri" secondAttribute="leading" constant="16" id="HmQ-Xn-wAv"/>
-                            <constraint firstItem="8rZ-1E-YUG" firstAttribute="leading" secondItem="eRR-dj-rri" secondAttribute="leading" constant="16" id="Ogc-gK-EDO"/>
-                            <constraint firstItem="8rZ-1E-YUG" firstAttribute="top" secondItem="eRR-dj-rri" secondAttribute="top" constant="5" id="QK5-XP-vZ7"/>
-                            <constraint firstItem="eRR-dj-rri" firstAttribute="trailing" secondItem="Srs-UQ-mxz" secondAttribute="trailing" constant="16" id="mPe-Ik-hAX"/>
-                            <constraint firstItem="Srs-UQ-mxz" firstAttribute="top" secondItem="8rZ-1E-YUG" secondAttribute="bottom" constant="8" id="oUd-AF-KHT"/>
-                            <constraint firstItem="eRR-dj-rri" firstAttribute="trailing" secondItem="8rZ-1E-YUG" secondAttribute="trailing" constant="16" id="yM5-Dp-uht"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="eRR-dj-rri"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Export" id="WZU-id-nw0"/>
-                    <connections>
-                        <outlet property="descriptionLabel" destination="8rZ-1E-YUG" id="O4B-Qh-h8s"/>
-                        <outlet property="imageView" destination="Srs-UQ-mxz" id="b8a-BR-mk4"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="IXO-dM-SLD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1007" y="1128"/>
-        </scene>
         <!--Pricing-->
         <scene sceneID="iIU-DK-86S">
             <objects>
