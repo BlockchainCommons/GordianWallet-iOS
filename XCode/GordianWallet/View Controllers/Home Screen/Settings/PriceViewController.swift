@@ -15,12 +15,21 @@ class PriceViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var addButton = UIBarButtonItem()
     
     let priceServer = PriceServer()
+    let localeConfig = LocaleConfig()
     let cellReuseIdentifier = "cell"
-    var selectedRow = 0
+    var selectedRow: Int = 0
+    var selectedRowC: Int = 0
+    var selectedRowE: Int = 0
+    var testlst: [String] = []
+    var testlst2: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         selectedRow = priceServer.getCurrentServerIndex()
+        selectedRowC = localeConfig.getSavedIndex()
+        selectedRowE = priceServer.getSavedExchangeIndex()
+        testlst = localeConfig.getCurrencyList()
+        testlst2 = priceServer.getExchangeList()
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         tableView.delegate = self
         tableView.dataSource = self
@@ -33,44 +42,90 @@ class PriceViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
+   func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.priceServer.getServers().count
+        if section == 0 {
+            return self.priceServer.getServers().count
+        } else if section == 1 {
+            return self.testlst.count
+        } else {
+            return self.testlst2.count
+        }
     }
     
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
- 
         let cell:UITableViewCell = (self.tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell?)!
-        cell.textLabel?.text = self.priceServer.getServers()[indexPath.row]
+        
+        if indexPath.section == 0 {
+            cell.textLabel?.text = self.priceServer.getServers()[indexPath.row]
+        } else if indexPath.section == 1 {
+            cell.textLabel?.text = self.testlst[indexPath.row]
+        } else {
+            cell.textLabel?.text = self.testlst2[indexPath.row]
+        }
         
         
         return cell
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.section == 0 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return "Server"
+        } else if section == 1 {
+            return "Currency"
+        } else {
+            return "Exchange"
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("You tapped cell number \(indexPath.row).")
-        //if let cell = tableView.cellForRow(at: indexPath) {
-        //    cell.accessoryType = .checkmark
-        //
-        //}
-        //DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-        //    tableView.deselectRow(at: indexPath, animated: true)
-        //}
-        priceServer.setCurrentServer(server: priceServer.getServers()[indexPath.row], index: indexPath.row)
-        print(self.priceServer.getServers())
+        if indexPath.section == 0 {
+            priceServer.setCurrentServer(server: priceServer.getServers()[indexPath.row], index: indexPath.row)
+            selectedRow = indexPath.row
+            print(self.priceServer.getServers())
+        } else if indexPath.section == 1 {
+            let selectedValue = localeConfig.getCurrencyList()[indexPath.row]
+            localeConfig.changeLocale(newLocale: selectedValue)
+        } else {
+            let selectedValue = priceServer.getExchangeList()[indexPath.row]
+            priceServer.changeExchange(newExchange: selectedValue)
+        }
         print(self.priceServer.createSpotBitURL())
-        selectedRow = indexPath.row
-        for cell in tableView.visibleCells {
-            cell.accessoryType = .none
+        if let unwrappedIndexes = tableView.indexPathsForVisibleRows {
+            for cellIndex in unwrappedIndexes {
+                if cellIndex.section == indexPath.section {
+                    if let unwrappedCell = tableView.cellForRow(at: cellIndex) {
+                        unwrappedCell.accessoryType = .none
+                    }
+                }
+            }
         }
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.accessoryType = indexPath.row == selectedRow ? .checkmark : .none
+        if indexPath.section == 0 {
+            cell.accessoryType = indexPath.row == selectedRow ? .checkmark : .none
+        } else if indexPath.section == 1 {
+            cell.accessoryType = indexPath.row == selectedRowC ? .checkmark : .none
+        } else {
+            cell.accessoryType = indexPath.row == selectedRowE ? .checkmark : .none
+        }
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

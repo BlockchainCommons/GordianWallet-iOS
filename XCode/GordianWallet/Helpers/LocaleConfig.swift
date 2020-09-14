@@ -91,4 +91,8 @@ class LocaleConfig {
     func currencySymbol() -> String {
         return currencySymbolDict[self.getSavedLocale()] ?? "$"
     }
+    
+    func getSavedIndex() -> Int {
+        return currencyList.firstIndex(of: self.getSavedLocale()) ?? 0
+    }
 }

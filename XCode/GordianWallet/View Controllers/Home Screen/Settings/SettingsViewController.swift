@@ -8,32 +8,16 @@
 
 import UIKit
 
-class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource {
+class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var doneBlock : ((Bool) -> Void)?
     let ud = UserDefaults.standard
     @IBOutlet var settingsTable: UITableView!
     
-    var pickerView: UIPickerView!
-    var pickerViewE: UIPickerView!
-    var localeConfig = LocaleConfig()
-    var priceServer = PriceServer()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         settingsTable.delegate = self
-        
-        // TEST
-        pickerView = UIPickerView(frame: CGRect(x: 10, y: 50, width: 250, height: 150))
-        pickerView.delegate = self
-        pickerView.dataSource = self
-        pickerView.tag = 1
-        // TEST
-        pickerViewE = UIPickerView(frame: CGRect(x: 10, y: 50, width: 250, height: 150))
-        pickerViewE.delegate = self
-        pickerViewE.dataSource = self
-        pickerView.tag = 2
         
     }
 
@@ -90,25 +74,15 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             
         case 2:
             thumbnail.image = UIImage(systemName: "desktopcomputer")
-            label.text = "Currency"
-            return settingsCell
-            
-        case 3:
-            thumbnail.image = UIImage(systemName: "desktopcomputer")
-            label.text = "Exchange"
-            return settingsCell
-            
-        case 4:
-            thumbnail.image = UIImage(systemName: "desktopcomputer")
             label.text = "Spotbit Server"
             return settingsCell
             
-        case 5:
+        case 3:
             thumbnail.image = UIImage(systemName: "exclamationmark.triangle")
             label.text = "Delete Core Data"
             return settingsCell
             
-        case 6:
+        case 4:
             thumbnail.image = UIImage(systemName: "exclamationmark.triangle")
             label.text = "Delete Keychain Items"
             return settingsCell
@@ -124,7 +98,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func numberOfSections(in tableView: UITableView) -> Int {
         
-        return 7
+        return 5
         
     }
     
@@ -186,21 +160,13 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             
         case 2:
             
-            currencySelector()
-        
-        case 3:
-        
-            exchangeSelector()
-            
-        case 4:
-            
             segueToPrice()
             
-        case 5:
+        case 3:
         
             resetApp()
             
-        case 6:
+        case 4:
             
             promptToDeleteKeychain()
             
@@ -219,7 +185,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 vc.deleteKeychainItems()
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-            alert.popoverPresentationController?.sourceView = vc.settingsTable
+            #if !targetEnvironment(macCatalyst)
+                alert.popoverPresentationController?.sourceView = vc.settingsTable
+            #endif
             vc.present(alert, animated: true, completion: nil)
         }
     }
@@ -257,82 +225,12 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-            alert.popoverPresentationController?.sourceView = vc.settingsTable
+            #if !targetEnvironment(macCatalyst)
+                alert.popoverPresentationController?.sourceView = vc.settingsTable
+            #endif
             vc.present(alert, animated: true, completion: nil)
         }
     }
-    
-    func exchangeSelector() {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-        
-            vc.showupAlertE()
-            
-        }
-        
-    }
-    
-    func showupAlertE() {
-        let ac = UIAlertController(title: "Exchanges", message: "\n\n\n\n\n\n\n\n\n\n", preferredStyle: .alert)
-        let defaultIndex = priceServer.getExchangeList().firstIndex(of: priceServer.getCurrentExchange()) ?? 0
-        pickerViewE.selectRow(defaultIndex, inComponent: 0, animated: true)
-        ac.view.addSubview(pickerViewE)
-        ac.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-            let pickerValue = self.priceServer.getExchangeList()[self.pickerViewE.selectedRow(inComponent: 0)]
-            self.priceServer.changeExchange(newExchange: pickerValue)
-            print("New exchange: \(pickerValue).")
-            print(self.priceServer.createSpotBitURL())
-        }))
-        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(ac, animated: true)
-    }
-
-    func currencySelector() {
-        
-        DispatchQueue.main.async { [unowned vc = self] in
-        
-            vc.showupAlert()
-            
-        }
-        
-    }
-    
-    // TEST
-    func showupAlert() {
-        let ac = UIAlertController(title: "Currency", message: "\n\n\n\n\n\n\n\n\n\n", preferredStyle: .alert)
-        let defaultIndex = localeConfig.currencyList.firstIndex(of: localeConfig.getSavedLocale()) ?? 0
-        pickerView.selectRow(defaultIndex, inComponent: 0, animated: true)
-        ac.view.addSubview(pickerView)
-        ac.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-            let pickerValue = self.localeConfig.currencyList[self.pickerView.selectedRow(inComponent: 0)]
-            self.localeConfig.changeLocale(newLocale: pickerValue)
-            print("New currency: \(pickerValue).")
-            print(self.priceServer.createSpotBitURL())
-        }))
-        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(ac, animated: true)
-    }
-
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if pickerView.tag == 2 {
-            return localeConfig.currencyList.count
-        } else {
-            return priceServer.getExchangeList().count
-        }
-    }
-
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if pickerView.tag == 2 {
-            return "\(localeConfig.currencyList[row])"
-        } else {
-            return "\(priceServer.getExchangeList()[row])"
-        }
-    }
-    // TEST
     
     func nodeManager() {
         
