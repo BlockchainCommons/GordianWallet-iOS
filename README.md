@@ -98,7 +98,7 @@ This table below also establishes provenance (repository of origin, permalink, a
 
 To financially support further development of *Gordian Wallet* and other projects, please consider becoming a Patron of Blockchain Commons through ongoing monthly patronage as a [GitHub Sponsor](https://github.com/sponsors/BlockchainCommons). You can also support Blockchain Commons with bitcoins at our [BTCPay Server](https://btcpay.blockchaincommons.com/).
 
-### Project Sponsor
+### Project Sponsors
 
 Thanks to our project sponsors for their support of *Gordian Wallet*:
 
