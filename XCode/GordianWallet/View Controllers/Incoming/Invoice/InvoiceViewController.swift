@@ -28,6 +28,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var amountField: UITextField!
     @IBOutlet var labelField: UITextField!
     @IBOutlet weak var invoiceAddressHeader: UILabel!
+    @IBOutlet weak var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +46,9 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         qrButton.alpha = 0
         shareButton.alpha = 0
         copyButton.alpha = 0
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 5
+        imageView.layer.magnificationFilter = .nearest
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self,
                                                                  action: #selector(dismissKeyboard))
@@ -62,6 +66,16 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
                              action: #selector(textFieldDidChange(_:)),
                              for: .editingChanged)
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        getActiveWalletNow() { [unowned vc = self] (wallet, error) in
+            if wallet != nil {
+                DispatchQueue.main.async {
+                    vc.imageView.image = LifeHash.image(wallet!.descriptor)
+                }
+            }
+        }
     }
     
     @objc func clearInvoice() {
@@ -229,6 +243,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             
             UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
                 
+                vc.imageView.image = LifeHash.image(vc.wallet!.descriptor)
                 vc.invoiceAddressHeader.alpha = 1
                 vc.qrButton.alpha = 1
                 vc.addressOutlet.alpha = 1

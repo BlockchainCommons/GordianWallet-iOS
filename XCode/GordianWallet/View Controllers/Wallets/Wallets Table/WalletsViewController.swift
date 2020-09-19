@@ -15,7 +15,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var walletToImport = [String:Any]()
     var isLoading = Bool()
     var refresher: UIRefreshControl!
-    var index = Int()
+    var index = 0
     var name = ""
     var node:NodeStruct!
     var wallets = [[String:Any]]()
@@ -101,7 +101,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc func transactionSent(_ notification: Notification) {
         spinner.addConnectingView(vc: self, description: "refreshing balance...")
-        /// Need to hardcode a delay as doing it immedeately after the transaction broadcasts means the transaction may not have propgated across the network that quickly. Keep in mind we use Blockstreams node to broadcast transactions, if we strictly used our own node then of course it would be instant.
+        /// Need to hardcode a delay as doing it immideately after the transaction broadcasts means the transaction may not have propgated across the network that quickly. Keep in mind we use Blockstreams node to broadcast transactions, if we strictly used our own node then of course it would be instant.
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [unowned vc = self] in
             vc.refreshActiveWalletData()
         }
@@ -123,16 +123,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         walletTable.addSubview(refresher)
     }
     
-    func onionAddress(wallet: WalletStruct) -> String {
-        var rpcOnion = ""
-        for n in nodes {
-            let s = NodeStruct(dictionary: n)
-            if s.id == wallet.nodeId {
-                rpcOnion = s.onionAddress
-            }
-        }
-        return rpcOnion
-    }
+//    func onionAddress(wallet: WalletStruct) -> String {
+//        var rpcOnion = ""
+//        for n in nodes {
+//            let s = NodeStruct(dictionary: n)
+//            if s.id == wallet.nodeId {
+//                rpcOnion = s.onionAddress
+//            }
+//        }
+//        return rpcOnion
+//    }
     
     func refreshLocalDataOnly() {
         spinner.addConnectingView(vc: self, description: "refreshing local data...")
@@ -264,9 +264,21 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 vc.sortedWallets[i]["unknownSigners"] = uknownSigners
                 if i + 1 == vc.sortedWallets.count {
                     vc.sortedWallets = vc.sortedWallets.sorted{ ($0["lastUsed"] as? Date ?? Date()) > ($1["lastUsed"] as? Date ?? Date()) }
-                    completion(true)
+                    vc.setLifeHashes(completion: completion)
                 }
             }
+        }
+    }
+    
+    private func setLifeHashes(completion: @escaping ((Bool)) -> Void) {
+        if index < sortedWallets.count {
+            let wstruct = WalletStruct(dictionary: sortedWallets[index])
+            sortedWallets[index]["lifehash"] = lifehash(wstruct.descriptor)
+            index += 1
+            setLifeHashes(completion: completion)
+        } else {
+            index = 0
+            completion(true)
         }
     }
     
@@ -341,6 +353,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
+    private func lifehash(_ input: String) -> UIImage {
+        return LifeHash.image(input)
+    }
+    
     private func singleSigCell(_ indexPath: IndexPath) -> UITableViewCell {
         
         let d = sortedWallets[indexPath.section]
@@ -368,11 +384,17 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let walletTypeImage = cell.viewWithTag(40) as! UIImageView
         let accountLabel = cell.viewWithTag(42) as! UILabel
         let typeLabel = cell.viewWithTag(43) as! UILabel
+        let lifehashImage = cell.viewWithTag(44) as! UIImageView
         
         deviceLabel.text = UIDevice.current.name
         accountLabel.text = walletStruct.label
         balanceLabel.adjustsFontSizeToFitWidth = true
         balanceLabel.text = "\(walletStruct.lastBalance.avoidNotation) BTC"
+        
+        lifehashImage.image = (sortedWallets[indexPath.section]["lifehash"] as! UIImage)
+        lifehashImage.clipsToBounds = true
+        lifehashImage.layer.cornerRadius = 5
+        lifehashImage.layer.magnificationFilter = .nearest
         
         if walletStruct.isActive {
             
@@ -453,17 +475,14 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         for n in nodes {
-            
             let s = NodeStruct(dictionary: n)
             
             if s.id == walletStruct.nodeId {
-                
                 let rpcOnion = s.onionAddress
                 let first10 = String(rpcOnion.prefix(5))
                 let last15 = String(rpcOnion.suffix(15))
                 rpcOnionLabel.text = "\(first10)*****\(last15)"
                 nodeLabel.text = s.label
-                
             }
             
         }
@@ -504,6 +523,12 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let deviceSeedImage = cell.viewWithTag(41) as! UIImageView
         let accountLabel = cell.viewWithTag(42) as! UILabel
         let primaryKeysNodeSignerImage = cell.viewWithTag(43) as! UIImageView
+        
+        let lifehashImage = cell.viewWithTag(44) as! UIImageView
+        lifehashImage.image = (sortedWallets[indexPath.section]["lifehash"] as! UIImage)
+        lifehashImage.clipsToBounds = true
+        lifehashImage.layer.cornerRadius = 5
+        lifehashImage.layer.magnificationFilter = .nearest
         
         deviceLabel.text = UIDevice.current.name
         accountLabel.text = walletStruct.label

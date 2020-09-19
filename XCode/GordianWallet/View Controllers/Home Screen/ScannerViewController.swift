@@ -147,7 +147,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             
         } else if isRecovering {
             
-            let url = URL(string: "https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Recovery.md")!
+            let url = URL(string: "https://github.com/BlockchainCommons/GordianWallet-iOS/blob/master/Recovery.md")!
             UIApplication.shared.open(url) { (Bool) in }
             
         }
@@ -163,7 +163,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { [unowned vc = self] action in
                 
                 // Testnet Linode instance:
-                let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=Test%20Node"
+                let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=BC%20Beta%20Test%20Node"
                 vc.addBtcRpcQr(url: url)
 
             }))
