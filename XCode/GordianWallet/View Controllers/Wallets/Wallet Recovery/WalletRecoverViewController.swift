@@ -118,11 +118,9 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         }        
     }
     
-    
     @IBAction func getWordsAction(_ sender: Any) {
         getWords()
     }
-    
     
     @IBAction func scanAction(_ sender: Any) {
         DispatchQueue.main.async { [unowned vc = self] in
@@ -195,45 +193,30 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
         switch segue.identifier {
             
         case "segueToManualXpubRecovery":
-            
             if let vc = segue.destination as? AddExtendedKeyViewController {
-                
                 vc.isRecovering = true
-                
             }
             
         case "getWords":
-            
             if let vc = segue.destination as? WordRecoveryViewController {
-                
                 vc.testingWords = testingWords
                 vc.recoveryDict = recoveryDict
                 vc.walletNameHash = walletName
-                
             }
             
         case "goConfirmQr":
-            
             if let vc = segue.destination as? ConfirmRecoveryViewController {
-                
                 vc.walletNameHash = walletName
                 vc.walletDict = recoveryDict
                 vc.isImporting = true
-                
             }
             
         case "scanRecovery":
-            
             if let vc = segue.destination as? ScannerViewController {
-                
                 vc.isRecovering = true
-                
-                vc.onImportDoneBlock = { [unowned thisVc = self] importItem in
-                    
+                vc.returnStringBlock = { [unowned thisVc = self] importItem in
                     thisVc.processImport(importItem: importItem)
-                    
                 }
-                
             }
             
         default:

@@ -9,9 +9,9 @@
 import Foundation
 import URKit
 
-class URHelper {
+enum URHelper {
     
-    class func entropyToUr(data: Data) -> String? {
+    static func entropyToUr(data: Data) -> String? {
         let wrapper:CBOR = .map([
             .unsignedInt(1) : .byteString(data.bytes),
         ])
@@ -24,7 +24,7 @@ class URHelper {
         }
     }
     
-    class func urToEntropy(urString: String) -> (data: Data?, birthdate: UInt64?) {
+    static func urToEntropy(urString: String) -> (data: Data?, birthdate: UInt64?) {
         do {
             let ur = try URDecoder.decode(urString)
             let decodedCbor = try CBOR.decode(ur.cbor.bytes)
@@ -49,7 +49,19 @@ class URHelper {
         }
     }
     
-    class func urToHdkey(urString: String) -> (isMaster: Bool?, keyData: String?, chainCode: String?) {
+    static func urToShard(sskrUr: String) -> String? {
+        do {
+            let ur = try URDecoder.decode(sskrUr)
+            guard let decodedCbor = try? CBOR.decode(ur.cbor.bytes),
+                case let CBOR.tagged(_, cborRaw) = decodedCbor,
+                case let CBOR.byteString(byteString) = cborRaw else { return nil }
+            return Data(byteString).hexString
+        } catch {
+            return nil
+        }
+    }
+    
+    static func urToHdkey(urString: String) -> (isMaster: Bool?, keyData: String?, chainCode: String?) {
         do {
             let ur = try URDecoder.decode(urString)
             let decodedCbor = try CBOR.decode(ur.cbor.bytes)

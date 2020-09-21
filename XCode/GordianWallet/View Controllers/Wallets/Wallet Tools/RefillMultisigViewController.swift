@@ -29,8 +29,6 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         textField.delegate = self
         descriptionLabel.adjustsFontSizeToFitWidth = true
         wordsView.layer.cornerRadius = 8
@@ -41,28 +39,82 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         
         if addSeed {
             navigationItem.title = "Add Signer"
-            descriptionLabel.text = "You can add a 12 or 24 word BIP39 seed phrase which can sign for this account."
+            descriptionLabel.text = "You can add a 12 or 24 word BIP39 seed phrase which can sign for this account, or you can scan SSKR UR shards by tapping the QR scanner."
             lostWordsOutlet.alpha = 0
             
         }
         
     }
     
+    @IBAction func scanShardsAction(_ sender: Any) {
+        goScan()
+    }
+    
+    private func parseUr(_ ur: String) -> (valid: Bool, complete: Bool) {
+        var isValid = false
+        let isComplete = false
+        let shard = URHelper.urToShard(sskrUr: ur) ?? ""
+        if shard != "" {
+            parseShard(shard)
+            isValid = true
+        }
+        return (isValid, isComplete)
+    }
+    
+    private func parseShard(_ shard: String) {
+        let id = shard.prefix(4)
+        let shareValue = shard.replacingOccurrences(of: shard.prefix(10), with: "") // same length as master seed
+        let array = Array(shard)
+        
+        guard let groupThresholdIndex = Int("\(array[4])"), // total # of possible groups
+            let groupCountIndex = Int("\(array[5])"), // the group # this share comes from
+            let groupIndex = Int("\(array[6])"), // # shares required from this group
+            let memberThresholdIndex = Int("\(array[7])"), // MUST be zero
+            let reserved = Int("\(array[8])"), // the # share from the group
+            let memberIndex = Int("\(array[9])") else { return } //  # of groups required
+        
+    }
+    
+    private func promptToScanAnotherShard() {
+        DispatchQueue.main.async { [weak self] in
+            var alertStyle = UIAlertController.Style.actionSheet
+            
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
+            
+            let alert = UIAlertController(title: "Valid SSKR shard scanned ✓", message: "You still need X more shards to reconstruct the seed.", preferredStyle: alertStyle)
+            
+            alert.addAction(UIAlertAction(title: "Scan another shard", style: .default, handler: { action in
+                self?.goScan()
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+                self?.connectingView.removeConnectingView()
+            }))
+            
+            alert.popoverPresentationController?.sourceView = self?.view
+            alert.popoverPresentationController?.sourceRect = self!.view.bounds
+            self?.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func goScan() {
+        DispatchQueue.main.async { [weak self] in
+            self?.performSegue(withIdentifier: "segueToScanShards", sender: self)
+        }
+    }
+    
     private func updatePlaceHolder(wordNumber: Int) {
         DispatchQueue.main.async { [unowned vc = self] in
             vc.textField.attributedPlaceholder = NSAttributedString(string: "add word #\(wordNumber)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
-            
         }
     }
     
     @objc func handleTap() {
-        
         DispatchQueue.main.async {
-            
             self.textField.resignFirstResponder()
-            
         }
-        
     }
     
     func processTextfieldInput() {
@@ -630,14 +682,28 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     
     
     
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        if segue.identifier == "segueToScanShards" {
+            guard let vc = segue.destination as? ScannerViewController else { return }
+            vc.scanningShards = true
+            vc.returnStringBlock = { [weak self] ur in
+                guard self != nil else { return }
+                let (isValid, isComplete) = self!.parseUr(ur)
+                if isValid && !isComplete {
+                    self?.promptToScanAnotherShard()
+                    
+                } else {
+                    
+                }
+            }
+        }
     }
-    */
+    
 
 }

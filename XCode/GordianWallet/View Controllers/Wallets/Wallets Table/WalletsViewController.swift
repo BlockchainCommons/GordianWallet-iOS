@@ -1141,7 +1141,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         walletTable.reloadData()
     }
     
-    private func processUrHdkey(urString: String) {
+    private func processUrHdkey(ur: String) {
         //"ur:crypto-hdkey/otadykaxhdclaevswfdmjpfswpwkahcywspsmndwmusoskprbbehetchsnpfcybbmwrhchspfxjeecaahdcxlnfszolyrtdlgmhfcnzectvwcmkbpsftgonbgauefsehgrqzdmvodizoweemtlaybakiylat"
         Encryption.getNode { (node, error) in
             guard node != nil else { return }
@@ -1149,10 +1149,10 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if node!.network == "testnet" {
                 prefix = "04358394"
             }
-            let (isMaster, keyData, chainCode) = URHelper.urToHdkey(urString: urString)
-            guard isMaster != nil else { return }
-            guard keyData != nil else { return }
-            guard chainCode != nil else { return }
+            let (isMaster, keyData, chainCode) = URHelper.urToHdkey(urString: ur)
+            guard isMaster != nil, keyData != nil, chainCode != nil else { return }
+            //guard keyData != nil else { return }
+            //guard chainCode != nil else { return }
             if isMaster! {
                 var base58String = "\(prefix)000000000000000000\(chainCode!)\(keyData!)"
                 if let data = Data(base58String) {
@@ -1169,13 +1169,24 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    private func processUrSskr(ur: String) {
+        if let shard = URHelper.urToShard(sskrUr: ur) {
+            print("shard: \(shard)")
+        }
+    }
+    
     private func processDescriptor(item: String) {
         spinner.addConnectingView(vc: self, description: "processing...")
-        
-        if item.hasPrefix("ur:crypto-hdkey/") {
-            processUrHdkey(urString: item)
+        //ur:crypto-sskr/taadecgojlcybyadaoknuyjekszmztwppfjejyvacyghhfemgdoxsrneyt
+        if item.hasPrefix("ur:crypto-sskr/") {
+            processUrSskr(ur: item)
+            
+        } else if item.hasPrefix("ur:crypto-hdkey/") {
+            processUrHdkey(ur: item)
+            
         } else if item.hasPrefix("ur:crypto-seed/") {
             spinner.removeConnectingView()
+            
             if let _ = URHelper.urToEntropy(urString: item).data {
                 DispatchQueue.main.async { [unowned vc = self] in
                     vc.urToRecover = item
@@ -1184,6 +1195,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             } else {
                 showAlert(vc: self, title: "Oops", message: "That does not look like a valid crypto-seed UR")
             }
+            
         } else if let data = item.data(using: .utf8) {
             
             do {
@@ -1195,7 +1207,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     if let _ = dict["blockheight"] as? Int {
                         /// It is an Account Map.
                         Import.importAccountMap(accountMap: dict) { walletDict in
-                            print("importAccountMap")
                             
                             if walletDict != nil {
                                 DispatchQueue.main.async { [unowned vc = self] in
@@ -1208,6 +1219,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
                             }
                         }
                     }
+                    
                 } else if let fingerprint = dict["xfp"] as? String {
                     /// It is a coldcard wallet skeleton file.
                     spinner.removeConnectingView()
@@ -1336,7 +1348,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         case "goImport":
         if let vc = segue.destination as? ScannerViewController {
             vc.isImporting = true
-            vc.onImportDoneBlock = { [unowned thisVc = self] item in
+            vc.returnStringBlock = { [unowned thisVc = self] item in
                 thisVc.processDescriptor(item: item.lowercased())
             }
         }

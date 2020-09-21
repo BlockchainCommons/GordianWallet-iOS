@@ -1059,7 +1059,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         case "scanBip21Segue":
             if let vc = segue.destination as? ScannerViewController {
                 vc.isScanningInvoice = true
-                vc.onScanBip21DoneBlock = { [unowned thisVc = self] result in
+                vc.returnStringBlock = { [unowned thisVc = self] result in
                     thisVc.processBIP21(url: result)
                 }
             }

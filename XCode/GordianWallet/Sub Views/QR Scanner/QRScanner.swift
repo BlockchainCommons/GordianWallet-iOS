@@ -12,6 +12,7 @@ import AVFoundation
 
 class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    var scanningShards = Bool()
     var verifying = Bool()
     var scanningBip21 = Bool()
     var scanningRecovery = Bool()
@@ -290,8 +291,17 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
         configureTorchButton()
         configureDownSwipe()
         
-        if isScanningNode {
+        if scanningShards {
+            label.text = "Scan SSKR UR"
+            labelDetail.text = "Gordian Wallet allows you to scan UR SSKR shards to add a signer to your account."
+            addTestingNodeButton.setTitle("more info please", for: .normal)
+            configureLabel()
+            configureDetailLabel()
+            configureDontHaveAnodeButton()
+            closeButton.alpha = 0
             
+        
+        } else if isScanningNode {
             label.text = "Scan a QuickConnect QR Code"
             labelDetail.text = "Compatible with Bitcoin Core 0.19.0, BTCPayServer, Nodl, Raspiblitz, and StandUp"
             addTestingNodeButton.setTitle("don't have a node? tap to add a tester", for: .normal)
@@ -311,7 +321,7 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
         } else if scanningRecovery {
             
             label.text = "Scan an Account Map"
-            labelDetail.text = "FullyNoded 2 allows you to backup/export an Account Map QR code for each wallet you create. You can scan one at anytime to recreate the wallet as watch-only, you can then add signers to it."
+            labelDetail.text = "Gordian Wallet allows you to backup/export an Account Map QR code for each wallet you create. You can scan one at anytime to recreate the wallet as watch-only, you can then add signers to it."
             addTestingNodeButton.setTitle("more info please", for: .normal)
             configureLabel()
             configureDetailLabel()
