@@ -42,6 +42,7 @@
 		D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650072441A78E00754ACF /* VerifyKeysViewController.swift */; };
 		D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650092442C58200754ACF /* WordRecoveryViewController.swift */; };
 		D056500C2446BF6E00754ACF /* 1024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D056500B2446BF6D00754ACF /* 1024.jpg */; };
+		D0576F032519BECA005D11CE /* Shard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0576F022519BECA005D11CE /* Shard.swift */; };
 		D06FD7C12505FDC700481185 /* CLibWally.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06FD7BF2505FDC600481185 /* CLibWally.xcframework */; };
 		D06FD7C72506005100481185 /* LibWally.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06FD7C52506003300481185 /* LibWally.xcframework */; };
 		D06FD7C82506005100481185 /* LibWally.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D06FD7C52506003300481185 /* LibWally.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -239,6 +240,7 @@
 		D05650072441A78E00754ACF /* VerifyKeysViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyKeysViewController.swift; sourceTree = "<group>"; };
 		D05650092442C58200754ACF /* WordRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordRecoveryViewController.swift; sourceTree = "<group>"; };
 		D056500B2446BF6D00754ACF /* 1024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1024.jpg; sourceTree = "<group>"; };
+		D0576F022519BECA005D11CE /* Shard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shard.swift; sourceTree = "<group>"; };
 		D06FD7BF2505FDC600481185 /* CLibWally.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CLibWally.xcframework; sourceTree = "<group>"; };
 		D06FD7C52506003300481185 /* LibWally.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = LibWally.xcframework; sourceTree = "<group>"; };
 		D07399D6245E6E5600860B7E /* Broadcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Broadcast.swift; sourceTree = "<group>"; };
@@ -531,6 +533,7 @@
 				D0DB944E24736C0600A0E99D /* TransactionStruct.swift */,
 				D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */,
 				D0D5E63E24A087C700F3783C /* StatusStruct.swift */,
+				D0576F022519BECA005D11CE /* Shard.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -1190,6 +1193,7 @@
 				D0D5E63F24A087C700F3783C /* StatusStruct.swift in Sources */,
 				D00016B5245BBB5C0091F7CF /* SeedStruct.swift in Sources */,
 				D042EFA22457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift in Sources */,
+				D0576F032519BECA005D11CE /* Shard.swift in Sources */,
 				D09D732823F0F3C000847DC8 /* VerifyViewController.swift in Sources */,
 				D09D732F23F0F3C000847DC8 /* ScannerViewController.swift in Sources */,
 				D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */,
