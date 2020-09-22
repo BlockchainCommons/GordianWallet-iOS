@@ -24,6 +24,17 @@ enum URHelper {
         }
     }
     
+    static func shardToUr(data: Data) -> String? {
+        let wrapper:CBOR = .tagged(.init(rawValue: 309), .byteString(data.bytes))
+        let cbor = Data(wrapper.encode())
+        do {
+            let rawUr = try UR(type: "crypto-sskr", cbor: cbor)
+            return UREncoder.encode(rawUr)
+        } catch {
+            return nil
+        }
+    }
+    
     static func urToEntropy(urString: String) -> (data: Data?, birthdate: UInt64?) {
         do {
             let ur = try URDecoder.decode(urString)

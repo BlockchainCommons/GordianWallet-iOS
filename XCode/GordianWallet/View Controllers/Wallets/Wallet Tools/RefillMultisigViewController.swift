@@ -26,6 +26,8 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     var bip39Words = [String]()
     var wallet:WalletStruct!
     let connectingView = ConnectingView()
+    var rawShards = [String]()
+    var shards = [Shard]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,35 +46,153 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
             
         }
         
+//        let twoOfthree = [
+//        "6f1a110100e237632b501bb5e9e524ec5d2ffbf029",
+//        "6f1a110101ae41678f076b1448a20ce9f39f201e98",
+//        "6f1a1101027adb6b78fefbecb06b74e61a54563750"
+//        ]
+//
+//        for s in twoOfthree {
+//            let ur = URHelper.shardToUr(data: Data(s)!)
+//            print("2of3: \(ur!)")
+//        }
+//
+//        let threeOffive = [
+//            "6f1a1112001a6f5c00d667c7c941309bb92ee736ef",
+//            "6f1a111201ae72e6beca78121c31dec081d79ba556",
+//            "6f1a11120205e3d87dacd285144866575bb16a1c50",
+//            "6f1a111203b1fe62c3b0cd50c138880c6348168fe9",
+//            "6f1a1112048f82ce92310ca2c3daeeeb18c8293eff"
+//        ]
+//
+//        for s in threeOffive {
+//            let ur = URHelper.shardToUr(data: Data(s)!)
+//            print("3of5: \(ur!)")
+//        }
+        
+//        2of3: ur:crypto-sskr/taadecgojlcybyadaevoemiadngdcwrewlvwdkwphldlztwtdtqzpafnzo
+//        2of3: ur:crypto-sskr/taadecgojlcybyadadplfpiomyatjebbfdoebnwlwfnecxckmkyllglryl
+//        2of3: ur:crypto-sskr/taadecgojlcybyadaoknuyjekszmztwppfjejyvacyghhfemgdoxsrneyt
+//
+//        3of5: ur:crypto-sskr/taadecgojlcybybgaecyjlhhaetbiostsofpdyndrhdmvdenwshgqzpkfe
+//        3of5: ur:crypto-sskr/taadecgojlcybybgadpljpvarnsgksbgceehuertlytsndonhfcnzsgdtn
+//        3of5: ur:crypto-sskr/taadecgojlcybybgaoahvltpkipstdltbbfdiyhghppaimcegdgrnlcyct
+//        3of5: ur:crypto-sskr/taadecgojlcybybgaxpazmidsrpfsngdseetlobniafdcmmywlfhtsvtla
+//        3of5: ur:crypto-sskr/taadecgojlcybybgaamylftomoehbnoesrtnwywmcsspdtfmzoztenmydw
+        
+        
     }
     
     @IBAction func scanShardsAction(_ sender: Any) {
         goScan()
     }
     
-    private func parseUr(_ ur: String) -> (valid: Bool, complete: Bool) {
-        var isValid = false
-        let isComplete = false
-        let shard = URHelper.urToShard(sskrUr: ur) ?? ""
-        if shard != "" {
-            parseShard(shard)
-            isValid = true
+    // Checks if we are complete or not
+    private func processShard(_ shard: Shard) -> Bool {
+        print("processShard")
+        let totalGroupsRequired = shard.groupThreshold
+        let totalMembersRequired = shard.memberThreshold
+        let group = shard.groupIndex
+        
+        var existingShardsInGroup = 0
+        
+        for s in shards {
+            if s.groupIndex == group {
+                existingShardsInGroup += 1
+            }
         }
-        return (isValid, isComplete)
+        
+        var groups = [Int]()
+        
+        if existingShardsInGroup == totalMembersRequired {
+            for s in shards {
+                groups.append(s.groupIndex)
+            }
+        } else {
+            return false
+        }
+        
+        let uniqueGroups = Array(Set(groups))
+        
+        if uniqueGroups.count == totalGroupsRequired {
+            // DING DING DING DING DING DING DING DING DING DING
+            return true
+        } else {
+            return false
+        }
     }
     
-    private func parseShard(_ shard: String) {
+    private func parseUr(_ ur: String) -> (valid: Bool, alreadyAdded: Bool, shard: String) {
+        let shard = URHelper.urToShard(sskrUr: ur) ?? ""
+        guard shard != "" else { return (false, false, shard) }
+        guard shardAlreadyAdded(shard) == false else { return (true, true, shard) }
+        rawShards.append(shard)
+        return (true, false, shard)
+    }
+    
+    private func shardAlreadyAdded(_ shard: String) -> Bool {
+        guard rawShards.count > 0 else { return false }
+        var shardAlreadyExists = false
+        for s in rawShards {
+            if shard == s {
+                shardAlreadyExists = true
+            }
+        }
+        return shardAlreadyExists
+    }
+    
+    struct Shard: CustomStringConvertible {
+        let id: String
+        let shareValue: String
+        let groupThreshold: Int
+        let groupCount: Int
+        let groupIndex: Int
+        let memberThreshold: Int
+        let reserved: Int
+        let memberIndex: Int
+        
+        init(dictionary: [String: Any]) {
+            id = dictionary["id"] as? String ?? ""
+            shareValue = dictionary["shareValue"] as! String               /// the length of this value should equal the length of the master seed
+            groupThreshold = dictionary["groupThreshold"] as! Int       /// required # of groups
+            groupCount = dictionary["groupCount"] as! Int               /// total # of possible groups
+            groupIndex = dictionary["groupIndex"] as! Int               /// the group this share belongs to
+            memberThreshold = dictionary["memberThreshold"] as! Int     /// # of shares required from this group
+            reserved = dictionary["reserved"] as! Int                   /// MUST be 0
+            memberIndex = dictionary["memberIndex"] as! Int             ///  the shares member # within its group
+        }
+        
+        public var description: String {
+            return ""
+        }
+    }
+    
+    private func parseShard(_ shard: String) -> Shard? {
         let id = shard.prefix(4)
-        let shareValue = shard.replacingOccurrences(of: shard.prefix(10), with: "") // same length as master seed
+        let shareValue = shard.replacingOccurrences(of: shard.prefix(10), with: "") /// the length of this value should equal the length of the master seed
         let array = Array(shard)
         
-        guard let groupThresholdIndex = Int("\(array[4])"), // total # of possible groups
-            let groupCountIndex = Int("\(array[5])"), // the group # this share comes from
-            let groupIndex = Int("\(array[6])"), // # shares required from this group
-            let memberThresholdIndex = Int("\(array[7])"), // MUST be zero
-            let reserved = Int("\(array[8])"), // the # share from the group
-            let memberIndex = Int("\(array[9])") else { return } //  # of groups required
+        guard let groupThresholdIndex = Int("\(array[4])"),             /// required # of groups
+            let groupCountIndex = Int("\(array[5])"),                   /// total # of possible groups
+            let groupIndex = Int("\(array[6])"),                        /// # the group this share belongs to
+            let memberThresholdIndex = Int("\(array[7])"),              /// # of shares required from this group
+            let reserved = Int("\(array[8])"),                          /// MUST be 0
+            let memberIndex = Int("\(array[9])") else { return nil }    ///  the shares member # within its group
         
+        let dict = [
+            
+            "id": id,
+            "shareValue": shareValue,                       /// the length of this value should equal the length of the master seed
+            "groupThreshold": groupThresholdIndex + 1,      /// required # of groups
+            "groupCount": groupCountIndex + 1,              /// total # of possible groups
+            "groupIndex": groupIndex + 1,                   /// the group this share belongs to
+            "memberThreshold": memberThresholdIndex + 1,    /// # of shares required from this group
+            "reserved": reserved,                           /// MUST be 0
+            "memberIndex": memberIndex + 1                  /// the shares member # within its group
+            
+        ] as [String:Any]
+        
+        return Shard(dictionary: dict)
     }
     
     private func promptToScanAnotherShard() {
@@ -692,12 +812,21 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         if segue.identifier == "segueToScanShards" {
             guard let vc = segue.destination as? ScannerViewController else { return }
             vc.scanningShards = true
+            
             vc.returnStringBlock = { [weak self] ur in
-                guard self != nil else { return }
-                let (isValid, isComplete) = self!.parseUr(ur)
-                if isValid && !isComplete {
-                    self?.promptToScanAnotherShard()
-                    
+                guard let self = self else { return }
+                
+                let (isValid, alreadyAdded, s) = self.parseUr(ur)
+                
+                if isValid && !alreadyAdded {
+                    if let shardStruct = self.parseShard(s) {
+                        self.shards.append(shardStruct)
+                        if !self.processShard(shardStruct) {
+                            self.promptToScanAnotherShard()
+                        } else {
+                            showAlert(vc: self, title: "Success ✅", message: "Your seed words have been recovered with SSKR shards")
+                        }
+                    }
                 } else {
                     
                 }
