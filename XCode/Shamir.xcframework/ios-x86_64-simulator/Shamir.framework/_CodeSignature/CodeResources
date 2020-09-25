@@ -10,11 +10,19 @@
 		</data>
 		<key>Headers/Shamir.h</key>
 		<data>
-		F2siKsdUKzdNpWWCBqXNaI38s00=
+		sDNlrto9cwYkYfebplqcTxarY7s=
 		</data>
 		<key>Info.plist</key>
 		<data>
 		BK5pRPyZO+ODuUKwLiMyKMlFDG0=
+		</data>
+		<key>Modules/Shamir.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
+		<data>
+		qxV2e/jRpXnFbhpwq2idK5UBXqw=
+		</data>
+		<key>Modules/Shamir.swiftmodule/Project/x86_64.swiftsourceinfo</key>
+		<data>
+		qxV2e/jRpXnFbhpwq2idK5UBXqw=
 		</data>
 		<key>Modules/Shamir.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -22,11 +30,11 @@
 		</data>
 		<key>Modules/Shamir.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		wJ0R9Bx8/2meu13tW1GHW9HGkdE=
+		IxuE9xACW1I5NUqe+W++tiYoViM=
 		</data>
 		<key>Modules/Shamir.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		iwGJYGlFcPjWnfaXhfk1+/Ak2fM=
+		yIZcr/619bDFYUFo+3jLUENlkIw=
 		</data>
 		<key>Modules/Shamir.swiftmodule/x86_64.swiftdoc</key>
 		<data>
@@ -34,11 +42,11 @@
 		</data>
 		<key>Modules/Shamir.swiftmodule/x86_64.swiftinterface</key>
 		<data>
-		wJ0R9Bx8/2meu13tW1GHW9HGkdE=
+		IxuE9xACW1I5NUqe+W++tiYoViM=
 		</data>
 		<key>Modules/Shamir.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		iwGJYGlFcPjWnfaXhfk1+/Ak2fM=
+		yIZcr/619bDFYUFo+3jLUENlkIw=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -58,7 +66,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			jyqL85NE0rFh6glHHKBGQgAnsitZnfxzXKcsqnN2rfE=
+			+Id8PXNQ8ar9eEhNI4Vze5idg+WG6FzNesyFSfonMc8=
+			</data>
+		</dict>
+		<key>Modules/Shamir.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ZBwV0YYZv+4FDF9UUZDTp7ipuTADT492wOwVzwm/CWE=
+			</data>
+		</dict>
+		<key>Modules/Shamir.swiftmodule/Project/x86_64.swiftsourceinfo</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ZBwV0YYZv+4FDF9UUZDTp7ipuTADT492wOwVzwm/CWE=
 			</data>
 		</dict>
 		<key>Modules/Shamir.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
@@ -72,14 +94,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			EiBnaebjzQDrb5ueRMIA1JjlWsrj7ykrbjpPTOWGB6A=
+			aUTAQFkTMs/qNumCouQkV04b1uagcGHgvLO02tozD5U=
 			</data>
 		</dict>
 		<key>Modules/Shamir.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			9QgGQltwZf4k8+e8jYX8+OJl5ujZ0kCXtoauLBYxGRU=
+			dwwQB7p2pKSZ0FF10BuCBP4c4DvZvtMcgMoHtx85PBc=
 			</data>
 		</dict>
 		<key>Modules/Shamir.swiftmodule/x86_64.swiftdoc</key>
@@ -93,14 +115,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			EiBnaebjzQDrb5ueRMIA1JjlWsrj7ykrbjpPTOWGB6A=
+			aUTAQFkTMs/qNumCouQkV04b1uagcGHgvLO02tozD5U=
 			</data>
 		</dict>
 		<key>Modules/Shamir.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			9QgGQltwZf4k8+e8jYX8+OJl5ujZ0kCXtoauLBYxGRU=
+			dwwQB7p2pKSZ0FF10BuCBP4c4DvZvtMcgMoHtx85PBc=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

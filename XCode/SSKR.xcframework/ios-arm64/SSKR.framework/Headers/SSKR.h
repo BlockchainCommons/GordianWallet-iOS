@@ -12,5 +12,3 @@ FOUNDATION_EXPORT double SSKRVersionNumber;
 
 //! Project version string for SSKR.
 FOUNDATION_EXPORT const unsigned char SSKRVersionString[];
-
-#include "bc-sskr/bc-sskr.h"

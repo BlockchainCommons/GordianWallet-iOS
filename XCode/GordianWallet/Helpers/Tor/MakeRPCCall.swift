@@ -68,7 +68,7 @@ class MakeRPCCall {
                             if error != nil {
                                 
                                 /// attempt a node command 20 times to avoid user having to tap refresh button
-                                if vc.attempts < 20 {
+                                if vc.attempts < 20 && method != .listunspent {
                                     vc.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
                                     
                                 } else {

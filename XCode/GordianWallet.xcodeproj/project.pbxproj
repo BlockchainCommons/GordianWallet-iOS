@@ -43,16 +43,6 @@
 		D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650092442C58200754ACF /* WordRecoveryViewController.swift */; };
 		D056500C2446BF6E00754ACF /* 1024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D056500B2446BF6D00754ACF /* 1024.jpg */; };
 		D0576F032519BECA005D11CE /* Shard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0576F022519BECA005D11CE /* Shard.swift */; };
-		D0576F0B2519C276005D11CE /* CShamir.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0576F052519C275005D11CE /* CShamir.xcframework */; };
-		D0576F0D2519C276005D11CE /* CCryptoBase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0576F072519C275005D11CE /* CCryptoBase.xcframework */; };
-		D0576F0F2519C276005D11CE /* CSSKR.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0576F092519C276005D11CE /* CSSKR.xcframework */; };
-		D0576F102519C2C5005D11CE /* SSKR.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0576F062519C275005D11CE /* SSKR.xcframework */; };
-		D0576F112519C2C5005D11CE /* SSKR.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0576F062519C275005D11CE /* SSKR.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		D0576F122519C2C7005D11CE /* Shamir.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0576F082519C275005D11CE /* Shamir.xcframework */; };
-		D0576F132519C2C7005D11CE /* Shamir.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0576F082519C275005D11CE /* Shamir.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		D0576F142519C2EC005D11CE /* CryptoBase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0576F042519C274005D11CE /* CryptoBase.xcframework */; };
-		D0576F152519C2EC005D11CE /* CryptoBase.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0576F042519C274005D11CE /* CryptoBase.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		D06FD7C12505FDC700481185 /* CLibWally.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06FD7BF2505FDC600481185 /* CLibWally.xcframework */; };
 		D06FD7C72506005100481185 /* LibWally.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06FD7C52506003300481185 /* LibWally.xcframework */; };
 		D06FD7C82506005100481185 /* LibWally.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D06FD7C52506003300481185 /* LibWally.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D07399D7245E6E5600860B7E /* Broadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399D6245E6E5600860B7E /* Broadcast.swift */; };
@@ -60,6 +50,16 @@
 		D07399DD2461764700860B7E /* XpubConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DC2461764700860B7E /* XpubConverter.swift */; };
 		D07399DF2461796A00860B7E /* Base58.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DE2461796A00860B7E /* Base58.swift */; };
 		D07399E324617A1000860B7E /* base58.c in Sources */ = {isa = PBXBuildFile; fileRef = D07399E224617A1000860B7E /* base58.c */; };
+		D0828F6A251DC8FA001A11A0 /* Shamir.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0828F59251DC8D1001A11A0 /* Shamir.xcframework */; };
+		D0828F6B251DC8FA001A11A0 /* Shamir.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0828F59251DC8D1001A11A0 /* Shamir.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D0828F6C251DC8FC001A11A0 /* SSKR.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0828F5B251DC8D1001A11A0 /* SSKR.xcframework */; };
+		D0828F6D251DC8FC001A11A0 /* SSKR.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0828F5B251DC8D1001A11A0 /* SSKR.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D0828F6E251DCC5B001A11A0 /* CCryptoBase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0828F56251DC8D0001A11A0 /* CCryptoBase.xcframework */; };
+		D0828F70251DCC62001A11A0 /* CLibWally.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06FD7BF2505FDC600481185 /* CLibWally.xcframework */; };
+		D0828F72251DCC66001A11A0 /* CShamir.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0828F58251DC8D0001A11A0 /* CShamir.xcframework */; };
+		D0828F74251DCC68001A11A0 /* CSSKR.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0828F57251DC8D0001A11A0 /* CSSKR.xcframework */; };
+		D0828F76251DCCF5001A11A0 /* CryptoBase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0828F5A251DC8D1001A11A0 /* CryptoBase.xcframework */; };
+		D0828F77251DCCF5001A11A0 /* CryptoBase.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D0828F5A251DC8D1001A11A0 /* CryptoBase.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D08A3DF4246D0F6900ADDDC6 /* TextBlurbs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08A3DF3246D0F6900ADDDC6 /* TextBlurbs.swift */; };
 		D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724023F0EDBB00847DC8 /* AppDelegate.swift */; };
 		D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724223F0EDBB00847DC8 /* SceneDelegate.swift */; };
@@ -204,10 +204,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D0828F6B251DC8FA001A11A0 /* Shamir.xcframework in Embed Frameworks */,
+				D0828F77251DCCF5001A11A0 /* CryptoBase.xcframework in Embed Frameworks */,
+				D0828F6D251DC8FC001A11A0 /* SSKR.xcframework in Embed Frameworks */,
 				D06FD7C82506005100481185 /* LibWally.xcframework in Embed Frameworks */,
-				D0576F152519C2EC005D11CE /* CryptoBase.xcframework in Embed Frameworks */,
-				D0576F132519C2C7005D11CE /* Shamir.xcframework in Embed Frameworks */,
-				D0576F112519C2C5005D11CE /* SSKR.xcframework in Embed Frameworks */,
 				D03FC07925087F4E00450B45 /* Tor-3.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -253,12 +253,6 @@
 		D05650092442C58200754ACF /* WordRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordRecoveryViewController.swift; sourceTree = "<group>"; };
 		D056500B2446BF6D00754ACF /* 1024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1024.jpg; sourceTree = "<group>"; };
 		D0576F022519BECA005D11CE /* Shard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shard.swift; sourceTree = "<group>"; };
-		D0576F042519C274005D11CE /* CryptoBase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CryptoBase.xcframework; sourceTree = "<group>"; };
-		D0576F052519C275005D11CE /* CShamir.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CShamir.xcframework; sourceTree = "<group>"; };
-		D0576F062519C275005D11CE /* SSKR.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = SSKR.xcframework; sourceTree = "<group>"; };
-		D0576F072519C275005D11CE /* CCryptoBase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CCryptoBase.xcframework; sourceTree = "<group>"; };
-		D0576F082519C275005D11CE /* Shamir.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Shamir.xcframework; sourceTree = "<group>"; };
-		D0576F092519C276005D11CE /* CSSKR.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CSSKR.xcframework; sourceTree = "<group>"; };
 		D06FD7BF2505FDC600481185 /* CLibWally.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CLibWally.xcframework; sourceTree = "<group>"; };
 		D06FD7C52506003300481185 /* LibWally.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = LibWally.xcframework; sourceTree = "<group>"; };
 		D07399D6245E6E5600860B7E /* Broadcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Broadcast.swift; sourceTree = "<group>"; };
@@ -268,6 +262,12 @@
 		D07399E024617A0F00860B7E /* GordianWallet-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GordianWallet-Bridging-Header.h"; sourceTree = "<group>"; };
 		D07399E124617A1000860B7E /* base58.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base58.h; sourceTree = "<group>"; };
 		D07399E224617A1000860B7E /* base58.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = base58.c; sourceTree = "<group>"; };
+		D0828F56251DC8D0001A11A0 /* CCryptoBase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CCryptoBase.xcframework; sourceTree = "<group>"; };
+		D0828F57251DC8D0001A11A0 /* CSSKR.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CSSKR.xcframework; sourceTree = "<group>"; };
+		D0828F58251DC8D0001A11A0 /* CShamir.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CShamir.xcframework; sourceTree = "<group>"; };
+		D0828F59251DC8D1001A11A0 /* Shamir.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Shamir.xcframework; sourceTree = "<group>"; };
+		D0828F5A251DC8D1001A11A0 /* CryptoBase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CryptoBase.xcframework; sourceTree = "<group>"; };
+		D0828F5B251DC8D1001A11A0 /* SSKR.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = SSKR.xcframework; sourceTree = "<group>"; };
 		D08A3DF3246D0F6900ADDDC6 /* TextBlurbs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBlurbs.swift; sourceTree = "<group>"; };
 		D09D723D23F0EDBB00847DC8 /* Gordian Wallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Gordian Wallet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D09D724023F0EDBB00847DC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -390,16 +390,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0B7F8072514841900D81022 /* LifeHash in Frameworks */,
-				D0576F0D2519C276005D11CE /* CCryptoBase.xcframework in Frameworks */,
-				D0576F0B2519C276005D11CE /* CShamir.xcframework in Frameworks */,
-				D0576F0F2519C276005D11CE /* CSSKR.xcframework in Frameworks */,
-				D0576F122519C2C7005D11CE /* Shamir.xcframework in Frameworks */,
-				D0576F142519C2EC005D11CE /* CryptoBase.xcframework in Frameworks */,
-				D06FD7C12505FDC700481185 /* CLibWally.xcframework in Frameworks */,
+				D0828F72251DCC66001A11A0 /* CShamir.xcframework in Frameworks */,
 				D0B3649D24DE2FFB0008A22F /* URKit in Frameworks */,
+				D0828F70251DCC62001A11A0 /* CLibWally.xcframework in Frameworks */,
+				D0828F6E251DCC5B001A11A0 /* CCryptoBase.xcframework in Frameworks */,
+				D0828F76251DCCF5001A11A0 /* CryptoBase.xcframework in Frameworks */,
+				D0828F74251DCC68001A11A0 /* CSSKR.xcframework in Frameworks */,
+				D0828F6A251DC8FA001A11A0 /* Shamir.xcframework in Frameworks */,
 				D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */,
 				D06FD7C72506005100481185 /* LibWally.xcframework in Frameworks */,
-				D0576F102519C2C5005D11CE /* SSKR.xcframework in Frameworks */,
+				D0828F6C251DC8FC001A11A0 /* SSKR.xcframework in Frameworks */,
 				D03FC07825087F4E00450B45 /* Tor-3.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -424,12 +424,12 @@
 		81676B434392851969DDF649 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D0576F072519C275005D11CE /* CCryptoBase.xcframework */,
-				D0576F042519C274005D11CE /* CryptoBase.xcframework */,
-				D0576F052519C275005D11CE /* CShamir.xcframework */,
-				D0576F092519C276005D11CE /* CSSKR.xcframework */,
-				D0576F082519C275005D11CE /* Shamir.xcframework */,
-				D0576F062519C275005D11CE /* SSKR.xcframework */,
+				D0828F56251DC8D0001A11A0 /* CCryptoBase.xcframework */,
+				D0828F5A251DC8D1001A11A0 /* CryptoBase.xcframework */,
+				D0828F58251DC8D0001A11A0 /* CShamir.xcframework */,
+				D0828F57251DC8D0001A11A0 /* CSSKR.xcframework */,
+				D0828F59251DC8D1001A11A0 /* Shamir.xcframework */,
+				D0828F5B251DC8D1001A11A0 /* SSKR.xcframework */,
 				D03FC07625087F4400450B45 /* Tor-3.xcframework */,
 				D06FD7C52506003300481185 /* LibWally.xcframework */,
 				D06FD7BF2505FDC600481185 /* CLibWally.xcframework */,

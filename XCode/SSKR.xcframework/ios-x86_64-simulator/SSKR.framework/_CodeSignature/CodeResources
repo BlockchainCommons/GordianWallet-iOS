@@ -10,11 +10,19 @@
 		</data>
 		<key>Headers/SSKR.h</key>
 		<data>
-		Yf0iHyX221FqtM11Hyt6VBq5sm4=
+		IolGJyyMz/Psb3zKO/HLceJz//A=
 		</data>
 		<key>Info.plist</key>
 		<data>
 		rjGH4JZUTCok7uTxqRVokpajkMM=
+		</data>
+		<key>Modules/SSKR.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
+		<data>
+		6gt+GpswSSXNzhYqApGZu0STO4M=
+		</data>
+		<key>Modules/SSKR.swiftmodule/Project/x86_64.swiftsourceinfo</key>
+		<data>
+		6gt+GpswSSXNzhYqApGZu0STO4M=
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -22,11 +30,11 @@
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		a7DilI+9uxZC4PKXgbdoO+SJCNY=
+		NHX0jwEU20Obt3yxripE6tcH8QA=
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		Z6yyp7p+ywhDwsDOIlAiYQWg0u0=
+		gufDPz2AZkTdlWPqzD2kMk+Xo/4=
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64.swiftdoc</key>
 		<data>
@@ -34,11 +42,11 @@
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64.swiftinterface</key>
 		<data>
-		a7DilI+9uxZC4PKXgbdoO+SJCNY=
+		NHX0jwEU20Obt3yxripE6tcH8QA=
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		Z6yyp7p+ywhDwsDOIlAiYQWg0u0=
+		gufDPz2AZkTdlWPqzD2kMk+Xo/4=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -58,7 +66,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			zFgz5mIsKRc3ZvAgeYOkC//qi2fUo0vLQ9EXseXFHCg=
+			Doq3SKu6iL7raoMa21zIwuYXnLWGvc9WfgwsdLjgihU=
+			</data>
+		</dict>
+		<key>Modules/SSKR.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			btdG7MXWkcjj2Chp0BwnYc1koU95znSIEOmQTyWeeXo=
+			</data>
+		</dict>
+		<key>Modules/SSKR.swiftmodule/Project/x86_64.swiftsourceinfo</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			btdG7MXWkcjj2Chp0BwnYc1koU95znSIEOmQTyWeeXo=
 			</data>
 		</dict>
 		<key>Modules/SSKR.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
@@ -72,14 +94,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Bbg164pbEkZOubcV3QajabvABwRmQWY9sEUVA5dBh94=
+			jniqekUXddBcKUa5qikQ7nOhkSb67Py7HidfeKCpxoE=
 			</data>
 		</dict>
 		<key>Modules/SSKR.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			1Go6T3D4Kvm8PZ5JJcSWMXvkM+aOp3cWlYfc1ZwE8fM=
+			z5fj2uc4DKzYxW2mHfC6oteMXxDaZTMvlN5CY8Q/fHA=
 			</data>
 		</dict>
 		<key>Modules/SSKR.swiftmodule/x86_64.swiftdoc</key>
@@ -93,14 +115,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Bbg164pbEkZOubcV3QajabvABwRmQWY9sEUVA5dBh94=
+			jniqekUXddBcKUa5qikQ7nOhkSb67Py7HidfeKCpxoE=
 			</data>
 		</dict>
 		<key>Modules/SSKR.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			1Go6T3D4Kvm8PZ5JJcSWMXvkM+aOp3cWlYfc1ZwE8fM=
+			z5fj2uc4DKzYxW2mHfC6oteMXxDaZTMvlN5CY8Q/fHA=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

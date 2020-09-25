@@ -12,5 +12,3 @@ FOUNDATION_EXPORT double ShamirVersionNumber;
 
 //! Project version string for Shamir.
 FOUNDATION_EXPORT const unsigned char ShamirVersionString[];
-
-#include "bc-shamir/bc-shamir.h"

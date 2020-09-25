@@ -12,5 +12,3 @@ FOUNDATION_EXPORT double CryptoBaseVersionNumber;
 
 //! Project version string for CryptoBase.
 FOUNDATION_EXPORT const unsigned char CryptoBaseVersionString[];
-
-#include "bc-crypto-base/bc-crypto-base.h"
