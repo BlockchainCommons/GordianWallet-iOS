@@ -29,6 +29,9 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     let connectingView = ConnectingView()
     var rawShards = [String]()
     var shards = [Shard]()
+    
+    var groupShares = [[SSKRShare]]()
+    var shares = [SSKRShare]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,18 +57,21 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     }
     
     // Checks if we are complete or not
-    private func processShard(_ shard: Shard) -> Bool {
+    private func processShard(_ shard: Shard) -> (complete: Bool, entropy: Data?, totalSharesRemainingInGroup: Int) {
         let totalGroupsRequired = shard.groupThreshold
         let totalMembersRequired = shard.memberThreshold
         let group = shard.groupIndex
         
         var existingShardsInGroup = 0
         
+        
         for s in shards {
             if s.groupIndex == group {
                 existingShardsInGroup += 1
             }
         }
+        
+        let totalSharesRemainingInGroup = totalMembersRequired - existingShardsInGroup
         
         var groups = [Int]()
         
@@ -74,16 +80,28 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                 groups.append(s.groupIndex)
             }
         } else {
-            return false
+            return (false, nil, totalSharesRemainingInGroup)
         }
         
         let uniqueGroups = Array(Set(groups))
         
         if uniqueGroups.count == totalGroupsRequired {
             // DING DING DING DING DING DING DING DING DING DING
-            return true
+            guard let recoveredEntropy = try? SSKRCombine(shares: shares) else { return (false, nil, totalSharesRemainingInGroup) }
+            
+            return (true, recoveredEntropy, totalSharesRemainingInGroup)
         } else {
-            return false
+            
+            return (false, nil, totalSharesRemainingInGroup)
+        }
+    }
+    
+    private func deriveMnemonicFromEntropy(_ entropy: Data) {
+        guard let recoveredEntropy = BIP39Entropy(entropy.hexString) else { return }
+        guard let mnemonic = BIP39Mnemonic(recoveredEntropy) else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.textField.text = mnemonic.description
+            self?.processTextfieldInput()
         }
     }
     
@@ -92,6 +110,8 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         guard shard != "" else { return (false, false, shard) }
         guard shardAlreadyAdded(shard) == false else { return (true, true, shard) }
         rawShards.append(shard)
+        let share = SSKRShare(data: [UInt8](Data(shard)!))
+        shares.append(share)
         return (true, false, shard)
     }
     
@@ -127,14 +147,15 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
             "groupIndex": groupIndex + 1,                                           /// the group this share belongs to
             "memberThreshold": memberThresholdIndex + 1,                            /// # of shares required from this group
             "reserved": reserved,                                                   /// MUST be 0
-            "memberIndex": memberIndex + 1                                          /// the shares member # within its group
+            "memberIndex": memberIndex + 1,                                         /// the shares member # within its group
+            "raw": shard
             
         ] as [String:Any]
         
         return Shard(dictionary: dict)
     }
     
-    private func promptToScanAnotherShard() {
+    private func promptToScanAnotherShard(_ totalSharesRemainingInGroup: Int) {
         DispatchQueue.main.async { [weak self] in
             var alertStyle = UIAlertController.Style.actionSheet
             
@@ -142,7 +163,13 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
               alertStyle = UIAlertController.Style.alert
             }
             
-            let alert = UIAlertController(title: "Valid SSKR shard scanned ✓", message: "You still need X more shards to reconstruct the seed.", preferredStyle: alertStyle)
+            var message = "You still need \(totalSharesRemainingInGroup) more shards from this group."
+            
+            if totalSharesRemainingInGroup == 0 {
+                message = "You need to add more shards from another group."
+            }
+            
+            let alert = UIAlertController(title: "Valid SSKR shard scanned ✓", message: message, preferredStyle: alertStyle)
             
             alert.addAction(UIAlertAction(title: "Scan another shard", style: .default, handler: { action in
                 self?.goScan()
@@ -760,10 +787,14 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                 if isValid && !alreadyAdded {
                     if let shardStruct = self.parseShard(s) {
                         self.shards.append(shardStruct)
-                        if !self.processShard(shardStruct) {
-                            self.promptToScanAnotherShard()
+                        
+                        let (complete, entropy, totalRemaining) = self.processShard(shardStruct)
+                        if !complete {
+                            self.promptToScanAnotherShard(totalRemaining)
+                        } else if entropy != nil {
+                            self.deriveMnemonicFromEntropy(entropy!)
                         } else {
-                            showAlert(vc: self, title: "Success ✅", message: "Your seed words have been recovered with SSKR shards")
+                            showAlert(vc: self, title: "Error!", message: "There was an error converting those shards to entropy")
                         }
                     }
                 } else {
@@ -775,3 +806,5 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     
 
 }
+
+

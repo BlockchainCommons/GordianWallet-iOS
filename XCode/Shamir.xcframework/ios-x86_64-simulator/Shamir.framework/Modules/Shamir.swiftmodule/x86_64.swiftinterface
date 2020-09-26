@@ -5,10 +5,14 @@ import CShamir
 import Foundation
 @_exported import Shamir
 import Swift
+public struct ShamirError : Swift.Error {
+  public let message: Swift.String
+}
 public typealias RandomFunc = (Swift.Int) -> Foundation.Data
 public struct ShamirShare {
   public let index: Swift.Int
   public var data: [Swift.UInt8]
+  public init(index: Swift.Int, data: [Swift.UInt8])
 }
 public func splitSecret(threshold: Swift.Int, shareCount: Swift.Int, secret: Foundation.Data, randomGenerator: @escaping Shamir.RandomFunc) -> [Shamir.ShamirShare]
 public func recoverSecret(shares: [Shamir.ShamirShare]) throws -> Foundation.Data

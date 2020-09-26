@@ -5,11 +5,16 @@ import CSSKR
 import Foundation
 @_exported import SSKR
 import Swift
+public struct SSKRError : Swift.Error {
+  public let message: Swift.String
+  public init(_ message: Swift.String)
+}
 public typealias RandomFunc = (Swift.Int) -> Foundation.Data
 public typealias SSKRGroupDescriptor = CSSKR.sskr_group_descriptor_struct
 public func SSKRCountShares(groupThreshold: Swift.Int, groups: [SSKR.SSKRGroupDescriptor]) throws -> Swift.Int
 public struct SSKRShare {
   public let data: [Swift.UInt8]
+  public init(data: [Swift.UInt8])
 }
 public func SSKRGenerate(groupThreshold: Swift.Int, groups: [SSKR.SSKRGroupDescriptor], secret: Foundation.Data, randomGenerator: @escaping SSKR.RandomFunc) throws -> [[SSKR.SSKRShare]]
 public func SSKRCombine(shares: [SSKR.SSKRShare]) throws -> Foundation.Data

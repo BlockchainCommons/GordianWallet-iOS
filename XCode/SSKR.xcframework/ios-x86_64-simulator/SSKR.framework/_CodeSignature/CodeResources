@@ -18,11 +18,11 @@
 		</data>
 		<key>Modules/SSKR.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		6gt+GpswSSXNzhYqApGZu0STO4M=
+		Z+/JYSqXkp8f7ClrShtuZ0kdBjo=
 		</data>
 		<key>Modules/SSKR.swiftmodule/Project/x86_64.swiftsourceinfo</key>
 		<data>
-		6gt+GpswSSXNzhYqApGZu0STO4M=
+		Z+/JYSqXkp8f7ClrShtuZ0kdBjo=
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -30,11 +30,11 @@
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		NHX0jwEU20Obt3yxripE6tcH8QA=
+		4RMA+VMYDJtQzOm2erriVM1fJCk=
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		gufDPz2AZkTdlWPqzD2kMk+Xo/4=
+		2mpMKLaxDU9fFlBS2LQRGtrpbws=
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64.swiftdoc</key>
 		<data>
@@ -42,11 +42,11 @@
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64.swiftinterface</key>
 		<data>
-		NHX0jwEU20Obt3yxripE6tcH8QA=
+		4RMA+VMYDJtQzOm2erriVM1fJCk=
 		</data>
 		<key>Modules/SSKR.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		gufDPz2AZkTdlWPqzD2kMk+Xo/4=
+		2mpMKLaxDU9fFlBS2LQRGtrpbws=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -73,14 +73,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			btdG7MXWkcjj2Chp0BwnYc1koU95znSIEOmQTyWeeXo=
+			mszK6iNSTbNt2QA9kuog/e6hJ8A1AqdSlqHaze9v8ng=
 			</data>
 		</dict>
 		<key>Modules/SSKR.swiftmodule/Project/x86_64.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			btdG7MXWkcjj2Chp0BwnYc1koU95znSIEOmQTyWeeXo=
+			mszK6iNSTbNt2QA9kuog/e6hJ8A1AqdSlqHaze9v8ng=
 			</data>
 		</dict>
 		<key>Modules/SSKR.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
@@ -94,14 +94,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			jniqekUXddBcKUa5qikQ7nOhkSb67Py7HidfeKCpxoE=
+			Zy5VZFnrbIhhwjoKGngt5N5aDkWFC2m7hpEd3MyXNZA=
 			</data>
 		</dict>
 		<key>Modules/SSKR.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			z5fj2uc4DKzYxW2mHfC6oteMXxDaZTMvlN5CY8Q/fHA=
+			+tMfcWsqQOJa3qFWn/zjuJlbbtMUSP1rLzQ8RtlHBh4=
 			</data>
 		</dict>
 		<key>Modules/SSKR.swiftmodule/x86_64.swiftdoc</key>
@@ -115,14 +115,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			jniqekUXddBcKUa5qikQ7nOhkSb67Py7HidfeKCpxoE=
+			Zy5VZFnrbIhhwjoKGngt5N5aDkWFC2m7hpEd3MyXNZA=
 			</data>
 		</dict>
 		<key>Modules/SSKR.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			z5fj2uc4DKzYxW2mHfC6oteMXxDaZTMvlN5CY8Q/fHA=
+			+tMfcWsqQOJa3qFWn/zjuJlbbtMUSP1rLzQ8RtlHBh4=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

@@ -2113,11 +2113,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tBq-5k-T1U">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0zB-Cx-vSF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                         </subviews>
@@ -4094,63 +4094,74 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsz-u9-Mzm">
-                                <rect key="frame" x="46" y="133" width="283" height="58"/>
-                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="58" id="iQ9-HI-X4s"/>
-                                    <constraint firstAttribute="width" constant="283" id="wT5-bR-fEp"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Scan account map QR" image="qrcode.viewfinder" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="scanAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="3za-sk-NIG"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Ai-bK-EJU">
-                                <rect key="frame" x="46" y="199" width="283" height="58"/>
-                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="58" id="Wpm-ma-zrj"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title=" Enter keys manually  " image="pencil.and.ellipsis.rectangle" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="addXpubsManually:" destination="Elr-wf-cyI" eventType="touchUpInside" id="iOu-aU-iA6"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40V-y5-mzs">
-                                <rect key="frame" x="46" y="265" width="283" height="58"/>
-                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="58" id="Suh-eJ-EUf"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Enter seed words       " image="bitcoinsign.square" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="getWordsAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="2Ri-M5-M4m"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="E22-VY-MaF">
+                                <rect key="frame" x="16" y="159" width="343" height="260"/>
+                                <subviews>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsz-u9-Mzm">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
+                                        <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="yXG-qT-DWe"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="  Scan account map QR" image="qrcode.viewfinder" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="scanAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="3za-sk-NIG"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gsw-50-cRb">
+                                        <rect key="frame" x="0.0" y="70" width="343" height="50"/>
+                                        <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="UHt-OV-dEl"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="  Scan SSKR UR Shards" image="qrcode.viewfinder" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="scanSskrNow:" destination="Elr-wf-cyI" eventType="touchUpInside" id="OFv-2H-2jL"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Ai-bK-EJU">
+                                        <rect key="frame" x="0.0" y="140" width="343" height="50"/>
+                                        <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="aT6-vj-PAc"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title=" Enter keys manually  " image="pencil.and.ellipsis.rectangle" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="addXpubsManually:" destination="Elr-wf-cyI" eventType="touchUpInside" id="iOu-aU-iA6"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40V-y5-mzs">
+                                        <rect key="frame" x="0.0" y="210" width="343" height="50"/>
+                                        <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="Rcs-O0-M7h"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="  Enter seed words       " image="bitcoinsign.square" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="getWordsAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="2Ri-M5-M4m"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="0Ai-bK-EJU" firstAttribute="centerX" secondItem="JxN-8Z-mkw" secondAttribute="centerX" id="1Ri-Ac-NNS"/>
-                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="0Ai-bK-EJU" secondAttribute="trailing" constant="46" id="2lF-IX-O9F"/>
-                            <constraint firstItem="40V-y5-mzs" firstAttribute="top" secondItem="0Ai-bK-EJU" secondAttribute="bottom" constant="8" id="6LF-do-HxP"/>
-                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="7Cm-sH-wLs"/>
-                            <constraint firstItem="0Ai-bK-EJU" firstAttribute="top" secondItem="nsz-u9-Mzm" secondAttribute="bottom" constant="8" id="7m8-dl-FwM"/>
-                            <constraint firstItem="40V-y5-mzs" firstAttribute="trailing" secondItem="duj-2r-qsr" secondAttribute="trailing" constant="-46" id="KLb-DD-ZZJ"/>
-                            <constraint firstItem="0Ai-bK-EJU" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="UDh-KB-FR1"/>
-                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="nsz-u9-Mzm" secondAttribute="trailing" constant="46" id="hjb-Jw-CsU"/>
-                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="top" secondItem="duj-2r-qsr" secondAttribute="top" constant="89" id="xKT-9p-MJT"/>
-                            <constraint firstItem="40V-y5-mzs" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="zgj-Mv-4xW"/>
+                            <constraint firstItem="E22-VY-MaF" firstAttribute="top" secondItem="duj-2r-qsr" secondAttribute="top" constant="115" id="Kd7-ef-2PM"/>
+                            <constraint firstItem="E22-VY-MaF" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="vyg-Vw-jz3"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="E22-VY-MaF" secondAttribute="trailing" constant="16" id="yDa-5q-P8H"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="duj-2r-qsr"/>
                     </view>
@@ -4163,6 +4174,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <segue destination="0g2-8e-jCH" kind="show" identifier="goConfirmQr" id="mqi-NU-Y0K"/>
                         <segue destination="kR7-Mg-fhs" kind="show" identifier="getWords" id="7qw-Ys-xsH"/>
                         <segue destination="QV1-we-EJN" kind="show" identifier="segueToManualXpubRecovery" id="WN6-Y9-PN0"/>
+                        <segue destination="o69-RN-9VD" kind="show" identifier="scanSskrSegue" id="clv-6h-CIc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZKN-I6-Ccq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -6375,13 +6387,13 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="fBg-S5-BEW"/>
         <segue reference="pun-AW-DGw"/>
         <segue reference="B11-cw-c8e"/>
-        <segue reference="sfT-Xz-gNf"/>
-        <segue reference="tvy-tG-Sod"/>
+        <segue reference="7qw-Ys-xsH"/>
+        <segue reference="mqi-NU-Y0K"/>
         <segue reference="G4m-Sr-i7G"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="MTV-lr-E4R"/>
         <segue reference="cZz-Rg-m7M"/>
-        <segue reference="fae-pp-fFg"/>
+        <segue reference="clv-6h-CIc"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
