@@ -18,6 +18,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     let qrGenerator = QRGenerator()
     var recoveryQr = ""
     var recoveryImage = UIImage()
+    var lifeHashImage:UIImage!
     var seed = ""
     var itemToDisplay = ""
     var wallet:WalletStruct!
@@ -154,12 +155,18 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         switch section {
             
         case 0:
+            message = "your \"Lifehash\" was copied to your clipboard"
+            DispatchQueue.main.async { [unowned vc = self] in
+                UIPasteboard.general.image = vc.lifeHashImage
+            }
+            
+        case 1:
             message = "your \"Account Map\" was copied to your clipboard"
             DispatchQueue.main.async { [unowned vc = self] in
                 UIPasteboard.general.image = vc.recoveryImage
             }
             
-        case 1:
+        case 2:
             textToCopy = "Devices seed:" + " " + seed + "derivation: \(wallet.derivation)/0" + "blockheight: \(wallet.blockheight)"
             message = "your seed was copied to your clipboard and will be erased in one minute"
             DispatchQueue.main.async {
@@ -172,7 +179,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
             }
             
-        case 2:
+        case 3:
             textToCopy = "Account xpub's: \(xpubs)"
             message = "your xpub's were copied to your clipboard and will be erased in one minute"
             DispatchQueue.main.async {
@@ -202,14 +209,23 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         let section = sender.tag
         
         switch section {
-            
+        
         case 0:
-            shareImage()
+            shareImage(image: lifeHashImage)
+            
         case 1:
+            shareImage(image: recoveryImage)
+            
+        case 2:
             itemToDisplay = seed
             shareText()
-        case 2:
+            
+        case 3:
             itemToDisplay = xpubs
+            shareText()
+            
+        case 4:
+            itemToDisplay = xprivs
             shareText()
 
         default:
@@ -224,15 +240,15 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         switch section {
             
-        case 1:
+        case 2:
             itemToDisplay = seed
             goToQRDisplayer()
             
-        case 2:
+        case 3:
             itemToDisplay = xpubs
             goToQRDisplayer()
             
-        case 3:
+        case 4:
             itemToDisplay = xprivs
             goToQRDisplayer()
 
@@ -321,9 +337,9 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func shareImage() {
+    func shareImage(image: UIImage) {
         DispatchQueue.main.async { [unowned vc = self] in
-            let imageToShare = [vc.recoveryImage]
+            let imageToShare = [image]
             let activityViewController = UIActivityViewController(activityItems: imageToShare, applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = vc.view
             activityViewController.popoverPresentationController?.sourceRect = vc.view.bounds
@@ -418,6 +434,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         DispatchQueue.main.async { [unowned vc = self] in
             vc.accountLabel.text = vc.wallet.label
+            vc.lifeHashImage = LifeHash.image(vc.wallet.descriptor)
             vc.tableView.reloadData()
             
             UIView.animate(withDuration: 0.2) {
@@ -434,6 +451,8 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         switch indexPath.section {
         case 0:
+            return 126
+        case 1:
             return 345
         default:
             tableView.estimatedRowHeight = 55
@@ -450,22 +469,30 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func numberOfSections(in tableView: UITableView) -> Int {
                 
-        return 4
+        return 5
         
+    }
+    
+    private func lifehashCell(_ indexPath: IndexPath) -> UITableViewCell {
+        let lifehashCell = tableView.dequeueReusableCell(withIdentifier: "lifehashCell", for: indexPath)
+        lifehashCell.selectionStyle = .none
+        let imageview = lifehashCell.viewWithTag(1) as! UIImageView
+        imageview.clipsToBounds = true
+        imageview.layer.magnificationFilter = .nearest
+        imageview.layer.cornerRadius = 5
+        imageview.image = self.lifeHashImage
+        return lifehashCell
     }
         
     private func recoveryCell(_ indexPath: IndexPath) -> UITableViewCell {
-        
         let recoveryCell = tableView.dequeueReusableCell(withIdentifier: "recoveryCell", for: indexPath)
         recoveryCell.selectionStyle = .none
         let imageview = recoveryCell.viewWithTag(1) as! UIImageView
         imageview.image = self.recoveryImage
         return recoveryCell
-        
     }
     
     private func seedCell(_ indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = UITableViewCell()
         cell.backgroundColor = #colorLiteral(red: 0.0507061556, green: 0.05862525851, blue: 0.0711022839, alpha: 1)
         cell.selectionStyle = .none
@@ -480,7 +507,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         return cell
-        
     }
     
     private func xpubsCell(_ indexPath: IndexPath) -> UITableViewCell {
@@ -562,35 +588,24 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = UITableViewCell()
-        cell.backgroundColor = #colorLiteral(red: 0.0507061556, green: 0.05862525851, blue: 0.0711022839, alpha: 1)
-        cell.selectionStyle = .none
-        cell.textLabel?.numberOfLines = 0
-        cell.textLabel?.textColor = .lightGray
-        cell.textLabel?.font = .systemFont(ofSize: 15, weight: .regular)
-        
         switch indexPath.section {
-            
         case 0:
-            
-            return recoveryCell(indexPath)
+            return lifehashCell(indexPath)
             
         case 1:
+            return recoveryCell(indexPath)
             
+        case 2:
             return seedCell(indexPath)
                         
-        case 2:
-            
+        case 3:
             return xpubsCell(indexPath)
             
-        case 3:
-            
+        case 4:
             return xprvsCell(indexPath)
             
         default:
-            
             return UITableViewCell()
-            
         }
         
     }
@@ -649,7 +664,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         switch section {
             
         case 0:
-            textLabel.text = "Account Map (public keys)"
+            textLabel.text = "Lifehash"
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(copyButton)
@@ -657,6 +672,14 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             copyButton.center.y = shareButton.center.y
             
         case 1:
+            textLabel.text = "Account Map (public keys)"
+            header.addSubview(textLabel)
+            header.addSubview(shareButton)
+            header.addSubview(copyButton)
+            copyButton.frame = CGRect(x: shareButton.frame.minX - 30, y: 0, width: 20, height: 20)
+            copyButton.center.y = shareButton.center.y
+            
+        case 2:
             textLabel.text = "Seed Words"
             header.addSubview(textLabel)
             header.addSubview(shareButton)
@@ -665,14 +688,14 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             deleteButton.addTarget(self, action: #selector(deleteSeed), for: .touchUpInside)
             header.addSubview(deleteButton)
             
-        case 2:
+        case 3:
             textLabel.text = "Account xpubs"
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(qrButton)
             header.addSubview(copyButton)
             
-        case 3:
+        case 4:
             textLabel.text = "Account xprvs"
             header.addSubview(textLabel)
             header.addSubview(shareButton)
@@ -699,13 +722,15 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 switch section {
                 
-                case 0: return 50
+                case 0: return 130
+                
+                case 1: return 50
                     
-                case 1: return 130
+                case 2: return 130
                     
-                case 2: return 80
+                case 3: return 80
                     
-                case 3: return 150
+                case 4: return 150
                                         
                 default:
                     
@@ -715,7 +740,17 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
             } else if wallet.type == "DEFAULT"  {
                 
-                return 80
+                switch section {
+                
+                case 0: return 130
+                
+                case 1: return 50
+                    
+                default:
+                    
+                    return 80
+                    
+                }
                 
             } else {
                 
@@ -750,24 +785,30 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 switch section {
                     
                 case 0:
+                
+                    label.text = "Your Account's \"Lifehash\", this image can be used as a unique visualization of your Account. It is always generated on the fly, if you ever notice a change in it then something is wrong! If it changes you should proceed with caution and ensure you are using the intended Account. You will see this Lifehash displayed to you throughout the app to remind you which Account your are using."
+                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 130)
+                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 130)
+                    
+                case 1:
                     
                     label.text = "This \"Account Map\" QR can be used with FullyNoded 2 to recreate this wallet as watch-only. ENSURE you back it up safely, it is required to recover multi-sig wallets."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 50)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 50)
                     
-                case 1:
+                case 2:
                     
                     label.text = "These BIP39 mnemonics represent the seeds associated with your account. These seed words are only stored for the explicit purpose of allowing you to back them up, once you have backed them up please delete them here. The seed words are not used for any other purpose. No passphrase is used. Seed words are always encrypted and never backed up to the iCloud."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 130)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 130)
                     
-                case 2:
+                case 3:
                     
                     label.text = "The account xpubs along with their fingerprint's and paths. Your Account Map already holds all the xpubs but we export them here so you may use them in other wallets."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
                     
-                case 3:
+                case 4:
                 
                     label.text = "The account xprvs along with their master key fingerprint's and paths. These xprvs are encrypted and stored on your device. We use them to sign your psbts. They will get backed up to the iCoud if you have iCloud enabled. If you want to make the device cold (not spendable) you can delete them here."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
@@ -784,21 +825,27 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 switch section {
                     
                 case 0:
+                
+                    label.text = "Your Account's \"Lifehash\", this image can be used as a unique visualization of your Account. It is always generated on the fly, if you ever notice a change in it then something is wrong! If it changes you should proceed with caution and ensure you are using the intended Account. You will see this Lifehash displayed to you throughout the app to remind you which Account your are using."
+                    footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 130)
+                    label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 130)
+                    
+                case 1:
                     label.text = "This \"Wallet Import QR\" can be used with either FullyNoded 2 or StandUp.app to recreate this wallet as watch-only. ENSURE you back it up safely."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 50)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 50)
                     
-                case 1:
+                case 2:
                     label.text = "These BIP39 mnemonics represent the seeds associated with your account. These seed words are only stored for the explicit purpose of allowing you to back them up, once you have backed them up please delete them here. The seed words are not used for any other purpose. No passphrase is used. Seed words are always encrypted and never backed up to the iCloud."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
                     
-                case 2:
+                case 3:
                     label.text = "The account xpubs along with their fingerprint's and paths. Your Account Map already holds all the xpubs but if you want we export them here so you may use them in other wallets."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)
                     
-                case 3:
+                case 4:
                     label.text = "The account xprvs along with their master key fingerprints and paths. These xprvs are encrypted and stored on your device. We use them to sign your psbts. They will get backed up to the iCoud if you have iCloud enabled. If you want to make the device cold (not spendable) you can delete them here."
                     footerView.frame = CGRect(x: 0, y: 10, width: tableView.frame.size.width - 50, height: 80)
                     label.frame = CGRect(x: 10, y: 0, width: tableView.frame.size.width - 50, height: 80)

@@ -13,6 +13,7 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
     @IBOutlet var textView: UITextView!
     @IBOutlet var textField: UITextField!
     @IBOutlet var nextOutlet: UIButton!
+    @IBOutlet weak var imageView: UIImageView!
     
     let tap = UITapGestureRecognizer()
     var wallet = [String:Any]()
@@ -36,6 +37,9 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
         nextOutlet.layer.cornerRadius = 8
         tap.addTarget(self, action: #selector(handleTap))
         view.addGestureRecognizer(tap)
+        imageView.layer.magnificationFilter = .nearest
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 5
         
         w = WalletStruct(dictionary: wallet)
         
@@ -62,6 +66,10 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
             nextOutlet.setTitle("Done", for: .normal)
         }
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        imageView.image = LifeHash.image(w.descriptor)
     }
     
     private func deactivateAllAccountsAndActivateNewAccount() {

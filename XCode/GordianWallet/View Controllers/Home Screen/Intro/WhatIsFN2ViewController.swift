@@ -14,7 +14,7 @@ class WhatIsFN2ViewController: UIViewController, UITextViewDelegate, UINavigatio
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var textView: UITextView!
     
-    let recoveryUrl = "https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Recovery.md"
+    let recoveryUrl = "https://github.com/BlockchainCommons/GordianWallet-iOS/blob/master/Recovery.md"
     let libwallyLink = "https://github.com/blockchain/libwally-swift/blob/master/README.md"
     let fullynoded1Link = "https://apps.apple.com/us/app/fully-noded/id1436425586"
     

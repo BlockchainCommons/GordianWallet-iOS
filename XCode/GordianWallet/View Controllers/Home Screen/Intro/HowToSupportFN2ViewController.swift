@@ -16,7 +16,7 @@ class HowToSupportFN2ViewController: UIViewController, UITextViewDelegate, UINav
     
     let donationLinkUrl = "https://btcpay.blockchaincommons.com"
     let homePageUrl = "www.blockchaincommons.com"
-    let repoLink = "https://github.com/BlockchainCommons/FullyNoded-2"
+    let repoLink = "https://github.com/BlockchainCommons/GordianWallet-iOS"
     let sponsorLink = "https://github.com/sponsors/BlockchainCommons"
 
     override func viewDidLoad() {
