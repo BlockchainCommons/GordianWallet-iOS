@@ -46,6 +46,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     var nodes = [[String:Any]]()
     var transactionArray = [[String:Any]]()
     var coldcard = [String:Any]()
+    let localeConfig = LocaleConfig()
+    let priceServer = PriceServer()
     var deviceWords = ""
     var offlineWords = ""
     var tx = ""
@@ -95,6 +97,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         }
+        
+        localeConfig.onStartup()
+        priceServer.onStartup()
+        print(priceServer.createSpotBitURL())
         
         bootStrapping = true
         addStatusLabel(description: "     Bootstrapping Tor...")

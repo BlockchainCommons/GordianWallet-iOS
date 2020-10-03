@@ -11,6 +11,7 @@ import Foundation
 class NodeLogic {
     
     static let sharedInstance = NodeLogic()
+    let localeConfig = LocaleConfig()
     private init() {}
     
     func loadTorData(completion: @escaping ((success: Bool, dict: [String:Any]?, errorDescription: String?)) -> Void) {
@@ -369,9 +370,12 @@ class NodeLogic {
                         let fx = FiatConverter.sharedInstance
                         fx.getFxRate() { (fxRate) in
                             if fxRate != nil {
-                                dictToReturn["fiatBalance"] = "$\(Int(amount * fxRate!).withCommas())"
-                                dictToReturn["fxRate"] = "1 btc / $\(fxRate!)"
+                                dictToReturn["fiatBalance"] = self.localeConfig.currencySymbol() + "\(Int(amount * fxRate!).withCommas())"
+                                dictToReturn["fxRate"] = "1 btc / " + self.localeConfig.currencySymbol() + String(format: "%.2f", fxRate!)
                                 dictToReturn["actualFxRate"] = fxRate!
+                            } else {
+                                dictToReturn["fiatBalance"] = "No price"
+                                dictToReturn["fxRate"] = ""
                             }
                             complete()
                         }

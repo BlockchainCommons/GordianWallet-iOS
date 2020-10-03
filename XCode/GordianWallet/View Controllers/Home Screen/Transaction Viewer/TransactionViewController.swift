@@ -26,6 +26,7 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
     var outputs = [String]()
     var txid = ""
     let creatingView = ConnectingView()
+    let localeConfig = LocaleConfig()
     @IBOutlet weak var transactionTable: UITableView!
     
     override func viewDidLoad() {
@@ -206,17 +207,22 @@ class TransactionViewController: UIViewController, UITableViewDelegate, UITableV
                     let miningFeePresent = vc.roundedToTwo(number: vc.fee * currentFxRate!)
                     if let fxRateAtTheTime = vc.txStruct?.fxRate {
                         let usdValueAtTheTime = vc.roundedToTwo(number: btcAmount * fxRateAtTheTime)
-                        vc.amountText = "\(btcAmount) btc - $\(usdCurrentValue.withCommas()) current - $\(usdValueAtTheTime.withCommas()) at creation"
+                        vc.amountText = "\(btcAmount) btc - " + self.localeConfig.currencySymbol() + "\(usdCurrentValue.withCommas()) current - " + self.localeConfig.currencySymbol() + "\(usdValueAtTheTime.withCommas()) at creation"
                         let miningFeePast = vc.roundedToTwo(number: vc.fee * fxRateAtTheTime)
-                        vc.miningFeeText = "\(vc.fee.avoidNotation) btc - $\(miningFeePresent) current - $\(miningFeePast) at creation"
+                        vc.miningFeeText = "\(vc.fee.avoidNotation) btc - " + self.localeConfig.currencySymbol() + "\(miningFeePresent) current - " + self.localeConfig.currencySymbol() + "\(miningFeePast) at creation"
                         vc.reloadTable()
                         vc.creatingView.removeConnectingView()
                     } else {
-                        vc.amountText = "\(btcAmount) btc - $\(usdCurrentValue.withCommas()) current"
-                        vc.miningFeeText = "\(vc.fee.avoidNotation) btc - $\(miningFeePresent) current"
+                        vc.amountText = "\(btcAmount) btc - " + self.localeConfig.currencySymbol() + "\(usdCurrentValue.withCommas()) current"
+                        vc.miningFeeText = "\(vc.fee.avoidNotation) btc - " + self.localeConfig.currencySymbol() + "\(miningFeePresent) current"
                         vc.reloadTable()
                         vc.creatingView.removeConnectingView()
                     }
+                } else {
+                    vc.amountText = "\(btcAmount) btc - error fetching fx rate"
+                    vc.miningFeeText = "\(vc.fee.avoidNotation) btc - error fetching fx rate"
+                    vc.reloadTable()
+                    vc.creatingView.removeConnectingView()
                 }
             }
         }

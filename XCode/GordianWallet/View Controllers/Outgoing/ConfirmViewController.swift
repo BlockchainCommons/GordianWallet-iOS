@@ -33,6 +33,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     var addressToVerify = ""
     var sweeping = Bool()
     var alertStyle = UIAlertController.Style.actionSheet
+    let localeConfig = LocaleConfig()
     @IBOutlet var confirmTable: UITableView!
     @IBOutlet var broadcastButton: UIButton!
     @IBOutlet weak var exportTx: UIButton!
@@ -522,7 +523,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     vc.fxRate = exchangeRate!
                     let fiatFee = exchangeRate! * vc.txFee
                     let roundedFiatFee = Double(round(100*fiatFee)/100)
-                    vc.miningFee = "\(txfeeString) btc / $\(roundedFiatFee)"
+                    vc.miningFee = "\(txfeeString) btc / " + self.localeConfig.currencySymbol() + "\(roundedFiatFee)"
                     vc.loadTableData()
                     
                 } else {
