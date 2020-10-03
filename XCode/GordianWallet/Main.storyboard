@@ -3956,11 +3956,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
             </objects>
             <point key="canvasLocation" x="-8922" y="1235"/>
         </scene>
-<<<<<<< HEAD
-=======
->>>>>>> 65a9c8e... feat: mac Catalyst version of Gordian Wallet 🤩
-=======
->>>>>>> 485f075... mergefixes
         <!--Node Manager-->
         <scene sceneID="xYz-bt-Lyj">
             <objects>
@@ -6299,10 +6294,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="uaX-te-aDX"/>
         <segue reference="dWo-28-ynr"/>
         <segue reference="prj-l9-xjw"/>
-<<<<<<< HEAD
->>>>>>> 65a9c8e... feat: mac Catalyst version of Gordian Wallet 🤩
-=======
->>>>>>> 485f075... mergefixes
         <segue reference="sfT-Xz-gNf"/>
         <segue reference="igz-Ga-xca"/>
         <segue reference="G4m-Sr-i7G"/>

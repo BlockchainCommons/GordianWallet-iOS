@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C608C88C24E3D95300721CCB /* LocaleConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608C88B24E3D95300721CCB /* LocaleConfig.swift */; };
-		C608C88E24E4023700721CCB /* PriceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C608C88D24E4023700721CCB /* PriceViewController.swift */; };
-		C6E8C9EB24E75BDB00C0AEF8 /* PriceServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E8C9EA24E75BDB00C0AEF8 /* PriceServer.swift */; };
+		C65439562528024A00566C16 /* LocaleConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C65439552528024900566C16 /* LocaleConfig.swift */; };
+		C65439582528025400566C16 /* PriceServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C65439572528025300566C16 /* PriceServer.swift */; };
+		C654395A252802B700566C16 /* PriceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6543959252802B700566C16 /* PriceViewController.swift */; };
 		D00016B3245ABFFA0091F7CF /* Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B2245ABFFA0091F7CF /* Import.swift */; };
 		D00016B5245BBB5C0091F7CF /* SeedStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B4245BBB5C0091F7CF /* SeedStruct.swift */; };
 		D00016B9245BD89C0091F7CF /* SeedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00016B8245BD89C0091F7CF /* SeedParser.swift */; };
@@ -201,9 +201,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		C608C88B24E3D95300721CCB /* LocaleConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaleConfig.swift; sourceTree = "<group>"; };
-		C608C88D24E4023700721CCB /* PriceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceViewController.swift; sourceTree = "<group>"; };
-		C6E8C9EA24E75BDB00C0AEF8 /* PriceServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceServer.swift; sourceTree = "<group>"; };
+		C65439552528024900566C16 /* LocaleConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocaleConfig.swift; sourceTree = "<group>"; };
+		C65439572528025300566C16 /* PriceServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriceServer.swift; sourceTree = "<group>"; };
+		C6543959252802B700566C16 /* PriceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriceViewController.swift; sourceTree = "<group>"; };
 		D00016B2245ABFFA0091F7CF /* Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Import.swift; sourceTree = "<group>"; };
 		D00016B4245BBB5C0091F7CF /* SeedStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedStruct.swift; sourceTree = "<group>"; };
 		D00016B8245BD89C0091F7CF /* SeedParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedParser.swift; sourceTree = "<group>"; };
@@ -562,8 +562,8 @@
 		D09D728C23F0F3BF00847DC8 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				C6543959252802B700566C16 /* PriceViewController.swift */,
 				D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */,
-				C608C88D24E4023700721CCB /* PriceViewController.swift */,
 				D09D72A123F0F3BF00847DC8 /* SettingsViewController.swift */,
 			);
 			path = Settings;
@@ -697,14 +697,14 @@
 		D09D72C523F0F3C000847DC8 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				C65439572528025300566C16 /* PriceServer.swift */,
+				C65439552528024900566C16 /* LocaleConfig.swift */,
 				D09D72C623F0F3C000847DC8 /* Entities.swift */,
 				D09D72C723F0F3C000847DC8 /* Reducer.swift */,
 				D09D72C823F0F3C000847DC8 /* CoreDataService.swift */,
 				D09D72C923F0F3C000847DC8 /* FirstTime.swift */,
 				D09D72CA23F0F3C000847DC8 /* MnemonicCreator.swift */,
 				D09D72CB23F0F3C000847DC8 /* KeyFetcher.swift */,
-				C608C88B24E3D95300721CCB /* LocaleConfig.swift */,
-				C6E8C9EA24E75BDB00C0AEF8 /* PriceServer.swift */,
 				D09D72CC23F0F3C000847DC8 /* Commands.swift */,
 				D09D72CD23F0F3C000847DC8 /* KeychainCreator.swift */,
 				D09D72CE23F0F3C000847DC8 /* QuickConnect.swift */,
@@ -1170,6 +1170,7 @@
 				D09D734123F0F3C000847DC8 /* KeychainCreator.swift in Sources */,
 				D00016B9245BD89C0091F7CF /* SeedParser.swift in Sources */,
 				D09D734323F0F3C000847DC8 /* MakeRPCCall.swift in Sources */,
+				C65439582528025400566C16 /* PriceServer.swift in Sources */,
 				D0BFDF572490B6A600EB7846 /* LockedUtxoStruct.swift in Sources */,
 				D09D724B23F0EDBB00847DC8 /* GordianWallet.xcdatamodeld in Sources */,
 				D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */,
@@ -1216,7 +1217,6 @@
 				D09D731823F0F3C000847DC8 /* NodeManagerViewController.swift in Sources */,
 				D09D733E23F0F3C000847DC8 /* MnemonicCreator.swift in Sources */,
 				D09D734223F0F3C000847DC8 /* QuickConnect.swift in Sources */,
-				C6E8C9EB24E75BDB00C0AEF8 /* PriceServer.swift in Sources */,
 				D0B3649F24DF805A0008A22F /* UniformResource.swift in Sources */,
 				D0D5E63D24A07E4600F3783C /* WalletStatus.swift in Sources */,
 				D09D735D23F0F3C000847DC8 /* CustomButton.swift in Sources */,
@@ -1242,7 +1242,7 @@
 				D09D736823F0F3C000847DC8 /* MultiSigTxBuilder.swift in Sources */,
 				D006E34B243ED2FE007B1A5B /* Keychain.swift in Sources */,
 				D09D732623F0F3C000847DC8 /* UTXOViewController.swift in Sources */,
-				C608C88C24E3D95300721CCB /* LocaleConfig.swift in Sources */,
+				C65439562528024A00566C16 /* LocaleConfig.swift in Sources */,
 				D09D733C23F0F3C000847DC8 /* CoreDataService.swift in Sources */,
 				D07399DD2461764700860B7E /* XpubConverter.swift in Sources */,
 				D09D736423F0F3C000847DC8 /* RawDisplayer.swift in Sources */,
@@ -1251,7 +1251,6 @@
 				D047DDF9242B2F3F004BC26D /* IntroductionViewController.swift in Sources */,
 				D047DDFD242B32C3004BC26D /* HowToSupportFN2ViewController.swift in Sources */,
 				D09D733B23F0F3C000847DC8 /* Reducer.swift in Sources */,
-				C608C88E24E4023700721CCB /* PriceViewController.swift in Sources */,
 				D047DE01242B3390004BC26D /* IsFN2SecureViewController.swift in Sources */,
 				D0D5E63924A05D1100F3783C /* NotificationCenterViewController.swift in Sources */,
 				D09D736323F0F3C000847DC8 /* ErrorView.swift in Sources */,
@@ -1273,6 +1272,7 @@
 				D0A1C9A024CFA7240052FFE7 /* CheckSubAccounts.swift in Sources */,
 				D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */,
 				D0D561FD24306B060085E3CC /* RefillMultiSig.swift in Sources */,
+				C654395A252802B700566C16 /* PriceViewController.swift in Sources */,
 				D09D735E23F0F3C000847DC8 /* QRGenerator.swift in Sources */,
 				D09D732E23F0F3C000847DC8 /* MainMenuViewController.swift in Sources */,
 				D07399DB245F9F9A00860B7E /* ChooseNumberOfSignersViewController.swift in Sources */,
@@ -1440,21 +1440,11 @@
 				DEPLOYMENT_POSTPROCESSING = NO;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-					"$(PROJECT_DIR)",
-				);
 				INFOPLIST_FILE = "$(SRCROOT)/GordianWallet/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Pods/LibWally/CLibWally/libwally-core/src/.libs",
 				);
 				MARKETING_VERSION = 0.1.82;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
@@ -1478,21 +1468,11 @@
 				DEPLOYMENT_POSTPROCESSING = NO;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-					"$(PROJECT_DIR)",
-				);
 				INFOPLIST_FILE = "$(SRCROOT)/GordianWallet/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Pods/LibWally/CLibWally/libwally-core/src/.libs",
 				);
 				MARKETING_VERSION = 0.1.82;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
