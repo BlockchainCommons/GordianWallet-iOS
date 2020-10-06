@@ -34,10 +34,38 @@ class WalletToolsViewController: UIViewController {
         backupInfoOutlet.layer.cornerRadius = 8
         utxosOutlet.layer.cornerRadius = 8
         exportKeyOutlet.layer.cornerRadius = 8
-        if wallet.type == "DEFAULT" && wallet.xprvs != nil {
-            addSignerOutlet.alpha = 0
-            addSignerInfoOutlet.alpha = 0
+        
+        if wallet.xprvs != nil {
+            
+            if wallet.xprvs!.count == 0 && wallet.type == "DEFAULT" {
+                addSignerOutlet.alpha = 1
+                addSignerInfoOutlet.alpha = 1
+                
+            } else if wallet.xprvs!.count > 0 && wallet.type == "DEFAULT" {
+                addSignerOutlet.alpha = 0
+                addSignerInfoOutlet.alpha = 0
+                
+            } else if wallet.type != "DEFAULT" {
+                let parser = DescriptorParser()
+                let str = parser.descriptor(wallet.descriptor)
+                
+                if wallet.xprvs!.count < str.sigsRequired {
+                    addSignerOutlet.alpha = 1
+                    addSignerInfoOutlet.alpha = 1
+                    
+                } else {
+                    addSignerOutlet.alpha = 0
+                    addSignerInfoOutlet.alpha = 0
+                    
+                }
+            }
+            
+        } else {
+            addSignerOutlet.alpha = 1
+            addSignerInfoOutlet.alpha = 1
+            
         }
+    
     }
     
     private func refillMultisig() {

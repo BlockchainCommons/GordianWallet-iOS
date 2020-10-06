@@ -11,15 +11,12 @@ import Foundation
 class FiatConverter {
     
     static let sharedInstance = FiatConverter()
+    let priceServer = PriceServer()
     private init() {}
     
     func getFxRate(completion: @escaping ((Double?)) -> Void) {
         
-        UserDefaults.standard.set("http://km3danfmt7aiqylbq5lhyn53zhv2hhbmkr6q5pjc64juiyuxuhcsjwyd.onion/now/", forKey: "spotbitURL")
-        UserDefaults.standard.set("AUD", forKey: "currentCurrency")
-        UserDefaults.standard.set("binance", forKey: "currentExchange")
-        
-        let spotbitURL = UserDefaults.standard.string(forKey: "spotbitURL")! + UserDefaults.standard.string(forKey: "currentCurrency")! + "/" + UserDefaults.standard.string(forKey: "currentExchange")!
+        let spotbitURL = priceServer.createSpotBitURL()
         
         let torClient = TorClient.sharedInstance
         let url = NSURL(string: spotbitURL)
@@ -48,6 +45,8 @@ class FiatConverter {
                                     
                                             completion(data)
                                     
+                                } else {
+                                    completion(nil)
                                 }
                                 
                             }

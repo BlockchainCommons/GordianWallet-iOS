@@ -11,7 +11,7 @@ import UIKit
 
 class LocaleConfig {
     
-    let localeToCurrency = [
+    let localeToCurrency: [String: String] = [
         "US": "USD",
         "AU": "AUD",
         "CA": "CAD",
@@ -42,27 +42,57 @@ class LocaleConfig {
         "IN": "INR",
         "CN": "CNY",
         "KR": "KRW",
-        "JP": "JPY"
+        "JP": "JPY",
+        "ID": "IDR"
     ]
-    let currencyList = ["USD", "USDT", "CAD", "BRL", "ARS", "GBP", "EUR", "TRY", "ZAR", "INR", "CNY", "KRW", "JPY", "AUD"]
-    
-    func getNewLocale() -> String {
-        let locale = localeToCurrency[Locale.current.regionCode ?? "US"] ?? "USD"
-        if UserDefaults.standard.string(forKey: "currentLocale") == nil {
-            UserDefaults.standard.set(locale, forKey: "currentLocale")
-        }
-        return locale
-    }
+    let currencyList: [String] = ["USD","GBP","JPY","AUD","USDT","BRL","EUR","KRW","ZAR","TRY","USDC","INR","CAD","IDR"]
+    let currencySymbolDict: [String: String] = [
+        "USD": "$",
+        "CAD": "C$",
+        "BRL": "R$",
+        "ARS": "$",
+        "GBP": "£",
+        "EUR": "€",
+        "TRY": "₺",
+        "ZAR": "R",
+        "INR": "₹",
+        "CNY": "¥",
+        "KRW": "₩",
+        "JPY": "¥",
+        "AUD": "A$",
+        "IDR": "Rp"
+    ]
+    let defaultLocale: String = "US"
+    let defaultCurrency: String = "USD"
     
     func getSavedLocale() -> String {
-        let locale = localeToCurrency[Locale.current.regionCode ?? "US"] ?? "USD"
+        return UserDefaults.standard.string(forKey: "currentLocale") ?? defaultCurrency
+    }
+    
+    func onStartup() -> Void {
+        let locale = localeToCurrency[Locale.current.regionCode ?? defaultLocale] ?? defaultCurrency
         if UserDefaults.standard.string(forKey: "currentLocale") == nil {
             UserDefaults.standard.set(locale, forKey: "currentLocale")
         }
-        return UserDefaults.standard.string(forKey: "currentLocale") ?? "USD"
     }
     
     func changeLocale(newLocale: String) -> Void {
         UserDefaults.standard.set(newLocale, forKey: "currentLocale")
+    }
+    
+    func getCurrencyList() -> [String] {
+        return currencyList
+    }
+    
+    func convertLocaleToCurrency(locale: String) -> String {
+        return localeToCurrency[locale] ?? defaultCurrency
+    }
+    
+    func currencySymbol() -> String {
+        return currencySymbolDict[self.getSavedLocale()] ?? "$"
+    }
+    
+    func getSavedIndex() -> Int {
+        return currencyList.firstIndex(of: self.getSavedLocale()) ?? 0
     }
 }

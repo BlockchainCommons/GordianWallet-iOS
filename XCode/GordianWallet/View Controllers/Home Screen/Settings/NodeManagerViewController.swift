@@ -372,7 +372,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                         }
                         if i + 1 == nodes!.count {
                             vc.load()
-                            vc.deactiveateWallets(nodeToActivateId: nodeToActivate)
+                            vc.deactiveateWallets()
                         }
                     }
                 }
@@ -380,7 +380,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
-    private func deactiveateWallets(nodeToActivateId: UUID) {
+    private func deactiveateWallets() {
         
         CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
             
@@ -391,7 +391,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                     if wallet["id"] != nil && wallet["isArchived"] != nil && wallet["nodeId"] != nil {
                         let w = WalletStruct(dictionary: wallet)
                         
-                        if !w.isArchived && w.isActive && w.nodeId! != nodeToActivateId {
+                        if !w.isArchived && w.isActive {
                             
                             CoreDataService.updateEntity(id: w.id!, keyToUpdate: "isActive", newValue: false, entityName: .wallets) { (success, errorDescription) in
                                 
@@ -424,6 +424,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         }
         
     }
+
     
     // MARK: - Navigation
 
@@ -454,9 +455,8 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
                 
                 vc.scanningNode = true
                 vc.onDoneBlock = { [unowned thisVc = self] result in
-                    
+                    thisVc.deactiveateWallets()
                     thisVc.load()
-                    
                 }
                 
             }

@@ -347,7 +347,7 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
             addToKeypool = true
             addToInternal = true
         }
-        let primaryDescParams = "[{ \"desc\": \"\(wallet.descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Godion\", \"keypool\": \(addToKeypool), \"internal\": false }]"
+        let primaryDescParams = "[{ \"desc\": \"\(wallet.descriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"label\": \"Gordian\", \"keypool\": \(addToKeypool), \"internal\": false }]"
         let changeDescParams = "[{ \"desc\": \"\(wallet.changeDescriptor)\", \"timestamp\": \"now\", \"range\": [0,2500], \"watchonly\": true, \"keypool\": \(addToKeypool), \"internal\": \(addToInternal) }]"
         
         func filter() {

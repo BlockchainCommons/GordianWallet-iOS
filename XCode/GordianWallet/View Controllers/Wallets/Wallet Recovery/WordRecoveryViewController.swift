@@ -65,6 +65,14 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         
         if urToRecover != "" {
             parse(text: urToRecover)
+            
+        } else if words != "" {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.textField.text = self.words
+                self.processTextfieldInput()
+            }
+            
         }
     }
     
@@ -743,7 +751,10 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 }
             }
             
-            if !recoveringMultiSigWithWordsOnly {
+            if words != "" {
+                chooseDerivation()
+            
+            } else if !recoveringMultiSigWithWordsOnly {
                 DispatchQueue.main.async { [unowned vc = self] in
                     var alertStyle = UIAlertController.Style.actionSheet
                     if (UIDevice.current.userInterfaceIdiom == .pad) {

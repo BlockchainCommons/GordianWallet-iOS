@@ -114,11 +114,9 @@ class WalletCreatedQRViewController: UIViewController, UINavigationControllerDel
             }
             
             let objectsToShare = [vc.qrView.image!]
-            
-            let activityController = UIActivityViewController(activityItems: objectsToShare,
-                                                              applicationActivities: nil)
-            
+            let activityController = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
             activityController.popoverPresentationController?.sourceView = vc.view
+            activityController.popoverPresentationController?.sourceRect = vc.view.bounds
             vc.present(activityController, animated: true) {}
             
         }

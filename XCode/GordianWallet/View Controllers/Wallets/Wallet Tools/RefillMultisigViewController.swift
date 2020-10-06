@@ -8,6 +8,7 @@
 
 import LibWally
 import UIKit
+import SSKR
 
 class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     
@@ -26,11 +27,14 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     var bip39Words = [String]()
     var wallet:WalletStruct!
     let connectingView = ConnectingView()
+    var rawShards = [String]()
+    var shards = [Shard]()
+    
+    var groupShares = [[SSKRShare]]()
+    var shares = [SSKRShare]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         textField.delegate = self
         descriptionLabel.adjustsFontSizeToFitWidth = true
         wordsView.layer.cornerRadius = 8
@@ -41,28 +45,162 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         
         if addSeed {
             navigationItem.title = "Add Signer"
-            descriptionLabel.text = "You can add a 12 or 24 word BIP39 seed phrase which can sign for this account."
+            descriptionLabel.text = "You can add a 12 or 24 word BIP39 seed phrase which can sign for this account, or you can scan SSKR UR shards by tapping the QR scanner."
             lostWordsOutlet.alpha = 0
             
         }
         
     }
     
+    @IBAction func scanShardsAction(_ sender: Any) {
+        goScan()
+    }
+    
+    // Checks if we are complete or not
+    private func processShard(_ shard: Shard) -> (complete: Bool, entropy: Data?, totalSharesRemainingInGroup: Int) {
+        let totalGroupsRequired = shard.groupThreshold
+        let totalMembersRequired = shard.memberThreshold
+        let group = shard.groupIndex
+        
+        var existingShardsInGroup = 0
+        
+        
+        for s in shards {
+            if s.groupIndex == group {
+                existingShardsInGroup += 1
+            }
+        }
+        
+        let totalSharesRemainingInGroup = totalMembersRequired - existingShardsInGroup
+        
+        var groups = [Int]()
+        
+        if existingShardsInGroup == totalMembersRequired {
+            for s in shards {
+                groups.append(s.groupIndex)
+            }
+        } else {
+            return (false, nil, totalSharesRemainingInGroup)
+        }
+        
+        let uniqueGroups = Array(Set(groups))
+        
+        if uniqueGroups.count == totalGroupsRequired {
+            // DING DING DING DING DING DING DING DING DING DING
+            guard let recoveredEntropy = try? SSKRCombine(shares: shares) else { return (false, nil, totalSharesRemainingInGroup) }
+            
+            return (true, recoveredEntropy, totalSharesRemainingInGroup)
+        } else {
+            
+            return (false, nil, totalSharesRemainingInGroup)
+        }
+    }
+    
+    private func deriveMnemonicFromEntropy(_ entropy: Data) {
+        guard let recoveredEntropy = BIP39Entropy(entropy.hexString) else { return }
+        guard let mnemonic = BIP39Mnemonic(recoveredEntropy) else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.textField.text = mnemonic.description
+            self?.processTextfieldInput()
+        }
+    }
+    
+    private func parseUr(_ ur: String) -> (valid: Bool, alreadyAdded: Bool, shard: String) {
+        let shard = URHelper.urToShard(sskrUr: ur) ?? ""
+        guard shard != "" else { return (false, false, shard) }
+        guard shardAlreadyAdded(shard) == false else { return (true, true, shard) }
+        rawShards.append(shard)
+        let share = SSKRShare(data: [UInt8](Data(shard)!))
+        shares.append(share)
+        return (true, false, shard)
+    }
+    
+    private func shardAlreadyAdded(_ shard: String) -> Bool {
+        guard rawShards.count > 0 else { return false }
+        var shardAlreadyExists = false
+        for s in rawShards {
+            if shard == s {
+                shardAlreadyExists = true
+            }
+        }
+        return shardAlreadyExists
+    }
+    
+    private func parseShard(_ shard: String) -> Shard? {
+        let id = shard.prefix(4)
+        let shareValue = shard.replacingOccurrences(of: shard.prefix(10), with: "") /// the length of this value should equal the length of the master seed
+        let array = Array(shard)
+        
+        guard let groupThresholdIndex = Int("\(array[4])"),                         /// required # of groups
+            let groupCountIndex = Int("\(array[5])"),                               /// total # of possible groups
+            let groupIndex = Int("\(array[6])"),                                    /// # the group this share belongs to
+            let memberThresholdIndex = Int("\(array[7])"),                          /// # of shares required from this group
+            let reserved = Int("\(array[8])"),                                      /// MUST be 0
+            let memberIndex = Int("\(array[9])") else { return nil }                ///  the shares member # within its group
+        
+        let dict = [
+            
+            "id": id,
+            "shareValue": shareValue,                                               /// the length of this value should equal the length of the master seed
+            "groupThreshold": groupThresholdIndex + 1,                              /// required # of groups
+            "groupCount": groupCountIndex + 1,                                      /// total # of possible groups
+            "groupIndex": groupIndex + 1,                                           /// the group this share belongs to
+            "memberThreshold": memberThresholdIndex + 1,                            /// # of shares required from this group
+            "reserved": reserved,                                                   /// MUST be 0
+            "memberIndex": memberIndex + 1,                                         /// the shares member # within its group
+            "raw": shard
+            
+        ] as [String:Any]
+        
+        return Shard(dictionary: dict)
+    }
+    
+    private func promptToScanAnotherShard(_ totalSharesRemainingInGroup: Int) {
+        DispatchQueue.main.async { [weak self] in
+            var alertStyle = UIAlertController.Style.actionSheet
+            
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+              alertStyle = UIAlertController.Style.alert
+            }
+            
+            var message = "You still need \(totalSharesRemainingInGroup) more shards from this group."
+            
+            if totalSharesRemainingInGroup == 0 {
+                message = "You need to add more shards from another group."
+            }
+            
+            let alert = UIAlertController(title: "Valid SSKR shard scanned ✓", message: message, preferredStyle: alertStyle)
+            
+            alert.addAction(UIAlertAction(title: "Scan another shard", style: .default, handler: { action in
+                self?.goScan()
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+                self?.connectingView.removeConnectingView()
+            }))
+            
+            alert.popoverPresentationController?.sourceView = self?.view
+            alert.popoverPresentationController?.sourceRect = self!.view.bounds
+            self?.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func goScan() {
+        DispatchQueue.main.async { [weak self] in
+            self?.performSegue(withIdentifier: "segueToScanShards", sender: self)
+        }
+    }
+    
     private func updatePlaceHolder(wordNumber: Int) {
         DispatchQueue.main.async { [unowned vc = self] in
             vc.textField.attributedPlaceholder = NSAttributedString(string: "add word #\(wordNumber)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray])
-            
         }
     }
     
     @objc func handleTap() {
-        
         DispatchQueue.main.async {
-            
             self.textField.resignFirstResponder()
-            
         }
-        
     }
     
     func processTextfieldInput() {
@@ -630,14 +768,43 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     
     
     
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        if segue.identifier == "segueToScanShards" {
+            guard let vc = segue.destination as? ScannerViewController else { return }
+            vc.scanningShards = true
+            
+            vc.returnStringBlock = { [weak self] ur in
+                guard let self = self else { return }
+                
+                let (isValid, alreadyAdded, s) = self.parseUr(ur)
+                
+                if isValid && !alreadyAdded {
+                    if let shardStruct = self.parseShard(s) {
+                        self.shards.append(shardStruct)
+                        
+                        let (complete, entropy, totalRemaining) = self.processShard(shardStruct)
+                        if !complete {
+                            self.promptToScanAnotherShard(totalRemaining)
+                        } else if entropy != nil {
+                            self.deriveMnemonicFromEntropy(entropy!)
+                        } else {
+                            showAlert(vc: self, title: "Error!", message: "There was an error converting those shards to entropy")
+                        }
+                    }
+                } else {
+                    
+                }
+            }
+        }
     }
-    */
+    
 
 }
+
+
