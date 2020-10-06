@@ -20,6 +20,14 @@
 
 *GordianWallet* can be easily installed using Testflight, but if you prefer you can also install from source.
 
+To install from source:
+
+* `$ git clone https://github.com/BlockchainCommons/GordianWallet-iOS`
+* `$ cd GordianWallet-iOS/XCode`
+* double click `GordianWallet.xcodeproj`
+
+You can then run the app either on your mac, iPhone or a simulator.
+
 Please only use the app on testnet!
 
 To help us improve *GordianWallet*, *please*  share crash reports and give us feedback. Want a feature added? Tell us about it.
