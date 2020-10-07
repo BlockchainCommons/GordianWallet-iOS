@@ -451,16 +451,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                         vc.loadWalletData()
                                     }
                                 } else {
-                                    if vc.existingNodeId != node!.id {
-                                        /// this means the node was changed in node manager or a wallet on a different node was activated
-                                        vc.refreshNow()
-                                    } else if vc.existingWalletName != "" {
-                                        /// this means the wallet was deleted without getting deactivated first, so we just force refresh
-                                        /// and manually set the wallet to nil
-                                        vc.wallet = nil
-                                        vc.refreshNow()
-                                    }
                                     vc.existingWalletName = ""
+                                    vc.wallet = nil
+                                    vc.refreshNow()
+//                                    if vc.existingNodeId != node!.id {
+//                                        /// this means the node was changed in node manager or a wallet on a different node was activated
+//                                        vc.refreshNow()
+//                                    } else if vc.existingWalletName != "" {
+//                                        /// this means the wallet was deleted without getting deactivated first, so we just force refresh
+//                                        /// and manually set the wallet to nil
+//                                        vc.wallet = nil
+//                                        vc.refreshNow()
+//                                    }
+//                                    vc.existingWalletName = ""
                                 }
                             }
                         }
@@ -586,13 +589,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         let view1 = cell.viewWithTag(30)!
         let view2 = cell.viewWithTag(31)!
         let view3 = cell.viewWithTag(32)!
+        let imageView = cell.viewWithTag(33) as! UIImageView
         
         view1.clipsToBounds = true
         view2.clipsToBounds = true
         view3.clipsToBounds = true
+        imageView.clipsToBounds = true
         view1.layer.cornerRadius = 8
         view2.layer.cornerRadius = 8
         view3.layer.cornerRadius = 8
+        imageView.layer.cornerRadius = 5
+        imageView.layer.magnificationFilter = .nearest
+        
+        imageView.image = LifeHash.image(wallet.descriptor)
         
         fxRate.text = walletInfo.fxRate
         var coldBalance = walletInfo.coldBalance

@@ -12,6 +12,7 @@ import AVFoundation
 
 class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    var scanningShards = Bool()
     var verifying = Bool()
     var scanningBip21 = Bool()
     var scanningRecovery = Bool()
@@ -284,64 +285,84 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
             
         }
         
-        configureImagePicker()
-        configureTextField()
-        configureUploadButton()
-        configureTorchButton()
-        configureDownSwipe()
+        #if targetEnvironment(macCatalyst)
+            configureImagePicker()
+            chooseQRCodeFromLibrary()
         
-        if isScanningNode {
-            
-            label.text = "Scan a QuickConnect QR Code"
-            labelDetail.text = "Compatible with Bitcoin Core 0.19.0, BTCPayServer, Nodl, Raspiblitz, and StandUp"
-            addTestingNodeButton.setTitle("don't have a node? tap to add a tester", for: .normal)
-            configureLabel()
-            configureDetailLabel()
-            configureDontHaveAnodeButton()
-            
-        } else if isImporting {
-            
-            label.text = "Import an Account"
-            labelDetail.text = "You may scan an \"Account Map\", Bitcoin Core Descriptor, Specter \"Wallet Import\" QR, Coldcard skeleton json, crypto-seed UR or crypto-hdkey (master key only) UR"
-            configureLabel()
-            configureDetailLabel()
-            closeButton.alpha = 0
-            configureDontHaveAnodeButton()
-            
-        } else if scanningRecovery {
-            
-            label.text = "Scan an Account Map"
-            labelDetail.text = "FullyNoded 2 allows you to backup/export an Account Map QR code for each wallet you create. You can scan one at anytime to recreate the wallet as watch-only, you can then add signers to it."
-            addTestingNodeButton.setTitle("more info please", for: .normal)
-            configureLabel()
-            configureDetailLabel()
-            configureDontHaveAnodeButton()
-            closeButton.alpha = 0
-            
-        } else if verifying {
-            
-            label.text = "Scan an Address to Verify"
-            labelDetail.text = "If you want to be certain the address you are receiving to is the one you expect you can scan it with this tool to ensure they match."
-            configureLabel()
-            configureDetailLabel()
-            
-        } else if scanningBip21 {
-            
-            label.text = "Scan an Address or BIP21 Invoice"
-            labelDetail.text = "You can scan a Bitcoin address or a BIP21 invoice."
-            configureLabel()
-            configureDetailLabel()
-            
-        } else {
-            
-            label.text = "Scan a QR Code"
-            labelDetail.text = "You can scan a QuickConnect QR to add a node, or a PSBT to sign"
-            configureLabel()
-            configureDetailLabel()
-            
-        }
+        #else
+            configureImagePicker()
+            configureTextField()
+            configureUploadButton()
+            configureTorchButton()
+            configureDownSwipe()
         
-        configureCloseButton()
+            if scanningShards {
+                label.text = "Scan SSKR UR"
+                labelDetail.text = "Gordian Wallet allows you to scan UR SSKR shards to add a signer to your account."
+                addTestingNodeButton.setTitle("more info please", for: .normal)
+                configureLabel()
+                configureDetailLabel()
+                configureDontHaveAnodeButton()
+                closeButton.alpha = 0
+                
+            
+            } else if isScanningNode {
+                label.text = "Scan a QuickConnect QR Code"
+                labelDetail.text = "Compatible with Bitcoin Core 0.19.0, BTCPayServer, Nodl, Raspiblitz, and StandUp"
+                addTestingNodeButton.setTitle("don't have a node? tap to add a tester", for: .normal)
+                configureLabel()
+                configureDetailLabel()
+                configureDontHaveAnodeButton()
+                
+            } else if isImporting {
+                
+                label.text = "Import an Account"
+                labelDetail.text = "You may scan an \"Account Map\", Bitcoin Core Descriptor, Specter \"Wallet Import\" QR, Coldcard skeleton json, crypto-seed UR or crypto-hdkey (master key only) UR"
+                configureLabel()
+                configureDetailLabel()
+                closeButton.alpha = 0
+                configureDontHaveAnodeButton()
+                
+            } else if scanningRecovery {
+                
+                label.text = "Scan an Account Map"
+                labelDetail.text = "Gordian Wallet allows you to backup/export an Account Map QR code for each wallet you create. You can scan one at anytime to recreate the wallet as watch-only, you can then add signers to it."
+                addTestingNodeButton.setTitle("more info please", for: .normal)
+                configureLabel()
+                configureDetailLabel()
+                configureDontHaveAnodeButton()
+                closeButton.alpha = 0
+                
+            } else if verifying {
+                
+                label.text = "Scan an Address to Verify"
+                labelDetail.text = "If you want to be certain the address you are receiving to is the one you expect you can scan it with this tool to ensure they match."
+                configureLabel()
+                configureDetailLabel()
+                
+            } else if scanningBip21 {
+                
+                label.text = "Scan an Address or BIP21 Invoice"
+                labelDetail.text = "You can scan a Bitcoin address or a BIP21 invoice."
+                configureLabel()
+                configureDetailLabel()
+                
+            } else {
+                
+                label.text = "Scan a QR Code"
+                labelDetail.text = "You can scan a QuickConnect QR to add a node, or a PSBT to sign"
+                configureLabel()
+                configureDetailLabel()
+                
+            }
+            
+            configureCloseButton()
+        
+        #endif
+        
+        
+        
+        
         
     }
     
@@ -376,15 +397,13 @@ class QRScanner: UIView, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerCo
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        
-        picker.dismiss(animated: true, completion: nil)
-        
+        picker.dismiss(animated: true) {
+            self.vc.dismiss(animated: true, completion: nil)
+        }
     }
     
     func chooseQRCodeFromLibrary() {
-        
         vc.present(imagePicker, animated: true, completion: nil)
-        
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {

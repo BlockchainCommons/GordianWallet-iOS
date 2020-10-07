@@ -41,6 +41,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     @IBOutlet weak var spendDustSwitch: UISwitch!
     @IBOutlet weak var doNotSpendChangeLabel: UILabel!
     @IBOutlet weak var doNotSpendDustLabel: UILabel!
+    @IBOutlet weak var imageView: UIImageView!
     
     let creatingView = ConnectingView()
     var outputArray = [[String:String]]()
@@ -61,6 +62,9 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         addressInput.layer.borderColor = UIColor.darkGray.cgColor
         addressInput.clipsToBounds = true
         addressInput.layer.cornerRadius = 4
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 5
+        imageView.layer.magnificationFilter = .nearest
         feeSliderOutlet.addTarget(self, action: #selector(setFee), for: .allEvents)
         feeSliderOutlet.maximumValue = 2 * -1
         feeSliderOutlet.minimumValue = 432 * -1
@@ -94,6 +98,15 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        
+        getActiveWalletNow { (wallet, error) in
+            if wallet != nil {
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.imageView.image = LifeHash.image(wallet!.descriptor)
+                }
+            }
+        }
+        
         amount = ""
         outputs.removeAll()
         outputArray.removeAll()
@@ -1046,7 +1059,7 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         case "scanBip21Segue":
             if let vc = segue.destination as? ScannerViewController {
                 vc.isScanningInvoice = true
-                vc.onScanBip21DoneBlock = { [unowned thisVc = self] result in
+                vc.returnStringBlock = { [unowned thisVc = self] result in
                     thisVc.processBIP21(url: result)
                 }
             }
