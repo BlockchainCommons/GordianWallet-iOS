@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="nU0-zz-6p3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="nU0-zz-6p3">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -840,7 +840,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="315" height="63"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00000000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n9a-vz-hvu">
-                                                                    <rect key="frame" x="8" y="6.5" width="272.5" height="50"/>
+                                                                    <rect key="frame" x="63" y="6.5" width="217.5" height="50"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="50" id="Ryg-eu-OTe"/>
                                                                     </constraints>
@@ -856,14 +856,23 @@
                                                                         <constraint firstAttribute="width" constant="20" id="qtF-PG-cxc"/>
                                                                     </constraints>
                                                                 </imageView>
+                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="33" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qJG-na-MyK">
+                                                                    <rect key="frame" x="8" y="8" width="47" height="47"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="47" id="McT-rd-wz3"/>
+                                                                        <constraint firstAttribute="height" constant="47" id="jdE-ye-5Xy"/>
+                                                                    </constraints>
+                                                                </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" red="0.085731543600000001" green="0.1016313806" blue="0.122437112" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
+                                                                <constraint firstItem="qJG-na-MyK" firstAttribute="centerY" secondItem="aJx-dj-EJK" secondAttribute="centerY" id="7uU-YA-Pnb"/>
                                                                 <constraint firstItem="n9a-vz-hvu" firstAttribute="centerY" secondItem="aJx-dj-EJK" secondAttribute="centerY" id="8fR-Ah-2if"/>
-                                                                <constraint firstItem="n9a-vz-hvu" firstAttribute="leading" secondItem="aJx-dj-EJK" secondAttribute="leading" constant="8" id="EFU-5d-tfG"/>
                                                                 <constraint firstAttribute="height" constant="60" id="FSk-iM-kPG"/>
                                                                 <constraint firstAttribute="trailing" secondItem="3hr-QF-KVB" secondAttribute="trailing" constant="8" id="Q62-3h-mpf"/>
                                                                 <constraint firstItem="3hr-QF-KVB" firstAttribute="centerY" secondItem="aJx-dj-EJK" secondAttribute="centerY" id="WjH-xn-d5I"/>
+                                                                <constraint firstItem="qJG-na-MyK" firstAttribute="leading" secondItem="aJx-dj-EJK" secondAttribute="leading" constant="8" id="pqD-ax-69v"/>
+                                                                <constraint firstItem="n9a-vz-hvu" firstAttribute="leading" secondItem="qJG-na-MyK" secondAttribute="trailing" constant="8" id="uP3-Nk-DC7"/>
                                                                 <constraint firstItem="3hr-QF-KVB" firstAttribute="leading" secondItem="n9a-vz-hvu" secondAttribute="trailing" constant="6.5" id="v9j-mg-YCJ"/>
                                                             </constraints>
                                                         </view>
@@ -1043,7 +1052,7 @@
                         <segue destination="3uQ-0D-YgM" kind="show" identifier="goToWallets" id="fBg-S5-BEW"/>
                         <segue destination="AS8-ke-Yxh" kind="show" identifier="settings" id="hdq-o6-Ing"/>
                         <segue destination="NHv-UH-1lX" kind="presentation" identifier="goDonate" id="C3T-yU-SMU"/>
-                        <segue destination="reL-7P-R3q" kind="presentation" identifier="refillMsigFromHome" id="pun-AW-DGw"/>
+                        <segue destination="reL-7P-R3q" kind="show" identifier="refillMsigFromHome" id="pun-AW-DGw"/>
                         <segue destination="xB3-mY-13p" kind="show" identifier="goConfirmPsbtSegue" id="Xe1-Me-c8c"/>
                         <segue destination="0g2-8e-jCH" kind="show" identifier="segueToConfirmImport" id="tvy-tG-Sod"/>
                         <segue destination="shH-Cs-byi" kind="show" identifier="segueToColdcardMusigCreated" id="MTV-lr-E4R"/>
@@ -1258,7 +1267,7 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="lsS-j6-ZOY">
                                 <rect key="frame" x="16" y="107" width="343" height="442"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">Thanks for trying out FullyNoded 2!
+                                <string key="text">Thanks for trying out Gordian Wallet!
 
 You will be connected to your own node and interacting with the Bitcoin network in a secure self-sovereign way in no time.
 
@@ -1277,7 +1286,7 @@ We appreciate your attention and patience!</string>
                                     <constraint firstAttribute="height" constant="20" id="lj8-QH-Y6n"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to FullyNoded 2!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oBE-mt-kCx">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Gordian Wallet!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oBE-mt-kCx">
                                 <rect key="frame" x="49" y="44" width="310" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="diz-EA-jbd"/>
@@ -1339,23 +1348,19 @@ We appreciate your attention and patience!</string>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="SrH-4k-3KF">
                                 <rect key="frame" x="16" y="127" width="343" height="434"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">FullyNoded 2 is the successor app to FullyNoded 1.
+                                <string key="text">Gordian Wallet is designed to be extremely easy to use without sacrificing functionality or security, it is a focused wallet which leverages the power of your node and your device in the best possible ways. Gordian Wallet utilizes a well known library called LibWally which allows us to create seeds and sign transactions without needing an internet connection or your node at all. That makes Gordian Wallet a hybrid between a hardware wallet and a remote control for your own personal node.
 
-The apps are very similiar yet very different in what they do. You can think of FullyNoded1 as a powerful, raw interface between you and your node where all the functionality is quite manual and meant for expert users.
-
-FullyNoded 2 is designed to be extremely easy to use without sacrificing functionality or security, it is a focused wallet which leverages the power of your node and your device in the best possible ways. FullyNoded 2 utilizes a well known library called LibWally which allows us to create seeds and sign transactions without needing an internet connection or your node at all. That makes FullyNoded 2 a hybrid between a hardware wallet and a remote control for your own personal node.
-
-FullyNoded 2 is capable of creating two wallet types; single-signature and multi-signature.
+Gordian Wallet is capable of creating two wallet types; single-signature and multi-signature.
 
 Single signature wallets:
 
 The app will create a seed, convert it to your back up words, encrypt the seed, store it locally on your device and then creates a specific wallet on your node, importing 5,000 public keys into it.
 
-FullyNoded 2 uses your node strictly as a watch-only wallet and does not interfere with any existing wallets on your node. In this way your node can be in charge of building unsigned PSBT's and your device will take those unsigned PSBT's and fetch the necessary private keys, decrypt them and then sign the transaction locally on your device. At that point the app will use your node to analyze the signed transaction displaying all the inputs and outputs to you for your verification before you broadcast.
+Gordian Wallet uses your node strictly as a watch-only wallet and does not interfere with any existing wallets on your node. In this way your node can be in charge of building unsigned PSBT's and your device will take those unsigned PSBT's and fetch the necessary private keys, decrypt them and then sign the transaction locally on your device. At that point the app will use your node to analyze the signed transaction displaying all the inputs and outputs to you for your verification before you broadcast.
 
 Multi-signature wallets:
 
-2 of 3 multi-sig wallet whereby your device holds one seed for signing locally, your node holds 5,000 private keys derived from a second seed and you securely store a third seed offline in the form of a 12 word BIP39 recovery phrase along with a RecoveryQR code to use in the unlikely event that you ever lose your node AND device. This is beneficial because if anyone stole your node or hacked their way into it they would not have any access to your funds, same goes for the offline recovery words. In short FullyNoded 2 makes using multi-signature easy for anyone.
+2 of 3 multi-sig wallet whereby your device holds one seed for signing locally, your node holds 5,000 private keys derived from a second seed and you securely store a third seed offline in the form of a 12 word BIP39 recovery phrase along with a RecoveryQR code to use in the unlikely event that you ever lose your node AND device. This is beneficial because if anyone stole your node or hacked their way into it they would not have any access to your funds, same goes for the offline recovery words. In short Gordian Wallet makes using multi-signature easy for anyone.
 
 For more information regarding wallet recovery please see our Recovery.md file.</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1370,7 +1375,7 @@ For more information regarding wallet recovery please see our Recovery.md file.<
                                     <constraint firstAttribute="width" constant="20" id="tUD-jx-eaQ"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What is FullyNoded 2?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hqs-hU-o5J">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What is Gordian Wallet?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hqs-hU-o5J">
                                 <rect key="frame" x="49" y="64" width="310" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="iQh-GT-WP9"/>
@@ -1437,7 +1442,7 @@ For more information regarding wallet recovery please see our Recovery.md file.<
                                     <constraint firstAttribute="height" constant="20" id="ztC-3F-nnL"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to support development of FullyNoded 2?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eBw-zi-FS5">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to support development of Gordian Wallet?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eBw-zi-FS5">
                                 <rect key="frame" x="49" y="64" width="310" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="AGW-eq-Cdd"/>
@@ -1449,9 +1454,9 @@ For more information regarding wallet recovery please see our Recovery.md file.<
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="m5T-sk-K3t">
                                 <rect key="frame" x="16" y="127" width="343" height="433"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">FullyNoded 2 is a project of Blockchain Commons. We are proudly a "not-for-profit" social benefit corporation committed to open source &amp; open development. Our work is focused on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web. It's funded entirely by donations and collaborative partnerships with people like you.
+                                <string key="text">Gordian Wallet is a project of Blockchain Commons. We are proudly a "not-for-profit" social benefit corporation committed to open source &amp; open development. Our work is focused on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web. It's funded entirely by donations and collaborative partnerships with people like you.
 
-For the FullyNoded 2 source code and detailed information about how the app works, please visit the GitHub repo.
+For the Gordian Wallet source code and detailed information about how the app works, please visit the GitHub repo.
 
 If you find this project useful, and would like to learn more about Blockchain Commons, click the Blockchain Commons logo within the app. You can become a Blockchain Commons patron and support projects like this!</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1516,7 +1521,7 @@ If you find this project useful, and would like to learn more about Blockchain C
                                     <constraint firstAttribute="width" constant="25" id="qMd-BO-3j7"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to use FullyNoded 2?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ch6-hj-Nt0">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How to use Gordian Wallet?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ch6-hj-Nt0">
                                 <rect key="frame" x="49" y="64" width="310" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="Wgj-Su-njh"/>
@@ -1530,7 +1535,7 @@ If you find this project useful, and would like to learn more about Blockchain C
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <string key="text">Connect to your node by scanning the QuickConnect QR code that your node software produces, supporting node software includes StandUp.app (MacOS), BTCPay, MyNode, RaspiBlitz and Nodl. Of course you may do this yourself by following the instructions on our github or you can also use our simple StandUp.sh scripts for linux.
 
-The app will then do all the hard work for you. Using FullyNoded 2 is straightforward, to create a Bitcoin invoice just tap the "In" button, to spend Bitcoin just tap the "Out" button.</string>
+The app will then do all the hard work for you. Using Gordian Wallet is straightforward, to create a Bitcoin invoice just tap the "In" button, to spend Bitcoin just tap the "Out" button.</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1593,7 +1598,7 @@ The app will then do all the hard work for you. Using FullyNoded 2 is straightfo
                                     <constraint firstAttribute="height" constant="26" id="uTA-ol-gCP"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Is FullyNoded 2 secure?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DTh-CK-kbL">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Is Gordian Wallet secure?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DTh-CK-kbL">
                                 <rect key="frame" x="49" y="64" width="310" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="wBB-4C-gDa"/>
@@ -1605,11 +1610,11 @@ The app will then do all the hard work for you. Using FullyNoded 2 is straightfo
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="rde-as-Mcu">
                                 <rect key="frame" x="16" y="127" width="343" height="433"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">FullyNoded 2 runs a Tor node which it uses to connect to your nodes V3 hidden service over the onion network. This way you can privately and securely control your nodes wallet functionality remotely from anywhere in the world, allowing you to keep your node completely behind a firewall with no port forwarding required. The app uses a lot of security minded features to avoid any sensitive info being recorded to your devices memory regarding the Tor traffic. Clearnet traffic is strictly disabled, the Tor config settings excludes exit nodes from your Tor circuit meaning it will only ever interact with the Tor network.
+                                <string key="text">Gordian Wallet runs a Tor node which it uses to connect to your nodes V3 hidden service over the onion network. This way you can privately and securely control your nodes wallet functionality remotely from anywhere in the world, allowing you to keep your node completely behind a firewall with no port forwarding required. The app uses a lot of security minded features to avoid any sensitive info being recorded to your devices memory regarding the Tor traffic. Clearnet traffic is strictly disabled, the Tor config settings excludes exit nodes from your Tor circuit meaning it will only ever interact with the Tor network.
 
-FullyNoded 2 uses powerful encryption to secure your your nodes hidden service urls and private keys. Initially a private key is created which is stored on your devices keychain which is itself encrypted. That private key is used to decrypt/encrypt the apps sensitive data. Whenever your device goes into the background all the apps data becomes encrypted yet again. No sensitive info is ever stored unencrypted or transmitted over the internet in clear text. All Tor traffic is highly encrypted by default.
+Gordian Wallet uses powerful encryption to secure your your nodes hidden service urls and private keys. Initially a private key is created which is stored on your devices keychain which is itself encrypted. That private key is used to decrypt/encrypt the apps sensitive data. Whenever your device goes into the background all the apps data becomes encrypted yet again. No sensitive info is ever stored unencrypted or transmitted over the internet in clear text. All Tor traffic is highly encrypted by default.
 
-FullyNoded 2 utilizes the latest generation of hidden services and allows you to take advantage of Tor V3 authentication, meaning your device is capable of producing a private/public key offline where you may upload the public to your node to ensure that your device is the only device in the world that can access your node EVEN IF an attacker managed to get your nodes hidden service url. This means of authentication is particularly handy if you want to share your node with trusted others, ensuring only they have access. This is possible because you as the user never have access to the private key used for authentication, so even if users share their public keys with an attacker it would be useless to them. To be clear the way it works is FullyNoded will create the ultra secret private key, encrypt it and store it locally, it then get decrypted when the Tor node starts up, whenever your app goes into the background the private key is deleted from your Tor config, the file the private key is saved on is also maximally protected by native iOS encryption on top of a secondary layer of encryption we give it, you as theuser will never see or have access to the private key and without that private key no device or attacker can possibly get access to your nodes hidden service. Of course there may be attack vectors we are not aware of and it is important you do your own research and look at the codebase if you are curious.</string>
+Gordian Wallet utilizes the latest generation of hidden services and allows you to take advantage of Tor V3 authentication, meaning your device is capable of producing a private/public key offline where you may upload the public to your node to ensure that your device is the only device in the world that can access your node EVEN IF an attacker managed to get your nodes hidden service url. This means of authentication is particularly handy if you want to share your node with trusted others, ensuring only they have access. This is possible because you as the user never have access to the private key used for authentication, so even if users share their public keys with an attacker it would be useless to them. To be clear the way it works is Gordian Wallet will create the ultra secret private key, encrypt it and store it locally, it then get decrypted when the Tor node starts up, whenever your app goes into the background the private key is deleted from your Tor config, the file the private key is saved on is also maximally protected by native iOS encryption on top of a secondary layer of encryption we give it, you as theuser will never see or have access to the private key and without that private key no device or attacker can possibly get access to your nodes hidden service. Of course there may be attack vectors we are not aware of and it is important you do your own research and look at the codebase if you are curious.</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1706,7 +1711,7 @@ FullyNoded 2 utilizes the latest generation of hidden services and allows you to
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <string key="text">Please read and accept the terms of our disclaimer:
 
-The use of FullyNoded 2 is under the "BSD 2-Clause Plus Patent License" (https://spdx.org/licenses/BSD-2-Clause-Patent.html). Copyright © 2019 BlockchainCommons. All rights reserved. With the disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</string>
+The use of Gordian Wallet is under the "BSD 2-Clause Plus Patent License" (https://spdx.org/licenses/BSD-2-Clause-Patent.html). Copyright © 2019 BlockchainCommons. All rights reserved. With the disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1782,13 +1787,13 @@ The use of FullyNoded 2 is under the "BSD 2-Clause Plus Patent License" (https:/
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ecb-v8-vHB">
                                 <rect key="frame" x="16" y="127" width="343" height="423"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">Fully Noded 2 uses the "Sign in with Apple" tool for 2FA (two-factor authentication) purposes.
+                                <string key="text">Gordian Wallet uses the "Sign in with Apple" tool for 2FA (two-factor authentication) purposes.
 
 We save your Apple ID username to the devices Secure Enclave upon signing in successfully here, then whenever you go to broadcast a transaction or expose a private key/seed we will prompt you to authenticate again to enure only you can spend your bitcoins.
 
 Depending on your devices settings you will either be prompted with biometrics or manual password entry for your Apple ID.
 
-Blockchain Commons and Fully Noded 2 never share any data with any third party ever, the only server the app connects to is your own node over Tor. "Sign in with Apple" is simply a secure way of ensuring no one else can spend your funds.</string>
+Blockchain Commons and Gordian Wallet never share any data with any third party ever, the only server the app connects to is your own node over Tor. "Sign in with Apple" is simply a secure way of ensuring no one else can spend your funds.</string>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -1850,7 +1855,7 @@ Blockchain Commons and Fully Noded 2 never share any data with any third party e
                         <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Support continued development of FullyNoded 2!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xwv-9F-5rX">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Support continued development of Gordian Wallet!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xwv-9F-5rX">
                                 <rect key="frame" x="16" y="72" width="343" height="53"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="53" id="B5j-qo-6ja"/>
@@ -1865,7 +1870,7 @@ Blockchain Commons and Fully Noded 2 never share any data with any third party e
                                 <constraints>
                                     <constraint firstAttribute="height" constant="392" id="hCD-Ju-9qf"/>
                                 </constraints>
-                                <string key="text">FullyNoded 2 is free, open-source software that is a project of Blockchain Commons. Our goal is to make it easier for beginners and experts alike to use Bitcoin in a secure, self-sovereign way, where you truly control your own digital assets.
+                                <string key="text">Gordian Wallet is free, open-source software that is a project of Blockchain Commons. Our goal is to make it easier for beginners and experts alike to use Bitcoin in a secure, self-sovereign way, where you truly control your own digital assets.
 
 Creating this sort of tool is one of the primary mandates of Blockchain Commons, a "not-for-profit" social benefit corporation committed to open source &amp; open development. And, we need your help! Our work is funded entirely by donations and collaborative partnerships with people like you. Every contribution will be spent on building open tools, technologies, and techniques that sustain and advance blockchain and internet security infrastructure and promote an open web. Your support can help to make this app and other important projects sustainable, as we continue building a self-sovereign future.
 
@@ -2108,11 +2113,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tBq-5k-T1U">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0zB-Cx-vSF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                         </subviews>
@@ -2165,8 +2170,8 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="optional" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qFH-Vc-Ghn">
-                                <rect key="frame" x="16" y="89" width="343" height="44"/>
+                            <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="optional" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qFH-Vc-Ghn">
+                                <rect key="frame" x="17" y="129" width="343" height="44"/>
                                 <color key="backgroundColor" red="0.078040815890000004" green="0.090017892419999995" blue="0.10251823810000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="LvW-WM-vYu"/>
@@ -2176,7 +2181,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad" keyboardAppearance="alert" returnKeyType="done"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AMOUNT (FOR BIP21 QR)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hqF-pF-90p">
-                                <rect key="frame" x="16" y="72" width="155.5" height="15"/>
+                                <rect key="frame" x="16" y="112" width="155.5" height="15"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="LEr-Af-lFF"/>
                                 </constraints>
@@ -2184,14 +2189,14 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LABEL (FOR BIP21 QR)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dHL-et-rVM">
-                                <rect key="frame" x="16" y="141" width="139" height="15"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="LABEL (FOR BIP21 QR)" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dHL-et-rVM">
+                                <rect key="frame" x="17" y="181" width="139" height="15"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="optional" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vqa-Nl-Pcv">
-                                <rect key="frame" x="16" y="164" width="343" height="44"/>
+                            <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="optional" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vqa-Nl-Pcv">
+                                <rect key="frame" x="17" y="204" width="343" height="44"/>
                                 <color key="backgroundColor" red="0.078040815890000004" green="0.090017892419999995" blue="0.10251823810000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="CNf-jm-5B9"/>
@@ -2200,8 +2205,8 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done"/>
                             </textField>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ghy-83-UIK">
-                                <rect key="frame" x="14" y="216" width="140" height="28"/>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ghy-83-UIK">
+                                <rect key="frame" x="15" y="256" width="140" height="28"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="cX9-Lv-fRj"/>
@@ -2214,14 +2219,14 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                     <action selector="createNow:" destination="Xxg-Pp-vvN" eventType="touchUpInside" id="Vyk-VN-RRI"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="INVOICE ADDRESS:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Idc-je-Df2">
-                                <rect key="frame" x="14" y="273" width="121" height="15"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="INVOICE ADDRESS:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Idc-je-Df2">
+                                <rect key="frame" x="15" y="313" width="121" height="15"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="12"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VH4-GU-cDv">
-                                <rect key="frame" x="16" y="296" width="343" height="30"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VH4-GU-cDv">
+                                <rect key="frame" x="17" y="336" width="343" height="30"/>
                                 <color key="backgroundColor" red="0.060488220388144269" green="0.069584576046932162" blue="0.079814399267512659" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="COt-bA-dBc"/>
@@ -2230,8 +2235,8 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Gs-OB-9VV">
-                                <rect key="frame" x="337" y="264" width="22" height="24"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Gs-OB-9VV">
+                                <rect key="frame" x="338" y="304" width="22" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="1U4-Tb-o8C"/>
                                     <constraint firstAttribute="width" constant="22" id="EIH-dH-ekv"/>
@@ -2242,8 +2247,8 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                     <action selector="copyAction:" destination="Xxg-Pp-vvN" eventType="touchUpInside" id="OEw-zZ-IMm"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZtA-OV-s8T">
-                                <rect key="frame" x="308" y="265" width="20" height="22"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZtA-OV-s8T">
+                                <rect key="frame" x="309" y="305" width="20" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="5Om-Hz-GTR"/>
                                     <constraint firstAttribute="width" constant="20" id="Zpw-FU-QXq"/>
@@ -2254,8 +2259,8 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                     <action selector="showQrAction:" destination="Xxg-Pp-vvN" eventType="touchUpInside" id="3Rv-1P-BRc"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="38K-xd-PQp">
-                                <rect key="frame" x="280" y="265" width="21" height="22"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="38K-xd-PQp">
+                                <rect key="frame" x="281" y="305" width="21" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="21" id="Mpd-be-U9R"/>
                                     <constraint firstAttribute="height" constant="22" id="UgK-EN-dw3"/>
@@ -2266,14 +2271,22 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                     <action selector="shareAddressAction:" destination="Xxg-Pp-vvN" eventType="touchUpInside" id="0rU-pm-rXe"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r63-37-nHm">
+                                <rect key="frame" x="16" y="55" width="49" height="49"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="49" id="cDe-qD-PEt"/>
+                                    <constraint firstAttribute="height" constant="49" id="sjr-7a-WNs"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="luY-Vj-OjD" firstAttribute="trailing" secondItem="VH4-GU-cDv" secondAttribute="trailing" constant="16" id="0md-YJ-YAZ"/>
                             <constraint firstItem="Ghy-83-UIK" firstAttribute="leading" secondItem="luY-Vj-OjD" secondAttribute="leading" constant="14" id="5kX-oT-DKF"/>
-                            <constraint firstItem="hqF-pF-90p" firstAttribute="top" secondItem="luY-Vj-OjD" secondAttribute="top" constant="28" id="FZl-D0-Xxq"/>
+                            <constraint firstItem="r63-37-nHm" firstAttribute="leading" secondItem="luY-Vj-OjD" secondAttribute="leading" constant="16" id="At7-s5-ANq"/>
                             <constraint firstItem="dHL-et-rVM" firstAttribute="leading" secondItem="luY-Vj-OjD" secondAttribute="leading" constant="16" id="HJ5-ud-3A8"/>
                             <constraint firstItem="qFH-Vc-Ghn" firstAttribute="leading" secondItem="luY-Vj-OjD" secondAttribute="leading" constant="16" id="Kay-gG-Kjc"/>
+                            <constraint firstItem="hqF-pF-90p" firstAttribute="top" secondItem="r63-37-nHm" secondAttribute="bottom" constant="8" id="KgN-MX-Vpz"/>
                             <constraint firstItem="ZtA-OV-s8T" firstAttribute="centerY" secondItem="38K-xd-PQp" secondAttribute="centerY" id="LnB-p1-pXI"/>
                             <constraint firstItem="vqa-Nl-Pcv" firstAttribute="top" secondItem="dHL-et-rVM" secondAttribute="bottom" constant="8" id="PFk-q7-Se7"/>
                             <constraint firstItem="luY-Vj-OjD" firstAttribute="trailing" secondItem="qFH-Vc-Ghn" secondAttribute="trailing" constant="16" id="QJ3-ei-E3b"/>
@@ -2291,6 +2304,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="VH4-GU-cDv" firstAttribute="top" secondItem="4Gs-OB-9VV" secondAttribute="bottom" constant="8" id="lyb-eg-6BV"/>
                             <constraint firstItem="VH4-GU-cDv" firstAttribute="leading" secondItem="luY-Vj-OjD" secondAttribute="leading" constant="16" id="o3a-WF-Kwx"/>
                             <constraint firstItem="luY-Vj-OjD" firstAttribute="trailing" secondItem="vqa-Nl-Pcv" secondAttribute="trailing" constant="16" id="o5M-Kn-E38"/>
+                            <constraint firstItem="r63-37-nHm" firstAttribute="top" secondItem="luY-Vj-OjD" secondAttribute="top" constant="11" id="xcd-Xb-lV6"/>
                             <constraint firstItem="Idc-je-Df2" firstAttribute="leading" secondItem="luY-Vj-OjD" secondAttribute="leading" constant="14" id="yYM-bq-2q0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="luY-Vj-OjD"/>
@@ -2301,6 +2315,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <outlet property="amountField" destination="qFH-Vc-Ghn" id="hTO-DQ-Qnr"/>
                         <outlet property="copyButton" destination="4Gs-OB-9VV" id="WS7-qz-HO0"/>
                         <outlet property="createOutlet" destination="Ghy-83-UIK" id="hgq-SA-V4m"/>
+                        <outlet property="imageView" destination="r63-37-nHm" id="1aZ-VZ-szf"/>
                         <outlet property="invoiceAddressHeader" destination="Idc-je-Df2" id="du3-El-ALw"/>
                         <outlet property="labelField" destination="vqa-Nl-Pcv" id="5Oe-5Q-2WN"/>
                         <outlet property="qrButton" destination="ZtA-OV-s8T" id="PHX-Bs-hfv"/>
@@ -2320,24 +2335,8 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="0.0" borderStyle="roundedRect" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="WBT-v4-ipz">
-                                <rect key="frame" x="16" y="93.5" width="343" height="44"/>
-                                <color key="backgroundColor" red="0.078040815890000004" green="0.090017892419999995" blue="0.10251823810000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="EsG-Q0-eOn"/>
-                                </constraints>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" keyboardType="decimalPad" keyboardAppearance="alert"/>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ADDRESS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uIC-Eu-XZD">
-                                <rect key="frame" x="16" y="145.5" width="60.5" height="14.5"/>
-                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="12"/>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="jXp-xP-J4h">
-                                <rect key="frame" x="0.0" y="356" width="375" height="194"/>
+                                <rect key="frame" x="0.0" y="391" width="375" height="159"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="375" id="dAH-4K-TTt"/>
@@ -2370,42 +2369,12 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                     <outlet property="delegate" destination="pUo-bf-sNm" id="m2o-tp-c0x"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AMOUNT" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WP2-Zk-iPW">
-                                <rect key="frame" x="16" y="77" width="57" height="14.5"/>
-                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="12"/>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="vds-w7-arV">
-                                <rect key="frame" x="16" y="168" width="343" height="44"/>
-                                <color key="backgroundColor" red="0.078040815890000004" green="0.090017892419999995" blue="0.10251823810000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="uFS-nf-Fw3"/>
-                                </constraints>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
-                            </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.0 btc / $0 available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6jp-Ka-1Xg">
-                                <rect key="frame" x="16" y="58" width="110" height="13.5"/>
+                                <rect key="frame" x="78" y="55" width="110" height="13.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yUR-gC-Jjg">
-                                <rect key="frame" x="16" y="220" width="61" height="18"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="61" id="Yb4-GS-q6C"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="plus" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="addOutput:" destination="pUo-bf-sNm" eventType="touchUpInside" id="sSb-Ji-dxe"/>
-                                </connections>
-                            </button>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Ipy-yo-xxh">
                                 <rect key="frame" x="14" y="601.5" width="347" height="31"/>
                                 <color key="minimumTrackTintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2435,8 +2404,73 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QCt-8G-YWG">
-                                <rect key="frame" x="248" y="220" width="111" height="18"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mf6-E6-DmQ">
+                                <rect key="frame" x="336" y="55" width="23" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="23" id="2V0-H0-z5o"/>
+                                    <constraint firstAttribute="width" constant="23" id="oUP-ip-gCY"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="paintbrush" catalog="system"/>
+                                <connections>
+                                    <action selector="sweepButtonAction:" destination="pUo-bf-sNm" eventType="touchUpInside" id="gph-z0-gss"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TgD-ae-rdY">
+                                <rect key="frame" x="16" y="55" width="49" height="49"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="49" id="Nxw-M6-hPr"/>
+                                    <constraint firstAttribute="width" constant="49" id="hEl-YP-FVW"/>
+                                </constraints>
+                            </imageView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="0.0" borderStyle="roundedRect" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="WBT-v4-ipz">
+                                <rect key="frame" x="16" y="128.5" width="343" height="44"/>
+                                <color key="backgroundColor" red="0.078040815890000004" green="0.090017892419999995" blue="0.10251823810000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="EsG-Q0-eOn"/>
+                                </constraints>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" keyboardType="decimalPad" keyboardAppearance="alert"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ADDRESS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uIC-Eu-XZD">
+                                <rect key="frame" x="16" y="180.5" width="60.5" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="12"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AMOUNT" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WP2-Zk-iPW">
+                                <rect key="frame" x="16" y="112" width="57" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="12"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="vds-w7-arV">
+                                <rect key="frame" x="16" y="203" width="343" height="44"/>
+                                <color key="backgroundColor" red="0.078040815890000004" green="0.090017892419999995" blue="0.10251823810000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="uFS-nf-Fw3"/>
+                                </constraints>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yUR-gC-Jjg">
+                                <rect key="frame" x="16" y="255" width="61" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="61" id="Yb4-GS-q6C"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="plus" catalog="system">
+                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="addOutput:" destination="pUo-bf-sNm" eventType="touchUpInside" id="sSb-Ji-dxe"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QCt-8G-YWG">
+                                <rect key="frame" x="247" y="255" width="111" height="18"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="18" id="5Zn-4E-RyG"/>
                                     <constraint firstAttribute="width" constant="111" id="9xk-wt-5Ps"/>
@@ -2448,7 +2482,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </connections>
                             </button>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="CbZ-8G-6aB">
-                                <rect key="frame" x="16" y="246" width="51" height="31"/>
+                                <rect key="frame" x="16" y="281" width="51" height="31"/>
                                 <color key="onTintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="thumbTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
@@ -2456,7 +2490,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </connections>
                             </switch>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Lbs-WQ-4zp">
-                                <rect key="frame" x="16" y="285" width="51" height="31"/>
+                                <rect key="frame" x="16" y="320" width="51" height="31"/>
                                 <color key="onTintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="thumbTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
@@ -2464,19 +2498,19 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="do not spend change" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fjA-7h-veh">
-                                <rect key="frame" x="73" y="254" width="120" height="15"/>
+                                <rect key="frame" x="73" y="289" width="120" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="do not spend dust" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUX-To-gKI">
-                                <rect key="frame" x="73" y="293" width="103" height="15"/>
+                                <rect key="frame" x="73" y="328" width="103" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lld-wI-YhN">
-                                <rect key="frame" x="16" y="318" width="135" height="30"/>
+                                <rect key="frame" x="16" y="353" width="135" height="30"/>
                                 <state key="normal" title="manual coin control">
                                     <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -2484,55 +2518,36 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                     <action selector="coinControlAction:" destination="pUo-bf-sNm" eventType="touchUpInside" id="huE-qp-clQ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mf6-E6-DmQ">
-                                <rect key="frame" x="336" y="58" width="23" height="23"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="23" id="jw3-dM-1on"/>
-                                    <constraint firstAttribute="width" constant="23" id="rt4-9j-ebJ"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="paintbrush" catalog="system"/>
-                                <connections>
-                                    <action selector="sweepButtonAction:" destination="pUo-bf-sNm" eventType="touchUpInside" id="gph-z0-gss"/>
-                                </connections>
-                            </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hCl-Q8-hd5">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="yUR-gC-Jjg" firstAttribute="top" secondItem="vds-w7-arV" secondAttribute="bottom" constant="8" id="1XP-wj-Trb"/>
                             <constraint firstItem="yUR-gC-Jjg" firstAttribute="leading" secondItem="vds-w7-arV" secondAttribute="leading" id="1fy-X0-OMg"/>
-                            <constraint firstItem="WP2-Zk-iPW" firstAttribute="top" secondItem="6jp-Ka-1Xg" secondAttribute="bottom" constant="5.5" id="1yF-Th-58K"/>
                             <constraint firstItem="vds-w7-arV" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="2BM-5g-VLP"/>
                             <constraint firstItem="AUX-To-gKI" firstAttribute="leading" secondItem="Lbs-WQ-4zp" secondAttribute="trailing" constant="8" id="2K0-mi-Dn3"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="Ipy-yo-xxh" secondAttribute="trailing" constant="16" id="477-2q-0mw"/>
                             <constraint firstItem="QCt-8G-YWG" firstAttribute="top" secondItem="vds-w7-arV" secondAttribute="bottom" constant="8" id="47t-6O-ya0"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="jXp-xP-J4h" secondAttribute="trailing" id="561-gS-kW0"/>
+                            <constraint firstItem="TgD-ae-rdY" firstAttribute="top" secondItem="C0H-pw-RSl" secondAttribute="top" constant="11" id="6Bx-OI-Cjr"/>
                             <constraint firstItem="WBT-v4-ipz" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="732-BP-c7w"/>
-                            <constraint firstItem="6jp-Ka-1Xg" firstAttribute="top" secondItem="C0H-pw-RSl" secondAttribute="top" constant="14" id="7Kz-bN-YV6"/>
                             <constraint firstItem="EVv-F0-8a1" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="84m-jQ-j6T"/>
                             <constraint firstItem="Lbs-WQ-4zp" firstAttribute="top" secondItem="CbZ-8G-6aB" secondAttribute="bottom" constant="8" id="8Jc-8r-zUD"/>
-                            <constraint firstItem="hCl-Q8-hd5" firstAttribute="top" secondItem="DIN-Fg-EH6" secondAttribute="top" id="9aj-Tf-f3P"/>
                             <constraint firstItem="fjA-7h-veh" firstAttribute="leading" secondItem="CbZ-8G-6aB" secondAttribute="trailing" constant="8" id="9eF-KC-TiJ"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="bottom" secondItem="LiM-LT-3Xz" secondAttribute="bottom" constant="15.5" id="9k9-lL-dVH"/>
                             <constraint firstItem="EVv-F0-8a1" firstAttribute="top" secondItem="jXp-xP-J4h" secondAttribute="bottom" constant="29.5" id="9sd-te-3ke"/>
                             <constraint firstItem="Ipy-yo-xxh" firstAttribute="top" secondItem="EVv-F0-8a1" secondAttribute="bottom" id="C8j-Jf-Bvd"/>
+                            <constraint firstItem="WP2-Zk-iPW" firstAttribute="top" secondItem="TgD-ae-rdY" secondAttribute="bottom" constant="8" id="H87-6g-VbH"/>
                             <constraint firstItem="jXp-xP-J4h" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" id="HMJ-p4-PHt"/>
+                            <constraint firstItem="TgD-ae-rdY" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="JOi-IM-s1J"/>
                             <constraint firstItem="lld-wI-YhN" firstAttribute="top" secondItem="Lbs-WQ-4zp" secondAttribute="bottom" constant="2" id="JtP-Qg-bup"/>
                             <constraint firstItem="uIC-Eu-XZD" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="LUf-xe-94t"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="vds-w7-arV" secondAttribute="trailing" constant="16" id="Mj4-Xk-115"/>
-                            <constraint firstItem="hCl-Q8-hd5" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" id="OxE-DM-w3a"/>
-                            <constraint firstItem="mf6-E6-DmQ" firstAttribute="top" secondItem="C0H-pw-RSl" secondAttribute="top" constant="14" id="PZ8-bZ-d79"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="QCt-8G-YWG" secondAttribute="trailing" constant="16" id="QBS-V5-A63"/>
                             <constraint firstItem="uIC-Eu-XZD" firstAttribute="top" secondItem="WBT-v4-ipz" secondAttribute="bottom" constant="8" id="S0e-7C-w5o"/>
                             <constraint firstItem="LiM-LT-3Xz" firstAttribute="top" secondItem="Ipy-yo-xxh" secondAttribute="bottom" constant="-1" id="VI2-We-knv"/>
                             <constraint firstItem="CbZ-8G-6aB" firstAttribute="top" secondItem="yUR-gC-Jjg" secondAttribute="bottom" constant="8" id="WRD-Qq-alr"/>
                             <constraint firstItem="Lbs-WQ-4zp" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="XgN-GB-afq"/>
-                            <constraint firstItem="6jp-Ka-1Xg" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="XmC-VO-PkA"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="LiM-LT-3Xz" secondAttribute="trailing" constant="16" id="Y0r-fO-mrB"/>
-                            <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="mf6-E6-DmQ" secondAttribute="trailing" constant="16" id="Y51-HX-iWk"/>
                             <constraint firstItem="WP2-Zk-iPW" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="ZMe-Mx-WXx"/>
                             <constraint firstItem="n6j-yg-uLt" firstAttribute="leading" secondItem="EVv-F0-8a1" secondAttribute="trailing" constant="8" id="b3p-jQ-kKi"/>
                             <constraint firstItem="lld-wI-YhN" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="bEy-Sx-rIl"/>
@@ -2541,13 +2556,15 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                             <constraint firstItem="WBT-v4-ipz" firstAttribute="top" secondItem="WP2-Zk-iPW" secondAttribute="bottom" constant="2" id="haY-qi-1oz"/>
                             <constraint firstItem="vds-w7-arV" firstAttribute="top" secondItem="uIC-Eu-XZD" secondAttribute="bottom" constant="8" id="icX-cq-YNr"/>
                             <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="WBT-v4-ipz" secondAttribute="trailing" constant="16" id="kQJ-gQ-LC2"/>
+                            <constraint firstItem="6jp-Ka-1Xg" firstAttribute="top" secondItem="TgD-ae-rdY" secondAttribute="top" id="l09-Xu-L0w"/>
                             <constraint firstItem="fjA-7h-veh" firstAttribute="centerY" secondItem="CbZ-8G-6aB" secondAttribute="centerY" id="lBe-PN-CYL"/>
-                            <constraint firstItem="hCl-Q8-hd5" firstAttribute="bottom" secondItem="C0H-pw-RSl" secondAttribute="bottom" id="nv9-qL-otg"/>
+                            <constraint firstItem="6jp-Ka-1Xg" firstAttribute="leading" secondItem="TgD-ae-rdY" secondAttribute="trailing" constant="13" id="m8I-ek-e4r"/>
                             <constraint firstItem="LiM-LT-3Xz" firstAttribute="leading" secondItem="C0H-pw-RSl" secondAttribute="leading" constant="16" id="oKT-DP-1ye"/>
                             <constraint firstItem="jXp-xP-J4h" firstAttribute="top" secondItem="lld-wI-YhN" secondAttribute="bottom" constant="8" id="pqO-ZB-Q2P"/>
+                            <constraint firstItem="C0H-pw-RSl" firstAttribute="trailing" secondItem="mf6-E6-DmQ" secondAttribute="trailing" constant="16" id="qo7-uM-mYq"/>
                             <constraint firstItem="n6j-yg-uLt" firstAttribute="centerY" secondItem="EVv-F0-8a1" secondAttribute="centerY" id="rf9-jE-vqW"/>
-                            <constraint firstItem="hCl-Q8-hd5" firstAttribute="trailing" secondItem="C0H-pw-RSl" secondAttribute="trailing" id="sCh-Gb-jd7"/>
                             <constraint firstItem="AUX-To-gKI" firstAttribute="centerY" secondItem="Lbs-WQ-4zp" secondAttribute="centerY" id="sa7-iN-feC"/>
+                            <constraint firstItem="mf6-E6-DmQ" firstAttribute="top" secondItem="6jp-Ka-1Xg" secondAttribute="top" id="wpX-zE-bqL"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="C0H-pw-RSl"/>
                     </view>
@@ -2570,6 +2587,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <outlet property="doNotSpendChangeLabel" destination="fjA-7h-veh" id="g1h-Vy-UWq"/>
                         <outlet property="doNotSpendDustLabel" destination="AUX-To-gKI" id="1dM-2B-Abw"/>
                         <outlet property="feeSliderOutlet" destination="Ipy-yo-xxh" id="rHx-JP-mDx"/>
+                        <outlet property="imageView" destination="TgD-ae-rdY" id="Zpm-Ag-LC1"/>
                         <outlet property="outputsTable" destination="jXp-xP-J4h" id="y02-Rq-oD9"/>
                         <outlet property="receivingLabel" destination="uIC-Eu-XZD" id="wYg-jj-lxo"/>
                         <outlet property="scannerButton" destination="ynQ-Sz-wh0" id="7Kg-PV-l2l"/>
@@ -2949,7 +2967,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="NOC-aP-rCn">
-                                <rect key="frame" x="0.0" y="83" width="375" height="584"/>
+                                <rect key="frame" x="0.0" y="83" width="375" height="535"/>
                                 <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="separatorColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -3006,6 +3024,28 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                                 <constraint firstItem="ni3-IN-Mpq" firstAttribute="centerX" secondItem="wqc-ot-E8c" secondAttribute="centerX" id="URU-VE-fGE"/>
                                                 <constraint firstItem="ni3-IN-Mpq" firstAttribute="leading" secondItem="wqc-ot-E8c" secondAttribute="leadingMargin" id="ij3-3U-LCp"/>
                                                 <constraint firstItem="ni3-IN-Mpq" firstAttribute="centerY" secondItem="wqc-ot-E8c" secondAttribute="centerY" id="sTn-UD-cJm"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.050706155599999997" green="0.05862525851" blue="0.071102283899999993" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="lifehashCell" rowHeight="126" id="whs-Vd-4le">
+                                        <rect key="frame" x="15" y="580" width="345" height="126"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="whs-Vd-4le" id="obB-O8-dT7">
+                                            <rect key="frame" x="0.0" y="0.0" width="345" height="126"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7eV-J7-d3y">
+                                                    <rect key="frame" x="122.5" y="11" width="100" height="100"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="100" id="9qN-Qk-OZK"/>
+                                                        <constraint firstAttribute="width" constant="100" id="Hu4-Bl-kUp"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="7eV-J7-d3y" firstAttribute="centerX" secondItem="obB-O8-dT7" secondAttribute="centerX" id="Byh-aN-60p"/>
+                                                <constraint firstItem="7eV-J7-d3y" firstAttribute="top" secondItem="obB-O8-dT7" secondAttribute="topMargin" id="z83-81-lXH"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.050706155599999997" green="0.05862525851" blue="0.071102283899999993" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3077,7 +3117,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="yc0-Fv-wwi">
-                                <rect key="frame" x="16" y="78.5" width="30" height="30"/>
+                                <rect key="frame" x="16" y="70" width="30" height="30"/>
                                 <color key="tintColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="4V9-lo-VXw"/>
@@ -3085,28 +3125,13 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account successfully created!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aef-bh-l0x">
-                                <rect key="frame" x="53" y="52" width="306" height="83"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="83" id="Z8w-lx-P3y"/>
-                                </constraints>
+                                <rect key="frame" x="53" y="73" width="306" height="24"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="20"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="uIe-4E-bmA">
-                                <rect key="frame" x="16" y="185" width="343" height="412"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">In order to ensure you can recover your account there is some information you ought to record securely.
-
-You will be presented with an Account Map QR code and a 12 word seed phrase.
-
-You should make mutliple backups of each and store them in seperate locations.</string>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xwM-qa-HzN">
-                                <rect key="frame" x="159" y="617" width="57" height="30"/>
+                                <rect key="frame" x="159" y="568" width="57" height="30"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="57" id="8cC-7B-qfE"/>
@@ -3118,8 +3143,33 @@ You should make mutliple backups of each and store them in seperate locations.</
                                     <action selector="nextAction:" destination="shH-Cs-byi" eventType="touchUpInside" id="7YL-Bl-ZOv"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yT1-Ke-yf5">
+                                <rect key="frame" x="16" y="116" width="45" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="TPS-Iu-ZHD"/>
+                                    <constraint firstAttribute="width" constant="45" id="kLd-0w-RWB"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your account's lifehash, an easy to identify visualization of your account. " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M72-19-fX9">
+                                <rect key="frame" x="69" y="116" width="290" height="33.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="uIe-4E-bmA">
+                                <rect key="frame" x="16" y="211" width="343" height="349"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">In order to ensure you can recover your account there is some information you ought to record securely.
+
+You will be presented with an Account Map QR code and a 12 word seed phrase.
+
+You should make mutliple backups of each and store them in seperate locations.</string>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="add an account label here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4PM-ox-jZp">
-                                <rect key="frame" x="16" y="143" width="343" height="34"/>
+                                <rect key="frame" x="16" y="169" width="343" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
@@ -3129,22 +3179,28 @@ You should make mutliple backups of each and store them in seperate locations.</
                             <constraint firstItem="uIe-4E-bmA" firstAttribute="top" secondItem="4PM-ox-jZp" secondAttribute="bottom" constant="8" id="1Mf-Kp-98H"/>
                             <constraint firstItem="4PM-ox-jZp" firstAttribute="leading" secondItem="i9d-oo-KHe" secondAttribute="leading" constant="16" id="5DV-8n-7lq"/>
                             <constraint firstItem="xwM-qa-HzN" firstAttribute="centerX" secondItem="vnd-UJ-Nms" secondAttribute="centerX" id="7xD-PG-gkT"/>
+                            <constraint firstItem="yc0-Fv-wwi" firstAttribute="top" secondItem="i9d-oo-KHe" secondAttribute="top" constant="25.5" id="9e4-4W-fEg"/>
                             <constraint firstItem="i9d-oo-KHe" firstAttribute="bottom" secondItem="xwM-qa-HzN" secondAttribute="bottom" constant="20" id="CqO-FU-yeH"/>
                             <constraint firstItem="aef-bh-l0x" firstAttribute="leading" secondItem="yc0-Fv-wwi" secondAttribute="trailing" constant="7" id="Du4-5V-fnd"/>
-                            <constraint firstItem="xwM-qa-HzN" firstAttribute="top" secondItem="uIe-4E-bmA" secondAttribute="bottom" constant="20" id="GJQ-AC-FUW"/>
+                            <constraint firstItem="4PM-ox-jZp" firstAttribute="top" secondItem="yT1-Ke-yf5" secondAttribute="bottom" constant="8" id="FQu-vf-SWB"/>
+                            <constraint firstItem="xwM-qa-HzN" firstAttribute="top" secondItem="uIe-4E-bmA" secondAttribute="bottom" constant="8" id="GdO-1c-084"/>
                             <constraint firstItem="i9d-oo-KHe" firstAttribute="trailing" secondItem="4PM-ox-jZp" secondAttribute="trailing" constant="16" id="Lpn-m5-4eK"/>
-                            <constraint firstItem="4PM-ox-jZp" firstAttribute="top" secondItem="aef-bh-l0x" secondAttribute="bottom" constant="8" id="O72-Sx-Lmp"/>
+                            <constraint firstItem="M72-19-fX9" firstAttribute="leading" secondItem="yT1-Ke-yf5" secondAttribute="trailing" constant="8" id="TrF-K7-ObH"/>
+                            <constraint firstItem="M72-19-fX9" firstAttribute="top" secondItem="aef-bh-l0x" secondAttribute="bottom" constant="19" id="UHF-ZW-4rh"/>
                             <constraint firstItem="uIe-4E-bmA" firstAttribute="leading" secondItem="i9d-oo-KHe" secondAttribute="leading" constant="16" id="YoU-zh-U25"/>
                             <constraint firstItem="i9d-oo-KHe" firstAttribute="trailing" secondItem="aef-bh-l0x" secondAttribute="trailing" constant="16" id="cku-Qb-QAt"/>
+                            <constraint firstItem="i9d-oo-KHe" firstAttribute="trailing" secondItem="M72-19-fX9" secondAttribute="trailing" constant="16" id="iqi-i2-Uvr"/>
+                            <constraint firstItem="yT1-Ke-yf5" firstAttribute="leading" secondItem="i9d-oo-KHe" secondAttribute="leading" constant="16" id="o0Q-d1-KwY"/>
                             <constraint firstItem="yc0-Fv-wwi" firstAttribute="leading" secondItem="i9d-oo-KHe" secondAttribute="leading" constant="16" id="pdn-Az-bKM"/>
-                            <constraint firstItem="aef-bh-l0x" firstAttribute="top" secondItem="i9d-oo-KHe" secondAttribute="top" constant="8" id="pp4-xH-46D"/>
                             <constraint firstItem="yc0-Fv-wwi" firstAttribute="centerY" secondItem="aef-bh-l0x" secondAttribute="centerY" id="sxb-sY-WmS"/>
                             <constraint firstItem="i9d-oo-KHe" firstAttribute="trailing" secondItem="uIe-4E-bmA" secondAttribute="trailing" constant="16" id="vgf-a2-Nc1"/>
+                            <constraint firstItem="yT1-Ke-yf5" firstAttribute="top" secondItem="yc0-Fv-wwi" secondAttribute="bottom" constant="15.5" id="yDA-7K-KR0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="i9d-oo-KHe"/>
                     </view>
                     <navigationItem key="navigationItem" id="1TT-DX-F5Y"/>
                     <connections>
+                        <outlet property="imageView" destination="yT1-Ke-yf5" id="wBk-Nh-5bA"/>
                         <outlet property="nextOutlet" destination="xwM-qa-HzN" id="f8r-LD-V5X"/>
                         <outlet property="textField" destination="4PM-ox-jZp" id="8Vr-XZ-cB0"/>
                         <outlet property="textView" destination="uIe-4E-bmA" id="a9P-St-tNO"/>
@@ -3164,7 +3220,7 @@ You should make mutliple backups of each and store them in seperate locations.</
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9dU-ye-Td9">
-                                <rect key="frame" x="155.5" y="617" width="64" height="30"/>
+                                <rect key="frame" x="155.5" y="568" width="64" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="64" id="9d9-3i-pvJ"/>
@@ -3289,7 +3345,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </stackView>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zeg-gD-nXd">
-                                <rect key="frame" x="133.5" y="618" width="108" height="30"/>
+                                <rect key="frame" x="133.5" y="569" width="108" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="108" id="AyX-sh-90j"/>
@@ -3388,7 +3444,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XLw-9b-ixq">
-                                <rect key="frame" x="133.5" y="619" width="108" height="30"/>
+                                <rect key="frame" x="133.5" y="570" width="108" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="0pu-CH-uyz"/>
@@ -3541,7 +3597,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MpI-zv-VI9">
-                                <rect key="frame" x="155" y="581" width="65" height="30"/>
+                                <rect key="frame" x="155" y="532" width="65" height="30"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="65" id="KaA-jr-Lbd"/>
@@ -3554,7 +3610,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AFT-F7-8fK">
-                                <rect key="frame" x="16" y="0.0" width="343" height="573"/>
+                                <rect key="frame" x="16" y="0.0" width="343" height="524"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <string key="text">On the next screen we will display 12 very important words.
 
@@ -3642,7 +3698,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FuR-Cy-7AE">
-                                <rect key="frame" x="67.5" y="579" width="240" height="44"/>
+                                <rect key="frame" x="67.5" y="530" width="240" height="44"/>
                                 <subviews>
                                     <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fih-k0-Pmh">
                                         <rect key="frame" x="0.0" y="0.0" width="110" height="44"/>
@@ -4038,63 +4094,74 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsz-u9-Mzm">
-                                <rect key="frame" x="46" y="133" width="283" height="58"/>
-                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="58" id="iQ9-HI-X4s"/>
-                                    <constraint firstAttribute="width" constant="283" id="wT5-bR-fEp"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Scan account map QR" image="qrcode.viewfinder" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="scanAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="3za-sk-NIG"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Ai-bK-EJU">
-                                <rect key="frame" x="46" y="199" width="283" height="58"/>
-                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="58" id="Wpm-ma-zrj"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title=" Enter keys manually  " image="pencil.and.ellipsis.rectangle" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="addXpubsManually:" destination="Elr-wf-cyI" eventType="touchUpInside" id="iOu-aU-iA6"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40V-y5-mzs">
-                                <rect key="frame" x="46" y="265" width="283" height="58"/>
-                                <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="58" id="Suh-eJ-EUf"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="  Enter seed words       " image="bitcoinsign.square" catalog="system">
-                                    <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="getWordsAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="2Ri-M5-M4m"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="E22-VY-MaF">
+                                <rect key="frame" x="16" y="159" width="343" height="260"/>
+                                <subviews>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsz-u9-Mzm">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="50"/>
+                                        <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="yXG-qT-DWe"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="  Scan account map QR" image="qrcode.viewfinder" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="scanAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="3za-sk-NIG"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gsw-50-cRb">
+                                        <rect key="frame" x="0.0" y="70" width="343" height="50"/>
+                                        <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="UHt-OV-dEl"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="  Scan SSKR UR Shards" image="qrcode.viewfinder" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="scanSskrNow:" destination="Elr-wf-cyI" eventType="touchUpInside" id="OFv-2H-2jL"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Ai-bK-EJU">
+                                        <rect key="frame" x="0.0" y="140" width="343" height="50"/>
+                                        <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="aT6-vj-PAc"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title=" Enter keys manually  " image="pencil.and.ellipsis.rectangle" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="addXpubsManually:" destination="Elr-wf-cyI" eventType="touchUpInside" id="iOu-aU-iA6"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="40V-y5-mzs">
+                                        <rect key="frame" x="0.0" y="210" width="343" height="50"/>
+                                        <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="Rcs-O0-M7h"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="  Enter seed words       " image="bitcoinsign.square" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="getWordsAction:" destination="Elr-wf-cyI" eventType="touchUpInside" id="2Ri-M5-M4m"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="0.038850985470000002" green="0.050955481830000003" blue="0.055168129500000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="0Ai-bK-EJU" firstAttribute="centerX" secondItem="JxN-8Z-mkw" secondAttribute="centerX" id="1Ri-Ac-NNS"/>
-                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="0Ai-bK-EJU" secondAttribute="trailing" constant="46" id="2lF-IX-O9F"/>
-                            <constraint firstItem="40V-y5-mzs" firstAttribute="top" secondItem="0Ai-bK-EJU" secondAttribute="bottom" constant="8" id="6LF-do-HxP"/>
-                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="7Cm-sH-wLs"/>
-                            <constraint firstItem="0Ai-bK-EJU" firstAttribute="top" secondItem="nsz-u9-Mzm" secondAttribute="bottom" constant="8" id="7m8-dl-FwM"/>
-                            <constraint firstItem="40V-y5-mzs" firstAttribute="trailing" secondItem="duj-2r-qsr" secondAttribute="trailing" constant="-46" id="KLb-DD-ZZJ"/>
-                            <constraint firstItem="0Ai-bK-EJU" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="UDh-KB-FR1"/>
-                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="nsz-u9-Mzm" secondAttribute="trailing" constant="46" id="hjb-Jw-CsU"/>
-                            <constraint firstItem="nsz-u9-Mzm" firstAttribute="top" secondItem="duj-2r-qsr" secondAttribute="top" constant="89" id="xKT-9p-MJT"/>
-                            <constraint firstItem="40V-y5-mzs" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="46" id="zgj-Mv-4xW"/>
+                            <constraint firstItem="E22-VY-MaF" firstAttribute="top" secondItem="duj-2r-qsr" secondAttribute="top" constant="115" id="Kd7-ef-2PM"/>
+                            <constraint firstItem="E22-VY-MaF" firstAttribute="leading" secondItem="duj-2r-qsr" secondAttribute="leading" constant="16" id="vyg-Vw-jz3"/>
+                            <constraint firstItem="duj-2r-qsr" firstAttribute="trailing" secondItem="E22-VY-MaF" secondAttribute="trailing" constant="16" id="yDa-5q-P8H"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="duj-2r-qsr"/>
                     </view>
@@ -4107,6 +4174,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <segue destination="0g2-8e-jCH" kind="show" identifier="goConfirmQr" id="mqi-NU-Y0K"/>
                         <segue destination="kR7-Mg-fhs" kind="show" identifier="getWords" id="7qw-Ys-xsH"/>
                         <segue destination="QV1-we-EJN" kind="show" identifier="segueToManualXpubRecovery" id="WN6-Y9-PN0"/>
+                        <segue destination="o69-RN-9VD" kind="show" identifier="scanSskrSegue" id="clv-6h-CIc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZKN-I6-Ccq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -4152,11 +4220,11 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </connections>
                             </button>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ir0-SX-h8D">
-                                <rect key="frame" x="16" y="119" width="343" height="426"/>
+                                <rect key="frame" x="16" y="119" width="343" height="377"/>
                                 <color key="backgroundColor" red="0.06801593996529115" green="0.089767907349853029" blue="0.098156708180203167" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="custom derivations are optional and for expert users only, leave it blank to stick with the defaults (recommended)." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="08W-8g-1NG">
-                                <rect key="frame" x="16" y="624" width="343" height="35"/>
+                                <rect key="frame" x="16" y="575" width="343" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="m82-hX-dXM"/>
                                 </constraints>
@@ -4165,13 +4233,13 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Custom derivation: (optional)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ocn-cO-Dth">
-                                <rect key="frame" x="16" y="553" width="222" height="21"/>
+                                <rect key="frame" x="16" y="504" width="222" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="optional" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dUC-de-xB5">
-                                <rect key="frame" x="16" y="582" width="343" height="34"/>
+                                <rect key="frame" x="16" y="533" width="343" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                             </textField>
@@ -4562,7 +4630,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z3L-oO-DTP">
-                                <rect key="frame" x="99" y="621" width="177" height="27"/>
+                                <rect key="frame" x="99" y="572" width="177" height="27"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="27" id="DWa-of-avE"/>
                                     <constraint firstAttribute="width" constant="177" id="kJA-SC-WGa"/>
@@ -4596,12 +4664,20 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="mv9-LM-BsN"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Refill Keypool" id="08e-Ri-PlX"/>
+                    <navigationItem key="navigationItem" title="Refill Keypool" id="08e-Ri-PlX">
+                        <barButtonItem key="rightBarButtonItem" image="qrcode.viewfinder" catalog="system" id="itp-ke-8ZX">
+                            <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="scanShardsAction:" destination="reL-7P-R3q" id="Z0t-Hk-VIN"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="descriptionLabel" destination="np9-Jt-mqz" id="C4D-1r-yHA"/>
                         <outlet property="lostWordsOutlet" destination="Z3L-oO-DTP" id="Zct-5h-wVU"/>
                         <outlet property="textField" destination="PUj-6s-7Hk" id="Sut-R9-dPF"/>
                         <outlet property="wordsView" destination="Y4A-rC-7g8" id="dwa-UV-F6R"/>
+                        <segue destination="o69-RN-9VD" kind="presentation" identifier="segueToScanShards" id="fae-pp-fFg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4tH-gj-Xwq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -4617,7 +4693,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GAV-8b-V2V">
-                                <rect key="frame" x="16" y="89" width="343" height="558"/>
+                                <rect key="frame" x="16" y="89" width="343" height="509"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -4834,7 +4910,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="JXW-QX-3AG">
-                                <rect key="frame" x="0.0" y="44" width="375" height="624"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="575"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="singleSigWalletCell" rowHeight="335" id="GZc-Lm-9ch">
@@ -5093,15 +5169,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00000000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Sm-zd-H8y">
-                                                    <rect key="frame" x="16" y="52" width="313" height="48"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="48" id="cwj-mz-XrZ"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="46"/>
-                                                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="uhRD45u_StandUp.dat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LpX-Z8-tmr">
                                                     <rect key="frame" x="128" y="312" width="110" height="12"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
@@ -5126,6 +5193,22 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="44" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="T6q-7b-DL9">
+                                                    <rect key="frame" x="14" y="56" width="40" height="40"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" id="Div-li-2P4"/>
+                                                        <constraint firstAttribute="width" constant="40" id="gbr-9J-oid"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00000000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Sm-zd-H8y">
+                                                    <rect key="frame" x="62" y="52" width="267" height="48"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="48" id="cwj-mz-XrZ"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="46"/>
+                                                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
@@ -5138,6 +5221,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                 <constraint firstItem="TQL-WW-Jpr" firstAttribute="leading" secondItem="DLd-eo-yhH" secondAttribute="trailing" constant="8" id="792-19-H3I"/>
                                                 <constraint firstItem="DLd-eo-yhH" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leadingMargin" constant="-1" id="Aib-Z8-KYd"/>
                                                 <constraint firstItem="LpX-Z8-tmr" firstAttribute="leading" secondItem="ev4-Ba-BNf" secondAttribute="leading" id="CGL-UH-ae7"/>
+                                                <constraint firstItem="6Sm-zd-H8y" firstAttribute="leading" secondItem="T6q-7b-DL9" secondAttribute="trailing" constant="8" id="F1m-0w-x6j"/>
                                                 <constraint firstItem="LpX-Z8-tmr" firstAttribute="centerY" secondItem="g8x-Ld-Ezw" secondAttribute="centerY" id="FmU-WX-gXk"/>
                                                 <constraint firstItem="kYv-xd-YpP" firstAttribute="leading" secondItem="gEN-a7-pZj" secondAttribute="trailing" constant="8.5" id="GMc-oN-EuI"/>
                                                 <constraint firstItem="gEN-a7-pZj" firstAttribute="centerY" secondItem="DLd-eo-yhH" secondAttribute="centerY" id="GOp-sy-Myb"/>
@@ -5151,12 +5235,13 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                 <constraint firstAttribute="trailing" secondItem="7yp-J1-Thl" secondAttribute="trailing" id="TaX-4v-sep"/>
                                                 <constraint firstItem="xH1-gd-tNV" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leadingMargin" id="Tb5-8J-LgN"/>
                                                 <constraint firstItem="xH1-gd-tNV" firstAttribute="trailing" secondItem="nN1-0D-mSU" secondAttribute="trailingMargin" id="VO4-b3-nOH"/>
-                                                <constraint firstItem="6Sm-zd-H8y" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leading" constant="16" id="Xe7-IH-96A"/>
                                                 <constraint firstItem="vxO-CT-ic3" firstAttribute="top" secondItem="DLd-eo-yhH" secondAttribute="bottom" constant="2" id="YjN-qv-xX9"/>
                                                 <constraint firstItem="car-yr-b08" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leadingMargin" id="Zf1-md-eIl"/>
                                                 <constraint firstItem="4rs-FI-UmB" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leadingMargin" id="aq3-Ch-tiE"/>
                                                 <constraint firstItem="7yp-J1-Thl" firstAttribute="top" secondItem="nN1-0D-mSU" secondAttribute="top" id="dNb-Es-J4R"/>
                                                 <constraint firstItem="Mus-be-FaA" firstAttribute="top" secondItem="4rs-FI-UmB" secondAttribute="bottom" constant="3" id="lWq-q2-bGY"/>
+                                                <constraint firstItem="T6q-7b-DL9" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leading" constant="14" id="oeP-q2-vAs"/>
+                                                <constraint firstItem="T6q-7b-DL9" firstAttribute="top" secondItem="7yp-J1-Thl" secondAttribute="bottom" constant="12" id="p3P-27-z0P"/>
                                                 <constraint firstItem="7yp-J1-Thl" firstAttribute="leading" secondItem="nN1-0D-mSU" secondAttribute="leading" id="p5i-3d-X6S"/>
                                                 <constraint firstItem="g8x-Ld-Ezw" firstAttribute="bottom" secondItem="nN1-0D-mSU" secondAttribute="bottomMargin" id="ppQ-je-Woj"/>
                                                 <constraint firstItem="DLd-eo-yhH" firstAttribute="top" secondItem="xH1-gd-tNV" secondAttribute="bottom" constant="7.5" id="sph-Xk-Mrw"/>
@@ -5493,7 +5578,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00000000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KGY-cW-hyS">
-                                                    <rect key="frame" x="15" y="52" width="315" height="48"/>
+                                                    <rect key="frame" x="63" y="52" width="267" height="48"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="48" id="vny-gI-uR3"/>
                                                     </constraints>
@@ -5525,6 +5610,13 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="44" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4xV-cy-4kc">
+                                                    <rect key="frame" x="15" y="56" width="40" height="40"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" id="GVC-7O-baR"/>
+                                                        <constraint firstAttribute="width" constant="40" id="zGH-eE-ndB"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="4Fz-Xw-tv1" firstAttribute="top" secondItem="hMn-I7-11U" secondAttribute="bottom" constant="2" id="1LK-q8-fmb"/>
@@ -5549,12 +5641,13 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                 <constraint firstItem="pII-Us-N4E" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leadingMargin" id="WIa-ew-J4R"/>
                                                 <constraint firstItem="hNy-iI-3Iy" firstAttribute="leading" secondItem="hMn-I7-11U" secondAttribute="trailing" constant="5" id="WUK-yK-XJf"/>
                                                 <constraint firstItem="Pie-V8-QKM" firstAttribute="trailing" secondItem="EKP-cw-XcR" secondAttribute="trailingMargin" id="Wae-xv-yx4"/>
+                                                <constraint firstItem="4xV-cy-4kc" firstAttribute="top" secondItem="kho-sl-W6K" secondAttribute="bottom" constant="12" id="ZNT-hb-ePp"/>
                                                 <constraint firstItem="Pie-V8-QKM" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leadingMargin" id="Zis-Tb-Kz6"/>
-                                                <constraint firstItem="KGY-cW-hyS" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leadingMargin" id="clr-Pd-Byf"/>
                                                 <constraint firstItem="75R-94-8gm" firstAttribute="leading" secondItem="Ckd-q3-zNx" secondAttribute="trailing" constant="2" id="ddk-jQ-Db9"/>
                                                 <constraint firstAttribute="trailing" secondItem="kho-sl-W6K" secondAttribute="trailing" id="dui-ac-HlT"/>
                                                 <constraint firstItem="kho-sl-W6K" firstAttribute="top" secondItem="EKP-cw-XcR" secondAttribute="top" id="eMO-Ud-rWa"/>
                                                 <constraint firstItem="pII-Us-N4E" firstAttribute="top" secondItem="Pie-V8-QKM" secondAttribute="bottom" constant="8" id="fBM-gl-wRq"/>
+                                                <constraint firstItem="KGY-cW-hyS" firstAttribute="leading" secondItem="4xV-cy-4kc" secondAttribute="trailing" constant="8" id="fK7-Te-SDA"/>
                                                 <constraint firstItem="Ckd-q3-zNx" firstAttribute="top" secondItem="Pd7-kd-359" secondAttribute="bottom" constant="8" id="fRG-GD-9EB"/>
                                                 <constraint firstItem="4Fz-Xw-tv1" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leadingMargin" constant="1" id="hhW-FG-uSh"/>
                                                 <constraint firstItem="KGY-cW-hyS" firstAttribute="top" secondItem="kho-sl-W6K" secondAttribute="bottom" constant="8" id="hr2-dR-dtR"/>
@@ -5564,6 +5657,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                                 <constraint firstItem="xiT-PY-mWf" firstAttribute="centerY" secondItem="75R-94-8gm" secondAttribute="centerY" id="sUg-ID-fje"/>
                                                 <constraint firstItem="MfD-7G-p6e" firstAttribute="centerY" secondItem="75R-94-8gm" secondAttribute="centerY" id="vnn-dw-xcE"/>
                                                 <constraint firstItem="hNy-iI-3Iy" firstAttribute="centerY" secondItem="hMn-I7-11U" secondAttribute="centerY" id="w2Q-fA-9Mh"/>
+                                                <constraint firstItem="4xV-cy-4kc" firstAttribute="leading" secondItem="EKP-cw-XcR" secondAttribute="leadingMargin" id="xRG-HD-X8d"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.089769794811718012" green="0.10632825981529986" blue="0.12038902404213192" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -5743,7 +5837,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </connections>
                             </button>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gC1-hS-rHa">
-                                <rect key="frame" x="16" y="610" width="343" height="38"/>
+                                <rect key="frame" x="16" y="561" width="343" height="38"/>
                                 <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="38" id="Cx2-wB-uV1"/>
@@ -5758,14 +5852,14 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                 </connections>
                             </button>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qRS-Sq-Mau">
-                                <rect key="frame" x="163" y="548" width="51" height="31"/>
+                                <rect key="frame" x="163" y="499" width="51" height="31"/>
                                 <color key="onTintColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <action selector="switchCustomSeedAction:" destination="20O-ZD-xtI" eventType="valueChanged" id="l60-xI-Tgd"/>
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="custom seed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qpe-22-gpY">
-                                <rect key="frame" x="151.5" y="587" width="72.5" height="15"/>
+                                <rect key="frame" x="151.5" y="538" width="72.5" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -6287,20 +6381,19 @@ At a minimum we recommend writing these words down on water proof paper with a p
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="vbG-Ex-JNf"/>
+        <segue reference="l1a-Jv-Q1K"/>
         <segue reference="WN6-Y9-PN0"/>
         <segue reference="AOL-nc-Scs"/>
-        <segue reference="msh-B5-XLl"/>
-        <segue reference="uaX-te-aDX"/>
-        <segue reference="dWo-28-ynr"/>
-        <segue reference="prj-l9-xjw"/>
-        <segue reference="sfT-Xz-gNf"/>
-        <segue reference="igz-Ga-xca"/>
+        <segue reference="fBg-S5-BEW"/>
+        <segue reference="pun-AW-DGw"/>
+        <segue reference="B11-cw-c8e"/>
+        <segue reference="7qw-Ys-xsH"/>
+        <segue reference="mqi-NU-Y0K"/>
         <segue reference="G4m-Sr-i7G"/>
         <segue reference="c5y-jb-z8M"/>
-        <segue reference="2kH-rb-1zK"/>
-        <segue reference="OVL-GL-HPC"/>
-        <segue reference="N8R-BU-J52"/>
+        <segue reference="MTV-lr-E4R"/>
+        <segue reference="cZz-Rg-m7M"/>
+        <segue reference="clv-6h-CIc"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>

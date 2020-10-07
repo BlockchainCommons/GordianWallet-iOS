@@ -11,6 +11,7 @@ import LibWally
 
 class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
+    var scanningShards = Bool()
     var isScanningInvoice = Bool()
     var isImporting = Bool()
     var unsignedPsbt = ""
@@ -23,8 +24,8 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     var closeButton = UIButton()
     var onDoneRecoveringBlock : (([String:Any]) -> Void)?
     var onDoneBlock : ((Bool) -> Void)?
-    var onScanBip21DoneBlock: ((String) -> Void)?
-    var onImportDoneBlock : ((String) -> Void)?
+    var returnStringBlock: ((String) -> Void)?
+    //var onImportDoneBlock : ((String) -> Void)?
     let qrScanner = QRScanner()
     var isTorchOn = Bool()
     let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
@@ -64,7 +65,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
 
                     alert.addAction(UIAlertAction(title: "Add Node", style: .default, handler: { action in
                         
-                        vc.addBtcRpcQr(url: qrCodeLink)
+                        vc.processQRString(url: qrCodeLink)
                         
                     }))
                     
@@ -90,7 +91,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
 
                         alert.addAction(UIAlertAction(title: "Add Node", style: .default, handler: { action in
                             
-                            vc.addBtcRpcQr(url: value)
+                            vc.processQRString(url: value)
                             
                         }))
                         
@@ -147,7 +148,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             
         } else if isRecovering {
             
-            let url = URL(string: "https://github.com/BlockchainCommons/FullyNoded-2/blob/master/Recovery.md")!
+            let url = URL(string: "https://github.com/BlockchainCommons/GordianWallet-iOS/blob/master/Recovery.md")!
             UIApplication.shared.open(url) { (Bool) in }
             
         }
@@ -163,8 +164,8 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { [unowned vc = self] action in
                 
                 // Testnet Linode instance:
-                let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=Test%20Node"
-                vc.addBtcRpcQr(url: url)
+                let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=BC%20Beta%20Test%20Node"
+                vc.processQRString(url: url)
 
             }))
             
@@ -183,6 +184,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         imageView.frame = view.frame
         imageView.isUserInteractionEnabled = true
         
+        qrScanner.scanningShards = scanningShards
         qrScanner.scanningBip21 = isScanningInvoice
         qrScanner.isScanningNode = scanningNode
         qrScanner.scanningRecovery = isRecovering
@@ -218,7 +220,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     func didPickImage() {
         
         let qrString = qrScanner.qrString
-        addBtcRpcQr(url: qrString)
+        processQRString(url: qrString)
         
     }
     
@@ -271,7 +273,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     func getQRCode() {
         
         let btcstandupURI = qrScanner.stringToReturn
-        addBtcRpcQr(url: btcstandupURI)
+        processQRString(url: btcstandupURI)
         
     }
     
@@ -321,85 +323,57 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         
     }
     
-    func addBtcRpcQr(url: String) {
+    func processQRString(url: String) {
         
         func addnode() {
-            
             let qc = QuickConnect()
             qc.addNode(vc: self, url: url) { (success, errorDesc) in
-                
                 if success {
-                    
                     DispatchQueue.main.async {
-                        
                         self.onDoneBlock!(true)
                         self.dismiss(animated: true, completion: nil)
-                        
                     }
-                    
                 } else {
-                    
                     showAlert(vc: self, title: "Error", message: "Error adding node: \(errorDesc ?? "unknown error")")
-                    
                 }
-                
             }
-            
         }
         
         func updateNode() {
-            
             let qc = QuickConnect()
             qc.nodeToUpdate = self.nodeId
             qc.addNode(vc: self, url: url) { (success, errorDesc) in
-                
                 if success {
-                    
                     DispatchQueue.main.async {
-                        
                         self.onDoneBlock!(true)
                         self.dismiss(animated: true, completion: nil)
-                        
                     }
-                    
                 } else {
-                    
                     showAlert(vc: self, title: "Error", message: "Error adding node: \(errorDesc ?? "unknown error")")
-                    
                 }
-                
             }
-            
         }
         
-        if isScanningInvoice {
-            
-            onScanBip21DoneBlock!(url)
-            self.dismiss(animated: true, completion: nil)
-            
-        } else if isRecovering {
-            
-            onImportDoneBlock!(url)
-            self.navigationController?.popViewController(animated: true)
-            
-        } else if isImporting {
-            
-            self.dismiss(animated: true) { [unowned vc = self] in
-                vc.onImportDoneBlock!(url)
+        if scanningShards || isScanningInvoice || isImporting {
+            if navigationController != nil {
+                self.returnStringBlock!(url)
+                navigationController?.popViewController(animated: true)
+            } else {
+                dismiss(animated: true) { [weak self] in
+                    self?.returnStringBlock!(url)
+                }
             }
             
-        } else {
+        } else if isRecovering {
+            returnStringBlock!(url)
+            navigationController?.popViewController(animated: true)
             
+        } else {
             if url.hasPrefix("btcrpc://") || url.hasPrefix("btcstandup://") {
-                
                 if !updatingNode {
-                    
                     addnode()
-                    
                 } else {
-                    
                     updateNode()
-                    
                 }
                 
             } else if let _ = Data(base64Encoded: url) {

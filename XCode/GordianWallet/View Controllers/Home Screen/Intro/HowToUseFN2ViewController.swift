@@ -15,12 +15,12 @@ class HowToUseFN2ViewController: UIViewController, UITextViewDelegate, UINavigat
     @IBOutlet var textView: UITextView!
     
     let standupAppLink = "https://drive.google.com/open?id=1lXyl_zO6WPJN5tzWAVV3p42WPFtyesCR"
-    let scriptLink = "https://github.com/BlockchainCommons/Bitcoin-Standup/tree/master/Scripts"
+    let scriptLink = "https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts"
     let myNodeLink = "http://www.mynodebtc.com"
     let raspiBlitzLink = "https://raspiblitz.com"
     let nodlLink = "https://www.nodl.it"
     let btcpayLink = "https://btcpayserver.org"
-    let quickConnectLink = "https://github.com/BlockchainCommons/Bitcoin-Standup#quick-connect-url-using-btcstandup"
+    let quickConnectLink = "https://github.com/BlockchainCommons/Gordian/blob/master/Docs/Quick-Connect-API.md"
 
     override func viewDidLoad() {
         super.viewDidLoad()

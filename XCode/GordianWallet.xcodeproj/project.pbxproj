@@ -36,13 +36,22 @@
 		D047DE0B242C651F004BC26D /* WalletCreatedWordsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DE0A242C651F004BC26D /* WalletCreatedWordsViewController.swift */; };
 		D047DE0D242D984E004BC26D /* RefillSingleSig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DE0C242D984E004BC26D /* RefillSingleSig.swift */; };
 		D047DE0F242DDEB3004BC26D /* LocalNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047DE0E242DDEB3004BC26D /* LocalNode.swift */; };
+		D04AC566251EDA0C00D1CB88 /* CSSKR.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04AC560251EDA0A00D1CB88 /* CSSKR.xcframework */; };
+		D04AC567251EDA0C00D1CB88 /* CShamir.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04AC561251EDA0A00D1CB88 /* CShamir.xcframework */; };
+		D04AC568251EDA0C00D1CB88 /* CCryptoBase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04AC562251EDA0B00D1CB88 /* CCryptoBase.xcframework */; };
+		D04AC56C251EDE3900D1CB88 /* CryptoBase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04AC564251EDA0B00D1CB88 /* CryptoBase.xcframework */; };
+		D04AC56D251EDE3900D1CB88 /* CryptoBase.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D04AC564251EDA0B00D1CB88 /* CryptoBase.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D04AC56E251EDE7400D1CB88 /* Shamir.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04AC565251EDA0C00D1CB88 /* Shamir.xcframework */; };
+		D04AC56F251EDE7400D1CB88 /* Shamir.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D04AC565251EDA0C00D1CB88 /* Shamir.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D04AC570251EDE7700D1CB88 /* SSKR.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D04AC563251EDA0B00D1CB88 /* SSKR.xcframework */; };
+		D04AC571251EDE7700D1CB88 /* SSKR.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D04AC563251EDA0B00D1CB88 /* SSKR.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D0502FEC244C44EA00213870 /* PSBTSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0502FEB244C44EA00213870 /* PSBTSigner.swift */; };
 		D0502FEE244D2D4A00213870 /* FiatConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0502FED244D2D4A00213870 /* FiatConverter.swift */; };
 		D0502FF024500DE000213870 /* AddExtendedKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0502FEF24500DE000213870 /* AddExtendedKeyViewController.swift */; };
 		D05650082441A78E00754ACF /* VerifyKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650072441A78E00754ACF /* VerifyKeysViewController.swift */; };
 		D056500A2442C58200754ACF /* WordRecoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05650092442C58200754ACF /* WordRecoveryViewController.swift */; };
 		D056500C2446BF6E00754ACF /* 1024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D056500B2446BF6D00754ACF /* 1024.jpg */; };
-		D06FD7C12505FDC700481185 /* CLibWally.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06FD7BF2505FDC600481185 /* CLibWally.xcframework */; };
+		D0576F032519BECA005D11CE /* Shard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0576F022519BECA005D11CE /* Shard.swift */; };
 		D06FD7C72506005100481185 /* LibWally.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06FD7C52506003300481185 /* LibWally.xcframework */; };
 		D06FD7C82506005100481185 /* LibWally.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D06FD7C52506003300481185 /* LibWally.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D07399D7245E6E5600860B7E /* Broadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399D6245E6E5600860B7E /* Broadcast.swift */; };
@@ -50,6 +59,7 @@
 		D07399DD2461764700860B7E /* XpubConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DC2461764700860B7E /* XpubConverter.swift */; };
 		D07399DF2461796A00860B7E /* Base58.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07399DE2461796A00860B7E /* Base58.swift */; };
 		D07399E324617A1000860B7E /* base58.c in Sources */ = {isa = PBXBuildFile; fileRef = D07399E224617A1000860B7E /* base58.c */; };
+		D0828F70251DCC62001A11A0 /* CLibWally.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D06FD7BF2505FDC600481185 /* CLibWally.xcframework */; };
 		D08A3DF4246D0F6900ADDDC6 /* TextBlurbs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08A3DF3246D0F6900ADDDC6 /* TextBlurbs.swift */; };
 		D09D724123F0EDBB00847DC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724023F0EDBB00847DC8 /* AppDelegate.swift */; };
 		D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D724223F0EDBB00847DC8 /* SceneDelegate.swift */; };
@@ -140,6 +150,8 @@
 		D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B08BE5241888500025AD04 /* DonateViewController.swift */; };
 		D0B3649D24DE2FFB0008A22F /* URKit in Frameworks */ = {isa = PBXBuildFile; productRef = D0B3649C24DE2FFB0008A22F /* URKit */; };
 		D0B3649F24DF805A0008A22F /* UniformResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B3649E24DF805A0008A22F /* UniformResource.swift */; };
+		D0B7F8072514841900D81022 /* LifeHash in Frameworks */ = {isa = PBXBuildFile; productRef = D0B7F8062514841900D81022 /* LifeHash */; };
+		D0B7F8092514965500D81022 /* LifeHashImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7F8082514965500D81022 /* LifeHashImage.swift */; };
 		D0BFDF572490B6A600EB7846 /* LockedUtxoStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */; };
 		D0BFDF592490BC4400EB7846 /* CoinControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFDF582490BC4400EB7846 /* CoinControl.swift */; };
 		D0C20EE924A82B7000C62AA4 /* TransactionFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C20EE824A82B7000C62AA4 /* TransactionFetcher.swift */; };
@@ -193,7 +205,10 @@
 			dstSubfolderSpec = 10;
 			files = (
 				D06FD7C82506005100481185 /* LibWally.xcframework in Embed Frameworks */,
+				D04AC571251EDE7700D1CB88 /* SSKR.xcframework in Embed Frameworks */,
+				D04AC56F251EDE7400D1CB88 /* Shamir.xcframework in Embed Frameworks */,
 				D03FC07925087F4E00450B45 /* Tor-3.xcframework in Embed Frameworks */,
+				D04AC56D251EDE3900D1CB88 /* CryptoBase.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -231,12 +246,19 @@
 		D047DE0A242C651F004BC26D /* WalletCreatedWordsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCreatedWordsViewController.swift; sourceTree = "<group>"; };
 		D047DE0C242D984E004BC26D /* RefillSingleSig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillSingleSig.swift; sourceTree = "<group>"; };
 		D047DE0E242DDEB3004BC26D /* LocalNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNode.swift; sourceTree = "<group>"; };
+		D04AC560251EDA0A00D1CB88 /* CSSKR.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CSSKR.xcframework; sourceTree = "<group>"; };
+		D04AC561251EDA0A00D1CB88 /* CShamir.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CShamir.xcframework; sourceTree = "<group>"; };
+		D04AC562251EDA0B00D1CB88 /* CCryptoBase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CCryptoBase.xcframework; sourceTree = "<group>"; };
+		D04AC563251EDA0B00D1CB88 /* SSKR.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = SSKR.xcframework; sourceTree = "<group>"; };
+		D04AC564251EDA0B00D1CB88 /* CryptoBase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CryptoBase.xcframework; sourceTree = "<group>"; };
+		D04AC565251EDA0C00D1CB88 /* Shamir.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Shamir.xcframework; sourceTree = "<group>"; };
 		D0502FEB244C44EA00213870 /* PSBTSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PSBTSigner.swift; sourceTree = "<group>"; };
 		D0502FED244D2D4A00213870 /* FiatConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatConverter.swift; sourceTree = "<group>"; };
 		D0502FEF24500DE000213870 /* AddExtendedKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExtendedKeyViewController.swift; sourceTree = "<group>"; };
 		D05650072441A78E00754ACF /* VerifyKeysViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyKeysViewController.swift; sourceTree = "<group>"; };
 		D05650092442C58200754ACF /* WordRecoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordRecoveryViewController.swift; sourceTree = "<group>"; };
 		D056500B2446BF6D00754ACF /* 1024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1024.jpg; sourceTree = "<group>"; };
+		D0576F022519BECA005D11CE /* Shard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shard.swift; sourceTree = "<group>"; };
 		D06FD7BF2505FDC600481185 /* CLibWally.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CLibWally.xcframework; sourceTree = "<group>"; };
 		D06FD7C52506003300481185 /* LibWally.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = LibWally.xcframework; sourceTree = "<group>"; };
 		D07399D6245E6E5600860B7E /* Broadcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Broadcast.swift; sourceTree = "<group>"; };
@@ -343,6 +365,7 @@
 		D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseWalletFormatViewController.swift; sourceTree = "<group>"; };
 		D0B08BE5241888500025AD04 /* DonateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonateViewController.swift; sourceTree = "<group>"; };
 		D0B3649E24DF805A0008A22F /* UniformResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniformResource.swift; sourceTree = "<group>"; };
+		D0B7F8082514965500D81022 /* LifeHashImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LifeHashImage.swift; sourceTree = "<group>"; };
 		D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockedUtxoStruct.swift; sourceTree = "<group>"; };
 		D0BFDF582490BC4400EB7846 /* CoinControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinControl.swift; sourceTree = "<group>"; };
 		D0C20EE824A82B7000C62AA4 /* TransactionFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionFetcher.swift; sourceTree = "<group>"; };
@@ -366,10 +389,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D06FD7C12505FDC700481185 /* CLibWally.xcframework in Frameworks */,
+				D0B7F8072514841900D81022 /* LifeHash in Frameworks */,
+				D0828F70251DCC62001A11A0 /* CLibWally.xcframework in Frameworks */,
+				D04AC568251EDA0C00D1CB88 /* CCryptoBase.xcframework in Frameworks */,
+				D04AC567251EDA0C00D1CB88 /* CShamir.xcframework in Frameworks */,
+				D04AC566251EDA0C00D1CB88 /* CSSKR.xcframework in Frameworks */,
 				D0B3649D24DE2FFB0008A22F /* URKit in Frameworks */,
+				D04AC56C251EDE3900D1CB88 /* CryptoBase.xcframework in Frameworks */,
+				D04AC56E251EDE7400D1CB88 /* Shamir.xcframework in Frameworks */,
 				D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */,
 				D06FD7C72506005100481185 /* LibWally.xcframework in Frameworks */,
+				D04AC570251EDE7700D1CB88 /* SSKR.xcframework in Frameworks */,
 				D03FC07825087F4E00450B45 /* Tor-3.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -394,6 +424,12 @@
 		81676B434392851969DDF649 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D04AC562251EDA0B00D1CB88 /* CCryptoBase.xcframework */,
+				D04AC564251EDA0B00D1CB88 /* CryptoBase.xcframework */,
+				D04AC561251EDA0A00D1CB88 /* CShamir.xcframework */,
+				D04AC560251EDA0A00D1CB88 /* CSSKR.xcframework */,
+				D04AC565251EDA0C00D1CB88 /* Shamir.xcframework */,
+				D04AC563251EDA0B00D1CB88 /* SSKR.xcframework */,
 				D03FC07625087F4400450B45 /* Tor-3.xcframework */,
 				D06FD7C52506003300481185 /* LibWally.xcframework */,
 				D06FD7BF2505FDC600481185 /* CLibWally.xcframework */,
@@ -527,6 +563,7 @@
 				D0DB944E24736C0600A0E99D /* TransactionStruct.swift */,
 				D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */,
 				D0D5E63E24A087C700F3783C /* StatusStruct.swift */,
+				D0576F022519BECA005D11CE /* Shard.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -726,6 +763,7 @@
 				D0A1C99D24CFA6CB0052FFE7 /* AddressScanner.swift */,
 				D0A1C99F24CFA7240052FFE7 /* CheckSubAccounts.swift */,
 				D0B3649E24DF805A0008A22F /* UniformResource.swift */,
+				D0B7F8082514965500D81022 /* LifeHashImage.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -937,6 +975,7 @@
 			name = GordianWallet;
 			packageProductDependencies = (
 				D0B3649C24DE2FFB0008A22F /* URKit */,
+				D0B7F8062514841900D81022 /* LifeHash */,
 			);
 			productName = FullyNoded2;
 			productReference = D09D723D23F0EDBB00847DC8 /* Gordian Wallet.app */;
@@ -946,7 +985,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D09D726D23F0EDC300847DC8 /* Build configuration list for PBXNativeTarget "GordianWalletTests" */;
 			buildPhases = (
-				E07860C251DFE866BB96F736 /* [CP] Check Pods Manifest.lock */,
 				D09D725223F0EDC300847DC8 /* Sources */,
 				D09D725323F0EDC300847DC8 /* Frameworks */,
 				D09D725423F0EDC300847DC8 /* Resources */,
@@ -965,11 +1003,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D09D727023F0EDC300847DC8 /* Build configuration list for PBXNativeTarget "GordianWalletUITests" */;
 			buildPhases = (
-				E9BF6764452A3537FA269B11 /* [CP] Check Pods Manifest.lock */,
 				D09D725D23F0EDC300847DC8 /* Sources */,
 				D09D725E23F0EDC300847DC8 /* Frameworks */,
 				D09D725F23F0EDC300847DC8 /* Resources */,
-				7E49488A27EFD889BA84E792 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1016,6 +1052,7 @@
 			mainGroup = D09D723423F0EDBB00847DC8;
 			packageReferences = (
 				D0B3649B24DE2FFB0008A22F /* XCRemoteSwiftPackageReference "URKit" */,
+				D0B7F8052514841900D81022 /* XCRemoteSwiftPackageReference "LifeHash" */,
 			);
 			productRefGroup = D09D723E23F0EDBB00847DC8 /* Products */;
 			projectDirPath = "";
@@ -1079,23 +1116,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		7E49488A27EFD889BA84E792 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GordianWallet-GordianWalletUITests/Pods-GordianWallet-GordianWalletUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GordianWallet-GordianWalletUITests/Pods-GordianWallet-GordianWalletUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GordianWallet-GordianWalletUITests/Pods-GordianWallet-GordianWalletUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		D09D727323F0F1F800847DC8 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1112,50 +1132,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-		E07860C251DFE866BB96F736 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-GordianWalletTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E9BF6764452A3537FA269B11 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-GordianWallet-GordianWalletUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1184,6 +1160,7 @@
 				D0D5E63F24A087C700F3783C /* StatusStruct.swift in Sources */,
 				D00016B5245BBB5C0091F7CF /* SeedStruct.swift in Sources */,
 				D042EFA22457E52F00C2CEBE /* WalletCreatedNodesSeedViewController.swift in Sources */,
+				D0576F032519BECA005D11CE /* Shard.swift in Sources */,
 				D09D732823F0F3C000847DC8 /* VerifyViewController.swift in Sources */,
 				D09D732F23F0F3C000847DC8 /* ScannerViewController.swift in Sources */,
 				D09D724323F0EDBB00847DC8 /* SceneDelegate.swift in Sources */,
@@ -1227,6 +1204,7 @@
 				D09D732423F0F3C000847DC8 /* CreateRawTxViewController.swift in Sources */,
 				D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */,
 				D047DDFF242B331F004BC26D /* HowToUseFN2ViewController.swift in Sources */,
+				D0B7F8092514965500D81022 /* LifeHashImage.swift in Sources */,
 				D09D732223F0F3C000847DC8 /* RecoveryViewController.swift in Sources */,
 				D04179EF247629D40096F74D /* segwit_addr.c in Sources */,
 				D09D731023F0F3C000847DC8 /* NodeLogic.swift in Sources */,
@@ -1436,7 +1414,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = GordianWallet/GordianWallet.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.82;
+				CURRENT_PROJECT_VERSION = 0.1.87;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				ENABLE_BITCODE = NO;
@@ -1464,7 +1442,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = GordianWallet/GordianWallet.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.82;
+				CURRENT_PROJECT_VERSION = 0.1.87;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				ENABLE_BITCODE = NO;
@@ -1503,7 +1481,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FullyNoded 2.app/FullyNoded 2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Gordian Wallet.app/Gordian Wallet";
 			};
 			name = Debug;
 		};
@@ -1526,7 +1504,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FullyNoded 2.app/FullyNoded 2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Gordian Wallet.app/Gordian Wallet";
 			};
 			name = Release;
 		};
@@ -1620,6 +1598,14 @@
 				minimumVersion = 1.0.3;
 			};
 		};
+		D0B7F8052514841900D81022 /* XCRemoteSwiftPackageReference "LifeHash" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/BlockchainCommons/LifeHash";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1627,6 +1613,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D0B3649B24DE2FFB0008A22F /* XCRemoteSwiftPackageReference "URKit" */;
 			productName = URKit;
+		};
+		D0B7F8062514841900D81022 /* LifeHash */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0B7F8052514841900D81022 /* XCRemoteSwiftPackageReference "LifeHash" */;
+			productName = LifeHash;
 		};
 /* End XCSwiftPackageProductDependency section */
 
