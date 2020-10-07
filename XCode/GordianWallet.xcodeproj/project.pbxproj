@@ -1424,11 +1424,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Pods/LibWally/CLibWally/libwally-core/src/.libs",
-				);
-				MARKETING_VERSION = 0.1.87;
 				MARKETING_VERSION = 0.1.82;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "Gordian Wallet";
@@ -1457,11 +1452,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Pods/LibWally/CLibWally/libwally-core/src/.libs",
-				);
-				MARKETING_VERSION = 0.1.87;
 				MARKETING_VERSION = 0.1.82;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "Gordian Wallet";
