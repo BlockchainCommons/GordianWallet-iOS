@@ -465,7 +465,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
             
             if let vc = segue.destination as? QRDisplayerViewController {
                 
-                vc.address = url
+                vc.text = url
                 
             }
             

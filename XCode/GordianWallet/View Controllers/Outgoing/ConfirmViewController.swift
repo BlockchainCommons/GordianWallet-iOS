@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import URKit
 import AuthenticationServices
 
 class ConfirmViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding, UITextFieldDelegate {
     
+    var parts = [String]()
     var memo = ""
     var txFee = Double()
     var fxRate = Double()
@@ -116,16 +118,34 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         
     }
     
+    private func convertPsbtToUrParts() {
+        guard let b64 = Data(base64Encoded: unsignedPsbt), let ur = URHelper.psbtUr(b64) else { return }
+        let encoder = UREncoder(ur, maxFragmentLen: 250)
+        
+        let part = encoder.nextPart()
+        let index = encoder.seqNum
+        
+        if index <= encoder.seqLen {
+            parts.append(part.uppercased())
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.performSegue(withIdentifier: "segueToExportPsbtAsQR", sender: self)
+        }
+    }
+    
     func showPsbtOptions() {
         
         DispatchQueue.main.async { [unowned vc = self] in
                         
             let alert = UIAlertController(title: "Export as:", message: "", preferredStyle: vc.alertStyle)
             
-            alert.addAction(UIAlertAction(title: ".psbt data file", style: .default, handler: { [unowned vc = self] action in
-                
+            alert.addAction(UIAlertAction(title: ".psbt file", style: .default, handler: { [unowned vc = self] action in
                 vc.convertPSBTtoData(string: vc.unsignedPsbt)
-                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "QR", style: .default, handler: { action in
+                self.convertPsbtToUrParts()
             }))
             
             alert.addAction(UIAlertAction(title: "base64 encoded text", style: .default, handler: { [unowned vc = self] action in
@@ -376,7 +396,6 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         let dict = inputArray[index]
         let txid = dict["txid"] as! String
         let vout = dict["vout"] as! Int
-        //parsePrevTx(method: .getrawtransaction, param: "\"\(txid)\"", vout: vout)
         parsePrevTx(method: .gettransaction, param: "\"\(txid)\", true", vout: vout)
     }
     
@@ -1151,11 +1170,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
         switch id {
             
         case "verify":
-            
             if let vc = segue.destination as? VerifyViewController {
-                
                 vc.address = self.addressToVerify
-                
+            }
+            
+        case "segueToExportPsbtAsQR":
+            if let vc = segue.destination as? QRDisplayerViewController {
+                vc.parts = [""]
             }
             
         default:

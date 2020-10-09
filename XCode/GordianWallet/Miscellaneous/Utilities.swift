@@ -110,6 +110,12 @@ public extension UIButton {
     }
 }
 
+extension Array where Element == UInt8 {
+    var data: Data {
+        Data(self)
+    }
+}
+
 extension Notification.Name {
     public static let didStartBootstrappingTor = Notification.Name(rawValue: "didStartBootstrappingTor")
     public static let didCompleteOnboarding = Notification.Name(rawValue: "didCompleteOnboarding")

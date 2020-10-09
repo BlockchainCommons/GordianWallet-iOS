@@ -162,8 +162,13 @@ class Import {
         }
         
         func process(node: NodeStruct) {
-            let plainDescriptor = accountMap["descriptor"] as! String
-            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(plainDescriptor)\"") { (object, errorDescription) in
+            var rawDesc = accountMap["descriptor"] as! String
+            if rawDesc.contains("#") {
+                let rawDescArr = rawDesc.split(separator: "#")
+                rawDesc = "\(rawDescArr[0])"
+            }
+            
+            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(rawDesc)\"") { (object, errorDescription) in
                 if let dict = object as? NSDictionary {
                     let descriptor = dict["descriptor"] as! String
                     let p = DescriptorParser()

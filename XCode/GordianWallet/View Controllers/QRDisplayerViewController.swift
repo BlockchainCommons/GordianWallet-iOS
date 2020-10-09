@@ -7,13 +7,20 @@
 //
 
 import UIKit
+import URKit
 
 class QRDisplayerViewController: UIViewController {
     
-    var address = ""
-    let qrGenerator = QRGenerator()
-    let backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-    @IBOutlet weak var imageView: UIImageView!
+    var parts = [String]()
+    var text = ""
+    private var encoder:UREncoder!
+    private var timer: Timer?
+    private var ur: UR!
+    private var partIndex = 0
+    private let qrGenerator = QRGenerator()
+    private let backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    
+    @IBOutlet weak private var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,23 +33,65 @@ class QRDisplayerViewController: UIViewController {
         }
     }
     
+    private func animateNow() {
+        encoder = UREncoder(ur, maxFragmentLen: 250)
+        setTimer()
+    }
+    
+    private func setTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(automaticRefresh), userInfo: nil, repeats: true)
+    }
+
+    @objc func automaticRefresh() {
+        nextPart()
+    }
     
     func showQR() {
-        
-        let (qr, error) = qrGenerator.getQRCode(textInput: address)
-        
-        if error {
+        if parts.count > 0 {
+            convertToUr()
+        } else {
+            let (qr, error) = qrGenerator.getQRCode(textInput: text)
+            if error {
+                showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+            }
             
-            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
-            
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.imageView.image = qr
+            }
         }
+    }
+    
+    private func convertToUr() {
+        guard let b64 = Data(base64Encoded: text), let ur = URHelper.psbtUr(b64) else { return }
+        self.ur = ur
+        text = UREncoder.encode(ur)
+        showQR()
+    }
+    
+    private func nextPart() {
+        let part = encoder.nextPart()
+        let index = encoder.seqNum
         
-        DispatchQueue.main.async { [unowned vc = self] in
-            
-            vc.imageView.image = qr
-            
+        if index <= encoder.seqLen {
+            parts.append(part.uppercased())
+        } else {
+            timer?.invalidate()
+            timer = nil
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(animate), userInfo: nil, repeats: true)
         }
+    }
+    
+    @objc func animate() {
+        showQR()
         
+        if partIndex < parts.count - 1 {
+            partIndex += 1
+        } else {
+            partIndex = 0
+        }
     }
     
 

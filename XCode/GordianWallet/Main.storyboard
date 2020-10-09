@@ -2803,6 +2803,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <outlet property="confirmTable" destination="A2T-tZ-Y6M" id="i8O-B5-gpr"/>
                         <outlet property="exportTx" destination="mX7-xj-54j" id="ZXd-pk-Pjb"/>
                         <segue destination="J96-pV-r6d" kind="show" identifier="verify" id="2Mi-tx-qOQ"/>
+                        <segue destination="WYx-vx-5xJ" kind="show" identifier="segueToExportPsbtAsQR" id="IAM-9M-UXN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nmz-vJ-TbM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -4286,18 +4287,18 @@ At a minimum we recommend writing these words down on water proof paper with a p
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="WYx-vx-5xJ" customClass="QRDisplayerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Nlx-Rv-vA1">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QuE-Kt-X26">
-                                <rect key="frame" x="37.5" y="92" width="300" height="300"/>
+                                <rect key="frame" x="37.5" y="136" width="300" height="300"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="efo-O0-g9K"/>
                                     <constraint firstAttribute="height" constant="300" id="rNO-4u-u0X"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GDj-zH-I5k">
-                                <rect key="frame" x="310" y="20" width="49" height="38"/>
+                                <rect key="frame" x="310" y="64" width="49" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="49" id="OZh-Dc-oBm"/>
                                     <constraint firstAttribute="height" constant="38" id="zHf-Xo-HuC"/>
@@ -6386,7 +6387,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="AOL-nc-Scs"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="pun-AW-DGw"/>
-        <segue reference="B11-cw-c8e"/>
+        <segue reference="IAM-9M-UXN"/>
         <segue reference="7qw-Ys-xsH"/>
         <segue reference="mqi-NU-Y0K"/>
         <segue reference="G4m-Sr-i7G"/>
