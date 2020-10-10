@@ -346,7 +346,7 @@
                     <navigationItem key="navigationItem" title="Public Keys &amp; Addresses" id="f1p-Xz-zgp"/>
                     <connections>
                         <outlet property="table" destination="nzw-bT-meu" id="tp8-yb-sPk"/>
-                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="exportKeys" id="Kzq-6W-yKR"/>
+                        <segue destination="WYx-vx-5xJ" kind="show" identifier="exportKeys" id="Kzq-6W-yKR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2f1-ht-YJe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2111,35 +2111,76 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
         <!--Scanner View Controller-->
         <scene sceneID="S5B-qY-ww0">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="o69-RN-9VD" customClass="ScannerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tBq-5k-T1U">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0zB-Cx-vSF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="525"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="574"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oja-1j-Jbu">
+                                <rect key="frame" x="16" y="537" width="343" height="61"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="23g-6F-Hvf">
+                                    <rect key="frame" x="0.0" y="0.0" width="343" height="61"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FAh-eZ-PPu">
+                                            <rect key="frame" x="154" y="8" width="35.5" height="17"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="y8n-KT-Bbs">
+                                            <rect key="frame" x="8" y="41" width="327" height="2"/>
+                                            <color key="progressTintColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </progressView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="y8n-KT-Bbs" firstAttribute="leading" secondItem="23g-6F-Hvf" secondAttribute="leading" constant="8" id="J6k-V9-AOi"/>
+                                        <constraint firstItem="FAh-eZ-PPu" firstAttribute="top" secondItem="23g-6F-Hvf" secondAttribute="top" constant="8" id="Wot-tQ-CxA"/>
+                                        <constraint firstAttribute="trailing" secondItem="y8n-KT-Bbs" secondAttribute="trailing" constant="8" id="don-in-WZ3"/>
+                                        <constraint firstItem="y8n-KT-Bbs" firstAttribute="leading" secondItem="23g-6F-Hvf" secondAttribute="leading" constant="8" id="jTg-jw-EvZ"/>
+                                        <constraint firstItem="FAh-eZ-PPu" firstAttribute="centerX" secondItem="23g-6F-Hvf" secondAttribute="centerX" id="lIN-nv-g87"/>
+                                        <constraint firstAttribute="trailing" secondItem="y8n-KT-Bbs" secondAttribute="trailing" constant="8" id="qsY-fE-k0m"/>
+                                        <constraint firstAttribute="bottom" secondItem="y8n-KT-Bbs" secondAttribute="bottom" constant="18" id="tXq-Ht-oVd"/>
+                                    </constraints>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="61" id="QPP-GF-bmX"/>
+                                </constraints>
+                                <blurEffect style="regular"/>
+                            </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" red="0.078040815890000004" green="0.090017892419999995" blue="0.10251823810000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="0zB-Cx-vSF" firstAttribute="trailing" secondItem="nKt-eP-WWx" secondAttribute="trailing" id="5zm-AI-Fbe"/>
                             <constraint firstItem="0zB-Cx-vSF" firstAttribute="leading" secondItem="nKt-eP-WWx" secondAttribute="leading" id="6Y9-us-fKX"/>
+                            <constraint firstItem="nKt-eP-WWx" firstAttribute="trailing" secondItem="Oja-1j-Jbu" secondAttribute="trailing" constant="16" id="8G6-Px-64w"/>
                             <constraint firstItem="0zB-Cx-vSF" firstAttribute="top" secondItem="nKt-eP-WWx" secondAttribute="top" id="A0v-R9-Nn5"/>
+                            <constraint firstItem="0zB-Cx-vSF" firstAttribute="leading" secondItem="nKt-eP-WWx" secondAttribute="leading" id="EGz-sh-B0i"/>
+                            <constraint firstItem="0zB-Cx-vSF" firstAttribute="top" secondItem="nKt-eP-WWx" secondAttribute="top" id="EI6-CX-MWY"/>
                             <constraint firstItem="nKt-eP-WWx" firstAttribute="bottom" secondItem="0zB-Cx-vSF" secondAttribute="bottom" id="ON5-jm-P3t"/>
+                            <constraint firstItem="Oja-1j-Jbu" firstAttribute="leading" secondItem="nKt-eP-WWx" secondAttribute="leading" constant="16" id="n9K-PG-vVN"/>
+                            <constraint firstItem="0zB-Cx-vSF" firstAttribute="bottom" secondItem="nKt-eP-WWx" secondAttribute="bottom" id="s8o-v0-R7a"/>
+                            <constraint firstItem="nKt-eP-WWx" firstAttribute="bottom" secondItem="Oja-1j-Jbu" secondAttribute="bottom" constant="20" id="tal-bd-Idu"/>
+                            <constraint firstItem="0zB-Cx-vSF" firstAttribute="trailing" secondItem="nKt-eP-WWx" secondAttribute="trailing" id="xVc-EI-NaB"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="nKt-eP-WWx"/>
                     </view>
-                    <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="599-rY-RlY"/>
                     <connections>
+                        <outlet property="backgroundView" destination="Oja-1j-Jbu" id="tpS-Gy-HQg"/>
                         <outlet property="imageView" destination="0zB-Cx-vSF" id="p6E-U5-ptt"/>
+                        <outlet property="progressDescriptionLabel" destination="FAh-eZ-PPu" id="QTN-8R-ZlN"/>
+                        <outlet property="progressView" destination="y8n-KT-Bbs" id="6IE-gP-YKG"/>
                         <segue destination="xB3-mY-13p" kind="presentation" identifier="goConfirmPsbt" id="Sh6-1X-4BR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yzr-Ht-6RX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8401" y="378"/>
+            <point key="canvasLocation" x="-8402.3999999999996" y="377.36131934032989"/>
         </scene>
         <!--Out-->
         <scene sceneID="zmQ-sK-kpe">
@@ -2320,7 +2361,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <outlet property="labelField" destination="vqa-Nl-Pcv" id="5Oe-5Q-2WN"/>
                         <outlet property="qrButton" destination="ZtA-OV-s8T" id="PHX-Bs-hfv"/>
                         <outlet property="shareButton" destination="38K-xd-PQp" id="IQF-NK-WvA"/>
-                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="showInvoiceQr" id="B11-cw-c8e"/>
+                        <segue destination="WYx-vx-5xJ" kind="show" identifier="showInvoiceQr" id="B11-cw-c8e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e3g-lC-Q3f" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2607,11 +2648,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="xB3-mY-13p" customClass="ConfirmViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="T5K-PU-RA6">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="A2T-tZ-Y6M">
-                                <rect key="frame" x="16" y="95" width="343" height="558"/>
+                                <rect key="frame" x="16" y="51" width="343" height="582"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="inputCell" rowHeight="78" id="6pv-wa-mjr">
@@ -2756,7 +2797,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="anh-YQ-Dnl">
-                                <rect key="frame" x="187" y="44" width="172" height="43"/>
+                                <rect key="frame" x="187" y="0.0" width="172" height="43"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="43" id="GV3-Qj-cUB"/>
                                     <constraint firstAttribute="width" constant="172" id="dgc-Md-hpQ"/>
@@ -2770,7 +2811,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mX7-xj-54j">
-                                <rect key="frame" x="16" y="45" width="104" height="41"/>
+                                <rect key="frame" x="16" y="1" width="104" height="41"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="104" id="9Bx-M4-lA4"/>
                                     <constraint firstAttribute="height" constant="41" id="hZP-qA-D49"/>
@@ -2815,11 +2856,11 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="J96-pV-r6d" customClass="VerifyViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XGu-4Z-bs0">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="yLm-bN-fYY">
-                                <rect key="frame" x="16" y="64" width="343" height="583"/>
+                                <rect key="frame" x="16" y="20" width="343" height="607"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -3102,7 +3143,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <outlet property="accountLabel" destination="ZWX-60-MMn" id="rDR-v6-wgB"/>
                         <outlet property="editLabelOutlet" destination="gIC-40-Ern" id="vfq-Q1-ySo"/>
                         <outlet property="tableView" destination="NOC-aP-rCn" id="EJQ-4i-ZGa"/>
-                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="showQR" id="prj-l9-xjw"/>
+                        <segue destination="WYx-vx-5xJ" kind="show" identifier="showQR" id="prj-l9-xjw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cfw-Yo-wGu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3429,7 +3470,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
                         <outlet property="savedOutlet" destination="zeg-gD-nXd" id="cJL-0u-a1F"/>
                         <outlet property="textView" destination="Rfs-Ll-yPj" id="VUg-fh-SFK"/>
                         <segue destination="pka-dK-9G9" kind="show" identifier="showOfflineSeed" id="rM8-oF-xn4"/>
-                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="nodeSeedQr" id="fP2-TS-xGx"/>
+                        <segue destination="WYx-vx-5xJ" kind="show" identifier="nodeSeedQr" id="fP2-TS-xGx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dzt-Jt-AKw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3582,7 +3623,7 @@ It holds your wallets PUBLIC KEYS, and can not be used to spend funds! In order 
                         <outlet property="derivationLabel" destination="Ofy-n1-kBT" id="TRs-DI-PWN"/>
                         <outlet property="saveOutlet" destination="XLw-9b-ixq" id="N7q-mX-i5P"/>
                         <outlet property="textView" destination="Ufy-g0-TWi" id="scu-be-nUN"/>
-                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="mnemonicQr" id="HTQ-38-5NU"/>
+                        <segue destination="WYx-vx-5xJ" kind="show" identifier="mnemonicQr" id="HTQ-38-5NU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Baa-YC-UbI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -4080,7 +4121,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <outlet property="table" destination="2hj-fw-DNn" id="N5l-s9-Oyp"/>
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="addNode" id="N8R-BU-J52"/>
                         <segue destination="o69-RN-9VD" kind="presentation" identifier="updateNode" id="4j4-Il-RUv"/>
-                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="shareNode" id="dWo-28-ynr"/>
+                        <segue destination="WYx-vx-5xJ" kind="show" identifier="shareNode" id="dWo-28-ynr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8UK-q3-fY3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -4123,6 +4164,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                             <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
+                                            <action selector="scanShardsOutlet:" destination="jAD-s2-JE4" eventType="touchUpInside" id="c2Y-ji-Zbp"/>
                                             <action selector="scanSskrNow:" destination="Elr-wf-cyI" eventType="touchUpInside" id="OFv-2H-2jL"/>
                                         </connections>
                                     </button>
@@ -4169,6 +4211,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                     <navigationItem key="navigationItem" title="Recovery" id="vZu-kK-u52"/>
                     <connections>
                         <outlet property="scanButton" destination="nsz-u9-Mzm" id="roa-rd-akK"/>
+                        <outlet property="scanShardsOutlet" destination="gsw-50-cRb" id="oGW-Ih-e3e"/>
                         <outlet property="seedWordsOutlet" destination="40V-y5-mzs" id="pM4-AL-CF1"/>
                         <outlet property="xpubsOutlet" destination="0Ai-bK-EJU" id="NXR-iW-A7g"/>
                         <segue destination="o69-RN-9VD" kind="show" identifier="scanRecovery" id="zkr-zY-rLG"/>
@@ -4179,6 +4222,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZKN-I6-Ccq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="jAD-s2-JE4" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-3546.4000000000001" y="1100.5997001499252"/>
         </scene>
@@ -4287,38 +4331,21 @@ At a minimum we recommend writing these words down on water proof paper with a p
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="WYx-vx-5xJ" customClass="QRDisplayerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Nlx-Rv-vA1">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QuE-Kt-X26">
-                                <rect key="frame" x="37.5" y="136" width="300" height="300"/>
+                                <rect key="frame" x="37.5" y="92" width="300" height="300"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="efo-O0-g9K"/>
                                     <constraint firstAttribute="height" constant="300" id="rNO-4u-u0X"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GDj-zH-I5k">
-                                <rect key="frame" x="310" y="64" width="49" height="38"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="49" id="OZh-Dc-oBm"/>
-                                    <constraint firstAttribute="height" constant="38" id="zHf-Xo-HuC"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="tintColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="xmark.circle" catalog="system">
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
-                                </state>
-                                <connections>
-                                    <action selector="closeAction:" destination="WYx-vx-5xJ" eventType="touchUpInside" id="by3-dW-rsu"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="QuE-Kt-X26" firstAttribute="top" secondItem="Mbb-B1-62W" secondAttribute="top" constant="92" id="Txw-Si-4Zm"/>
-                            <constraint firstItem="GDj-zH-I5k" firstAttribute="top" secondItem="Mbb-B1-62W" secondAttribute="top" constant="20" id="bbc-sQ-ow9"/>
                             <constraint firstItem="QuE-Kt-X26" firstAttribute="centerX" secondItem="Nlx-Rv-vA1" secondAttribute="centerX" id="ex3-sb-g4x"/>
-                            <constraint firstItem="Mbb-B1-62W" firstAttribute="trailing" secondItem="GDj-zH-I5k" secondAttribute="trailing" constant="16" id="jhs-6F-UbE"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Mbb-B1-62W"/>
                     </view>
@@ -6393,7 +6420,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="G4m-Sr-i7G"/>
         <segue reference="c5y-jb-z8M"/>
         <segue reference="MTV-lr-E4R"/>
-        <segue reference="cZz-Rg-m7M"/>
+        <segue reference="Sh6-1X-4BR"/>
         <segue reference="clv-6h-CIc"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -6451,7 +6478,6 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <image name="timer" catalog="system" width="128" height="121"/>
         <image name="wrench" catalog="system" width="128" height="120"/>
         <image name="x.circle" catalog="system" width="128" height="121"/>
-        <image name="xmark.circle" catalog="system" width="128" height="121"/>
         <image name="xmark.circle.fill" catalog="system" width="128" height="121"/>
     </resources>
 </document>

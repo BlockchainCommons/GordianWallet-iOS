@@ -316,10 +316,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func signPsbtAlert(psbt: String) {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Sign PSBT?", message: TextBlurbs.signPsbtMessage(), preferredStyle: vc.alertStyle)
+            let alert = UIAlertController(title: "Process PSBT?", message: TextBlurbs.signPsbtMessage(), preferredStyle: vc.alertStyle)
             
-            alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
-                vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
+            alert.addAction(UIAlertAction(title: "Process", style: .default, handler: { action in
+                vc.connectingView.addConnectingView(vc: vc, description: "processing psbt")
                 vc.signPSBT(psbt: psbt)
             }))
             
@@ -1771,6 +1771,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 vc.scanningNode = scanningNode
                 vc.onDoneBlock = { [unowned thisVc = self] result in
                     thisVc.nodeJustAdded()
+                }
+                
+                vc.onPsbtScanDoneBlock = { [weak self] psbt in
+                    guard let self = self else { return }
+                    
+                    self.signPsbtAlert(psbt: psbt)
                 }
             }
             

@@ -69,7 +69,11 @@ class MakeRPCCall {
                                 
                                 /// attempt a node command 20 times to avoid user having to tap refresh button
                                 if vc.attempts < 20 {
-                                    vc.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
+                                    if !error!.localizedDescription.contains("Could not connect to the server") {
+                                        vc.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
+                                    } else {
+                                        completion((false, nil, "Looks like your node is not on, or Tor is not on"))
+                                    }
                                     
                                 } else {
                                     vc.attempts = 0

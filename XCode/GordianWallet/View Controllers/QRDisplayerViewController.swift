@@ -49,7 +49,29 @@ class QRDisplayerViewController: UIViewController {
     
     func showQR() {
         if parts.count > 0 {
-            convertToUr()
+            timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+                
+                let (qr, error) = self.qrGenerator.getQRCode(textInput: self.parts[self.partIndex])
+                
+                if error {
+                    showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
+                }
+                
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    
+                    self.imageView.image = qr
+                    
+                    if self.partIndex < self.parts.count - 1 {
+                        self.partIndex += 1
+                    } else {
+                        self.partIndex = 0
+                    }
+                }
+                
+            }
+            
         } else {
             let (qr, error) = qrGenerator.getQRCode(textInput: text)
             if error {
@@ -62,13 +84,6 @@ class QRDisplayerViewController: UIViewController {
                 self.imageView.image = qr
             }
         }
-    }
-    
-    private func convertToUr() {
-        guard let b64 = Data(base64Encoded: text), let ur = URHelper.psbtUr(b64) else { return }
-        self.ur = ur
-        text = UREncoder.encode(ur)
-        showQR()
     }
     
     private func nextPart() {

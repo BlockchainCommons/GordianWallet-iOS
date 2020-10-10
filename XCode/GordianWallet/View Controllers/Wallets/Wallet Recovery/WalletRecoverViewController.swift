@@ -25,15 +25,18 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     var shares = [SSKRShare]()
     var words = ""
     
+    @IBOutlet weak var scanShardsOutlet: UIButton!
     @IBOutlet weak var seedWordsOutlet: UIButton!
     @IBOutlet weak var xpubsOutlet: UIButton!
     @IBOutlet var scanButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scanShardsOutlet.layer.cornerRadius = 8
         scanButton.layer.cornerRadius = 8
         seedWordsOutlet.layer.cornerRadius = 8
         xpubsOutlet.layer.cornerRadius = 8
+        
         if (UIDevice.current.userInterfaceIdiom == .pad) {
           alertStyle = UIAlertController.Style.alert
         }
@@ -207,6 +210,7 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     
     private func parseUr(_ ur: String) -> (valid: Bool, alreadyAdded: Bool, shard: String) {
         let shard = URHelper.urToShard(sskrUr: ur) ?? ""
+        print("shard: \(shard)")
         guard shard != "" else { return (false, false, shard) }
         guard shardAlreadyAdded(shard) == false else { return (true, true, shard) }
         rawShards.append(shard)
@@ -294,11 +298,15 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     private func processImport(importItem: String) {
         let cv = ConnectingView()
         cv.addConnectingView(vc: self, description: "processing...")
-        if importItem.hasPrefix("ur:crypto-sskr/") {
+        if importItem.hasPrefix("ur:crypto-sskr/") || importItem.hasPrefix("UR:CRYPTO-SSKR/") {
             
             cv.removeConnectingView()
             
             let (isValid, alreadyAdded, s) = self.parseUr(importItem)
+            print("isValid: \(isValid)")
+            print("alreadyAdded: \(alreadyAdded)")
+            print("s: \(s)")
+            print("importItem: \(importItem)")
             
             if isValid && !alreadyAdded {
                 if let shardStruct = self.parseShard(s) {
@@ -323,10 +331,12 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
                         /// It is an Account Map.
                         Import.importAccountMap(accountMap: dict) { walletDict in
                             if walletDict != nil {
-                                DispatchQueue.main.async { [unowned vc = self] in
-                                    vc.recoveryDict = walletDict!
-                                    vc.walletName = walletDict!["name"] as! String
-                                    vc.performSegue(withIdentifier: "goConfirmQr", sender: vc)
+                                DispatchQueue.main.async { [weak self] in
+                                    guard let self = self else { return }
+                                    
+                                    self.recoveryDict = walletDict!
+                                    self.walletName = walletDict!["name"] as! String
+                                    self.performSegue(withIdentifier: "goConfirmQr", sender: self)
                                 }
                             }
                         }

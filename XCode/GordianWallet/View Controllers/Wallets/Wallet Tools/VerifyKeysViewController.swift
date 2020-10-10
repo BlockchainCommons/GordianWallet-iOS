@@ -114,17 +114,7 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let index = indexPath.section
-        address = keys[index]
-        let impact = UIImpactFeedbackGenerator()
-        impact.impactOccurred()
-        
-        DispatchQueue.main.async {
-            
-            self.performSegue(withIdentifier: "verifyAddress", sender: self)
-            
-        }
+    
         
     }
     
@@ -164,28 +154,6 @@ class VerifyKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         (view as! UITableViewHeaderFooterView).textLabel?.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         (view as! UITableViewHeaderFooterView).textLabel?.textColor = UIColor.white
         (view as! UITableViewHeaderFooterView).textLabel?.alpha = 1
-        
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        let id = segue.identifier
-        
-        switch id {
-            
-        case "verifyAddress":
-            
-            if let vc = segue.destination as? VerifyAddressViewController {
-                
-                vc.address = address
-                
-            }
-            
-        default:
-            
-            break
-            
-        }
         
     }
 

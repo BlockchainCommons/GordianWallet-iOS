@@ -74,7 +74,6 @@
 		D09D731123F0F3C000847DC8 /* ExportKeysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D728D23F0F3BF00847DC8 /* ExportKeysViewController.swift */; };
 		D09D731223F0F3C000847DC8 /* SeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D728F23F0F3BF00847DC8 /* SeedViewController.swift */; };
 		D09D731823F0F3C000847DC8 /* NodeManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */; };
-		D09D731923F0F3C000847DC8 /* VerifyAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */; };
 		D09D731A23F0F3C000847DC8 /* QRDisplayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */; };
 		D09D731C23F0F3C000847DC8 /* QRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729923F0F3BF00847DC8 /* QRViewController.swift */; };
 		D09D731F23F0F3C000847DC8 /* WalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D729D23F0F3BF00847DC8 /* WalletsViewController.swift */; };
@@ -132,7 +131,6 @@
 		D09D736223F0F3C000847DC8 /* ConnectingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72F423F0F3C000847DC8 /* ConnectingView.swift */; };
 		D09D736323F0F3C000847DC8 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72F623F0F3C000847DC8 /* ErrorView.swift */; };
 		D09D736423F0F3C000847DC8 /* RawDisplayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72F823F0F3C000847DC8 /* RawDisplayer.swift */; };
-		D09D736523F0F3C000847DC8 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FA23F0F3C000847DC8 /* QRScanner.swift */; };
 		D09D736823F0F3C000847DC8 /* MultiSigTxBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */; };
 		D09D736923F0F3C000847DC8 /* SingleSigBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */; };
 		D09D736B23F0F3C000847DC8 /* CreateMultisigWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */; };
@@ -148,12 +146,12 @@
 		D0A1C9A024CFA7240052FFE7 /* CheckSubAccounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A1C99F24CFA7240052FFE7 /* CheckSubAccounts.swift */; };
 		D0A9EB8723F5335A00C84829 /* ChooseWalletFormatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A9EB8623F5335A00C84829 /* ChooseWalletFormatViewController.swift */; };
 		D0B08BE6241888500025AD04 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B08BE5241888500025AD04 /* DonateViewController.swift */; };
-		D0B3649D24DE2FFB0008A22F /* URKit in Frameworks */ = {isa = PBXBuildFile; productRef = D0B3649C24DE2FFB0008A22F /* URKit */; };
 		D0B3649F24DF805A0008A22F /* UniformResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B3649E24DF805A0008A22F /* UniformResource.swift */; };
 		D0B7F8072514841900D81022 /* LifeHash in Frameworks */ = {isa = PBXBuildFile; productRef = D0B7F8062514841900D81022 /* LifeHash */; };
 		D0B7F8092514965500D81022 /* LifeHashImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B7F8082514965500D81022 /* LifeHashImage.swift */; };
 		D0BFDF572490B6A600EB7846 /* LockedUtxoStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFDF562490B6A600EB7846 /* LockedUtxoStruct.swift */; };
 		D0BFDF592490BC4400EB7846 /* CoinControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BFDF582490BC4400EB7846 /* CoinControl.swift */; };
+		D0C1F91025303A4B0079C2B8 /* URKit in Frameworks */ = {isa = PBXBuildFile; productRef = D0C1F90F25303A4B0079C2B8 /* URKit */; };
 		D0C20EE924A82B7000C62AA4 /* TransactionFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C20EE824A82B7000C62AA4 /* TransactionFetcher.swift */; };
 		D0C4E63124173F1B00E49DA5 /* WalletToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C4E63024173F1B00E49DA5 /* WalletToolsViewController.swift */; };
 		D0CA541324065C650096EE26 /* WalletRecoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA541224065C650096EE26 /* WalletRecoverViewController.swift */; };
@@ -287,7 +285,6 @@
 		D09D728D23F0F3BF00847DC8 /* ExportKeysViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExportKeysViewController.swift; sourceTree = "<group>"; };
 		D09D728F23F0F3BF00847DC8 /* SeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeedViewController.swift; sourceTree = "<group>"; };
 		D09D729523F0F3BF00847DC8 /* NodeManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeManagerViewController.swift; sourceTree = "<group>"; };
-		D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyAddressViewController.swift; sourceTree = "<group>"; };
 		D09D729723F0F3BF00847DC8 /* QRDisplayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRDisplayerViewController.swift; sourceTree = "<group>"; };
 		D09D729923F0F3BF00847DC8 /* QRViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRViewController.swift; sourceTree = "<group>"; };
 		D09D729D23F0F3BF00847DC8 /* WalletsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletsViewController.swift; sourceTree = "<group>"; };
@@ -346,7 +343,6 @@
 		D09D72F423F0F3C000847DC8 /* ConnectingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectingView.swift; sourceTree = "<group>"; };
 		D09D72F623F0F3C000847DC8 /* ErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		D09D72F823F0F3C000847DC8 /* RawDisplayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawDisplayer.swift; sourceTree = "<group>"; };
-		D09D72FA23F0F3C000847DC8 /* QRScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
 		D09D72FE23F0F3C000847DC8 /* MultiSigTxBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSigTxBuilder.swift; sourceTree = "<group>"; };
 		D09D72FF23F0F3C000847DC8 /* SingleSigBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleSigBuilder.swift; sourceTree = "<group>"; };
 		D09D730123F0F3C000847DC8 /* CreateMultisigWallet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateMultisigWallet.swift; sourceTree = "<group>"; };
@@ -389,12 +385,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0C1F91025303A4B0079C2B8 /* URKit in Frameworks */,
 				D0B7F8072514841900D81022 /* LifeHash in Frameworks */,
 				D0828F70251DCC62001A11A0 /* CLibWally.xcframework in Frameworks */,
 				D04AC568251EDA0C00D1CB88 /* CCryptoBase.xcframework in Frameworks */,
 				D04AC567251EDA0C00D1CB88 /* CShamir.xcframework in Frameworks */,
 				D04AC566251EDA0C00D1CB88 /* CSSKR.xcframework in Frameworks */,
-				D0B3649D24DE2FFB0008A22F /* URKit in Frameworks */,
 				D04AC56C251EDE3900D1CB88 /* CryptoBase.xcframework in Frameworks */,
 				D04AC56E251EDE7400D1CB88 /* Shamir.xcframework in Frameworks */,
 				D0DB944D24723F2900A0E99D /* CloudKit.framework in Frameworks */,
@@ -815,7 +811,6 @@
 				D09D72F323F0F3C000847DC8 /* Spinner View */,
 				D09D72F523F0F3C000847DC8 /* Alert View */,
 				D09D72F723F0F3C000847DC8 /* Raw Transaction Displayer */,
-				D09D72F923F0F3C000847DC8 /* QR Scanner */,
 				D08A3DF3246D0F6900ADDDC6 /* TextBlurbs.swift */,
 			);
 			path = "Sub Views";
@@ -862,14 +857,6 @@
 			path = "Raw Transaction Displayer";
 			sourceTree = "<group>";
 		};
-		D09D72F923F0F3C000847DC8 /* QR Scanner */ = {
-			isa = PBXGroup;
-			children = (
-				D09D72FA23F0F3C000847DC8 /* QRScanner.swift */,
-			);
-			path = "QR Scanner";
-			sourceTree = "<group>";
-		};
 		D09D72FB23F0F3C000847DC8 /* Wallet Logic */ = {
 			isa = PBXGroup;
 			children = (
@@ -896,7 +883,6 @@
 			children = (
 				D05650072441A78E00754ACF /* VerifyKeysViewController.swift */,
 				D09D728D23F0F3BF00847DC8 /* ExportKeysViewController.swift */,
-				D09D729623F0F3BF00847DC8 /* VerifyAddressViewController.swift */,
 				D0C4E63024173F1B00E49DA5 /* WalletToolsViewController.swift */,
 				D047DDF62423464A004BC26D /* SweepToViewController.swift */,
 				D0D561FA24305CDB0085E3CC /* RefillMultisigViewController.swift */,
@@ -974,8 +960,8 @@
 			);
 			name = GordianWallet;
 			packageProductDependencies = (
-				D0B3649C24DE2FFB0008A22F /* URKit */,
 				D0B7F8062514841900D81022 /* LifeHash */,
+				D0C1F90F25303A4B0079C2B8 /* URKit */,
 			);
 			productName = FullyNoded2;
 			productReference = D09D723D23F0EDBB00847DC8 /* Gordian Wallet.app */;
@@ -1051,8 +1037,8 @@
 			);
 			mainGroup = D09D723423F0EDBB00847DC8;
 			packageReferences = (
-				D0B3649B24DE2FFB0008A22F /* XCRemoteSwiftPackageReference "URKit" */,
 				D0B7F8052514841900D81022 /* XCRemoteSwiftPackageReference "LifeHash" */,
+				D0C1F90E25303A4B0079C2B8 /* XCRemoteSwiftPackageReference "URKit" */,
 			);
 			productRefGroup = D09D723E23F0EDBB00847DC8 /* Products */;
 			projectDirPath = "";
@@ -1168,7 +1154,6 @@
 				D09D731A23F0F3C000847DC8 /* QRDisplayerViewController.swift in Sources */,
 				D0502FEE244D2D4A00213870 /* FiatConverter.swift in Sources */,
 				D09D734523F0F3C000847DC8 /* Encryption.swift in Sources */,
-				D09D731923F0F3C000847DC8 /* VerifyAddressViewController.swift in Sources */,
 				D010946A242F0080000B3A40 /* WalletCreatedSaveWordsViewController.swift in Sources */,
 				D047DE0B242C651F004BC26D /* WalletCreatedWordsViewController.swift in Sources */,
 				D047DDF72423464A004BC26D /* SweepToViewController.swift in Sources */,
@@ -1199,7 +1184,6 @@
 				D09D735D23F0F3C000847DC8 /* CustomButton.swift in Sources */,
 				D047DE0D242D984E004BC26D /* RefillSingleSig.swift in Sources */,
 				D0457C19248DEBA40028CC9D /* LockedUtxosViewController.swift in Sources */,
-				D09D736523F0F3C000847DC8 /* QRScanner.swift in Sources */,
 				D047DE05242B34BA004BC26D /* SignInViewController.swift in Sources */,
 				D09D732423F0F3C000847DC8 /* CreateRawTxViewController.swift in Sources */,
 				D0D561FB24305CDB0085E3CC /* RefillMultisigViewController.swift in Sources */,
@@ -1416,7 +1400,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.87;
+				CURRENT_PROJECT_VERSION = 0.1.89;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				ENABLE_BITCODE = NO;
@@ -1426,7 +1410,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.82;
+				MARKETING_VERSION = 0.1.89;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "Gordian Wallet";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1446,7 +1430,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = GordianWallet/GordianWallet.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.1.87;
+				CURRENT_PROJECT_VERSION = 0.1.89;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				DEVELOPMENT_TEAM = YZHG975W3A;
 				ENABLE_BITCODE = NO;
@@ -1456,7 +1440,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.82;
+				MARKETING_VERSION = 0.1.89;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockchaincommons.standupios;
 				PRODUCT_NAME = "Gordian Wallet";
 				SUPPORTS_MACCATALYST = YES;
@@ -1594,14 +1578,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D0B3649B24DE2FFB0008A22F /* XCRemoteSwiftPackageReference "URKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/BlockchainCommons/URKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.3;
-			};
-		};
 		D0B7F8052514841900D81022 /* XCRemoteSwiftPackageReference "LifeHash" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/BlockchainCommons/LifeHash";
@@ -1610,18 +1586,26 @@
 				minimumVersion = 4.2.0;
 			};
 		};
+		D0C1F90E25303A4B0079C2B8 /* XCRemoteSwiftPackageReference "URKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/BlockchainCommons/URKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D0B3649C24DE2FFB0008A22F /* URKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D0B3649B24DE2FFB0008A22F /* XCRemoteSwiftPackageReference "URKit" */;
-			productName = URKit;
-		};
 		D0B7F8062514841900D81022 /* LifeHash */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D0B7F8052514841900D81022 /* XCRemoteSwiftPackageReference "LifeHash" */;
 			productName = LifeHash;
+		};
+		D0C1F90F25303A4B0079C2B8 /* URKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0C1F90E25303A4B0079C2B8 /* XCRemoteSwiftPackageReference "URKit" */;
+			productName = URKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 

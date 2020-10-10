@@ -121,16 +121,22 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     private func convertPsbtToUrParts() {
         guard let b64 = Data(base64Encoded: unsignedPsbt), let ur = URHelper.psbtUr(b64) else { return }
         let encoder = UREncoder(ur, maxFragmentLen: 250)
+        weak var timer: Timer?
         
-        let part = encoder.nextPart()
-        let index = encoder.seqNum
-        
-        if index <= encoder.seqLen {
-            parts.append(part.uppercased())
-        }
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.performSegue(withIdentifier: "segueToExportPsbtAsQR", sender: self)
+        timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            
+            let part = encoder.nextPart()
+            let index = encoder.seqNum
+            
+            if index <= encoder.seqLen {
+                self.parts.append(part.uppercased())
+            } else {
+                timer?.invalidate()
+                DispatchQueue.main.async { [weak self] in
+                    self?.performSegue(withIdentifier: "segueToExportPsbtAsQR", sender: self)
+                }
+            }
         }
     }
     
@@ -186,50 +192,56 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
                     var sigsAndKeys:[[String:String]] = []
                     for (i, input) in inputs.enumerated() {
                         let inputDict = input as! NSDictionary
-                        let bip32derivs = inputDict["bip32_derivs"] as! NSArray
-                        let partialSignatures = inputDict["partial_signatures"] as! NSDictionary
-                        var pubkeySigner = ""
-                        var signature = ""
-                        for (key, value) in partialSignatures {
-                            pubkeySigner = key as! String
-                            signature = value as! String
-                        }
-                        for bip32deriv in bip32derivs {
-                            let bip32derivDict = bip32deriv as! NSDictionary
-                            let pubkey = bip32derivDict["pubkey"] as! String
-                            let masterFingerprint = bip32derivDict["master_fingerprint"] as! String
-                            if pubkey == pubkeySigner {
-                                CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
-                                    if wallets != nil {
-                                        var signingXpub = ""
-                                        for wallet in wallets! {
-                                            let walletStruct = WalletStruct(dictionary: wallet)
-                                            if walletStruct.type == "MULTI" {
-                                                let descriptorParser = DescriptorParser()
-                                                let descriptorStruct = descriptorParser.descriptor(walletStruct.descriptor)
-                                                let keys = descriptorStruct.keysWithPath
-                                                for key in keys {
-                                                    if key.contains(masterFingerprint) {
-                                                        let arr1 = key.split(separator: "]")
-                                                        let arr2 = "\(arr1[1])".split(separator: "/")
-                                                        signingXpub = "\(arr2[0])"
+                        if let bip32derivs = inputDict["bip32_derivs"] as? NSArray {
+                            if let partialSignatures = inputDict["partial_signatures"] as? NSDictionary {
+                                var pubkeySigner = ""
+                                var signature = ""
+                                for (key, value) in partialSignatures {
+                                    pubkeySigner = key as! String
+                                    signature = value as! String
+                                }
+                                for bip32deriv in bip32derivs {
+                                    let bip32derivDict = bip32deriv as! NSDictionary
+                                    let pubkey = bip32derivDict["pubkey"] as! String
+                                    let masterFingerprint = bip32derivDict["master_fingerprint"] as! String
+                                    if pubkey == pubkeySigner {
+                                        CoreDataService.retrieveEntity(entityName: .wallets) { (wallets, errorDescription) in
+                                            if wallets != nil {
+                                                var signingXpub = ""
+                                                for wallet in wallets! {
+                                                    let walletStruct = WalletStruct(dictionary: wallet)
+                                                    if walletStruct.type == "MULTI" {
+                                                        let descriptorParser = DescriptorParser()
+                                                        let descriptorStruct = descriptorParser.descriptor(walletStruct.descriptor)
+                                                        let keys = descriptorStruct.keysWithPath
+                                                        for key in keys {
+                                                            if key.contains(masterFingerprint) {
+                                                                let arr1 = key.split(separator: "]")
+                                                                let arr2 = "\(arr1[1])".split(separator: "/")
+                                                                signingXpub = "\(arr2[0])"
+                                                            }
+                                                        }
                                                     }
                                                 }
+                                                let dict = ["xpub":signingXpub, "signature":signature]
+                                                sigsAndKeys.append(dict)
                                             }
                                         }
-                                        let dict = ["xpub":signingXpub, "signature":signature]
-                                        sigsAndKeys.append(dict)
                                     }
                                 }
+                                if i + 1 == inputs.count {
+                                    DispatchQueue.main.async {
+                                        let textToShare = ["\(sigsAndKeys)"]
+                                        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+                                        activityViewController.popoverPresentationController?.sourceView = vc.view
+                                        vc.present(activityViewController, animated: true) {}
+                                    }
+                                }
+                            } else {
+                                showAlert(vc: self, title: "No signatures", message: "")
                             }
-                        }
-                        if i + 1 == inputs.count {
-                            DispatchQueue.main.async {
-                                let textToShare = ["\(sigsAndKeys)"]
-                                let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
-                                activityViewController.popoverPresentationController?.sourceView = vc.view
-                                vc.present(activityViewController, animated: true) {}
-                            }
+                        } else {
+                            showAlert(vc: self, title: "No bip32 derivs", message: "")
                         }
                     }
                 }
@@ -598,20 +610,37 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
             Reducer.makeCommand(walletName: walletName, command: .gettransaction, param: param) { [unowned vc = self] (object, errorDescription) in
                 
-                //if let rawTransaction = object as? String {
-                if let dict = object as? NSDictionary, let hex = dict["hex"] as? String {
+                guard let errorDescription = errorDescription else {
+                    
+                    guard let dict = object as? NSDictionary, let hex = dict["hex"] as? String else {
+                        vc.creatingView.removeConnectingView()
+                        displayAlert(viewController: vc, isError: true, message: "Error parsing inputs")
+                        return
+                    }
                     
                     vc.parsePrevTx(method: .decoderawtransaction, param: "\"\(hex)\"", vout: vout)
                     
-                } else {
-                    
-                    vc.creatingView.removeConnectingView()
-                    displayAlert(viewController: vc, isError: true, message: "Error parsing inputs")
-                    
+                    return
                 }
                 
+                if errorDescription.contains("Invalid or non-wallet transaction id") {
+                    let arr = param.split(separator: ",")
+                    let txid = "\(arr[0])".replacingOccurrences(of: "\"", with: "")
+                    let fetcher = TransactionFetcher.sharedInstance
+                    fetcher.fetch(txid: txid) { [unowned vc = self] hex in
+                        guard let hex = hex else {
+                            vc.creatingView.removeConnectingView()
+                            displayAlert(viewController: vc, isError: true, message: "Error parsing inputs")
+                            return
+                        }
+                        
+                        vc.parsePrevTx(method: .decoderawtransaction, param: "\"\(hex)\"", vout: vout)
+                    }
+                } else {
+                    vc.creatingView.removeConnectingView()
+                    displayAlert(viewController: vc, isError: true, message: "Error parsing inputs: \(errorDescription)")
+                }
             }
-            
         }
         
         getActiveWalletNow { (wallet, error) in
@@ -1176,7 +1205,7 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             
         case "segueToExportPsbtAsQR":
             if let vc = segue.destination as? QRDisplayerViewController {
-                vc.parts = [""]
+                vc.parts = self.parts
             }
             
         default:
