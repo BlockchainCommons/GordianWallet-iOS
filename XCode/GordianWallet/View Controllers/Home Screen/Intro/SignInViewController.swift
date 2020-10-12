@@ -30,6 +30,10 @@ class SignInViewController: UIViewController, ASAuthorizationControllerDelegate,
         textView.text = TextBlurbs.twoFactorAuthExplainerText()
         
         textView.addHyperLinksToText(originalText: textView.text, hyperLinks: ["Sign in with Apple": signInWithAppleUrl])
+        
+        #if DEBUG
+            navigationController?.popToRootViewController(animated: true)
+        #endif
     }
     
     private func setTitleView() {

@@ -14,11 +14,10 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var lostWordsOutlet: UIButton!
     @IBOutlet var descriptionLabel: UILabel!
-    @IBOutlet var wordsView: UIView!
     @IBOutlet var textField: UITextField!
+    @IBOutlet weak var wordsView: UITextView!
     var addSeed = Bool()
     var multiSigRefillDoneBlock: ((Bool) -> Void)?
-    let label = UILabel()
     let tap = UITapGestureRecognizer()
     var autoCompleteCharacterCount = 0
     var timer = Timer()
@@ -287,8 +286,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
             
             DispatchQueue.main.async { [unowned vc = self] in
                 
-                vc.label.removeFromSuperview()
-                vc.label.text = ""
+                vc.wordsView.text = ""
                 vc.addedWords.removeAll()
                 vc.justWords.remove(at: vc.justWords.count - 1)
                 
@@ -303,12 +301,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                     
                 }
                 
-                vc.label.textColor = .systemGreen
-                vc.label.text = vc.addedWords.joined(separator: "")
-                vc.label.frame = CGRect(x: 16, y: 0, width: vc.wordsView.frame.width - 32, height: vc.wordsView.frame.height - 10)
-                vc.label.numberOfLines = 0
-                vc.label.sizeToFit()
-                vc.wordsView.addSubview(vc.label)
+                vc.wordsView.text = vc.addedWords.joined(separator: "")
                 
                 if vc.justWords.count == 12 {
                     
@@ -465,8 +458,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         
         DispatchQueue.main.async { [unowned vc = self] in
             
-            vc.label.removeFromSuperview()
-            vc.label.text = ""
+            vc.wordsView.text = ""
             vc.addedWords.removeAll()
             vc.justWords.append(word)
             
@@ -477,12 +469,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                 
             }
             
-            vc.label.textColor = .systemGreen
-            vc.label.text = vc.addedWords.joined(separator: "")
-            vc.label.frame = CGRect(x: 16, y: 0, width: vc.wordsView.frame.width - 32, height: vc.wordsView.frame.height - 10)
-            vc.label.numberOfLines = 0
-            vc.label.sizeToFit()
-            vc.wordsView.addSubview(vc.label)
+            vc.wordsView.text = vc.addedWords.joined(separator: "")
             
             if vc.justWords.count == 12 {
                 
@@ -521,7 +508,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                                     if success {
                                         DispatchQueue.main.async { [unowned vc = self] in
                                             vc.updatePlaceHolder(wordNumber: 1)
-                                            vc.label.text = ""
+                                            vc.wordsView.text = ""
                                             NotificationCenter.default.post(name: .seedAdded, object: nil, userInfo: nil)
                                         }
                                         showAlert(vc: vc, title: "Success!", message: "Signer added, the device will now be able to sign for this wallet.")

@@ -72,7 +72,11 @@ class MakeRPCCall {
                                     if !error!.localizedDescription.contains("Could not connect to the server") {
                                         vc.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
                                     } else {
-                                        completion((false, nil, "Looks like your node is not on, or Tor is not on"))
+                                        // Only attempt 5 times for "Could not connect to server error"
+                                        if vc.attempts < 15 {
+                                            vc.attempts = 15
+                                        }
+                                        vc.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
                                     }
                                     
                                 } else {

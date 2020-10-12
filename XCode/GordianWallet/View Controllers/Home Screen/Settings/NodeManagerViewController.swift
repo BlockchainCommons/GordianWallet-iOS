@@ -205,7 +205,12 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
     
     func load() {
         
-        self.nodes.removeAll()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.nodes.removeAll()
+            self.table.reloadData()
+        }
         
         CoreDataService.retrieveEntity(entityName: .nodes) { [unowned vc = self] (nodes, errorDescription) in
             
@@ -438,7 +443,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
             
             if let vc = segue.destination as? ScannerViewController {
                 
-                vc.updatingNode = true
+                vc.isUpdatingNode = true
                 vc.nodeId = self.id
                 vc.onDoneBlock = { [unowned thisVc = self] result in
                     
@@ -453,7 +458,7 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
             
             if let vc = segue.destination as? ScannerViewController {
                 
-                vc.scanningNode = true
+                vc.isScanningNode = true
                 vc.onDoneBlock = { [unowned thisVc = self] result in
                     thisVc.deactiveateWallets()
                     thisVc.load()

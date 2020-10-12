@@ -23,7 +23,6 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     var addedWords = [String]()
     var justWords = [String]()
     var bip39Words = [String]()
-    let label = UILabel()
     let tap = UITapGestureRecognizer()
     var autoCompleteCharacterCount = 0
     var timer = Timer()
@@ -38,7 +37,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     
     @IBOutlet weak var derivationField: UITextField!
     @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var wordView: UIView!
+    @IBOutlet weak var wordView: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,8 +122,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             
             DispatchQueue.main.async { [unowned vc = self] in
                 
-                vc.label.removeFromSuperview()
-                vc.label.text = ""
+                vc.wordView.text = ""
                 vc.addedWords.removeAll()
                 vc.justWords.remove(at: vc.justWords.count - 1)
                 
@@ -138,12 +136,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                     }
                 }
                 
-                vc.label.textColor = .systemGreen
-                vc.label.text = vc.addedWords.joined(separator: "")
-                vc.label.frame = CGRect(x: 16, y: 0, width: vc.wordView.frame.width - 32, height: vc.wordView.frame.height - 10)
-                vc.label.numberOfLines = 0
-                vc.label.sizeToFit()
-                vc.wordView.addSubview(vc.label)
+                vc.wordView.text = vc.addedWords.joined(separator: "")
                 
                 if vc.justWords.count == 12 || vc.justWords.count == 24 {
                     
@@ -548,8 +541,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         
         DispatchQueue.main.async { [unowned vc = self] in
             
-            vc.label.removeFromSuperview()
-            vc.label.text = ""
+            vc.wordView.text = ""
             vc.addedWords.removeAll()
             vc.justWords = words
             
@@ -558,13 +550,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 vc.updatePlaceHolder(wordNumber: i + 2)
             }
             
-            vc.label.textColor = .systemGreen
-            vc.label.text = vc.addedWords.joined(separator: "")
-            vc.label.frame = CGRect(x: 16, y: 0, width: vc.wordView.frame.width - 32, height: vc.wordView.frame.height - 10)
-            vc.label.numberOfLines = 0
-            vc.label.sizeToFit()
-            vc.wordView.addSubview(vc.label)
-            
+            vc.wordView.text = vc.addedWords.joined(separator: "")
             
             if vc.justWords.count == 24 || vc.justWords.count == 12 {
                 
@@ -588,8 +574,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         
         DispatchQueue.main.async { [unowned vc = self] in
             
-            vc.label.removeFromSuperview()
-            vc.label.text = ""
+            vc.wordView.text = ""
             vc.addedWords.removeAll()
             vc.justWords.append(word)
             
@@ -600,13 +585,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 
             }
             
-            vc.label.textColor = .systemGreen
-            vc.label.text = vc.addedWords.joined(separator: "")
-            vc.label.frame = CGRect(x: 16, y: 0, width: vc.wordView.frame.width - 32, height: vc.wordView.frame.height - 10)
-            vc.label.numberOfLines = 0
-            vc.label.sizeToFit()
-            vc.wordView.addSubview(vc.label)
-            
+            vc.wordView.text = vc.addedWords.joined(separator: "")
             
             if vc.justWords.count == 24 || vc.justWords.count == 12 {
                 
@@ -634,7 +613,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     
     private func confirm() {
         DispatchQueue.main.async { [unowned vc = self] in
-            vc.label.text = ""
+            vc.wordView.text = ""
             vc.performSegue(withIdentifier: "confirmFromWords", sender: vc)
         }
     }
@@ -733,7 +712,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                     vc.justWords.removeAll()
                     vc.addedWords.removeAll()
                     vc.textField.text = ""
-                    vc.label.text = ""
+                    vc.wordView.text = ""
                     vc.updatePlaceHolder(wordNumber: 1)
                 }
             }
@@ -788,7 +767,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                         vc.justWords.removeAll()
                         vc.addedWords.removeAll()
                         vc.textField.text = ""
-                        vc.label.text = ""
+                        vc.wordView.text = ""
                         vc.updatePlaceHolder(wordNumber: 1)
                         seedAddedAddAnother()
                     }))

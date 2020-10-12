@@ -13,6 +13,7 @@ import AVFoundation
 
 class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
+    var isUpdatingNode = Bool()
     var scanningShards = Bool()
     var verifying = Bool()
     var scanningBip21 = Bool()
@@ -23,13 +24,8 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     let labelDetail = UILabel()
     let addTestingNodeButton = UIButton()
     let avCaptureSession = AVCaptureSession()
-    //var imageView = UIImageView()
     var stringToReturn = ""
-    //var completion = {}
-    //var didChooseImage = {}
     var keepRunning = true
-    //var downSwipeAction = {}
-    //var vc = UIViewController()
     let imagePicker = UIImagePickerController()
     var qrString = ""
     let uploadButton = UIButton()
@@ -37,29 +33,22 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     let closeButton = UIButton()
     let blurHeaderView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffect.Style.systemChromeMaterialDark))
     let downSwipe = UISwipeGestureRecognizer()
-    
     var blurArray = [UIVisualEffectView]()
     var decoder:URDecoder!
-    //var scanningShards = Bool()
     var isScanningInvoice = Bool()
-    //var isImporting = Bool()
     var unsignedPsbt = ""
     var signedRawTx = ""
-    var updatingNode = Bool()
     var nodeId:UUID!
     var words = ""
-    var scanningNode = Bool()
     var isRecovering = Bool()
-    //var closeButton = UIButton()
     var onDoneRecoveringBlock : (([String:Any]) -> Void)?
     var onDoneBlock : ((Bool) -> Void)?
     var returnStringBlock: ((String) -> Void)?
     var onPsbtScanDoneBlock: ((String) -> Void)?
-    //var onImportDoneBlock : ((String) -> Void)?
     var isTorchOn = Bool()
-    //let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     let connectingView = ConnectingView()
     var alertStyle = UIAlertController.Style.actionSheet
+    
     @IBOutlet var imageView: UIImageView!
     @IBOutlet weak var backgroundView: UIVisualEffectView!
     @IBOutlet weak var progressDescriptionLabel: UILabel!
@@ -151,7 +140,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
     @objc func addTester() {
         
-        if scanningNode {
+        if isScanningNode {
             
             DispatchQueue.main.async { [unowned vc = self] in
                 
@@ -250,8 +239,8 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             guard let self = self else { return }
             
             self.scanQRNow()
-            self.configure()
             self.addScannerButtons()
+            self.configure()
             self.connectingView.removeConnectingView()
         }
     }
@@ -351,7 +340,12 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             }
         }
         
-        if url.hasPrefix("ur:crypto-psbt/") || url.hasPrefix("UR:CRYPTO-PSBT/") {
+        if isScanningInvoice {
+            dismiss(animated: true) { [weak self] in
+                self?.returnStringBlock!(url)
+            }
+        
+        } else if url.hasPrefix("ur:crypto-psbt/") || url.hasPrefix("UR:CRYPTO-PSBT/") {
             processUrPsbt(text: url)
             
         } else if isImporting {
@@ -371,7 +365,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             
         } else {
             if url.hasPrefix("btcrpc://") || url.hasPrefix("btcstandup://") {
-                if !updatingNode {
+                if !isUpdatingNode {
                     addnode()
                 } else {
                     updateNode()
@@ -552,19 +546,39 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         
         #else
         configureImagePicker()
-        //configureTextField()
         configureUploadButton()
         configureTorchButton()
         configureDownSwipe()
         
-        if scanningShards {
-            label.text = "Scan SSKR UR"
-            labelDetail.text = "Gordian Wallet allows you to scan UR SSKR shards to add a signer to your account."
+        if isRecovering {
+            label.text = "Scan an Account Map"
+            labelDetail.text = "Gordian Wallet allows you to backup/export an Account Map QR code for each wallet you create. You can scan one at anytime to recreate the wallet as watch-only, you can then add signers to it."
             addTestingNodeButton.setTitle("more info please", for: .normal)
             configureLabel()
             configureDetailLabel()
             configureDontHaveAnodeButton()
-            closeButton.alpha = 0
+        
+        } else if isScanningInvoice {
+            label.text = "Scan a Bitcoin address or invoice"
+            labelDetail.text = "Gordian Wallet is compatible with BIP21 invoices"
+            addTestingNodeButton.setTitle("", for: .normal)
+            configureLabel()
+            configureDetailLabel()
+        
+        } else if scanningShards {
+            label.text = "Scan SSKR UR"
+            labelDetail.text = "Gordian Wallet allows you to scan UR SSKR shards to add a signer to your account."
+            addTestingNodeButton.setTitle("", for: .normal)
+            configureLabel()
+            configureDetailLabel()
+            configureDontHaveAnodeButton()
+            
+        } else if isUpdatingNode {
+            label.text = "Scan a QuickConnect QR Code"
+            labelDetail.text = "This node will be updated with the credentials contained within the scanned QR"
+            addTestingNodeButton.setTitle("", for: .normal)
+            configureLabel()
+            configureDetailLabel()
             
         } else if isScanningNode {
             label.text = "Scan a QuickConnect QR Code"
@@ -579,7 +593,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             labelDetail.text = "You may scan an \"Account Map\", Bitcoin Core Descriptor, Specter \"Wallet Import\" QR, Coldcard skeleton json, crypto-seed UR or crypto-hdkey (master key only) UR"
             configureLabel()
             configureDetailLabel()
-            closeButton.alpha = 0
             configureDontHaveAnodeButton()
             
         } else if scanningRecovery {
@@ -589,7 +602,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             configureLabel()
             configureDetailLabel()
             configureDontHaveAnodeButton()
-            closeButton.alpha = 0
             
         } else if verifying {
             label.text = "Scan an Address to Verify"

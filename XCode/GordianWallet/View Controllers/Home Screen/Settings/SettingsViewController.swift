@@ -194,6 +194,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func deleteKeychainItems() {
         KeyChain.removeAll()
+        KeyChain.remove(key: "acceptedDisclaimer")
+        KeyChain.remove(key: "userIdentifier")
+        KeyChain.remove(key: "privateKey")
         let domain = Bundle.main.bundleIdentifier!
         UserDefaults.standard.removePersistentDomain(forName: domain)
         UserDefaults.standard.synchronize()
