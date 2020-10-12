@@ -11,13 +11,27 @@ import UIKit
 import LibWally
 
 extension String {
+//: ### Base64 encoding a string
+    func base64Encoded() -> String? {
+        if let data = self.data(using: .utf8) {
+            return data.base64EncodedString()
+        }
+        return nil
+    }
+
+//: ### Base64 decoding a string
+    func base64Decoded() -> String? {
+        if let data = Data(base64Encoded: self, options: .ignoreUnknownCharacters) {
+            return String(data: data, encoding: .utf8)
+        }
+        return nil
+    }
+    
     func condenseWhitespace() -> String {
         let components = self.components(separatedBy: .whitespacesAndNewlines)
         return components.filter { !$0.isEmpty }.joined(separator: " ")
     }
-}
-
-extension String {
+    
     var utf8: Data {
         return data(using: .utf8)!
     }
@@ -107,6 +121,12 @@ public extension UIButton {
                 }
             }
         }
+    }
+}
+
+extension Array where Element == UInt8 {
+    var data: Data {
+        Data(self)
     }
 }
 

@@ -76,54 +76,56 @@ class PSBTSigner {
         
         func attemptToSignLocallyWithActiveWalletXprv() {
             getActiveWalletNow { (wallet, error) in
-                if wallet != nil {
-                    if wallet?.xprvs != nil {
-                        if wallet!.xprvs!.count > 0 {
-                            let encryptedXprvs = wallet!.xprvs!
-                            var signableKeys = [String]()
-                            for (x, encryptedXprv) in encryptedXprvs.enumerated() {
-                                Encryption.decryptData(dataToDecrypt: encryptedXprv) { (decryptedXprv) in
-                                    if decryptedXprv != nil {
-                                        if let xprv = String(bytes: decryptedXprv!, encoding: .utf8) {
-                                            if let key = HDKey(xprv) {
-                                                let inputs = psbtToSign.inputs
-                                                for (i, input) in inputs.enumerated() {
-                                                    /// Create an array of child keys that we know can sign our inputs.
-                                                    if let origins = input.origins {
-                                                        for origin in origins {
-                                                            if let path = BIP32Path((origin.value.path.description).replacingOccurrences(of: wallet!.derivation + "/", with: "")) {
-                                                                if let childKey = try? key.derive(path) {
-                                                                    if let privKey = childKey.privKey {
-                                                                        if privKey.pubKey == origin.key {
-                                                                            signableKeys.append(privKey.wif)
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    if i + 1 == inputs.count && x + 1 == encryptedXprvs.count {
-                                                        let uniqueSigners = Array(Set(signableKeys))
-                                                        for (w, wif) in uniqueSigners.enumerated() {
-                                                            if let key = Key(wif, chain) {
-                                                                psbtToSign.sign(key)
-                                                            }
-                                                            if w + 1 == uniqueSigners.count {
-                                                                finalizeWithBitcoind()
+                
+                guard let wallet = wallet, let xprvs = wallet.xprvs, xprvs.count > 0 else {
+                    finalizeWithBitcoind()
+                    return
+                }
+                
+                let encryptedXprvs = xprvs
+                var signableKeys = [String]()
+                
+                for (x, encryptedXprv) in encryptedXprvs.enumerated() {
+                    
+                    Encryption.decryptData(dataToDecrypt: encryptedXprv) { (decryptedXprv) in
+                        if decryptedXprv != nil {
+                            if let xprv = String(bytes: decryptedXprv!, encoding: .utf8) {
+                                if let key = HDKey(xprv) {
+                                    let inputs = psbtToSign.inputs
+                                    for (i, input) in inputs.enumerated() {
+                                        /// Create an array of child keys that we know can sign our inputs.
+                                        if let origins = input.origins {
+                                            for origin in origins {
+                                                if let path = BIP32Path((origin.value.path.description).replacingOccurrences(of: wallet.derivation + "/", with: "")) {
+                                                    if let childKey = try? key.derive(path) {
+                                                        if let privKey = childKey.privKey {
+                                                            if privKey.pubKey == origin.key {
+                                                                signableKeys.append(privKey.wif)
                                                             }
                                                         }
                                                     }
                                                 }
                                             }
                                         }
+                                        if i + 1 == inputs.count && x + 1 == encryptedXprvs.count {
+                                            let uniqueSigners = Array(Set(signableKeys))
+                                            if uniqueSigners.count > 0 {
+                                                for (w, wif) in uniqueSigners.enumerated() {
+                                                    if let key = Key(wif, chain) {
+                                                        psbtToSign.sign(key)
+                                                    }
+                                                    if w + 1 == uniqueSigners.count {
+                                                        finalizeWithBitcoind()
+                                                    }
+                                                }
+                                            } else {
+                                                finalizeWithBitcoind()
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        } else {
-                            finalizeWithBitcoind()
                         }
-                    } else {
-                        finalizeWithBitcoind()
                     }
                 }
             }

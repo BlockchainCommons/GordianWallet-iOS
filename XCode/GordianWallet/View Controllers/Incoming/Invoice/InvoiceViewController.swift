@@ -378,7 +378,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         switch id {
         case "showInvoiceQr":
             if let vc = segue.destination as? QRDisplayerViewController {
-                vc.address = textToShareViaQRCode
+                vc.text = textToShareViaQRCode
             }
         default:
             break

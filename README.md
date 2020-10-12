@@ -1,8 +1,6 @@
 # GordianWallet-iOS
 
-*(Previously known as FullyNoded-2)*
-
-[<img src="./Images/macos_badge.png" alt="download gordian wallet for macos" width="100"/>](./GordianWallet-macOS.dmg)<br/>
+</br><img src="./Images/GordianWallet_logo.png" alt="Gordian Wallet app Home Screen" width="100"/></br>
 
 **_GordianWallet-iOS_** is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to the full node of your choice, including: a bitcoind installed using either [GordianServer-macOS](https://github.com/BlockchainCommons/GordianServer-macOS) or another Bitcoin Standup program such as [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts); a full-node box such as [Nodl](https://www.nodl.it/) or [Rasbiblitz](https://github.com/rootzoll/raspiblitz); or a full-node service such as [BTCpay](https://btcpayserver.org/]). *GordianWallet* is a self-sovereign wallet, and self-sovereignty means that you get to decide.
 
@@ -22,6 +20,7 @@
 
 To install from source:
 
+* `$ brew install carthage`
 * `$ git clone https://github.com/BlockchainCommons/GordianWallet-iOS`
 * `$ cd GordianWallet-iOS/XCode`
 * double click `GordianWallet.xcodeproj`

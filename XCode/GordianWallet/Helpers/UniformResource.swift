@@ -61,15 +61,11 @@ enum URHelper {
     }
     
     static func urToShard(sskrUr: String) -> String? {
-        do {
-            let ur = try URDecoder.decode(sskrUr)
-            guard let decodedCbor = try? CBOR.decode(ur.cbor.bytes),
-                case let CBOR.tagged(_, cborRaw) = decodedCbor,
-                case let CBOR.byteString(byteString) = cborRaw else { return nil }
-            return Data(byteString).hexString
-        } catch {
-            return nil
-        }
+        guard let ur = try? URDecoder.decode(sskrUr),
+            let decodedCbor = try? CBOR.decode(ur.cbor.bytes),
+            case let CBOR.tagged(_, cborRaw) = decodedCbor,
+            case let CBOR.byteString(byteString) = cborRaw else { return nil }
+        return Data(byteString).hexString
     }
     
     static func urToHdkey(urString: String) -> (isMaster: Bool?, keyData: String?, chainCode: String?) {
@@ -99,5 +95,20 @@ enum URHelper {
         } catch {
             return (nil, nil, nil)
         }
+    }
+    
+    static func psbtUr(_ data: Data) -> UR? {
+        let cbor = CBOR.byteString(data.bytes).encode().data
+        
+        return try? UR(type: "crypto-psbt", cbor: cbor)
+    }
+    
+    static func psbtUrToBase64Text(_ ur: UR) -> String? {
+        guard let decodedCbor = try? CBOR.decode(ur.cbor.bytes),
+            case let CBOR.byteString(bytes) = decodedCbor else {
+                return nil
+        }
+        
+        return Data(bytes).base64EncodedString()
     }
 }

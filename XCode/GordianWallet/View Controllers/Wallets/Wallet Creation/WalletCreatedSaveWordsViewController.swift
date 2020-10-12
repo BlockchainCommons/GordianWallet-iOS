@@ -198,7 +198,7 @@ class WalletCreatedSaveWordsViewController: UIViewController, UINavigationContro
             
             if let vc = segue.destination as? QRDisplayerViewController {
                 
-                vc.address = mnemonic
+                vc.text = mnemonic
                 
             }
             

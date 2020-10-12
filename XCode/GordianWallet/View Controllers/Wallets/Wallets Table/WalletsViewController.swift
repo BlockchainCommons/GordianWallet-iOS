@@ -1151,8 +1151,6 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             let (isMaster, keyData, chainCode) = URHelper.urToHdkey(urString: ur)
             guard isMaster != nil, keyData != nil, chainCode != nil else { return }
-            //guard keyData != nil else { return }
-            //guard chainCode != nil else { return }
             if isMaster! {
                 var base58String = "\(prefix)000000000000000000\(chainCode!)\(keyData!)"
                 if let data = Data(base58String) {
@@ -1169,25 +1167,16 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    private func processUrSskr(ur: String) {
-        if let shard = URHelper.urToShard(sskrUr: ur) {
-            print("shard: \(shard)")
-        }
-    }
-    
-    private func processDescriptor(item: String) {
+   private func processDescriptor(item: String) {
         spinner.addConnectingView(vc: self, description: "processing...")
         //ur:crypto-sskr/taadecgojlcybyadaoknuyjekszmztwppfjejyvacyghhfemgdoxsrneyt
-        if item.hasPrefix("ur:crypto-sskr/") {
-            processUrSskr(ur: item)
+        if item.hasPrefix("ur:crypto-hdkey/") || item.hasPrefix("UR:CRYPTO-HDKEY/") {
+            processUrHdkey(ur: item.lowercased())
             
-        } else if item.hasPrefix("ur:crypto-hdkey/") {
-            processUrHdkey(ur: item)
-            
-        } else if item.hasPrefix("ur:crypto-seed/") {
+        } else if item.hasPrefix("ur:crypto-seed/") || item.hasPrefix("UR:CRYPTO-SEED/") {
             spinner.removeConnectingView()
             
-            if let _ = URHelper.urToEntropy(urString: item).data {
+            if let _ = URHelper.urToEntropy(urString: item.lowercased()).data {
                 DispatchQueue.main.async { [unowned vc = self] in
                     vc.urToRecover = item
                     vc.performSegue(withIdentifier: "segueToUrRecovery", sender: vc)
@@ -1349,7 +1338,7 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let vc = segue.destination as? ScannerViewController {
             vc.isImporting = true
             vc.returnStringBlock = { [unowned thisVc = self] item in
-                thisVc.processDescriptor(item: item.lowercased())
+                thisVc.processDescriptor(item: item)
             }
         }
             

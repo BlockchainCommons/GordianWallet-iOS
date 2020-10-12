@@ -69,7 +69,15 @@ class MakeRPCCall {
                                 
                                 /// attempt a node command 20 times to avoid user having to tap refresh button
                                 if vc.attempts < 20 {
-                                    vc.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
+                                    if !error!.localizedDescription.contains("Could not connect to the server") {
+                                        vc.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
+                                    } else {
+                                        // Only attempt 5 times for "Could not connect to server error"
+                                        if vc.attempts < 15 {
+                                            vc.attempts = 15
+                                        }
+                                        vc.executeRPCCommand(walletName: walletName, method: method, param: param, completion: completion)
+                                    }
                                     
                                 } else {
                                     vc.attempts = 0
@@ -91,6 +99,7 @@ class MakeRPCCall {
                                     do {
                                         
                                         let json = try JSONSerialization.jsonObject(with: urlContent, options: JSONSerialization.ReadingOptions.mutableLeaves) as! NSDictionary
+                                        
                                         
                                         #if DEBUG
                                         print("response = \(json)")

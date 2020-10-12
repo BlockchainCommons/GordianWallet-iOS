@@ -24,7 +24,7 @@ class TextBlurbs {
     
     class func signPsbtMessage() -> String {
         
-        return "We will attempt to sign this psbt with your nodes current active wallet and then we will attempt to sing it locally. If the psbt is complete it will be returned to you as a raw transaction for broadcasting, if it is incomplete you will be able to export it to another signer."
+        return "We will attempt to process this psbt with your nodes current active account and sign it locally if it is not already signed. If the psbt is complete it will be returned to you as a raw transaction for verification and broadcasting, if it is incomplete you will be able to export it to another signer."
         
     }
     

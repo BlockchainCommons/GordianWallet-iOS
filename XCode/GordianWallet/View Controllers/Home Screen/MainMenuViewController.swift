@@ -316,10 +316,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func signPsbtAlert(psbt: String) {
         DispatchQueue.main.async { [unowned vc = self] in
-            let alert = UIAlertController(title: "Sign PSBT?", message: TextBlurbs.signPsbtMessage(), preferredStyle: vc.alertStyle)
+            let alert = UIAlertController(title: "Process PSBT?", message: TextBlurbs.signPsbtMessage(), preferredStyle: vc.alertStyle)
             
-            alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { action in
-                vc.connectingView.addConnectingView(vc: vc, description: "signing psbt")
+            alert.addAction(UIAlertAction(title: "Process", style: .default, handler: { action in
+                vc.connectingView.addConnectingView(vc: vc, description: "processing psbt")
                 vc.signPSBT(psbt: psbt)
             }))
             
@@ -405,14 +405,19 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                 vc.wallet = wallet!
             }
         }
+                        
         #if DEBUG
-        didAppear()
+            if KeyChain.getData("acceptedDisclaimer") == nil {
+                showIntro()
+            } else {
+                didAppear()
+            }
         #else
-        if KeyChain.getData("userIdentifier") == nil || KeyChain.getData("acceptedDisclaimer") == nil {
-            showIntro()
-        } else {
-            didAppear()
-        }
+            if KeyChain.getData("userIdentifier") == nil || KeyChain.getData("acceptedDisclaimer") == nil {
+                showIntro()
+            } else {
+                didAppear()
+            }
         #endif
     }
     
@@ -454,23 +459,22 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                                     vc.existingWalletName = ""
                                     vc.wallet = nil
                                     vc.refreshNow()
-//                                    if vc.existingNodeId != node!.id {
-//                                        /// this means the node was changed in node manager or a wallet on a different node was activated
-//                                        vc.refreshNow()
-//                                    } else if vc.existingWalletName != "" {
-//                                        /// this means the wallet was deleted without getting deactivated first, so we just force refresh
-//                                        /// and manually set the wallet to nil
-//                                        vc.wallet = nil
-//                                        vc.refreshNow()
-//                                    }
-//                                    vc.existingWalletName = ""
                                 }
                             }
                         }
                     }
                 } else {
-                    vc.scanningNode = true
-                    vc.addNode()
+                    #if DEBUG
+                        if KeyChain.getData("acceptedDisclaimer") != nil {
+                            vc.scanningNode = true
+                            vc.addNode()
+                        }
+                    #else
+                        if KeyChain.getData("userIdentifier") != nil || KeyChain.getData("acceptedDisclaimer") != nil {
+                           vc.scanningNode = true
+                           vc.addNode()
+                        }
+                    #endif
                 }
             }
         }
@@ -1768,9 +1772,15 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             
         case "scanNow":
             if let vc = segue.destination as? ScannerViewController {
-                vc.scanningNode = scanningNode
+                vc.isScanningNode = scanningNode
                 vc.onDoneBlock = { [unowned thisVc = self] result in
                     thisVc.nodeJustAdded()
+                }
+                
+                vc.onPsbtScanDoneBlock = { [weak self] psbt in
+                    guard let self = self else { return }
+                    
+                    self.signPsbtAlert(psbt: psbt)
                 }
             }
             

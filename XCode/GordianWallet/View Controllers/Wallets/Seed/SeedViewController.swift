@@ -1008,7 +1008,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             if let vc = segue.destination as? QRDisplayerViewController {
                 
-                vc.address = itemToDisplay
+                vc.text = itemToDisplay
                 
             }
             

@@ -826,7 +826,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
 
             if let vc = segue.destination as? QRDisplayerViewController {
 
-                vc.address = qrString
+                vc.text = qrString
 
             }
 

@@ -203,7 +203,7 @@ class WalletCreatedNodesSeedViewController: UIViewController, UINavigationContro
             
             if let vc = segue.destination as? QRDisplayerViewController {
                 
-                vc.address = nodesMnemonic
+                vc.text = nodesMnemonic
                 
             }
             

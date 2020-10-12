@@ -27,25 +27,39 @@ class KeyChain {
     
     class func overWriteExistingSeeds(unencryptedSeeds: [String], completion: @escaping ((Bool)) -> Void) {
         var encrpytedSeeds:[Data] = []
-        for (i, unencryptedSeed) in unencryptedSeeds.enumerated() {
-            Encryption.encryptData(dataToEncrypt: unencryptedSeed.dataUsingUTF8StringEncoding) { (encryptedData, error) in
-                if encryptedData != nil {
-                    encrpytedSeeds.append(encryptedData!)
-                    if i + 1 == unencryptedSeeds.count {
-                        do {
-                            let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: encrpytedSeeds, requiringSecureCoding: true)
-                            if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
-                                completion(true)
-                            } else {
+        print("unencryptedSeeds.count: \(unencryptedSeeds.count)")
+        if unencryptedSeeds.count > 0 {
+            for (i, unencryptedSeed) in unencryptedSeeds.enumerated() {
+                Encryption.encryptData(dataToEncrypt: unencryptedSeed.dataUsingUTF8StringEncoding) { (encryptedData, error) in
+                    if encryptedData != nil {
+                        encrpytedSeeds.append(encryptedData!)
+                        if i + 1 == unencryptedSeeds.count {
+                            do {
+                                let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: encrpytedSeeds, requiringSecureCoding: true)
+                                if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
+                                    completion(true)
+                                } else {
+                                    completion(false)
+                                }
+                            } catch {
                                 completion(false)
                             }
-                        } catch {
-                            completion(false)
                         }
+                    } else {
+                        completion(false)
                     }
+                }
+            }
+        } else {
+            do {
+                let updatedEncryptedSeedArray = try NSKeyedArchiver.archivedData(withRootObject: [], requiringSecureCoding: true)
+                if KeyChain.setSeed(updatedEncryptedSeedArray, forKey: "seeds") {
+                    completion(true)
                 } else {
                     completion(false)
                 }
+            } catch {
+                completion(false)
             }
         }
     }
