@@ -303,10 +303,14 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                 
                 vc.wordsView.text = vc.addedWords.joined(separator: "")
                 
-                if vc.justWords.count == 12 {
+                if vc.justWords.count == 12 ||  vc.justWords.count == 24 {
                     
-                    vc.validWordsAdded()
+                    if let mnemonic = BIP39Mnemonic(vc.justWords.joined(separator: " ")) {
                     
+                        vc.validWordsAdded(mnemonic)
+                        
+                    }
+                                        
                 }
                 
             }
@@ -352,10 +356,10 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                 
                 vc.textField.text = substring
                 
-                if let _ = BIP39Mnemonic(vc.processedCharacters(vc.textField.text!)) {
+                if let mnemonic = BIP39Mnemonic(vc.processedCharacters(vc.textField.text!)) {
                     
                     vc.textField.textColor = .systemGreen
-                    vc.validWordsAdded()
+                    vc.validWordsAdded(mnemonic)
                     
                 } else {
                     
@@ -471,11 +475,11 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
             
             vc.wordsView.text = vc.addedWords.joined(separator: "")
             
-            if vc.justWords.count == 12 {
+            if vc.justWords.count == 12 || vc.justWords.count == 24 {
                 
-                if let _ = BIP39Mnemonic(vc.justWords.joined(separator: " ")) {
+                if let mnemonic = BIP39Mnemonic(vc.justWords.joined(separator: " ")) {
                     
-                    vc.validWordsAdded()
+                    vc.validWordsAdded(mnemonic)
                     
                 } else {
                     
@@ -557,7 +561,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    private func validWordsAdded() {
+    private func validWordsAdded(_ mnemonic: BIP39Mnemonic) {
         
         DispatchQueue.main.async { [unowned vc = self] in
             
@@ -571,12 +575,13 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         let str = parser.descriptor(wallet.descriptor)
         let derivation = wallet.derivation
         
-        MnemonicCreator.convert(words: justWords.joined(separator: " ")) { [unowned vc = self] (mnemonic, error) in
+        //MnemonicCreator.convert(words: justWords.joined(separator: " ")) { [unowned vc = self] (mnemonic, error) in
+            //print("words: \(vc.justWords.joined(separator: " "))")
             
-            if !error && mnemonic != nil {
-                let seed = mnemonic!.seedHex()
+            //if !error && mnemonic != nil {
+                let seed = mnemonic.seedHex()
                 
-                if let mk = HDKey(seed, network(descriptor: vc.wallet.descriptor)) {
+                if let mk = HDKey(seed, network(descriptor: wallet.descriptor)) {
                     
                     if let path = BIP32Path(derivation) {
                         
@@ -586,7 +591,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                             let xpub = hdKey.xpub
                             var existingXpubs = [String]()
                             
-                            if vc.wallet.type == "MULTI" {
+                            if wallet.type == "MULTI" {
                                 existingXpubs = str.multiSigKeys
                                 
                             } else {
@@ -608,38 +613,38 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                                     
                                     if xpubsMatch {
                                         
-                                        if !vc.addSeed {
+                                        if !addSeed {
                                             
                                             if xpub == str.multiSigKeys[0] || xpub == str.multiSigKeys[2] {
                                                 
                                                 DispatchQueue.main.async {
-                                                    vc.connectingView.label.text = "xpub's match, refilling keypool"
+                                                    self.connectingView.label.text = "xpub's match, refilling keypool"
                                                 }
-                                                vc.refillMulti(hdKey: hdKey)
+                                                refillMulti(hdKey: hdKey)
                                                 
                                             } else {
                                                 
-                                                vc.connectingView.removeConnectingView()
-                                                showAlert(vc: vc, title: "Error", message: "That xpub matches your device's xpub, in order to add private keys to your node to refill the keypool we need to use one of the offline recovery phrases.")
+                                                connectingView.removeConnectingView()
+                                                showAlert(vc: self, title: "Error", message: "That xpub matches your device's xpub, in order to add private keys to your node to refill the keypool we need to use one of the offline recovery phrases.")
                                             }
                                                                                         
                                         } else {
                                             
                                             DispatchQueue.main.async {
-                                                vc.connectingView.removeConnectingView()
+                                                self.connectingView.removeConnectingView()
                                             }
                                             if let xprv = hdKey.xpriv {
-                                                vc.addSeedNow(xprv: xprv)
+                                                addSeedNow(xprv: xprv)
                                             } else {
-                                                showAlert(vc: vc, title: "Error", message: "There was an error deriving your xprv.")
+                                                showAlert(vc: self, title: "Error", message: "There was an error deriving your xprv.")
                                             }
                                             
                                         }
                                         
                                     } else {
                                         
-                                        vc.connectingView.removeConnectingView()
-                                        showAlert(vc: vc, title: "Error", message: "that recovery phrase does not match the required recovery phrase for this wallet")
+                                        connectingView.removeConnectingView()
+                                        showAlert(vc: self, title: "Error", message: "that recovery phrase does not match the required recovery phrase for this wallet")
                                         
                                     }
                                     
@@ -649,33 +654,33 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                             
                         } catch {
                             
-                            vc.connectingView.removeConnectingView()
-                            showAlert(vc: vc, title: "Error", message: "error deriving xpub from master key")
+                            self.connectingView.removeConnectingView()
+                            showAlert(vc: self, title: "Error", message: "error deriving xpub from master key")
                             
                         }
                         
                     } else {
                         
-                        vc.connectingView.removeConnectingView()
-                        showAlert(vc: vc, title: "Error", message: "error converting derivation to bip32 path")
+                        self.connectingView.removeConnectingView()
+                        showAlert(vc: self, title: "Error", message: "error converting derivation to bip32 path")
                         
                     }
                     
                 } else {
                     
-                    vc.connectingView.removeConnectingView()
-                    showAlert(vc: vc, title: "Error", message: "error deriving master key")
+                    self.connectingView.removeConnectingView()
+                    showAlert(vc: self, title: "Error", message: "error deriving master key")
                     
                 }
                 
-            } else {
-                
-                vc.connectingView.removeConnectingView()
-                showAlert(vc: vc, title: "Error", message: "error converting your words to a valid mnemonic")
-                
-            }
+//            } else {
+//
+//                vc.connectingView.removeConnectingView()
+//                showAlert(vc: vc, title: "Error", message: "error converting your words to a valid mnemonic")
+//
+//            }
             
-        }
+        //}
         
     }
     
