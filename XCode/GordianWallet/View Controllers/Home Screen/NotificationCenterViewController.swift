@@ -11,7 +11,7 @@ import UIKit
 class NotificationCenterViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var notificationTable: UITableView!
-    var notificationDict:[String:Any]!
+    var notificationDict:[String:Any]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +66,7 @@ class NotificationCenterViewController: UIViewController, UITableViewDelegate, U
         icon.tintColor = .white
         let checkmarkImage = UIImage(systemName: "checkmark.circle")!
         let alertImage = UIImage(systemName: "exclamationmark.circle")!
-        let shouldRefill = notificationDict["shouldRefill"] as? Bool ?? false
+        let shouldRefill = notificationDict?["shouldRefill"] as? Bool ?? false
         label.text = "Refill keypool"
         if shouldRefill {
             icon.image = alertImage
@@ -106,7 +106,16 @@ class NotificationCenterViewController: UIViewController, UITableViewDelegate, U
         // Pass the selected object to the new view controller.
         if segue.identifier == "showNotificationDetail" {
             if let vc = segue.destination as? NotificationDetailViewController {
-                let shouldRefill = notificationDict["shouldRefill"] as? Bool ?? false
+                
+               guard let shouldRefill = notificationDict?["shouldRefill"] as? Bool else {
+                    vc.backgroundIcon = UIImage(systemName: "checkmark.circle")!
+                    vc.backgroundTint = .systemGreen
+                    vc.isAlert = false
+                    vc.notificationType = "Refill"
+                    
+                    return
+                }
+                
                 if shouldRefill {
                     vc.backgroundIcon = UIImage(systemName: "exclamationmark.circle")!
                     vc.backgroundTint = .systemRed
@@ -114,6 +123,7 @@ class NotificationCenterViewController: UIViewController, UITableViewDelegate, U
                     vc.backgroundIcon = UIImage(systemName: "checkmark.circle")!
                     vc.backgroundTint = .systemGreen
                 }
+                
                 vc.isAlert = shouldRefill
                 vc.notificationType = "Refill"
             }
