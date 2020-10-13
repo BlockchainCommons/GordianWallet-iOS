@@ -204,7 +204,7 @@ class KeyFetcher {
 
     }
 
-    class func musigAddress(completion: @escaping ((address: String?, error: Bool)) -> Void) {
+    class func musigAddress(completion: @escaping ((address: String?, errorMessage: String?)) -> Void) {
 
         getActiveWalletNow { (wallet, error) in
 
@@ -221,17 +221,17 @@ class KeyFetcher {
 
                         if let address = addresses[0] as? String {
 
-                            completion((address,false))
+                            completion((address,nil))
 
                         } else {
 
-                            completion((nil,true))
+                            completion((nil, errorDesc))
 
                         }
 
                     } else {
 
-                        completion((nil,true))
+                        completion((nil, errorDesc))
 
                     }
 

@@ -428,9 +428,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @objc func logoTapped() {
+        #if targetEnvironment(macCatalyst)
+        #else
         DispatchQueue.main.async { [unowned vc = self] in
             vc.performSegue(withIdentifier: "goDonate", sender: vc)
         }
+        #endif
     }
     
     private func didAppear() {
@@ -1655,19 +1658,25 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func sponsorNow(_ sender: Any) {
-        sponsorNow()
+        #if targetEnvironment(macCatalyst)
+        #else
+            sponsorNow()
+        #endif
     }
     
     private func sponsorThisApp() {
-        DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                vc.sponsorView.alpha = 1
-            }) { [unowned vc = self] (_) in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) {
-                    vc.closeSponsorButton()
+        #if targetEnvironment(macCatalyst)
+        #else
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
+                    vc.sponsorView.alpha = 1
+                }) { [unowned vc = self] (_) in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) {
+                        vc.closeSponsorButton()
+                    }
                 }
             }
-        }
+        #endif
     }
     
     @IBAction func closeSponsorBanner(_ sender: Any) {

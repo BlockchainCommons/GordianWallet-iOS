@@ -167,9 +167,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    func showAddress() {
-        print("showAddress")
-        
+    func showAddress() {        
         let parser = DescriptorParser()
         let str = parser.descriptor(wallet!.descriptor)
         
@@ -186,22 +184,18 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     }
     
     func getMsigAddress() {
-        print("getMsigAddress")
-        
-        KeyFetcher.musigAddress { [unowned vc = self] (address, error) in
+        KeyFetcher.musigAddress { [weak self] (address, error) in
+            guard let self = self else { return }
             
-            if !error {
-                
-                vc.connectingView.removeConnectingView()
-                vc.addressString = address!
-                vc.showAddress(address: address!)
-                
-            } else {
-                
-                vc.connectingView.removeConnectingView()
-                displayAlert(viewController: vc, isError: true, message: "error getting musig address")
-                
+            guard let msigAddress = address else {
+                self.connectingView.removeConnectingView()
+                displayAlert(viewController: self, isError: true, message: "Error getting multisig address: \(error ?? "unknown error")")
+                return
             }
+            
+            self.connectingView.removeConnectingView()
+            self.addressString = msigAddress
+            self.showAddress(address: msigAddress)
             
         }
         
