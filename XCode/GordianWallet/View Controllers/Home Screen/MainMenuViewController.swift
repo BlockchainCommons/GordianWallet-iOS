@@ -1342,6 +1342,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         vc.isRefreshingWalletData = false
                         vc.reloadSections([vc.walletCellIndex, 3])
                         vc.loadTransactionData()
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .didUpdateLabel, object: nil, userInfo: nil)
+                        }
                     }
                 }
             } else {
@@ -1369,6 +1372,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         vc.walletSectionLoaded = true
                         vc.isRefreshingWalletData = false
                         vc.reloadSections([vc.walletCellIndex])
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .didUpdateLabel, object: nil, userInfo: nil)
+                        }
                     }
                 }
             } else {
