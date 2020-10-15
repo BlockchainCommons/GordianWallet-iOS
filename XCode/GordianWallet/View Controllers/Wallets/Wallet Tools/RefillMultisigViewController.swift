@@ -16,6 +16,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var descriptionLabel: UILabel!
     @IBOutlet var textField: UITextField!
     @IBOutlet weak var wordsView: UITextView!
+    
     var addSeed = Bool()
     var multiSigRefillDoneBlock: ((Bool) -> Void)?
     let tap = UITapGestureRecognizer()
@@ -46,9 +47,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
             navigationItem.title = "Add Signer"
             descriptionLabel.text = "You can add a 12 or 24 word BIP39 seed phrase which can sign for this account, or you can scan SSKR UR shards by tapping the QR scanner."
             lostWordsOutlet.alpha = 0
-            
         }
-        
     }
     
     @IBAction func scanShardsAction(_ sender: Any) {
