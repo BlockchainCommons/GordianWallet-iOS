@@ -455,10 +455,13 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     }
     
     private func parse(text: String) {
-        if text.hasPrefix("ur:crypto-seed/") {
+        print("parse")
+        if text.lowercased().hasPrefix("ur:crypto-seed/") {
             if let data = URHelper.urToEntropy(urString: text).data {
+                print("data: \(data)")
                 let entropy = BIP39Entropy(data)
                 if let mnemonic = BIP39Mnemonic(entropy) {
+                    print("mnemonic: \(mnemonic)")
                     let words = mnemonic.words.joined(separator: " ")
                     DispatchQueue.main.async { [unowned vc = self] in
                         vc.textField.text = words

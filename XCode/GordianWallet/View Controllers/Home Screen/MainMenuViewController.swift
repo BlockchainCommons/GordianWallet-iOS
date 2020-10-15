@@ -428,9 +428,12 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @objc func logoTapped() {
+        #if targetEnvironment(macCatalyst)
+        #else
         DispatchQueue.main.async { [unowned vc = self] in
             vc.performSegue(withIdentifier: "goDonate", sender: vc)
         }
+        #endif
     }
     
     private func didAppear() {
@@ -1339,6 +1342,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         vc.isRefreshingWalletData = false
                         vc.reloadSections([vc.walletCellIndex, 3])
                         vc.loadTransactionData()
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .didUpdateLabel, object: nil, userInfo: nil)
+                        }
                     }
                 }
             } else {
@@ -1366,6 +1372,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                         vc.walletSectionLoaded = true
                         vc.isRefreshingWalletData = false
                         vc.reloadSections([vc.walletCellIndex])
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .didUpdateLabel, object: nil, userInfo: nil)
+                        }
                     }
                 }
             } else {
@@ -1655,19 +1664,25 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func sponsorNow(_ sender: Any) {
-        sponsorNow()
+        #if targetEnvironment(macCatalyst)
+        #else
+            sponsorNow()
+        #endif
     }
     
     private func sponsorThisApp() {
-        DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
-                vc.sponsorView.alpha = 1
-            }) { [unowned vc = self] (_) in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) {
-                    vc.closeSponsorButton()
+        #if targetEnvironment(macCatalyst)
+        #else
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
+                    vc.sponsorView.alpha = 1
+                }) { [unowned vc = self] (_) in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) {
+                        vc.closeSponsorButton()
+                    }
                 }
             }
-        }
+        #endif
     }
     
     @IBAction func closeSponsorBanner(_ sender: Any) {

@@ -357,6 +357,10 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             if navigationController != nil {
                 self.returnStringBlock!(url)
                 navigationController?.popViewController(animated: true)
+            } else {
+                dismiss(animated: true) { [weak self] in
+                    self?.returnStringBlock!(url)
+                }
             }
             
         } else if isRecovering {
