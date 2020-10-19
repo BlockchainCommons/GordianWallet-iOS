@@ -1602,9 +1602,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func addNode() {
+        #if targetEnvironment(macCatalyst)
+        addTester()
+        #else
         DispatchQueue.main.async { [unowned vc = self] in
             vc.performSegue(withIdentifier: "scanNow", sender: vc)
         }
+        #endif
     }
     
     private func reloadTableData() {
@@ -1740,6 +1744,53 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                 }
             }
+        }
+    }
+    
+    private func addnode() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            let alert = UIAlertController(title: "Warning", message: "We may periodically delete testnet wallets from our testing node. Please make sure you save your recovery info when creating wallets so you can easily recover.", preferredStyle: vc.alertStyle)
+            
+            alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { action in
+                
+                // Testnet Linode instance:
+                let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=BC%20Beta%20Test%20Node"
+                let qc = QuickConnect()
+                qc.addNode(vc: self, url: url) { (success, errorDesc) in
+                    if success {
+                        DispatchQueue.main.async {
+                            self.nodeJustAdded()
+                        }
+                    } else {
+                        showAlert(vc: self, title: "Error", message: "Error adding node: \(errorDesc ?? "unknown error")")
+                    }
+                }
+                
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+            
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+            
+        }
+    }
+    
+    private func addTester() {
+        DispatchQueue.main.async { [unowned vc = self] in
+            
+            let alert = UIAlertController(title: "Connect to our testing node?", message: "We have a testnet node you can borrow for testing purposes only, just tap \"Add Testing Node\" to use it. This is a great way to get comfortable with the app and gain an idea of how it works.", preferredStyle: vc.alertStyle)
+
+            alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { [unowned vc = self] action in
+                vc.addnode()
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    
+            alert.popoverPresentationController?.sourceView = vc.view
+            vc.present(alert, animated: true, completion: nil)
+            
         }
     }
     

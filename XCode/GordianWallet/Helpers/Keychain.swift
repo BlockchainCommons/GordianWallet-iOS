@@ -27,7 +27,6 @@ class KeyChain {
     
     class func overWriteExistingSeeds(unencryptedSeeds: [String], completion: @escaping ((Bool)) -> Void) {
         var encrpytedSeeds:[Data] = []
-        print("unencryptedSeeds.count: \(unencryptedSeeds.count)")
         if unencryptedSeeds.count > 0 {
             for (i, unencryptedSeed) in unencryptedSeeds.enumerated() {
                 Encryption.encryptData(dataToEncrypt: unencryptedSeed.dataUsingUTF8StringEncoding) { (encryptedData, error) in

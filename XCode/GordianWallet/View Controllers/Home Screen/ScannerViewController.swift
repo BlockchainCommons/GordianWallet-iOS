@@ -147,10 +147,14 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                 let alert = UIAlertController(title: "Connect to our testing node?", message: "We have a testnet node you can borrow for testing purposes only, just tap \"Add Testing Node\" to use it. This is a great way to get comfortable with the app and gain an idea of how it works.", preferredStyle: vc.alertStyle)
 
                 alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { [unowned vc = self] action in
-                    
                     vc.addnode()
-
                 }))
+                
+                #if targetEnvironment(macCatalyst)
+                alert.addAction(UIAlertAction(title: "Upload QR", style: .default, handler: { [unowned vc = self] action in
+                    vc.chooseQRCodeFromLibrary()
+                }))
+                #endif
                 
                 alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
                         
@@ -210,6 +214,10 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     @objc func chooseQRCodeFromLibrary() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            
+            #if targetEnvironment(macCatalyst)
+            self.configureImagePicker()
+            #endif
             
             self.present(self.imagePicker, animated: true, completion: nil)
         }
@@ -545,10 +553,16 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         isTorchOn = false
         
         #if targetEnvironment(macCatalyst)
-        configureImagePicker()
-        chooseQRCodeFromLibrary()
+        
+        if isScanningNode {
+            addTester()
+        } else {
+            configureImagePicker()
+            chooseQRCodeFromLibrary()
+        }
         
         #else
+        
         configureImagePicker()
         configureUploadButton()
         configureTorchButton()
