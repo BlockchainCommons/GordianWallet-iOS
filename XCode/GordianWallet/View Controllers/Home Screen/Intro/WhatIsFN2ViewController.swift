@@ -58,11 +58,12 @@ class WhatIsFN2ViewController: UIViewController, UITextViewDelegate, UINavigatio
     }
     
     @IBAction func nextAction(_ sender: Any) {
-        
         DispatchQueue.main.async {
-            
-            self.performSegue(withIdentifier: "next2", sender: self)
-            
+            #if targetEnvironment(macCatalyst)
+                self.performSegue(withIdentifier: "skipSupportBlurb", sender: self)
+            #else
+                self.performSegue(withIdentifier: "next2", sender: self)
+            #endif
         }
     }
     

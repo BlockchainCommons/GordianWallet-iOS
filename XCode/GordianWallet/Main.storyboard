@@ -1407,6 +1407,7 @@ For more information regarding wallet recovery please see our Recovery.md file.<
                         <outlet property="textView" destination="SrH-4k-3KF" id="wGx-Y6-SzZ"/>
                         <outlet property="titleLabel" destination="hqs-hU-o5J" id="Czu-FJ-Ttp"/>
                         <segue destination="2py-0n-Ew1" kind="show" identifier="next2" id="xeG-ie-ydC"/>
+                        <segue destination="2h3-RM-OBN" kind="show" identifier="skipSupportBlurb" id="jbk-RU-0Le"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Omg-d1-FdT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -6426,6 +6427,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="MTV-lr-E4R"/>
         <segue reference="Sh6-1X-4BR"/>
         <segue reference="fae-pp-fFg"/>
+        <segue reference="jbk-RU-0Le"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
