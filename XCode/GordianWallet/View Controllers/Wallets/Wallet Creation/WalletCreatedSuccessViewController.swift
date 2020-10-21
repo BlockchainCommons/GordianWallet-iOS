@@ -103,12 +103,12 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
     }
     
     @objc func handleTap() {
-        
+        #if targetEnvironment(macCatalyst)
+        #else
         DispatchQueue.main.async { [unowned vc = self] in
-            
             vc.textField.resignFirstResponder()
-            
         }
+        #endif
         
     }
     

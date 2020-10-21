@@ -12,7 +12,16 @@ import UIKit
 enum LifeHash {
     
     static func image(_ input: String) -> UIImage {
-        return LifeHashGenerator.generateSync(input)
+        let arr = input.split(separator: "#")
+        var bare = ""
+        
+        if arr.count > 0 {
+            bare = "\(arr[0])".replacingOccurrences(of: "'", with: "h")
+        } else {
+            bare = input.replacingOccurrences(of: "'", with: "h")
+        }
+        
+        return LifeHashGenerator.generateSync(bare)
     }
     
 }
