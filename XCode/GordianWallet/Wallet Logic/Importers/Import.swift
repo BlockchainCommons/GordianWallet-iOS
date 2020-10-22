@@ -162,19 +162,64 @@ class Import {
         }
         
         func process(node: NodeStruct) {
+            let p = DescriptorParser()
             var rawDesc = accountMap["descriptor"] as! String
+            var descStruct = p.descriptor(rawDesc)
+            
             if rawDesc.contains("#") {
                 let rawDescArr = rawDesc.split(separator: "#")
                 rawDesc = "\(rawDescArr[0])"
             }
             
+             rawDesc = rawDesc.replacingOccurrences(of: "'", with: "h")
+             descStruct = p.descriptor(rawDesc)
+             
+             // Sparrow wallet exports do not include range
+             if !rawDesc.contains("/0/*") {
+                 for key in descStruct.multiSigKeys {
+                     if !key.contains("/0/*") {
+                         rawDesc = rawDesc.replacingOccurrences(of: key, with: key + "/0/*")
+                     }
+                 }
+             }
+             
+             descStruct = p.descriptor(rawDesc)
+             
+             // If the descriptor is multisig, we sort the keys lexicographically
+             if rawDesc.contains(",") {
+                 var dictArray = [[String:String]]()
+                 
+                 for keyWithPath in descStruct.keysWithPath {
+                     let arr = keyWithPath.split(separator: "]")
+                     let dict = ["path":"\(arr[0])]", "key": "\(arr[1].replacingOccurrences(of: "))", with: ""))"]
+                     dictArray.append(dict)
+                 }
+                 
+                 dictArray.sort(by: {($0["key"]!) < $1["key"]!})
+                 
+                 var sortedKeys = ""
+                 
+                 for (i, sortedItem) in dictArray.enumerated() {
+                     let path = sortedItem["path"]!
+                     let key = sortedItem["key"]!
+                     let fullKey = path + key
+                     sortedKeys += fullKey
+                     
+                     if i + 1 < dictArray.count {
+                         sortedKeys += ","
+                     }
+                 }
+                 
+                 let arr2 = rawDesc.split(separator: ",")
+                 rawDesc = "\(arr2[0])," + sortedKeys + "))"
+             }
+            
             Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(rawDesc)\"") { (object, errorDescription) in
                 if let dict = object as? NSDictionary {
                     let descriptor = dict["descriptor"] as! String
-                    let p = DescriptorParser()
-                    let str = p.descriptor(descriptor)
+                    descStruct = p.descriptor(descriptor)
                     let walletName = Encryption.sha256hash(descriptor)
-                    walletToImport["derivation"] = str.derivation
+                    walletToImport["derivation"] = descStruct.derivation
                     walletToImport["name"] = walletName
                     walletToImport["descriptor"] = descriptor
                     walletToImport["nodeId"] = node.id
@@ -188,7 +233,7 @@ class Import {
                     walletToImport["lastBalance"] = 0.0
                     walletToImport["label"] = accountMap["label"] as? String ?? ""
                     walletToImport["nodeIsSigner"] = false
-                    if str.isMulti {
+                    if descStruct.isMulti {
                         walletToImport["type"] = "MULTI"
                     } else {
                         walletToImport["type"] = "DEFAULT"
