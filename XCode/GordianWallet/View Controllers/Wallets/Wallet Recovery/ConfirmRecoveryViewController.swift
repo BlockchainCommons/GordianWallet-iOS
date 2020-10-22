@@ -241,10 +241,9 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func rescanFrom(param: String, wallet: WalletStruct) {
-        Reducer.makeCommand(walletName: wallet.name ?? walletNameHash, command: .rescanblockchain, param: param) { [unowned vc = self] (object, errorDescription) in
-            vc.connectingView.removeConnectingView()
-            vc.walletSuccessfullyCreated(wallet: wallet)
-        }
+        Reducer.makeCommand(walletName: wallet.name ?? walletNameHash, command: .rescanblockchain, param: param) { (_, _) in }
+        connectingView.removeConnectingView()
+        walletSuccessfullyCreated(wallet: wallet)
     }
     
     func rescan(wallet: WalletStruct) {
@@ -265,10 +264,9 @@ class ConfirmRecoveryViewController: UIViewController, UITableViewDelegate, UITa
                             vc.showError(message: errorDescription ?? "unknown error")
                         }
                     } else {
-                        Reducer.makeCommand(walletName: wallet.name ?? vc.walletNameHash, command: .rescanblockchain, param: "\(wallet.blockheight)") { [unowned vc = self] (object, errorDescription) in
-                            vc.connectingView.removeConnectingView()
-                            vc.walletSuccessfullyCreated(wallet: wallet)
-                        }
+                        Reducer.makeCommand(walletName: wallet.name ?? vc.walletNameHash, command: .rescanblockchain, param: "\(wallet.blockheight)") { (_, _) in }
+                        vc.connectingView.removeConnectingView()
+                        vc.walletSuccessfullyCreated(wallet: wallet)
                     }
                 } else {
                     vc.showError(message: errorDescription ?? "unknown error")

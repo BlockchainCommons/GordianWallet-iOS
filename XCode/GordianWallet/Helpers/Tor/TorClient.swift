@@ -239,133 +239,90 @@ class TorClient {
     private func addAuthKeysToAuthDirectory(completion: @escaping () -> Void) {
         
         let authPath = self.authDirPath
-        CoreDataService.retrieveEntity(entityName: .nodes) { (entity, errorDescription) in
+        Encryption.getNode { (node, error) in
+            guard let activeNode = node else { completion(); return }
             
-            if entity != nil {
+            CoreDataService.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
                 
-                if entity!.count > 0 {
+                if errorDescription == nil {
                     
-                    let nodesCount = entity!.count
-                    
-                    for (i, n) in entity!.enumerated() {
-                                                                        
-                        CoreDataService.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
+                    if authKeys != nil {
+                        
+                        if authKeys!.count > 0 {
                             
-                            if errorDescription == nil {
+                            if let encryptedPrivkey = authKeys![0]["privkey"] as? Data {
                                 
-                                if authKeys != nil {
+                                Encryption.decryptData(dataToDecrypt: encryptedPrivkey) { (decryptedPrivkey) in
                                     
-                                    if authKeys!.count > 0 {
+                                    if decryptedPrivkey != nil {
                                         
-                                        if let encryptedPrivkey = authKeys![0]["privkey"] as? Data {
+                                        let authorizedKey = String(bytes: decryptedPrivkey!, encoding: .utf8)!
+                                        
+                                        let onionAddressArray = activeNode.onionAddress.components(separatedBy: ".onion:")
+                                        let authString = onionAddressArray[0] + ":descriptor:x25519:" + authorizedKey
+                                        let file = URL(fileURLWithPath: authPath, isDirectory: true).appendingPathComponent("\(randomString(length: 10)).auth_private")
+                                        
+                                        do {
                                             
-                                            Encryption.decryptData(dataToDecrypt: encryptedPrivkey) { (decryptedPrivkey) in
+                                            try authString.write(to: file, atomically: true, encoding: .utf8)
+                                            print("successfully wrote authkey to file")
+                                            
+                                            do {
                                                 
-                                                if decryptedPrivkey != nil {
-                                                    
-                                                    let authorizedKey = String(bytes: decryptedPrivkey!, encoding: .utf8)!
-                                                    let encryptedOnionAddress = n["onionAddress"] as! Data
-                                                    
-                                                    Encryption.decryptData(dataToDecrypt: encryptedOnionAddress) { (decryptedOnion) in
-                                                        
-                                                        if decryptedOnion != nil {
-                                                            
-                                                            let onionAddress = String(bytes: decryptedOnion!, encoding: .utf8)!
-                                                            let onionAddressArray = onionAddress.components(separatedBy: ".onion:")
-                                                            let authString = onionAddressArray[0] + ":descriptor:x25519:" + authorizedKey
-                                                            let file = URL(fileURLWithPath: authPath, isDirectory: true).appendingPathComponent("\(randomString(length: 10)).auth_private")
-                                                            
-                                                            do {
-                                                                
-                                                                try authString.write(to: file, atomically: true, encoding: .utf8)
-                                                                print("successfully wrote authkey to file")
-                                                                
-                                                                do {
-                                                                    
-                                                                    try (file as NSURL).setResourceValue(URLFileProtection.complete, forKey: .fileProtectionKey)
-                                                                    print("success setting file protection")
-                                                                    
-                                                                } catch {
-                                                                    
-                                                                   print("error setting file protection")
-                                                                    
-                                                                }
-                                                                
-                                                                if i + 1 == nodesCount {
-                                                                    
-                                                                    completion()
-                                                                    
-                                                                }
-                                                                
-                                                            } catch {
-                                                                
-                                                                print("failed writing auth key")
-                                                                completion()
-                                                            }
-                                                            
-                                                        } else {
-                                                            
-                                                            print("failed decrypting onion address")
-                                                            completion()
-                                                            
-                                                        }
-                                                        
-                                                    }
-                                                    
-                                                } else {
-                                                    
-                                                    print("failed decrypting private key")
-                                                    completion()
-                                                    
-                                                }
+                                                try (file as NSURL).setResourceValue(URLFileProtection.complete, forKey: .fileProtectionKey)
+                                                print("success setting file protection")
+                                                completion()
+                                                
+                                            } catch {
+                                                
+                                                print("error setting file protection")
+                                                completion()
                                                 
                                             }
                                             
-                                        } else {
+                                        } catch {
                                             
                                             print("failed writing auth key")
                                             completion()
-                                            
                                         }
                                         
                                     } else {
                                         
-                                        print("no authkeys")
+                                        print("failed decrypting private key")
                                         completion()
+                                        
                                     }
-                                    
-                                } else {
-                                    
-                                    print("error getting auth keys")
-                                    completion()
                                     
                                 }
                                 
                             } else {
                                 
-                                print("error getting authkeys")
+                                print("failed writing auth key")
                                 completion()
                                 
                             }
                             
+                        } else {
+                            
+                            print("no authkeys")
+                            completion()
                         }
+                        
+                    } else {
+                        
+                        print("error getting auth keys")
+                        completion()
                         
                     }
                     
-                }  else {
+                } else {
                     
-                    print("no nodes")
+                    print("error getting authkeys")
                     completion()
                     
                 }
                 
-            } else {
-                
-                print("no nodes")
-                completion()
-                
             }
-            
         }
         
     }

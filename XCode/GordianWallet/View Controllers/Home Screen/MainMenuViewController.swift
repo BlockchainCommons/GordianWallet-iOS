@@ -111,29 +111,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         firstTimeHere()
-        checkIfoutdated()
         
         if (UIDevice.current.userInterfaceIdiom == .pad) {
           alertStyle = UIAlertController.Style.alert
-        }
-    }
-    
-    private func checkIfoutdated() {
-        CoreDataService.retrieveEntity(entityName: .wallets) { [unowned vc = self] (wallets, errorDescription) in
-            if wallets != nil {
-                var isOutdated = true
-                for (i, wallet) in wallets!.enumerated() {
-                    let walletStruct = WalletStruct(dictionary: wallet)
-                    if walletStruct.xprvs != nil {
-                        isOutdated = false
-                    }
-                    if i + 1 == wallets!.count {
-                        if isOutdated {
-                            showAlert(vc: vc, title: "Important!", message: "We recently made some fundamental changes to how the app stores seeds and derives signing keys, this means the app will no longer be able to sign for outdated accounts. Make sure you back up all your account info, then utilize both kill switches, force quit and reopen the app then recover your existing accounts. If you have only just downloaded the app and have not yet created any accounts then this message can be ignored.")
-                        }
-                    }
-                }
-            }
         }
     }
     
@@ -437,6 +417,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func didAppear() {
+        print("didAppear")
         
         DispatchQueue.main.async {
             Encryption.getNode { [unowned vc = self] (node, error) in
@@ -1622,6 +1603,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             vc.mainMenu.reloadData()
             vc.existingWalletName = ""
         }
+        
         getActiveWalletNow() { [unowned vc = self] (w, error) in
             if !error && w != nil {
                 vc.wallet = w!
