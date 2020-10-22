@@ -991,6 +991,8 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
 
             }
                 
+        } else {
+            print("no user identifier")
         }
 
     }

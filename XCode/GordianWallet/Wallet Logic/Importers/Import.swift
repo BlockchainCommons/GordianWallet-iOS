@@ -13,8 +13,9 @@ class Import {
     
     class func importDescriptor(descriptor: String, completion: @escaping (([String:Any]?)) -> Void) {
         var walletToImport = [String:Any]()
+        let updated = updatedDesc(descriptor)
         let descriptorParser = DescriptorParser()
-        let descriptorStruct = descriptorParser.descriptor(descriptor)
+        let descriptorStruct = descriptorParser.descriptor(updated)
         
         func getChangeDescriptor(changeDesc: String) {
             Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(changeDesc)\"") { (object, errorDescription) in
@@ -39,46 +40,6 @@ class Import {
                 } else {
                     completion(nil)
                 }
-            }
-        }
-        
-        func importBitcoinCoreDescriptor() {
-            /// First parse the descriptor to see if it is an account or not. If it is an account we manipulate it.
-            if descriptorStruct.isAccount {
-                if descriptor.contains("/0/*") {
-                    /// No need to add the child keys, just get the change descriptor and send it off.
-                    let changeDesc = descriptor.replacingOccurrences(of: "/0/*", with: "/1/*")
-                    getDescriptors(primaryDesc: descriptor, changeDesc: changeDesc)
-                } else {
-                    /// No child keys added, since it is account and HD we can add it.
-                    if descriptorStruct.isMulti {
-                        var primaryDesc = ""
-                        let keys = descriptorStruct.multiSigKeys
-                        for (i, key) in keys.enumerated() {
-                            if i == 0 {
-                               primaryDesc = descriptor.replacingOccurrences(of: key, with: key + "/0/*")
-                            } else {
-                                primaryDesc = primaryDesc.replacingOccurrences(of: key, with: key + "/0/*")
-                            }
-                        }
-                        let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
-                        getDescriptors(primaryDesc: primaryDesc, changeDesc: changeDesc)
-                    } else {
-                        var key = ""
-                        if descriptorStruct.accountXprv != "" {
-                            key = descriptorStruct.accountXprv
-                        } else if descriptorStruct.accountXpub != "" {
-                            key = descriptorStruct.accountXpub
-                        }
-                        let primaryDesc = descriptor.replacingOccurrences(of: key, with: key + "/0/*")
-                        let changeDesc = primaryDesc.replacingOccurrences(of: "/0/*", with: "/1/*")
-                        getDescriptors(primaryDesc: primaryDesc, changeDesc: changeDesc)
-                    }
-                }
-            } else {
-                /// It is non standard, we use the same descriptor for receiving and change.
-                print("importing a non standard descriptor!")
-                getDescriptors(primaryDesc: descriptor, changeDesc: descriptor)
             }
         }
         
@@ -130,7 +91,8 @@ class Import {
                     walletToImport["type"] = "DEFAULT"
                 }
                 /// Here we will need to process the descriptor.
-                importBitcoinCoreDescriptor()
+                let changeDesc = updated.replacingOccurrences(of: "/0/*", with: "/1/*")
+                getDescriptors(primaryDesc: updated, changeDesc: changeDesc)
             } else {
                 print("descriptor type is not supported...")
                 completion(nil)
@@ -162,62 +124,13 @@ class Import {
         }
         
         func process(node: NodeStruct) {
-            let p = DescriptorParser()
-            var rawDesc = accountMap["descriptor"] as! String
-            var descStruct = p.descriptor(rawDesc)
+            let updated = updatedDesc(accountMap["descriptor"] as! String)
             
-            if rawDesc.contains("#") {
-                let rawDescArr = rawDesc.split(separator: "#")
-                rawDesc = "\(rawDescArr[0])"
-            }
-            
-             rawDesc = rawDesc.replacingOccurrences(of: "'", with: "h")
-             descStruct = p.descriptor(rawDesc)
-             
-             // Sparrow wallet exports do not include range
-             if !rawDesc.contains("/0/*") {
-                 for key in descStruct.multiSigKeys {
-                     if !key.contains("/0/*") {
-                         rawDesc = rawDesc.replacingOccurrences(of: key, with: key + "/0/*")
-                     }
-                 }
-             }
-             
-             descStruct = p.descriptor(rawDesc)
-             
-             // If the descriptor is multisig, we sort the keys lexicographically
-             if rawDesc.contains(",") {
-                 var dictArray = [[String:String]]()
-                 
-                 for keyWithPath in descStruct.keysWithPath {
-                     let arr = keyWithPath.split(separator: "]")
-                     let dict = ["path":"\(arr[0])]", "key": "\(arr[1].replacingOccurrences(of: "))", with: ""))"]
-                     dictArray.append(dict)
-                 }
-                 
-                 dictArray.sort(by: {($0["key"]!) < $1["key"]!})
-                 
-                 var sortedKeys = ""
-                 
-                 for (i, sortedItem) in dictArray.enumerated() {
-                     let path = sortedItem["path"]!
-                     let key = sortedItem["key"]!
-                     let fullKey = path + key
-                     sortedKeys += fullKey
-                     
-                     if i + 1 < dictArray.count {
-                         sortedKeys += ","
-                     }
-                 }
-                 
-                 let arr2 = rawDesc.split(separator: ",")
-                 rawDesc = "\(arr2[0])," + sortedKeys + "))"
-             }
-            
-            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(rawDesc)\"") { (object, errorDescription) in
+            Reducer.makeCommand(walletName: "", command: .getdescriptorinfo, param: "\"\(updated)\"") { (object, errorDescription) in
                 if let dict = object as? NSDictionary {
+                    let p = DescriptorParser()
                     let descriptor = dict["descriptor"] as! String
-                    descStruct = p.descriptor(descriptor)
+                    let descStruct = p.descriptor(descriptor)
                     let walletName = Encryption.sha256hash(descriptor)
                     walletToImport["derivation"] = descStruct.derivation
                     walletToImport["name"] = walletName
@@ -453,6 +366,68 @@ class Import {
             } else {
                 completion((nil,nil,nil))
             }
+        }
+    }
+    
+    private class func updatedDesc(_ desc: String) -> String {
+        var rawDesc = desc
+        let p = DescriptorParser()
+        var descStruct = p.descriptor(rawDesc)
+        
+        if rawDesc.contains("#") {
+            let rawDescArr = desc.split(separator: "#")
+            rawDesc = "\(rawDescArr[0])"
+        }
+        
+        rawDesc = rawDesc.replacingOccurrences(of: "'", with: "h")
+        descStruct = p.descriptor(rawDesc)
+        
+        // Sparrow wallet exports do not include range
+        if !rawDesc.contains("/0/*") {
+            if descStruct.isMulti {
+                for key in descStruct.multiSigKeys {
+                    if !key.contains("/0/*") {
+                        rawDesc = rawDesc.replacingOccurrences(of: key, with: key + "/0/*")
+                    }
+                }
+            } else {
+                if !descStruct.accountXpub.contains("/0/*") {
+                    rawDesc = rawDesc.replacingOccurrences(of: descStruct.accountXpub, with: descStruct.accountXpub + "/0/*")
+                }
+            }
+        }
+        
+        descStruct = p.descriptor(rawDesc)
+        
+        // If the descriptor is multisig, we sort the keys lexicographically
+        if rawDesc.contains(",") {
+            var dictArray = [[String:String]]()
+            
+            for keyWithPath in descStruct.keysWithPath {
+                let arr = keyWithPath.split(separator: "]")
+                let dict = ["path":"\(arr[0])]", "key": "\(arr[1].replacingOccurrences(of: "))", with: ""))"]
+                dictArray.append(dict)
+            }
+            
+            dictArray.sort(by: {($0["key"]!) < $1["key"]!})
+            
+            var sortedKeys = ""
+            
+            for (i, sortedItem) in dictArray.enumerated() {
+                let path = sortedItem["path"]!
+                let key = sortedItem["key"]!
+                let fullKey = path + key
+                sortedKeys += fullKey
+                
+                if i + 1 < dictArray.count {
+                    sortedKeys += ","
+                }
+            }
+            
+            let arr2 = desc.split(separator: ",")
+            return "\(arr2[0])," + sortedKeys + "))"
+        } else {
+            return rawDesc
         }
     }
     
