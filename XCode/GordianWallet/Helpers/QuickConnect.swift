@@ -18,117 +18,24 @@ class QuickConnect {
     // btcstandup://rpcuser:rpcpassword@uhqefiu873h827h3ufnjecnkajbciw7bui3hbuf233b.onion:1309?
     
     func addNode(vc: UIViewController, url: String, completion: @escaping ((success: Bool, errorDesc: String?)) -> Void) {
+        var label = "GordianServer"
         
-        var host = ""
-        var rpcPassword = ""
-        var rpcUser = ""
-        var label = "StandUp"
+        guard var host = URLComponents(string: url)?.host,
+            let port = URLComponents(string: url)?.port,
+            let rpcPassword = URLComponents(string: url)?.password,
+            let rpcUser = URLComponents(string: url)?.user else {
+                completion((false, "invalid url"))
+                return
+        }
         
-        if let params = URLComponents(string: url)?.queryItems {
-            
-            if let hostCheck = URLComponents(string: url)?.host {
-                
-                if hostCheck != "" {
-                    
-                    let arr = hostCheck.split(separator: ".")
-                    if arr[0].count == 56 {
-                        
-                        if isValidCharacters("\(arr[0])") {
-                            
-                            if let portCheck = URLComponents(string: url)?.port {
-                                
-                                if isValidCharacters(String(portCheck)) {
-                                    
-                                    host = hostCheck + ":" + String(portCheck)
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                }
-                
-            }
-            
-            if let rpcPasswordCheck = URLComponents(string: url)?.password {
-                
-                if isValidCharacters(rpcPasswordCheck) {
-                    
-                    rpcPassword = rpcPasswordCheck
-                    
-                }
-                
-            }
-            
-            if let rpcUserCheck = URLComponents(string: url)?.user {
-                
-                if isValidCharacters(rpcUserCheck) {
-                    
-                    rpcUser = rpcUserCheck
-                    
-                }
-                
-            }
-            
-            
-            if let check = URLComponents(string: url)?.queryItems {
-                
-                if let labelCheck = (check.first)?.value {
-                    
-                    var removeAllowedChars = label.replacingOccurrences(of: ".", with: "")
-                    removeAllowedChars = removeAllowedChars.replacingOccurrences(of: "%", with: "")
-                    removeAllowedChars = removeAllowedChars.replacingOccurrences(of: "-", with: "")
-                    removeAllowedChars = removeAllowedChars.replacingOccurrences(of: "_", with: "")
-                    
-                    if isValidCharacters(removeAllowedChars) {
-                        
-                        label = labelCheck
-                        
-                    }
-                    
-                }
-                
-            }
-            
-            if rpcUser == "" && rpcPassword == "" {
-                
-                if params.count == 2 {
-                    
-                    rpcUser = (params[0].description).replacingOccurrences(of: "user=", with: "")
-                    rpcPassword = (params[1].description).replacingOccurrences(of: "password=", with: "")
-                    
-                    if rpcPassword.contains("?label=") {
-                        
-                        let arr = rpcPassword.components(separatedBy: "?label=")
-                        rpcPassword = arr[0]
-                        
-                        if arr.count > 1 {
-                            
-                            if isValidCharacters("\(arr[1])") {
-                                
-                                label = arr[1]
-                                
-                            }
-                                                        
-                        }
-                        
-                    }
-                    
-                }
-                
-            }
-            
-        } else {
-            
-            completion((false, "url error"))
-            
+        host += ":" + String(port)
+        
+        if let labelCheck = URL(string: url)?.value(for: "label") {
+            label = labelCheck
         }
         
         guard host != "", rpcUser != "", rpcPassword != "" else {
-            completion((false, "That is not a valid QuickConnect URI"))
+            completion((false, "either the hostname, rpcuser or rpcpassword is empty"))
             return
         }
         
@@ -137,11 +44,13 @@ class QuickConnect {
         node["label"] = label
         node["rpcuser"] = rpcUser
         node["rpcpassword"] = rpcPassword
+        
         if nodeToUpdate == nil {
             node["id"] = UUID()
         } else {
             node["id"] = nodeToUpdate
         }
+        
         node["isActive"] = true
         
         func deactivate(newNodeID: UUID) {
@@ -180,7 +89,7 @@ class QuickConnect {
             
             Encryption.saveNode(newNode: node) { (success, error) in
                 
-                if error == nil && success {
+                if success {
                     
                     print("standup node added")
                     deactivate(newNodeID: node["id"] as! UUID)

@@ -13,6 +13,8 @@ import AVFoundation
 
 class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
+    var isRunning = false
+    let qc = QuickConnect()
     var isUpdatingNode = Bool()
     var scanningShards = Bool()
     var verifying = Bool()
@@ -23,7 +25,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     let label = UILabel()
     let labelDetail = UILabel()
     let addTestingNodeButton = UIButton()
-    let avCaptureSession = AVCaptureSession()
+    var avCaptureSession: AVCaptureSession!
     var stringToReturn = ""
     var keepRunning = true
     let imagePicker = UIImagePickerController()
@@ -65,11 +67,12 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
           alertStyle = UIAlertController.Style.alert
         }
         
+        avCaptureSession = AVCaptureSession()
+        
         decoder = URDecoder()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        
         scanNow()
         
         if UIPasteboard.general.hasImages {
@@ -147,7 +150,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                 let alert = UIAlertController(title: "Connect to our testing node?", message: "We have a testnet node you can borrow for testing purposes only, just tap \"Add Testing Node\" to use it. This is a great way to get comfortable with the app and gain an idea of how it works.", preferredStyle: vc.alertStyle)
 
                 alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { [unowned vc = self] action in
-                    vc.addnode()
+                    vc.addTestingNodeWarning()
                 }))
                 
                 #if targetEnvironment(macCatalyst)
@@ -172,7 +175,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
     }
     
-    func addnode() {
+    func addTestingNodeWarning() {
         
         DispatchQueue.main.async { [unowned vc = self] in
             
@@ -253,10 +256,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    func getQRCode() {
-        processQRString(url: stringToReturn)
-    }
-    
     @objc func toggleTorchNow() {
         if isTorchOn {
             toggleTorch(on: false)
@@ -281,6 +280,8 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     
     private func processUrPsbt(text: String) {
         // Stop if we're already done with the decode.
+        isRunning = false
+        
         guard decoder.result == nil else {
             guard let result = try? decoder.result?.get(), let psbt = URHelper.psbtUrToBase64Text(result) else { return }
             stopScanning(psbt)
@@ -320,8 +321,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     func processQRString(url: String) {
         
         func addnode() {
-            let qc = QuickConnect()
-            qc.addNode(vc: self, url: url) { (success, errorDesc) in
+            self.qc.addNode(vc: self, url: url) { (success, errorDesc) in
                 if success {
                     DispatchQueue.main.async {
                         self.onDoneBlock!(true)
@@ -334,9 +334,8 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         }
         
         func updateNode() {
-            let qc = QuickConnect()
-            qc.nodeToUpdate = self.nodeId
-            qc.addNode(vc: self, url: url) { (success, errorDesc) in
+            self.qc.nodeToUpdate = self.nodeId
+            self.qc.addNode(vc: self, url: url) { (success, errorDesc) in
                 if success {
                     DispatchQueue.main.async {
                         self.onDoneBlock!(true)
@@ -375,15 +374,15 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             returnStringBlock!(url)
             navigationController?.popViewController(animated: true)
             
+        } else if isScanningNode {
+            if !isUpdatingNode {
+                addnode()
+            } else {
+                updateNode()
+            }
+            
         } else {
-            if url.hasPrefix("btcrpc://") || url.hasPrefix("btcstandup://") {
-                if !isUpdatingNode {
-                    addnode()
-                } else {
-                    updateNode()
-                }
-                
-            } else if let _ = Data(base64Encoded: url) {
+            if let _ = Data(base64Encoded: url) {
                 stopScanning(url)
                             
             } else if url.hasPrefix("01") || url.hasPrefix("02") {
@@ -506,7 +505,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     func scanQRNow() {
-            
+        
         guard let avCaptureDevice = AVCaptureDevice.default(for: AVMediaType.video) else { return }
             
         guard let avCaptureInput = try? AVCaptureDeviceInput(device: avCaptureDevice) else { return }
@@ -534,7 +533,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         avCaptureVideoPreviewLayer.frame = self.imageView.bounds
         self.imageView.layer.addSublayer(avCaptureVideoPreviewLayer)
         avCaptureSession.startRunning()
-            
     }
     
     func configure() {
@@ -660,12 +658,6 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             self.avCaptureSession.stopRunning()
         }
     }
-    
-    func startScanner() {
-        DispatchQueue.main.async {
-            self.avCaptureSession.startRunning()
-        }
-    }
 
 }
 
@@ -682,26 +674,32 @@ fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePicke
 extension ScannerViewController: AVCaptureMetadataOutputObjectsDelegate {
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        guard metadataObjects.count > 0,
-            let machineReadableCode = metadataObjects[0] as? AVMetadataMachineReadableCodeObject,
-            machineReadableCode.type == AVMetadataObject.ObjectType.qr else {
-                return
-        }
-        
-        let stringURL = machineReadableCode.stringValue!
-        
-        DispatchQueue.main.async {
-            self.avCaptureSession.stopRunning()
-            let impact = UIImpactFeedbackGenerator()
-            impact.impactOccurred()
-            AudioServicesPlaySystemSound(1103)
-        }
-        
-        self.processQRString(url: stringURL)
-        
-        if keepRunning {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.avCaptureSession.startRunning()
+        if !isRunning {
+            
+            guard metadataObjects.count > 0,
+                let machineReadableCode = metadataObjects[0] as? AVMetadataMachineReadableCodeObject,
+                machineReadableCode.type == AVMetadataObject.ObjectType.qr,
+                let stringUrl = machineReadableCode.stringValue else {
+                    isRunning = false
+                    return
+            }
+            
+            isRunning = true
+            
+            DispatchQueue.main.async {
+                self.stopScanner()
+                let impact = UIImpactFeedbackGenerator()
+                impact.impactOccurred()
+                AudioServicesPlaySystemSound(1103)
+            }
+                    
+            self.processQRString(url: stringUrl)
+            
+            if keepRunning {
+                self.isRunning = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    self.avCaptureSession.startRunning()
+                }
             }
         }
     }
