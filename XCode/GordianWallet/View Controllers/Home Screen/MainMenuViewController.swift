@@ -380,6 +380,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         if ud?.object(forKey: "feeTarget") ==  nil {
             ud?.set(432, forKey: "feeTarget")
         }
+        
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             if wallet != nil {
                 vc.wallet = wallet!
@@ -389,14 +390,10 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         #if DEBUG
             if KeyChain.getData("acceptedDisclaimer") == nil {
                 showIntro()
-            } else {
-                didAppear()
             }
         #else
             if KeyChain.getData("userIdentifier") == nil || KeyChain.getData("acceptedDisclaimer") == nil {
                 showIntro()
-            } else {
-                didAppear()
             }
         #endif
     }
@@ -419,46 +416,55 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     private func didAppear() {
         print("didAppear")
         
-        DispatchQueue.main.async {
-            Encryption.getNode { [unowned vc = self] (node, error) in
-                if !error && node != nil {
-                    vc.node = node!
-                    if vc.torConnected {
-                        if vc.initialLoad {
-                            vc.initialLoad = false
-                            vc.reloadTableData()
-                        } else {
-                            getActiveWalletNow() { (w, error) in
-                                if !error && w != nil {
-                                    vc.wallet = w!
-                                    if vc.existingWalletName != w!.name && vc.existingNodeId != node!.id {
-                                        /// user switched to a different wallet on a different node
-                                        vc.existingNodeId = node!.id
-                                        vc.refreshNow()
-                                    } else if vc.existingWalletName != w!.name {
-                                        /// user switched wallets
-                                        vc.loadWalletData()
-                                    }
-                                } else {
-                                    vc.existingWalletName = ""
-                                    vc.wallet = nil
-                                    vc.refreshNow()
-                                }
-                            }
+        Encryption.getNode { [weak self] (node, error) in
+            guard let self = self else { return }
+            
+            guard let node = node else {
+                #if DEBUG
+                if KeyChain.getData("acceptedDisclaimer") != nil {
+                    self.scanningNode = true
+                    self.addNode()
+                }
+                #else
+                if KeyChain.getData("userIdentifier") != nil || KeyChain.getData("acceptedDisclaimer") != nil {
+                    self.scanningNode = true
+                    self.addNode()
+                }
+                #endif
+                
+                return
+            }
+            
+            self.node = node
+            
+            if self.torConnected {
+                
+                if self.initialLoad {
+                    self.initialLoad = false
+                    self.reloadTableData()
+                    
+                } else {
+                    
+                    getActiveWalletNow() { (w, error) in
+                        guard let w = w else {
+                            self.existingWalletName = ""
+                            self.wallet = nil
+                            self.refreshNow()
+                            return
+                        }
+                        
+                        self.wallet = w
+                        
+                        if self.existingWalletName != w.name && self.existingNodeId != node.id {
+                            /// user switched to a different wallet on a different node
+                            self.existingNodeId = node.id
+                            self.refreshNow()
+                            
+                        } else if self.existingWalletName != w.name {
+                            /// user switched wallets
+                            self.loadWalletData()
                         }
                     }
-                } else {
-                    #if DEBUG
-                        if KeyChain.getData("acceptedDisclaimer") != nil {
-                            vc.scanningNode = true
-                            vc.addNode()
-                        }
-                    #else
-                        if KeyChain.getData("userIdentifier") != nil || KeyChain.getData("acceptedDisclaimer") != nil {
-                           vc.scanningNode = true
-                           vc.addNode()
-                        }
-                    #endif
                 }
             }
         }
@@ -1096,7 +1102,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         
         switch section {
         case self.torCellIndex:
-            textLabel.text = "Tor Status"
+            textLabel.text = "Tor Connection Status"
             if torSectionLoaded {
                 refreshButton.alpha = 1
                 refreshButton.frame = CGRect(x: refreshButtonX, y: 0, width: 15, height: 18)
@@ -1629,6 +1635,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     private func nodeJustAdded() {
+        print("nodeJustAdded")
         Encryption.getNode { [unowned vc = self] (node, error) in
             if !error && node != nil {
                 vc.node = node!
@@ -1692,7 +1699,11 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func torConnProgress(_ progress: Int) {
-        updateLabel(text: "     Bootstrapping Tor \(progress)%...")
+        if progress < 100 {
+            updateLabel(text: "     Bootstrapping Tor \(progress)%...")
+        } else {
+            updateLabel(text: "")
+        }
     }
     
     func torConnFinished() {
@@ -1705,8 +1716,8 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         didAppear()
     }
     
-    func torConnDifficulties() {
-        showAlert(vc: self, title: "Error", message: "We are having difficulties starting tor...")
+    func torConnDifficulties(_ message: String) {
+        showAlert(vc: self, title: "Tor is having issues bootstrapping...", message: message)
     }
     
     private func checkWalletStatus() {
@@ -1729,7 +1740,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    private func addnode() {
+    private func addTesterNodeNow() {
         DispatchQueue.main.async { [unowned vc = self] in
             
             let alert = UIAlertController(title: "Warning", message: "We may periodically delete testnet wallets from our testing node. Please make sure you save your recovery info when creating wallets so you can easily recover.", preferredStyle: vc.alertStyle)
@@ -1765,7 +1776,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             let alert = UIAlertController(title: "Connect to our testing node?", message: "We have a testnet node you can borrow for testing purposes only, just tap \"Add Testing Node\" to use it. This is a great way to get comfortable with the app and gain an idea of how it works.", preferredStyle: vc.alertStyle)
 
             alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { [unowned vc = self] action in
-                vc.addnode()
+                vc.addTesterNodeNow()
             }))
             
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
@@ -1821,8 +1832,13 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         case "scanNow":
             if let vc = segue.destination as? ScannerViewController {
                 vc.isScanningNode = scanningNode
-                vc.onDoneBlock = { [unowned thisVc = self] result in
-                    thisVc.nodeJustAdded()
+                vc.keepRunning = !scanningNode
+                vc.isUpdatingNode = false
+                
+                vc.onDoneBlock = { [weak self] result in
+                    guard let self = self else { return }
+                    
+                    self.nodeJustAdded()
                 }
                 
                 vc.onPsbtScanDoneBlock = { [weak self] psbt in

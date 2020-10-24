@@ -38,11 +38,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidAppear(_ animated: Bool) {
         
-        #if !targetEnvironment(simulator)
-        if !verified {
-            showAuth()
-        }
-        #else
+        #if DEBUG
         getActiveWalletNow { [unowned vc = self] (wallet, error) in
             
             if wallet != nil && !error {
@@ -54,6 +50,10 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 displayAlert(viewController: vc, isError: true, message: "no active wallet")
                 
             }
+        }
+        #else
+        if !verified {
+            showAuth()
         }
         #endif
         
@@ -980,15 +980,11 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                             break
                             
                         }
-                        
                     }
                     
                 default:
-
                     break
-
                 }
-
             }
                 
         } else {

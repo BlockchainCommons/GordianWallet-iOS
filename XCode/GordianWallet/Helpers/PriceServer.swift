@@ -13,9 +13,9 @@ class PriceServer {
     
     let localeConfig = LocaleConfig()
     
-    let defaultServerString: String = "h6zwwkcivy2hjys6xpinlnz2f74dsmvltzsd4xb42vinhlcaoe7fdeqd.onion"
+    let defaultServerString: String = "https://blockchain.info/ticker"
     let defaultServerIndex: Int = 0
-    let defaultServers: [String] = ["h6zwwkcivy2hjys6xpinlnz2f74dsmvltzsd4xb42vinhlcaoe7fdeqd.onion"]
+    let defaultServers: [String] = ["https://blockchain.info/ticker", "h6zwwkcivy2hjys6xpinlnz2f74dsmvltzsd4xb42vinhlcaoe7fdeqd.onion"]
     let exchangeList: [String] = ["Binance", "Bitbank", "Bitfinex", "Bithumb", "Bitstamp", "Bittrex", "CEX", "Coinbase", "Coinbase Pro", "Coincheck", "Coinone", "FTX", "Gemini", "Indodax", "Kraken", "Liquid", "OKCoin", "Upbit", "Zaif", "bitFlyer"]
     let defaultExchange: String = "Coinbase"
     let localeToExchange: [String:[String]] = [
@@ -105,9 +105,17 @@ class PriceServer {
     
     func createSpotBitURL() -> String {
         if self.getCurrentExchange() == "Average" {
-            return "http://" + self.getCurrentServerString() + "/now/" + localeConfig.getSavedLocale()
+            if self.getCurrentServerString() == "https://blockchain.info/ticker" {
+                return self.getCurrentServerString()
+            } else {
+                return "http://" + self.getCurrentServerString() + "/now/" + localeConfig.getSavedLocale()
+            }
         } else {
-            return "http://" + self.getCurrentServerString() + "/now/" + localeConfig.getSavedLocale() + "/" + self.getCurrentExchange().replacingOccurrences(of: " ", with: "").lowercased()
+            if self.getCurrentServerString() == "https://blockchain.info/ticker" {
+                return self.getCurrentServerString()
+            } else {
+                return "http://" + self.getCurrentServerString() + "/now/" + localeConfig.getSavedLocale() + "/" + self.getCurrentExchange().replacingOccurrences(of: " ", with: "").lowercased()
+            }
         }
     }
     

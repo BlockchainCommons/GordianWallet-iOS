@@ -11,12 +11,9 @@ import Foundation
 import Tor
 
 protocol OnionManagerDelegate: class {
-
     func torConnProgress(_ progress: Int)
-
     func torConnFinished()
-
-    func torConnDifficulties()
+    func torConnDifficulties(_ message: String)
 }
 
 class TorClient {
@@ -57,18 +54,19 @@ class TorClient {
         session.configuration.urlCache = URLCache(memoryCapacity: 0, diskCapacity: 0, diskPath: nil)
         #endif
 
-        clearAuthKeys { [unowned vc = self] in
+        clearAuthKeys { [weak self] in
+            guard let self = self else { return }
 
-            vc.addAuthKeysToAuthDirectory { [unowned vc = self] in
+            self.addAuthKeysToAuthDirectory { [weak self] in
+                guard let self = self else { return }
 
-                vc.config.options = [
-
+                self.config.options = [
                     "DNSPort": "12346",
                     "AutomapHostsOnResolve": "1",
                     /*"SocksPort": "29050 OnionTrafficOnly",*/
                     "SocksPort": "29050",
                     "AvoidDiskWrites": "1",
-                    "ClientOnionAuthDir": "\(vc.authDirPath)",
+                    "ClientOnionAuthDir": "\(self.authDirPath)",
                     "LearnCircuitBuildTimeout": "1",
                     "NumEntryGuards": "8",
                     "SafeSocks": "1",
@@ -78,13 +76,12 @@ class TorClient {
                     "SafeLogging": "1",
                     /*"ExcludeExitNodes": "1",*/
                     "StrictNodes": "1"
-
                 ]
 
-                vc.config.cookieAuthentication = true
-                vc.config.dataDirectory = URL(fileURLWithPath: torDir)
-                vc.config.controlSocket = vc.config.dataDirectory?.appendingPathComponent("cp")
-                vc.config.arguments = ["--ignore-missing-torrc"]
+                self.config.cookieAuthentication = true
+                self.config.dataDirectory = URL(fileURLWithPath: torDir)
+                self.config.controlSocket = self.config.dataDirectory?.appendingPathComponent("cp")
+                self.config.arguments = ["--ignore-missing-torrc"]
             }
 
         }
@@ -94,93 +91,100 @@ class TorClient {
     // Start the tor client.
     func start(delegate: OnionManagerDelegate?) {
         print("start")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [unowned vc = self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            guard let self = self else { return }
+            
             weak var weakDelegate = delegate
-            vc.state = .started
+            self.state = .started
             
             // Initiate the controller.
-            if vc.controller == nil {
-                if vc.config.controlSocket != nil {
-                    vc.controller = TorController(socketURL: vc.config.controlSocket!)
+            if self.controller == nil {
+                if self.config.controlSocket != nil {
+                    self.controller = TorController(socketURL: self.config.controlSocket!)
                 }
             }
             
-            if vc.thread == nil {
-                vc.thread = TorThread(configuration: vc.config)
-                vc.thread?.start()
+            if self.thread == nil {
+                self.thread = TorThread(configuration: self.config)
+                self.thread?.start()
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned vc = self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+                guard let self = self else { return }
+                
                 // Connect Tor controller.
-                do {
-                    if !(vc.controller?.isConnected ?? false) {
-                        do {
-                            try vc.controller?.connect()
-                            
-                        } catch {
-                            print("error=\(error)")
-                            
+                if !(self.controller?.isConnected ?? false) {
+                    try? self.controller?.connect()
+                }
+                
+                guard let dataDir = self.config.dataDirectory else {
+                    weakDelegate?.torConnDifficulties("Could not access the Tor config data directory")
+                    self.state = .stopped
+                    return
+                }
+                
+                guard let cookie = try? Data(contentsOf: dataDir.appendingPathComponent("control_auth_cookie"), options: NSData.ReadingOptions(rawValue: 0)) else {
+                    weakDelegate?.torConnDifficulties("Could not create the control cookie")
+                    self.state = .stopped
+                    return
+                }
+                
+                self.controller?.authenticate(with: cookie) { [weak self] (success, error) in
+                    guard let self = self else { return }
+                    
+                    guard success else {
+                        
+                        guard let error = error else {
+                            weakDelegate?.torConnDifficulties("Could not authenticate with the control cookie")
+                            self.state = .stopped
+                            return
                         }
+                        
+                        weakDelegate?.torConnDifficulties(error.localizedDescription)
+                        self.state = .stopped
+                        
+                        return
                     }
                     
-                    let cookie = try Data(
-                        contentsOf: vc.config.dataDirectory!.appendingPathComponent("control_auth_cookie"),
-                        options: NSData.ReadingOptions(rawValue: 0)
+                    var progressObs: Any?
+                    progressObs = self.controller?.addObserver(forStatusEvents: {
+                        (type: String, severity: String, action: String, arguments: [String : String]?) -> Bool in
+                        #if DEBUG
+                        print("args = \(String(describing: arguments))")
+                        #endif
                         
-                    )
-                    
-                    vc.controller?.authenticate(with: cookie) { [unowned vc = self] (success, error) in
-                        if let error = error {
-                            print("error = \(error.localizedDescription)")
-                            return
-                            
-                        }
-                        
-                        var progressObs: Any?
-                        progressObs = vc.controller?.addObserver(forStatusEvents: {
-                            (type: String, severity: String, action: String, arguments: [String : String]?) -> Bool in
-                            #if DEBUG
-                            print("args = \(String(describing: arguments))")
-                            #endif
-                            
-                            if type == "STATUS_CLIENT" && action == "BOOTSTRAP" {
-                                let progress = Int(arguments!["PROGRESS"]!)!
-                                weakDelegate?.torConnProgress(progress)
-                                if progress >= 100 {
-                                    vc.controller?.removeObserver(progressObs)
-                                    
-                                }
-                                return true
-                            }
-                            return false
-                        })
-                        
-                        var obvs:Any!
-                        obvs = vc.controller?.addObserver(forCircuitEstablished: { established in
-                            
-                            func connected() {
-                                vc.state = .connected
-                                weakDelegate?.torConnFinished()
-                                vc.controller?.removeObserver(obvs)
+                        if type == "STATUS_CLIENT" && action == "BOOTSTRAP" {
+                            let progress = Int(arguments!["PROGRESS"]!)!
+                            weakDelegate?.torConnProgress(progress)
+                            if progress >= 100 {
+                                self.controller?.removeObserver(progressObs)
                                 
                             }
-                            
-                            // For some reason when reconnecting the Tor thread on the 3rd time we lose the observers and the code does not fire off
-                            // even though Tor connects successfully, the only way I can reliably reconnect without issue is with the below. To test
-                            // put the app into background, then foreground more then twice, executing an operation each time to ensure the connection
-                            // is functional.
-                            if established {
-                                connected()
-                            } else if vc.state == .refreshing {
-                                connected()
-                            }
-                        })
-                    }
-                } catch {
-                    print("failed connecting tor")
-                    weakDelegate?.torConnDifficulties()
-                    vc.state = .none
+                            return true
+                        }
+                        return false
+                    })
                     
+                    var obvs:Any!
+                    obvs = self.controller?.addObserver(forCircuitEstablished: { established in
+                        
+                        func connected() {
+                            self.state = .connected
+                            weakDelegate?.torConnFinished()
+                            self.controller?.removeObserver(obvs)
+                            
+                        }
+                        
+                        // For some reason when reconnecting the Tor thread on the 3rd time we lose the observers and the code does not fire off
+                        // even though Tor connects successfully, the only way I can reliably reconnect without issue is with the below. To test
+                        // put the app into background, then foreground more then twice, executing an operation each time to ensure the connection
+                        // is functional.
+                        if established {
+                            connected()
+                        } else if self.state == .refreshing {
+                            connected()
+                        }
+                    })
                 }
             }
         }
@@ -237,108 +241,58 @@ class TorClient {
     }
     
     private func addAuthKeysToAuthDirectory(completion: @escaping () -> Void) {
+        print("addAuthKeysToAuthDirectory")
         
-        let authPath = self.authDirPath
         Encryption.getNode { (node, error) in
-            guard let activeNode = node else { completion(); return }
+            guard let activeNode = node else {
+                print("no node")
+                completion()
+                return
+            }
+            
+            print("node ID: \(activeNode.id)")
             
             CoreDataService.retrieveEntity(entityName: .auth) { (authKeys, errorDescription) in
-                
-                if errorDescription == nil {
-                    
-                    if authKeys != nil {
-                        
-                        if authKeys!.count > 0 {
-                            
-                            if let encryptedPrivkey = authKeys![0]["privkey"] as? Data {
-                                
-                                Encryption.decryptData(dataToDecrypt: encryptedPrivkey) { (decryptedPrivkey) in
-                                    
-                                    if decryptedPrivkey != nil {
-                                        
-                                        let authorizedKey = String(bytes: decryptedPrivkey!, encoding: .utf8)!
-                                        
-                                        let onionAddressArray = activeNode.onionAddress.components(separatedBy: ".onion:")
-                                        let authString = onionAddressArray[0] + ":descriptor:x25519:" + authorizedKey
-                                        let file = URL(fileURLWithPath: authPath, isDirectory: true).appendingPathComponent("\(randomString(length: 10)).auth_private")
-                                        
-                                        do {
-                                            
-                                            try authString.write(to: file, atomically: true, encoding: .utf8)
-                                            print("successfully wrote authkey to file")
-                                            
-                                            do {
-                                                
-                                                try (file as NSURL).setResourceValue(URLFileProtection.complete, forKey: .fileProtectionKey)
-                                                print("success setting file protection")
-                                                completion()
-                                                
-                                            } catch {
-                                                
-                                                print("error setting file protection")
-                                                completion()
-                                                
-                                            }
-                                            
-                                        } catch {
-                                            
-                                            print("failed writing auth key")
-                                            completion()
-                                        }
-                                        
-                                    } else {
-                                        
-                                        print("failed decrypting private key")
-                                        completion()
-                                        
-                                    }
-                                    
-                                }
-                                
-                            } else {
-                                
-                                print("failed writing auth key")
-                                completion()
-                                
-                            }
-                            
-                        } else {
-                            
-                            print("no authkeys")
-                            completion()
-                        }
-                        
-                    } else {
-                        
-                        print("error getting auth keys")
+                guard let authKeys = authKeys,
+                    authKeys.count > 0,
+                    let encryptedPrivkey = authKeys[0]["privkey"] as? Data else {
+                        print("no auth keys")
                         completion()
-                        
-                    }
-                    
-                } else {
-                    
-                    print("error getting authkeys")
-                    completion()
-                    
+                        return
                 }
                 
+                print("auth keys exist")
+                                    
+                Encryption.decryptData(dataToDecrypt: encryptedPrivkey) { (decryptedPrivkey) in
+                    guard let decryptedPrivkey = decryptedPrivkey,
+                        let authorizedKey = String(bytes: decryptedPrivkey, encoding: .utf8) else {
+                        completion()
+                        return
+                    }
+                    
+                    let onionAddressArray = activeNode.onionAddress.components(separatedBy: ".onion:")
+                    let authString = onionAddressArray[0] + ":descriptor:x25519:" + authorizedKey
+                    let file = URL(fileURLWithPath: self.authDirPath, isDirectory: true).appendingPathComponent("\(randomString(length: 10)).auth_private")
+                    
+                    try? authString.write(to: file, atomically: true, encoding: .utf8)
+                    try? (file as NSURL).setResourceValue(URLFileProtection.complete, forKey: .fileProtectionKey)
+                    completion()
+                }
             }
         }
-        
     }
     
     private func clearAuthKeys(completion: @escaping () -> Void) {
         
         let fileManager = FileManager.default
-        let authPath = self.authDirPath
         
         do {
             
-            let filePaths = try fileManager.contentsOfDirectory(atPath: authPath)
+            let filePaths = try fileManager.contentsOfDirectory(atPath: self.authDirPath)
             
             for filePath in filePaths {
                 
-                let url = URL(fileURLWithPath: authPath + "/" + filePath)
+                let url = URL(fileURLWithPath: self.authDirPath + "/" + filePath)
                 try fileManager.removeItem(at: url)
                 #if DEBUG
                 print("deleted key")
