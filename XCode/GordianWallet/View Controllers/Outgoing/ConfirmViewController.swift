@@ -460,6 +460,10 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             outputsString += "Output #\(number):\nAmount: \(amount.avoidNotation)\nAddress: \(addressString)\n\n"
             var isChange = true
             
+            if recipients.count == 0 {
+                isChange = false
+            }
+            
             for recipient in recipients {
                 
                 if addressString == recipient {
