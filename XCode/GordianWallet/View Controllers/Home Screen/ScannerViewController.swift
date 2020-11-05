@@ -392,6 +392,11 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
                         self.stopScanning(psbt)
                     }
                 }
+            } else if url.hasPrefix("btcrpc") || url.hasPrefix("btcstandup") {
+                keepRunning = false
+                isScanningNode = true
+                addnode()
+                
             } else {
                 displayAlert(viewController: self, isError: true, message: "That's not a compatible QR Code!")
             }
