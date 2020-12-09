@@ -1,5 +1,7 @@
 # GordianWallet-iOS
 
+### _by Peter Denton and Christopher Allen_
+
 ![](Images/logos/gordian-wallet-screen.png)
 
 **_GordianWallet-iOS_** is an open source iOS Bitcoin wallet that connects via Tor V3 authenticated service to the full node of your choice, including: a bitcoind installed using either [GordianServer-macOS](https://github.com/BlockchainCommons/GordianServer-macOS) or another Bitcoin Standup program such as [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts); a full-node box such as [Nodl](https://www.nodl.it/) or [Rasbiblitz](https://github.com/rootzoll/raspiblitz); or a full-node service such as [BTCpay](https://btcpayserver.org/]). *GordianWallet* is a self-sovereign wallet, and self-sovereignty means that you get to decide.
@@ -10,11 +12,32 @@
 
 <img src="./Images/home_screen_collapsed.PNG" alt="Gordian Wallet app Home Screen" width="250"/> <img src="./Images/home_screen_expanded.PNG" alt="Gordian Wallet app Home Screen" width="250"/>
 
+## Additional Information
+
+### The Philosophy Behind GordianWallet
+
+*GordianWallet* is a professional mobile wallet built using the most up-to-date technologies for Bitcoin. It's focused on three goals that together demonstrate some of the best practices for modern mobile-wallet design:
+
+1. **Self-sovereign Interactions.** Classic mobile wallets usually talked to a full node chosen by the wallet developer and owned/controlled by someone else. *GordianWallet* instead allows you to choose a full node, either one created using a setup process such as #BitcoinStandup and run by yourself, or a service offered by a provider that you select: self-sovereign means you get to decide. (You can use Blockchain Commons' full-node server for beta testing, but you should migrate to a protected server for real money transactions.)
+
+2. **Protected Communications.** All of the communications in *GordianWallet* are protected by the latest version of Tor, which provides two-way authentication of both the server and your wallet. Unlike traditional use of the soon-to-be-deprecated SPV protocol, which reveals that you're accessing the Bitcoin network, Tor simply shows that you're engaging in private onion communications. It's safer when you're in a hostile state, and it's safer in your local coffee shop.
+
+3. **Multi-sig Protections.** Finally, *GordianWallet* ensures that your private keys are protected from the most common adversary: loss. Its 2-of-3 multi-sig system leaves one key on the server, one on your mobile wallet, and one in safe off-line storage. If you lose your phone or your server, you can still rebuild from the other two. (The Blockchain Commons [#SmartCustody](https://github.com/BlockchainCommons/SmartCustodyBook) system talks more about how to protect off-line keys.)
+
+*GordianWallet* is intended for a sophisticated power user. It's a leading-edge platform that experiments with modern Bitcoin technologies to create a powerful new architecture with features not found in other mobile wallets. It's intended as a professional wallet for your use and also as a demonstration of functionality that other companies can integrate into their own apps as an open source reference implementation of functionality.
+
+Even more cutting-edge technology is planned for the future, including collaborative custody models, airgapped technologies such as Blockchain Commons' #LetheKit for offline signing using QR codes, and methodologies for social-key recovery.
+
 ## Status — Early Beta
 
 *GordianWallet* is currently under active development and in early beta testing phase. It should be used on Bitcoin testnet to gain familiarity with how the wallet works, and most importantly to practice deleting and recovering wallet. For a detailed checklist to test critical functionality please see our [Testing Checklist.md](./Docs/Testing Checklist.md)
 
-## Installing Gordian Wallet
+## Prerequisites
+
+- iOS 13
+- A Bitcoin Core full node v0.20.0 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service, such as a [GordianServer-macOS](https://github.com/BlockchainCommons/GordianServer-macOS) or one created by the Bitcoin Standup [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts). Your node does not need to be an archive node, thus you can save space by being setup as a pruned full node.
+
+## Installation Instructions
 
 *GordianWallet* can be easily installed using Testflight, but if you prefer you can also install from source.
 
@@ -30,11 +53,6 @@ You can then run the app either on your mac, iPhone or a simulator.
 Please only use the app on testnet!
 
 To help us improve *GordianWallet*, *please*  share crash reports and give us feedback. Want a feature added? Tell us about it.
-
-### Requirements
-
-- iOS 13
-- A Bitcoin Core full node v0.20.0 (at minimum) which is running on Tor with `rpcport` exposed to a Tor V3 hidden service, such as a [GordianServer-macOS](https://github.com/BlockchainCommons/GordianServer-macOS) or one created by the Bitcoin Standup [Linux Scripts](https://github.com/BlockchainCommons/Bitcoin-StandUp-Scripts). Your node does not need to be an archive node, thus you can save space by being setup as a pruned full node.
 
 ### Installing GordianWallet from Testflight
 
@@ -60,25 +78,12 @@ Please refer to their telegram groups for simple instructions on linking to thes
 - [RaspiBlitz Telegram](https://t.me/raspiblitz)
 - [BTCPayServer Telegram](https://t.me/btcpayserver)
 
-## Using GordianWallet
+## Usage Instructions
 
 Please see our [features](Docs/Features.md) document for full information on how to use Gordian Wallet once it's installed.
 
 Afterward, you may also want to read about [how it all works](Docs/How-it-works.md).
 
-## The Philosophy Behind GordianWallet
-
-*GordianWallet* is a professional mobile wallet built using the most up-to-date technologies for Bitcoin. It's focused on three goals that together demonstrate some of the best practices for modern mobile-wallet design:
-
-1. **Self-sovereign Interactions.** Classic mobile wallets usually talked to a full node chosen by the wallet developer and owned/controlled by someone else. *GordianWallet* instead allows you to choose a full node, either one created using a setup process such as #BitcoinStandup and run by yourself, or a service offered by a provider that you select: self-sovereign means you get to decide. (You can use Blockchain Commons' full-node server for beta testing, but you should migrate to a protected server for real money transactions.)
-
-2. **Protected Communications.** All of the communications in *GordianWallet* are protected by the latest version of Tor, which provides two-way authentication of both the server and your wallet. Unlike traditional use of the soon-to-be-deprecated SPV protocol, which reveals that you're accessing the Bitcoin network, Tor simply shows that you're engaging in private onion communications. It's safer when you're in a hostile state, and it's safer in your local coffee shop.
-
-3. **Multi-sig Protections.** Finally, *GordianWallet* ensures that your private keys are protected from the most common adversary: loss. Its 2-of-3 multi-sig system leaves one key on the server, one on your mobile wallet, and one in safe off-line storage. If you lose your phone or your server, you can still rebuild from the other two. (The Blockchain Commons [#SmartCustody](https://github.com/BlockchainCommons/SmartCustodyBook) system talks more about how to protect off-line keys.)
-
-*GordianWallet* is intended for a sophisticated power user. It's a leading-edge platform that experiments with modern Bitcoin technologies to create a powerful new architecture with features not found in other mobile wallets. It's intended as a professional wallet for your use and also as a demonstration of functionality that other companies can integrate into their own apps as an open source reference implementation of functionality.
-
-Even more cutting-edge technology is planned for the future, including collaborative custody models, airgapped technologies such as Blockchain Commons' #LetheKit for offline signing using QR codes, and methodologies for social-key recovery.
 
 ## Origin, Authors, Copyright & Licenses
 
