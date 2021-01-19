@@ -1,6 +1,7 @@
 # GordianWallet-iOS
 
-### _by Peter Denton and Christopher Allen_
+### _by [Peter Denton](https://github.com/Fonta1n3) and [Christopher Allen](https://github.com/ChristopherA)_
+* <img src="https://raw.githubusercontent.com/BlockchainCommons/gordian/master/images/logos/gordian-icon.png" width=30 valign="bottom"> ***uses [gordian](https://github.com/BlockchainCommons/gordian/blob/master/README.md) technology***
 
 ![](Images/logos/gordian-wallet-screen.png)
 
