@@ -15,7 +15,7 @@ enum URHelper {
         let wrapper:CBOR = .map([
             .unsignedInt(1) : .byteString(data.bytes),
         ])
-        let cbor = Data(wrapper.encode())
+        let cbor = Data(wrapper.cborEncode())
         do {
             let rawUr = try UR(type: "crypto-seed", cbor: cbor)
             return UREncoder.encode(rawUr)
@@ -26,7 +26,7 @@ enum URHelper {
     
     static func shardToUr(data: Data) -> String? {
         let wrapper:CBOR = .tagged(.init(rawValue: 309), .byteString(data.bytes))
-        let cbor = Data(wrapper.encode())
+        let cbor = Data(wrapper.cborEncode())
         do {
             let rawUr = try UR(type: "crypto-sskr", cbor: cbor)
             return UREncoder.encode(rawUr)
@@ -98,7 +98,7 @@ enum URHelper {
     }
     
     static func psbtUr(_ data: Data) -> UR? {
-        let cbor = CBOR.byteString(data.bytes).encode().data
+        let cbor = CBOR.byteString(data.bytes).cborEncode().data
         
         return try? UR(type: "crypto-psbt", cbor: cbor)
     }
