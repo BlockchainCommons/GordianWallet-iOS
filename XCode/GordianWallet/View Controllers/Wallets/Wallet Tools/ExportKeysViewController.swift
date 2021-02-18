@@ -370,37 +370,35 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             var pubkeyStrings = [String]()
 
             for (k, key) in keys.enumerated() {
-                let hdKey = HDKey(key)
+                let hdKey = try! HDKey(base58: key)
                 let path = paths[k] + "/" + "\(i)"
 
                 do {
 
-                    if let bip32path = BIP32Path(path) {
-                        let key = try hdKey?.derive(bip32path)
-
-                        if key != nil {
-                            pubkeys.append(key!.pubKey)
-                            pubkeyStrings.append("#\(k + 1): \(key!.pubKey.data.hexString)")
-
-                            if k + 1 == keys.count {
-                                let scriptPubKey = ScriptPubKey(multisig: pubkeys, threshold: sigsRequired, bip67: s.isBIP67)
-                                var multiSigAddress:Address!
-                                let processedPubkeys = processedKeys(pubkeys: pubkeyStrings)
-
-                                // LibWally only produces bech32 multisig addresses, so need to fetch other formats from the node
-                                if wallet.derivation.contains("84") || wallet.derivation.contains("48") || s.isBIP84 || s.isP2WPKH {
-                                    multiSigAddress = Address(scriptPubKey, network(descriptor: wallet.descriptor))
-                                    self.keys.append(["address":"\(String(describing: multiSigAddress!))", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
-
-                                } else {
-                                    self.keys.append(["address":"fetching addresses from your node...", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
-                                    getKeysFromNode = true
-
-                                }
-
-                                pubkeys.removeAll()
-
+                    if let bip32path = try? BIP32Path(string: path) {
+                        guard let key = try? hdKey.derive(using: bip32path) else { return }
+                        
+                        pubkeys.append(key.pubKey)
+                        pubkeyStrings.append("#\(k + 1): \(key.pubKey.data.hexString)")
+                        
+                        if k + 1 == keys.count {
+                            let scriptPubKey = ScriptPubKey(multisig: pubkeys, threshold: sigsRequired, isBIP67: s.isBIP67)
+                            var multiSigAddress:Address!
+                            let processedPubkeys = processedKeys(pubkeys: pubkeyStrings)
+                            
+                            // LibWally only produces bech32 multisig addresses, so need to fetch other formats from the node
+                            if wallet.derivation.contains("84") || wallet.derivation.contains("48") || s.isBIP84 || s.isP2WPKH {
+                                multiSigAddress = try? Address(scriptPubKey: scriptPubKey, network: network(descriptor: wallet.descriptor))
+                                self.keys.append(["address":"\(String(describing: multiSigAddress!))", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
+                                
+                            } else {
+                                self.keys.append(["address":"fetching addresses from your node...", "publicKey":"\(processedPubkeys)", "scriptPubKey":"\(scriptPubKey)"])
+                                getKeysFromNode = true
+                                
                             }
+                            
+                            pubkeys.removeAll()
+                            
                         }
                     }
 
@@ -552,7 +550,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             let p = DescriptorParser()
             let str = p.descriptor(wallet.descriptor)
 
-            if let xpub = HDKey(str.accountXpub) {
+            if let xpub = try? HDKey(base58: str.accountXpub) {
                 fetchKeysFromXpub(xpub: xpub)
 
             }
@@ -579,11 +577,11 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
         }
 
         for i in 0 ... 999 {
-            let path = BIP32Path("0/\(i)")!
+            let path = try! BIP32Path(string: "0/\(i)")
 
             do {
-                let key = try xprv.derive(path)
-                let address = key.address(addressType)
+                let key = try xprv.derive(using: path)
+                let address = key.address(type: addressType)
 
                 let dict = [
 
@@ -639,12 +637,12 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
 
         for i in 0 ... 999 {
 
-            let path = BIP32Path("0/\(i)")!
+            let path = try! BIP32Path(string: "0/\(i)")
 
             do {
 
-                let key = try xpub.derive(path)
-                let address = key.address(addressType)
+                let key = try xpub.derive(using: path)
+                let address = key.address(type: addressType)
 
                 let dict = [
 
@@ -679,13 +677,13 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
     func getKeys(mnemonic: BIP39Mnemonic) {
 
         let derivation = wallet.derivation
-        let path = BIP32Path(derivation)!
-        let masterKey = HDKey((mnemonic.seedHex("")), network(descriptor: wallet.descriptor))!
-        let account = try! masterKey.derive(path)
+        let path = try! BIP32Path(string: derivation)
+        let masterKey = try! HDKey(seed: (mnemonic.seedHex(passphrase: "")), network: network(descriptor: wallet.descriptor))
+        let account = try! masterKey.derive(using: path)
 
         for i in 0 ... 999 {
 
-            let key1 = try! account.derive(BIP32Path("0/\(i)")!)
+            let key1 = try! account.derive(using: BIP32Path(string: "0/\(i)"))
             var addressType:AddressType!
 
             if derivation.contains("84") {
@@ -702,7 +700,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
 
             }
 
-            let address = key1.address(addressType)
+            let address = key1.address(type: addressType)
 
             let dict = [
 

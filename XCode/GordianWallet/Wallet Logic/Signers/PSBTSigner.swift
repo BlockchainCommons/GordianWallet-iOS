@@ -56,7 +56,7 @@ class PSBTSigner {
                         if let dict = object as? NSDictionary {
                             if let processedPsbt = dict["psbt"] as? String {
                                 do {
-                                    psbtToSign = try PSBT(processedPsbt, chain)
+                                    psbtToSign = try PSBT(psbt: processedPsbt, network: chain)
                                     attemptToSignLocallyWithActiveWalletXprv()
                                 } catch {
                                     attemptToSignLocallyWithActiveWalletXprv()
@@ -90,14 +90,14 @@ class PSBTSigner {
                     Encryption.decryptData(dataToDecrypt: encryptedXprv) { (decryptedXprv) in
                         if decryptedXprv != nil {
                             if let xprv = String(bytes: decryptedXprv!, encoding: .utf8) {
-                                if let key = HDKey(xprv) {
+                                if let key = try? HDKey(base58: xprv) {
                                     let inputs = psbtToSign.inputs
                                     for (i, input) in inputs.enumerated() {
                                         /// Create an array of child keys that we know can sign our inputs.
                                         if let origins = input.origins {
                                             for origin in origins {
-                                                if let path = BIP32Path((origin.value.path.description).replacingOccurrences(of: wallet.derivation + "/", with: "")) {
-                                                    if let childKey = try? key.derive(path) {
+                                                if let path = try? BIP32Path(string: (origin.value.path.description).replacingOccurrences(of: wallet.derivation + "/", with: "")) {
+                                                    if let childKey = try? key.derive(using: path) {
                                                         if let privKey = childKey.privKey {
                                                             if privKey.pubKey == origin.key {
                                                                 signableKeys.append(privKey.wif)
@@ -111,8 +111,8 @@ class PSBTSigner {
                                             let uniqueSigners = Array(Set(signableKeys))
                                             if uniqueSigners.count > 0 {
                                                 for (w, wif) in uniqueSigners.enumerated() {
-                                                    if let key = Key(wif, chain) {
-                                                        psbtToSign.sign(key)
+                                                    if let key = try? Key(wif: wif, network: chain) {
+                                                        psbtToSign = try? psbtToSign.signed(with: key)
                                                     }
                                                     if w + 1 == uniqueSigners.count {
                                                         finalizeWithBitcoind()
@@ -141,7 +141,7 @@ class PSBTSigner {
                         chain = .mainnet
                     }
                     do {
-                        psbtToSign = try PSBT(psbt, chain)
+                        psbtToSign = try PSBT(psbt: psbt, network: chain)
                         processWithActiveWallet()
                     } catch {
                         completion((false, nil, nil))

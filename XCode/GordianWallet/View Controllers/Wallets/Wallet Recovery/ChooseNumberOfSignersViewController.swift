@@ -93,17 +93,17 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
     private func buildWallet() {
         func getKeys(network: Network) {
             for (i, seed) in seedArray.enumerated() {
-                if let mnemonic = BIP39Mnemonic(seed) {
+                if let mnemonic = try? BIP39Mnemonic(words: seed) {
                     var pathString = "m/48'/0'/0'/2'"
                     if network == .testnet {
                         pathString = "m/48'/1'/0'/2'"
                     }
-                    if let path = BIP32Path(pathString) {
-                        let seed = mnemonic.seedHex("")
-                        if let mk = HDKey(seed, network) {
+                    if let path = try? BIP32Path(string: pathString) {
+                        let seed = mnemonic.seedHex(passphrase: "")
+                        if let mk = try? HDKey(seed: seed, network: network) {
                             let fingerprint = mk.fingerprint.hexString
                             do {
-                                let account = try mk.derive(path)
+                                let account = try mk.derive(using: path)
                                 let pathWithFingerprint = pathString.replacingOccurrences(of: "m", with: fingerprint)
                                 if i + 1 == seedArray.count {
                                     recoveryDict["derivation"] = pathString
@@ -158,13 +158,13 @@ class ChooseNumberOfSignersViewController: UIViewController, UIPickerViewDelegat
                             if let changeDescriptor = dict["descriptor"] as? String {
                                 var encryptedXprvs:[Data] = []
                                 for (i, seed) in vc.seedArray.enumerated() {
-                                    if let mnemonic = BIP39Mnemonic(seed) {
+                                    if let mnemonic = try? BIP39Mnemonic(words: seed) {
                                         if let derivation = vc.recoveryDict["derivation"] as? String {
-                                            let seed = mnemonic.seedHex("")
-                                            if let mk = HDKey(seed, vc.network) {
-                                                if let path = BIP32Path(derivation) {
+                                            let seed = mnemonic.seedHex(passphrase: "")
+                                            if let mk = try? HDKey(seed: seed, network: vc.network) {
+                                                if let path = try? BIP32Path(string: derivation) {
                                                     do {
-                                                        if let xprv = try mk.derive(path).xpriv {
+                                                        if let xprv = try mk.derive(using: path).xpriv {
                                                             Encryption.encryptData(dataToEncrypt: xprv.dataUsingUTF8StringEncoding) { [unowned vc = self] (encryptedData, error) in
                                                                 if encryptedData != nil {
                                                                     encryptedXprvs.append(encryptedData!)

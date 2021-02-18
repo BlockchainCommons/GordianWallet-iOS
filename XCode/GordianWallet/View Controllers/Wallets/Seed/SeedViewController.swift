@@ -559,7 +559,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                             let arr = xpubWithPath.split(separator: "]")
                             let arr2 = "\(arr[1])".split(separator: ")")
                             let xpub = "\(arr2[0])".replacingOccurrences(of: "/0/*", with: "")
-                            if let hdkey = HDKey(xprv) {
+                            if let hdkey = try? HDKey(base58: xprv) {
                                 if xpub == hdkey.xpub {
                                     xprivs += "\(arr[0])]" + xprv + "\n\n"
                                 }

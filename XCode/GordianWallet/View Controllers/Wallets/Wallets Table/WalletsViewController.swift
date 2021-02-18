@@ -1012,48 +1012,48 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
 //-------------------------------------------------------------------------------
 // MARK: - To enable mainnet accounts just uncomment the following lines of code:
 //
-//            DispatchQueue.main.async { [unowned vc = self] in
-//
-//                vc.performSegue(withIdentifier: "addWallet", sender: vc)
-//
-//            }
+            DispatchQueue.main.async { [unowned vc = self] in
+
+                vc.performSegue(withIdentifier: "addWallet", sender: vc)
+
+            }
 //-------------------------------------------------------------------------------
 // MARK: - And comment out the following lines of code:
 
-            Encryption.getNode { [unowned vc = self] (node, error) in
-                
-                if !error && node != nil {
-                    
-                    if node!.network == "mainnet" {
-                        
-                        DispatchQueue.main.async {
-                            var alertStyle = UIAlertController.Style.actionSheet
-                            if (UIDevice.current.userInterfaceIdiom == .pad) {
-                                alertStyle = UIAlertController.Style.alert
-                            }
-                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: alertStyle)
-                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { action in }))
-                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
-                            vc.present(alert, animated: true, completion: nil)
-                        }
-                        
-                    } else {
-                        
-                        DispatchQueue.main.async {
-                            
-                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
-                            
-                        }
-                        
-                    }
-                    
-                } else {
-                    
-                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
-                    
-                }
-                
-            }
+//            Encryption.getNode { [unowned vc = self] (node, error) in
+//                
+//                if !error && node != nil {
+//                    
+//                    if node!.network == "mainnet" {
+//                        
+//                        DispatchQueue.main.async {
+//                            var alertStyle = UIAlertController.Style.actionSheet
+//                            if (UIDevice.current.userInterfaceIdiom == .pad) {
+//                                alertStyle = UIAlertController.Style.alert
+//                            }
+//                            let alert = UIAlertController(title: "We appreciate your patience", message: "We are still adding new features, so mainnet wallets are disabled. Please help us test.", preferredStyle: alertStyle)
+//                            alert.addAction(UIAlertAction(title: "Understood", style: .default, handler: { action in }))
+//                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+//                            vc.present(alert, animated: true, completion: nil)
+//                        }
+//                        
+//                    } else {
+//                        
+//                        DispatchQueue.main.async {
+//                            
+//                            vc.performSegue(withIdentifier: "addWallet", sender: vc)
+//                            
+//                        }
+//                        
+//                    }
+//                    
+//                } else {
+//                    
+//                    displayAlert(viewController: vc, isError: true, message: "No active nodes")
+//                    
+//                }
+//                
+//            }
 //-------------------------------------------------------------------------------
             
         } else {
@@ -1152,15 +1152,13 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
             guard isMaster != nil, keyData != nil, chainCode != nil else { return }
             if isMaster! {
                 var base58String = "\(prefix)000000000000000000\(chainCode!)\(keyData!)"
-                if let data = Data(base58String) {
-                    let checksum = Encryption.checksum(Data(data))
-                    base58String += checksum
-                    if let rawData = Data(base58String) {
-                        DispatchQueue.main.async { [unowned vc = self] in
-                            vc.xprv = Base58.encode([UInt8](rawData))
-                            vc.performSegue(withIdentifier: "segueToCreateUrSuppliedKey", sender: vc)
-                        }
-                    }
+                let data = Data(value: base58String)
+                let checksum = Encryption.checksum(Data(data))
+                base58String += checksum
+                let rawData = Data(value: base58String)
+                DispatchQueue.main.async { [unowned vc = self] in
+                    vc.xprv = Base58.encode([UInt8](rawData))
+                    vc.performSegue(withIdentifier: "segueToCreateUrSuppliedKey", sender: vc)
                 }
             }
         }
