@@ -246,7 +246,11 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                             let btc = (s.coldBalance).doubleValue
                             let fiat = s.fiatBalance
                             DispatchQueue.main.async { [unowned vc = self] in
-                                vc.availableBalance.text = "\(btc) btc / \(fiat) available"
+                                if !s.unconfirmed {
+                                    vc.availableBalance.text = "\(btc) btc / \(fiat) available"
+                                } else {
+                                    vc.availableBalance.text = "confirmations pending..."
+                                }
                                 vc.availableBalance.alpha = 1
                             }
                         }
