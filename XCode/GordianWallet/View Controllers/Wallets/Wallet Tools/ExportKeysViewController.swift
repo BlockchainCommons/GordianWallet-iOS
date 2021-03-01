@@ -581,7 +581,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
 
             do {
                 let key = try xprv.derive(using: path)
-                let address = key.address(type: addressType)
+                let address = key.address(type: addressType).description
 
                 let dict = [
 
@@ -642,7 +642,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
             do {
 
                 let key = try xpub.derive(using: path)
-                let address = key.address(type: addressType)
+                let address = key.address(type: addressType).description
 
                 let dict = [
 
@@ -700,7 +700,7 @@ class ExportKeysViewController: UIViewController, UITableViewDelegate, UITableVi
 
             }
 
-            let address = key1.address(type: addressType)
+            let address = key1.address(type: addressType).description
 
             let dict = [
 
