@@ -210,7 +210,6 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     
     private func parseUr(_ ur: String) -> (valid: Bool, alreadyAdded: Bool, shard: String) {
         let shard = URHelper.urToShard(sskrUr: ur) ?? ""
-        print("shard: \(shard)")
         guard shard != "" else { return (false, false, shard) }
         guard shardAlreadyAdded(shard) == false else { return (true, true, shard) }
         rawShards.append(shard)

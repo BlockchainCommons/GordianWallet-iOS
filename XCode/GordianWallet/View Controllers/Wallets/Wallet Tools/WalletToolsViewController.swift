@@ -109,6 +109,23 @@ class WalletToolsViewController: UIViewController {
         
     }
     
+    private func showCosigner() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.performSegue(withIdentifier: "showCosignerSegue", sender: self)
+        }
+    }
+    
+    @IBAction func exportCosignerAction(_ sender: Any) {
+        showCosigner()
+    }
+    
+    
+    @IBAction func seeCosignerInfoAction(_ sender: Any) {
+    }
+    
+    
     @IBAction func seeBackUpInfo(_ sender: Any) {
         DispatchQueue.main.async { [unowned vc = self] in
             vc.performSegue(withIdentifier: "exportSeed", sender: vc)
@@ -524,6 +541,11 @@ class WalletToolsViewController: UIViewController {
         // Pass the selected object to the new view controller.
         
         switch segue.identifier {
+        
+        case "showCosignerSegue":
+            guard let vc = segue.destination as? QRDisplayerViewController else { fallthrough }
+            
+            vc.text = "this will be a cosigner"
             
         case "goSweep":
             

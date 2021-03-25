@@ -55,8 +55,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         /// Force Tor to resign when going into background as it does not  survive on its own.
         let mgr = TorClient.sharedInstance
         if mgr.state != .stopped && mgr.state != .refreshing {
+            #if !targetEnvironment(macCatalyst)
             mgr.state = .refreshing
             mgr.resign()
+            #endif
         }
         CoreDataService.saveContext()
     }
