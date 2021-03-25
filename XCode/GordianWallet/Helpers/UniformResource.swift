@@ -111,4 +111,42 @@ enum URHelper {
         
         return Data(bytes).base64EncodedString()
     }
+    
+    static func xpubToUrHdkey(_ xpub: String, _ fingerprint: String, _ cointype: UInt64) -> String? {
+        /// Decodes our original extended key to base58 data.
+        let b58 = Base58.decode(xpub)
+        let b58Data = Data(b58)
+        let depth = b58Data.subdata(in: Range(4...4))
+        let parentFingerprint = b58Data.subdata(in: Range(5...8))
+        let childIndex = b58Data.subdata(in: Range(9...12))
+        guard childIndex.hexString == "80000002" else { return nil }
+        let chaincode = b58Data.subdata(in: Range(13...44))
+        let keydata = b58Data.subdata(in: Range(45...77))
+        
+        var originsArray:[OrderedMapEntry] = []
+        originsArray.append(.init(key: 1, value: .array([.unsignedInt(48), true, .unsignedInt(cointype), true, .unsignedInt(0), true, .unsignedInt(2), true])))
+        originsArray.append(.init(key: 2, value: .unsignedInt(UInt64(fingerprint, radix: 16) ?? 0)))
+        originsArray.append(.init(key: 3, value: .unsignedInt(UInt64(depth.hexString) ?? 0)))
+        let originsWrapper = CBOR.orderedMap(originsArray)
+        
+        let useInfoWrapper:CBOR = .map([
+            .unsignedInt(2) : .unsignedInt(cointype)
+        ])
+        
+        guard let hexValue = UInt64(parentFingerprint.hexString, radix: 16) else { return nil }
+        
+        var hdkeyArray:[OrderedMapEntry] = []
+        hdkeyArray.append(.init(key: 1, value: .boolean(false)))
+        hdkeyArray.append(.init(key: 2, value: .boolean(false)))
+        hdkeyArray.append(.init(key: 3, value: .byteString([UInt8](keydata))))
+        hdkeyArray.append(.init(key: 4, value: .byteString([UInt8](chaincode))))
+        hdkeyArray.append(.init(key: 5, value: .tagged(CBOR.Tag(rawValue: 305), useInfoWrapper)))
+        hdkeyArray.append(.init(key: 6, value: .tagged(CBOR.Tag(rawValue: 304), originsWrapper)))
+        hdkeyArray.append(.init(key: 8, value: .unsignedInt(hexValue)))
+        let hdKeyWrapper = CBOR.orderedMap(hdkeyArray)
+        
+        guard let rawUr = try? UR(type: "crypto-hdkey", cbor: hdKeyWrapper) else { return nil }
+        
+        return UREncoder.encode(rawUr)
+    }
 }

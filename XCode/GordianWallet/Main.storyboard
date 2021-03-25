@@ -4338,11 +4338,11 @@ At a minimum we recommend writing these words down on water proof paper with a p
             <objects>
                 <viewController extendedLayoutIncludesOpaqueBars="YES" hidesBottomBarWhenPushed="YES" id="WYx-vx-5xJ" customClass="QRDisplayerViewController" customModule="Gordian_Wallet" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Nlx-Rv-vA1">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QuE-Kt-X26">
-                                <rect key="frame" x="37.5" y="92" width="300" height="300"/>
+                                <rect key="frame" x="37.5" y="136" width="300" height="300"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="efo-O0-g9K"/>
                                     <constraint firstAttribute="height" constant="300" id="rNO-4u-u0X"/>
@@ -4472,24 +4472,8 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                             <action selector="seeUtxos:" destination="51a-bL-HRe" eventType="touchUpInside" id="io9-Mf-sn6"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uqd-eM-Y70">
-                                        <rect key="frame" x="0.0" y="324" width="200" height="44"/>
-                                        <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="200" id="KlT-MX-Phw"/>
-                                            <constraint firstAttribute="height" constant="44" id="tw8-Gh-fY1"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <color key="tintColor" systemColor="systemTealColor"/>
-                                        <state key="normal" title="   Add a signer        " image="plus.square" catalog="system">
-                                            <color key="titleColor" systemColor="systemTealColor"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="addSigner:" destination="51a-bL-HRe" eventType="touchUpInside" id="UfQ-Bf-zBO"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zG0-7f-mmc">
-                                        <rect key="frame" x="0.0" y="378" width="200" height="44"/>
+                                        <rect key="frame" x="0.0" y="324" width="200" height="44"/>
                                         <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="c4p-Uf-5H4"/>
@@ -4502,6 +4486,22 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                         </state>
                                         <connections>
                                             <action selector="exportCosignerAction:" destination="51a-bL-HRe" eventType="touchUpInside" id="594-N2-zoJ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uqd-eM-Y70">
+                                        <rect key="frame" x="0.0" y="378" width="200" height="44"/>
+                                        <color key="backgroundColor" red="0.1020978744" green="0.1020978744" blue="0.1020978744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="KlT-MX-Phw"/>
+                                            <constraint firstAttribute="height" constant="44" id="tw8-Gh-fY1"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="tintColor" systemColor="systemTealColor"/>
+                                        <state key="normal" title="   Add a signer        " image="plus.square" catalog="system">
+                                            <color key="titleColor" systemColor="systemTealColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="addSigner:" destination="51a-bL-HRe" eventType="touchUpInside" id="UfQ-Bf-zBO"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -4578,19 +4578,8 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                             <action selector="exportKeysInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="PGe-xY-EpX"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DUB-0n-F9k">
-                                        <rect key="frame" x="0.0" y="324" width="20" height="44"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="ufI-vF-CT9"/>
-                                        </constraints>
-                                        <color key="tintColor" systemColor="systemTealColor"/>
-                                        <state key="normal" image="info.circle" catalog="system"/>
-                                        <connections>
-                                            <action selector="addSignerInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="3gP-V5-4u4"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NVf-dY-21c">
-                                        <rect key="frame" x="0.0" y="378" width="20" height="44"/>
+                                        <rect key="frame" x="0.0" y="324" width="20" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="CAn-qM-E3O"/>
                                         </constraints>
@@ -4598,6 +4587,17 @@ At a minimum we recommend writing these words down on water proof paper with a p
                                         <state key="normal" image="info.circle" catalog="system"/>
                                         <connections>
                                             <action selector="seeCosignerInfoAction:" destination="51a-bL-HRe" eventType="touchUpInside" id="6gJ-k7-UI4"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DUB-0n-F9k">
+                                        <rect key="frame" x="0.0" y="378" width="20" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="ufI-vF-CT9"/>
+                                        </constraints>
+                                        <color key="tintColor" systemColor="systemTealColor"/>
+                                        <state key="normal" image="info.circle" catalog="system"/>
+                                        <connections>
+                                            <action selector="addSignerInfo:" destination="51a-bL-HRe" eventType="touchUpInside" id="3gP-V5-4u4"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -4620,6 +4620,8 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <outlet property="addSignerInfoOutlet" destination="DUB-0n-F9k" id="V9Q-eY-caK"/>
                         <outlet property="addSignerOutlet" destination="uqd-eM-Y70" id="gJ5-CB-BBP"/>
                         <outlet property="backupInfoOutlet" destination="qMQ-qJ-Jfy" id="og8-01-0c9"/>
+                        <outlet property="exportCosignerInfoOutlet" destination="NVf-dY-21c" id="YKc-g9-mMu"/>
+                        <outlet property="exportCosignerOutlet" destination="zG0-7f-mmc" id="W0J-OK-Y67"/>
                         <outlet property="exportKeyOutlet" destination="QDP-TM-BUv" id="4CQ-ea-G1v"/>
                         <outlet property="refillOutlet" destination="xJG-pY-hmO" id="Cod-JP-uX8"/>
                         <outlet property="rescanOutlet" destination="dSZ-4Z-lCQ" id="fZw-hH-Heu"/>
@@ -4630,7 +4632,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
                         <segue destination="lq5-Pd-gqW" kind="show" identifier="exportSeed" id="An7-c7-bWJ"/>
                         <segue destination="qYd-Xi-rqO" kind="show" identifier="seeUtxos" id="vbG-Ex-JNf"/>
                         <segue destination="jX1-Is-hS7" kind="show" identifier="viewKeysSegue" id="PhK-0p-x5q"/>
-                        <segue destination="WYx-vx-5xJ" kind="presentation" identifier="showCosignerSegue" id="tjZ-LY-tly"/>
+                        <segue destination="WYx-vx-5xJ" kind="show" identifier="showCosignerSegue" id="tjZ-LY-tly"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vmz-N1-e8G" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -6447,7 +6449,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="WN6-Y9-PN0"/>
         <segue reference="AOL-nc-Scs"/>
         <segue reference="fBg-S5-BEW"/>
-        <segue reference="pun-AW-DGw"/>
+        <segue reference="uaX-te-aDX"/>
         <segue reference="tjZ-LY-tly"/>
         <segue reference="7qw-Ys-xsH"/>
         <segue reference="tvy-tG-Sod"/>

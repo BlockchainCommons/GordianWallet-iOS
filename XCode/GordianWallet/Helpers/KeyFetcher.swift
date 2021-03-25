@@ -129,6 +129,32 @@ class KeyFetcher {
         }
 
     }
+    
+    class func cosignerKey(_ words: String, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
+        getActiveWalletNow() { (wallet, error) in
+            guard let wallet = wallet else { completion((nil, true)); return }
+            
+            MnemonicCreator.convert(words: words) { (mnemonic, error) in
+                guard let mnemonic = mnemonic else { completion((nil, true)); return }
+                
+                let chain = network(descriptor: wallet.descriptor)
+                
+                guard let masterKey = try? HDKey(seed: (mnemonic.seedHex(passphrase: "")), network: chain) else { completion((nil, true)); return }
+                
+                var coinType = 1
+                
+                if chain == .mainnet {
+                    coinType = 0
+                }
+                
+                guard let path = try? BIP32Path(string: "m/48h/\(coinType)h/0h/2h") else { completion((nil, true)); return }
+                
+                guard let account = try? masterKey.derive(using: path) else { completion((nil, true)); return }
+                
+                completion((account.xpub, false))
+            }
+        }
+    }
 
     class func accountXprv(completion: @escaping ((xprv: String?, error: Bool)) -> Void) {
 
