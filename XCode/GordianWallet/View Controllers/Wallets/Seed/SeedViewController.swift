@@ -27,6 +27,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var accountLabel: UILabel!
     @IBOutlet var tableView: UITableView!
     @IBOutlet weak var editLabelOutlet: UIButton!
+    @IBOutlet weak var urSwitch: UISegmentedControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,6 +57,10 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             showAuth()
         }
         #endif
+        
+    }
+    
+    @IBAction func didSwitchFormat(_ sender: Any) {
         
     }
     
@@ -347,26 +352,46 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func loadData() {
-        
-        xprvs()
-        
+    private func loadAccountMap() {
         let arr = wallet.descriptor.split(separator: "#")
         let plainDesc = "\(arr[0])".replacingOccurrences(of: "'", with: "h")
         let recoveryQr = ["descriptor":"\(plainDesc)", "blockheight":wallet.blockheight, "label": wallet.label] as [String : Any]
         
         if let json = recoveryQr.json() {
-            
             let (qr, error) = qrGenerator.getQRCode(textInput: json)
+            
+            
             recoveryImage = qr
             
             if error {
-                
-                showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
-                
+                showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image.")
             }
-            
         }
+    }
+    
+    private func loadCryptoOutput() {
+        guard let cryptoOutput = URHelper.accountToUrOutput(wallet.descriptor) else { print("failing here"); return }
+        
+        let (qr, error) = qrGenerator.getQRCode(textInput: cryptoOutput)
+        recoveryImage = qr
+        
+        if error {
+            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image.")
+        }
+    }
+    
+    func loadData() {
+        
+        xprvs()
+        
+        if urSwitch.selectedSegmentIndex == 0 {
+            // load crypto-output
+            loadCryptoOutput()
+        } else {
+            loadAccountMap()
+        }
+        
+        
         
         SeedParser.fetchSeeds(wallet: wallet) { [unowned vc = self] (seeds, fingerprints) in
             

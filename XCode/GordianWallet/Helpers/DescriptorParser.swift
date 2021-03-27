@@ -248,7 +248,9 @@ class DescriptorParser {
             if descriptor.contains("[") && descriptor.contains("]") {
                 
                 let arr1 = descriptor.split(separator: "[")
-                dict["keysWithPath"] = ["[" + "\(arr1[1])"]
+                var processOrigin = "\(arr1[1])".replacingOccurrences(of: "/0/*", with: "")
+                processOrigin = processOrigin.replacingOccurrences(of: "/1/*", with: "")
+                dict["keysWithPath"] = ["[" + "\(processOrigin)"]
                 let arr2 = arr1[1].split(separator: "]")
                 let derivation = arr2[0]
                 dict["prefix"] = "[\(derivation)]"

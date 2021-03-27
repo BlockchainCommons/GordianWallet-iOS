@@ -3013,7 +3013,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="NOC-aP-rCn">
-                                <rect key="frame" x="0.0" y="83" width="375" height="535"/>
+                                <rect key="frame" x="0.0" y="122" width="375" height="496"/>
                                 <color key="backgroundColor" red="0.097010917959999998" green="0.12930551169999999" blue="0.1419161558" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="separatorColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -3120,16 +3120,28 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                                     <action selector="editLabel:" destination="lq5-Pd-gqW" eventType="touchUpInside" id="13j-43-BP5"/>
                                 </connections>
                             </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="DNd-bZ-Wkt">
+                                <rect key="frame" x="202" y="83" width="157" height="32"/>
+                                <segments>
+                                    <segment title="UR"/>
+                                    <segment title="Plain Text"/>
+                                </segments>
+                                <connections>
+                                    <action selector="didSwitchFormat:" destination="lq5-Pd-gqW" eventType="valueChanged" id="7xa-LZ-ULA"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="l53-Rf-mg1"/>
                         <color key="backgroundColor" red="0.050735630099999998" green="0.058785595000000003" blue="0.062973126769999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="DNd-bZ-Wkt" firstAttribute="top" secondItem="ZWX-60-MMn" secondAttribute="bottom" constant="8" symbolic="YES" id="5lD-kG-Knc"/>
                             <constraint firstItem="NOC-aP-rCn" firstAttribute="leading" secondItem="l53-Rf-mg1" secondAttribute="leading" id="7eD-ri-eGk"/>
                             <constraint firstItem="ZWX-60-MMn" firstAttribute="leading" secondItem="l53-Rf-mg1" secondAttribute="leading" constant="16" id="DcT-Eu-ekb"/>
                             <constraint firstItem="ZWX-60-MMn" firstAttribute="top" secondItem="l53-Rf-mg1" secondAttribute="top" constant="8" id="Jvi-j7-av5"/>
+                            <constraint firstItem="l53-Rf-mg1" firstAttribute="trailing" secondItem="DNd-bZ-Wkt" secondAttribute="trailing" constant="16" id="OqU-1p-5ql"/>
                             <constraint firstItem="NOC-aP-rCn" firstAttribute="bottom" secondItem="l53-Rf-mg1" secondAttribute="bottom" id="XIg-Wv-bAy"/>
                             <constraint firstItem="gIC-40-Ern" firstAttribute="leading" secondItem="ZWX-60-MMn" secondAttribute="trailing" constant="15" id="arr-Mz-xmv"/>
-                            <constraint firstItem="NOC-aP-rCn" firstAttribute="top" secondItem="ZWX-60-MMn" secondAttribute="bottom" constant="8" id="cHT-C9-gK4"/>
+                            <constraint firstItem="NOC-aP-rCn" firstAttribute="top" secondItem="DNd-bZ-Wkt" secondAttribute="bottom" constant="8" symbolic="YES" id="hrk-qs-e9z"/>
                             <constraint firstItem="NOC-aP-rCn" firstAttribute="trailing" secondItem="l53-Rf-mg1" secondAttribute="trailing" id="idh-CG-Gxm"/>
                             <constraint firstItem="gIC-40-Ern" firstAttribute="centerY" secondItem="ZWX-60-MMn" secondAttribute="centerY" id="lcu-di-3zH"/>
                             <constraint firstItem="l53-Rf-mg1" firstAttribute="trailing" secondItem="gIC-40-Ern" secondAttribute="trailing" constant="23" id="oez-mo-Sdt"/>
@@ -3147,6 +3159,7 @@ You can either support us by becoming a GitHub sponsor, where GitHub is matching
                         <outlet property="accountLabel" destination="ZWX-60-MMn" id="rDR-v6-wgB"/>
                         <outlet property="editLabelOutlet" destination="gIC-40-Ern" id="vfq-Q1-ySo"/>
                         <outlet property="tableView" destination="NOC-aP-rCn" id="EJQ-4i-ZGa"/>
+                        <outlet property="urSwitch" destination="DNd-bZ-Wkt" id="Z0p-N8-hDl"/>
                         <segue destination="WYx-vx-5xJ" kind="show" identifier="showQR" id="prj-l9-xjw"/>
                     </connections>
                 </viewController>
@@ -6450,7 +6463,7 @@ At a minimum we recommend writing these words down on water proof paper with a p
         <segue reference="AOL-nc-Scs"/>
         <segue reference="fBg-S5-BEW"/>
         <segue reference="uaX-te-aDX"/>
-        <segue reference="tjZ-LY-tly"/>
+        <segue reference="prj-l9-xjw"/>
         <segue reference="7qw-Ys-xsH"/>
         <segue reference="tvy-tG-Sod"/>
         <segue reference="G4m-Sr-i7G"/>
