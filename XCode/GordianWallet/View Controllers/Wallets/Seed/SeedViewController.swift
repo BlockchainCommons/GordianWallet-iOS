@@ -61,7 +61,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @IBAction func didSwitchFormat(_ sender: Any) {
-        
+        loadData()
     }
     
     @IBAction func deletAccount(_ sender: Any) {
@@ -359,8 +359,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         if let json = recoveryQr.json() {
             let (qr, error) = qrGenerator.getQRCode(textInput: json)
-            
-            
             recoveryImage = qr
             
             if error {
@@ -385,7 +383,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         xprvs()
         
         if urSwitch.selectedSegmentIndex == 0 {
-            // load crypto-output
             loadCryptoOutput()
         } else {
             loadAccountMap()
@@ -393,15 +390,16 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         
         
-        SeedParser.fetchSeeds(wallet: wallet) { [unowned vc = self] (seeds, fingerprints) in
+        SeedParser.fetchSeeds(wallet: wallet) { [weak self] (seeds, fingerprints) in
+            guard let self = self else { return }
             
             var str = ""
-            vc.accountSeeds.removeAll()
-            vc.seed = ""
+            self.accountSeeds.removeAll()
+            self.seed = ""
             
             if seeds != nil {
                 
-                vc.accountSeeds = seeds!
+                self.accountSeeds = seeds!
                 
                 for (x, s) in seeds!.enumerated() {
                     
@@ -433,7 +431,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                     
                     if x + 1 == seeds!.count {
-                        vc.seed = str
+                        self.seed = str
                         
                         DispatchQueue.main.async { [unowned vc = self] in
                             
@@ -697,7 +695,12 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             copyButton.center.y = shareButton.center.y
             
         case 1:
-            textLabel.text = "Account Map (public keys)"
+            if urSwitch.selectedSegmentIndex == 0 {
+                textLabel.text = "ur:crypto-output (public keys)"
+            } else {
+                textLabel.text = "Account Map (public keys)"
+            }
+            
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(copyButton)
@@ -705,7 +708,12 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             copyButton.center.y = shareButton.center.y
             
         case 2:
-            textLabel.text = "Seed Words"
+            if urSwitch.selectedSegmentIndex == 0 {
+                textLabel.text = "ur:crypto-seed (master seed)"
+            } else {
+                textLabel.text = "Seed Words"
+            }
+            
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(qrButton)
@@ -714,14 +722,24 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             header.addSubview(deleteButton)
             
         case 3:
-            textLabel.text = "Account xpubs"
+            if urSwitch.selectedSegmentIndex == 0 {
+                textLabel.text = "ur:crypto-hdkey (public key)"
+            } else {
+                textLabel.text = "Account xpubs"
+            }
+            
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(qrButton)
             header.addSubview(copyButton)
             
         case 4:
-            textLabel.text = "Account xprvs"
+            if urSwitch.selectedSegmentIndex == 0 {
+                textLabel.text = "ur:crypto-hdkey (private key)"
+            } else {
+                textLabel.text = "Account xprvs"
+            }
+            
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(qrButton)
