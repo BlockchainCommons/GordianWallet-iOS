@@ -151,6 +151,7 @@ class WalletToolsViewController: UIViewController {
                 if chain == .testnet {
                     cointype = 1
                 }
+                
                 guard let hdkey = URHelper.xpubToUrHdkey(xpub, self.wallet.fingerprint, cointype) else { return }
                 
                 self.cosigner = hdkey

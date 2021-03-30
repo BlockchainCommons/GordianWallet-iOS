@@ -120,7 +120,7 @@ enum URHelper {
     }
     
     static func xpubToUrHdkey(_ xpub: String, _ fingerprint: String, _ cointype: UInt64) -> String? {
-        /// Decodes our original extended key to base58 data.
+        /// Only converts an exisiting seed to a cosigner (bip48) so we hard code origins
         let b58 = Base58.decode(xpub)
         let b58Data = Data(b58)
         let depth = b58Data.subdata(in: Range(4...4))
@@ -207,6 +207,8 @@ enum URHelper {
         
         let arrayCbor = CBOR.orderedMap(array)
         
+        print("hex: \(arrayCbor.cborEncode().data.hexString)")
+        
         guard let rawUr = try? UR(type: "crypto-output", cbor: arrayCbor) else { return nil }
         
         return UREncoder.encode(rawUr)
@@ -231,6 +233,8 @@ enum URHelper {
             
             let cbor = CBOR.orderedMap(array)
             
+            print("hex: \(cbor.cborEncode().data.hexString)")
+            
             guard let rawUr = try? UR(type: "crypto-output", cbor: cbor) else { return nil }
             
             return UREncoder.encode(rawUr)
@@ -239,6 +243,8 @@ enum URHelper {
             array.append(.init(key: 403, value: arrayCbor))
             
             let cbor = CBOR.orderedMap(array)
+            
+            print("hex: \(cbor.cborEncode().data.hexString)")
             
             guard let rawUr = try? UR(type: "crypto-output", cbor: cbor) else { return nil }
             
@@ -249,6 +255,8 @@ enum URHelper {
             let arrayCbor = CBOR.orderedMap(array)
             nestedArray.append(.init(key: 400, value: arrayCbor))
             let cbor = CBOR.orderedMap(nestedArray)
+            
+            print("hex: \(cbor.cborEncode().data.hexString)")
             
             guard let rawUr = try? UR(type: "crypto-output", cbor: cbor) else { return nil }
             

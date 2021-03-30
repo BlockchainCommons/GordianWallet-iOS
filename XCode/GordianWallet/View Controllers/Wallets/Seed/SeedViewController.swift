@@ -370,7 +370,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     private func loadCryptoOutput() {
         guard let cryptoOutput = URHelper.accountToUrOutput(wallet.descriptor) else { return }
-        
+                
         let (qr, error) = qrGenerator.getQRCode(textInput: cryptoOutput)
         recoveryImage = qr
         
