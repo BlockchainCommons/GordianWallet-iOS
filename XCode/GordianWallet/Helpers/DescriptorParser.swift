@@ -191,15 +191,15 @@ class DescriptorParser {
                             dict["isWIP48"] = true
                             dict["isAccount"] = true
                             
-                        case "m/48'/0'/0'/3'", "m/48'/1'/0'/3'":
-                            dict["isBIP44"] = false
-                            dict["isP2PKH"] = false
-                            dict["isBIP84"] = false
-                            dict["isP2WPKH"] = false
-                            dict["isBIP49"] = false
-                            dict["isP2SHP2WPKH"] = true
-                            dict["isWIP48"] = true
-                            dict["isAccount"] = true
+//                        case "m/48'/0'/0'/1'", "m/48'/1'/0'/1'":
+//                            dict["isBIP44"] = false
+//                            dict["isP2PKH"] = false
+//                            dict["isBIP84"] = false
+//                            dict["isP2WPKH"] = false
+//                            dict["isBIP49"] = false
+//                            dict["isP2SHP2WPKH"] = true
+//                            dict["isWIP48"] = true
+//                            dict["isAccount"] = true
 
                         case "m/44'/0'/0'", "m/44'/1'/0'":
                             dict["isBIP44"] = true

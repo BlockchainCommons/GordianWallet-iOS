@@ -8,8 +8,15 @@
 
 import Foundation
 import URKit
+import LibWally
 
 enum URHelper {
+    
+    static func wordsToUr(words: String) -> String? {
+        guard let bip39Mnemonic = try? BIP39Mnemonic(words: words) else { return nil }
+        
+        return entropyToUr(data: bip39Mnemonic.entropy.data)
+    }
     
     static func entropyToUr(data: Data) -> String? {
         let wrapper:CBOR = .map([
@@ -150,35 +157,26 @@ enum URHelper {
         return UREncoder.encode(rawUr)
     }
     
-    static func accountToUrOutput(_ descriptor: String) -> String? {
-        let descriptorParser = DescriptorParser()
-        let descriptorStruct = descriptorParser.descriptor(descriptor)
-        let threshold = descriptorStruct.sigsRequired
-        
+    static func coinType(_ descriptorStruct: DescriptorStruct) -> UInt64 {
         var cointType:UInt64 = 0
         
         if descriptorStruct.chain == "Testnet" {
             cointType = 1
         }
         
+        return cointType
+    }
+    
+    static func msigOutput(_ descriptorStruct: DescriptorStruct) -> String? {
+        let threshold = descriptorStruct.sigsRequired
+        
         var hdkeyArray:[OrderedMapEntry] = []
-        if descriptorStruct.isMulti {
-            for key in descriptorStruct.keysWithPath {
-                print("key: \(key)")
-                guard let hdkey = cosignerToCborHdkey(key, false, cointType) else { return nil }
-                
-                hdkeyArray.append(.init(key: 303, value: hdkey))
-            }
-        } else {
-            var processedOrigin = "\(descriptorStruct.keysWithPath[0])".replacingOccurrences(of: "'", with: "h")
-            processedOrigin = "\(processedOrigin.split(separator: ")")[0])"
-            print("processedOrigin: \(processedOrigin)")
-            guard let hdkey = cosignerToCborHdkey(processedOrigin, false, cointType) else { return nil }
-            print("hdkey: \(hdkey)")
+        
+        for key in descriptorStruct.keysWithPath {
+            guard let hdkey = cosignerToCborHdkey(key, false, coinType(descriptorStruct)) else { return nil }
             
             hdkeyArray.append(.init(key: 303, value: hdkey))
         }
-        
         
         var keyThreshholdArray:[OrderedMapEntry] = []
         keyThreshholdArray.append(.init(key: 1, value: .unsignedInt(UInt64(threshold))))
@@ -186,16 +184,91 @@ enum URHelper {
         let keyThreshholdArrayCbor = CBOR.orderedMap(keyThreshholdArray)
         
         var scriptType:[OrderedMapEntry] = []
-        scriptType.append(.init(key: 406, value: keyThreshholdArrayCbor))//multisig
+        if descriptorStruct.isBIP67 {
+            scriptType.append(.init(key: 407, value: keyThreshholdArrayCbor))//sorted-multisig
+        } else {
+            scriptType.append(.init(key: 406, value: keyThreshholdArrayCbor))//multisig
+        }
+        
         let scriptTypeCbor = CBOR.orderedMap(scriptType)
         
         var array:[OrderedMapEntry] = []
-        array.append(.init(key: 401, value: scriptTypeCbor))//witness script hash
+        var nestedScriptArray:[OrderedMapEntry] = []
+        
+        if descriptorStruct.isP2WPKH {
+            array.append(.init(key: 401, value: scriptTypeCbor))//witness script hash
+        } else if descriptorStruct.isP2PKH {
+            array.append(.init(key: 403, value: scriptTypeCbor))
+        } else if descriptorStruct.isP2SHP2WPKH {
+            // this is not correct!
+            array.append(.init(key: 400, value: scriptTypeCbor))
+            nestedScriptArray.append(.init(key: 404, value: scriptTypeCbor))
+        }
+        
         let arrayCbor = CBOR.orderedMap(array)
         
         guard let rawUr = try? UR(type: "crypto-output", cbor: arrayCbor) else { return nil }
         
         return UREncoder.encode(rawUr)
+    }
+    
+    static func singleSigOutput(_ descriptorStruct: DescriptorStruct) -> String? {
+        var processedOrigin = "\(descriptorStruct.keysWithPath[0])".replacingOccurrences(of: "'", with: "h")
+        processedOrigin = "\(processedOrigin.split(separator: ")")[0])"
+        
+        guard let hdkey = cosignerToCborHdkey(processedOrigin, false, coinType(descriptorStruct)) else { return nil }
+        
+        var nestedArray:[OrderedMapEntry] = []
+        
+        var keyArray:[OrderedMapEntry] = []
+        keyArray.append(.init(key: 303, value: hdkey))
+        let arrayCbor = CBOR.orderedMap(keyArray)
+        
+        var array:[OrderedMapEntry] = []
+        
+        if descriptorStruct.isP2WPKH {
+            array.append(.init(key: 404, value: arrayCbor))
+            
+            let cbor = CBOR.orderedMap(array)
+            
+            guard let rawUr = try? UR(type: "crypto-output", cbor: cbor) else { return nil }
+            
+            return UREncoder.encode(rawUr)
+            
+        } else if descriptorStruct.isP2PKH {
+            array.append(.init(key: 403, value: arrayCbor))
+            
+            let cbor = CBOR.orderedMap(array)
+            
+            guard let rawUr = try? UR(type: "crypto-output", cbor: cbor) else { return nil }
+            
+            return UREncoder.encode(rawUr)
+            
+        } else if descriptorStruct.isP2SHP2WPKH {
+            array.append(.init(key: 404, value: arrayCbor))
+            let arrayCbor = CBOR.orderedMap(array)
+            nestedArray.append(.init(key: 400, value: arrayCbor))
+            let cbor = CBOR.orderedMap(nestedArray)
+            
+            guard let rawUr = try? UR(type: "crypto-output", cbor: cbor) else { return nil }
+            
+            return UREncoder.encode(rawUr)
+            
+        } else {
+            
+            return nil
+        }
+    }
+    
+    static func accountToUrOutput(_ descriptor: String) -> String? {
+        let descriptorParser = DescriptorParser()
+        let descriptorStruct = descriptorParser.descriptor(descriptor)
+        
+        if descriptorStruct.isMulti {
+            return msigOutput(descriptorStruct)
+        } else {
+            return singleSigOutput(descriptorStruct)
+        }
     }
     
     static func origins(_ descStruct: DescriptorStruct) -> [CBOR] {
