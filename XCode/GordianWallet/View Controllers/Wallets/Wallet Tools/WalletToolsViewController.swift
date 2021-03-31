@@ -141,7 +141,11 @@ class WalletToolsViewController: UIViewController {
     
     @IBAction func exportCosignerAction(_ sender: Any) {
         SeedParser.fetchSeeds(wallet: wallet) { (seeds, fingerprints) in
-            guard let seeds = seeds else { return }
+            
+            guard let seeds = seeds, seeds.count > 0 else {
+                showAlert(vc: self, title: "", message: "You can only export a cosigner with a wallet that holds a seed.")
+                return
+            }
             
             KeyFetcher.cosignerKey(seeds[0], completion: { [weak self] (xpub, error) in
                 guard let xpub = xpub, let self = self else { return }

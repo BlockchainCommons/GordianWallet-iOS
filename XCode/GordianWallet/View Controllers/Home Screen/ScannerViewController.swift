@@ -356,14 +356,23 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
             processUrPsbt(text: url)
             
         } else if isImporting {
-            dismiss(animated: true) { [weak self] in
-                self?.returnStringBlock!(url)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.dismiss(animated: true) { [weak self] in
+                    self?.returnStringBlock!(url)
+                }
             }
             
         } else if scanningShards || isScanningInvoice {
             if navigationController != nil {
                 self.returnStringBlock!(url)
-                navigationController?.popViewController(animated: true)
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    
+                    self.navigationController?.popViewController(animated: true)
+                }
+                
             } else {
                 dismiss(animated: true) { [weak self] in
                     self?.returnStringBlock!(url)
@@ -510,13 +519,14 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     func scanQRNow() {
+        let queue = DispatchQueue(label: "codes", qos: .userInteractive)
         
         guard let avCaptureDevice = AVCaptureDevice.default(for: AVMediaType.video) else { return }
             
         guard let avCaptureInput = try? AVCaptureDeviceInput(device: avCaptureDevice) else { return }
             
         let avCaptureMetadataOutput = AVCaptureMetadataOutput()
-        avCaptureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+        avCaptureMetadataOutput.setMetadataObjectsDelegate(self, queue: queue)
             
         if let inputs = avCaptureSession.inputs as? [AVCaptureDeviceInput] {
             for input in inputs {
@@ -555,16 +565,16 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         
         isTorchOn = false
         
-        #if targetEnvironment(macCatalyst)
-        
-        if isScanningNode {
-            addTester()
-        } else {
-            configureImagePicker()
-            chooseQRCodeFromLibrary()
-        }
-        
-        #else
+//        #if targetEnvironment(macCatalyst)
+//
+//        if isScanningNode {
+//            addTester()
+//        } else {
+//            configureImagePicker()
+//            chooseQRCodeFromLibrary()
+//        }
+//
+//        #else
         
         configureImagePicker()
         configureUploadButton()
@@ -645,7 +655,7 @@ class ScannerViewController: UIViewController, UINavigationControllerDelegate {
         
         configureCloseButton()
         
-        #endif
+        //#endif
     }
     
     func removeScanner() {
