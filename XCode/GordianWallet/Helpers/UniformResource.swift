@@ -191,74 +191,121 @@ enum URHelper {
         }
         
         let scriptTypeCbor = CBOR.orderedMap(scriptType)
-        
-        var array:[OrderedMapEntry] = []
-        var nestedScriptArray:[OrderedMapEntry] = []
-        
+                
         if descriptorStruct.isP2WPKH {
-            array.append(.init(key: 401, value: scriptTypeCbor))//witness script hash
+            
+            let wrapper:CBOR = .map([
+                .unsignedInt(401) : scriptTypeCbor,
+            ])
+            
+            print("hex: \(wrapper.cborEncode().data.hexString)")
+            
+            guard let rawUr = try? UR(type: "crypto-output", cbor: wrapper) else { return nil }
+            
+            return UREncoder.encode(rawUr)
+            
         } else if descriptorStruct.isP2PKH {
-            array.append(.init(key: 403, value: scriptTypeCbor))
+            
+            let wrapper:CBOR = .map([
+                .unsignedInt(403) : scriptTypeCbor,
+            ])
+            
+            print("hex: \(wrapper.cborEncode().data.hexString)")
+            
+            guard let rawUr = try? UR(type: "crypto-output", cbor: wrapper) else { return nil }
+            
+            return UREncoder.encode(rawUr)
+            
         } else if descriptorStruct.isP2SHP2WPKH {
-            // this is not correct!
-            array.append(.init(key: 400, value: scriptTypeCbor))
-            nestedScriptArray.append(.init(key: 404, value: scriptTypeCbor))
-        }
-        
-        let arrayCbor = CBOR.orderedMap(array)
-        
-        print("hex: \(arrayCbor.cborEncode().data.hexString)")
-        
-        guard let rawUr = try? UR(type: "crypto-output", cbor: arrayCbor) else { return nil }
-        
-        return UREncoder.encode(rawUr)
+            
+            let shWrapper:CBOR = .map([
+                .unsignedInt(404) : scriptTypeCbor,
+            ])
+            
+            let wrapper:CBOR = .map([
+                .unsignedInt(400) : shWrapper,
+            ])
+                                    
+            print("hex: \(wrapper.cborEncode().data.hexString)")
+            
+            guard let rawUr = try? UR(type: "crypto-output", cbor: wrapper) else { return nil }
+            
+            return UREncoder.encode(rawUr)
+            
+        } else {
+            
+            return nil
+        }        
     }
     
     static func singleSigOutput(_ descriptorStruct: DescriptorStruct) -> String? {
+        
+        
+        /*403( ; public-key-hash
+            303({ ; crypto-hdkey
+                3: h'02d2b36900396c9282fa14628566582f206a5dd0bcc8d5e892611806cafb0301f0', ; key-data
+                4: h'637807030d55d01f9a0cb3a7839515d796bd07706386a6eddf06cc29a65a0e29', ; chain-code
+                6: 304({ ; origin: crypto-keypath
+                    1: [ ; components
+                        44, true, 0, true, 0, true ; 44'/0'/0'
+                    ],
+                    2: 3545084735 ; origin-fingerprint
+                }),
+                7: 304({ ; children: crypto-keypath
+                    1: [ ; components
+                        1, false, [], false ; 1
+                    ]
+                }),
+                8: 2017537594 ; parent-fingerprint
+            })
+        )*/
+ 
         var processedOrigin = "\(descriptorStruct.keysWithPath[0])".replacingOccurrences(of: "'", with: "h")
         processedOrigin = "\(processedOrigin.split(separator: ")")[0])"
         
         guard let hdkey = cosignerToCborHdkey(processedOrigin, false, coinType(descriptorStruct)) else { return nil }
-        
-        var nestedArray:[OrderedMapEntry] = []
-        
+                
         var keyArray:[OrderedMapEntry] = []
         keyArray.append(.init(key: 303, value: hdkey))
         let arrayCbor = CBOR.orderedMap(keyArray)
-        
-        var array:[OrderedMapEntry] = []
-        
+                
         if descriptorStruct.isP2WPKH {
-            array.append(.init(key: 404, value: arrayCbor))
             
-            let cbor = CBOR.orderedMap(array)
+            let wrapper:CBOR = .map([
+                .unsignedInt(404) : arrayCbor,
+            ])
+                        
+            print("hex: \(wrapper.cborEncode().data.hexString)")
             
-            print("hex: \(cbor.cborEncode().data.hexString)")
-            
-            guard let rawUr = try? UR(type: "crypto-output", cbor: cbor) else { return nil }
+            guard let rawUr = try? UR(type: "crypto-output", cbor: wrapper) else { return nil }
             
             return UREncoder.encode(rawUr)
             
         } else if descriptorStruct.isP2PKH {
-            array.append(.init(key: 403, value: arrayCbor))
             
-            let cbor = CBOR.orderedMap(array)
+            let wrapper:CBOR = .map([
+                .unsignedInt(403) : arrayCbor,
+            ])
+                        
+            print("hex: \(wrapper.cborEncode().data.hexString)")
             
-            print("hex: \(cbor.cborEncode().data.hexString)")
-            
-            guard let rawUr = try? UR(type: "crypto-output", cbor: cbor) else { return nil }
+            guard let rawUr = try? UR(type: "crypto-output", cbor: wrapper) else { return nil }
             
             return UREncoder.encode(rawUr)
             
         } else if descriptorStruct.isP2SHP2WPKH {
-            array.append(.init(key: 404, value: arrayCbor))
-            let arrayCbor = CBOR.orderedMap(array)
-            nestedArray.append(.init(key: 400, value: arrayCbor))
-            let cbor = CBOR.orderedMap(nestedArray)
             
-            print("hex: \(cbor.cborEncode().data.hexString)")
+            let p2pkhWrapper:CBOR = .map([
+                .unsignedInt(404) : arrayCbor,
+            ])
             
-            guard let rawUr = try? UR(type: "crypto-output", cbor: cbor) else { return nil }
+            let shWrapper:CBOR = .map([
+                .unsignedInt(400) : p2pkhWrapper,
+            ])
+                        
+            print("hex: \(shWrapper.cborEncode().data.hexString)")
+            
+            guard let rawUr = try? UR(type: "crypto-output", cbor: shWrapper) else { return nil }
             
             return UREncoder.encode(rawUr)
             

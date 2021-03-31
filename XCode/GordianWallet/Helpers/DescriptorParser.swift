@@ -173,11 +173,11 @@ class DescriptorParser {
                             
                         case "m/48'/0'/0'/1'", "m/48'/1'/0'/1'":
                             dict["isBIP44"] = false
-                            dict["isP2PKH"] = true
+                            dict["isP2PKH"] = false
                             dict["isBIP84"] = false
                             dict["isP2WPKH"] = false
                             dict["isBIP49"] = false
-                            dict["isP2SHP2WPKH"] = false
+                            dict["isP2SHP2WPKH"] = true
                             dict["isWIP48"] = true
                             dict["isAccount"] = true
                             
