@@ -170,33 +170,33 @@ enum URHelper {
     static func msigOutput(_ descriptorStruct: DescriptorStruct) -> String? {
         let threshold = descriptorStruct.sigsRequired
         
-        var hdkeyArray:[OrderedMapEntry] = []
+        var hdkeyArray:[CBOR] = []
         
         for key in descriptorStruct.keysWithPath {
             guard let hdkey = cosignerToCborHdkey(key, false, coinType(descriptorStruct)) else { return nil }
             
-            hdkeyArray.append(.init(key: 303, value: hdkey))
+            hdkeyArray.append(hdkey)
         }
         
         var keyThreshholdArray:[OrderedMapEntry] = []
         keyThreshholdArray.append(.init(key: 1, value: .unsignedInt(UInt64(threshold))))
-        keyThreshholdArray.append(.init(key: 2, value: .orderedMap(hdkeyArray)))
+        keyThreshholdArray.append(.init(key: 2, value: .array(hdkeyArray)))
         let keyThreshholdArrayCbor = CBOR.orderedMap(keyThreshholdArray)
         
-        var scriptType:[OrderedMapEntry] = []
-        if descriptorStruct.isBIP67 {
-            scriptType.append(.init(key: 407, value: keyThreshholdArrayCbor))//sorted-multisig
-        } else {
-            scriptType.append(.init(key: 406, value: keyThreshholdArrayCbor))//multisig
-        }
+        var msigTypeCbor:CBOR!
         
-        let scriptTypeCbor = CBOR.orderedMap(scriptType)
-                
+        if descriptorStruct.isBIP67 {
+            let sortedMultisigTag:CBOR.Tag = .init(rawValue: 407)
+            msigTypeCbor = .tagged(sortedMultisigTag, keyThreshholdArrayCbor)
+        } else {
+            let multisigTag:CBOR.Tag = .init(rawValue: 406)
+            msigTypeCbor = .tagged(multisigTag, keyThreshholdArrayCbor)
+        }
+                        
         if descriptorStruct.isP2WPKH {
             
-            let wrapper:CBOR = .map([
-                .unsignedInt(401) : scriptTypeCbor,
-            ])
+            let wshTag:CBOR.Tag = .init(rawValue: 401)
+            let wrapper:CBOR = .tagged(wshTag, msigTypeCbor)
             
             print("hex: \(wrapper.cborEncode().data.hexString)")
             
@@ -206,9 +206,8 @@ enum URHelper {
             
         } else if descriptorStruct.isP2PKH {
             
-            let wrapper:CBOR = .map([
-                .unsignedInt(403) : scriptTypeCbor,
-            ])
+            let p2shTag:CBOR.Tag = .init(rawValue: 403)
+            let wrapper:CBOR = .tagged(p2shTag, msigTypeCbor)
             
             print("hex: \(wrapper.cborEncode().data.hexString)")
             
@@ -218,13 +217,11 @@ enum URHelper {
             
         } else if descriptorStruct.isP2SHP2WPKH {
             
-            let shWrapper:CBOR = .map([
-                .unsignedInt(404) : scriptTypeCbor,
-            ])
+            let shTag:CBOR.Tag = .init(rawValue: 404)
+            let shWrapper:CBOR = .tagged(shTag, msigTypeCbor)
             
-            let wrapper:CBOR = .map([
-                .unsignedInt(400) : shWrapper,
-            ])
+            let nestedTag:CBOR.Tag = .init(rawValue: 400)
+            let wrapper:CBOR = .tagged(nestedTag, shWrapper)
                                     
             print("hex: \(wrapper.cborEncode().data.hexString)")
             
@@ -240,40 +237,18 @@ enum URHelper {
     
     static func singleSigOutput(_ descriptorStruct: DescriptorStruct) -> String? {
         
-        
-        /*403( ; public-key-hash
-            303({ ; crypto-hdkey
-                3: h'02d2b36900396c9282fa14628566582f206a5dd0bcc8d5e892611806cafb0301f0', ; key-data
-                4: h'637807030d55d01f9a0cb3a7839515d796bd07706386a6eddf06cc29a65a0e29', ; chain-code
-                6: 304({ ; origin: crypto-keypath
-                    1: [ ; components
-                        44, true, 0, true, 0, true ; 44'/0'/0'
-                    ],
-                    2: 3545084735 ; origin-fingerprint
-                }),
-                7: 304({ ; children: crypto-keypath
-                    1: [ ; components
-                        1, false, [], false ; 1
-                    ]
-                }),
-                8: 2017537594 ; parent-fingerprint
-            })
-        )*/
- 
         var processedOrigin = "\(descriptorStruct.keysWithPath[0])".replacingOccurrences(of: "'", with: "h")
         processedOrigin = "\(processedOrigin.split(separator: ")")[0])"
         
         guard let hdkey = cosignerToCborHdkey(processedOrigin, false, coinType(descriptorStruct)) else { return nil }
-                
-        var keyArray:[OrderedMapEntry] = []
-        keyArray.append(.init(key: 303, value: hdkey))
-        let arrayCbor = CBOR.orderedMap(keyArray)
+        
+        let hdkeyTag:CBOR.Tag = .init(rawValue: 303)
+        let hdKeyWrapper:CBOR = .tagged(hdkeyTag, hdkey)
                 
         if descriptorStruct.isP2WPKH {
             
-            let wrapper:CBOR = .map([
-                .unsignedInt(404) : arrayCbor,
-            ])
+            let p2wpkhTag:CBOR.Tag = .init(rawValue: 404)
+            let wrapper:CBOR = .tagged(p2wpkhTag, hdKeyWrapper)
                         
             print("hex: \(wrapper.cborEncode().data.hexString)")
             
@@ -283,9 +258,8 @@ enum URHelper {
             
         } else if descriptorStruct.isP2PKH {
             
-            let wrapper:CBOR = .map([
-                .unsignedInt(403) : arrayCbor,
-            ])
+            let p2pkhTag:CBOR.Tag = .init(rawValue: 403)
+            let wrapper:CBOR = .tagged(p2pkhTag, hdKeyWrapper)
                         
             print("hex: \(wrapper.cborEncode().data.hexString)")
             
@@ -295,17 +269,15 @@ enum URHelper {
             
         } else if descriptorStruct.isP2SHP2WPKH {
             
-            let p2pkhWrapper:CBOR = .map([
-                .unsignedInt(404) : arrayCbor,
-            ])
+            let p2wpkhTag:CBOR.Tag = .init(rawValue: 404)
+            let nestedWrapper:CBOR = .tagged(p2wpkhTag, hdKeyWrapper)
             
-            let shWrapper:CBOR = .map([
-                .unsignedInt(400) : p2pkhWrapper,
-            ])
+            let shTag:CBOR.Tag = .init(rawValue: 400)
+            let wrapper:CBOR = .tagged(shTag, nestedWrapper)
                         
-            print("hex: \(shWrapper.cborEncode().data.hexString)")
+            print("hex: \(wrapper.cborEncode().data.hexString)")
             
-            guard let rawUr = try? UR(type: "crypto-output", cbor: shWrapper) else { return nil }
+            guard let rawUr = try? UR(type: "crypto-output", cbor: wrapper) else { return nil }
             
             return UREncoder.encode(rawUr)
             
