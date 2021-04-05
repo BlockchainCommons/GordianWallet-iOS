@@ -97,8 +97,13 @@ class DescriptorParser {
                     dict["sigsRequired"] = UInt(mofnarray[0])
                     var keysWithPath = [String]()
                     for (i, item) in mofnarray.enumerated() {
+                        var processed = item.replacingOccurrences(of: ")", with: "")
                         if i != 0 {
-                            keysWithPath.append("\(item)")
+                            if processed.contains("#") {
+                                let a = processed.split(separator: "#")
+                                processed = "\(a[0])"
+                            }
+                            keysWithPath.append("\(processed)")
                         }
                         if i + 1 == mofnarray.count {
                             dict["keysWithPath"] = keysWithPath
@@ -190,16 +195,6 @@ class DescriptorParser {
                             dict["isP2SHP2WPKH"] = false
                             dict["isWIP48"] = true
                             dict["isAccount"] = true
-                            
-//                        case "m/48'/0'/0'/1'", "m/48'/1'/0'/1'":
-//                            dict["isBIP44"] = false
-//                            dict["isP2PKH"] = false
-//                            dict["isBIP84"] = false
-//                            dict["isP2WPKH"] = false
-//                            dict["isBIP49"] = false
-//                            dict["isP2SHP2WPKH"] = true
-//                            dict["isWIP48"] = true
-//                            dict["isAccount"] = true
 
                         case "m/44'/0'/0'", "m/44'/1'/0'":
                             dict["isBIP44"] = true

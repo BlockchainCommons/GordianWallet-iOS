@@ -460,19 +460,21 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         }
         
-        DispatchQueue.main.async { [unowned vc = self] in
-            vc.accountLabel.text = vc.wallet.label
-            vc.lifeHashImage = LifeHash.image(vc.wallet.descriptor)
-            vc.tableView.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            guard let sorted = self.wallet.descriptor.sortedDescriptor() else { return }
+            
+            self.accountLabel.text = self.wallet.label
+            self.lifeHashImage = LifeHash.image(sorted)
+            self.tableView.reloadData()
             
             UIView.animate(withDuration: 0.2) {
-                vc.editLabelOutlet.alpha = 1
-                vc.accountLabel.alpha = 1
-                vc.tableView.alpha = 1
+                self.editLabelOutlet.alpha = 1
+                self.accountLabel.alpha = 1
+                self.tableView.alpha = 1
             }
-            
         }
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

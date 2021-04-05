@@ -595,7 +595,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         imageView.layer.cornerRadius = 5
         imageView.layer.magnificationFilter = .nearest
         
-        imageView.image = LifeHash.image(wallet.descriptor)
+        guard let sorted = self.wallet.descriptor.sortedDescriptor() else { return UITableViewCell() }
+        
+        imageView.image = LifeHash.image(sorted)
         
         fxRate.text = walletInfo.fxRate
         var coldBalance = walletInfo.coldBalance

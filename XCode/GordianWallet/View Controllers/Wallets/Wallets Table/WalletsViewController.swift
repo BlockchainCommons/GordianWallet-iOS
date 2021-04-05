@@ -273,7 +273,8 @@ class WalletsViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func setLifeHashes(completion: @escaping ((Bool)) -> Void) {
         if index < sortedWallets.count {
             let wstruct = WalletStruct(dictionary: sortedWallets[index])
-            sortedWallets[index]["lifehash"] = lifehash(wstruct.descriptor)
+            guard let sorted = wstruct.descriptor.sortedDescriptor() else { return }
+            sortedWallets[index]["lifehash"] = lifehash(sorted)
             index += 1
             setLifeHashes(completion: completion)
         } else {

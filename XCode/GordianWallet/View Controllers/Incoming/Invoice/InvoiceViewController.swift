@@ -71,8 +71,10 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(_ animated: Bool) {
         getActiveWalletNow() { [unowned vc = self] (wallet, error) in
             if wallet != nil {
+                guard let sorted = wallet!.descriptor.sortedDescriptor() else { return }
+                
                 DispatchQueue.main.async {
-                    vc.imageView.image = LifeHash.image(wallet!.descriptor)
+                    vc.imageView.image = LifeHash.image(sorted)
                 }
             }
         }

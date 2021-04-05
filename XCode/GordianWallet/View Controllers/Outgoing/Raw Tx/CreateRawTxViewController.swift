@@ -101,8 +101,10 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         getActiveWalletNow { (wallet, error) in
             if wallet != nil {
+                guard let sorted = wallet!.descriptor.sortedDescriptor() else { return }
+                
                 DispatchQueue.main.async { [unowned vc = self] in
-                    vc.imageView.image = LifeHash.image(wallet!.descriptor)
+                    vc.imageView.image = LifeHash.image(sorted)
                 }
             }
         }
