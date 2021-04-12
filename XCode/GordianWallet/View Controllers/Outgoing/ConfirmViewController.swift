@@ -1142,13 +1142,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     func showAuth() {
         
         DispatchQueue.main.async {
-            
+
             let request = ASAuthorizationAppleIDProvider().createRequest()
             let controller = ASAuthorizationController(authorizationRequests: [request])
             controller.delegate = self
             controller.presentationContextProvider = self
             controller.performRequests()
-            
+
         }
         
     }
