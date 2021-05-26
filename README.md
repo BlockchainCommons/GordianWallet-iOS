@@ -29,6 +29,17 @@
 
 Even more cutting-edge technology is planned for the future, including collaborative custody models, airgapped technologies such as Blockchain Commons' #LetheKit for offline signing using QR codes, and methodologies for social-key recovery.
 
+## Gordian Principles
+
+Gordian Wallet is a reference implementation meant to display the [Gordian Principles](https://github.com/BlockchainCommons/Gordian#gordian-principles), which are philosophical and technical underpinnings to Blockchain Commons' Gordian technology. This includes:
+
+* **Independence.** GordianWallet allows you to maintain your funds on a closely held mobile wallet.
+* **Privacy.** A Torgap ensures the safety of connections between your wallet and server.
+* **Resilience.** A two-of-three multisig with keys held on wallet, server, and off-line minimizes Single Points of Failure or Compromise.
+* **Openness.** GordianWallet links to a full-node server as well as an entire ecosystem of services and microservices.
+
+Blockchain Commons apps do not phone home and do not run ads. Some are available through various app stores; all are available in our code repositories for your usage.
+
 ## Status — Early Beta
 
 *GordianWallet* is currently under active development and in early beta testing phase. It should be used on Bitcoin testnet to gain familiarity with how the wallet works, and most importantly to practice deleting and recovering wallet. For a detailed checklist to test critical functionality please see our [Testing Checklist.md](./Docs/Testing Checklist.md)
