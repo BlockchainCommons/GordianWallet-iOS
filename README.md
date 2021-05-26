@@ -17,26 +17,26 @@
 
 ### The Philosophy Behind GordianWallet
 
-*GordianWallet* is a professional mobile wallet built using the most up-to-date technologies for Bitcoin. It's focused on three goals that together demonstrate some of the best practices for modern mobile-wallet design:
-
-1. **Self-sovereign Interactions.** Classic mobile wallets usually talked to a full node chosen by the wallet developer and owned/controlled by someone else. *GordianWallet* instead allows you to choose a full node, either one created using a setup process such as #BitcoinStandup and run by yourself, or a service offered by a provider that you select: self-sovereign means you get to decide. (You can use Blockchain Commons' full-node server for beta testing, but you should migrate to a protected server for real money transactions.)
-
-2. **Protected Communications.** All of the communications in *GordianWallet* are protected by the latest version of Tor, which provides two-way authentication of both the server and your wallet. Unlike traditional use of the soon-to-be-deprecated SPV protocol, which reveals that you're accessing the Bitcoin network, Tor simply shows that you're engaging in private onion communications. It's safer when you're in a hostile state, and it's safer in your local coffee shop.
-
-3. **Multi-sig Protections.** Finally, *GordianWallet* ensures that your private keys are protected from the most common adversary: loss. Its 2-of-3 multi-sig system leaves one key on the server, one on your mobile wallet, and one in safe off-line storage. If you lose your phone or your server, you can still rebuild from the other two. (The Blockchain Commons [#SmartCustody](https://github.com/BlockchainCommons/SmartCustodyBook) system talks more about how to protect off-line keys.)
-
-*GordianWallet* is intended for a sophisticated power user. It's a leading-edge platform that experiments with modern Bitcoin technologies to create a powerful new architecture with features not found in other mobile wallets. It's intended as a professional wallet for your use and also as a demonstration of functionality that other companies can integrate into their own apps as an open source reference implementation of functionality.
+*GordianWallet* is intended for a sophisticated power user. It's a leading-edge platform that experiments with modern Bitcoin technologies to create a powerful new architecture with features not found in other mobile wallets. Though it can be used as a professional wallet for your use, it's primarily intended as a demonstration of functionality that other companies can integrate into their own apps as an open source reference implementation of functionality.
 
 Even more cutting-edge technology is planned for the future, including collaborative custody models, airgapped technologies such as Blockchain Commons' #LetheKit for offline signing using QR codes, and methodologies for social-key recovery.
 
 ## Gordian Principles
 
-Gordian Wallet is a reference implementation meant to display the [Gordian Principles](https://github.com/BlockchainCommons/Gordian#gordian-principles), which are philosophical and technical underpinnings to Blockchain Commons' Gordian technology. This includes:
+Gordian Wallet is a reference implementation meant to display the [Gordian Principles](https://github.com/BlockchainCommons/Gordian#gordian-principles), which are philosophical and technical underpinnings to Blockchain Commons' Gordian technology. As noted above, this includes:
 
 * **Independence.** GordianWallet allows you to maintain your funds on a closely held mobile wallet.
 * **Privacy.** A Torgap ensures the safety of connections between your wallet and server.
 * **Resilience.** A two-of-three multisig with keys held on wallet, server, and off-line minimizes Single Points of Failure or Compromise.
 * **Openness.** GordianWallet links to a full-node server as well as an entire ecosystem of services and microservices.
+
+Here's some more details on how architectural decisions were made to support these principles:
+ 
+1. **Self-sovereign Interactions.** _Supports Independence & Openness._ Classic mobile wallets usually talked to a full node chosen by the wallet developer and owned/controlled by someone else. *GordianWallet* instead allows you to choose a full node, either one created using a setup process such as #BitcoinStandup and run by yourself, or a service offered by a provider that you select: self-sovereign means you get to decide. (You can use Blockchain Commons' full-node server for beta testing, but you should migrate to a protected server for real money transactions.)
+
+2. **Protected Communications.** _Supports Privacy._ All of the communications in *GordianWallet* are protected by the latest version of Tor, which provides two-way authentication of both the server and your wallet. Unlike traditional use of the soon-to-be-deprecated SPV protocol, which reveals that you're accessing the Bitcoin network, Tor simply shows that you're engaging in private onion communications. It's safer when you're in a hostile state, and it's safer in your local coffee shop.
+
+3. **Multi-sig Protections.** _Supports Resilience._ Finally, *GordianWallet* ensures that your private keys are protected from the most common adversary: loss. Its 2-of-3 multi-sig system leaves one key on the server, one on your mobile wallet, and one in safe off-line storage. If you lose your phone or your server, you can still rebuild from the other two. (The Blockchain Commons [#SmartCustody](https://github.com/BlockchainCommons/SmartCustodyBook) system talks more about how to protect off-line keys.)
 
 Blockchain Commons apps do not phone home and do not run ads. Some are available through various app stores; all are available in our code repositories for your usage.
 
