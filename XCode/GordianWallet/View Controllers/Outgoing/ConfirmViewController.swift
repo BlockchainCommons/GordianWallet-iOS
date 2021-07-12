@@ -460,6 +460,10 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
             outputsString += "Output #\(number):\nAmount: \(amount.avoidNotation)\nAddress: \(addressString)\n\n"
             var isChange = true
             
+            if recipients.count == 0 {
+                isChange = false
+            }
+            
             for recipient in recipients {
                 
                 if addressString == recipient {
@@ -1138,13 +1142,13 @@ class ConfirmViewController: UIViewController, UINavigationControllerDelegate, U
     func showAuth() {
         
         DispatchQueue.main.async {
-            
+
             let request = ASAuthorizationAppleIDProvider().createRequest()
             let controller = ASAuthorizationController(authorizationRequests: [request])
             controller.delegate = self
             controller.presentationContextProvider = self
             controller.performRequests()
-            
+
         }
         
     }

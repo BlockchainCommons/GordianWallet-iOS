@@ -155,7 +155,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             parse(text: textField.text!)
         } else {
             if justWords.count == 24 || justWords.count == 12 {
-                if let _ = BIP39Mnemonic(justWords.joined(separator: " ")) {
+                if let _ = try? BIP39Mnemonic(words: justWords.joined(separator: " ")) {
                     validWordsAdded()
                 }
             }
@@ -383,7 +383,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                     
                     vc.textField.text = substring
                     
-                    if let _ = BIP39Mnemonic(vc.processedCharacters(vc.textField.text!)) {
+                    if let _ = try? BIP39Mnemonic(words: vc.processedCharacters(vc.textField.text!)) {
                         
                         vc.processTextfieldInput()
                         vc.textField.textColor = .systemGreen
@@ -423,7 +423,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             derivationFieldEditing = false
             if derivationField.text != "" {
                 if derivationField.text!.hasPrefix("m") {
-                    if let path = BIP32Path(derivationField.text!) {
+                    if let path = try? BIP32Path(string: derivationField.text!) {
                         self.derivation = path.description
                     } else {
                         DispatchQueue.main.async { [unowned vc = self] in
@@ -457,8 +457,8 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     private func parse(text: String) {
         if text.lowercased().hasPrefix("ur:crypto-seed/") {
             if let data = URHelper.urToEntropy(urString: text).data {
-                let entropy = BIP39Entropy(data)
-                if let mnemonic = BIP39Mnemonic(entropy) {
+                let entropy = BIP39Mnemonic.Entropy(data)
+                if let mnemonic = try? BIP39Mnemonic(entropy: entropy) {
                     let words = mnemonic.words.joined(separator: " ")
                     DispatchQueue.main.async { [unowned vc = self] in
                         vc.textField.text = words
@@ -554,7 +554,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             
             if vc.justWords.count == 24 || vc.justWords.count == 12 {
                 
-                if let _ = BIP39Mnemonic(vc.justWords.joined(separator: " ")) {
+                if let _ = try? BIP39Mnemonic(words: vc.justWords.joined(separator: " ")) {
                     
                     vc.validWordsAdded()
                     
@@ -589,7 +589,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
             
             if vc.justWords.count == 24 || vc.justWords.count == 12 {
                 
-                if let _ = BIP39Mnemonic(vc.justWords.joined(separator: " ")) {
+                if let _ = try? BIP39Mnemonic(words: vc.justWords.joined(separator: " ")) {
                     
                     vc.validWordsAdded()
                     
@@ -633,13 +633,13 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
                 if !error && mnemonic != nil {
                     
                     let seed = mnemonic!.seedHex()
-                    if let mk = HDKey(seed, vc.network) {
+                    if let mk = try? HDKey(seed: seed, network: vc.network) {
                         
-                        if let path = BIP32Path(derivation) {
+                        if let path = try? BIP32Path(string: derivation) {
                             
                             do {
                                 
-                                let hdKey = try mk.derive(path)
+                                let hdKey = try mk.derive(using: path)
                                 let xpub = hdKey.xpub
                                 
                                 if xpub == backupXpub {
@@ -794,18 +794,18 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
     
     private func mnemonic() -> BIP39Mnemonic? {
         if words != nil {
-            return BIP39Mnemonic(words!)
+            return try? BIP39Mnemonic(words: words!)
         } else {
             return nil
         }
     }
     
     private func masterKey(mnemonic: BIP39Mnemonic) -> HDKey? {
-        return HDKey(mnemonic.seedHex(""), network)
+        return try? HDKey(seed: mnemonic.seedHex(passphrase: ""), network: network)
     }
     
     private func path(deriv: String) -> BIP32Path? {
-        return BIP32Path(deriv)
+        return try? BIP32Path(string: deriv)
     }
     
     private func fingerprint(key: HDKey) -> String {
@@ -816,7 +816,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         if mnemonic() != nil {
             if let mk = masterKey(mnemonic: mnemonic()!) {
                 do {
-                    return try mk.derive(path).xpub
+                    return try mk.derive(using: path).xpub
                 } catch {
                     return nil
                 }
@@ -832,7 +832,7 @@ class WordRecoveryViewController: UIViewController, UITextFieldDelegate, UINavig
         if mnemonic() != nil {
             if let mk = masterKey(mnemonic: mnemonic()!) {
                 do {
-                    return try mk.derive(path).xpriv
+                    return try? mk.derive(using: path).xpriv
                 } catch {
                     return nil
                 }

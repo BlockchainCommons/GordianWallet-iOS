@@ -67,7 +67,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     private func createDescriptors() {
         
         func checkKey(key: String, fp: String?) {
-            if let hdkey = HDKey(key) {
+            if let hdkey = try? HDKey(base58: key) {
                 var dict:[String:String]!
                 if fp != nil {
                     dict = ["key":key, "fingerprint":fp!]
@@ -157,9 +157,9 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
              "m/49'/0'/0'",
              "m/49'/1'/0'":
             
-            if let _ = HDKey(xpub) {
+            if let _ = try? HDKey(base58: xpub) {
                 ///Its a valid xpub
-                if let _ = BIP32Path(plainPath) {
+                if let _ = try? BIP32Path(string: plainPath) {
                     return true
                 } else {
                     showAlert(vc: self, title: "Invalid path", message: TextBlurbs.invalidPathWarning())
@@ -246,7 +246,7 @@ class AddExtendedKeyViewController: UIViewController, UITextFieldDelegate, UITex
     }
     
     private func fingerprint(key: String) -> String? {
-        if let hdKey = HDKey(key) {
+        if let hdKey = try? HDKey(base58: key) {
             return hdKey.fingerprint.hexString
         } else {
             return nil

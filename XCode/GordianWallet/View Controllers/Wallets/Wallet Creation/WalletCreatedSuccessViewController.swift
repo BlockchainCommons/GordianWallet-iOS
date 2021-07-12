@@ -69,7 +69,9 @@ class WalletCreatedSuccessViewController: UIViewController, UITextFieldDelegate,
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        imageView.image = LifeHash.image(w.descriptor)
+        guard let sorted = w.descriptor.sortedDescriptor() else { return }
+        
+        imageView.image = LifeHash.image(sorted)
     }
     
     private func deactivateAllAccountsAndActivateNewAccount() {

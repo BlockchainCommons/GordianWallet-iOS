@@ -440,38 +440,32 @@ class NodeManagerViewController: UIViewController, UITableViewDelegate, UITableV
         switch id {
             
         case "updateNode":
-            
             if let vc = segue.destination as? ScannerViewController {
-                
+                vc.isScanningNode = true
                 vc.isUpdatingNode = true
+                vc.keepRunning = false
                 vc.nodeId = self.id
+                
                 vc.onDoneBlock = { [unowned thisVc = self] result in
-                    
                     showAlert(vc: thisVc, title: "Node Updated!", message: "The nodes credentials were successfully updated")
                     thisVc.load()
-                    
                 }
-                
             }
             
         case "addNode":
-            
             if let vc = segue.destination as? ScannerViewController {
-                
                 vc.isScanningNode = true
+                vc.keepRunning = false
+                
                 vc.onDoneBlock = { [unowned thisVc = self] result in
                     thisVc.deactiveateWallets()
                     thisVc.load()
                 }
-                
             }
             
         case "shareNode":
-            
             if let vc = segue.destination as? QRDisplayerViewController {
-                
                 vc.text = url
-                
             }
             
         default:

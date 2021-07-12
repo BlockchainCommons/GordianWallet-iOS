@@ -97,8 +97,13 @@ class DescriptorParser {
                     dict["sigsRequired"] = UInt(mofnarray[0])
                     var keysWithPath = [String]()
                     for (i, item) in mofnarray.enumerated() {
+                        var processed = item.replacingOccurrences(of: ")", with: "")
                         if i != 0 {
-                            keysWithPath.append("\(item)")
+                            if processed.contains("#") {
+                                let a = processed.split(separator: "#")
+                                processed = "\(a[0])"
+                            }
+                            keysWithPath.append("\(processed)")
                         }
                         if i + 1 == mofnarray.count {
                             dict["keysWithPath"] = keysWithPath
@@ -173,11 +178,11 @@ class DescriptorParser {
                             
                         case "m/48'/0'/0'/1'", "m/48'/1'/0'/1'":
                             dict["isBIP44"] = false
-                            dict["isP2PKH"] = true
+                            dict["isP2PKH"] = false
                             dict["isBIP84"] = false
                             dict["isP2WPKH"] = false
                             dict["isBIP49"] = false
-                            dict["isP2SHP2WPKH"] = false
+                            dict["isP2SHP2WPKH"] = true
                             dict["isWIP48"] = true
                             dict["isAccount"] = true
                             
@@ -188,16 +193,6 @@ class DescriptorParser {
                             dict["isP2WPKH"] = true
                             dict["isBIP49"] = false
                             dict["isP2SHP2WPKH"] = false
-                            dict["isWIP48"] = true
-                            dict["isAccount"] = true
-                            
-                        case "m/48'/0'/0'/3'", "m/48'/1'/0'/3'":
-                            dict["isBIP44"] = false
-                            dict["isP2PKH"] = false
-                            dict["isBIP84"] = false
-                            dict["isP2WPKH"] = false
-                            dict["isBIP49"] = false
-                            dict["isP2SHP2WPKH"] = true
                             dict["isWIP48"] = true
                             dict["isAccount"] = true
 
@@ -248,7 +243,9 @@ class DescriptorParser {
             if descriptor.contains("[") && descriptor.contains("]") {
                 
                 let arr1 = descriptor.split(separator: "[")
-                dict["keysWithPath"] = ["[" + "\(arr1[1])"]
+                var processOrigin = "\(arr1[1])".replacingOccurrences(of: "/0/*", with: "")
+                processOrigin = processOrigin.replacingOccurrences(of: "/1/*", with: "")
+                dict["keysWithPath"] = ["[" + "\(processOrigin)"]
                 let arr2 = arr1[1].split(separator: "]")
                 let derivation = arr2[0]
                 dict["prefix"] = "[\(derivation)]"

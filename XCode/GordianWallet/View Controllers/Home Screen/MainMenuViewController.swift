@@ -595,7 +595,9 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
         imageView.layer.cornerRadius = 5
         imageView.layer.magnificationFilter = .nearest
         
-        imageView.image = LifeHash.image(wallet.descriptor)
+        guard let sorted = self.wallet.descriptor.sortedDescriptor() else { return UITableViewCell() }
+        
+        imageView.image = LifeHash.image(sorted)
         
         fxRate.text = walletInfo.fxRate
         var coldBalance = walletInfo.coldBalance
@@ -1748,7 +1750,7 @@ class MainMenuViewController: UIViewController, UITableViewDelegate, UITableView
             alert.addAction(UIAlertAction(title: "Add Testing Node", style: .default, handler: { action in
                 
                 // Testnet Linode instance:
-                let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=BC%20Beta%20Test%20Node"
+                let url = "btcstandup://StandUp:71e355f8e097857c932cc315f321eb4a@ftemeyifladknw3cpdhilomt7fhb3cquebzczjb7hslia77khc7cnwid.onion:1309/?label=BC%20Testnet%20Node"
                 let qc = QuickConnect()
                 qc.addNode(vc: self, url: url) { (success, errorDesc) in
                     if success {

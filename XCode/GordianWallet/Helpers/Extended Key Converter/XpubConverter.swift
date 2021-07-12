@@ -51,7 +51,7 @@ class XpubConverter {
             /// Removes the original prefix.
             b58.removeFirst(4)
             /// Converts the new prefix string to data.
-            var prefix = Data(returnedPrefix)!
+            var prefix = Data(value: returnedPrefix)
             /// Appends the xpub data to the new prefix.
             prefix.append(contentsOf: b58)
             /// Converts our data to array so we can easily manipulate it.

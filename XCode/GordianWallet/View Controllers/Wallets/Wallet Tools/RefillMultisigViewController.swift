@@ -95,8 +95,8 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func deriveMnemonicFromEntropy(_ entropy: Data) {
-        guard let recoveredEntropy = BIP39Entropy(entropy.hexString) else { return }
-        guard let mnemonic = BIP39Mnemonic(recoveredEntropy) else { return }
+        let recoveredEntropy = BIP39Mnemonic.Entropy(entropy)
+        guard let mnemonic = try? BIP39Mnemonic(entropy: recoveredEntropy) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.textField.text = mnemonic.description
             self?.processTextfieldInput()
@@ -108,7 +108,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
         guard shard != "" else { return (false, false, shard) }
         guard shardAlreadyAdded(shard) == false else { return (true, true, shard) }
         rawShards.append(shard)
-        let share = SSKRShare(data: [UInt8](Data(shard)!))
+        let share = SSKRShare(data: [UInt8](Data(value: shard)))
         shares.append(share)
         return (true, false, shard)
     }
@@ -304,7 +304,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                 
                 if vc.justWords.count == 12 ||  vc.justWords.count == 24 {
                     
-                    if let mnemonic = BIP39Mnemonic(vc.justWords.joined(separator: " ")) {
+                    if let mnemonic = try? BIP39Mnemonic(words: vc.justWords.joined(separator: " ")) {
                     
                         vc.validWordsAdded(mnemonic)
                         
@@ -355,7 +355,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
                 
                 vc.textField.text = substring
                 
-                if let mnemonic = BIP39Mnemonic(vc.processedCharacters(vc.textField.text!)) {
+                if let mnemonic = try? BIP39Mnemonic(words: vc.processedCharacters(vc.textField.text!)) {
                     
                     vc.textField.textColor = .systemGreen
                     vc.validWordsAdded(mnemonic)
@@ -476,7 +476,7 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
             
             if vc.justWords.count == 12 || vc.justWords.count == 24 {
                 
-                if let mnemonic = BIP39Mnemonic(vc.justWords.joined(separator: " ")) {
+                if let mnemonic = try? BIP39Mnemonic(words: vc.justWords.joined(separator: " ")) {
                     
                     vc.validWordsAdded(mnemonic)
                     
@@ -580,13 +580,13 @@ class RefillMultisigViewController: UIViewController, UITextFieldDelegate {
             //if !error && mnemonic != nil {
                 let seed = mnemonic.seedHex()
                 
-                if let mk = HDKey(seed, network(descriptor: wallet.descriptor)) {
+        if let mk = try? HDKey(seed: seed, network: network(descriptor: wallet.descriptor)) {
                     
-                    if let path = BIP32Path(derivation) {
+            if let path = try? BIP32Path(string: derivation) {
                         
                         do {
                             
-                            let hdKey = try mk.derive(path)
+                            let hdKey = try! mk.derive(using: path)
                             let xpub = hdKey.xpub
                             var existingXpubs = [String]()
                             

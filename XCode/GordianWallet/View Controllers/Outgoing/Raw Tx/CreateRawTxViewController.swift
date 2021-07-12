@@ -101,8 +101,10 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
         
         getActiveWalletNow { (wallet, error) in
             if wallet != nil {
+                guard let sorted = wallet!.descriptor.sortedDescriptor() else { return }
+                
                 DispatchQueue.main.async { [unowned vc = self] in
-                    vc.imageView.image = LifeHash.image(wallet!.descriptor)
+                    vc.imageView.image = LifeHash.image(sorted)
                 }
             }
         }
@@ -246,7 +248,11 @@ class CreateRawTxViewController: UIViewController, UITextFieldDelegate, UITableV
                             let btc = (s.coldBalance).doubleValue
                             let fiat = s.fiatBalance
                             DispatchQueue.main.async { [unowned vc = self] in
-                                vc.availableBalance.text = "\(btc) btc / \(fiat) available"
+                                if !s.unconfirmed {
+                                    vc.availableBalance.text = "\(btc) btc / \(fiat) available"
+                                } else {
+                                    vc.availableBalance.text = "confirmations pending..."
+                                }
                                 vc.availableBalance.alpha = 1
                             }
                         }

@@ -14,6 +14,7 @@ class WalletToolsViewController: UIViewController {
     var wallet:WalletStruct!
     var sweepDoneBlock: ((Bool) -> Void)?
     var refillDoneBlock: ((Bool) -> Void)?
+    var cosigner = ""
     @IBOutlet var rescanOutlet: UIButton!
     @IBOutlet var sweepToOutlet: UIButton!
     @IBOutlet var refillOutlet: UIButton!
@@ -22,6 +23,8 @@ class WalletToolsViewController: UIViewController {
     @IBOutlet weak var utxosOutlet: UIButton!
     @IBOutlet weak var exportKeyOutlet: UIButton!
     @IBOutlet weak var addSignerInfoOutlet: UIButton!
+    @IBOutlet weak var exportCosignerOutlet: UIButton!
+    @IBOutlet weak var exportCosignerInfoOutlet: UIButton!
     
     let creatingView = ConnectingView()
     
@@ -34,6 +37,25 @@ class WalletToolsViewController: UIViewController {
         backupInfoOutlet.layer.cornerRadius = 8
         utxosOutlet.layer.cornerRadius = 8
         exportKeyOutlet.layer.cornerRadius = 8
+        exportCosignerOutlet.layer.cornerRadius = 8
+        
+        SeedParser.fetchSeeds(wallet: wallet) { (seeds, fingerprints) in
+            if seeds != nil {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    
+                    self.exportCosignerOutlet.alpha = 1
+                    self.exportCosignerInfoOutlet.alpha = 1
+                }
+            } else {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    
+                    self.exportCosignerOutlet.alpha = 0
+                    self.exportCosignerInfoOutlet.alpha = 0
+                }
+            }
+        }
         
         if wallet.xprvs != nil {
             
@@ -108,6 +130,45 @@ class WalletToolsViewController: UIViewController {
         }
         
     }
+    
+    private func showCosigner() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.performSegue(withIdentifier: "showCosignerSegue", sender: self)
+        }
+    }
+    
+    @IBAction func exportCosignerAction(_ sender: Any) {
+        SeedParser.fetchSeeds(wallet: wallet) { (seeds, fingerprints) in
+            
+            guard let seeds = seeds, seeds.count > 0 else {
+                showAlert(vc: self, title: "", message: "You can only export a cosigner with a wallet that holds a seed.")
+                return
+            }
+            
+            KeyFetcher.cosignerKey(seeds[0], completion: { [weak self] (xpub, error) in
+                guard let xpub = xpub, let self = self else { return }
+                
+                var cointype:UInt64 = 0
+                let chain = network(descriptor: self.wallet.descriptor)
+                if chain == .testnet {
+                    cointype = 1
+                }
+                
+                guard let hdkey = URHelper.xpubToUrHdkey(xpub, self.wallet.fingerprint, cointype) else { return }
+                
+                self.cosigner = hdkey
+                
+                self.showCosigner()
+            })
+        }
+    }
+    
+    
+    @IBAction func seeCosignerInfoAction(_ sender: Any) {
+    }
+    
     
     @IBAction func seeBackUpInfo(_ sender: Any) {
         DispatchQueue.main.async { [unowned vc = self] in
@@ -524,6 +585,11 @@ class WalletToolsViewController: UIViewController {
         // Pass the selected object to the new view controller.
         
         switch segue.identifier {
+        
+        case "showCosignerSegue":
+            guard let vc = segue.destination as? QRDisplayerViewController else { fallthrough }
+            
+            vc.text = self.cosigner
             
         case "goSweep":
             

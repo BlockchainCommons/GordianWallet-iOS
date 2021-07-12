@@ -202,19 +202,18 @@ class WalletRecoverViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func deriveMnemonicFromEntropy(_ entropy: Data) {
-        guard let recoveredEntropy = BIP39Entropy(entropy.hexString) else { return }
-        guard let mnemonic = BIP39Mnemonic(recoveredEntropy) else { return }
+        let recoveredEntropy = BIP39Mnemonic.Entropy(entropy)
+        guard let mnemonic = try? BIP39Mnemonic(entropy: recoveredEntropy) else { return }
         self.words = mnemonic.description
         getWords()
     }
     
     private func parseUr(_ ur: String) -> (valid: Bool, alreadyAdded: Bool, shard: String) {
         let shard = URHelper.urToShard(sskrUr: ur) ?? ""
-        print("shard: \(shard)")
         guard shard != "" else { return (false, false, shard) }
         guard shardAlreadyAdded(shard) == false else { return (true, true, shard) }
         rawShards.append(shard)
-        let share = SSKRShare(data: [UInt8](Data(shard)!))
+        let share = SSKRShare(data: [UInt8](Data(value: shard)))
         shares.append(share)
         return (true, false, shard)
     }

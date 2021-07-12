@@ -363,10 +363,10 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                 }
             }
         } else {
-            if let hdkey = HDKey(rootKey!) {
-                if let bip32 = BIP32Path(wallet.derivation) {
+            if let hdkey = try? HDKey(base58: rootKey!) {
+                if let bip32 = try? BIP32Path(string: wallet.derivation) {
                     do {
-                        let accountXprv = try hdkey.derive(bip32)
+                        let accountXprv = try! hdkey.derive(using: bip32)
                         Encryption.encryptData(dataToEncrypt: accountXprv.description.dataUsingUTF8StringEncoding) { [unowned vc = self] (encryptedData, error) in
                             if encryptedData != nil {
                                 let fingerprint = hdkey.fingerprint.hexString
@@ -598,16 +598,16 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             network = .mainnet
                         }
                         
-                        if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
+                        if let masterKey = try? HDKey(seed: (mnemonic!.seedHex(passphrase: "")), network: network) {
                                                         
                             let recoveryFingerPrint = masterKey.fingerprint.hexString
                             vc.fingerprints.append(recoveryFingerPrint)
                             
-                            if let path = BIP32Path(derivation) {
+                            if let path = try? BIP32Path(string: derivation) {
                                 
                                 do {
                                     
-                                    let account = try masterKey.derive(path)
+                                    let account = try masterKey.derive(using: path)
                                     vc.recoveryPubkey = account.xpub
                                     vc.publickeys.append(vc.recoveryPubkey)
                                     
@@ -694,16 +694,16 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                         network = .mainnet
                                     }
                                     
-                                    if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
+                                    if let masterKey = try? HDKey(seed: (mnemonic!.seedHex(passphrase: "")), network: network) {
                                         
                                         let localFingerPrint = masterKey.fingerprint.hexString
                                         vc.fingerprints.append(localFingerPrint)
                                         
-                                        if let path = BIP32Path(derivation) {
+                                        if let path = try? BIP32Path(string: derivation) {
                                             
                                             do {
                                                 
-                                                let account = try masterKey.derive(path)
+                                                let account = try masterKey.derive(using: path)
                                                 vc.publickeys.append(account.xpub)
                                                 
                                                 if account.xpriv != nil {
@@ -797,16 +797,16 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                                 network = .mainnet
                             }
                             
-                            if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
+                            if let masterKey = try? HDKey(seed: (mnemonic!.seedHex(passphrase: "")), network: network) {
                                 
                                 let localFingerPrint = masterKey.fingerprint.hexString
                                 vc.fingerprints.append(localFingerPrint)
                                 
-                                if let path = BIP32Path(derivation) {
+                                if let path = try? BIP32Path(string: derivation) {
                                     
                                     do {
                                         
-                                        let account = try masterKey.derive(path)
+                                        let account = try masterKey.derive(using: path)
                                         vc.publickeys.append(account.xpub)
                                         
                                         if account.xpriv != nil {
@@ -884,16 +884,16 @@ class ChooseWalletFormatViewController: UIViewController, UINavigationController
                             network = .mainnet
                         }
                         
-                        if let masterKey = HDKey((mnemonic!.seedHex("")), network) {
+                        if let masterKey = try? HDKey(seed: (mnemonic!.seedHex(passphrase: "")), network: network) {
                             
                             let nodesFingerPrint = masterKey.fingerprint.hexString
                             vc.fingerprints.append(nodesFingerPrint)
                             
-                            if let path = BIP32Path(derivation) {
+                            if let path = try? BIP32Path(string: derivation) {
                                 
                                 do {
                                     
-                                    let account = try masterKey.derive(path)
+                                    let account = try masterKey.derive(using: path)
                                     vc.publickeys.append(account.xpub)
                                     
                                     if account.xpriv != nil {
