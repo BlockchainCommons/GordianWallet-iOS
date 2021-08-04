@@ -1,18 +1,23 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.2.2 (swiftlang-1103.0.32.6 clang-1103.0.32.51)
-// swift-module-flags: -target arm64-apple-ios13.6 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name Shamir
-import CShamir
+// swift-compiler-version: Apple Swift version 5.3.2 (swiftlang-1200.0.45 clang-1200.0.32.28)
+// swift-module-flags: -target arm64-apple-ios13 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name Shamir
 import Foundation
 @_exported import Shamir
 import Swift
-public struct ShamirError : Swift.Error {
+public struct ShamirError : Foundation.LocalizedError {
   public let message: Swift.String
+  public var errorDescription: Swift.String? {
+    get
+  }
 }
-public typealias RandomFunc = (Swift.Int) -> Foundation.Data
-public struct ShamirShare {
-  public let index: Swift.Int
-  public var data: [Swift.UInt8]
-  public init(index: Swift.Int, data: [Swift.UInt8])
+public enum Shamir {
+  public typealias RandomFunc = (Swift.Int) -> Foundation.Data
+  public static func identify() -> Swift.String
+  public struct Share {
+    public let index: Swift.Int
+    public var data: [Swift.UInt8]
+    public init(index: Swift.Int, data: [Swift.UInt8])
+  }
+  public static func splitSecret(threshold: Swift.Int, shareCount: Swift.Int, secret: Foundation.Data, randomGenerator: @escaping Shamir.Shamir.RandomFunc) -> [Shamir.Shamir.Share]
+  public static func recoverSecret(shares: [Shamir.Shamir.Share]) throws -> Foundation.Data
 }
-public func splitSecret(threshold: Swift.Int, shareCount: Swift.Int, secret: Foundation.Data, randomGenerator: @escaping Shamir.RandomFunc) -> [Shamir.ShamirShare]
-public func recoverSecret(shares: [Shamir.ShamirShare]) throws -> Foundation.Data

@@ -32,7 +32,7 @@ class SeedParser {
                     Encryption.decryptData(dataToDecrypt: encryptedXprv) { (decryptedXprv) in
                         if decryptedXprv != nil {
                             if let xprvString = String(bytes: decryptedXprv!, encoding: .utf8) {
-                                if let hdKey = HDKey(xprvString) {
+                                if let hdKey = try? HDKey(base58: xprvString) {
                                     for (i, xpub) in xpubs.enumerated() {
                                         if xpub == hdKey.xpub {
                                             let fingerprint = hdKey.fingerprint.hexString
@@ -94,13 +94,13 @@ class SeedParser {
                                                 let descriptorStruct = descriptorParser.descriptor(walletStruct.descriptor)
                                                 let chain = network(descriptor: walletStruct.descriptor)
                                                 
-                                                if let bip32path = BIP32Path(walletStruct.derivation) {
+                                                if let bip32path = try? BIP32Path(string: walletStruct.derivation) {
                                                     
-                                                    if let masterKey = HDKey(mnemonic!.seedHex(""), chain) {
+                                                    if let masterKey = try? HDKey(seed: mnemonic!.seedHex(passphrase: ""), network: chain) {
                                                         
                                                         do {
                                                             
-                                                            let hdkey = try masterKey.derive(bip32path)
+                                                            let hdkey = try! masterKey.derive(using: bip32path)
                                                             
                                                             if descriptorStruct.isMulti {
                                                                 
@@ -177,10 +177,10 @@ class SeedParser {
             let unique = Array(Set(seeds))
             for (i, xpub) in xpubs.enumerated() {
                 for (p, potentialSeed) in unique.enumerated() {
-                    if let mnemonic = BIP39Mnemonic(potentialSeed) {
-                        if let masterKey = HDKey(mnemonic.seedHex(""), chain) {
+                    if let mnemonic = try? BIP39Mnemonic(words: potentialSeed) {
+                        if let masterKey = try? HDKey(seed: mnemonic.seedHex(passphrase: ""), network: chain) {
                             do {
-                                let hdkey = try masterKey.derive(bip32Path)
+                                let hdkey = try! masterKey.derive(using: bip32Path)
                                 if xpub == hdkey.xpub {
                                     accountsSeeds.append(potentialSeed)
                                     fingerprints.append(masterKey.fingerprint.hexString)
@@ -199,9 +199,9 @@ class SeedParser {
         
         func checkXprv(xprv: String, bip32Path: BIP32Path) {
             for (i, xpub) in xpubs.enumerated() {
-                if let masterKey = HDKey(xprv) {
+                if let masterKey = try? HDKey(base58: xprv) {
                     do {
-                        let hdkey = try masterKey.derive(bip32Path)
+                        let hdkey = try! masterKey.derive(using: bip32Path)
                         if xpub == hdkey.xpub {
                             fingerprints.append(masterKey.fingerprint.hexString)
                         }
@@ -217,7 +217,7 @@ class SeedParser {
                 
         derivation = wallet.derivation
         
-        guard let bip32path = BIP32Path(derivation) else {
+        guard let bip32path = try? BIP32Path(string: derivation) else {
             completion((nil, nil))
             return
         }

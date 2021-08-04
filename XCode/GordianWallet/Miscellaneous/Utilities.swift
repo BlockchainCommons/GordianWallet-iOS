@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 import LibWally
 
+
+
 extension String {
 //: ### Base64 encoding a string
     func base64Encoded() -> String? {
@@ -35,6 +37,54 @@ extension String {
     var utf8: Data {
         return data(using: .utf8)!
     }
+    
+    func sortedDescriptor() -> String? {
+        var dictArray = [[String:String]]()
+        let descriptorParser = DescriptorParser()
+        let descStruct = descriptorParser.descriptor(self)
+        
+        if descStruct.isMulti {
+            for keyWithPath in descStruct.keysWithPath {
+                let arr = keyWithPath.split(separator: "]")
+                
+                if arr.count > 1 {
+                    var xpubString = "\(arr[1].replacingOccurrences(of: "))", with: ""))"
+                    xpubString = xpubString.replacingOccurrences(of: "/0/*", with: "")
+                    
+                    guard let xpub = try? HDKey(base58: xpubString) else { return nil }
+                                    
+                    let dict = ["path":"\(arr[0])]", "key": xpub.description]
+                    dictArray.append(dict)
+                }
+            }
+            
+            dictArray.sort(by: {($0["key"]!) < $1["key"]!})
+            
+            var sortedKeys = ""
+            
+            for (i, sortedItem) in dictArray.enumerated() {
+                let path = sortedItem["path"]!
+                let key = sortedItem["key"]!
+                let fullKey = path + key
+                sortedKeys += fullKey
+                
+                if i + 1 < dictArray.count {
+                    sortedKeys += ","
+                }
+            }
+            
+            let arr2 = self.split(separator: ",")
+            let descriptor = "\(arr2[0])," + sortedKeys + "))"
+            return descriptor
+        } else {
+            if self.contains("#") {
+                let a = self.split(separator: "#")
+                return "\(a[0])"
+            } else {
+                return self
+            }
+        }
+    }
 }
 
 extension Data {
@@ -51,6 +101,21 @@ extension Data {
         var b: [UInt8] = []
         b.append(contentsOf: self)
         return b
+    }
+    
+    /// A hexadecimal string representation of the bytes.
+    var hexString: String {
+        let hexDigits = Array("0123456789abcdef".utf16)
+        var hexChars = [UTF16.CodeUnit]()
+        hexChars.reserveCapacity(count * 2)
+        
+        for byte in self {
+            let (index1, index2) = Int(byte).quotientAndRemainder(dividingBy: 16)
+            hexChars.append(hexDigits[index1])
+            hexChars.append(hexDigits[index2])
+        }
+        
+        return String(utf16CodeUnits: hexChars, count: hexChars.count)
     }
 }
 

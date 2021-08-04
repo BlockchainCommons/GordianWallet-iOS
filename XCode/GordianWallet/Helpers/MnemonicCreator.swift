@@ -22,7 +22,7 @@ class MnemonicCreator {
             
         }
     
-        if let mnemonic = BIP39Mnemonic(array) {
+        if let mnemonic = try? BIP39Mnemonic(words: array) {
             
             completion((mnemonic,false))
             

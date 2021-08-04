@@ -15,12 +15,12 @@ class KeyFetcher {
         Encryption.decryptData(dataToDecrypt: seed) { (seed) in
             if seed != nil {
                 let words = String(data: seed!, encoding: .utf8)!
-                if let mnemonic = BIP39Mnemonic(words) {
-                    if let masterKey = HDKey((mnemonic.seedHex("")), chain) {
+                if let mnemonic = try? BIP39Mnemonic(words: words) {
+                    if let masterKey = try? HDKey(seed: (mnemonic.seedHex(passphrase: "")), network: chain) {
                         let fingerprint = masterKey.fingerprint.hexString
-                        if let path = BIP32Path(derivation) {
+                        if let path = try? BIP32Path(string: derivation) {
                             do {
-                                let account = try masterKey.derive(path)
+                                let account = try masterKey.derive(using: path)
                                 if let xprv = account.xpriv {
                                     completion((xprv, account.xpub, fingerprint, false))
                                 }
@@ -52,15 +52,15 @@ class KeyFetcher {
 
                     if !error {
 
-                        if let masterKey = HDKey((mnemonic!.seedHex("")), chain) {
+                        if let masterKey = try? HDKey(seed: (mnemonic!.seedHex(passphrase: "")), network: chain) {
 
                             let fingerprint = masterKey.fingerprint.hexString
 
-                            if let path = BIP32Path(derivation) {
+                            if let path = try? BIP32Path(string: derivation) {
 
                                 do {
 
-                                    let account = try masterKey.derive(path)
+                                    let account = try masterKey.derive(using: path)
                                     completion((account.xpub, fingerprint, false))
 
                                 } catch {
@@ -129,6 +129,32 @@ class KeyFetcher {
         }
 
     }
+    
+    class func cosignerKey(_ words: String, completion: @escaping ((xpub: String?, error: Bool)) -> Void) {
+        getActiveWalletNow() { (wallet, error) in
+            guard let wallet = wallet else { completion((nil, true)); return }
+            
+            MnemonicCreator.convert(words: words) { (mnemonic, error) in
+                guard let mnemonic = mnemonic else { completion((nil, true)); return }
+                
+                let chain = network(descriptor: wallet.descriptor)
+                
+                guard let masterKey = try? HDKey(seed: (mnemonic.seedHex(passphrase: "")), network: chain) else { completion((nil, true)); return }
+                
+                var coinType = 1
+                
+                if chain == .mainnet {
+                    coinType = 0
+                }
+                
+                guard let path = try? BIP32Path(string: "m/48h/\(coinType)h/0h/2h") else { completion((nil, true)); return }
+                
+                guard let account = try? masterKey.derive(using: path) else { completion((nil, true)); return }
+                
+                completion((account.xpub, false))
+            }
+        }
+    }
 
     class func accountXprv(completion: @escaping ((xprv: String?, error: Bool)) -> Void) {
 
@@ -146,13 +172,13 @@ class KeyFetcher {
 
                             if !error {
 
-                                if let masterKey = HDKey((mnemonic!.seedHex("")), network(descriptor: wallet!.descriptor)) {
+                                if let masterKey = try? HDKey(seed: (mnemonic!.seedHex(passphrase: "")), network: network(descriptor: wallet!.descriptor)) {
 
-                                    if let path = BIP32Path(derivationPath) {
+                                    if let path = try? BIP32Path(string: derivationPath) {
 
                                         do {
 
-                                            let account = try masterKey.derive(path)
+                                            let account = try masterKey.derive(using: path)
 
                                             if let xprv = account.xpriv {
 
@@ -299,10 +325,10 @@ class KeyFetcher {
     
     class func fetchAddresses(words: String, derivation: String, completion: @escaping (([String]?)) -> Void) {
         var addresses:[String] = []
-        if let bip39mnemonic = BIP39Mnemonic(words) {
-            let seed = bip39mnemonic.seedHex("")
+        if let bip39mnemonic = try? BIP39Mnemonic(words: words) {
+            let seed = bip39mnemonic.seedHex(passphrase: "")
             var addressType:AddressType!
-            if let mk = HDKey(seed, .testnet) {
+            if let mk = try? HDKey(seed: seed, network: .testnet) {
                 if derivation.contains("49") {
                     addressType = .payToScriptHashPayToWitnessPubKeyHash
                 } else if derivation.contains("44") {
@@ -312,10 +338,10 @@ class KeyFetcher {
                 } else {
                     completion(nil)
                 }
-                if let path = BIP32Path(derivation) {
+                if let path = try? BIP32Path(string: derivation) {
                     do {
-                        let key = try mk.derive(path)
-                        let address = key.address(addressType)
+                        let key = try mk.derive(using: path)
+                        let address = key.address(type: addressType)
                         addresses.append(address.description)
                         completion(addresses)
                     } catch {

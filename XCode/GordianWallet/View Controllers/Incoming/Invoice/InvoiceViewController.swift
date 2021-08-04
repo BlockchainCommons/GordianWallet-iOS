@@ -69,11 +69,25 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        getActiveWalletNow() { [unowned vc = self] (wallet, error) in
-            if wallet != nil {
-                DispatchQueue.main.async {
-                    vc.imageView.image = LifeHash.image(wallet!.descriptor)
-                }
+        getActiveWalletNow() { [weak self] (wallet, error) in
+            guard let self = self else { return }
+            
+            guard let wallet = wallet else { return }
+            
+            guard let sorted = wallet.descriptor.sortedDescriptor() else { return }
+            
+            var lifehash:UIImage?
+            
+            if self.addressString != "" {
+                lifehash = LifeHash.image(self.addressString)
+            } else {
+                lifehash = LifeHash.image(sorted)
+            }
+            
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.imageView.image = lifehash
             }
         }
     }
@@ -237,7 +251,7 @@ class InvoiceViewController: UIViewController, UITextFieldDelegate {
             
             UIView.animate(withDuration: 0.3, animations: { [unowned vc = self] in
                 
-                vc.imageView.image = LifeHash.image(vc.wallet!.descriptor)
+                vc.imageView.image = LifeHash.image(address)
                 vc.invoiceAddressHeader.alpha = 1
                 vc.qrButton.alpha = 1
                 vc.addressOutlet.alpha = 1

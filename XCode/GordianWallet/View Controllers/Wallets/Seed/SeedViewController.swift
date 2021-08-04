@@ -9,6 +9,7 @@
 import UIKit
 import AuthenticationServices
 import LibWally
+import URKit
 
 class SeedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
@@ -27,6 +28,7 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var accountLabel: UILabel!
     @IBOutlet var tableView: UITableView!
     @IBOutlet weak var editLabelOutlet: UIButton!
+    @IBOutlet weak var urSwitch: UISegmentedControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +59,10 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         #endif
         
+    }
+    
+    @IBAction func didSwitchFormat(_ sender: Any) {
+        loadData()
     }
     
     @IBAction func deletAccount(_ sender: Any) {
@@ -347,68 +353,90 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func loadData() {
-        
-        xprvs()
-        
+    private func loadAccountMap() {
         let arr = wallet.descriptor.split(separator: "#")
         let plainDesc = "\(arr[0])".replacingOccurrences(of: "'", with: "h")
         let recoveryQr = ["descriptor":"\(plainDesc)", "blockheight":wallet.blockheight, "label": wallet.label] as [String : Any]
         
         if let json = recoveryQr.json() {
-            
             let (qr, error) = qrGenerator.getQRCode(textInput: json)
             recoveryImage = qr
             
             if error {
-                
-                showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image")
-                
+                showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image.")
             }
-            
+        }
+    }
+    
+    private func loadCryptoOutput() {
+        guard let cryptoOutput = URHelper.accountToUrOutput(wallet.descriptor) else { return }
+                
+        let (qr, error) = qrGenerator.getQRCode(textInput: cryptoOutput)
+        recoveryImage = qr
+        
+        if error {
+            showAlert(vc: self, title: "QR Error", message: "There is too much data to squeeze into that small of an image.")
+        }
+    }
+    
+    func loadData() {
+        xprvs()
+        
+        if urSwitch.selectedSegmentIndex == 0 {
+            loadCryptoOutput()
+        } else {
+            loadAccountMap()
         }
         
-        SeedParser.fetchSeeds(wallet: wallet) { [unowned vc = self] (seeds, fingerprints) in
+        SeedParser.fetchSeeds(wallet: wallet) { [weak self] (seeds, fingerprints) in
+            guard let self = self else { return }
             
             var str = ""
-            vc.accountSeeds.removeAll()
-            vc.seed = ""
+            self.accountSeeds.removeAll()
+            self.seed = ""
             
             if seeds != nil {
                 
-                vc.accountSeeds = seeds!
+                self.accountSeeds = seeds!
                 
                 for (x, s) in seeds!.enumerated() {
                     
-                    let arr = s.split(separator: " ")
-                    
-                    for (i, word) in arr.enumerated() {
+                    if self.urSwitch.selectedSegmentIndex == 0 {
+                        guard let urSeed = URHelper.wordsToUr(words: s) else { return }
                         
-                        if i + 1 == arr.count {
+                        str += "\(urSeed)\n\n\n"
+                        
+                    } else {
+                        let arr = s.split(separator: " ")
+                        
+                        for (i, word) in arr.enumerated() {
                             
-                            /// There are multiple seeds so split them up with a triple new line.
-                            if x == 0 && seeds!.count > 1 {
+                            if i + 1 == arr.count {
                                 
-                               str += "\(i + 1). \(word)\n\n\n"
+                                /// There are multiple seeds so split them up with a triple new line.
+                                if x == 0 && seeds!.count > 1 {
+                                    
+                                   str += "\(i + 1). \(word)\n\n\n"
+                                    
+                                } else {
+                                    
+                                    /// Its the last word of the last seed.
+                                    str += "\(i + 1). \(word)"
+                                    
+                                }
                                 
                             } else {
                                 
-                                /// Its the last word of the last seed.
-                                str += "\(i + 1). \(word)"
+                                /// Its not the last word, add a new line between each seed word.
+                                str += "\(i + 1). \(word)\n"
                                 
                             }
                             
-                        } else {
-                            
-                            /// Its not the last word, add a new line between each seed word.
-                            str += "\(i + 1). \(word)\n"
-                            
                         }
-                        
                     }
                     
                     if x + 1 == seeds!.count {
-                        vc.seed = str
+                        self.seed = str
                         
                         DispatchQueue.main.async { [unowned vc = self] in
                             
@@ -432,19 +460,21 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         }
         
-        DispatchQueue.main.async { [unowned vc = self] in
-            vc.accountLabel.text = vc.wallet.label
-            vc.lifeHashImage = LifeHash.image(vc.wallet.descriptor)
-            vc.tableView.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            guard let sorted = self.wallet.descriptor.sortedDescriptor() else { return }
+            
+            self.accountLabel.text = self.wallet.label
+            self.lifeHashImage = LifeHash.image(sorted)
+            self.tableView.reloadData()
             
             UIView.animate(withDuration: 0.2) {
-                vc.editLabelOutlet.alpha = 1
-                vc.accountLabel.alpha = 1
-                vc.tableView.alpha = 1
+                self.editLabelOutlet.alpha = 1
+                self.accountLabel.alpha = 1
+                self.tableView.alpha = 1
             }
-            
         }
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -522,12 +552,32 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             let descriptorParser = DescriptorParser()
             let descriptorStruct = descriptorParser.descriptor(wallet.descriptor)
             var xpubtext = ""
-            for key in descriptorStruct.keysWithPath {
-                xpubtext += key.replacingOccurrences(of: "/0/*", with: "") + "\n\n"
+            for cosigner in descriptorStruct.keysWithPath {
+                if urSwitch.selectedSegmentIndex == 0 {
+                    var coinType:UInt64 = 0
+                    
+                    if descriptorStruct.network == "Testnet" {
+                        coinType = 1
+                    }
+                    
+                    let processed = "\(cosigner.split(separator: ")")[0])"
+                    
+                    guard let hdkey = URHelper.cosignerToCborHdkey(processed, false, coinType) else { return UITableViewCell() }
+                    
+                    guard let rawUr = try? UR(type: "crypto-hdkey", cbor: hdkey) else { return UITableViewCell() }
+                    
+                    let ur = UREncoder.encode(rawUr)
+                    
+                    xpubtext += ur + "\n\n"
+                    
+                } else {
+                    xpubtext += cosigner.replacingOccurrences(of: "/0/*", with: "") + "\n\n"
+                }
+                
             }
+            
             xpubs = "\(xpubtext.split(separator: ")")[0])"
             cell.textLabel?.text = xpubs
-            
         }
         
         return cell
@@ -559,9 +609,28 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                             let arr = xpubWithPath.split(separator: "]")
                             let arr2 = "\(arr[1])".split(separator: ")")
                             let xpub = "\(arr2[0])".replacingOccurrences(of: "/0/*", with: "")
-                            if let hdkey = HDKey(xprv) {
+                            if let hdkey = try? HDKey(base58: xprv) {
                                 if xpub == hdkey.xpub {
-                                    xprivs += "\(arr[0])]" + xprv + "\n\n"
+                                    if self.urSwitch.selectedSegmentIndex == 0 {
+                                        let cosigner = "\(arr[0])]" + xprv
+                                        
+                                        var coinType:UInt64 = 0
+                                        
+                                        if descriptorStruct.network == "Testnet" {
+                                            coinType = 1
+                                        }
+                                        
+                                        guard let hdkey = URHelper.cosignerToCborHdkey(cosigner, true, coinType) else { return }
+                                        
+                                        guard let rawUr = try? UR(type: "crypto-hdkey", cbor: hdkey) else { return }
+                                        
+                                        let ur = UREncoder.encode(rawUr)
+                                        
+                                        xprivs += ur + "\n\n"
+                                        
+                                    } else {
+                                        xprivs += "\(arr[0])]" + xprv + "\n\n"
+                                    }
                                 }
                             }
                         }
@@ -672,7 +741,12 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             copyButton.center.y = shareButton.center.y
             
         case 1:
-            textLabel.text = "Account Map (public keys)"
+            if urSwitch.selectedSegmentIndex == 0 {
+                textLabel.text = "ur:crypto-output (public keys)"
+            } else {
+                textLabel.text = "Account Map (public keys)"
+            }
+            
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(copyButton)
@@ -680,7 +754,12 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             copyButton.center.y = shareButton.center.y
             
         case 2:
-            textLabel.text = "Seed Words"
+            if urSwitch.selectedSegmentIndex == 0 {
+                textLabel.text = "ur:crypto-seed (master seed)"
+            } else {
+                textLabel.text = "Seed Words"
+            }
+            
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(qrButton)
@@ -689,14 +768,24 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
             header.addSubview(deleteButton)
             
         case 3:
-            textLabel.text = "Account xpubs"
+            if urSwitch.selectedSegmentIndex == 0 {
+                textLabel.text = "ur:crypto-hdkey (public key)"
+            } else {
+                textLabel.text = "Account xpubs"
+            }
+            
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(qrButton)
             header.addSubview(copyButton)
             
         case 4:
-            textLabel.text = "Account xprvs"
+            if urSwitch.selectedSegmentIndex == 0 {
+                textLabel.text = "ur:crypto-hdkey (private key)"
+            } else {
+                textLabel.text = "Account xprvs"
+            }
+            
             header.addSubview(textLabel)
             header.addSubview(shareButton)
             header.addSubview(qrButton)
@@ -949,7 +1038,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                         switch (state) {
                             
                         case .authorized:
-                            print("Account Found - Signed In")
                             getActiveWalletNow { (wallet, error) in
                                 
                                 if wallet != nil && !error {
@@ -970,7 +1058,6 @@ class SeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                             }
                             
                         case .revoked:
-                            print("No Account Found")
                             fallthrough
                             
                         case .notFound:

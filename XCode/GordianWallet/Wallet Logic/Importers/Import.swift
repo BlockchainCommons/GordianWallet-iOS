@@ -294,11 +294,11 @@ class Import {
         }
         
         func getDeviceXpub(mnemonic: BIP39Mnemonic) {
-            let seed = mnemonic.seedHex("")
-            if let masterKey = HDKey(seed, chain) {
+            let seed = mnemonic.seedHex(passphrase: "")
+            if let masterKey = try? HDKey(seed: seed, network: chain) {
                 let fingerprint = masterKey.fingerprint.hexString
                 do {
-                    let xpub = try masterKey.derive(path).xpub
+                    let xpub = try masterKey.derive(using: path).xpub
                     let path1 = (path.description).replacingOccurrences(of: "m", with: fingerprint)
                     deviceKey = "[\(path1)]\(xpub)/0/*"
                 } catch {
@@ -310,11 +310,11 @@ class Import {
         }
         
         func getNodeXpub(mnemonic: BIP39Mnemonic) {
-            let seed = mnemonic.seedHex("")
-            if let masterKey = HDKey(seed, chain) {
+            let seed = mnemonic.seedHex(passphrase: "")
+            if let masterKey = try? HDKey(seed: seed, network: chain) {
                 let fingerprint = masterKey.fingerprint.hexString
                 do {
-                    let xpub = try masterKey.derive(path).xpub
+                    let xpub = try! masterKey.derive(using: path).xpub
                     let path1 = (path.description).replacingOccurrences(of: "m", with: fingerprint)
                     nodeKey = "[\(path1)]\(xpub)/0/*"
                 } catch {
@@ -330,7 +330,7 @@ class Import {
             let fingerprint = coldcardDict["xfp"] as! String
             let xpub = XpubConverter.convert(extendedKey: zpub)
             let derivation = coldcardDict["p2wsh_deriv"] as! String
-            path = BIP32Path(derivation)
+            path = try! BIP32Path(string: derivation)
             accountToImport["derivation"] = derivation
             KeychainCreator.createKeyChain() { (device_words, error) in
                 if device_words != nil {
@@ -338,10 +338,10 @@ class Import {
                     KeychainCreator.createKeyChain() { (offline_words, error) in
                         if offline_words != nil {
                             offlineWords = offline_words!
-                            let deviceMnemonic = BIP39Mnemonic(device_words!)
-                            let offlineMnemonic = BIP39Mnemonic(offline_words!)
-                            getDeviceXpub(mnemonic: deviceMnemonic!)
-                            getNodeXpub(mnemonic: offlineMnemonic!)
+                            let deviceMnemonic = try! BIP39Mnemonic(words: device_words!)
+                            let offlineMnemonic = try! BIP39Mnemonic(words: offline_words!)
+                            getDeviceXpub(mnemonic: deviceMnemonic)
+                            getNodeXpub(mnemonic: offlineMnemonic)
                             let path1 = (path.description).replacingOccurrences(of: "m", with: fingerprint)
                             if xpub != nil {
                                 coldCardKey = "[\(path1)]\(xpub!)/0/*"

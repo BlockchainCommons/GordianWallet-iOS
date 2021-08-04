@@ -21,7 +21,7 @@ enum LifeHash {
             bare = input.replacingOccurrences(of: "'", with: "h")
         }
         
-        return LifeHashGenerator.generateSync(bare)
+        return LifeHashGenerator.generateSync(bare, version: .version2)
     }
     
 }
