@@ -139,6 +139,35 @@ class WalletToolsViewController: UIViewController {
         }
     }
     
+    private func alertToExportCosigner(_ hdkey: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            let alertStyle = UIAlertController.Style.alert
+            
+            let alert = UIAlertController(title: "Export Cosigner", message: "Export it directly to Gordian Cosigner or export as a QR code?", preferredStyle: alertStyle)
+
+            alert.addAction(UIAlertAction(title: "Gordian Cosigner", style: .default, handler: { action in
+                guard let url = URL(string: "ur://\(hdkey)") else { return }
+                                
+                DispatchQueue.main.async {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }))
+            
+            alert.addAction(UIAlertAction(title: "QR", style: .default, handler: { [weak self] action in
+                guard let self = self else { return }
+                
+                self.cosigner = hdkey
+                self.showCosigner()
+            }))
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in }))
+                    
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     @IBAction func exportCosignerAction(_ sender: Any) {
         SeedParser.fetchSeeds(wallet: wallet) { (seeds, fingerprints) in
             
@@ -150,17 +179,32 @@ class WalletToolsViewController: UIViewController {
             KeyFetcher.cosignerKey(seeds[0], completion: { [weak self] (xpub, error) in
                 guard let xpub = xpub, let self = self else { return }
                 
+                let dp = DescriptorParser()
+                let ds = dp.descriptor(self.wallet.descriptor)
+                
+                var fingerprint = "00000000"
+                
+                if ds.isMulti {
+                    for (i, keyWithPath) in ds.keysWithPath.enumerated() {
+                        if keyWithPath.contains(xpub) {
+                            if let fingerprints = fingerprints {
+                                fingerprint = fingerprints[i]
+                            }
+                        }
+                    }
+                } else {
+                    fingerprint = ds.fingerprint
+                }
+                
                 var cointype:UInt64 = 0
                 let chain = network(descriptor: self.wallet.descriptor)
                 if chain == .testnet {
                     cointype = 1
                 }
                 
-                guard let hdkey = URHelper.xpubToUrHdkey(xpub, self.wallet.fingerprint, cointype) else { return }
+                guard let hdkey = URHelper.xpubToUrHdkey(xpub, fingerprint, cointype) else { return }
                 
-                self.cosigner = hdkey
-                
-                self.showCosigner()
+                self.alertToExportCosigner(hdkey)
             })
         }
     }
