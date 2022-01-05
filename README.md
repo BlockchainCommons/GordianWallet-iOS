@@ -66,10 +66,6 @@ Please only use the app on testnet!
 
 To help us improve *GordianWallet*, *please*  share crash reports and give us feedback. Want a feature added? Tell us about it.
 
-### Installing GordianWallet from Source
-
-Full instruction on installing from source are available [here](Docs/Install-from-source.md).
-
 ### Linking to a Full Node
 
 When you install *GordianWallet*, you will need to link it to the full node of your choice.
