@@ -9,7 +9,7 @@
 
 *GordianWallet* allows for multiple wallet templates, including: legacy, SegWit-compatible, and SegWit-native hot wallets using a single signature (seed on iOS device); a warm wallet using multisig (seed on iOS device, keys on full node, offline seed, etc.); or a number of cold wallet templates that leverage PSBTs (Partially Signed Bitcoin Transactions), such as cold offline seeds, third-party collaborative custody services, and various air-gapped hardware solutions using QR codes. *GordianWallet* can potentially support almost anything that can be described by a [bitcoind descriptor](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md).
 
-*GordianWallet-iOS* is part of the [Gordian system](https://github.com/BlockchainCommons/Gordian).
+*GordianWallet-iOS* is part of the [Gordian system](https://github.com/BlockchainCommons/Gordian). Also see [Gordian SeedTool](https://github.com/BlockchainCommons/GordianSeedTool-iOS), which expands on the Gordian principles by demonstrating how to make active use of keys in a largely offline manner.
 
 <img src="./Images/home_screen_collapsed.PNG" alt="Gordian Wallet app Home Screen" width="250"/> <img src="./Images/home_screen_expanded.PNG" alt="Gordian Wallet app Home Screen" width="250"/>
 
